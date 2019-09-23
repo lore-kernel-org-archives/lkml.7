@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F912C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83305C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574B720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB5420665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263290;
-	bh=xZy9Pi4lsVhkXDAkr4SEdvDPcBAFmm9NjrvMEiupZ8E=;
+	s=default; t=1569263294;
+	bh=ugxC1rfETd3AuQmzO5Cyjit52vqx8D84Y9LPx85+m9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QBc12m+qYdIL+XFgEVWYh6gwg4oJfFCLJMrdQB+rD4ifDBAox+LLBmokjTc3PcbJ1
-	 YBnTiFFr+ngJ5f8k+vvkApnpgI36yTpRy8/ML0LGLYXX1335sUzzHgPedjIQpLsIZM
-	 NGoadnH7TTZWYVQHh9jOlpL9MrjWT/FVdN7kjjlE=
+	b=1YiGU1kPSGgyYW+JeaeL/ZUkrjuUIv7c/5IGxc7/n35FrmMxtDKtEST3OqQ8f0/BX
+	 LqI8NJtrtTfW6ofBnkQXRfZjk0IizU6tqwg/ZhOjAWoeR0e08yHRWI6/0tSofFVDAb
+	 cuOh57bBFUvG3z/D3r0iyir24twJnWBdURpoiV8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406063AbfIWS2G (ORCPT
+        id S1733033AbfIWS2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:28:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:47106 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 14:28:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:47148 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502410AbfIWS2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:28:01 -0400
+        id S1731819AbfIWS2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:28:08 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8879B22D9;
-        Mon, 23 Sep 2019 11:28:01 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33BFB237B;
+        Mon, 23 Sep 2019 11:28:08 -0700 (PDT)
 Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B0C93F694;
-        Mon, 23 Sep 2019 11:27:58 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52D513F694;
+        Mon, 23 Sep 2019 11:28:04 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 25/35] irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
-Date:   Mon, 23 Sep 2019 19:25:56 +0100
-Message-Id: <20190923182606.32100-26-maz@kernel.org>
+Subject: [PATCH 27/35] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+Date:   Mon, 23 Sep 2019 19:25:58 +0100
+Message-Id: <20190923182606.32100-28-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
 References: <20190923182606.32100-1-maz@kernel.org>
@@ -56,48 +56,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement mask/unmask for virtual SGIs by calling into the
-configuration helper.
+As for VLPIs, there is a number of configuration bits that cannot
+be directly communicated through the normal irqchip API, and we
+have to use our good old friend set_vcpu_affinity.
+
+This is used to configure group and priority for a given vSGI.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
+ include/linux/irqchip/arm-gic-v4.h |  5 +++++
+ 2 files changed, 23 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 5234b9eef8ad..727a890f72ae 100644
+index 5e67dfe1c4b1..4aae9582182b 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3660,6 +3660,22 @@ static void its_configure_sgi(struct irq_data *d, bool clear)
- 	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
+@@ -3737,6 +3737,23 @@ static int its_sgi_get_irqchip_state(struct irq_data *d,
+ 	return 0;
  }
  
-+static void its_sgi_mask_irq(struct irq_data *d)
++static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
 +{
 +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_cmd_info *info = vcpu_info;
 +
-+	vpe->sgi_config[d->hwirq].enabled = false;
-+	its_configure_sgi(d, false);
++	switch (info->cmd_type) {
++	case PROP_UPDATE_SGI:
++		vpe->sgi_config[d->hwirq].priority = info->priority;
++		vpe->sgi_config[d->hwirq].group = info->group;
++		its_configure_sgi(d, false);
++		return 0;
++
++	default:
++		return -EINVAL;
++	}
 +}
 +
-+static void its_sgi_unmask_irq(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = true;
-+	its_configure_sgi(d, false);
-+}
-+
- static int its_sgi_set_affinity(struct irq_data *d,
- 				const struct cpumask *mask_val,
- 				bool force)
-@@ -3669,6 +3685,8 @@ static int its_sgi_set_affinity(struct irq_data *d,
- 
  static struct irq_chip its_sgi_irq_chip = {
  	.name			= "GICv4.1-sgi",
-+	.irq_mask		= its_sgi_mask_irq,
-+	.irq_unmask		= its_sgi_unmask_irq,
+ 	.irq_mask		= its_sgi_mask_irq,
+@@ -3744,6 +3761,7 @@ static struct irq_chip its_sgi_irq_chip = {
  	.irq_set_affinity	= its_sgi_set_affinity,
+ 	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+ 	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
++	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
+ };
+ 
+ static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 03bbd0aed2e2..6185926e4582 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -96,6 +96,7 @@ enum its_vcpu_info_cmd_type {
+ 	SCHEDULE_VPE,
+ 	DESCHEDULE_VPE,
+ 	INVALL_VPE,
++	PROP_UPDATE_SGI,
+ };
+ 
+ struct its_cmd_info {
+@@ -108,6 +109,10 @@ struct its_cmd_info {
+ 			bool		g0en;
+ 			bool		g1en;
+ 		};
++		struct {
++			u8		priority;
++			bool		group;
++		};
+ 	};
  };
  
 -- 
