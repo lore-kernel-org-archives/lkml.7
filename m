@@ -2,179 +2,141 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED747C432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE81C432C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B594220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1030521A4C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ne7PIJi2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qm6ynigy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503457AbfIWWkp (ORCPT
+        id S2503466AbfIWWlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 18:40:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34779 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392282AbfIWWko (ORCPT
+        Mon, 23 Sep 2019 18:41:24 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:22620 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392282AbfIWWlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 18:40:44 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b128so10117321pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dV/VFIBBnqaIS6aRCC/wcXHFeYbMA2iZ1Q9+7enJTQg=;
-        b=Ne7PIJi24GGIHptbAvF1PYuU1lPdUtAI8cUiMgsIavTd3Ni4NUMgE5ngyrSH0WjFpJ
-         y6V13OYicPJFLnGdpvQOoM2ZiBUQgeKR6S3xP0qepIBvlRosmtun5YhV47GwZBMhwHIi
-         fUrNZg8L5+CM3H1+fM8iP30LIcWfeOB4xauFw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dV/VFIBBnqaIS6aRCC/wcXHFeYbMA2iZ1Q9+7enJTQg=;
-        b=iICMlj6PkQRlEavKie8wG6dpe8dHWlSCaOoJywrOUb/OHyRMB1rXaif2OWYiMdbPG2
-         7DnlmMGWAa8ZrQhmI5h3oHR13fo9ZDWR5J+fswhPAuaRcuBTkwltIZnybY/9iv3xDIR7
-         Xgs6hKVONYLNZfjCFe/hm8dcM1B6Eqrqrw4o9abLuhBQDIjOnHXWczJWzN8Kss6ZHUWv
-         Ge+dOA6odwv/xGskT/l5J2/7rMqOIKfyIHZwe7XsXXbEAYZh6sLWrwO+1xO7rJNBd82i
-         xUU3mBvNuliPnUfNDVGQZO5FA8KYz/pKIUs9opo1iQcyKw0ktX/st+2RXXhmM5OlNUKN
-         3PCA==
-X-Gm-Message-State: APjAAAUy7XaNZ5vrR/mLDWnGGCk15ZXb2S8s1lWNJvJhkld6ziB2LyMm
-        +Ui50eS42ObfWnwpLrts3UqZJQ==
-X-Google-Smtp-Source: APXvYqwJ/YZFjqVIePIntTXndtIsstaltiFMdt5JylGJwMjKeHF8y7vM9oVdgnJmvOsINhEnrCrbCw==
-X-Received: by 2002:a65:504c:: with SMTP id k12mr2257623pgo.252.1569278443553;
-        Mon, 23 Sep 2019 15:40:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o42sm19687393pjo.32.2019.09.23.15.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 15:40:42 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 15:40:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: Use make invocation's -j argument for
- parallelism
-Message-ID: <201909231537.0FC0474C@keescook>
-References: <201909191438.C00E6DB@keescook>
- <20190922140331.3ffe8604@lwn.net>
+        Mon, 23 Sep 2019 18:41:23 -0400
+Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x8NMeEuJ017051;
+        Tue, 24 Sep 2019 07:40:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x8NMeEuJ017051
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569278415;
+        bh=QLpqgwiwdHsVJ7lYAMtFWzbVRcNyLxBKNZxEbuiniCM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qm6ynigy6gEkhspkwQmqf/q+uQz6jl90Xidb6J6R5+ckOxnq8t5m0Z+spHOVmEska
+         C5TKt7JXhzLBDghbbsoQy1pjxhl8SBlG5hMc4ncLPIw26GHX6SjRcUDFxYjCk5uzxp
+         vC3a1IX3N6HCeM7JUPHnjYVZP5JLYoHRThPwfKdgoMK/OrAf9104vYPITF7ZNwnJs+
+         tQXTgbeDY3PdU1vAHjxuHGZCeSfayrbJ7WRrPltV/EVRARta7FZ//IoolLr/8U9IgA
+         V6TDxBxQ7zikO8pNXDbR1rJvyAPD4lS+z4s2QBSNeCJmuYQNozeyA4vxKHB/y4y/dy
+         j9tKsc05mkmhg==
+X-Nifty-SrcIP: [126.21.98.169]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] netfilter: use __u8 instead of uint8_t in uapi header
+Date:   Tue, 24 Sep 2019 07:40:06 +0900
+Message-Id: <20190923224007.20179-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190922140331.3ffe8604@lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 02:03:31PM -0600, Jonathan Corbet wrote:
-> On Thu, 19 Sep 2019 14:44:37 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > While sphinx 1.7 and later supports "-jauto" for parallelism, this
-> > effectively ignores the "-j" flag used in the "make" invocation, which
-> > may cause confusion for build systems. Instead, extract the available
-> 
-> What sort of confusion might we expect?  Or, to channel akpm, "what are the
-> user-visible effects of this bug"?
+When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+make sure they can be included from user-space.
 
-When I run "make htmldocs -j16" with a pre-1.7 sphinx, it is not
-parallelized. When I run "make htmldocs -j8" with 1.7+ sphinx, it uses
-all my CPUs instead of 8. :)
+Currently, linux/netfilter_bridge/ebtables.h is excluded from the test
+coverage. To make it join the compile-test, we need to fix the build
+errors attached below.
 
-> > +	-j $(shell python3 $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
-> 
-> This (and the shebang line in the script itself) will cause the docs build
-> to fail on systems lacking Python 3.  While we have talked about requiring
-> Python 3 for the docs build, we have not actually taken that step yet.  We
-> probably shouldn't sneak it in here.  I don't see anything in the script
-> that should require a specific Python version, so I think it should be
-> tweaked to be version-independent and just invoke "python".
+For a case like this, we decided to use __u{8,16,32,64} variable types
+in this discussion:
 
-Ah, no problem. I can fix this. In a quick scan it looked like sphinx
-was python3, but I see now that's just my install. :)
+  https://lkml.org/lkml/2019/6/5/18
 
-> >  	-b $2 \
-> >  	-c $(abspath $(srctree)/$(src)) \
-> >  	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
-> > diff --git a/scripts/jobserver-count b/scripts/jobserver-count
-> > new file mode 100755
-> > index 000000000000..ff6ebe6b0194
-> > --- /dev/null
-> > +++ b/scripts/jobserver-count
-> > @@ -0,0 +1,53 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> 
-> By license-rules.rst, this should be GPL-2.0+
+Build log:
 
-Whoops, thanks.
+  CC      usr/include/linux/netfilter_bridge/ebtables.h.s
+In file included from <command-line>:32:0:
+./usr/include/linux/netfilter_bridge/ebtables.h:126:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
+./usr/include/linux/netfilter_bridge/ebtables.h:139:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
+./usr/include/linux/netfilter_bridge/ebtables.h:152:4: error: unknown type name ‘uint8_t’
+    uint8_t revision;
+    ^~~~~~~
 
-> > +# Extract and prepare jobserver file descriptors from envirnoment.
-> > +try:
-> > +	# Fetch the make environment options.
-> > +	flags = os.environ['MAKEFLAGS']
-> > +
-> > +	# Look for "--jobserver=R,W"
-> > +	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
-> > +
-> > +	# Parse out R,W file descriptor numbers and set them nonblocking.
-> > +	fds = opts[0].split("=", 1)[1]
-> > +	reader, writer = [nonblock(int(x)) for x in fds.split(",", 1)]
-> > +except:
-> 
-> So I have come to really dislike bare "except" clauses; I've seen them hide
-> too many bugs.  In this case, perhaps it's justified, but still ... it bugs
-> me ...
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Fair enough. I will adjust this (and the later instance).
+Changes in v2:
+ - Rebase on the latest Linus tree (commit 9f7582d15f82)
 
-> 
-> > +	# Any failures here should result in just using the default
-> > +	# specified parallelism.
-> > +	print(default)
-> > +	sys.exit(0)
-> > +
-> > +# Read out as many jobserver slots as possible.
-> > +jobs = b""
-> > +while True:
-> > +	try:
-> > +		slot = os.read(reader, 1)
-> > +		jobs += slot
-> > +	except:
-> 
-> This one, I think, should be explicit; anything other than EWOULDBLOCK
-> indicates a real problem, right?
-> 
-> > +		break
-> > +# Return all the reserved slots.
-> > +os.write(writer, jobs)
-> 
-> You made writer nonblocking, so it seems plausible that we could leak some
-> slots here, no?  Does writer really need to be nonblocking?
+ include/uapi/linux/netfilter_bridge/ebtables.h | 6 +++---
+ usr/include/Makefile                           | 1 -
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Good point. I will fix this too.
-
-> 
-> > +# If the jobserver was (impossibly) full or communication failed, use default.
-> > +if len(jobs) < 1:
-> > +	print(default)
-> > +
-> > +# Report available slots (with a bump for our caller's reserveration).
-> > +print(len(jobs) + 1)
-> 
-> The last question I have is...why is it that we have to do this complex
-> dance rather than just passing the "-j" option through directly to sphinx?
-> That comes down to the "confusion" mentioned at the top, I assume.  It
-> would be good to understand that?
-
-There is no method I have found to discover the -j option's contents
-(intentionally so, it seems) from within make. :(
-
+diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
+index 3b86c14ea49d..8076c940ffeb 100644
+--- a/include/uapi/linux/netfilter_bridge/ebtables.h
++++ b/include/uapi/linux/netfilter_bridge/ebtables.h
+@@ -123,7 +123,7 @@ struct ebt_entry_match {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_match *match;
+ 	} u;
+@@ -136,7 +136,7 @@ struct ebt_entry_watcher {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_target *watcher;
+ 	} u;
+@@ -149,7 +149,7 @@ struct ebt_entry_target {
+ 	union {
+ 		struct {
+ 			char name[EBT_EXTENSION_MAXNAMELEN];
+-			uint8_t revision;
++			__u8 revision;
+ 		};
+ 		struct xt_target *target;
+ 	} u;
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 05c71ef42f51..c9449aaf438d 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -38,7 +38,6 @@ header-test- += linux/ivtv.h
+ header-test- += linux/jffs2.h
+ header-test- += linux/kexec.h
+ header-test- += linux/matroxfb.h
+-header-test- += linux/netfilter_bridge/ebtables.h
+ header-test- += linux/netfilter_ipv4/ipt_LOG.h
+ header-test- += linux/netfilter_ipv6/ip6t_LOG.h
+ header-test- += linux/nfc.h
 -- 
-Kees Cook
+2.17.1
+
