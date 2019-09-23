@@ -2,95 +2,201 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDE0C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5805CC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E200207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="19j54Uyg"
+	by mail.kernel.org (Postfix) with ESMTP id 2C65D20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfIWPJ5 (ORCPT
+        id S1726970AbfIWPMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:09:57 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42988 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfIWPJ4 (ORCPT
+        Mon, 23 Sep 2019 11:12:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:33897 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726413AbfIWPMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:09:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VxdorSasQihgyGrRfngeW8imjxqrW6HQgqpg3Uet6QA=; b=19j54Uyg7eJ86wORZyg9s/5qo
-        AH4gXSstEeWW1uJu94k801lH9iKza86o97FNXMRf4B3ZR0IN/oXa9w37GN97lA9pC82IkLqd+M5ej
-        jU7fXVusAZy7gkDvUmzeE5X82UOsna4gz7LW2MvB/AWm3Cyj1+QWsI37hCRAD7DWokAZTNToMugWG
-        0u0wJ2VwReNXbHeOzN8130M+SyLJRnAR6hdl7OpJzAjb0lxvcYXN45n6ov4M25CBmgahdM4Kn+beI
-        tJKZmrriJ2XIxyaqenH6nXt99oiAC3XKQHNPLSlst4LVkQp/Wsfym7/kxAbS4pTgfhA0ikESjSbpK
-        h/1DfR/ag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCPyF-0004ZM-GS; Mon, 23 Sep 2019 15:09:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D4227305E43;
-        Mon, 23 Sep 2019 17:08:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 28FB020D80D42; Mon, 23 Sep 2019 17:09:42 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 17:09:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, linuxarm@huawei.com
-Subject: Re: [PATCH] driver core: ensure a device has valid node id in
- device_add()
-Message-ID: <20190923150942.GD2369@hirez.programming.kicks-ass.net>
-References: <9598b359-ab96-7d61-687a-917bee7a5cd9@huawei.com>
- <20190910093114.GA19821@kroah.com>
- <34feca56-c95e-41a6-e09f-8fc2d2fd2bce@huawei.com>
- <20190910110451.GP2063@dhcp22.suse.cz>
- <20190910111252.GA8970@kroah.com>
- <5a5645d2-030f-7921-432f-ff7d657405b8@huawei.com>
- <20190910125339.GZ2063@dhcp22.suse.cz>
- <20190911053334.GH4023@dhcp22.suse.cz>
- <ca590101-bfc8-3934-d803-537aacb707e0@huawei.com>
- <20190911064926.GJ4023@dhcp22.suse.cz>
+        Mon, 23 Sep 2019 11:12:07 -0400
+X-UUID: 0803255001274d039f165dabacd3c12d-20190923
+X-UUID: 0803255001274d039f165dabacd3c12d-20190923
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 397497340; Mon, 23 Sep 2019 23:11:56 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 23 Sep 2019 23:11:54 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 23 Sep 2019 23:11:52 +0800
+Message-ID: <1569251515.4102.31.camel@mtksdccf07>
+Subject: Re: [PATCH v9 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pwm@vger.kernel.org>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Mon, 23 Sep 2019 23:11:55 +0800
+In-Reply-To: <20190923133626.GA4671@ulmo>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+         <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
+         <20190921002149.GB86019@mithrandir> <1569208857.4102.9.camel@mtksdccf07>
+         <20190923133626.GA4671@ulmo>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190911064926.GJ4023@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 08:49:26AM +0200, Michal Hocko wrote:
-> On Wed 11-09-19 14:15:51, Yunsheng Lin wrote:
+On Mon, 2019-09-23 at 15:36 +0200, Thierry Reding wrote:
+> On Mon, Sep 23, 2019 at 11:20:57AM +0800, Sam Shih wrote:
+> > On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
+> > > On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
+> > > > From: Ryder Lee <ryder.lee@mediatek.com>
+> > > > 
+> > > > This adds a property "num-pwms" in example so that we could
+> > > > specify the number of PWM channels via device tree.
+> > > > 
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > > Changes since v6:
+> > > > Follow reviewers's comments:
+> > > > - The subject should indicate this is for Mediatek
+> > > > 
+> > > > Changes since v5:
+> > > > - Add an Acked-by tag
+> > > > - This file is original v4 patch 5/10
+> > > > (https://patchwork.kernel.org/patch/11102577/)
+> > > > 
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > You failed to address Rob's questions repeatedly and I agree with him
+> > > that you can just as easily derive the number of PWMs from the specific
+> > > compatible string. I won't be applying this and none of the patches that
+> > > depend on it.
+> > > 
+> > 
+> > Hi, 
+> > 
+> > Thanks for getting back to me.
+> > 
+> > New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
+> > dynamically") can support different variants with different number of
+> > PWMs by the new property <num-pwms>
+> > 
+> > For example:
+> > 1. Use "num-pwms" = <2> and assign clocks pwm1, pwm2 for mt7622
+> > 2. Use "num-pwms" = <6> and assign clocks pwm1, pwm2, pwm3, pwm4, pwm5,
+> > pwm6 for mt7622.
+> > 
+> > If we just as easily derive the number of PWMs from the specific
+> > compatible string in this document:
+> > 
+> >    - "pwm1-6": the six per PWM clocks for mt7622
+> >    
+> > This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
+> > required property in DT, It doesn't make sense.
+> 
+> I don't understand. Why doesn't that make sense? If your hardware block
+> has 6 PWMs and each can be driven by its own clock, then you need to
+> provide references for each of those clocks, otherwise you won't be able
+> to use them.
 
-> > >>>>>> When passing the return value of dev_to_node() to cpumask_of_node()
-> > >>>>>> without checking the node id if the node id is not valid, there is
-> > >>>>>> global-out-of-bounds detected by KASAN as below:
-> > >>>>>
-> > >>>>> OK, I seem to remember this being brought up already. And now when I
-> > >>>>> think about it, we really want to make cpumask_of_node NUMA_NO_NODE
-> > >>>>> aware. That means using the same trick the allocator does for this
-> > >>>>> special case.
+Thank you for your instruction,
+I will add all clock-names and clocks according to
+hardware blocks instead of value of <num-pwms> in DT.
 
-> No. Please read the above paragraph again. NUMA_NO_NODE really means no
-> node affinity. So all cpus should be usable. Making any assumptions
-> about a local context is just wrong.
+> >    
+> > So we removed those descriptions and added  
+> > 
+> >    - "pwm1-N": the PWM clocks for each channel 
+> >    
+> >    
+> > But the max number of clocks from the compatible string are still
+> > important information that should be provide in this document.
+> > 
+> > 
+> > What do you think of this?
+> > 
+> >    - "pwm1-N": per PWM clocks for mt2712, the max number of PWM channels
+> > is 8
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7622, the max number of PWM channels
+> > is 6
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7623, the max number of PWM channels
+> > is 5
+> 
+> That's what's in the bindings already, isn't it?
+> 
+> 	 - clocks: phandle and clock specifier of the PWM reference clock.
+> 	 - clock-names: must contain the following, except for MT7628 which
+> 			has no clocks
+> 	   - "top": the top clock generator
+> 	   - "main": clock used by the PWM core
+> 	   - "pwm1-8": the eight per PWM clocks for mt2712
+> 	   - "pwm1-6": the six per PWM clocks for mt7622
+> 	   - "pwm1-5": the five per PWM clocks for mt7623
 
-So none of this makes sense to me. How can a device have NUMA_NO_NODE on
-a NUMA machine. It needs to have a physical presence _somwhere_; and
-that cannot be equidistant from all CPUs.
+Yes, You are right, 
+I will keep original description and remove "pwm1-N" from this patch.
+	   - "top": the top clock generator
+	   - "main": clock used by the PWM core
+	   - "pwm1-8": the eight per PWM clocks for mt2712
+	   - "pwm1-6": the six per PWM clocks for mt7622
+	   - "pwm1-5": the five per PWM clocks for mt7623       
 
-Please explain how this makes physical sense.
+Actually, MT7629 also use "mediatek,mt7622-pwm" as compatible string,
+but it's hardware only support one pwm, so I was wrongly stick by
+expecting "pwm1-N" in clock-names based on "num-pwms" in DT.
+(that we can assign num-pwms to 1 and only provide pwm1 as clock-names)
+
+Maybe added mt7629 description to this document can solve this simply.
+	   - "pwm1": the PWM1 clock for mt7629    
+
+> Note that the description of the "clocks" property isn't quite accurate.
+> It should be something like:
+> 
+> 	- clocks: One phandle and clock specifier for each entry in the
+> 	          "clock-names" property.
+> 
+> In the above you clearly describe which PWMs you have to specify for
+> each generation of the hardware block.
+
+Thanks for your advise, I will update this description
+	- clocks: One phandle and clock specifier for each entry in the
+	          "clock-names" property.
+
+> > 
+> >    where N starting from 1 to the maximum number of PWM channels
+> >    - num-pwms: the number of PWM channels.
+> 
+> That's redundant information. The specific number of PWMs in already
+> implied by the compatible string, so you don't need to duplicate that
+> information here.
+
+Okay, I will remove it.
+
+
+
+Thanks,
+Best Regards,
+Sam 
+
+
