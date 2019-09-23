@@ -6,36 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1732C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140E5C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE452217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A9520820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439721AbfIWMzC (ORCPT
+        id S2439734AbfIWM4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:55:02 -0400
-Received: from regular1.263xmail.com ([211.150.70.200]:42354 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437464AbfIWMzB (ORCPT
+        Mon, 23 Sep 2019 08:56:06 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:48462 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437481AbfIWM4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:55:01 -0400
-Received: from hjc?rock-chips.com (unknown [192.168.167.174])
-        by regular1.263xmail.com (Postfix) with ESMTP id D7EDA327;
-        Mon, 23 Sep 2019 20:54:59 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
+        Mon, 23 Sep 2019 08:56:05 -0400
+X-Greylist: delayed 469 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Sep 2019 08:56:02 EDT
+Received: from localhost (unknown [192.168.167.227])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 1CBF866344;
+        Mon, 23 Sep 2019 20:48:05 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
 X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
 X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29405T140104878241536S1569243297686069_;
-        Mon, 23 Sep 2019 20:54:58 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P14169T140710336407296S1569242883858959_;
+        Mon, 23 Sep 2019 20:48:04 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <7f510e2dec1a5fec4a829d4e2f2a610e>
+X-UNIQUE-TAG: <dcbf38747a55e5c1495e51f206d0b1dd>
 X-RL-SENDER: hjc@rock-chips.com
 X-SENDER: hjc@rock-chips.com
 X-LOGIN-NAME: hjc@rock-chips.com
@@ -45,13 +43,13 @@ X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 From:   Sandy Huang <hjc@rock-chips.com>
 To:     dri-devel@lists.freedesktop.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     hjc@rock-chips.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 36/36] drm/omapdrm: use bpp instead of cpp for drm_format_info
-Date:   Mon, 23 Sep 2019 20:54:56 +0800
-Message-Id: <1569243296-183701-1-git-send-email-hjc@rock-chips.com>
+Subject: [PATCH 11/36] drm/armada: use bpp instead of cpp for drm_format_info
+Date:   Mon, 23 Sep 2019 20:47:35 +0800
+Message-Id: <1569242880-182878-1-git-send-email-hjc@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,44 +61,52 @@ So we use bpp[BitPerPlane] to instead cpp.
 
 Signed-off-by: Sandy Huang <hjc@rock-chips.com>
 ---
- drivers/gpu/drm/omapdrm/omap_fb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/armada/armada_fbdev.c | 2 +-
+ drivers/gpu/drm/armada/armada_plane.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_fb.c b/drivers/gpu/drm/omapdrm/omap_fb.c
-index 1b8b510..d18aafa 100644
---- a/drivers/gpu/drm/omapdrm/omap_fb.c
-+++ b/drivers/gpu/drm/omapdrm/omap_fb.c
-@@ -87,7 +87,7 @@ static u32 get_linear_addr(struct drm_framebuffer *fb,
- 	u32 offset;
+diff --git a/drivers/gpu/drm/armada/armada_fbdev.c b/drivers/gpu/drm/armada/armada_fbdev.c
+index 090cc0d..a2e4344 100644
+--- a/drivers/gpu/drm/armada/armada_fbdev.c
++++ b/drivers/gpu/drm/armada/armada_fbdev.c
+@@ -88,7 +88,7 @@ static int armada_fbdev_create(struct drm_fb_helper *fbh,
+ 	drm_fb_helper_fill_info(info, fbh, sizes);
  
- 	offset = fb->offsets[n]
--	       + (x * format->cpp[n] / (n == 0 ? 1 : format->hsub))
-+	       + (x * format->bpp[n] / 8 / (n == 0 ? 1 : format->hsub))
- 	       + (y * fb->pitches[n] / (n == 0 ? 1 : format->vsub));
+ 	DRM_DEBUG_KMS("allocated %dx%d %dbpp fb: 0x%08llx\n",
+-		dfb->fb.width, dfb->fb.height, dfb->fb.format->cpp[0] * 8,
++		dfb->fb.width, dfb->fb.height, dfb->fb.format->bpp[0],
+ 		(unsigned long long)obj->phys_addr);
  
- 	return plane->dma_addr + offset;
-@@ -206,7 +206,7 @@ void omap_framebuffer_update_scanout(struct drm_framebuffer *fb,
+ 	return 0;
+diff --git a/drivers/gpu/drm/armada/armada_plane.c b/drivers/gpu/drm/armada/armada_plane.c
+index e7cc2b3..fa400ac 100644
+--- a/drivers/gpu/drm/armada/armada_plane.c
++++ b/drivers/gpu/drm/armada/armada_plane.c
+@@ -46,13 +46,13 @@ void armada_drm_plane_calc(struct drm_plane_state *state, u32 addrs[2][3],
+ 	int i;
+ 
+ 	DRM_DEBUG_KMS("pitch %u x %d y %d bpp %d\n",
+-		      fb->pitches[0], x, y, format->cpp[0] * 8);
++		      fb->pitches[0], x, y, format->bpp[0]);
+ 
+ 	if (num_planes > 3)
+ 		num_planes = 3;
+ 
+ 	addrs[0][0] = addr + fb->offsets[0] + y * fb->pitches[0] +
+-		      x * format->cpp[0];
++		      x * format->bpp[0] / 8;
+ 	pitches[0] = fb->pitches[0];
+ 
+ 	y /= format->vsub;
+@@ -60,7 +60,7 @@ void armada_drm_plane_calc(struct drm_plane_state *state, u32 addrs[2][3],
+ 
+ 	for (i = 1; i < num_planes; i++) {
+ 		addrs[0][i] = addr + fb->offsets[i] + y * fb->pitches[i] +
+-			      x * format->cpp[i];
++			      x * format->bpp[i] / 8;
+ 		pitches[i] = fb->pitches[i];
  	}
- 
- 	/* convert to pixels: */
--	info->screen_width /= format->cpp[0];
-+	info->screen_width /= format->bpp[0] / 8;
- 
- 	if (fb->format->format == DRM_FORMAT_NV12) {
- 		plane = &omap_fb->planes[1];
-@@ -382,10 +382,10 @@ struct drm_framebuffer *omap_framebuffer_init(struct drm_device *dev,
- 		goto fail;
- 	}
- 
--	if (pitch % format->cpp[0]) {
-+	if (pitch % (format->bpp[0] / 8)) {
- 		dev_dbg(dev->dev,
- 			"buffer pitch (%u bytes) is not a multiple of pixel size (%u bytes)\n",
--			pitch, format->cpp[0]);
-+			pitch, format->bpp[0] / 8);
- 		ret = -EINVAL;
- 		goto fail;
- 	}
+ 	for (; i < 3; i++) {
 -- 
 2.7.4
 
