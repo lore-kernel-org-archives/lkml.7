@@ -2,134 +2,99 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6C4C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB03C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977DF207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040BE207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfIWLw2 (ORCPT
+        id S1730235AbfIWLzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:52:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:40928 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfIWLw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:52:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6E51142F;
-        Mon, 23 Sep 2019 04:52:27 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CC3E3F694;
-        Mon, 23 Sep 2019 04:52:26 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 12:52:24 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Alessio Balsini <balsini@android.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: rt: Make RT capacity aware
-Message-ID: <20190923115223.a5fwrrxmg5dj765q@e107158-lin.cambridge.arm.com>
-References: <20190903103329.24961-1-qais.yousef@arm.com>
- <20190904072524.09de28aa@oasis.local.home>
- <20190904154052.ygbhtduzkfj3xs5d@e107158-lin.cambridge.arm.com>
- <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
- <20190918145233.kgntor5nb2gmnczd@e107158-lin.cambridge.arm.com>
- <d307c2f6-f16c-4e9e-0476-91d49d115480@arm.com>
+        Mon, 23 Sep 2019 07:55:22 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47208 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729656AbfIWLzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:55:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-27-s_lDrj5TMTGaATnbftqtUA-1; Mon, 23 Sep 2019 12:55:18 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 23 Sep 2019 12:55:17 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 23 Sep 2019 12:55:17 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+CC:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>
+Subject: RE: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Thread-Topic: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+Thread-Index: AQHVbyVve2HSE4CfFUa5FrGzj/69Mac5KmJw
+Date:   Mon, 23 Sep 2019 11:55:17 +0000
+Message-ID: <619e578cdfad4dca904eb9db9bf626c0@AcuMS.aculab.com>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190919143427.GQ6762@mit.edu>
+ <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
+ <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d307c2f6-f16c-4e9e-0476-91d49d115480@arm.com>
-User-Agent: NeoMutt/20171215
+X-MC-Unique: s_lDrj5TMTGaATnbftqtUA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/20/19 14:52, Dietmar Eggemann wrote:
-> > 	2. The fallback mechanism means we either have to call cpupri_find()
-> > 	   twice once to find filtered lowest_rq and the other to return the
-> > 	   none filtered version.
-> 
-> This is what I have in mind. (Only compile tested! ... and the 'if
-> (cpumask_any(lowest_mask) >= nr_cpu_ids)' condition has to be considered
-> as well):
-> 
-> @@ -98,8 +103,26 @@ int cpupri_find(struct cpupri *cp, struct
-> task_struct *p,
->                         continue;
-> 
->                 if (lowest_mask) {
-> +                       int cpu, max_cap_cpu = -1;
-> +                       unsigned long max_cap = 0;
-> +
->                         cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
-> 
-> +                       for_each_cpu(cpu, lowest_mask) {
-> +                               unsigned long cap =
-> arch_scale_cpu_capacity(cpu);
-> +
-> +                               if (!rt_task_fits_capacity(p, cpu))
-> +                                       cpumask_clear_cpu(cpu, lowest_mask);
-> +
-> +                               if (cap > max_cap) {
-> +                                       max_cap = cap;
-> +                                       max_cap_cpu = cpu;
-> +                               }
-> +                       }
-> +
-> +                       if (cpumask_empty(lowest_mask) && max_cap)
-> +                               cpumask_set_cpu(max_cap_cpu, lowest_mask);
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTkgU2VwdGVtYmVyIDIwMTkgMjE6MDQNCi4u
+Lg0KPiBOb3RlIHNtYWxsIGRldGFpbCBhYm92ZTogSSBjaGFuZ2VkIHRoZSBePSB0byBhICs9LiBB
+ZGRpdGlvbiB0ZW5kcyB0bw0KPiBiZSBiZXR0ZXIgKGR1ZSB0byBjYXJyeSBiZXR3ZWVuIGJpdHMp
+IHdoZW4gdGhlcmUgbWlnaHQgYmUgYml0DQo+IGNvbW1vbmFsaXRpZXMuICBQYXJ0aWN1bGFybHkg
+d2l0aCBzb21ldGhpbmcgbGlrZSBhIGN5Y2xlIGNvdW50IHdoZXJlDQo+IHR3byB4b3JzIGNhbiBt
+b3N0bHkgY2FuY2VsIG91dCBwcmV2aW91cyBiaXRzIHJhdGhlciB0aGFuIG1vdmUgYml0cw0KPiBh
+cm91bmQgaW4gdGhlIHdvcmQuDQoNClRoZXJlIGlzIGNvZGUgaW4gb25lIG9uIHRoZSBrZXJuZWwg
+Uk5HIHRoYXQgWE9ScyB0b2dldGhlciB0aGUgb3V0cHV0DQpvZiAzIExGU1IgKENSQykgZ2VuZXJh
+dG9ycy4NCkkgdGhpbmsgaXQgaXMgdXNlZCBmb3IgJ2xvdyBxdWFsaXR5JyByYW5kb21uZXNzIGFu
+ZCByZXNlZWRlZCBmcm9tIHRoZSBtYWluIFJORy4NClVzaW5nIFhPUiBtYWtlcyB0aGUgZW50aXJl
+IGdlbmVyYXRvciAnbGluZWFyJyBhbmQgdGh1cyB0cml2aWFsbHkgcmV2ZXJzaWJsZS4NCldpdGgg
+YSByZWxhdGl2ZWx5IHNtYWxsIG51bWJlciBvZiBjb25zZWN1dGl2ZSBvdXRwdXRzIHlvdSBjYW4g
+ZGV0ZXJtaW5lIHRoZSBzdGF0ZQ0Kb2YgYWxsIDMgTEZTUi4NCk1lcmdlIHRoZSByZXN1bHRzIHdp
+dGggYWRkaXRpb24gYW5kIHRoZSBwcm9jZXNzIGlzIGltbWVuc2VseSBoYXJkZXIuDQoNCkkndmUg
+YWxzbyB3b25kZXJlZCB3aGV0aGVyIHRoZSBSQzQgZ2VuZXJhdG9yIGlzIGEgdXNlZnVsIGVudHJv
+cHkgc3RvcmU/DQpJdCBoYXMgYSBsb3Qgb2Ygc3RhdGUgYW5kIHlvdSBjYW4gZmFpcmx5IGVhc2ls
+eSBmZWVkIGluIHZhbHVlcyB0aGF0IG1pZ2h0IChvcg0KbWlnaHQgbm90KSBjb250YWluIGFueSBy
+YW5kb21uZXNzIHdpdGhvdXQgbG9zaW5nIGFueSBzdG9yZWQgZW50cm9weS4NCg0KCURhdmlkDQoN
+Ci0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJt
+LCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChX
+YWxlcykNCg==
 
-I had a patch that I was testing but what I did is to continue rather than
-return a max_cap_cpu.
-
-e.g:
-
-	if no cpu at current priority fits the task:
-		continue;
-	else:
-		return the lowest_mask which contains fitting cpus only
-
-	if no fitting cpu was find:
-		return 0;
-
-
-Or we can tweak your approach to be
-
-	if no cpu at current priority fits the task:
-		if the cpu the task is currently running on doesn't fit it:
-			return lowest_mask with max_cap_cpu set;
-
-So we either:
-
-	1. Continue the search until we find a fitting CPU; bail out otherwise.
-
-	2. Or we attempt to return a CPU only if the CPU the task is currently
-	   running on doesn't fit it. We don't want to migrate the task from a
-	   fitting to a non-fitting one.
-
-We can also do something hybrid like:
-
-	3. Remember the outcome of 2 but don't return immediately and attempt
-	   to find a fitting CPU at a different priority level.
-
-
-Personally I see 1 is the simplest and good enough solution. What do you think?
-
-I think this is 'continue' to search makes doing it at cpupri_find() more
-robust than having to deal with whatever mask we first found in
-find_lowest_rq() - so I'm starting to like this approach better. Thanks for
-bringing it up.
-
-
-Cheers
-
---
-Qais Yousef
