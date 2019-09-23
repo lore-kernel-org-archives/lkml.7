@@ -6,24 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD07C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C15C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EE720867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EB020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502095AbfIWM4I (ORCPT
+        id S2502106AbfIWM4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:56:08 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:52370 "EHLO
+        Mon, 23 Sep 2019 08:56:10 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:48504 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439723AbfIWM4G (ORCPT
+        with ESMTP id S2437533AbfIWM4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:56:06 -0400
-X-Greylist: delayed 463 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Sep 2019 08:56:04 EDT
+        Mon, 23 Sep 2019 08:56:08 -0400
 Received: from localhost (unknown [192.168.167.227])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 109A842F3B;
-        Mon, 23 Sep 2019 20:48:19 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id DE03566909;
+        Mon, 23 Sep 2019 20:48:21 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,9 +30,9 @@ X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P14169T140710336407296S1569242883858959_;
-        Mon, 23 Sep 2019 20:48:19 +0800 (CST)
+        Mon, 23 Sep 2019 20:48:21 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <c5aed142c552fbfd0a9d05c825523723>
+X-UNIQUE-TAG: <029ba5340883946e18a39005adc9a83e>
 X-RL-SENDER: hjc@rock-chips.com
 X-SENDER: hjc@rock-chips.com
 X-LOGIN-NAME: hjc@rock-chips.com
@@ -42,16 +41,16 @@ X-SENDER-IP: 58.22.7.114
 X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 From:   Sandy Huang <hjc@rock-chips.com>
-To:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
+To:     dri-devel@lists.freedesktop.org, CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     hjc@rock-chips.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 14/36] drm/tegra: use bpp instead of cpp for drm_format_info
-Date:   Mon, 23 Sep 2019 20:47:38 +0800
-Message-Id: <1569242880-182878-4-git-send-email-hjc@rock-chips.com>
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 15/36] drm/mediatek: use bpp instead of cpp for drm_format_info
+Date:   Mon, 23 Sep 2019 20:47:39 +0800
+Message-Id: <1569242880-182878-5-git-send-email-hjc@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569242880-182878-1-git-send-email-hjc@rock-chips.com>
 References: <1569242880-182878-1-git-send-email-hjc@rock-chips.com>
@@ -65,50 +64,36 @@ So we use bpp[BitPerPlane] to instead cpp.
 
 Signed-off-by: Sandy Huang <hjc@rock-chips.com>
 ---
- drivers/gpu/drm/tegra/dc.c  | 2 +-
- drivers/gpu/drm/tegra/drm.c | 2 +-
- drivers/gpu/drm/tegra/fb.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_fb.c    | 2 +-
+ drivers/gpu/drm/mediatek/mtk_drm_plane.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index fbf57bc..850aef2 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -705,7 +705,7 @@ static void tegra_plane_atomic_update(struct drm_plane *plane,
- 	window.dst.y = plane->state->dst.y1;
- 	window.dst.w = drm_rect_width(&plane->state->dst);
- 	window.dst.h = drm_rect_height(&plane->state->dst);
--	window.bits_per_pixel = fb->format->cpp[0] * 8;
-+	window.bits_per_pixel = fb->format->bpp[0];
- 	window.bottom_up = tegra_fb_is_bottom_up(fb) || state->bottom_up;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_fb.c b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
+index 3f230a2..fd80548 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_fb.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
+@@ -69,7 +69,7 @@ struct drm_framebuffer *mtk_drm_mode_fb_create(struct drm_device *dev,
+ 	if (!gem)
+ 		return ERR_PTR(-ENOENT);
  
- 	/* copy from state */
-diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
-index 6fb7d74..ec6c5a2 100644
---- a/drivers/gpu/drm/tegra/drm.c
-+++ b/drivers/gpu/drm/tegra/drm.c
-@@ -973,7 +973,7 @@ static int tegra_debugfs_framebuffers(struct seq_file *s, void *data)
- 		seq_printf(s, "%3d: user size: %d x %d, depth %d, %d bpp, refcount %d\n",
- 			   fb->base.id, fb->width, fb->height,
- 			   fb->format->depth,
--			   fb->format->cpp[0] * 8,
-+			   fb->format->bpp[0],
- 			   drm_framebuffer_read_refcount(fb));
- 	}
+-	bpp = info->cpp[0];
++	bpp = info->bpp[0] / 8;
+ 	size = (height - 1) * cmd->pitches[0] + width * bpp;
+ 	size += cmd->offsets[0];
  
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index e34325c..d5f5e1a 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -148,7 +148,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
- 			goto unreference;
- 		}
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
+index 584a9ec..97d38db 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
+@@ -121,7 +121,7 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
+ 	pitch = fb->pitches[0];
+ 	format = fb->format->format;
  
--		bpp = info->cpp[i];
-+		bpp = info->bpp[i] / 8;
+-	addr += (plane->state->src.x1 >> 16) * fb->format->cpp[0];
++	addr += (plane->state->src.x1 >> 16) * fb->format->bpp[0] / 8;
+ 	addr += (plane->state->src.y1 >> 16) * pitch;
  
- 		size = (height - 1) * cmd->pitches[i] +
- 		       width * bpp + cmd->offsets[i];
+ 	state->pending.enable = true;
 -- 
 2.7.4
 
