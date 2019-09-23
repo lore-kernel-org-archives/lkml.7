@@ -2,74 +2,99 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15144C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC329C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9EC5206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9210820835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="pU4T85jj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXLOA+1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392372AbfIWJp0 (ORCPT
+        id S2392687AbfIWJrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:45:26 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:33983 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390596AbfIWJpZ (ORCPT
+        Mon, 23 Sep 2019 05:47:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38856 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390596AbfIWJrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:45:25 -0400
-Received: by mail-io1-f51.google.com with SMTP id q1so31896972ion.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:45:25 -0700 (PDT)
+        Mon, 23 Sep 2019 05:47:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 3so8507425wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:46:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=44EOEm7yz0oFG+vheu1aHwVYo1HpDuXq6px8EByvfPc=;
-        b=pU4T85jjQHoJV3oD9AWVMWGf12n9L6ApRhOca2y46BeVwOmskUCrUooYRj68YoUKcS
-         QC5Uf8USdwzZxwWHF0vJ85KTujKf1tFE6PjbOqE5nZ6P1QVAjCvBT0SRjPUXn8RkC6sC
-         QZ5bstTnOS92F6b65gGsTkcSO7g2Eu3DvtmX4=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5elTXzM6xlr8PjUTcrYvX5g+KiCaroLiG/40wyuwe8s=;
+        b=IXLOA+1T4aETvd3O9XWO8iNbUKNrgVGLqUimU+DN5SdqYCrVRZFp8ITqo/SWtvODY0
+         do42IgUiw7g5IRxm+5mARa1kr+2mJZ9xHZG5RtJdz3jQy78nhtyO+hhK2LRtxaXt6vAA
+         GJSvkFzeWH/nmuHeBbublaFZmxG4xXf7MtqxuhtFTm5rPWEOb0IEx9q5mpsYyQplCcIs
+         2Jp5ygJxcv+yaVO2bscDRYdWJYIHUEZJPZEu9SKFIreP4Y5NTUo6GQBQ05dVJkncyigx
+         5PuEw/l0x/EC+6GoSsSAU7sLk6gnXsA0W/Hofb6yWadlH/VJOt4hIJbHEixQxjNPsFr1
+         FFkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=44EOEm7yz0oFG+vheu1aHwVYo1HpDuXq6px8EByvfPc=;
-        b=bg1furccA4jjO2aQOZFvd4sFV0n2pYI/oQM0qHmfzPMfA3rxgGmeSwJr0KkZleDk+6
-         XCZI/ngJwm+2gD6aRueoB4YcKCcaPNwuTQ4Wwhn+D+QLe9GZw67EhFiEm5k46G5WZX+X
-         i5wLoFjq0WvbImn22hM7bK53MUnGloLFVO0s/MhKMGgWoK89ukGeF/EeIX00b+oLAb4o
-         0nVS/aJ3mtsoLKcdjEAl9P0oPQ9KksDRrjo4HoD9dnt6KaNKKM6DTWzLYVDSQkBFRRK1
-         kO8v7Qlmt50Q3olO8IAh7OHg73KSkS5+Ec6+Ju1//I4u6zFVKie6/riBrbyFc87zY+WB
-         gOZw==
-X-Gm-Message-State: APjAAAWJvKVSYqpymEebQ6Vofd68fXTqwmzwb3lqmTqrJEtXmqTgchV4
-        bOkw+pKx9vFXVxxBQc6/eG8kqm+rbLIxjfTAvpfFvg==
-X-Google-Smtp-Source: APXvYqwguBWvgHxLYx37Mt9hw9WURFWYERqTZpIFrikxCBZgtfE2YeigIK8DqlQvIp2Fr1D4afE8LQFArub6coM6gqQ=
-X-Received: by 2002:a6b:b243:: with SMTP id b64mr17114286iof.252.1569231924903;
- Mon, 23 Sep 2019 02:45:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5elTXzM6xlr8PjUTcrYvX5g+KiCaroLiG/40wyuwe8s=;
+        b=RPAkSBnX3TL93zX8GTJr9C9ffGEoSdbYwJ2bySrVi06sjCEwmQMuSoQ6VFta6e3cGh
+         DYvI+Cp7ifKcN76zC5OVynAbMOYWXXyyXGym4Ho0/PQNFjRKPi+eBKKLPI+KXZjxXGlE
+         3Ldm+hLy11nCezYXael7grJWepceQ1yx9SuqUqGvdJpc1v7WLmF4qHZcCq9SvhI5XMZz
+         xvyYqerRNiuQwZH0muMkMkJIUZ907O332nSv6vGFMhd/AZtUH8UNLMXOw8CfRjSTPQRv
+         RxZ7DlIkXBvOEt+jIiZnWENYXEMtkiKeSFBGOE2kfuZpL1A8Ce3Hwc5//4KHEFmCnVQS
+         UOaQ==
+X-Gm-Message-State: APjAAAWGeL4N6+v2TKEvV45LW+JvLLmcSKsdboKNDqWs66WL5GLXlcLn
+        Csn74R/DnSWiX1aLxn+04vQ13Kj6
+X-Google-Smtp-Source: APXvYqy93ietjX1bSVrNtVPwZS+jbfnCafIE+1DjFr1b+2lowlovhD+hOJDzgtxTj7pFEKe6Yu2tnQ==
+X-Received: by 2002:a05:600c:241:: with SMTP id 1mr12931695wmj.162.1569232017788;
+        Mon, 23 Sep 2019 02:46:57 -0700 (PDT)
+Received: from [10.43.17.245] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id o19sm13347126wro.50.2019.09.23.02.46.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 02:46:57 -0700 (PDT)
+Subject: Re: [dm-devel] dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
+To:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Alasdair Kergon <agk@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190920154434.GA923@gandi.net>
+ <20190920173707.GA21143@redhat.com>
+ <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
+ <20190920212746.GA22061@redhat.com> <20190920214758.GA162854@gmail.com>
+ <20190923082016.GA913@gandi.net>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <f820c3e8-8538-ac95-9303-eeee77c903ee@gmail.com>
+Date:   Mon, 23 Sep 2019 11:46:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190923055231.19728-1-yuehaibing@huawei.com>
-In-Reply-To: <20190923055231.19728-1-yuehaibing@huawei.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 23 Sep 2019 11:45:13 +0200
-Message-ID: <CAJfpegs4GzCHw-t4FssF=YNEByhFt3nTeidV+Jfoc-Q-KZ11-A@mail.gmail.com>
-Subject: Re: [PATCH -next] fuse: Make fuse_args_to_req static
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190923082016.GA913@gandi.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 7:53 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fix sparse warning:
->
-> fs/fuse/dev.c:468:6: warning: symbol 'fuse_args_to_req' was not declared. Should it be static?
+On 23/09/2019 10:20, Thibaut Sautereau wrote:
+> 
+> On top of that, there's no hint in kernel logs about a particular
+> algorithm, feature or Kconfig option that could be missing. Do we really
+> expect people simply tuning their kernel configuration to go and read
+> the source code to ensure they are not breaking their system?
 
-Thanks, applied.
+AFAIK all standard Linux kernels in distros have these options enabled,
+so it works out of the box.
 
-Miklos
+So it is the opposite view - if you are setting your kernel options,
+you need to dig much deeper...
+
+I can perhaps add some hint to userspace if this is detectable from errno though.
+
+Milan
