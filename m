@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF8C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F5C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D157720835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135A120856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408273AbfIWN6R (ORCPT
+        id S2408303AbfIWN6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:58:17 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:42102 "EHLO mx1.emlix.com"
+        Mon, 23 Sep 2019 09:58:19 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:42132 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408172AbfIWN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408206AbfIWN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 09:58:16 -0400
 Received: from mailer.emlix.com (unknown [81.20.119.6])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 4AA10600EF;
+        by mx1.emlix.com (Postfix) with ESMTPS id 57A3C600FF;
         Mon, 23 Sep 2019 15:58:14 +0200 (CEST)
 From:   Philipp Puschmann <philipp.puschmann@emlix.com>
 To:     linux-kernel@vger.kernel.org
@@ -32,9 +32,9 @@ Cc:     jlu@pengutronix.de, yibin.gong@nxp.com, fugang.duan@nxp.com,
         festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
-Date:   Mon, 23 Sep 2019 15:58:06 +0200
-Message-Id: <20190923135808.815-2-philipp.puschmann@emlix.com>
+Subject: [PATCH v5 3/3] dmaengine: imx-sdma: drop redundant variable
+Date:   Mon, 23 Sep 2019 15:58:08 +0200
+Message-Id: <20190923135808.815-4-philipp.puschmann@emlix.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190923135808.815-1-philipp.puschmann@emlix.com>
 References: <20190923135808.815-1-philipp.puschmann@emlix.com>
@@ -45,57 +45,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
-buffer, when 0 ARM owns it. When processing the buffers in
-sdma_update_channel_loop the ownership of the currently processed
-buffer was set to SDMA again before running the callback function of
-the buffer and while the sdma script may be running in parallel. So
-there was the possibility to get the buffer overwritten by SDMA before
-it has been processed by kernel leading to kind of random errors in the
-upper layers, e.g. bluetooth.
+In sdma_prep_dma_cyclic buf is redundant. Drop it.
 
-Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
 Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 ---
 
-Changelog v5:
+Changelog v3,v4,v5:
  - no changes
 
-Changelog v4:
- - fixed the fixes tag
- 
-Changelog v3:
- - use correct dma_wmb() instead of dma_wb()
- - add fixes tag
-
 Changelog v2:
- - add dma_wb()
- 
- drivers/dma/imx-sdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ - add Reviewed-by tag
+
+ drivers/dma/imx-sdma.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 9ba74ab7e912..b42281604e54 100644
+index 0b1d6a62423d..0d62664e534e 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
- 		*/
+@@ -1549,7 +1549,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 	struct sdma_engine *sdma = sdmac->sdma;
+ 	int num_periods = buf_len / period_len;
+ 	int channel = sdmac->channel;
+-	int i = 0, buf = 0;
++	int i;
+ 	struct sdma_desc *desc;
  
- 		desc->chn_real_count = bd->mode.count;
--		bd->mode.status |= BD_DONE;
- 		bd->mode.count = desc->period_len;
- 		desc->buf_ptail = desc->buf_tail;
- 		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
-@@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
- 		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
- 		spin_lock(&sdmac->vc.lock);
- 
-+		dma_wmb();
-+		bd->mode.status |= BD_DONE;
-+
- 		if (error)
- 			sdmac->status = old_status;
+ 	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
+@@ -1570,7 +1570,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 		goto err_bd_out;
  	}
+ 
+-	while (buf < buf_len) {
++	for (i = 0; i < num_periods; i++) {
+ 		struct sdma_buffer_descriptor *bd = &desc->bd[i];
+ 		int param;
+ 
+@@ -1597,9 +1597,6 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 		bd->mode.status = param;
+ 
+ 		dma_addr += period_len;
+-		buf += period_len;
+-
+-		i++;
+ 	}
+ 
+ 	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
 -- 
 2.23.0
 
