@@ -2,150 +2,78 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77152C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6B4C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB772089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R858SkgO"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACDF2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389740AbfIWQjQ (ORCPT
+        id S2389806AbfIWQlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:39:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46883 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389238AbfIWQjQ (ORCPT
+        Mon, 23 Sep 2019 12:41:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59137 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387922AbfIWQlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:39:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id c6so21840943ioo.13;
-        Mon, 23 Sep 2019 09:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RFFieyhD7JzCXe5ifm6amcb6+lfbnrSI8cAPQ36MW7I=;
-        b=R858SkgO5YchV55UFuoykyOJ1d6HANKAKcyNyXSnFjlDxWsun6RWo/szs6mFJe3Gl7
-         SpP8oCIxZAzjM/+mZzbvhek60QM+vQZHmgd6exOWOQ1rxiMl1xshylLYEEfBAIaAMWij
-         x17aBb18cOyd7Gg7jK7CY1adHHq+3GNeBb3vmLGvWhmMy13uO5l0VWhyyBV6WJQv0V4B
-         oHsBuvX5GMOyTZdaE6GRZMK00UfWpjPcuIlrVD0sbAPdGTfcZrfg/SegWSPVy3b6T3s9
-         rAjNxT2QY7bGNbKEXSyko1pUSYiwD2IyNLRIo+29fcBqwwXyf2UpdDm4+eCsUdBcDf0M
-         NGnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RFFieyhD7JzCXe5ifm6amcb6+lfbnrSI8cAPQ36MW7I=;
-        b=fOQdZrzm1Zuysos+GKJEdiFCAIyeP/DBo1G0ydNqg2//kqv6bT3qFMavr5hEuFJ/Zz
-         mdOA+2v/dxg5dxDPYLu8Mz+KGSkpjzNjTEkliZOhEe6KdQ2YgDu0pEG7VMrsK79TlsCz
-         c74JlDanSy/JY1xTJXyGqCLKiLkjsz/VB3eQd3I4yB9b9RCxjuxHEayjyVGb/F1YLMHG
-         Rde1g3itBXsf63UFUV1HIppSPHyMSo6Hs1xUzYxvdhD4DGDM6F3xndHzYA3+zUQgRuON
-         4APKwMr4mkuvqrJrJsnFSc1m8dQyIPkp7JFlf4slzLzwthlOQs85H5XquAZ1Q2GJF8Bz
-         yz/w==
-X-Gm-Message-State: APjAAAUdcmZ2iSZSgNMuNV74MRQGjQBCKKpzkS1J8al7Yvwn4xYkR2UO
-        wauVgpna7CiEZafCB+pSk/ql7VjS4+UAcRTIJjo6wQ==
-X-Google-Smtp-Source: APXvYqy3q7z0+B3zJnmH5mJA6m7Vv33JAsSr6VocMaurzTxah7VBiRqRJR2aBGpPsIduojTBLoR7xf0CVw90j+76/ro=
-X-Received: by 2002:a02:246:: with SMTP id 67mr278140jau.121.1569256755054;
- Mon, 23 Sep 2019 09:39:15 -0700 (PDT)
+        Mon, 23 Sep 2019 12:41:03 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iCROW-0001T3-67; Mon, 23 Sep 2019 18:41:00 +0200
+Date:   Mon, 23 Sep 2019 18:41:00 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190923164059.5hvqttxvh7lxxzas@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-2-swood@redhat.com>
+ <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
+ <63b430ca2f067e61bef1c387fad782ab4a2c1ed3.camel@redhat.com>
+ <20190917144252.v34ina4z2ydchoit@linutronix.de>
+ <ad29574b34aca9ab61d310508f4f21a35cac406e.camel@redhat.com>
 MIME-Version: 1.0
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
- <20190918175249.23474.51171.stgit@localhost.localdomain> <20190923041330-mutt-send-email-mst@kernel.org>
- <CAKgT0UfFBO9h3heGSo+AaZgUNpy5uuOm3yh62bYwYJ5dq+t1gQ@mail.gmail.com>
- <20190923105746-mutt-send-email-mst@kernel.org> <CAKgT0Ufp0bdz3YkbAoKWd5DALFjAkHaSUn_UywW1+3hk4tjPSQ@mail.gmail.com>
- <20190923113722-mutt-send-email-mst@kernel.org> <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
-In-Reply-To: <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 23 Sep 2019 09:39:03 -0700
-Message-ID: <CAKgT0UePDMnXRUxwWnkwb-WZTD+M02bZk+PbuHJ3i9ATzkM0WA@mail.gmail.com>
-Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ad29574b34aca9ab61d310508f4f21a35cac406e.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:46 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 23.09.19 17:37, Michael S. Tsirkin wrote:
-> > On Mon, Sep 23, 2019 at 08:28:00AM -0700, Alexander Duyck wrote:
-> >> On Mon, Sep 23, 2019 at 8:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >>>
-> >>> On Mon, Sep 23, 2019 at 07:50:15AM -0700, Alexander Duyck wrote:
-> >>>>>> +static inline void
-> >>>>>> +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
-> >>>>>> +{
-> >>>>>> +     int index;
-> >>>>>> +
-> >>>>>> +     if (order < PAGE_REPORTING_MIN_ORDER)
-> >>>>>> +             return;
-> >>>>>> +     if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> >>>>>> +             return;
-> >>>>>> +
-> >>>>>> +     index = get_reporting_index(order, mt);
-> >>>>>> +     reported_boundary[index] = &zone->free_area[order].free_list[mt];
-> >>>>>> +}
-> >>>>>
-> >>>>> So this seems to be costly.
-> >>>>> I'm guessing it's the access to flags:
-> >>>>>
-> >>>>>
-> >>>>>         /* zone flags, see below */
-> >>>>>         unsigned long           flags;
-> >>>>>
-> >>>>>         /* Primarily protects free_area */
-> >>>>>         spinlock_t              lock;
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> which is in the same cache line as the lock.
-> >>>>
-> >>>> I'm not sure what you mean by this being costly?
-> >>>
-> >>> I've just been wondering why does will it scale report a 1.5% regression
-> >>> with this patch.
-> >>
-> >> Are you talking about data you have collected from a test you have
-> >> run, or the data I have run?
-> >
-> > About the kernel test robot auto report that was sent recently.
->
-> https://lkml.org/lkml/2019/9/21/112
->
-> And if I'm correct, that regression is observable in case reporting is
-> not enabled. (so with this patch applied only, e.g., on a bare-metal system)
+On 2019-09-17 11:12:48 [-0500], Scott Wood wrote:
+> > rcu_read_lock() does:
+> > >         __rcu_read_lock();
+> > >         __acquire(RCU);
+> > >         rcu_lock_acquire(&rcu_lock_map);
+> > >         RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> > >                          "rcu_read_lock() used illegally while idle");
+> > 
+> > __acquire() is removed removed by cpp.
+> > That RCU_LOCKDEP_WARN is doing the same thing as above and redundant.
+> > Am I right to assume that you consider
+> > 	rcu_lock_acquire(&rcu_bh_lock_map);
+> > 
+> > redundant because the only user of that is also checking for
+> > rcu_lock_map?
+> Yes.
 
-Thanks. For whatever reason it looks like my gmail decided to pop it
-out of the thread so I hadn't seen it yet this morning.
+I'm going to drop that hunk. It makes the patch smaller and result more
+obvious. If the additional lock annotation (rcu_bh_lock_map) is too much
+then we can still remove it later entirely (for RT) but for now I would
+like to keep the changes simple and small.
 
-I'll have to look into it. It doesn't make much sense to me why this
-would have this much impact since especially in the disabled case the
-changes should be quite small.
+> -Scott
 
-- Alex
+Sebastian
