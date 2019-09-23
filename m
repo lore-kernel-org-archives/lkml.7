@@ -2,74 +2,118 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D4FC432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA9C4320D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A2421E6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AC4222BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503034AbfIWVYJ (ORCPT
+        id S2503076AbfIWVYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:24:09 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:34567 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388395AbfIWVYJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:24:09 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iCVoW-0001PW-Bn; Mon, 23 Sep 2019 15:24:08 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iCVoV-0001wk-Qg; Mon, 23 Sep 2019 15:24:08 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190917100350.GB1872@dhcp22.suse.cz>
-        <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
-        <20190917153830.GE1872@dhcp22.suse.cz>
-        <87ftku96md.fsf@x220.int.ebiederm.org>
-        <20190918071541.GB12770@dhcp22.suse.cz>
-        <87h8585bej.fsf@x220.int.ebiederm.org>
-        <20190922065801.GB18814@dhcp22.suse.cz>
-        <875zlk3tz9.fsf@x220.int.ebiederm.org>
-        <20190923080808.GA6016@dhcp22.suse.cz>
-Date:   Mon, 23 Sep 2019 16:23:40 -0500
-In-Reply-To: <20190923080808.GA6016@dhcp22.suse.cz> (Michal Hocko's message of
-        "Mon, 23 Sep 2019 10:08:08 +0200")
-Message-ID: <87mueuu2oz.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 23 Sep 2019 17:24:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3608 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503049AbfIWVYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:24:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 14:24:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
+   d="scan'208";a="189174896"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Sep 2019 14:24:35 -0700
+Date:   Mon, 23 Sep 2019 14:24:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+Message-ID: <20190923212435.GO18195@linux.intel.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-16-aarcange@redhat.com>
+ <87o8zb8ik1.fsf@vitty.brq.redhat.com>
+ <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
+ <20190923190514.GB19996@redhat.com>
+ <20190923202349.GL18195@linux.intel.com>
+ <20190923210838.GA23063@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iCVoV-0001wk-Qg;;;mid=<87mueuu2oz.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+hxpSDtOo3FHzcbUiojMZiFj7TaPT97BQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: threads-max observe limits
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923210838.GA23063@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 05:08:38PM -0400, Andrea Arcangeli wrote:
+> Hello,
+> 
+> On Mon, Sep 23, 2019 at 01:23:49PM -0700, Sean Christopherson wrote:
+> > The attached patch should do the trick.
+> 
+> The two most attractive options to me remains what I already have
+> implemented under #ifdef CONFIG_RETPOLINE with direct calls
+> (optionally replacing the "if" with a small "switch" still under
+> CONFIG_RETPOLINE if we give up the prioritization of the checks), or
+> the replacement of kvm_vmx_exit_handlers with a switch() as suggested
+> by Vitaly which would cleanup some code.
+> 
+> The intermediate solution that makes "const" work, has the cons of
+> forcing to parse EXIT_REASON_VMCLEAR and the other vmx exit reasons
+> twice, first through a pointer to function (or another if or switch
+> statement) then with a second switch() statement.
+> 
+> If we'd use a single switch statement per Vitaly's suggestion, the "if
+> nested" would better be more simply implemented as:
+> 
+> 	switch (exit_reason) {
+> 		case EXIT_REASON_VMCLEAR:
+> 			if (nested)
+> 				return handle_vmclear(vcpu);
+> 			else
+> 				return handle_vmx_instruction(vcpu);
+> 		case EXIT_REASON_VMCLEAR:
+> 			if (nested)
+> 		[..]
 
-Michal,
+Combing if/case statements would mitigate this to some degree, e.g.:
 
-Thinking about this I have a hunch about what changed.  I think at some
-point we changed from 4k to 8k kernel stacks.  So I suspect if your
-client is seeing a lower threads-max it is because the size of the
-kernel data structures increased.
+	if (exit_reason >= EXIT_REASON_VMCALL &&
+	    exit_reason <= EXIT_REASON_VMON)
+		return handle_vmx_instruction(vcpu);
 
-Eric
+or
 
+	case EXIT_REASON_VMCALL ... EXIT_REASON_VMON:
+		return handle_vmx_instruction(vcpu);
+
+> This also removes the compiler dependency to auto inline
+> handle_vmclear in the added nested_vmx_handle_vmx_instruction extern
+> call.
+
+I like the idea of routing through handle_vmx_instruction() because it
+allows the individual handlers to be wholly encapsulated in nested.c,
+e.g. handle_vmclear() and company don't have to be exposed.
+
+An extra CALL+RET isn't going to be noticeable, especially on modern
+hardware as the high frequency VMWRITE/VMREAD fields should hit the
+shadow VMCS.
+
+> VMREAD/WRITE/RESUME are the most frequent vmexit in l0 while nested
+> runs in l2.
+> 
+> Thanks,
+> Andrea
