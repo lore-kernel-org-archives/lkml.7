@@ -2,196 +2,340 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CED1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E984C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F56A20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D87C2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oKV8sdMm"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KkIlznEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406543AbfIWI7S (ORCPT
+        id S2406842AbfIWI7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:59:18 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45578 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405374AbfIWI7R (ORCPT
+        Mon, 23 Sep 2019 04:59:39 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55459 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405374AbfIWI7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:59:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c21so16146402qtj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1wmLHWhdWEkcWYQfJJdjt2kpx2xUUhXVzrZUl6Mqcvk=;
-        b=oKV8sdMm08lK+EjLtR8yNeyI4IyvkP6OrjmovokbPP9TprfyF7pcE5CmP/ErfTmFQJ
-         CSrgM4dwbkaN51hRrAlQsXR7WvYcY0OmWk31Y9ZDsDcPjEJc2qkkvm7QcBHoAQ4Btqjm
-         B09QkYxU6VbJWH2woeZYkSSCm7crCvOvxX/Hbt595TSzYlGQxePSCLE4hundQFWA96Jj
-         1BwOXUVL6PWAjK5Mao/1NRlmLGUXKEnsibfB2qIkSXnbhB0kFX2c7tz2vX38e1qIcdxB
-         CPSal/fgJ+0UOGkPD1UQP/fcKoZca2ByrGz/i32hGznd27/80bY+weHhbp1+/aW+ZvgY
-         oCBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1wmLHWhdWEkcWYQfJJdjt2kpx2xUUhXVzrZUl6Mqcvk=;
-        b=LLIQvqq8khjalA9HI3i30jK1qKqE3w/C8ljIXySPsXSYmlrzbkutTa4oL2fOSBC2uy
-         SBX3CZ2k47wc/flmrmUp+7xpRNe3MWYTf0+8cRQxuzT6ZcnoylV/xBvir6vl7lWP7932
-         HhJkti2zNvmmiZ67Ud6BoZCtgApFtyf3AFIgmsCD7jqW/jEfhvxJCejyC+WpPC028Zps
-         k2wiL2k5yYMOAi2s5EzzIiAF6qwx1THSjkV6bXtAgPszJL9wpYe4LUdjf9p+J6DqiHFC
-         zvD1K8R2tdlffLdtxKGz5ZiVc8MM+OC2rrz0/r7v8Ms+r9l9JG2iqS5qfCKo7437m5ai
-         JlRA==
-X-Gm-Message-State: APjAAAW/LZjx9Up2Z6aT2kSBFnKdHK31KVp7GN6yOTjUnFDtLeT4et2R
-        uhsIAeGgjrNLmzG4s3og0AEf/1IcM6ok7i3lDz5weg==
-X-Google-Smtp-Source: APXvYqxRwIbO6NZw6t3JA/NYV53cCzZi+MzOeDo0wlNTtzId6Ts/1raxTZV7AnSTGeWHXTmFMf44/3sIlJeJVTGIFcI=
-X-Received: by 2002:a05:6214:801:: with SMTP id df1mr16880596qvb.54.1569229156108;
- Mon, 23 Sep 2019 01:59:16 -0700 (PDT)
+        Mon, 23 Sep 2019 04:59:39 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190923085936euoutp029b0dcb7836f285c30a7ed08def0a96c9~HBZ8efFVl1648816488euoutp02R
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:59:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190923085936euoutp029b0dcb7836f285c30a7ed08def0a96c9~HBZ8efFVl1648816488euoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569229176;
+        bh=n+Pp880jnFM0iccPSEpCzg0MYcWPdHFdFFri+tpf0lM=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=KkIlznElKejS+tX5d1yixx6cNrABgP345VNLnatqjT+iikeG8pifVQU+HKhHybtA/
+         jPSD+fkfiKs1Ynujbvhxl8WN70en4Imixgd1v60R1uOE3BC88pTz4wm5dHeVRr7wVK
+         aWNm6rO0BKrTxVu3UKdYgSrLSph3h59klnCQNXYA=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190923085935eucas1p26db86ed226166527103fa2ed9270dbc9~HBZ79qrSS0371203712eucas1p2I;
+        Mon, 23 Sep 2019 08:59:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 32.99.04309.779888D5; Mon, 23
+        Sep 2019 09:59:35 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190923085935eucas1p262d0484a4fc9b6b174c382c8d4a4e942~HBZ7rmCZb1673316733eucas1p2O;
+        Mon, 23 Sep 2019 08:59:35 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190923085935eusmtrp29652c30fa5a7bbcfebcd61d7c8f5a423~HBZ7osPBg0328103281eusmtrp2-;
+        Mon, 23 Sep 2019 08:59:35 +0000 (GMT)
+X-AuditID: cbfec7f4-afbff700000010d5-72-5d8889772ca0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BE.38.04166.779888D5; Mon, 23
+        Sep 2019 09:59:35 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190923085934eusmtip29debb2717068212c94470229fe6850d7~HBZ6k5Ncz1176911769eusmtip2z;
+        Mon, 23 Sep 2019 08:59:33 +0000 (GMT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <18619804-ffe8-f3a5-aa54-ab590b3a83c0@samsung.com>
+Date:   Mon, 23 Sep 2019 10:59:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20190920155420.rxiflqdrpzinncpy@willie-the-truck> <20190923043113.GA1080@tardis>
- <CACT4Y+a8qwBA_cHfZXFyO=E8qt2dFwy-ahy=cd66KcvFbpcyZQ@mail.gmail.com> <20190923085409.GB1080@tardis>
-In-Reply-To: <20190923085409.GB1080@tardis>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 23 Sep 2019 10:59:04 +0200
-Message-ID: <CACT4Y+YfkV80QF2qxjfHnBghM8Am8m_YHzCtPRfSmOrF-y3bbg@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3bef8eb6a7dd32406e31c68f39ccde3accb58222.1569170717.git.agx@sigxcpu.org>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0yTZxTm/W79aFb28YHrCZohTbZMjOjUH28y08zEH2/iD8UfxAzZ7OAL
+        OGkhrYhoNl0mt+IFaphQmuEaiOUyhUqLgGyxIIgCDpCbYStEfwAZwuRiQCvafhj595znOec8
+        z3nz8rTo4CL4Y4YTktGgS9VwSsbdsdy7LTM/L2HH3IUo/P/PEyy+2NtFYZ+lQ4FX3UU0Lm/v
+        ZfHjxVkOTwwewIMvp2jc9d8gg6uLmxicX1ShwN7Fewg7nw6x2LxSReOBZhuHK4f7KOy5FI/v
+        lntYnN3arsC+RieDHcsuhCcb1F9/Qmp/q0Xk1YoFkdmRbAVpXbrGkCbrPwpSllfKEmd1Pkfu
+        F/ZTZGzoDkcal8ZZ4i3opMitirOk/vltilz27SAVvw5yxFrgRgfFb5R7kqTUYycl43btUWXK
+        4mUzk96z7ZSvYZ47h2Y3mRHPg7AbSuwfm5GSFwUHgm7HFCUXCwiuT71h5GIewchYP2tGwYGJ
+        K7nDnCxcR5D9uBnJxQyCpar7Cn9XmJAMDy2vA7vChS4OiuxWxi9wwhbw3Rrl/OYqQQslud/6
+        aUb4DEYHagItG4TD8GK8LeCmEkKhq/RZgA8W4qB7tJvyY1qIhF9cZbSM1fDkWXnAC4RxHjrq
+        hxk56j6orqnjZBwG050NChlvgtWmckrGZ8HrOE/Lw3kIXHVNtCx8BW2dfaw/KP0u9M3m7TK9
+        F9wtTxXy44XAyEyonCEELO6rtEyrIC9HlLujwNvjWluohsq/F9fSEKhY/oMtRFHWdVda111m
+        XXeZ9UOGa4ipRmopw6RPlkw7DVJmjEmnN2UYkmMS0/RO9O7/PnzTuXAbNb/+3oMEHmk+Us3V
+        5yaIrO6kKUvvQcDTmnCVMzonQVQl6bJOS8a074wZqZLJgzbyjEatOhM0Hi8KyboT0nFJSpeM
+        71WKD444hyJbW0ZnJqMnlUFpG2d+HEiy9fXHaLN6/qK36Ob/fTG9YN8ctvWHT+fO1Ec+2rP7
+        J1v8xJOyUP3prZmndi0kWsTKtpslhQ9u3F39gjC//xl3sbhBtA2NaY947LGxRbsi7BN3XFXa
+        OEPdfg17xfucPZhme9nvceYcCiqotMZ8vk+70q5hTCm6L6Npo0n3Fhn686m7AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsVy+t/xe7rlnR2xBp8ecFt8bHzIatF77iST
+        xd9Jx9gt/m+byGwx/8g5VosrX9+zWTy86m9x9ftLZouTb66yWKyaupPFonPiEnaL+1+PMlps
+        enyN1aLr10pmi8u75rBZLL1+kcniUF+0xcH5h1gtWvceYbf4u30Ti8WKn1sZLV5sEXcQ81gz
+        bw2jx+9fkxg93t9oZffY+20Bi8fOWXfZPWZ3zGT12LSqk83jxIRLTB53ru1h89j+7QGrx/3u
+        40wem5fUe2x8t4PJo/+vgceSaVfZPGZ1b2MMEIrSsynKLy1JVcjILy6xVYo2tDDSM7S00DMy
+        sdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy/ja38VScFa34u+Wz2wNjO9luhg5OSQETCQmt19n
+        62Lk4hASWMooMbvjMwtEQlxi9/y3zBC2sMSfa11QRa8ZJfa1PGEESQgLpEucnvSHCSQhInCa
+        TeJf726oqkuMEp0TD4O1swloSvzdfBMowcHBK2AnMaM9DiTMIqAqcfPyarBtogIREod3zAIb
+        yisgKHFy5hOwOKdAmMSZm2eYQGxmAXWJP/MuMUPY8hLNW2dD2eISt57MZ5rAKDgLSfssJC2z
+        kLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmBq2Xbs5+YdjJc2Bh9iFOBgVOLh
+        /bCxPVaINbGsuDL3EKMEB7OSCO8mrbZYId6UxMqq1KL8+KLSnNTiQ4ymQM9NZJYSTc4Hpr28
+        knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2M07x830kKJrpsMdm2
+        4lZqUrAGR41UpPj2TyYHlfgT9q/+WRXGvCS117W7z6jEZZNae4df3smTEdah5z0bMruO7Uh2
+        u8xy0GBrrqOXYMv+RkfrwL95c2/M5mVZfPOv+oJ0psRJLYr7e9871AuH7p3R/n+J8GlNGQ7e
+        vqM3sqe+FbgiotnN26jEUpyRaKjFXFScCACmq0OKQwMAAA==
+X-CMS-MailID: 20190923085935eucas1p262d0484a4fc9b6b174c382c8d4a4e942
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190922164722epcas3p2c44bddf9e6fd86cae5ab72ca078296b8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190922164722epcas3p2c44bddf9e6fd86cae5ab72ca078296b8
+References: <cover.1569170717.git.agx@sigxcpu.org>
+        <CGME20190922164722epcas3p2c44bddf9e6fd86cae5ab72ca078296b8@epcas3p2.samsung.com>
+        <3bef8eb6a7dd32406e31c68f39ccde3accb58222.1569170717.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:54 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+On 22.09.2019 18:47, Guido Günther wrote:
+> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
 >
-> On Mon, Sep 23, 2019 at 10:21:38AM +0200, Dmitry Vyukov wrote:
-> > On Mon, Sep 23, 2019 at 6:31 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> > >
-> > > On Fri, Sep 20, 2019 at 04:54:21PM +0100, Will Deacon wrote:
-> > > > Hi Marco,
-> > > >
-> > > > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > > > > We would like to share a new data-race detector for the Linux kernel:
-> > > > > Kernel Concurrency Sanitizer (KCSAN) --
-> > > > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > > > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> > > > >
-> > > > > To those of you who we mentioned at LPC that we're working on a
-> > > > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > > > > renamed it to KCSAN to avoid confusion with KTSAN).
-> > > > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> > > >
-> > > > Oh, spiffy!
-> > > >
-> > > > > In the coming weeks we're planning to:
-> > > > > * Set up a syzkaller instance.
-> > > > > * Share the dashboard so that you can see the races that are found.
-> > > > > * Attempt to send fixes for some races upstream (if you find that the
-> > > > > kcsan-with-fixes branch contains an important fix, please feel free to
-> > > > > point it out and we'll prioritize that).
-> > > >
-> > > > Curious: do you take into account things like alignment and/or access size
-> > > > when looking at READ_ONCE/WRITE_ONCE? Perhaps you could initially prune
-> > > > naturally aligned accesses for which __native_word() is true?
-> > > >
-> > > > > There are a few open questions:
-> > > > > * The big one: most of the reported races are due to unmarked
-> > > > > accesses; prioritization or pruning of races to focus initial efforts
-> > > > > to fix races might be required. Comments on how best to proceed are
-> > > > > welcome. We're aware that these are issues that have recently received
-> > > > > attention in the context of the LKMM
-> > > > > (https://lwn.net/Articles/793253/).
-> > > >
-> > > > This one is tricky. What I think we need to avoid is an onslaught of
-> > > > patches adding READ_ONCE/WRITE_ONCE without a concrete analysis of the
-> > > > code being modified. My worry is that Joe Developer is eager to get their
-> > > > first patch into the kernel, so runs this tool and starts spamming
-> > > > maintainers with these things to the point that they start ignoring KCSAN
-> > > > reports altogether because of the time they take up.
-> > > >
-> > > > I suppose one thing we could do is to require each new READ_ONCE/WRITE_ONCE
-> > > > to have a comment describing the racy access, a bit like we do for memory
-> > > > barriers. Another possibility would be to use atomic_t more widely if
-> > > > there is genuine concurrency involved.
-> > > >
-> > >
-> > > Instead of commenting READ_ONCE/WRITE_ONCE()s, how about adding
-> > > anotations for data fields/variables that might be accessed without
-> > > holding a lock? Because if all accesses to a variable are protected by
-> > > proper locks, we mostly don't need to worry about data races caused by
-> > > not using READ_ONCE/WRITE_ONCE(). Bad things happen when we write to a
-> > > variable using locks but read it outside a lock critical section for
-> > > better performance, for example, rcu_node::qsmask. I'm thinking so maybe
-> > > we can introduce a new annotation similar to __rcu, maybe call it
-> > > __lockfree ;-) as follow:
-> > >
-> > >         struct rcu_node {
-> > >                 ...
-> > >                 unsigned long __lockfree qsmask;
-> > >                 ...
-> > >         }
-> > >
-> > > , and __lockfree indicates that by design the maintainer of this data
-> > > structure or variable believe there will be accesses outside lock
-> > > critical sections. Note that not all accesses to __lockfree field, need
-> > > to be READ_ONCE/WRITE_ONCE(), if the developer manages to build a
-> > > complex but working wake/wait state machine so that it could not be
-> > > accessed in the same time, READ_ONCE()/WRITE_ONCE() is not needed.
-> > >
-> > > If we have such an annotation, I think it won't be hard for configuring
-> > > KCSAN to only examine accesses to variables with this annotation. Also
-> > > this annotation could help other checkers in the future.
-> > >
-> > > If KCSAN (at the least the upstream version) only check accesses with
-> > > such an anotation, "spamming with KCSAN warnings/fixes" will be the
-> > > choice of each maintainer ;-)
-> > >
-> > > Thoughts?
-> >
-> > But doesn't this defeat the main goal of any race detector -- finding
-> > concurrent accesses to complex data structures, e.g. forgotten
-> > spinlock around rbtree manipulation? Since rbtree is not meant to
-> > concurrent accesses, it won't have __lockfree annotation, and thus we
-> > will ignore races on it...
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/bridge/nwl-dsi.yaml      | 176 ++++++++++++++++++
+>  1 file changed, 176 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
 >
-> Maybe, but for forgotten locks detection, we already have lockdep and
-> also sparse can help a little.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> new file mode 100644
+> index 000000000000..31119c7885ff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -0,0 +1,176 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=7c9397fbdbbe3fd5.7c921cb4-87fc4542b5f41502&u=http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
+> +
+> +maintainers:
+> +  - Guido Gúnther <agx@sigxcpu.org>
+> +  - Robert Chiras <robert.chiras@nxp.com>
+> +
+> +description: |
+> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
+> +  the SOCs NWL MIPI-DSI host controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8mq-nwl-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: DSI core clock
+> +      - description: RX_ESC clock (used in escape mode)
+> +      - description: TX_ESC clock (used in escape mode)
+> +      - description: PHY_REF clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: rx_esc
+> +      - const: tx_esc
+> +      - const: phy_ref
+> +
+> +  mux-controls:
+> +    description:
+> +      mux controller node to use for operating the input mux
+> +
+> +  phys:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the phy module representing the DPHY
+> +
+> +  phy-names:
+> +    items:
+> +      - const: dphy
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    items:
+> +      - description: dsi byte reset line
+> +      - description: dsi dpi reset line
+> +      - description: dsi esc reset line
+> +      - description: dsi pclk reset line
+> +
+> +  reset-names:
+> +    items:
+> +      - const: byte
+> +      - const: dpi
+> +      - const: esc
+> +      - const: pclk
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/graph.txt.
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          Input port node to receive pixel data from the
+> +          display controller
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          DSI output port node to the panel or the next bridge
+> +          in the chain
+> +
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +      - port@0
+> +      - port@1
+> +
+> +    additionalProperties: false
+> +
+> +patternProperties:
+> +  "^panel@[0-9]+$":
+> +    type: object
+> +
+> +required:
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - clock-names
+> +  - clocks
+> +  - compatible
+> +  - interrupts
+> +  - mux-controls
 
-They don't do this at all, or to the necessary degree.
 
-> Having a __lockfree annotation could be
-> benefical for KCSAN to focus on checking the accesses whose race
-> conditions could only be detected by KCSAN at this time. I think this
-> could help KCSAN find problem more easily (and fast).
->
-> Out of curiosity, does KCSAN ever find a problem with forgotten locks
-> involved? I didn't see any in the -with-fixes branch (that's
-> understandable, given the seriousness, the fixes of this kind of
-> problems could already be submitted to upstream once KCSAN found it.)
+As I understand mux is not a part of the device, so maybe would be safer
+to make it optional.
 
-This one comes to mind:
-https://www.spinics.net/lists/linux-mm/msg92677.html
 
-Maybe some others here, but I don't remember which ones now:
-https://github.com/google/ktsan/wiki/KTSAN-Found-Bugs
+Regards
+
+Andrzej
+
+
+> +  - phy-names
+> +  - phys
+> +  - ports
+> +  - reg
+> +  - reset-names
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> + - |
+> +
+> +   mipi_dsi: mipi_dsi@30a00000 {
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +              compatible = "fsl,imx8mq-nwl-dsi";
+> +              reg = <0x30A00000 0x300>;
+> +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
+> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> +              interrupts = <0 34 4>;
+> +              mux-controls = <&mux 0>;
+> +              power-domains = <&pgc_mipi>;
+> +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
+> +              reset-names = "byte", "dpi", "esc", "pclk";
+> +              phys = <&dphy>;
+> +              phy-names = "dphy";
+> +
+> +              panel@0 {
+> +                      compatible = "rocktech,jh057n00900";
+> +                      reg = <0>;
+> +                      port@0 {
+> +                           panel_in: endpoint {
+> +                                     remote-endpoint = <&mipi_dsi_out>;
+> +                           };
+> +                      };
+> +              };
+> +
+> +              ports {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +
+> +                    port@0 {
+> +                           reg = <0>;
+> +                           mipi_dsi_in: endpoint {
+> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
+> +                           };
+> +                    };
+> +                    port@1 {
+> +                           reg = <1>;
+> +                           mipi_dsi_out: endpoint {
+> +                                         remote-endpoint = <&panel_in>;
+> +                           };
+> +                    };
+> +              };
+> +      };
+
+
