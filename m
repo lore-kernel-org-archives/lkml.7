@@ -2,134 +2,225 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF72C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1694920882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtZVa39H"
+	by mail.kernel.org (Postfix) with ESMTP id A24232089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393767AbfIWL0q (ORCPT
+        id S2393820AbfIWL0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:26:46 -0400
-Received: from mail-ua1-f46.google.com ([209.85.222.46]:38470 "EHLO
-        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387657AbfIWL0q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:26:46 -0400
-Received: by mail-ua1-f46.google.com with SMTP id 107so4202605uau.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IFdwQB/ijINnA/lqlmbhpdAwR/YqjJgUmIEdCY57TRQ=;
-        b=AtZVa39H3Xtur7smzRZSAgg07PxhyIHQVN8+CyVQrPEfTRLQEjLrIILub5Zeges/nQ
-         3uKUFiBL6SNW03v7RKQRUyjDFM4NQ7hwCfPxMjNnbd1tnO7xfv8q2vD+zqWJL2TJmQgR
-         MJOsQrsW7jzTSpquLrFphFxPYbxXa49l4dH8AzlsLTRtH9pCPVWf26vbcAnfDp3rSreB
-         siqCdt34IVlVlUf+86Jw8igtQUZRzUQs8IcpTas2POshYHB93fvq5jYZFTzKKgaTifxh
-         m6BMxWWuGuFgcUcCWjD4RJSglFyv1BIJ9FPuKnZ37ihhKP5O+IDkHtYuOpdh3uPotaWE
-         el6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IFdwQB/ijINnA/lqlmbhpdAwR/YqjJgUmIEdCY57TRQ=;
-        b=fVlkfiY4JALNznOCDJjYvmzI8E3GUW8vaZeUD18dLFDm0s1fKjrMhmWKp4D8FG8B9U
-         BSFpks1YelN3I3GeIvBSkYeNOiOrjDtqiySVWMl7qQDMoXmUpejxcARNkoeyyPWKrTwU
-         JEZCG6Ou3E6yr70BT5YyBjdX/vqyA6+epAc6A5ElYTSt/+8BgXq2a7eXNWYMGJMYYt5F
-         VSfGJTdGzHq3Pk2RNwZhmm+YvDTgwOgjB0rPvTpmMMI1XYLKTVB/1NEW0LIUJswXoC5S
-         xYi+FTbiasVJJjtqN/UM9vy2nYGMTvI4TiiOWY1trp6wOgZHX0UEjwxM4P3xUdRgjCKy
-         7uew==
-X-Gm-Message-State: APjAAAVOkq3D7eB28f1P2YDcz8yF4jhiwvOlYGMp8vtu35pL8SECpStp
-        rypasqpalWqtbbov8Td2MOwa4pwnT+fwdHAnqk4tDQ==
-X-Google-Smtp-Source: APXvYqyNSv3j9oFCo5Iv0a8bmqE4PuPid1Lo/7mebRqk5VMMOgNaP8qAY2MHuNIc1V7q3Qnj31ABEbdIbyybnwp6zoU=
-X-Received: by 2002:ab0:748a:: with SMTP id n10mr15884519uap.41.1569238003126;
- Mon, 23 Sep 2019 04:26:43 -0700 (PDT)
+        Mon, 23 Sep 2019 07:26:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:40734 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387657AbfIWL0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:26:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E29C2142F;
+        Mon, 23 Sep 2019 04:26:46 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8451E3F694;
+        Mon, 23 Sep 2019 04:26:45 -0700 (PDT)
+Subject: Re: sched: make struct task_struct::state 32-bit
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+ <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de>
+ <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com>
+ <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+ <alpine.DEB.2.21.1909231228200.2272@hadrien>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d529c390-546e-a8a4-f475-c3ee41f97645@arm.com>
+Date:   Mon, 23 Sep 2019 12:26:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <90399dee-53d8-a82c-3871-9ec8f94601ce@gmail.com> <87tv939td6.fsf@mid.deneb.enyo.de>
-In-Reply-To: <87tv939td6.fsf@mid.deneb.enyo.de>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 23 Sep 2019 04:26:07 -0700
-Message-ID: <CAKOZuetTgKjgWZpCaBz8q662MwVQ-UhrV4oWFqKEWr35mQTFLw@mail.gmail.com>
-Subject: Re: For review: pidfd_open(2) manual page
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.DEB.2.21.1909231228200.2272@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 3:53 AM Florian Weimer <fw@deneb.enyo.de> wrote:
->
-> * Michael Kerrisk:
->
-> > SYNOPSIS
-> >        int pidfd_open(pid_t pid, unsigned int flags);
->
-> Should this mention <sys/types.h> for pid_t?
->
-> > ERRORS
-> >        EINVAL flags is not 0.
-> >
-> >        EINVAL pid is not valid.
-> >
-> >        ESRCH  The process specified by pid does not exist.
->
-> Presumably, EMFILE and ENFILE are also possible errors, and so is
-> ENOMEM.
->
-> >        A  PID  file descriptor can be monitored using poll(2), select(2=
-),
-> >        and epoll(7).  When the process that it refers to terminates,  t=
-he
-> >        file descriptor indicates as readable.
+On 23/09/2019 11:34, Julia Lawall wrote:
+>> // FIXME: current not recognized as task_struct*, fixhack with regexp
+>> identifier current =~ "^current$";
+> 
+> Please don't do this.  Just use the word current.  It doesn't have to be a
+> metavariable.  You will though get a warning about it.  To eliminate the
+> warning, you can say symbol current;
+> 
 
-The phrase "becomes readable" is simpler than "indicates as readable"
-and conveys the same meaning. I agree with Florian's comment on this
-point below.
+Didn't know about that way to get rid of the warning, thanks!
 
-> > Note, however, that in the
-> >        current implementation, nothing can be read from the file descri=
-p=E2=80=90
-> >        tor.
->
-> =E2=80=9Cis indicated as readable=E2=80=9D or =E2=80=9Cbecomes readable=
-=E2=80=9D?  Will reading block?
->
-> >        The  pidfd_open()  system call is the preferred way of obtaining=
- a
-> >        PID file descriptor.  The alternative is to obtain a file descri=
-p=E2=80=90
-> >        tor by opening a /proc/[pid] directory.  However, the latter tec=
-h=E2=80=90
-> >        nique is possible only if the proc(5) file system is mounted; fu=
-r=E2=80=90
-> >        thermore,  the  file  descriptor  obtained in this way is not po=
-l=E2=80=90
-> >        lable.
+>> identifier task_state =~ "^TASK_";
+> 
+> Are there a lot of options?  You can also enumerate them in {}, ie
+> 
+> identifier task_state = {TASK_BLAH, TASK_BLAHBLAH};
+> 
 
-Referring to procfs directory FDs as pidfds will probably confuse
-people. I'd just omit this paragraph.
+Around a dozen, can be enumerated easily and is indeed probably better than
+a regexp.
 
-> One question is whether the glibc wrapper should fall back back to the
-> /proc subdirectory if it is not available.  Probably not.
+>> identifier state_var;
+>> position pos;
+>> @@
+>>
+>> (
+>>   p->state & state_var@pos
+>> |
+>>   current->state & state_var@pos
+>> |
+>>   p->state | state_var@pos
+>> |
+>>   current->state | state_var@pos
+>> |
+>>   p->state < state_var@pos
+>> |
+>>   current->state < state_var@pos
+>> |
+>>   p->state > state_var@pos
+>> |
+>>   current->state > state_var@pos
+>> |
+>>   state_var@pos = p->state
+>> |
+>>   state_var@pos = current->state
+>> |
+>>   p->state == state_var@pos
+>> |
+>>   current->state == state_var@pos
+>> |
+>>   p->state != state_var@pos
+>> |
+>>   current->state != state_var@pos
+>> |
+>> // FIXME: match functions that do something with state_var underneath?
+>> // How to do recursive rules?
+> 
+> You want to look at the definitions of called functions?  Coccinelle
+> doesn't really support that, but there are hackish ways to add that.  How
+> many function calls would you expect have to be unrolled?
+> 
 
-I'd prefer that glibc not provide this kind of fallback.
-posix_fallocate-style emulation is, IMHO, too surprising.
+I wouldn't expect more than a handful (~5). I suppose this has to do with
+injecting some Python/Ocaml code? I have some examples bookmarked but
+haven't gotten to stare at them long enough.
+
+>>   set_current_state(state_var@pos)
+>> |
+>>   set_special_state(state_var@pos)
+>> |
+>>   signal_pending_state(state_var@pos, p)
+>> |
+>>   signal_pending_state(state_var@pos, current)
+>> |
+>>   state_var@pos & task_state
+>> |
+>>   state_var@pos | task_state
+>> )
+>>
+>> // Fixup local variables
+>> @depends on patch && state_access@
+>> identifier state_var = state_access.state_var;
+>> @@
+>> (
+>> - long
+>> + int
+>> |
+>> - unsigned long
+>> + unsigned int
+>> )
+>> state_var;
+>>
+>> // Fixup function parameters
+>> @depends on patch && state_access@
+>> identifier fn;
+>> identifier state_var = state_access.state_var;
+>> @@
+>>
+>> fn(...,
+>> - long state_var
+>> + int state_var
+>> ,...)
+>> {
+>> 	...
+>> }
+>>
+>> // FIXME: find a way to squash that with the above?
+> 
+> I think that you can make a disjunction on a function parameter
+> 
+> fn(...,
+> (
+> - T1 x1
+> + T2 x2
+> |
+> - T3 x3
+> + T4 x4
+> )
+> , ...) { ... }
+> 
+
+My attempt at this gives me "minus: parse error", which is why I went
+with the split.
+
+Something simple like this works:
+---
+virtual patch
+virtual report
+
+@@
+identifier fn;
+identifier p;
+@@
+
+fn(...,
+- long
++ int
+p
+,...)
+{
+	...
+}
+---
+
+but this doesn't:
+---
+virtual patch
+virtual report
+
+@@
+identifier fn;
+identifier p;
+@@
+
+fn(...,
+(
+- long p
++ int p
+|
+- unsigned long p
++ unsigned int p
+)
+,...)
+{
+	...
+}
+---
+
+> julia
+> 
