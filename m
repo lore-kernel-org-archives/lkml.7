@@ -2,198 +2,227 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BCBC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E13C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9852E214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD8C207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+sph3Qs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439959AbfIWOb1 (ORCPT
+        id S2439972AbfIWOcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:31:27 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:46611 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439898AbfIWObK (ORCPT
+        Mon, 23 Sep 2019 10:32:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34260 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437427AbfIWOcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:31:10 -0400
-Received: by mail-io1-f71.google.com with SMTP id t11so23863929ioc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:31:08 -0700 (PDT)
+        Mon, 23 Sep 2019 10:32:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so9259211pfa.1;
+        Mon, 23 Sep 2019 07:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NdWL2Xiq3cS/BfrYS0FnV72zAIIRU8nsmqTk9Q6D73w=;
+        b=N+sph3QsTYxFcVE4teLhSOS62PeOUnNTYuHCACNp8IP+DxF/jMGabVX/dzhbnS3w8c
+         5HrfWEBRIhutPZWCM5HD2OBf8RQOM6LEWmpgAGu3CgTUA7zLIAweiUmtSPJkTOZ4cGRu
+         5uPWJgVR5/nr8OvHIyj53u5BvkmwfNu7VstGFAndgKpgMWx43zhDm4lSQxLmYBaxCc4v
+         bFETaNs51UwkWP2a/zA5OjhiwkE9ZX10hIppNckrMPiRTuaTi11B1zhMElbK7aZVBr2D
+         Pxfk8Updtto8c+BYP2sb4kZHfgXqpAbbqmjcoAkLHcimrHm9Z2jA/eU43oyoK1lPU3y1
+         IitA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SFhRwK/SitmqD+aaCPJ6RcAIGGBP5VF+84/JtJXz/tQ=;
-        b=QIfiHkp4sk3RY8h01SneXDY3bSwwg+CUm/lBYPDLMWpEXuLquNa1S4XQDSY1cj4yDs
-         Rfnev1a2ydIh2FQBOfawFBivKIpFW5FgoE1uQDeYYYSr/xG1jDfjWZI7Rpl+ab5dEBGO
-         x0OKRIezCQ3HC8BYw3C0X/xNco6poWW8imUsNOI3XvNwfpV5fIgDFYR2p20FqopzU5TZ
-         eQo/hYLHjrASYv/lYMKGQVbq1PXDVMoO5lHnvdxfgrRIs+NG8K00rw11yzglXJEoFztj
-         ord5U02DwDpqg2t8ilM5Sy9/a7FcPzawcAc2KPA7XlbvSnGVzwbKuF0fPky1aFTsKN3u
-         x4SQ==
-X-Gm-Message-State: APjAAAXrKfEoYGKTyJP55j+NMHiSuVOS04xBV8Cdo+wUtPVXrra83WXk
-        AdAj2znIKoFNf3+7yR5XTaVA1bv4Fjm8Qm9nUONqmFhTU1/q
-X-Google-Smtp-Source: APXvYqxuoaIEJQC0zCD1Sc4icCLYNqnURPsMDMGmmbrBNePUkbh8vJ/FLVc5gOh5GMZvMGs99sQcRz1RlvwLGWQLLW1ZXP8QomJt
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NdWL2Xiq3cS/BfrYS0FnV72zAIIRU8nsmqTk9Q6D73w=;
+        b=JLAv+9qg1ZQwz5pGiXY/i/KRGdBc3Jv8JD4YOa3yVfEaXUJPRcXCU2xYZjKDNgxWg2
+         kRqKYZCoiGoX4exbB2AT/8LgSVSKNNpgyHpkvCWXA426S9KXRco5YKKR3+5vGSJe2Hve
+         QwaY3/LKXHpbT4SM9HTDTNN8tjjd1cL4UjFRvIcysHez/iF5iBteFerVBwKoIeECWVr5
+         eLmcCpLHMsNxPC4YsfS9eFkrkTbwUVMMl9lWM/dzSF/8nC9sg070j0a2ASyEG2MHTKT4
+         SvuT7/2f4BSmnQvirI5OZ2rh0hq3roIAy94Kaj/wZMMshZ8vYz5cLPsNja7YfFZRXxAA
+         lkBQ==
+X-Gm-Message-State: APjAAAWR9XlqMY2yqtXZR93m0Dfv30vE3Fe4jZXrTH7nTX118+hyPjs2
+        ggOaYpwMrrBBhAY+wKaSyD3NtzoD
+X-Google-Smtp-Source: APXvYqwVxWY2hR1+J8pjDw5gRFB44H/IjwFJtZUdUo2dJ+GvCZD4N9S5ELVmVfG9Lgyzp4bzrtEfIg==
+X-Received: by 2002:a63:515a:: with SMTP id r26mr242299pgl.121.1569249123574;
+        Mon, 23 Sep 2019 07:32:03 -0700 (PDT)
+Received: from Gentoo ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id bx18sm9556925pjb.26.2019.09.23.07.31.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 07:32:02 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 20:01:48 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.3.1
+Message-ID: <20190923143145.GA17787@Gentoo>
+References: <20190921063708.GA1083465@kroah.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:2382:: with SMTP id u124mr38245219jau.7.1569249067969;
- Mon, 23 Sep 2019 07:31:07 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 07:31:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000042d60805933945b5@google.com>
-Subject: KASAN: use-after-free Read in appledisplay_bl_get_brightness
-From:   syzbot <syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com>
-To:     2pi@mok.nu, alex.theissen@me.com, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+In-Reply-To: <20190921063708.GA1083465@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=13714ad9600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
-dashboard link: https://syzkaller.appspot.com/bug?extid=495dab1f175edc9c2f13
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1653d945600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15176945600000
+On 08:37 Sat 21 Sep 2019, Greg KH wrote:
+>I'm announcing the release of the 5.3.1 kernel.
+>
+>All users of the 5.3 kernel series must upgrade.
+>
+>The updated 5.3.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git lin=
+ux-5.3.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3D=
+summary
+>
+>thanks,
+>
+>greg k-h
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+Thanks, a bunch Greg! :)
 
-==================================================================
-BUG: KASAN: use-after-free in appledisplay_bl_get_brightness+0x1ac/0x1c0  
-drivers/usb/misc/appledisplay.c:167
-Read of size 8 at addr ffff8881cfc576a0 by task kworker/1:0/17
-
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events appledisplay_work
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:618
-  appledisplay_bl_get_brightness+0x1ac/0x1c0  
-drivers/usb/misc/appledisplay.c:167
-  appledisplay_work+0x36/0x160 drivers/usb/misc/appledisplay.c:187
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:493 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  appledisplay_probe+0x15a/0xb37 drivers/usb/misc/appledisplay.c:218
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1474 [inline]
-  slab_free mm/slub.c:3016 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3957
-  appledisplay_probe+0x772/0xb37 drivers/usb/misc/appledisplay.c:312
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881cfc57680
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 32 bytes inside of
-  512-byte region [ffff8881cfc57680, ffff8881cfc57880)
-The buggy address belongs to the page:
-page:ffffea00073f1580 refcount:1 mapcount:0 mapping:ffff8881da002500  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002500
-raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881cfc57580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cfc57600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881cfc57680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                ^
-  ffff8881cfc57700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cfc57780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Thanks,
+Bhaskar
+>
+>------------
+>
+> Documentation/filesystems/overlayfs.txt           |    2
+> Documentation/sphinx/automarkup.py                |    2
+> Makefile                                          |    2
+> arch/arm64/include/asm/pgtable.h                  |   12 ++-
+> drivers/block/floppy.c                            |    4 -
+> drivers/firmware/google/vpd.c                     |    4 -
+> drivers/firmware/google/vpd_decode.c              |   55 +++++++++-------
+> drivers/firmware/google/vpd_decode.h              |    6 -
+> drivers/media/usb/dvb-usb/technisat-usb2.c        |   22 +++---
+> drivers/media/usb/tm6000/tm6000-dvb.c             |    3
+> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   12 ++-
+> drivers/net/xen-netfront.c                        |    2
+> drivers/phy/qualcomm/phy-qcom-qmp.c               |   33 ++++-----
+> drivers/phy/renesas/phy-rcar-gen3-usb2.c          |    2
+> drivers/tty/serial/atmel_serial.c                 |    1
+> drivers/tty/serial/sprd_serial.c                  |    2
+> drivers/usb/core/config.c                         |   12 ++-
+> fs/overlayfs/ovl_entry.h                          |    1
+> fs/overlayfs/super.c                              |   73 ++++++++++++++--=
+------
+> include/net/pkt_sched.h                           |    7 +-
+> include/net/sock_reuseport.h                      |   20 +++++-
+> net/core/dev.c                                    |   16 +++-
+> net/core/sock_reuseport.c                         |   15 +++-
+> net/dsa/dsa2.c                                    |    2
+> net/ipv4/datagram.c                               |    2
+> net/ipv4/udp.c                                    |    5 -
+> net/ipv6/datagram.c                               |    2
+> net/ipv6/ip6_gre.c                                |    2
+> net/ipv6/udp.c                                    |    5 -
+> net/sched/sch_generic.c                           |    3
+> net/wireless/nl80211.c                            |    4 -
+> virt/kvm/coalesced_mmio.c                         |   19 +++--
+> 32 files changed, 226 insertions(+), 126 deletions(-)
+>
+>Alan Stern (1):
+>      USB: usbcore: Fix slab-out-of-bounds bug during device reset
+>
+>Amir Goldstein (1):
+>      ovl: fix regression caused by overlapping layers detection
+>
+>Andrew Lunn (1):
+>      net: dsa: Fix load order between DSA drivers and taggers
+>
+>Bjorn Andersson (1):
+>      phy: qcom-qmp: Correct ready status, again
+>
+>Chunyan Zhang (1):
+>      serial: sprd: correct the wrong sequence of arguments
+>
+>Cong Wang (1):
+>      net_sched: let qdisc_put() accept NULL pointer
+>
+>Dongli Zhang (1):
+>      xen-netfront: do not assume sk_buff_head list is empty in error hand=
+ling
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.3.1
+>
+>Hung-Te Lin (1):
+>      firmware: google: check if size is valid when decoding VPD data
+>
+>Jann Horn (1):
+>      floppy: fix usercopy direction
+>
+>Jonathan Neusch=E4fer (1):
+>      Documentation: sphinx: Add missing comma to list of strings
+>
+>Jose Abreu (1):
+>      net: stmmac: Hold rtnl lock in suspend/resume callbacks
+>
+>Masashi Honma (1):
+>      nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds
+>
+>Matt Delco (1):
+>      KVM: coalesced_mmio: add bounds checking
+>
+>Paolo Abeni (1):
+>      net/sched: fix race between deactivation and dequeue for NOLOCK qdisc
+>
+>Razvan Stefanescu (1):
+>      tty/serial: atmel: reschedule TX after RX was started
+>
+>Sean Young (2):
+>      media: tm6000: double free if usb disconnect while streaming
+>      media: technisat-usb2: break out of loop at end of buffer
+>
+>Will Deacon (1):
+>      Revert "arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}"
+>
+>Willem de Bruijn (1):
+>      udp: correct reuseport selection with connected sockets
+>
+>Xin Long (1):
+>      ip6_gre: fix a dst leak in ip6erspan_tunnel_xmit
+>
+>Yoshihiro Shimoda (1):
+>      phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
+>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2I100ACgkQsjqdtxFL
+KRVd1wf8Cn9lZ+rU6FwMb1+W/8nLyh8EK7c9rSQWkuZWwhLQlMbLWs/CS8Uzwhhy
++q36BCH05L7hn1XeI8/Rs30oriZqOzp3lJBgxAL31AJ8rOwGZiPXyg03DszCL2js
+Al8Ej7rYd7wBbQKWuqh/tMptoog3bUMituZl1JlFSmqimINNC4MztwaDowfrwSJt
+OQDDXP+X+M8tkY59BEe5KN+6qydAr5ZeRcQAI73X2TFw44KaEKSO8zULopeyMkUe
+a2HBSb1/mRCfAqyu/U2PKCkgUcBeTr1dd2qcNHttshKlsg46/q8qYHFRPWtsmE4T
+bNBNlD7nwA0JovQHzHIxjlN0wUZDNw==
+=S0eI
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
