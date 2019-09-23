@@ -2,141 +2,141 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919FAC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE999C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615C02089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569261850;
-	bh=L5sCV4pvrBNYv4Inilae+JS/iE6orzTuw62KtFc3ZZY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E9bBcmMGczUn+nG4E5zhuNZ/9b/gFAjDuRrT7kJjFIV2Z7UZD0W25bl2osRTF4d/z
-	 jds3gAxPS08uQxkOe6lBt561IvOHC7bbsFDTfH4ZdbY2cRWaHaRV1ZyvKFCtH9MaHT
-	 SlCP4vmnWGHhErK28WQVBUjKxn9U9zJqC1bWFBoo=
+	by mail.kernel.org (Postfix) with ESMTP id A874A2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="dVWTU2YR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440292AbfIWSEJ (ORCPT
+        id S2440303AbfIWSFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:04:09 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44553 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440281AbfIWSEJ (ORCPT
+        Mon, 23 Sep 2019 14:05:54 -0400
+Received: from dvalin.narfation.org ([213.160.73.56]:38386 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390851AbfIWSFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:04:09 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m13so14577397ljj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1kR+G8ndtoJyKRtN7szpcKy6yBwnoxfBwdrDmTb45aE=;
-        b=EDc55+UsUt1hlLqTRQpm9TOS1K4q0juc5fBusxwSGEQlx/lYD5sqi5FdaUC/djpdP9
-         fDW9guWgKyH5BjpKHGpvmcwvc2vRi5SCMb7hmXB4ugChfSwNDNWcht7pLo3VtEFR5Mug
-         PetSOXu5wrIuFLoWC3lwUyfioMD/N0vuwvNWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1kR+G8ndtoJyKRtN7szpcKy6yBwnoxfBwdrDmTb45aE=;
-        b=aT1psBtCt3BYNPJjbhnxGtMK9TMU0Q15xlZ6Gti9Rf8nQGK2F+MtoBBQx0713kH31U
-         fz5ZJ0A8Vx9J+BJxaNbh/dvRa85CXJAu0qcMTqCJFKVgJpWVSi+/hqNspDmRt8xQyHkG
-         VDYpra7uRP2E1MAX7Ds0dTPiRxBlb5o+0AW0leVmMT/hn7hDfMFVnxanhq0Te/XXlKtg
-         ANs17wv67yyRt+gm3xMVyYfbMxXQYsbwLDl65Fm8SMDf6yfyEh7la2P8mUu8Nu5D/g6u
-         byDmH6MHxcA/we8ZVUYfc/LUbiu76WEg+Kkl/0urIn+7pl+1tqxVhc8A8ASCOTsInSp6
-         87Hg==
-X-Gm-Message-State: APjAAAUzPKYjOXLJ+wZoU9Qp4AXEUk7urJiVT8Qu4otOX5TE8QZ7OSKo
-        NwPGZLyr1CpbzYKhV1lmwjmNJyDEP3c=
-X-Google-Smtp-Source: APXvYqyharrfMWYVfGuuLK+UQ5vYLtBWbTbMDsQsdrxot1d6GKxaXm6kKrSf82UV0CjYZrskbI3tGg==
-X-Received: by 2002:a2e:96d5:: with SMTP id d21mr358102ljj.187.1569261846954;
-        Mon, 23 Sep 2019 11:04:06 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id r75sm2366407lff.7.2019.09.23.11.04.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 11:04:05 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id r134so10826066lff.12
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:04:05 -0700 (PDT)
-X-Received: by 2002:a19:2489:: with SMTP id k131mr508976lfk.52.1569261845024;
- Mon, 23 Sep 2019 11:04:05 -0700 (PDT)
+        Mon, 23 Sep 2019 14:05:53 -0400
+X-Greylist: delayed 572 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Sep 2019 14:05:50 EDT
+Received: from sven-edge.localnet (unknown [IPv6:2a00:1ca0:1480:f9fc::4065])
+        by dvalin.narfation.org (Postfix) with ESMTPSA id D9AF31FFAB;
+        Mon, 23 Sep 2019 17:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1569259611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JUegENmeIHHiT+O9uIIOxc1zWJHPwvIxI2SvuwGf54A=;
+        b=dVWTU2YRhbvNTjzU5zWqJuZwGuXdr2Y5i4h8fAIbmfcxuBJK1ZG+fGo/W/YblVDINcKj0n
+        B670FTOeqbkbbqdtvLu3HbF2eoleJzXw6Dgnm1/VfifonzNleM7VytHWdyYL6G301L3qIC
+        tdTHwh8/l2Z9JQUVmzRFgWWvKZS3wUo=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     b.a.t.m.a.n@lists.open-mesh.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Jiri Kosina <trivial@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        lvs-devel@vger.kernel.org, rds-devel@oss.oracle.com
+Subject: Re: [PATCH trivial 1/2] net: Fix Kconfig indentation
+Date:   Mon, 23 Sep 2019 19:56:12 +0200
+Message-ID: <2354684.0ZvKvX0iQ3@sven-edge>
+In-Reply-To: <20190923155243.6997-1-krzk@kernel.org>
+References: <20190923155243.6997-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20190923042523.10027-1-peterx@redhat.com> <20190923042523.10027-6-peterx@redhat.com>
-In-Reply-To: <20190923042523.10027-6-peterx@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 23 Sep 2019 11:03:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiNGtUaXtRv1wniw3hfxFnU7SO7ZuisFSVg0btvROcW6w@mail.gmail.com>
-Message-ID: <CAHk-=wiNGtUaXtRv1wniw3hfxFnU7SO7ZuisFSVg0btvROcW6w@mail.gmail.com>
-Subject: Re: [PATCH v4 05/10] mm: Return faster for non-fatal signals in user
- mode faults
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Marty McFadden <mcfadden8@llnl.gov>, Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart2306317.z6aVZVsvuq"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1569259612;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JUegENmeIHHiT+O9uIIOxc1zWJHPwvIxI2SvuwGf54A=;
+        b=x1TVkKv99+ozAK7NGhKJppOQTZ3rt6BG5uCQ9jX1Cu6VwaJ1Z9e2XjHeZoi0ylFmE0Qgv2
+        uPumTYEhEqN0pwscCMrxg05p8YgwwZxS95AE3BnKHxJCx8DfTCCPdTAyKbC6OzxnJqzLC+
+        xMuRoeIhRMuvm0RcjlgRZSLiQKlXzBQ=
+ARC-Seal: i=1; s=20121; d=narfation.org; t=1569259612; a=rsa-sha256;
+        cv=none;
+        b=sC+Bw4VcxyWYjzxCJPweIGNX+Yyrk334W9KKcHzvmcS/hWk8OQo5sJew0irtt83lHu620y
+        GR1yOu+K+tFNotiu7Ji8FKdtPcJdPj6tP5KcJpiNcjdVnKzc1GUdEDf7J4u+rCReuDLD9y
+        a6G6B/KjsDql8SBNK00XkdLiqUmNeNQ=
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=sven smtp.mailfrom=sven@narfation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 9:26 PM Peter Xu <peterx@redhat.com> wrote:
->
-> This patch is a preparation of removing that special path by allowing
-> the page fault to return even faster if we were interrupted by a
-> non-fatal signal during a user-mode page fault handling routine.
+--nextPart2306317.z6aVZVsvuq
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-So I really wish saome other vm person would also review these things,
-but looking over this series once more, this is the patch I probably
-like the least.
+On Monday, 23 September 2019 17:52:42 CEST Krzysztof Kozlowski wrote:
+> --- a/net/batman-adv/Kconfig
+> +++ b/net/batman-adv/Kconfig
+> @@ -12,11 +12,11 @@ config BATMAN_ADV
+>         depends on NET
+>         select LIBCRC32C
+>         help
+> -          B.A.T.M.A.N. (better approach to mobile ad-hoc networking) is
+> -          a routing protocol for multi-hop ad-hoc mesh networks. The
+> -          networks may be wired or wireless. See
+> -          https://www.open-mesh.org/ for more information and user space
+> -          tools.
+> +         B.A.T.M.A.N. (better approach to mobile ad-hoc networking) is
+> +         a routing protocol for multi-hop ad-hoc mesh networks. The
+> +         networks may be wired or wireless. See
+> +         https://www.open-mesh.org/ for more information and user space
+> +         tools.
+>  
+>  config BATMAN_ADV_BATMAN_V
+>         bool "B.A.T.M.A.N. V protocol"
 
-And the reason I like it the least is that I have a hard time
-explaining to myself what the code does and why, and why it's so full
-of this pattern:
+Acked-by: Sven Eckelmann <sven@narfation.org>
 
-> -       if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
-> +       if ((fault & VM_FAULT_RETRY) &&
-> +           fault_should_check_signal(user_mode(regs)))
->                 return;
+Kind regards,
+	Sven
 
-which isn't all that pretty.
+--nextPart2306317.z6aVZVsvuq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Why isn't this just
+-----BEGIN PGP SIGNATURE-----
 
-  static bool fault_signal_pending(unsigned int fault_flags, struct
-pt_regs *regs)
-  {
-        return (fault_flags & VM_FAULT_RETRY) &&
-                (fatal_signal_pending(current) ||
-                 (user_mode(regs) && signal_pending(current)));
-  }
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl2JBzwACgkQXYcKB8Em
+e0YTVg/+PgtfvbyO8UPeEG3nkvaRcMywQsGWWB2nkRfHXA+QnFghJNXsvPHonkd+
+QQ1E5I3loiK90VFbdRR8R0o5G57WPTFAivY334UAL1m5qOZT1bMKwI971dT0GCny
+a9+BhZEjt729e7WlSOvkT/v7BHo8lxyHH5+x33dxMJF0oSD5UDdH8VZX9PCBTJ1g
+4+O3e18WyQdsXFi3G2N75DcT+OhRle2P7T6yfgD0Ro5ViMqeTigsdmw+kpq8x8IK
+fyUN3oo5vqFnH3sEEXFshmxAqAVjPjzzoRYTFTupTw8yDOTL2REIgU75HZ0WP2w6
+eQ03/+7hKhujukr4V/bwVPMf6WJ1mi9+cz88Op8BkY/UgFgAYJSUhnfeoLo1pK6q
+ewEwagQfFibXUqtebAoam3z20Mb7rnrUmQJbUvPLQatL76qUaonJp3yxUMnrOWo+
+GmDWR4zgHgwatjOBeGCPBuF3PBMPWe1NBrA0EF7+33gZu6pttf3Z6XLNUWCw3unx
+xQCR1dn7VzUA+/FdFZfVoUlGBPeqWzqdyp3Os2ymDHJRp6jZWTd2gX6KvldvWTDR
+dU2SmyvoOovNLFWyBd7rC7vud0aWMJUHypD2IlEMCPprnu+m33Lhqx8nrbF/goZL
+drH0F1BJDs5jlWehfTwnnaNdqZEuzamWT8GEJAUBj8Iq5R6+35s=
+=OS2O
+-----END PGP SIGNATURE-----
 
-and then most of the users would be something like
+--nextPart2306317.z6aVZVsvuq--
 
-        if (fault_signal_pending(fault, regs))
-                return;
 
-and the exceptions could do their own thing.
 
-Now the code is prettier and more understandable, I feel.
-
-And if something doesn't follow this pattern, maybe it either _should_
-follow that pattern or it should just not use the helper but explain
-why it has an unusual pattern.
-
-             Linus
