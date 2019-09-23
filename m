@@ -2,99 +2,149 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB03C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF42C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040BE207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309F8205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oNVlammA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfIWLzW (ORCPT
+        id S1730474AbfIWLz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:55:22 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47208 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729656AbfIWLzV (ORCPT
+        Mon, 23 Sep 2019 07:55:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41600 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbfIWLz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:55:21 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-27-s_lDrj5TMTGaATnbftqtUA-1; Mon, 23 Sep 2019 12:55:18 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 23 Sep 2019 12:55:17 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 23 Sep 2019 12:55:17 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-CC:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>
-Subject: RE: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-Thread-Topic: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-Thread-Index: AQHVbyVve2HSE4CfFUa5FrGzj/69Mac5KmJw
-Date:   Mon, 23 Sep 2019 11:55:17 +0000
-Message-ID: <619e578cdfad4dca904eb9db9bf626c0@AcuMS.aculab.com>
-References: <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190919143427.GQ6762@mit.edu>
- <CAHk-=wgqbBy84ovtr8wPFqRo6U8jvp59rvQ8a6TvXuoyb-4L-Q@mail.gmail.com>
- <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjTbpcyVevsy3g-syB5v9gk_rR-yRFrUAvTL8NFuGfCrw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 23 Sep 2019 07:55:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZizFBvtwt2vz2u9q4gsPXlMp4iNJyEM3en3pt0PZaTg=; b=oNVlammAA0mezRMg90hLWDCXg
+        Bw8JYsKy0YgSSLZEeZv8yq+CJlcasjWrKGNM5ouXxaIARaVg3ebsTk95TaUU5QrCokzzVWCMFlvRQ
+        Vtz59wyOigu+YgucMO/LekcFXLCLVjzXbh038ca24Gam9r88BcWMN+GOFMN8SjlbCwDoDzQZjpWew
+        yifS4BoJ7r83uDJAfDoS0qkTSYUhONJt+eTMsjfA377P3RSVzaKIOa9u2pcFDZNxV3I+9CdtEkKKj
+        ZjXT4y1j1/Skr1tGJEerjqvi3kr8TTp9GrG76NB5D8foHfAK1mtm1QegyYqmplkeesX7p4CGjh1b/
+        5UPj32ZjQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCMwb-0002qz-9W; Mon, 23 Sep 2019 11:55:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD873305E42;
+        Mon, 23 Sep 2019 13:55:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 04C9820C3E176; Mon, 23 Sep 2019 13:55:51 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 13:55:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, jgross@suse.com
+Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
+Message-ID: <20190923115551.GZ2386@hirez.programming.kicks-ass.net>
+References: <20190919150314.054351477@linutronix.de>
+ <20190919150809.446771597@linutronix.de>
+ <20190923084718.GG2349@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1909231227050.2003@nanos.tec.linutronix.de>
+ <20190923114920.GF2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MC-Unique: s_lDrj5TMTGaATnbftqtUA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923114920.GF2332@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTkgU2VwdGVtYmVyIDIwMTkgMjE6MDQNCi4u
-Lg0KPiBOb3RlIHNtYWxsIGRldGFpbCBhYm92ZTogSSBjaGFuZ2VkIHRoZSBePSB0byBhICs9LiBB
-ZGRpdGlvbiB0ZW5kcyB0bw0KPiBiZSBiZXR0ZXIgKGR1ZSB0byBjYXJyeSBiZXR3ZWVuIGJpdHMp
-IHdoZW4gdGhlcmUgbWlnaHQgYmUgYml0DQo+IGNvbW1vbmFsaXRpZXMuICBQYXJ0aWN1bGFybHkg
-d2l0aCBzb21ldGhpbmcgbGlrZSBhIGN5Y2xlIGNvdW50IHdoZXJlDQo+IHR3byB4b3JzIGNhbiBt
-b3N0bHkgY2FuY2VsIG91dCBwcmV2aW91cyBiaXRzIHJhdGhlciB0aGFuIG1vdmUgYml0cw0KPiBh
-cm91bmQgaW4gdGhlIHdvcmQuDQoNClRoZXJlIGlzIGNvZGUgaW4gb25lIG9uIHRoZSBrZXJuZWwg
-Uk5HIHRoYXQgWE9ScyB0b2dldGhlciB0aGUgb3V0cHV0DQpvZiAzIExGU1IgKENSQykgZ2VuZXJh
-dG9ycy4NCkkgdGhpbmsgaXQgaXMgdXNlZCBmb3IgJ2xvdyBxdWFsaXR5JyByYW5kb21uZXNzIGFu
-ZCByZXNlZWRlZCBmcm9tIHRoZSBtYWluIFJORy4NClVzaW5nIFhPUiBtYWtlcyB0aGUgZW50aXJl
-IGdlbmVyYXRvciAnbGluZWFyJyBhbmQgdGh1cyB0cml2aWFsbHkgcmV2ZXJzaWJsZS4NCldpdGgg
-YSByZWxhdGl2ZWx5IHNtYWxsIG51bWJlciBvZiBjb25zZWN1dGl2ZSBvdXRwdXRzIHlvdSBjYW4g
-ZGV0ZXJtaW5lIHRoZSBzdGF0ZQ0Kb2YgYWxsIDMgTEZTUi4NCk1lcmdlIHRoZSByZXN1bHRzIHdp
-dGggYWRkaXRpb24gYW5kIHRoZSBwcm9jZXNzIGlzIGltbWVuc2VseSBoYXJkZXIuDQoNCkkndmUg
-YWxzbyB3b25kZXJlZCB3aGV0aGVyIHRoZSBSQzQgZ2VuZXJhdG9yIGlzIGEgdXNlZnVsIGVudHJv
-cHkgc3RvcmU/DQpJdCBoYXMgYSBsb3Qgb2Ygc3RhdGUgYW5kIHlvdSBjYW4gZmFpcmx5IGVhc2ls
-eSBmZWVkIGluIHZhbHVlcyB0aGF0IG1pZ2h0IChvcg0KbWlnaHQgbm90KSBjb250YWluIGFueSBy
-YW5kb21uZXNzIHdpdGhvdXQgbG9zaW5nIGFueSBzdG9yZWQgZW50cm9weS4NCg0KCURhdmlkDQoN
-Ci0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJt
-LCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChX
-YWxlcykNCg==
+On Mon, Sep 23, 2019 at 01:49:20PM +0200, Peter Zijlstra wrote:
+> While walking the kids to school I wondered WTH we need to call
+> TRACE_IRQS_OFF in the first place. If this is the return from exception
+> path, interrupts had better be disabled already (in exception enter).
+> 
+> For entry_64.S we have:
+> 
+>   - idtentry_part; which does TRACE_IRQS_OFF at the start and error_exit
+>     at the end.
+> 
+>   - xen_do_hypervisor_callback, xen_failsafe_callback -- which are
+>     confusing.
+> 
+> So in the normal case, it appears we can simply do:
+> 
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index b7c3ea4cb19d..e9cf59ac554e 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1368,8 +1368,6 @@ END(error_entry)
+>  
+>  ENTRY(error_exit)
+>  	UNWIND_HINT_REGS
+> -	DISABLE_INTERRUPTS(CLBR_ANY)
+> -	TRACE_IRQS_OFF
+>  	testb	$3, CS(%rsp)
+>  	jz	retint_kernel
+>  	jmp	retint_user
+> 
+> and all should be well. This leaves Xen...
+> 
+> For entry_32.S it looks like nothing uses 'resume_userspace' so that
+> ENTRY can go away. Which then leaves:
+> 
+>  * ret_from_intr:
+>   - common_spurious: TRACE_IRQS_OFF
+>   - common_interrupt: TRACE_IRQS_OFF
+>   - BUILD_INTERRUPT3: TRACE_IRQS_OFF
+>   - xen_do_upcall: ...
+> 
+>  * ret_from_exception:
+>   - xen_failsafe_callback: ...
+>   - common_exception_read_cr2: TRACE_IRQS_OFF
+>   - common_exception: TRACE_IRQS_OFF
+>   - int3: TRACE_IRQS_OFF
+> 
+> Which again suggests:
+> 
+> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+> index f83ca5aa8b77..7a19e7413a8e 100644
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -825,9 +825,6 @@ END(ret_from_fork)
+>  	cmpl	$USER_RPL, %eax
+>  	jb	restore_all_kernel		# not returning to v8086 or userspace
+>  
+> -ENTRY(resume_userspace)
+> -	DISABLE_INTERRUPTS(CLBR_ANY)
+> -	TRACE_IRQS_OFF
+>  	movl	%esp, %eax
+>  	call	prepare_exit_to_usermode
+>  	jmp	restore_all
+> 
+> with the notable exception (oh teh pun!) being Xen... _again_.
+> 
+> With these patchlets on, we'd want prepare_exit_to_usermode() to
+> validate the IRQ state, but AFAICT it _should_ all just 'work' (famous
+> last words).
+> 
+> Cc Juergen because Xen
+
+Arrgh.. faults!! they do local_irq_enable() but never disable them
+again. Arguably those functions should be symmetric and restore IF when
+they muck with it instead of relying on the exit path fixing things up.
+
 
