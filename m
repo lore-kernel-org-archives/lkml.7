@@ -2,100 +2,94 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C00C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC00EC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBAA20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9A320820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qRK1tygt"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sXcWlOo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfIWTb1 (ORCPT
+        id S1728479AbfIWTen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:31:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38128 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfIWTb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:31:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so15270851wrx.5;
-        Mon, 23 Sep 2019 12:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/u25N3gHfsTDJPYdD/hTi62pENC5BVXXgjv47C0lP/k=;
-        b=qRK1tygtCBLHiE6DS1on7tacCNq0Gd7D72jK5Q9Sl/CXIQbzxXLX6mq4AjrNU4StZA
-         dt67BXWyl3u4RpLlNskpluftuY1YLOisQGeSWoiXwNbT3ISU0Hq5VWcGEFyv9D+xq75+
-         oBtlYSR9nMaVZDKO1Bdc8MHN3Nn/cNmGO49JGHQ20A/uDnUmrvG6kcPlWRpJDOQOWaTe
-         eJoIsZiMnRJVsRF6972C3+MaB1TWgNW3MyZyfcdlwVaFYq3p5B6S4Tge7FQo6LVjrZtp
-         V1XR7Qdkixn7abrI2GmUM3wIx/Dw+5bI0s+MV5Os3mGjyYNCFl67ejbp+g6HLLLsHCm+
-         Dpmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/u25N3gHfsTDJPYdD/hTi62pENC5BVXXgjv47C0lP/k=;
-        b=bet5IeIf6QGfAfmpxlKSslC0YcP5mJhFVre/LGlY8+ehCmSCmmUoqBj5bWPiGEu+Kr
-         jWSNtSu9dZnv54cKnVY3UL9YHLepx6Anu8sgiEZybevMwv1aDYIshzvWSxXZfiWKD2+p
-         05jb8sVywUVnx9kcl/4ZhLtGRcA+7hRutMB9FTAtwQd9c9rPgMgXYzOiSE38yIBvM31t
-         39xsdAz6fNPZinuuRhBY7FvWPWlqU06xV8Gk03huCGAhgiPvZuV6y3CaPmrqY+pHB4h/
-         QmI8C40eqcBgw0xAlBn9F62igAgbdgA8shjZRcvOtorJvzpAr5tl8Hj2FGE2ZRTe6wVL
-         uWaw==
-X-Gm-Message-State: APjAAAXRjdDEl+v66F9ABm6edF14pFUEeQ0MhyPM8VEMbt6xXJZcQQ7F
-        PzFVgd0BoE8nJ89r7SANMZo/YGaX
-X-Google-Smtp-Source: APXvYqxIiADK/MrK+mJXCxMz8ucZ/7OhB4IveJF4KfE4gr/KyrRv9rbDpN04djHGmLNBUjwdgCAGPw==
-X-Received: by 2002:adf:e28e:: with SMTP id v14mr759822wri.184.1569267084507;
-        Mon, 23 Sep 2019 12:31:24 -0700 (PDT)
-Received: from [192.168.2.202] (pD9E5A92F.dip0.t-ipconnect.de. [217.229.169.47])
-        by smtp.gmail.com with ESMTPSA id q124sm21927916wma.5.2019.09.23.12.31.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 12:31:23 -0700 (PDT)
-Subject: Re: [PATCH] serdev: Add ACPI devices by ResourceSource field
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190919195624.1140941-1-luzmaximilian@gmail.com>
- <50b016a1-ed4a-b848-4658-a05731727d7e@redhat.com>
- <4c2cc8b7-8541-0912-3162-399777dc8dd2@gmail.com>
- <8bed7cde-1f59-c5bf-9506-757dd89ad594@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <91a3e827-0ab7-3bd9-5d65-bd5cae2c367c@gmail.com>
-Date:   Mon, 23 Sep 2019 21:31:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 23 Sep 2019 15:34:43 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55662 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727981AbfIWTen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:34:43 -0400
+Received: from zn.tnic (p200300EC2F060400F036B51F4D309BFC.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:400:f036:b51f:4d30:9bfc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 743B11EC06F3;
+        Mon, 23 Sep 2019 21:34:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569267281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=cOtIH+ThVHQpxFENK80/GDkwsFcGH4JpmGhb1RD1kuE=;
+        b=sXcWlOo1Cf6BR+lWrajtGnsDDTS9hIUvKwljeKpj+Nm0t85WnvDMx+6rvJziYTomTou4ZU
+        KJLHPsr3OayePY/9EaXJutOEAxwUyYEMBQhiKuIXOj1m1wxS4/oVgmW1g7TaW7gHxxULSV
+        12ky9HQnuiXhbMI4N6FQqTBFzrVrbF0=
+Date:   Mon, 23 Sep 2019 21:34:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-um@lists.infradead.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
+Message-ID: <20190923193446.GL15355@zn.tnic>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+ <20190923094916.GB15355@zn.tnic>
+ <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8bed7cde-1f59-c5bf-9506-757dd89ad594@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 9/23/19 10:14 AM, Hans de Goede wrote:
-> Ack, this is what drivers/i2c/i2c-core-acpi.c is doing and more in general
-> all ACPI enumeration code always first checks _STA before doing anything
-> else, so I think it would be best to do this here too.
+On Mon, Sep 23, 2019 at 11:41:59AM -0700, Andy Lutomirski wrote:
+> On Mon, Sep 23, 2019 at 2:49 AM Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
+> > > While touching seccomp code I realized that the struct seccomp_data
+> > > argument to secure_computing() seems to be unused by all current
+> > > callers. So let's remove it unless there is some subtlety I missed.
+> > > Note, I only tested this on x86.
+> >
+> > What was amluto thinking in
+> >
+> > 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
 > 
-> Actually I think it might be best to fully copy how drivers/i2c/i2c-core-acpi.c
-> does things.
+> IIRC there was a period of time in which x86 used secure_computing()
+> for normal syscalls, and it was a good deal faster to have the arch
+> code supply seccomp_data.  x86 no longer works like this, and syscalls
+> aren't fast anymore ayway :(
 
-Right, I will do that then.
+Uhuh, thanks Andy.
 
-Thanks,
+Christian, pls add that piece of history to the commit message.
 
-Maximilian
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
