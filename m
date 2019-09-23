@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973A6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EF4C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2C720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1B720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406316AbfIWE0l (ORCPT
+        id S2406494AbfIWE0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 00:26:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:9461 "EHLO mx1.redhat.com"
+        Mon, 23 Sep 2019 00:26:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56058 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405826AbfIWE0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 00:26:40 -0400
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+        id S2405826AbfIWE0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 00:26:47 -0400
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81D7689AC2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:26:39 +0000 (UTC)
-Received: by mail-pg1-f200.google.com with SMTP id m1so6586806pgq.5
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 21:26:39 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 547ED85360
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:26:47 +0000 (UTC)
+Received: by mail-pl1-f200.google.com with SMTP id m8so7958959plt.14
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 21:26:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AKkEfjdoHGbVoKbr4xUEMS07lQumUdJTKR+cWS6/cLc=;
-        b=HfS4FvngV1QF7SE12LuTaglIMjK6cbtG4k0EgIjLYMzqFRTWKrThKbszzAM0j1oUwj
-         /99YBGFDoAMyghI/lLyqeHlQ6bPToEEM8xzX6ysZKdUI+6UlMif603LyKs4TdqOSQyY8
-         py+dveaNuCGFnnJcY2BXmDQwOm4KM0BUelHlQpTUKYr0V2lkkpxaa68TyJxjX1Apib7B
-         twxdU76SFswNNM78rG+8ixwIPFeCyEpQOUEf/P1Bzl5bCQ+KL/92TZg1DksGy5uFmM5k
-         oGhncN+y961q6XrXLoDAZXYOBgFJNAQ7KBSDnJOkUnO31HfuiNCFli4Or4RObNve01Hr
-         040w==
-X-Gm-Message-State: APjAAAX3awsl1FRxuGvxh/YVUkz5sgC9gjfMZepog7ICOzpcR/xC8MB9
-        UCwT1HYSLSGxK+uhqki+7q0wqcDhKmkYbg/p9a52YuBb7ETfZYSw35Vi9/CGrH5PS3Ah3CrRKB4
-        HzvAyWmLA2KMuSiR/QnumoJyS
-X-Received: by 2002:a63:f745:: with SMTP id f5mr12778397pgk.175.1569212798978;
-        Sun, 22 Sep 2019 21:26:38 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzCmcEfrc8QuXpBvHO5rswwqPBwY/o99XMn56GJV9UHiDMAd1lbEY/N2Jk/9XaUVCdbc3jZ2w==
-X-Received: by 2002:a63:f745:: with SMTP id f5mr12778387pgk.175.1569212798740;
-        Sun, 22 Sep 2019 21:26:38 -0700 (PDT)
+        bh=Zt8EwZyFUvlwT1VYMNYV6I/TnTem7aMxIFLElv6YJ/M=;
+        b=J5o/rzUvmsO0Nrs0VlAUuLI5J9KkSp2U0jq6ATTitpRDlU5UktJ1KM/ruJLW5RAddd
+         GMX0c3QlarVHjEy/DCo2m9OyoRNTeAFZR/IdLsdLTGscmxYFFGju+wfD/1S9KDaXwYua
+         rpwa7cx3rqfNslUCjJHZJDI5ZoQj5CZPKq5HMEKXQQn6Dyuq3RUAwWmaJJuy+iG7VfPy
+         cuPzoDn9/LfzmJcJpm2GkpH9N6kOw6cdUbQBfz3kYK0l1sjG4xuqE1BTCPVczT1Ktoyw
+         gXW2q01GWNh1WUDqpfnV6qK9bhrNnzu6NKARVF7230lnK/djGHeo8+I/PzrHPHePPCew
+         ORQw==
+X-Gm-Message-State: APjAAAXvxoUnJAftV/4DVnGmxL77jYrNxBGcCqKDwOOYZH/j3KOwIjCm
+        Cha7cVZSD34K4bkHaf4omH2LciLswyy0O//2h4kGmEMNxUR0KtHvkoH2IKwJsxjVTzCEsOLBczB
+        8T6zSKXbYIRUW9/Rn+1TcMqLI
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr18843066pja.73.1569212805394;
+        Sun, 22 Sep 2019 21:26:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwNMbTEwVZcWOawKIWtuccnJenC83wJpAVi10A5pUVIrEmJU1iYlQhFZ/KIbnUTXUKCTHPwqg==
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr18843054pja.73.1569212805196;
+        Sun, 22 Sep 2019 21:26:45 -0700 (PDT)
 Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x20sm11781867pfp.120.2019.09.22.21.26.32
+        by smtp.gmail.com with ESMTPSA id x20sm11781867pfp.120.2019.09.22.21.26.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 21:26:38 -0700 (PDT)
+        Sun, 22 Sep 2019 21:26:44 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -67,9 +67,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v4 08/10] mm/gup: Allow VM_FAULT_RETRY for multiple times
-Date:   Mon, 23 Sep 2019 12:25:21 +0800
-Message-Id: <20190923042523.10027-9-peterx@redhat.com>
+Subject: [PATCH v4 09/10] mm/gup: Allow to react to fatal signals
+Date:   Mon, 23 Sep 2019 12:25:22 +0800
+Message-Id: <20190923042523.10027-10-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190923042523.10027-1-peterx@redhat.com>
 References: <20190923042523.10027-1-peterx@redhat.com>
@@ -80,93 +80,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the gup counterpart of the change that allows the
-VM_FAULT_RETRY to happen for more than once.  One thing to mention is
-that we must check the fatal signal here before retry because the GUP
-can be interrupted by that, otherwise we can loop forever.
+The existing gup code does not react to the fatal signals in many code
+paths.  For example, in one retry path of gup we're still using
+down_read() rather than down_read_killable().  Also, when doing page
+faults we don't pass in FAULT_FLAG_KILLABLE as well, which means that
+within the faulting process we'll wait in non-killable way as well.
+These were spotted by Linus during the code review of some other
+patches.
+
+Let's allow the gup code to react to fatal signals to improve the
+responsiveness of threads when during gup and being killed.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- mm/gup.c     | 27 +++++++++++++++++++++------
- mm/hugetlb.c |  6 ++++--
- 2 files changed, 25 insertions(+), 8 deletions(-)
+ mm/gup.c     | 12 +++++++++---
+ mm/hugetlb.c |  3 ++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index e60d32f1674d..d2811bb15a25 100644
+index d2811bb15a25..4c638473db83 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -644,7 +644,10 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
+@@ -640,7 +640,7 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
+ 	if (*flags & FOLL_REMOTE)
+ 		fault_flags |= FAULT_FLAG_REMOTE;
+ 	if (locked)
+-		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
++		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
  	if (*flags & FOLL_NOWAIT)
  		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
  	if (*flags & FOLL_TRIED) {
--		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_ALLOW_RETRY);
-+		/*
-+		 * Note: FAULT_FLAG_ALLOW_RETRY and FAULT_FLAG_TRIED
-+		 * can co-exist
-+		 */
- 		fault_flags |= FAULT_FLAG_TRIED;
- 	}
+@@ -973,7 +973,7 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
+ 	vm_fault_t ret, major = 0;
  
-@@ -994,7 +997,6 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 		down_read(&mm->mmap_sem);
- 		if (!(fault_flags & FAULT_FLAG_TRIED)) {
- 			*unlocked = true;
--			fault_flags &= ~FAULT_FLAG_ALLOW_RETRY;
- 			fault_flags |= FAULT_FLAG_TRIED;
- 			goto retry;
- 		}
-@@ -1069,17 +1071,30 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 		if (likely(pages))
- 			pages += ret;
- 		start += ret << PAGE_SHIFT;
-+		lock_dropped = true;
+ 	if (unlocked)
+-		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
++		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
  
-+retry:
- 		/*
- 		 * Repeat on the address that fired VM_FAULT_RETRY
--		 * without FAULT_FLAG_ALLOW_RETRY but with
--		 * FAULT_FLAG_TRIED.
-+		 * with both FAULT_FLAG_ALLOW_RETRY and
-+		 * FAULT_FLAG_TRIED.  Note that GUP can be interrupted
-+		 * by fatal signals, so we need to check it before we
-+		 * start trying again otherwise it can loop forever.
- 		 */
-+
-+		if (fatal_signal_pending(current))
-+			break;
-+
+ retry:
+ 	vma = find_extend_vma(mm, address);
+@@ -1086,7 +1086,13 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 			break;
+ 
  		*locked = 1;
--		lock_dropped = true;
- 		down_read(&mm->mmap_sem);
-+
- 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
--				       pages, NULL, NULL);
-+				       pages, NULL, locked);
-+		if (!*locked) {
-+			/* Continue to retry until we succeeded */
-+			BUG_ON(ret != 0);
-+			goto retry;
+-		down_read(&mm->mmap_sem);
++		ret = down_read_killable(&mm->mmap_sem);
++		if (ret) {
++			BUG_ON(ret > 0);
++			if (!pages_done)
++				pages_done = ret;
++			break;
 +		}
- 		if (ret != 1) {
- 			BUG_ON(ret > 1);
- 			if (!pages_done)
+ 
+ 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
+ 				       pages, NULL, locked);
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 31c2a6275023..d0c98cff5b0f 100644
+index d0c98cff5b0f..84034154d50e 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -4347,8 +4347,10 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -4342,7 +4342,8 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 			if (flags & FOLL_WRITE)
+ 				fault_flags |= FAULT_FLAG_WRITE;
+ 			if (locked)
+-				fault_flags |= FAULT_FLAG_ALLOW_RETRY;
++				fault_flags |= FAULT_FLAG_ALLOW_RETRY |
++					FAULT_FLAG_KILLABLE;
+ 			if (flags & FOLL_NOWAIT)
  				fault_flags |= FAULT_FLAG_ALLOW_RETRY |
  					FAULT_FLAG_RETRY_NOWAIT;
- 			if (flags & FOLL_TRIED) {
--				VM_WARN_ON_ONCE(fault_flags &
--						FAULT_FLAG_ALLOW_RETRY);
-+				/*
-+				 * Note: FAULT_FLAG_ALLOW_RETRY and
-+				 * FAULT_FLAG_TRIED can co-exist
-+				 */
- 				fault_flags |= FAULT_FLAG_TRIED;
- 			}
- 			ret = hugetlb_fault(mm, vma, vaddr, fault_flags);
 -- 
 2.21.0
 
