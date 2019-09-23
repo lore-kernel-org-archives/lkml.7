@@ -2,153 +2,147 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A75C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664DBC32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C8920882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA0020856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fjRlOStJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdwgJmi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439868AbfIWO2Y (ORCPT
+        id S2439882AbfIWO2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:28:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42678 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437634AbfIWO2X (ORCPT
+        Mon, 23 Sep 2019 10:28:44 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35540 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439850AbfIWO2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:28:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pfO0w2VZ1NL504GmbRCCM2xrQ+ksHz0wYBTzCBYK0Ec=; b=fjRlOStJKkZCqSjwxVhWIXfaq
-        ncf21egJn851tlhDPNJsd2Ajs3gOhR2yRDfM3PvVxg7ti3UaFif+5b5Tfu25i1lNlpAlAU/rAc/op
-        erhysCFHFpvQLieLXnIlqrjmrLHpG8SVbg2q8TA7hDXVSfglNpBsnuNVjzmCbGCTHKR+8q8oyKmcZ
-        pXIm4R954n/XKhFQixdHsd+4hGDN+9yxqZnEdnq5CQpm4y3fm5bwT2LhrgVlvceBzG/7k4hPbPyFr
-        xrAgxtldFO5ulVHs80iZPUfDK2KWPz33AqdkdoE9SqGX0KU0Yhg40UNARyMwD18vXBN3QatmfHHJx
-        1sBbCsG5A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCPK4-0004A7-Bf; Mon, 23 Sep 2019 14:28:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7935E301A7A;
-        Mon, 23 Sep 2019 16:27:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 78B0820D80D44; Mon, 23 Sep 2019 16:28:14 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 16:28:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        chris@chris-wilson.co.uk
-Subject: Re: linux-next: Tree for Sep 18 (objtool)
-Message-ID: <20190923142814.GB2369@hirez.programming.kicks-ass.net>
-References: <20190918221053.GV2596@sirena.co.uk>
- <be0fb087-5fb4-a790-90dd-cc2af62419e7@infradead.org>
- <20190923092024.GI2349@hirez.programming.kicks-ass.net>
- <20190923124901.3ayejcis5ijrsvbx@treble>
- <20190923133352.GI2332@hirez.programming.kicks-ass.net>
- <20190923141657.p6kpqro3q4p4umwi@treble>
+        Mon, 23 Sep 2019 10:28:44 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so17392276qtq.2;
+        Mon, 23 Sep 2019 07:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6A8RKDCmDyC878dQzWO1YL9aQQceEgwXiR2QrHFFGlA=;
+        b=hdwgJmi/OVMqfuXrRAZeb0OgAK6fayty3d7SxMspb13PzIAJPc2nxxdt/gg+2pFmMD
+         ynAsDJOC+JhPaS+yH3wx0OWaSng4qioq1sLTr9M4c4pMcM/n4E2NcOedo/I62qscVYpI
+         V9i7AZ/dmhgNg+B+CBUoxHSV2A9kcXRBfJXe4vr/tU62VADfBwiyM9qOCxSg44HHJPIQ
+         oQRsLYSCN8+DPGjI3vJcio7U1zKVtRr2OhYKx+S1D0j26dEA/j8uncfEqeLpBfpQyRNn
+         rDWDq3dZxdnBzMv8YLKaX92hiMgR7P0r7jVk270RCt6dqz3aqLqThOJwjAzPIpNo3pcE
+         7m3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6A8RKDCmDyC878dQzWO1YL9aQQceEgwXiR2QrHFFGlA=;
+        b=hlUqzZrk+44cjY4qZX9vbwNyhQV+eon8YbjF53R03DoOnIPayIbzl7awn17tf6PBPp
+         deeKRsEYjjwDsPRHXqG3S+8w4DLWuAbv3wGKkCq6mSNDwaQ2nQUcPF+JhjvOJqBq5MHO
+         gcM2N4Nq1c+/8JJEnKpj3QacS+ampvkLZ8oWoy33z+cv6m8vnl93fd1lLcFqX82DysZq
+         7xto5VQ4nUXiVh2AyD/2IhSXl8gJ87TtRk0ECz8U9A1RARX/PGI6J/HXWO8gwm6OZ56m
+         8Sfixx1b8cg73AjyHmRf4kq7dYRLH8bnGhI4eQ/pDZ0TzK/YKD2dsQ+uEdvyAEbjpJT0
+         BZ0g==
+X-Gm-Message-State: APjAAAW0ajnc58w87/LF84ki45kDvB1UvBz080mOEVKP1E/YMbLUNO2E
+        QDxZIljR0zl6Ojnx5SPAXhY/vc7u
+X-Google-Smtp-Source: APXvYqzu+1OF6w8eowpANLEXk423/6OlJh65DRR8MqDt7DSkgSyaTtx5szHDosXF8d6z2uOr5tAIKA==
+X-Received: by 2002:ac8:1289:: with SMTP id y9mr164797qti.201.1569248922064;
+        Mon, 23 Sep 2019 07:28:42 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id 44sm6646756qtt.13.2019.09.23.07.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 07:28:41 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4EE6941105; Mon, 23 Sep 2019 11:28:39 -0300 (-03)
+Date:   Mon, 23 Sep 2019 11:28:39 -0300
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 0/6] tools/lib/traceevent: Man page updates and some file
+ movement
+Message-ID: <20190923142839.GD16544@kernel.org>
+References: <20190919212335.400961206@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923141657.p6kpqro3q4p4umwi@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919212335.400961206@goodmis.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 09:16:57AM -0500, Josh Poimboeuf wrote:
-> On Mon, Sep 23, 2019 at 03:33:52PM +0200, Peter Zijlstra wrote:
-> > On Mon, Sep 23, 2019 at 07:49:01AM -0500, Josh Poimboeuf wrote:
-> > > On Mon, Sep 23, 2019 at 11:20:24AM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Sep 18, 2019 at 09:04:21PM -0700, Randy Dunlap wrote:
-> > > > > On 9/18/19 3:10 PM, Mark Brown wrote:
-> > > > > > Hi all,
-> > > > > > 
-> > > > > > Changes since 20190917:
-> > > > > > 
-> > > > > 
-> > > > > on x86_64:
-> > > > > 
-> > > > > drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to gen8_canonical_addr() with UACCESS enabled
-> > > > 
-> > > > I'm thinking that comes from:
-> > > > 
-> > > > 				offset = gen8_canonical_addr(offset & ~UPDATE);
-> > > > 				if (unlikely(__put_user(offset, &urelocs[r-stack].presumed_offset))) {
-> > > > 
-> > > > however, per commit 6ae865615fc4 (and 2a418cf3f5f1) the compiler really
-> > > > should not be sticking gen8_canonical_addr() after __uaccess_begin().
-> > > > 
-> > > > /me puzzled...
-> > > 
-> > > I think you're looking at the wrong code.  It has user_access_begin/end
-> > > around it:
-> > > 
-> > > 		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
-> > > 			goto end;
-> > > 
-> > > 		for (i = 0; i < args->buffer_count; i++) {
-> > > 			if (!(exec2_list[i].offset & UPDATE))
-> > > 				continue;
-> > > 
-> > > 			exec2_list[i].offset =
-> > > 				gen8_canonical_addr(exec2_list[i].offset & PIN_OFFSET_MASK);
-> > > 			unsafe_put_user(exec2_list[i].offset,
-> > > 					&user_exec_list[i].offset,
-> > > 					end_user);
-> > > 		}
-> > > end_user:
-> > > 		user_access_end();
-> > > 
-> > 
-> > Oh, Duh... Yeah, so the alternative to your solution is to do 2 loops.
-> > Not sure which would be better.
+Em Thu, Sep 19, 2019 at 05:23:35PM -0400, Steven Rostedt escreveu:
+> Hi Arnaldo,
 > 
-> I like your idea better, makes the fix more localized and shrinks the
-> uaccess window.  Something like so (not even compile tested):
+> This is a series of man page updates to the libtraceevent code, as
+> well as a fix to one missing prototype and some movement of the location
+> of the plugins (to have the plugins in their own directory).
 
-At which point we should probably also Cc Chris who caused all this
-with commit:
+Thanks, applied.
 
-  2889caa92321 ("drm/i915: Eliminate lots of iterations over the execobjects array")
+- Arnaldo
+ 
+> -- Steve
+> 
+> 
+> 
+> 
+> Tzvetomir Stoyanov (2):
+>       tools/lib/traceevent: Man pages for libtraceevent event print related API
+>       tools/lib/traceevent: Man pages for tep plugins APIs
+> 
+> Tzvetomir Stoyanov (VMware) (4):
+>       tools/lib/traceevent: Man pages fix, rename tep_ref_get() to tep_get_ref()
+>       tools/lib/traceevent: Man pages fix, changes in event printing APIs
+>       tools/lib/traceevent: Add tep_get_event() in event-parse.h
+>       tools/lib/traceevent: Move traceevent plugins in its own subdirectory
+> 
+> ----
+>  tools/lib/traceevent/Build                         |  11 -
+>  .../Documentation/libtraceevent-event_print.txt    | 130 ++++++++++++
+>  .../Documentation/libtraceevent-handle.txt         |   8 +-
+>  .../Documentation/libtraceevent-plugins.txt        |  99 +++++++++
+>  .../lib/traceevent/Documentation/libtraceevent.txt |  15 +-
+>  tools/lib/traceevent/Makefile                      |  94 ++-------
+>  tools/lib/traceevent/event-parse.h                 |   2 +
+>  tools/lib/traceevent/plugins/Build                 |  10 +
+>  tools/lib/traceevent/plugins/Makefile              | 222 +++++++++++++++++++++
+>  .../lib/traceevent/{ => plugins}/plugin_cfg80211.c |   0
+>  .../lib/traceevent/{ => plugins}/plugin_function.c |   0
+>  .../lib/traceevent/{ => plugins}/plugin_hrtimer.c  |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_jbd2.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_kmem.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_kvm.c    |   0
+>  .../lib/traceevent/{ => plugins}/plugin_mac80211.c |   0
+>  .../traceevent/{ => plugins}/plugin_sched_switch.c |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_scsi.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_xen.c    |   0
+>  19 files changed, 485 insertions(+), 106 deletions(-)
+>  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_print.txt
+>  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-plugins.txt
+>  create mode 100644 tools/lib/traceevent/plugins/Build
+>  create mode 100644 tools/lib/traceevent/plugins/Makefile
+>  rename tools/lib/traceevent/{ => plugins}/plugin_cfg80211.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_function.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_hrtimer.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_jbd2.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_kmem.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_kvm.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_mac80211.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_sched_switch.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_scsi.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_xen.c (100%)
 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> index b5f6937369ea..406af374f728 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> @@ -2847,6 +2847,11 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
->  			u64_to_user_ptr(args->buffers_ptr);
->  		unsigned int i;
->  
-> +		for (i = 0; i < args->buffer_count; i++) {
-> +			exec2_list[i].offset =
-> +				gen8_canonical_addr(exec2_list[i].offset & PIN_OFFSET_MASK);
-> +		}
-> +
->  		/* Copy the new buffer offsets back to the user's exec list. */
->  		/*
->  		 * Note: count * sizeof(*user_exec_list) does not overflow,
-> @@ -2862,8 +2867,6 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
->  			if (!(exec2_list[i].offset & UPDATE))
->  				continue;
->  
-> -			exec2_list[i].offset =
-> -				gen8_canonical_addr(exec2_list[i].offset & PIN_OFFSET_MASK);
->  			unsafe_put_user(exec2_list[i].offset,
->  					&user_exec_list[i].offset,
->  					end_user);
+-- 
+
+- Arnaldo
