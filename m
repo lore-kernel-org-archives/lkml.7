@@ -2,80 +2,86 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB622C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7B4C11FFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8878F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BE520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:34:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKz83jxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502642AbfIWUbD (ORCPT
+        id S2387728AbfIWUe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:31:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30585 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502627AbfIWUbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:31:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 13:31:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="363749806"
-Received: from araj-mobl1.jf.intel.com ([10.24.10.67])
-  by orsmga005.jf.intel.com with ESMTP; 23 Sep 2019 13:31:02 -0700
-Date:   Mon, 23 Sep 2019 13:31:02 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        sanjay.k.kumar@intel.com, jacob.jun.pan@linux.intel.com,
-        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yi Sun <yi.y.sun@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-Message-ID: <20190923203102.GB21816@araj-mobl1.jf.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
+        Mon, 23 Sep 2019 16:34:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33647 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729065AbfIWUe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:34:29 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so9863516pfl.0;
+        Mon, 23 Sep 2019 13:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EGYPKi+Bj97Txmrg48DsS4RTp4MiyYLZEEl8Gx4dbp8=;
+        b=jKz83jxo6UQCdidNmrf33fmZCqbVFL/nOB6fiSnp2gNv9JmJj7hWP6gvttTTJSt6j0
+         AzRwAdPr3Q1Ev4WZPYct6kzWNZBwOwslDiqquT8VL/ZKKjpiXTZQpneTI/yz2eiuXMVr
+         lxvqmNrR6NQuBrnCeWyzMxyHswtKQBbRPGkqinArLe5zePNdPts+8by7W+6h1pA4tLjf
+         4I6UH6CdbIWL+O8cXm5deqtBJurbgLj3XGS4E45Qi3tluVvtuchQxkOLhAVazH0aTe0N
+         8Kr6y08en2OnR/mIASOeT5gehpa532iH7LzKfLmX/cpjxJamws3moxsebP7JIrdRujZ5
+         xs2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EGYPKi+Bj97Txmrg48DsS4RTp4MiyYLZEEl8Gx4dbp8=;
+        b=qhzMAWVJl0INbfpwTKTDl1C+pFFRIgmGh7AumfFHODSIxAT27+BtuKIsvXL/cnwuxa
+         zKh2OS4b/fRoHPNEzrIW617KQQVXT4RuSmsJr3gTt2S1Y1WYig8vilJbzb3RXx1VxE9q
+         kgt9qszgaTOu0cU7mA2XV6rNDu2cMzEOAGqJvIXwrDICgVfW/FYaZyJ/DgZFsdFMwpUF
+         KZr64oFVNApUjlBGgqOKLt8lg+GcnlCwS+Fh16RkEEGQ4a2v94CaL343RwvOUbswMyzl
+         lE55n1k5y88IkoXNClkg5rZXPKBf4bBn9EfipQb5Jk5TwuCBjwhxC5LuS9LwPk5PZPDv
+         3Vhg==
+X-Gm-Message-State: APjAAAVZVHUzKUyYNTBWRfbX/7tRt/ipiDNHRZtXUYmKDyl23vVhEZkP
+        0C7uR0DgDroFnwNK9bl914E=
+X-Google-Smtp-Source: APXvYqyNkmREM5d5I86SZMtJX+edL0QFUQzFvJrS6pzQ6ezjgBUHSDocLloyBDJm50K62Mx3Czjxkw==
+X-Received: by 2002:a65:4286:: with SMTP id j6mr1787684pgp.218.1569270868145;
+        Mon, 23 Sep 2019 13:34:28 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id z25sm12391618pfn.7.2019.09.23.13.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 13:34:26 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hidp: Fix assumptions on the return value of hidp_send_message
+Date:   Mon, 23 Sep 2019 13:33:57 -0700
+Message-Id: <20190923203357.8355-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <3D70AB75-FEFB-4EB3-9AC8-3BCE90F5458D@holtmann.org>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923122454.9888-3-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 08:24:52PM +0800, Lu Baolu wrote:
-> This adds functions to manipulate first level page tables
-> which could be used by a scalale mode capable IOMMU unit.
+> I am taking this through my tree. And yes, I applied the updated patch, but answered the other ;)
+>
+> Regards
+>
+> Marcel
 
-s/scalale/scalable
+Are you also going to mark this patch for inclusion to stable tree? I haven't seen it in any of the stable queues (netdev, Greg's), so just wanted to check.
 
-> 
-> intel_mmmap_range(domain, addr, end, phys_addr, prot)
-
-Maybe think of a different name..? mmmap seems a bit weird :-)
-
->  - Map an iova range of [addr, end) to the physical memory
->    started at @phys_addr with the @prot permissions.
-> 
-> intel_mmunmap_range(domain, addr, end)
->  - Tear down the map of an iova range [addr, end). A page
->    list will be returned which will be freed after iotlb
->    flushing.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Liu Yi L <yi.l.liu@intel.com>
-> Cc: Yi Sun <yi.y.sun@linux.intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Thanks,
+Andrey Smirnov
