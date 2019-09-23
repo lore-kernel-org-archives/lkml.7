@@ -2,176 +2,334 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2EBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BEC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1533E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FCB20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qu4GPOCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOOfU1a0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbfIWCnM (ORCPT
+        id S2405158AbfIWDA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 22:43:12 -0400
-Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:30756
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729208AbfIWCnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 22:43:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WWGExeEh32Hh3t8E0MCJ2yOiM5FQoeY1bGkn63JNmdOZ4Uoa5/GuW88NoKvjIIlHZmf0bouZpBW1bPR0DQ2fRdluXEP/dC/H9laasbWEqkh5QD6fNA5US9YoH1hHNSUa0HVIayNybvTkN7j8Tr9n37THaTCvLC6BmjZ5s8IggtBuOQssIFGC/B+yOmT4bLdfVjDsBiHXFlrPt7xpU1c3FPEhi52nxKaadZaI1n96Y/ECPQR7R/q/8lNwFLkDPTStJbcPAN9RcxE2Hq5hWC6bdWJRa8IVFMeLe8+uDkEEtvf1gVS4hL37p5fagOfmlEvJIg3UZ0KZMnk6p8O8EoGPtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kZ3WwySqHZpVC3nCDqJzq9KyMX1d7jOomWbYLq2ukYw=;
- b=kakvkf1wcBmKe4liDdoCy2bA7X4w5kft6t5jBNIrNMwVDQbrDv+yJ9czFwriBlHsLn8yJmta9mByMCh61A6E2+8owHzQIz9Pig15H1vZgPd0fqbp97Mo3bteYCeAhMaWyvVtvU1hL3Hjg1O2NMePEQROCZrGNahY7moxr/25O8kXLzP4WsWAUOJR1RsSMK39s3luGwb0HmjNDBZTjPV6e/daUBaftmeqvNuOiMrdy84IFcQahfddX/d70asVXPBgKJbjXn1531I90fjbI0e+di7TPTLOKPL8X+6FiFdl+dpkXVsJPsBJv1JdC35bLBu3JKHB9ihqSPcKojjlosKiWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kZ3WwySqHZpVC3nCDqJzq9KyMX1d7jOomWbYLq2ukYw=;
- b=Qu4GPOCjRgkNDSl39ZZj/wVddzU0m642lTw5rSHWtHTZ3Lj4tHPbZ3qtOvg75c/EHqsX4RTpx9UdYYvJdd6tq/mnUjomIMCnLQOnUsvF3q7Fl7r+zf6OGaisjaxT6NO9eMdA1EpBfqZfJncYPdA4Th0u4PoPj0aoIx7ccez6PdQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3643.eurprd04.prod.outlook.com (52.134.66.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Mon, 23 Sep 2019 02:43:04 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 02:43:04 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "cw00.choi@samsung.com" <cw00.choi@samsung.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V4 2/5] input: keyboard: imx_sc: Add i.MX system
- controller key support
-Thread-Topic: [PATCH V4 2/5] input: keyboard: imx_sc: Add i.MX system
- controller key support
-Thread-Index: AQHVbDoTG9IptYOIlUSe8in/1bTkN6cu+20AgAAdosCACNAggIAArZGA
-Date:   Mon, 23 Sep 2019 02:43:04 +0000
-Message-ID: <DB3PR0402MB39164F6EB8141BA5CC4F26FCF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1568602373-14164-1-git-send-email-Anson.Huang@nxp.com>
- <1568602373-14164-2-git-send-email-Anson.Huang@nxp.com>
- <20190916235330.GI237523@dtor-ws>
- <DB3PR0402MB3916859326C76BC9BC1F781CF58F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190922161432.GE1999@bug>
-In-Reply-To: <20190922161432.GE1999@bug>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4408efaa-c25f-4aee-1ace-08d73fcfc259
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3643;
-x-ms-traffictypediagnostic: DB3PR0402MB3643:|DB3PR0402MB3643:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3643932DA00AB294F52AC51FF5850@DB3PR0402MB3643.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(199004)(189003)(316002)(9686003)(14454004)(6246003)(66946007)(186003)(26005)(6916009)(25786009)(86362001)(478600001)(4326008)(66446008)(64756008)(11346002)(66476007)(66556008)(52536014)(446003)(5660300002)(76116006)(102836004)(7696005)(256004)(76176011)(99286004)(81156014)(486006)(3846002)(66066001)(71190400001)(71200400001)(6506007)(8936002)(8676002)(81166006)(7416002)(2906002)(476003)(305945005)(7736002)(6116002)(74316002)(44832011)(229853002)(6436002)(55016002)(54906003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3643;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: K6s2ph1cijMBXRPia0JJifM4zEgMRqFIrfi42wGGQJdFAPFxnN5XeB2nwdz/RiHKIkweTI4qylbOg+6XKE4t0SZQqetmrdYtsOrri9JGw+nUYiF5xpeTeZSMDwj8yDD8IWnJOWsAnjiZxoM3s5cEn5uE1O+LtBoxnRCnLOL5gujSIHQuIcYoozE9BTiycVUbKO5aaJO1wnhtrUcUt4ABvoPmho1gCN1bUuIXCTOJdr1h+H3/mtWN4U+x9yLnzcl6mBchC0QF2Sdt/NgUGBhNAw7KOVNFRF9aceriY9/8/emIMW0iAvnYjghLSfTd26iJOsEij+NhypzpNnGFBnyKMtQPanXT5HjVuoUl6tyQdO9g/EpTqAzsPhHIGInE+u75n96SSRcSeHc+9SSAxK0Yux/eOvoAMst/T/ookruszos=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 22 Sep 2019 23:00:27 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41601 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404758AbfIWDA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 23:00:26 -0400
+Received: by mail-vs1-f68.google.com with SMTP id l2so8433766vsr.8;
+        Sun, 22 Sep 2019 20:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BWqaQWhv6k4houp28Xd7ZU1mZ5VF9c1nzAKk9Enxcmk=;
+        b=EOOfU1a0AH0mVvagVrPoEIh2rGXN4f6EkUieuaxKWYNDyXlH0kcyfzRNRH1XWN3WBv
+         xTHg/LTNgUCEooocx3u1b9FQsMNv+iiYv7eAsZyAgTUv/KDEKo7l8yAOBOYRXyfV6+sG
+         szXDY/P2IIfLgqlV9f4lzWwo6M5c6agXYy2RXNRxMvFLEFlin6+G4TshRcqiAmplEiQL
+         26QLOOnPT3HUIuR6yyz4d8Nvox3oIg3qrFFidu3VSaWs9o2rTya8pPYmM3snFpoUCx1Q
+         4iaP/n4xdiE5ByCX4Bz847+dtz1aG1Spl9c2iLXnSRujSWd97xBcVARe6y1eNYkTgGMB
+         A9PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BWqaQWhv6k4houp28Xd7ZU1mZ5VF9c1nzAKk9Enxcmk=;
+        b=DOYm3z7gCj76HyHi99iilrL6HHJIibVcTDlyPJ8hHbepip1Nnlq0dC1C8WoCaH5gYu
+         l6vqp7UEZZ1TAzf7LNrNUyViEIEqRXrS3Xxyd7qIqjq0K8/mrhq6ZG5csH7ShTaM6aOL
+         fJO0WA3VAFCq4x9n4JCvv+ivpTrUI8HNJ2YGYijORrepFHkQn7ulr8pPM+QXH1/fF53p
+         2cN9srLSJBMR+EqKapbjzzh4Cc1TVhS4AJy93Ae/KszaRCp3BCnfIv7cM5cdeulnEccE
+         Lbn3WGxkP7Jgk0eCnWETqu7aofVN1BYt6A5rOzpg0SwABrPB9z964mApR3i3AUVu/9HK
+         d9Vg==
+X-Gm-Message-State: APjAAAWWMWcD4z9gm0JYTn6WpKyE2U/b/WXHQdmFqreV8LpIOQPuYc0T
+        yZRC0nwHXfdvRz2qryHhzObIO/BOW7nX64Hu5kI=
+X-Google-Smtp-Source: APXvYqymepsiquxOO2ZzZDvO+mwo8DVNZ3y8q8HuCmxQ/B7rhSM3UfH0Ye3A0ZQtwNPb+FVvfP2rZEyTzPwt6qX0rgI=
+X-Received: by 2002:a67:c181:: with SMTP id h1mr6465119vsj.195.1569207624720;
+ Sun, 22 Sep 2019 20:00:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4408efaa-c25f-4aee-1ace-08d73fcfc259
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 02:43:04.6115
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SpKDS5+vS2eabR49MXeoOr0S65YqxLagLrrgrbA0QqoImE6JCoYubS2OTZvbngGy2sBPgtyO5fEc0npp5l92+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3643
+References: <20190920185843.4096-1-matthew.cover@stackpath.com>
+ <20190922080326-mutt-send-email-mst@kernel.org> <CAGyo_hqGbFdt1PoDrmo=S5iTO8TwbrbtOJtbvGT1WrFFMLwk-Q@mail.gmail.com>
+ <0f4541d9-a405-6185-7e54-112dc9188146@redhat.com> <CAGyo_hp-PJUg7GWFK996vqRxn=cCEdE=hcWdYhyf4K-nSU9qYQ@mail.gmail.com>
+ <df4ee92f-89e4-70a7-2de8-49fa4acfa08e@redhat.com>
+In-Reply-To: <df4ee92f-89e4-70a7-2de8-49fa4acfa08e@redhat.com>
+From:   Matt Cover <werekraken@gmail.com>
+Date:   Sun, 22 Sep 2019 20:00:13 -0700
+Message-ID: <CAGyo_hrM8TzTp6L77x-_18XZn+NEcDyZXAxnwgNaCgMBLpCMPg@mail.gmail.com>
+Subject: Re: [PATCH net-next] tuntap: Fallback to automq on TUNSETSTEERINGEBPF
+ prog negative return
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, davem@davemloft.net,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com,
+        Eric Dumazet <edumazet@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Matthew Cover <matthew.cover@stackpath.com>,
+        mail@timurcelik.de, pabeni@redhat.com,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        wangli39@baidu.com, lifei.shirley@bytedance.com,
+        tglx@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFBhdmVsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNCAyLzVdIGlucHV0OiBrZXlib2Fy
-ZDogaW14X3NjOiBBZGQgaS5NWCBzeXN0ZW0NCj4gY29udHJvbGxlciBrZXkgc3VwcG9ydA0KPiAN
-Cj4gSGkhDQo+IA0KPiA+ID4gPiArCXJldCA9IGlteF9zY3VfY2FsbF9ycGMocHJpdi0+a2V5X2lw
-Y19oYW5kbGUsICZtc2csIHRydWUpOw0KPiA+ID4gPiArCWlmIChyZXQpIHsNCj4gPiA+ID4gKwkJ
-ZGV2X2VycigmaW5wdXQtPmRldiwgInJlYWQgaW14IHNjIGtleSBmYWlsZWQsIHJldCAlZFxuIiwg
-cmV0KTsNCj4gPiA+ID4gKwkJcmV0dXJuOw0KPiA+ID4gPiArCX0NCj4gPiA+ID4gKw0KPiA+ID4g
-PiArCXN0YXRlID0gKGJvb2wpbXNnLnN0YXRlOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJaWYgKCFz
-dGF0ZSAmJiAhcHJpdi0+a2V5c3RhdGUpDQo+ID4gPiA+ICsJCXN0YXRlID0gdHJ1ZTsNCj4gPiA+
-DQo+ID4gPiBUaGlzIG5lZWRzIGFuIGV4cGxhbmF0aW9uIHBsZWFzZS4NCj4gPg0KPiA+IFRoaXMg
-aXMgdG8gaGFuZGxlIHRoZSBxdWljayBwcmVzcyBvZiBidXR0b24sIGUuZy4sIHdoZW4gYnV0dG9u
-IGlzDQo+ID4gcHJlc3NlZCBhbmQgcmVsZWFzZWQgdmVyeSBxdWlja2x5LCB3aGVuIHRoZSBkZWxh
-eSB3b3JrIGlzIHNjaGVkdWxlZCwNCj4gPiB0aGUgYnV0dG9uIHN0YXRlIHJlYWQgZnJvbSBTQ1Ug
-RlcgaXMgYWN0dWFsbHkgYSByZWxlYXNlIHN0YXRlICgwKSwgdGhlIHByZXNzDQo+IHN0YXRlIGlz
-ICgxKSwgc28gdGhlIHF1aWNrIHByZXNzL3JlbGVhc2Ugd2lsbCBiZSBpZ25vcmVkLg0KPiA+DQo+
-ID4gSG93ZXZlciwgYWZ0ZXIgZG91YmxlIGNoZWNrIGFuZCB0ZXN0LCBJIHRoaW5rIHRoaXMgc2hv
-dWxkIGJlIGhhbmRsZWQNCj4gPiBieSBkZWJvdW5jZSB0aW1lLCBpZiB0aGUgYnV0dG9uIGlzIHBy
-ZXNzZWQvcmVsZWFzZSB2ZXJ5IHF1aWNrbHksIHRoZQ0KPiA+IGV2ZW50IHNob3VsZCBiZSBpZ25v
-cmVkLCBJIHdpbGwgcmVtb3ZlIGl0IGFuZCByZWR1Y2UgdGhlIGRlYm91bmNlIHRpbWUgdG8NCj4g
-MzBtUywgcHJldmlvdXMgMTAwbVMgaXMgdG9vIGxvbmcsIHVzaW5nIDMwbVMgYXMgZGVib3VuY2Ug
-dGltZSwgSSBkaWQgTk9UDQo+IHNlZSBzaW1pbGFyIGlzc3VlIG5vIG1hdHRlciBob3cgcXVpY2sg
-SSBwcmVzcy9yZWxlYXNlIHRoZSBidXR0b24uDQo+IA0KPiBBcmUgeW91IHN1cmUgdGhpcyBpcyBl
-eHBlY3RlZCBiZWhhdmlvdXI/DQo+IA0KPiBBRkFJSyBtaWNyb3N3aXRjaGVzIGNhbiBib3VuY2Ug
-d2hlbiB0aGUgYnV0dG9uIGlzIHByZXNzZWQgYW5kIHJlbGVhc2VkLA0KPiBidXQgd2lsbCBub3Qg
-Z2VuZXJhdGUgZ2xpdGNoZXMgd2hlbiB0aGUgYnV0dG9uIHdhcyBub3QgcHJlc3NlZCwgc28gZXZl
-bg0KPiBzaG9ydCBwcmVzc2VzIGFyZSByZWFsIGFuZCBzaG91bGQgYmUgcHJvcGFnYXRlZC4uLg0K
-DQpMYXRlc3QgdmVyc2lvbiBvZiBwYXRjaCBoYW5kbGUgdGhlIHF1aWNrIHByZXNzIGFzIGJlbG93
-Og0KDQotIFdoZW4gdGhlIGJ1dHRvbiBpcyBwcmVzc2VkLCB0aGUgZGVsYXllZCB3b3JrIHdpbGwg
-YmUgc2NoZWR1bGVkOw0KLSBJbiB0aGUgZGVsYXllZCB3b3JrLCB0aGUgYnV0dG9uIHN0YXRlIHdp
-bGwgYmUgcmVhZCwgb25jZSB0aGUgc3RhdGUgaXMgZGlmZmVyZW50IGFzIHByZXZpb3VzDQogIHN0
-YXRlLCBpdCB3aWxsIGJlIHByb3BhZ2F0ZWQ7DQotIElmIHRoZSBzdGF0ZSBpcyBhIHByZXNzIHN0
-YXRlLCBhbm90aGVyIGRlbGF5ZWQgd29yayB3aWxsIGJlIHNjaGVkdWxlZCBmb3IgaGFuZGxpbmcg
-cmVsZWFzZQ0KICBldmVudC4NCg0KU28gdGhlcmUgY291bGQgYmUgYSBzbWFsbCB3aW5kb3cgb2Yg
-REVCT1VOQ0VfVElNRSAoMzBtUykgYmV0d2VlbiBidXR0b24gcHJlc3MgYW5kIHRoZSBkZWxheWVk
-DQp3b3JrIHNjaGVkdWxlZCBmb3IgcmVhZGluZyB0aGUgYnV0dG9uIHN0YXRlLCBpZiB0aGUgYnV0
-dG9uIGlzIHJlbGVhc2VkIGluIGxlc3MgdGhhbiAzMG1zLCB0aGVuIHRoZQ0Kc3RhdGUgcmVhZCBj
-b3VsZCBiZSBhIHJlbGVhc2Ugc3RhdGUgd2hpY2ggaXMgc2FtZSBhcyBwcmV2aW91cyBzdGF0ZSBh
-bmQgaXQgd2lsbCBiZSBpZ25vcmVkLg0KDQpEbyB5b3UgdGhpbmsgaW4gdGhpcyBjYXNlLCB3ZSBz
-aG91bGQgYWxzbyBwcm9wYWdhdGVkIHRoZSBwcmVzcyBldmVudD8gSWYgeWVzLCB0aGVuIHdoYXQg
-YWJvdXQgdGhlDQpyZWxlYXNlIGV2ZW50PyBBbHRob3VnaCBmcm9tIHdoYXQgSSB0ZXN0ZWQsIG5v
-IG1hdHRlciBob3cgcXVpY2sgSSBwcmVzcyB0aGUgYnV0dG9uLCB0aGUgZHJpdmVyDQpjYW4gYWx3
-YXlzIHJlY2VpdmUgYm90aCB0aGUgcHJlc3MgYW5kIHJlbGVhc2UgZXZlbnQsIGFzIHRoZSAzMG1T
-IGlzIHZlcnkgc2hvcnQuDQoNClRoYW5rcywNCkFuc29uIA0K
+On Sun, Sep 22, 2019 at 7:32 PM Jason Wang <jasowang@redhat.com> wrote:
+>
+>
+> On 2019/9/23 =E4=B8=8A=E5=8D=889:20, Matt Cover wrote:
+> > On Sun, Sep 22, 2019 at 5:46 PM Jason Wang <jasowang@redhat.com> wrote:
+> >>
+> >> On 2019/9/23 =E4=B8=8A=E5=8D=881:43, Matt Cover wrote:
+> >>> On Sun, Sep 22, 2019 at 5:37 AM Michael S. Tsirkin <mst@redhat.com> w=
+rote:
+> >>>> On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
+> >>>>> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a sig=
+nal
+> >>>>> to fallback to tun_automq_select_queue() for tx queue selection.
+> >>>>>
+> >>>>> Compilation of this exact patch was tested.
+> >>>>>
+> >>>>> For functional testing 3 additional printk()s were added.
+> >>>>>
+> >>>>> Functional testing results (on 2 txq tap device):
+> >>>>>
+> >>>>>     [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun n=
+o prog =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() retu=
+rned '-1'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ra=
+n
+> >>>>>     [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun p=
+rog -1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() retu=
+rned '-1'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() retu=
+rned '-1'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ra=
+n
+> >>>>>     [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun p=
+rog 0 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() retu=
+rned '0'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() retu=
+rned '0'
+> >>>>>     [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun p=
+rog 1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() retu=
+rned '1'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() retu=
+rned '1'
+> >>>>>     [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun p=
+rog 2 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() retu=
+rned '2'
+> >>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() retu=
+rned '0'
+> >>>>>
+> >>>>> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
+> >>>> Could you add a bit more motivation data here?
+> >>> Thank you for these questions Michael.
+> >>>
+> >>> I'll plan on adding the below information to the
+> >>> commit message and submitting a v2 of this patch
+> >>> when net-next reopens. In the meantime, it would
+> >>> be very helpful to know if these answers address
+> >>> some of your concerns.
+> >>>
+> >>>> 1. why is this a good idea
+> >>> This change allows TUNSETSTEERINGEBPF progs to
+> >>> do any of the following.
+> >>>    1. implement queue selection for a subset of
+> >>>       traffic (e.g. special queue selection logic
+> >>>       for ipv4, but return negative and use the
+> >>>       default automq logic for ipv6)
+> >>
+> >> Well, using ebpf means it need to take care of all the cases. E.g you
+> >> can easily implement the fallback through eBPF as well.
+> >>
+> > I really think there is value in being
+> > able to implement a scoped special
+> > case while leaving the rest of the
+> > packets in the kernel's hands.
+>
+>
+> This is only work when some fucntion could not be done by eBPF itself
+> and then we can provide the function through eBPF helpers. But this is
+> not the case here.
+>
+>
+> >
+> > Having to reimplement automq makes
+> > this hookpoint less accessible to
+> > beginners and experienced alike.
+>
+>
+> Note that automq itself is kind of complicated, it's best effort that is
+> hard to be documented accurately. It has several limitations (e.g flow
+> caches etc.) that may not work well in some conditions.
+>
+> It's not hard to implement a user programmable steering policy through
+> maps which could have much deterministic behavior than automq. The goal
+> of steering ebpf is to get rid of automq completely not partially rely
+> on it.
+>
+> And I don't see how relying on automq can simplify anything.
+>
+> Thanks
+>
+
+I'm not suggesting that we document automq.
+
+I'm suggesting that we add a return value
+which is documented as signaling to the
+kernel to implement whatever queue
+selection method is used when there is no
+ebpf prog attached. That behavior today is
+automq.
+
+There is nothing about this return value
+which would harder to change the default
+queue selection later. The default already
+exists today when there is no program
+loaded.
+
+>
+> >
+> >>>    2. determine there isn't sufficient information
+> >>>       to do proper queue selection; return
+> >>>       negative and use the default automq logic
+> >>>       for the unknown
+> >>
+> >> Same as above.
+> >>
+> >>
+> >>>    3. implement a noop prog (e.g. do
+> >>>       bpf_trace_printk() then return negative and
+> >>>       use the default automq logic for everything)
+> >>
+> >> ditto.
+> >>
+> >>
+> >>>> 2. how do we know existing userspace does not rely on existing behav=
+iour
+> >>> Prior to this change a negative return from a
+> >>> TUNSETSTEERINGEBPF prog would have been cast
+> >>> into a u16 and traversed netdev_cap_txqueue().
+> >>>
+> >>> In most cases netdev_cap_txqueue() would have
+> >>> found this value to exceed real_num_tx_queues
+> >>> and queue_index would be updated to 0.
+> >>>
+> >>> It is possible that a TUNSETSTEERINGEBPF prog
+> >>> return a negative value which when cast into a
+> >>> u16 results in a positive queue_index less than
+> >>> real_num_tx_queues. For example, on x86_64, a
+> >>> return value of -65535 results in a queue_index
+> >>> of 1; which is a valid queue for any multiqueue
+> >>> device.
+> >>>
+> >>> It seems unlikely, however as stated above is
+> >>> unfortunately possible, that existing
+> >>> TUNSETSTEERINGEBPF programs would choose to
+> >>> return a negative value rather than return the
+> >>> positive value which holds the same meaning.
+> >>>
+> >>> It seems more likely that future
+> >>> TUNSETSTEERINGEBPF programs would leverage a
+> >>> negative return and potentially be loaded into
+> >>> a kernel with the old behavior.
+> >>
+> >> Yes, eBPF can return probably wrong value, but what kernel did is just
+> >> to make sure it doesn't harm anything.
+> >>
+> >> I would rather just drop the packet in this case.
+> >>
+> > In addition to TUN_SSE_ABORT, we can
+> > add TUN_SSE_DROP. That could be made the
+> > default for any undefined negative
+> > return as well.
+> >
+> >> Thanks
+> >>
+> >>
+> >>>> 3. why doesn't userspace need a way to figure out whether it runs on=
+ a kernel with and
+> >>>>      without this patch
+> >>> There may be some value in exposing this fact
+> >>> to the ebpf prog loader. What is the standard
+> >>> practice here, a define?
+> >>>
+> >>>> thanks,
+> >>>> MST
+> >>>>
+> >>>>> ---
+> >>>>>    drivers/net/tun.c | 20 +++++++++++---------
+> >>>>>    1 file changed, 11 insertions(+), 9 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> >>>>> index aab0be4..173d159 100644
+> >>>>> --- a/drivers/net/tun.c
+> >>>>> +++ b/drivers/net/tun.c
+> >>>>> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun=
+_struct *tun, struct sk_buff *skb)
+> >>>>>         return txq;
+> >>>>>    }
+> >>>>>
+> >>>>> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk=
+_buff *skb)
+> >>>>> +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk=
+_buff *skb)
+> >>>>>    {
+> >>>>>         struct tun_prog *prog;
+> >>>>>         u32 numqueues;
+> >>>>> -     u16 ret =3D 0;
+> >>>>> +     int ret =3D -1;
+> >>>>>
+> >>>>>         numqueues =3D READ_ONCE(tun->numqueues);
+> >>>>>         if (!numqueues)
+> >>>>>                 return 0;
+> >>>>>
+> >>>>> +     rcu_read_lock();
+> >>>>>         prog =3D rcu_dereference(tun->steering_prog);
+> >>>>>         if (prog)
+> >>>>>                 ret =3D bpf_prog_run_clear_cb(prog->prog, skb);
+> >>>>> +     rcu_read_unlock();
+> >>>>>
+> >>>>> -     return ret % numqueues;
+> >>>>> +     if (ret >=3D 0)
+> >>>>> +             ret %=3D numqueues;
+> >>>>> +
+> >>>>> +     return ret;
+> >>>>>    }
+> >>>>>
+> >>>>>    static u16 tun_select_queue(struct net_device *dev, struct sk_bu=
+ff *skb,
+> >>>>>                             struct net_device *sb_dev)
+> >>>>>    {
+> >>>>>         struct tun_struct *tun =3D netdev_priv(dev);
+> >>>>> -     u16 ret;
+> >>>>> +     int ret;
+> >>>>>
+> >>>>> -     rcu_read_lock();
+> >>>>> -     if (rcu_dereference(tun->steering_prog))
+> >>>>> -             ret =3D tun_ebpf_select_queue(tun, skb);
+> >>>>> -     else
+> >>>>> +     ret =3D tun_ebpf_select_queue(tun, skb);
+> >>>>> +     if (ret < 0)
+> >>>>>                 ret =3D tun_automq_select_queue(tun, skb);
+> >>>>> -     rcu_read_unlock();
+> >>>>>
+> >>>>>         return ret;
+> >>>>>    }
+> >>>>> --
+> >>>>> 1.8.3.1
