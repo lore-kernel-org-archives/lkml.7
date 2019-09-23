@@ -2,138 +2,132 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED7C2BC0B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE4C47E48
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A08721655
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32A221D7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569273793;
+	bh=pCKg+2PogolszkaY7ZsYq/p4t00jT/BUvnHEy609X5E=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ecuGKX1RonSWeo89451DIZ4E3skQXe2ASmgc7hPjb+7Ev05XgL0jmT2ZnjdBa7hqG
+	 n8MJtxJzkNzE1i99DCTagXmbq+MLUIK9ZRBDzgCyngy85E8GEXWX9tQuMtzi2OVXNg
+	 X1lcm30g6KHWn6urs7VdVXlUq/BvtbllSB/C82D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503111AbfIWVay (ORCPT
+        id S2503012AbfIWVXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:30:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732345AbfIWVay (ORCPT
+        Mon, 23 Sep 2019 17:23:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35066 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388117AbfIWVXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:30:54 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NLN3AP091077;
-        Mon, 23 Sep 2019 17:30:42 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v740wkjnj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 17:30:42 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NLPiYH027618;
-        Mon, 23 Sep 2019 21:30:41 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 2v5bg74hy0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 21:30:41 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NLUdXr30015898
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 21:30:40 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C75A8C6059;
-        Mon, 23 Sep 2019 21:30:39 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C759C6057;
-        Mon, 23 Sep 2019 21:30:38 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.184])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 21:30:37 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 1/1] powerpc: kvm: Reduce calls to get current->mm by storing the value locally
-Date:   Mon, 23 Sep 2019 18:30:23 -0300
-Message-Id: <20190923213022.7740-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=351 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230179
+        Mon, 23 Sep 2019 17:23:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=0RChqD8gufqrC52I0W7my4ugNN03wWJCMZqZC40eNIs=; b=Va5BDDrVg2t+
+        U4Yav0A2EiOeMbHZkmUFajYv/LmKTBlI5tNReHgN3OA53uZPAveYKacTgPr/zkN3h5GSe5Lm9Ki5E
+        SmjnhDbDX+A1EY+kHVVymNGg80D1wD/ixNBQPVYbsfhqIxKTKS0wW0vUNhe+fygsptXmbb5ZxkMEq
+        eMdKg=;
+Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCVnX-0005Wr-MK; Mon, 23 Sep 2019 21:23:07 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id CFB9ED02FE4; Mon, 23 Sep 2019 22:23:05 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Applied "regulator: fixed: Prevent NULL pointer dereference when !CONFIG_OF" to the regulator tree
+In-Reply-To: <20190922022928.28355-1-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190923212305.CFB9ED02FE4@fitzroy.sirena.org.uk>
+Date:   Mon, 23 Sep 2019 22:23:05 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduces the number of calls to get_current() in order to get the value of
-current->mm by doing it once and storing the value, since it is not
-supposed to change inside the same process).
+The patch
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+   regulator: fixed: Prevent NULL pointer dereference when !CONFIG_OF
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 1d6db22ff7d67a17c571543c69c63b1d261249b0 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Sun, 22 Sep 2019 10:29:28 +0800
+Subject: [PATCH] regulator: fixed: Prevent NULL pointer dereference when
+ !CONFIG_OF
+
+Use of_device_get_match_data which has NULL test for match before
+dereference match->data. Add NULL test for drvtype so it still works
+for fixed_voltage_ops when !CONFIG_OF.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
+Link: https://lore.kernel.org/r/20190922022928.28355-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Re-sending to all lists involved. (I missed kvm ones)
+ drivers/regulator/fixed.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
- arch/powerpc/kvm/book3s_64_mmu_hv.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 9a75f0e1933b..f2b9aea43216 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -508,6 +508,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	struct vm_area_struct *vma;
- 	unsigned long rcbits;
- 	long mmio_update;
-+	struct mm_struct *mm;
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index d90a6fd8cbc7..f81533070058 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -144,8 +144,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct fixed_voltage_config *config;
+ 	struct fixed_voltage_data *drvdata;
+-	const struct fixed_dev_type *drvtype =
+-		of_match_device(dev->driver->of_match_table, dev)->data;
++	const struct fixed_dev_type *drvtype = of_device_get_match_data(dev);
+ 	struct regulator_config cfg = { };
+ 	enum gpiod_flags gflags;
+ 	int ret;
+@@ -177,7 +176,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
+ 	drvdata->desc.type = REGULATOR_VOLTAGE;
+ 	drvdata->desc.owner = THIS_MODULE;
  
- 	if (kvm_is_radix(kvm))
- 		return kvmppc_book3s_radix_page_fault(run, vcpu, ea, dsisr);
-@@ -584,6 +585,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	is_ci = false;
- 	pfn = 0;
- 	page = NULL;
-+	mm = current->mm;
- 	pte_size = PAGE_SIZE;
- 	writing = (dsisr & DSISR_ISSTORE) != 0;
- 	/* If writing != 0, then the HPTE must allow writing, if we get here */
-@@ -592,8 +594,8 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 	npages = get_user_pages_fast(hva, 1, writing ? FOLL_WRITE : 0, pages);
- 	if (npages < 1) {
- 		/* Check if it's an I/O mapping */
--		down_read(&current->mm->mmap_sem);
--		vma = find_vma(current->mm, hva);
-+		down_read(&mm->mmap_sem);
-+		vma = find_vma(mm, hva);
- 		if (vma && vma->vm_start <= hva && hva + psize <= vma->vm_end &&
- 		    (vma->vm_flags & VM_PFNMAP)) {
- 			pfn = vma->vm_pgoff +
-@@ -602,7 +604,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 			is_ci = pte_ci(__pte((pgprot_val(vma->vm_page_prot))));
- 			write_ok = vma->vm_flags & VM_WRITE;
- 		}
--		up_read(&current->mm->mmap_sem);
-+		up_read(&mm->mmap_sem);
- 		if (!pfn)
- 			goto out_put;
- 	} else {
-@@ -621,8 +623,7 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
- 			 * hugepage split and collapse.
- 			 */
- 			local_irq_save(flags);
--			ptep = find_current_mm_pte(current->mm->pgd,
--						   hva, NULL, NULL);
-+			ptep = find_current_mm_pte(mm->pgd, hva, NULL, NULL);
- 			if (ptep) {
- 				pte = kvmppc_read_update_linux_pte(ptep, 1);
- 				if (__pte_write(pte))
+-	if (drvtype->has_enable_clock) {
++	if (drvtype && drvtype->has_enable_clock) {
+ 		drvdata->desc.ops = &fixed_voltage_clkenabled_ops;
+ 
+ 		drvdata->enable_clock = devm_clk_get(dev, NULL);
 -- 
 2.20.1
 
