@@ -2,122 +2,60 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85898C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A23C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682292168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E0C20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbfIWSfo (ORCPT
+        id S1727971AbfIWSgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:35:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727376AbfIWSfo (ORCPT
+        Mon, 23 Sep 2019 14:36:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59410 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfIWSgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:35:44 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NIRme7091354;
-        Mon, 23 Sep 2019 14:35:26 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v72wrh5fe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 14:35:26 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NIVMc1031145;
-        Mon, 23 Sep 2019 18:35:25 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 2v5bg73544-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 18:35:25 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NIZNdQ40042852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 18:35:23 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83E1ABE04F;
-        Mon, 23 Sep 2019 18:35:23 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BAAABBE051;
-        Mon, 23 Sep 2019 18:35:22 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.184])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 18:35:22 +0000 (GMT)
-Message-ID: <8da27002e60b1c974836fa418b2b54a6f38fcdde.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] powerpc: kvm: Reduce calls to get current->mm by
- storing the value locally
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     PaulMackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 23 Sep 2019 15:35:21 -0300
-In-Reply-To: <5af478e1da6c0b847fbaf3aff6ccce5720e8a23c.camel@linux.ibm.com>
-References: <20190919222748.20761-1-leonardo@linux.ibm.com>
-         <5af478e1da6c0b847fbaf3aff6ccce5720e8a23c.camel@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-a1Mf0lh3sh8GXIMVDSuA"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 23 Sep 2019 14:36:09 -0400
+Received: from pd9ef19d4.dip0.t-ipconnect.de ([217.239.25.212] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iCTBt-0003Wu-Jh; Mon, 23 Sep 2019 20:36:05 +0200
+Date:   Mon, 23 Sep 2019 20:36:04 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RT] posix-timers: Unlock expiry lock in the early
+ return
+In-Reply-To: <20190923160141.oqsv7vwhw5pof6f2@linutronix.de>
+Message-ID: <alpine.DEB.2.21.1909232035530.1934@nanos.tec.linutronix.de>
+References: <20190923160141.oqsv7vwhw5pof6f2@linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230159
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 23 Sep 2019, Sebastian Andrzej Siewior wrote:
 
---=-a1Mf0lh3sh8GXIMVDSuA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Patch ("posix-timers: Add expiry lock") acquired a lock in
+> run_posix_cpu_timers() but didn't drop the lock in the early return.
+> 
+> Unlock the lock in the early return path.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On Thu, 2019-09-19 at 23:47 -0300, Leonardo Bras wrote:
-> Hello Paul,=20
-> I sent this patch, but I have a question:
->=20
-> > +	mm =3D current->mm;
->=20
-> Here, current->mm is not always the same as kvm->mm?=20
-> Thanks
-
-
-I have contacted Paul, who said it is equivalent. But I think I will
-deal with that on another patch series, as it's another issue.
-
-Could you please provide feedback on this patch?
-
-Best regards,=20
-Leonardo Bras
-
---=-a1Mf0lh3sh8GXIMVDSuA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JEGkACgkQlQYWtz9S
-ttQyKRAAxGmTSogSImTnITEp4Cq3rTR33mthlkoEl6yfulhu4l8UIk34zME+4AFf
-GWb7Sd2we/IGxhxH0IM3JSj6qtUZOxeW1RgtNefYCrIx8/YEqm0e1nZBcGC90BVl
-vdHCgjt5d4KKZxqcVW0eKqieSumTHTdomxS9ZLASrF9j0Ciep3ZF+C1aNC5SPdXh
-MY9NqXFiHA9bgxydq3Icjw6+c8MHO+NXfx2vMaZG1jxfdbCYYi/b7/7w9AkMewtq
-euhMIEkkpVU/fhyivmrNeihiLM7uVfDRfhzFJkNZN2j/tGdbmai4Zvc3RMaI7SNf
-y7lC/sJx40J3pqkOVU01mwq79kIWCd0iLuNiIhky9G2b9Bgy4Q2FdSkMvpIr7xdd
-niHA8r/n///sk/E9gPUL6sqqi1UXgLBLQCfTf4nlI5O5QQZUjjzwKxNGHKCvI/sF
-8q+wKD3ttLCXG1UxsVtusaF6gizdC2C8o7Tng18XKdfsguvem1pQw3vMzsV+ANWj
-4oRx8j0D5s8PVVxfzwyA+kLPWeXAeHPaEiKWnFXnxifdA7yB5iI4mABVye3P8p1K
-6Dp4DgmCkDJsY3p9Hmbxn+poFpovucfUH/+qfTZCjAycz9cbGJoYNc3/FJgc22GN
-kFNOLmKUkRs4M7lb544NbBWGTDUCuUcxvTtVIdPFGPzQZKj/ncE=
-=ub7Y
------END PGP SIGNATURE-----
-
---=-a1Mf0lh3sh8GXIMVDSuA--
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
