@@ -2,227 +2,119 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E13C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767DDC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD8C207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+sph3Qs"
+	by mail.kernel.org (Postfix) with ESMTP id 51B5621841
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439972AbfIWOcF (ORCPT
+        id S2437958AbfIWOd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:32:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34260 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437427AbfIWOcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:32:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b128so9259211pfa.1;
-        Mon, 23 Sep 2019 07:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NdWL2Xiq3cS/BfrYS0FnV72zAIIRU8nsmqTk9Q6D73w=;
-        b=N+sph3QsTYxFcVE4teLhSOS62PeOUnNTYuHCACNp8IP+DxF/jMGabVX/dzhbnS3w8c
-         5HrfWEBRIhutPZWCM5HD2OBf8RQOM6LEWmpgAGu3CgTUA7zLIAweiUmtSPJkTOZ4cGRu
-         5uPWJgVR5/nr8OvHIyj53u5BvkmwfNu7VstGFAndgKpgMWx43zhDm4lSQxLmYBaxCc4v
-         bFETaNs51UwkWP2a/zA5OjhiwkE9ZX10hIppNckrMPiRTuaTi11B1zhMElbK7aZVBr2D
-         Pxfk8Updtto8c+BYP2sb4kZHfgXqpAbbqmjcoAkLHcimrHm9Z2jA/eU43oyoK1lPU3y1
-         IitA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NdWL2Xiq3cS/BfrYS0FnV72zAIIRU8nsmqTk9Q6D73w=;
-        b=JLAv+9qg1ZQwz5pGiXY/i/KRGdBc3Jv8JD4YOa3yVfEaXUJPRcXCU2xYZjKDNgxWg2
-         kRqKYZCoiGoX4exbB2AT/8LgSVSKNNpgyHpkvCWXA426S9KXRco5YKKR3+5vGSJe2Hve
-         QwaY3/LKXHpbT4SM9HTDTNN8tjjd1cL4UjFRvIcysHez/iF5iBteFerVBwKoIeECWVr5
-         eLmcCpLHMsNxPC4YsfS9eFkrkTbwUVMMl9lWM/dzSF/8nC9sg070j0a2ASyEG2MHTKT4
-         SvuT7/2f4BSmnQvirI5OZ2rh0hq3roIAy94Kaj/wZMMshZ8vYz5cLPsNja7YfFZRXxAA
-         lkBQ==
-X-Gm-Message-State: APjAAAWR9XlqMY2yqtXZR93m0Dfv30vE3Fe4jZXrTH7nTX118+hyPjs2
-        ggOaYpwMrrBBhAY+wKaSyD3NtzoD
-X-Google-Smtp-Source: APXvYqwVxWY2hR1+J8pjDw5gRFB44H/IjwFJtZUdUo2dJ+GvCZD4N9S5ELVmVfG9Lgyzp4bzrtEfIg==
-X-Received: by 2002:a63:515a:: with SMTP id r26mr242299pgl.121.1569249123574;
-        Mon, 23 Sep 2019 07:32:03 -0700 (PDT)
-Received: from Gentoo ([103.231.91.35])
-        by smtp.gmail.com with ESMTPSA id bx18sm9556925pjb.26.2019.09.23.07.31.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 07:32:02 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 20:01:48 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.3.1
-Message-ID: <20190923143145.GA17787@Gentoo>
-References: <20190921063708.GA1083465@kroah.com>
+        Mon, 23 Sep 2019 10:33:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:43344 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437427AbfIWOd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:33:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 438731000;
+        Mon, 23 Sep 2019 07:33:28 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8F293F59C;
+        Mon, 23 Sep 2019 07:33:26 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
+To:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Dominik Behr <dbehr@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nick Fan <nick.fan@mediatek.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190905081546.42716-1-drinkcat@chromium.org>
+ <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
+ <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
+ <20190913181729.GB3115@kevin>
+ <CANMq1KD++==d0Mb6T2gKU1T7c_MaedswOYdxqEqEKKUL1bxgiw@mail.gmail.com>
+ <20190919123243.GA3457@kevin>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <3dfa9e3c-9a78-90d1-68c9-7b64a3d734e4@arm.com>
+Date:   Mon, 23 Sep 2019 15:33:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <20190921063708.GA1083465@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919123243.GA3457@kevin>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19/09/2019 13:32, Alyssa Rosenzweig wrote:
+>>> By the time MT8183 shows up in more concrete devices, it will, certainly
+>>> in kernel-space and likely in userspace as well. At present, the DDK can
+>>> be modified to run on top of the in-tree Mali drivers, i.e. "Bifrost on
+>>> mainline linux-next (+ page table/compatible patches), with blob
+>>> userspace".
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually most(?) Bifrost GPUs support the "legacy" 'LPAE-ish' page table
+format. So the only kernel change *required* is adding the compatible
+string (and any SoC-specific quirks).
 
-On 08:37 Sat 21 Sep 2019, Greg KH wrote:
->I'm announcing the release of the 5.3.1 kernel.
->
->All users of the 5.3 kernel series must upgrade.
->
->The updated 5.3.y git tree can be found at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git lin=
-ux-5.3.y
->and can be browsed at the normal kernel.org git web browser:
->	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3D=
-summary
->
->thanks,
->
->greg k-h
+The support for "blob-on-Panfrost" is currently an experimental internal
+investigation. So I can't make any promises about it ever being released
+publicly.
 
-Thanks, a bunch Greg! :)
+>>> While the open userspace isn't ready here quite yet, I would definitely
+>>> encourage upstream kernel for ChromeOS, since then there's no need to
+>>> maintain the out-of-tree GPU driver.
+>>
+>> That's an interesting idea, I had no idea, thanks for the info!
+>>
+>> Would that work with midgard as well? We have released hardware with
+>> RK3288/3399, so it might be nice to experiment with these first.
+> 
+> Yes, the above would work with Midgard as well with no changes needed.
+> Ping Steven about thtat (CC'd).
 
-Thanks,
-Bhaskar
->
->------------
->
-> Documentation/filesystems/overlayfs.txt           |    2
-> Documentation/sphinx/automarkup.py                |    2
-> Makefile                                          |    2
-> arch/arm64/include/asm/pgtable.h                  |   12 ++-
-> drivers/block/floppy.c                            |    4 -
-> drivers/firmware/google/vpd.c                     |    4 -
-> drivers/firmware/google/vpd_decode.c              |   55 +++++++++-------
-> drivers/firmware/google/vpd_decode.h              |    6 -
-> drivers/media/usb/dvb-usb/technisat-usb2.c        |   22 +++---
-> drivers/media/usb/tm6000/tm6000-dvb.c             |    3
-> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   12 ++-
-> drivers/net/xen-netfront.c                        |    2
-> drivers/phy/qualcomm/phy-qcom-qmp.c               |   33 ++++-----
-> drivers/phy/renesas/phy-rcar-gen3-usb2.c          |    2
-> drivers/tty/serial/atmel_serial.c                 |    1
-> drivers/tty/serial/sprd_serial.c                  |    2
-> drivers/usb/core/config.c                         |   12 ++-
-> fs/overlayfs/ovl_entry.h                          |    1
-> fs/overlayfs/super.c                              |   73 ++++++++++++++--=
-------
-> include/net/pkt_sched.h                           |    7 +-
-> include/net/sock_reuseport.h                      |   20 +++++-
-> net/core/dev.c                                    |   16 +++-
-> net/core/sock_reuseport.c                         |   15 +++-
-> net/dsa/dsa2.c                                    |    2
-> net/ipv4/datagram.c                               |    2
-> net/ipv4/udp.c                                    |    5 -
-> net/ipv6/datagram.c                               |    2
-> net/ipv6/ip6_gre.c                                |    2
-> net/ipv6/udp.c                                    |    5 -
-> net/sched/sch_generic.c                           |    3
-> net/wireless/nl80211.c                            |    4 -
-> virt/kvm/coalesced_mmio.c                         |   19 +++--
-> 32 files changed, 226 insertions(+), 126 deletions(-)
->
->Alan Stern (1):
->      USB: usbcore: Fix slab-out-of-bounds bug during device reset
->
->Amir Goldstein (1):
->      ovl: fix regression caused by overlapping layers detection
->
->Andrew Lunn (1):
->      net: dsa: Fix load order between DSA drivers and taggers
->
->Bjorn Andersson (1):
->      phy: qcom-qmp: Correct ready status, again
->
->Chunyan Zhang (1):
->      serial: sprd: correct the wrong sequence of arguments
->
->Cong Wang (1):
->      net_sched: let qdisc_put() accept NULL pointer
->
->Dongli Zhang (1):
->      xen-netfront: do not assume sk_buff_head list is empty in error hand=
-ling
->
->Greg Kroah-Hartman (1):
->      Linux 5.3.1
->
->Hung-Te Lin (1):
->      firmware: google: check if size is valid when decoding VPD data
->
->Jann Horn (1):
->      floppy: fix usercopy direction
->
->Jonathan Neusch=E4fer (1):
->      Documentation: sphinx: Add missing comma to list of strings
->
->Jose Abreu (1):
->      net: stmmac: Hold rtnl lock in suspend/resume callbacks
->
->Masashi Honma (1):
->      nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds
->
->Matt Delco (1):
->      KVM: coalesced_mmio: add bounds checking
->
->Paolo Abeni (1):
->      net/sched: fix race between deactivation and dequeue for NOLOCK qdisc
->
->Razvan Stefanescu (1):
->      tty/serial: atmel: reschedule TX after RX was started
->
->Sean Young (2):
->      media: tm6000: double free if usb disconnect while streaming
->      media: technisat-usb2: break out of loop at end of buffer
->
->Will Deacon (1):
->      Revert "arm64: Remove unnecessary ISBs from set_{pte,pmd,pud}"
->
->Willem de Bruijn (1):
->      udp: correct reuseport selection with connected sockets
->
->Xin Long (1):
->      ip6_gre: fix a dst leak in ip6erspan_tunnel_xmit
->
->Yoshihiro Shimoda (1):
->      phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
->
+Indeed since it's the same kernel driver the same compatibility layer
+can be used to run Midgard DDK blob on Panfrost. Although given the
+progress that has already occurred with the Mesa Panfrost user space you
+might be able to simply switch to a completely open stack (available now).
 
+Again I'm afraid I'm not in a position to give any guarantees that my
+prototype blob-on-Panfrost work will actually be released or timescales
+of when. However since the current focus internally is on newer GPUs I'm
+less confident that there will be interest for Midgard DDK on Panfrost.
 
+Steve
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
+>>> More immediately, per Rob's review, it's important that the bindings
+>>> accepted upstream work with the in-tree Bifrost driver. Conceptually,
+>>> once Mesa supports Bifrost, if I install Debian on a MT8183 board,
+>>> everything should just work. I shouldn't need MT-specific changes / need
+>>> to change names for the DT. Regardless of which kernel driver you end up
+>>> using, minimally sharing the DT is good for everyone :-)
+>>
+>> Yes. I'll try to dig further with MTK, but this may take some time.
+> 
+> Thank you!
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2I100ACgkQsjqdtxFL
-KRVd1wf8Cn9lZ+rU6FwMb1+W/8nLyh8EK7c9rSQWkuZWwhLQlMbLWs/CS8Uzwhhy
-+q36BCH05L7hn1XeI8/Rs30oriZqOzp3lJBgxAL31AJ8rOwGZiPXyg03DszCL2js
-Al8Ej7rYd7wBbQKWuqh/tMptoog3bUMituZl1JlFSmqimINNC4MztwaDowfrwSJt
-OQDDXP+X+M8tkY59BEe5KN+6qydAr5ZeRcQAI73X2TFw44KaEKSO8zULopeyMkUe
-a2HBSb1/mRCfAqyu/U2PKCkgUcBeTr1dd2qcNHttshKlsg46/q8qYHFRPWtsmE4T
-bNBNlD7nwA0JovQHzHIxjlN0wUZDNw==
-=S0eI
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
