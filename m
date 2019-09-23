@@ -2,134 +2,98 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE116C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E98C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76C520835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55670207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395563AbfIWNGK (ORCPT
+        id S2439591AbfIWNGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 23 Sep 2019 09:06:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58456 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395068AbfIWNGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 09:06:10 -0400
-Received: from regular1.263xmail.com ([211.150.70.201]:51890 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730313AbfIWNGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:06:09 -0400
-Received: from hjc?rock-chips.com (unknown [192.168.167.76])
-        by regular1.263xmail.com (Postfix) with ESMTP id 774492D6;
-        Mon, 23 Sep 2019 21:05:26 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.10.69] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P32760T140634052613888S1569243921745443_;
-        Mon, 23 Sep 2019 21:05:24 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0b6fdb288fe78861d4a4f870d3f2f563>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 01/36] drm/fourcc: Add 2 plane YCbCr 10bit format support
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-References: <1569242365-182133-1-git-send-email-hjc@rock-chips.com>
- <1569242365-182133-2-git-send-email-hjc@rock-chips.com>
- <20190923125314.GJ1208@intel.com>
-From:   "sandy.huang" <hjc@rock-chips.com>
-Message-ID: <82664d48-36de-15fd-3b30-a12907e5bfcd@rock-chips.com>
-Date:   Mon, 23 Sep 2019 06:05:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E21F220E4;
+        Mon, 23 Sep 2019 13:06:09 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-93.pek2.redhat.com [10.72.12.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42FEC1001B00;
+        Mon, 23 Sep 2019 13:05:34 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 5/6] vringh: fix copy direction of vringh_iov_push_kern()
+Date:   Mon, 23 Sep 2019 21:03:30 +0800
+Message-Id: <20190923130331.29324-6-jasowang@redhat.com>
+In-Reply-To: <20190923130331.29324-1-jasowang@redhat.com>
+References: <20190923130331.29324-1-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923125314.GJ1208@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 23 Sep 2019 13:06:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We want to copy from iov to buf, so the direction was wrong.
 
-在 2019/9/23 上午5:53, Ville Syrjälä 写道:
-> On Mon, Sep 23, 2019 at 08:38:50PM +0800, Sandy Huang wrote:
->> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->> index 3feeaa3..5fe89e9 100644
->> --- a/include/uapi/drm/drm_fourcc.h
->> +++ b/include/uapi/drm/drm_fourcc.h
->> @@ -266,6 +266,21 @@ extern "C" {
->>   #define DRM_FORMAT_P016		fourcc_code('P', '0', '1', '6') /* 2x2 subsampled Cr:Cb plane 16 bits per channel */
->>   
->>   /*
->> + * 2 plane YCbCr 10bit
->> + * index 0 = Y plane, [9:0] Y
->> + * index 1 = Cr:Cb plane, [19:0] Cr:Cb little endian
->> + * or
->> + * index 1 = Cb:Cr plane, [19:0] Cb:Cr little endian
-> What does "little endian" even mean for these?
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vhost/vringh.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-It's Inherited from the following define, the difference is 8bit and 10bit.
-
-/*
-  * 2 plane YCbCr
-  * index 0 = Y plane, [7:0] Y
-  * index 1 = Cr:Cb plane, [15:0] Cr:Cb little endian
-  * or
-  * index 1 = Cb:Cr plane, [15:0] Cb:Cr little endian
-  */
-#define DRM_FORMAT_NV12        fourcc_code('N', 'V', '1', '2') /* 2x2 
-subsampled Cr:Cb plane */
-#define DRM_FORMAT_NV21        fourcc_code('N', 'V', '2', '1') /* 2x2 
-subsampled Cb:Cr plane */
-#define DRM_FORMAT_NV16        fourcc_code('N', 'V', '1', '6') /* 2x1 
-subsampled Cr:Cb plane */
-#define DRM_FORMAT_NV61        fourcc_code('N', 'V', '6', '1') /* 2x1 
-subsampled Cb:Cr plane */
-#define DRM_FORMAT_NV24        fourcc_code('N', 'V', '2', '4') /* 
-non-subsampled Cr:Cb plane */
-#define DRM_FORMAT_NV42        fourcc_code('N', 'V', '4',
-
-
->
->> + */
->> +
->> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
->> +
->> +/*
->>    * 3 plane YCbCr
->>    * index 0: Y plane, [7:0] Y
->>    * index 1: Cb plane, [7:0] Cb
->> -- 
->> 2.7.4
->>
->>
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+index 08ad0d1f0476..a0a2d74967ef 100644
+--- a/drivers/vhost/vringh.c
++++ b/drivers/vhost/vringh.c
+@@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
+ 	return 0;
+ }
+ 
++static inline int kern_xfer(void *dst, void *src, size_t len)
++{
++	memcpy(dst, src, len);
++	return 0;
++}
++
+ /**
+  * vringh_init_kern - initialize a vringh for a kernelspace vring.
+  * @vrh: the vringh to initialize.
+@@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
+ ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
+ 			     const void *src, size_t len)
+ {
+-	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
++	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
+ }
+ EXPORT_SYMBOL(vringh_iov_push_kern);
+ 
+-- 
+2.19.1
 
