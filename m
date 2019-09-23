@@ -2,106 +2,159 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF83C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29872C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F1620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F376920B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njkIaQHg"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="iC4dUtHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502483AbfIWUKJ (ORCPT
+        id S2502493AbfIWUOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:10:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41557 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502454AbfIWUKI (ORCPT
+        Mon, 23 Sep 2019 16:14:38 -0400
+Received: from sonic304-16.consmr.mail.bf2.yahoo.com ([74.6.128.39]:35227 "EHLO
+        sonic304-16.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728647AbfIWUOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:10:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id r26so36584918ioh.8;
-        Mon, 23 Sep 2019 13:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=O4biPIS8QtKs0W4x755+TgKPEkw6EcSzOJulQCgOdjc=;
-        b=njkIaQHgxTxbxvCQR+vWZUivpNX+akdE2x1/MQJw6UKmijwTx7tDcioLHiCWPOR1As
-         2ezrnErR4qB8uh5MPY9oEv+uSM+Yzw/FRYBhw8dUYeyi36bRn1esr9cA/moDArP0sFZO
-         LGNq6sY8q+rH4eZD8M9rBBLYCIA63O53qsuJg3l4L71c0iViJsYoVlmixUSG9VxlEIL9
-         C3EhOLUS41GYEj5FzzL8m5OW+2FjNCBFan5Rp0exvo2AFgkvJbI1M5+zlSAjo9oBDfMA
-         880tkUs8fWGcC0yy1IzZjl/jqMc0dUMUbOBiRvEH3wl02pg2sacrZ15uiGq8kAeBlwgi
-         5zHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O4biPIS8QtKs0W4x755+TgKPEkw6EcSzOJulQCgOdjc=;
-        b=rW2nbo+pDSkLeS5ng6kdDtZM5TuPRXOOBzLAeCX/Y/DAmsiYkvm8npK+lW3KhqGDY0
-         3m3CKFlK4HMjoSOLq6tsl05SdgZRa5jDgKVu0XmgnpdR1e/PJTYnVIAzVB9YJOmGKVQ0
-         lqBmH7nKbB30HR6vWSQWtvlcfX25h/7hC3axocJq8j5FxexmiVWJ901S1kl3F+K0Ttj8
-         3K/G1kqBS2TTrzHgyp/wB1Ij9FCyHBYMWitI7iptjnyrREW3d5/hR6+cHTtt411P3q/A
-         3yMoK/1pHhq6prgov44rCWM+wRrKtE+UWdg1Jbb7zJKSleHaDErPIkRDPzLAgTwTHzcF
-         Fz+g==
-X-Gm-Message-State: APjAAAVRYJv86ukZKq8zfgwVZjuTGGgq3QT3h658n3JjpHMwz61TWn/d
-        pjmud3VdMrDfmI6Pf2gnc3c=
-X-Google-Smtp-Source: APXvYqzRCHe8NZfJwm/rb4Y5QIs6ohRRrof7MdIT+Pa/qzCoh0RmIrYSXWnnIw9K2UCgqWwuS2kRUw==
-X-Received: by 2002:a05:6602:2244:: with SMTP id o4mr1238924ioo.107.1569269407973;
-        Mon, 23 Sep 2019 13:10:07 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id d9sm10877889ioq.9.2019.09.23.13.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 13:10:07 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nbd: prevent memory leak
-Date:   Mon, 23 Sep 2019 15:09:58 -0500
-Message-Id: <20190923200959.29643-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 23 Sep 2019 16:14:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1569269675; bh=gZmGJlv4hrpFUzDUxsn1OYX/cY1MvwCXhCTnHpimK0o=; h=To:Cc:From:Subject:Date:From:Subject; b=iC4dUtHfoI3/nwf1eG0JLt4OWMmyTN35OFebmvc56jp9muuAJ/N0AcrKp7Blr2gUxHIZ4ls5qPDpBDDX20COcNuFWN2HQSopn/ltFJbJA7gD28IgielL4lZqqxPqD8XpIqA9JzjUFz85dUGWMEcnwvhpDpYh+MQH85ENLP/h0VSO7cDjJJvx2C+pNCZ3GnZ/G/WjxzxM34HalnsWa0DM+OXxATTAO4CSndTznW17Qe41OWQDx9yw2Y+PYudHG++pvgX6ckKAXHAB+3lfMxDl0rdx43/He46OVlry5gjv1gBqI11buaqayYF0I3wla4bfAKE1p0Z32+7WeJu5iJRspQ==
+X-YMail-OSG: prutIjcVM1lWibnMWR2WIz0.EA8oDZ01UHzykBLk5JP5zoJ6.7ZaUiH_qTSNy2z
+ 19anuG1dEKZExrR3B.47E6WDuXB0ctwbiOttIpLqF1sIv_K1aNoee4Bo7_c1RGZhlxcMdG8nl_YD
+ TahRX82vdD6._LMg21_hNftEgA7VqIOiaEt1zhTi5QnMuKcAhIQkR5GCzCiMzI1_auMhZBfYVXoY
+ 1mr9ey8kR6oCA3T1dF5rk1oRQR3k5_A0Gh.UPdCy7Y72rurs9g7OmaF8q0H7qaWDBx7d4DKKtHNx
+ z9mcjfZWiNe.lwruGI21buPMgbCx_DvliHWhypR.ffZ0_yaoeH4X7AxJFIhtQoDqdJllFGAtpLVV
+ weMPhhgS7hHrcc_5sB59SWs80Qh1QfGpTyBa8Uk0.forRr6hPoxkThYffSEAtvNwZrvI.jVLnqWk
+ Z2MqUJ7A0L0A.0.FZBMAxrblBmyKVhIgEnw.e1TnAzPEZEaRDR7T.ctZIL4gwpyl7LWPHzJRVTMj
+ aCQUIz8kLKdmLPBDewGmI22eh5iu6HiYqpSqtDj6h1dPQqmIkfVmZCcPJoSuyZBkXRWUns1FuRoj
+ wqyv1rMzGrQgVcqjk2l0p2TqnNW3Zti5POFjIuLXd095Z1GxPy8iL4Rq9n15Iu4ABQvwXIjnVvEa
+ YRPQ3A6fif_5EKqdTwrJ8.NEJKjFcr4WRGemE9nKvHS1WkGL_YUwCtTFSWCUuhsQzo1O9FFDEDmi
+ bjs4xK0j5eiqkJY8AR7h5EGma_Iqgqw1gLTb6_g6MQP4il9PER3jRInDXdaL.m1YznFuU9dls0SU
+ NRqEZnoCe7kO_3s07pmOtXy9OpN2cED94Vt5Ew_JkrvzwgX.b_3jdY1XV2powOEwTcxDla7w2UhV
+ lOneetA1AKFsadkUrymvwmUUnO_qJtaIzAb2NqcP_NDpfKeW99hAUEYEQppe05LpXA.Pewe2Dck.
+ NeWAAWuDsTzT4cKw5otHARkHfHcyOs.rleTToexdtz_TWS9Ldg6frSvyREmnMuufjCZyOC7uAne6
+ FP_dQaeAYTdRrVCr_YiHaS3XaO87Lo1dY8becL1hIiC6IQrHCqvsMQYYUjWoKea8jW8VmRuIuXEy
+ 280Rvn41o4bx1xnrQKzhd3WYG8ziFSjkLQYJFNTSnwHurlHXDJ2yeg0LNXTp0bH9NaHTu3ePTwKY
+ ylQLTB6RgjKJICfpa1sC0ElP7wRP8.CmVY.Pnkx9h9uyG3bNuQShKq0QjNra24SgvdqiI6uRgcyy
+ 6F51ctWl96adylAkM4vzwMfr9_T3_uNKibgAJO7HURb1XJj9E4coF8zZ2dcxtujqm_pmS6GtmtOJ
+ uibTPzwvtHHj17JGsKWzibQ83SBPK_9fa2oeJqe7nkX5BaA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.bf2.yahoo.com with HTTP; Mon, 23 Sep 2019 20:14:35 +0000
+Received: by smtp411.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 53b77dcb71c3f3a1a6facb94d16fd6cc;
+          Mon, 23 Sep 2019 20:14:34 +0000 (UTC)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, casey@schaufler-ca.com
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Subject: [GIT PULL] Smack patches for v5.4 - retry
+Message-ID: <745ac819-f2ae-4525-1855-535daf783638@schaufler-ca.com>
+Date:   Mon, 23 Sep 2019 13:14:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nbd_add_socket when krealloc succeeds, if nsock's allocation fail the
-reallocted memory is leak. The correct behaviour should be assigning the
-reallocted memory to config->socks right after success.
+Hello Linus
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Thank for the instruction. I think this is correct.
+I have four patches for v5.4. Nothing is major. All but one are in
+response to mechanically detected potential issues. The remaining
+patch cleans up kernel-doc notations.
+
+
+The following changes since commit 0ecfebd2b52404ae0c54a878c872bb93363ada=
+36:
+
+  Linux 5.2 (2019-07-07 15:41:56 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/cschaufler/smack-next.git tags/smack-for-5.4-rc1
+
+for you to fetch changes up to e5bfad3d7acc5702f32aafeb388362994f4d7bd0:
+
+  smack: use GFP_NOFS while holding inode_smack::smk_lock (2019-09-04 09:=
+37:07 -0700)
+
+----------------------------------------------------------------
+I have four patches for v5.4. Nothing is major. All but one are in
+response to mechanically detected potential issues. The remaining
+patch cleans up kernel-doc notations.
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      smack: use GFP_NOFS while holding inode_smack::smk_lock
+
+Jann Horn (1):
+      Smack: Don't ignore other bprm->unsafe flags if LSM_UNSAFE_PTRACE i=
+s set
+
+Jia-Ju Bai (1):
+      security: smack: Fix possible null-pointer dereferences in smack_so=
+cket_sock_rcv_skb()
+
+luanshi (1):
+      smack: fix some kernel-doc notations
+
+ security/smack/smack_access.c |  6 +++---
+ security/smack/smack_lsm.c    | 40 ++++++++++++++++++++-----------------=
 ---
- drivers/block/nbd.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index a8e3815295fe..8ae3bd2e7b30 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -987,14 +987,15 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
-+
-+	config->socks = socks;
-+
- 	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
- 	if (!nsock) {
- 		sockfd_put(sock);
- 		return -ENOMEM;
- 	}
- 
--	config->socks = socks;
--
- 	nsock->fallback_index = -1;
- 	nsock->dead = false;
- 	mutex_init(&nsock->tx_lock);
--- 
-2.17.1
 
