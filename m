@@ -2,169 +2,157 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A327BC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41922C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7744E20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D9120867
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569241518;
+	bh=stwjbMfH/x1TcMe4XsjzI2eHaLZ1XHq1GRqGaZ4lnsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jlFfGfHnedjGkxL/s80pAdkLihoxiroy81r3Cb0YvA1W3KOLjqvJw3qP91cj7f1zr
+	 637H1PqSFy3gZsktcuC4hRvBkJV1CwQuFmv0uWJNXzf++iNvSCJUsMC2AV5FUUt9OZ
+	 X+3a2BadH5TptuACE2dL0psU+S7PdmFj4ujtJ52g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732307AbfIWMVx (ORCPT
+        id S1732272AbfIWMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:21:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58616 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbfIWMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:21:52 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1830989AC7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:21:51 +0000 (UTC)
-Received: by mail-qk1-f197.google.com with SMTP id o133so17371615qke.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 05:21:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a9/IjKSOTtP+H0DwvJWJwjvwhzIswSQaCoNDgf8fYiY=;
-        b=TUtoZqAby2gXnnNBLwFd+RGVvcYHS3kvQeU+PR4atoRz33xHasJa6ke/NEoLhd+sbX
-         aWcKCKJ7hcRctL5YV1dyrqXDH6bu0zNGGm0HvI6bQPlMrDsx9Rkt8EVUGnVtdStQ6lRA
-         4Ydy2rFvByDwVgNh3haBBQxnrrBtyl38likT/uGOkQQ1XTekl2Buf+TQNax0Z6FVKnl5
-         bfOUk3mV94BNVMM8bw23hJEXzqxNxOfigdA4d8e2Uruu8tnwF+kb+AtUL1GhdDCuizVK
-         1UVQG++EnIfQUavJnvvZ7EB90bHkuaJBBJEtPs71PJCu4U6hzESLDK7rAUI8oMu7uqBw
-         MrFg==
-X-Gm-Message-State: APjAAAXArJAoRTf4JcC+1EGQEmO65EkAB2WxHXEM6nyfcBPQKlDjXCxy
-        sxLICp9oTB3Jw8QL5nbUnqD2i+o6tsJUN4LfcVvm9smfVbX94vEj+tBlhNQ3/3yWeUD5RPqw1EU
-        wabm/w535ibLdvcyYa4jZNRMH
-X-Received: by 2002:ac8:7117:: with SMTP id z23mr16276181qto.309.1569241310357;
-        Mon, 23 Sep 2019 05:21:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy19kCOwHbgejDjIiixAFXfW0feeppk9Ux+t6GtFmBM+eqf5FZ/rCyZVT2dupdlVrgcrW4SDA==
-X-Received: by 2002:ac8:7117:: with SMTP id z23mr16276147qto.309.1569241310042;
-        Mon, 23 Sep 2019 05:21:50 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id o38sm6573805qtc.39.2019.09.23.05.21.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 05:21:48 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 08:21:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, lingshan.zhu@intel.com,
-        idos@mellanox.com, eperezma@redhat.com, lulu@redhat.com
-Subject: Re: [RFC PATCH V2 0/6] mdev based hardware virtio offloading support
-Message-ID: <20190923074913-mutt-send-email-mst@kernel.org>
-References: <20190920082050.19352-1-jasowang@redhat.com>
+        Mon, 23 Sep 2019 08:25:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730431AbfIWMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 08:25:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A54DEAEAE;
+        Mon, 23 Sep 2019 12:25:14 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 14:25:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] memory_hotplug: Add a bounds check to
+ check_hotplug_memory_range()
+Message-ID: <20190923122513.GO6016@dhcp22.suse.cz>
+References: <20190917010752.28395-1-alastair@au1.ibm.com>
+ <20190917010752.28395-2-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920082050.19352-1-jasowang@redhat.com>
+In-Reply-To: <20190917010752.28395-2-alastair@au1.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 04:20:44PM +0800, Jason Wang wrote:
-> Hi all:
+On Tue 17-09-19 11:07:47, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> There are hardware that can do virtio datapath offloading while having
-> its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
+> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
+> are allocated from firmware. These address ranges may be higher
+> than what older kernels permit, as we increased the maximum
+> permissable address in commit 4ffe713b7587
+> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
+> possible that the addressable range may change again in the
+> future.
+> 
+> In this scenario, we end up with a bogus section returned from
+> __section_nr (see the discussion on the thread "mm: Trigger bug on
+> if a section is not found in __section_nr").
+> 
+> Adding a check here means that we fail early and have an
+> opportunity to handle the error gracefully, rather than rumbling
+> on and potentially accessing an incorrect section.
+> 
+> Further discussion is also on the thread ("powerpc: Perform a bounds
+> check in arch_add_memory").
 
-This is actually simple enough that I'm inclined to just
-put this into linux-next.
-This mixes virtio and vfio so the code can thinkably
-be merged through either tree.
-Alex, any strong opinions on any of this?
+It would be nicer to refer to this by a message-id based url.
+E.g. http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
 
-> Though the series only contain kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
+ 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  include/linux/memory_hotplug.h |  1 +
+>  mm/memory_hotplug.c            | 13 ++++++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
-> 
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific parents ops out of the common ones.
-> 
-> Pktgen test was done with virito-net + mvnet loop back device.
-> 
-> Please review.
-> 
-> Changes from V1:
-> 
-> - rename device id to class id
-> - add docs for class id and device specific ops (device_ops)
-> - split device_ops into seperate headers
-> - drop the mdev_set_dma_ops()
-> - use device_ops to implement the transport API, then it's not a part
->   of UAPI any more
-> - use GFP_ATOMIC in mvnet sample device and other tweaks
-> - set_vring_base/get_vring_base support for mvnet device
-> 
-> Jason Wang (6):
->   mdev: class id support
->   mdev: introduce device specific ops
->   mdev: introduce virtio device and its device ops
->   virtio: introudce a mdev based transport
->   vringh: fix copy direction of vringh_iov_push_kern()
->   docs: Sample driver to demonstrate how to implement virtio-mdev
->     framework
-> 
->  .../driver-api/vfio-mediated-device.rst       |  11 +-
->  drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
->  drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
->  drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
->  drivers/vfio/mdev/Kconfig                     |   7 +
->  drivers/vfio/mdev/Makefile                    |   1 +
->  drivers/vfio/mdev/mdev_core.c                 |  21 +-
->  drivers/vfio/mdev/mdev_driver.c               |  14 +
->  drivers/vfio/mdev/mdev_private.h              |   1 +
->  drivers/vfio/mdev/vfio_mdev.c                 |  37 +-
->  drivers/vfio/mdev/virtio_mdev.c               | 418 +++++++++++
->  drivers/vhost/vringh.c                        |   8 +-
->  include/linux/mdev.h                          |  46 +-
->  include/linux/mod_devicetable.h               |   8 +
->  include/linux/vfio_mdev.h                     |  50 ++
->  include/linux/virtio_mdev.h                   | 141 ++++
->  samples/Kconfig                               |   7 +
->  samples/vfio-mdev/Makefile                    |   1 +
->  samples/vfio-mdev/mbochs.c                    |  19 +-
->  samples/vfio-mdev/mdpy.c                      |  19 +-
->  samples/vfio-mdev/mtty.c                      |  17 +-
->  samples/vfio-mdev/mvnet.c                     | 688 ++++++++++++++++++
->  22 files changed, 1473 insertions(+), 89 deletions(-)
->  create mode 100644 drivers/vfio/mdev/virtio_mdev.c
->  create mode 100644 include/linux/vfio_mdev.h
->  create mode 100644 include/linux/virtio_mdev.h
->  create mode 100644 samples/vfio-mdev/mvnet.c
-> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f46ea71b4ffd..bc477e98a310 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -110,6 +110,7 @@ extern void __online_page_increment_counters(struct page *page);
+>  extern void __online_page_free(struct page *page);
+>  
+>  extern int try_online_node(int nid);
+> +int check_hotplug_memory_addressable(u64 start, u64 size);
+>  
+>  extern int arch_add_memory(int nid, u64 start, u64 size,
+>  			struct mhp_restrictions *restrictions);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c73f09913165..02cb9a74f561 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1030,6 +1030,17 @@ int try_online_node(int nid)
+>  	return ret;
+>  }
+>  
+> +int check_hotplug_memory_addressable(u64 start, u64 size)
+> +{
+> +#ifdef MAX_PHYSMEM_BITS
+> +	if ((start + size - 1) >> MAX_PHYSMEM_BITS)
+> +		return -E2BIG;
+> +#endif
+
+Is there any arch which doesn't define this? We seemed to be using this
+in sparsemem code without any ifdefs.
+
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(check_hotplug_memory_addressable);
+
+If you squashed the patch 2 then it would become clear why this needs to
+be exported because you would have a driver user. I find it a bit
+unfortunate to expect that any driver which uses the hotplug code is
+expected to know that this check should be called. This sounds too error
+prone. Why hasn't been this done at __add_pages layer?
+
+> +
+>  static int check_hotplug_memory_range(u64 start, u64 size)
+>  {
+>  	/* memory range must be block size aligned */
+> @@ -1040,7 +1051,7 @@ static int check_hotplug_memory_range(u64 start, u64 size)
+>  		return -EINVAL;
+>  	}
+>  
+> -	return 0;
+> +	return check_hotplug_memory_addressable(start, size);
+
+This will result in a silent failure (unlike misaligned case). Is this
+what we want?
+
+>  }
+>  
+>  static int online_memory_block(struct memory_block *mem, void *arg)
 > -- 
-> 2.19.1
+> 2.21.0
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
