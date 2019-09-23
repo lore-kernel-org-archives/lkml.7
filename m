@@ -2,192 +2,322 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ADCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B61AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA36F20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4F220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="KJyIPSai";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="xcxgKfYi"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="kzQDPNpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404630AbfIWDun (ORCPT
+        id S2406158AbfIWDz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 23:50:43 -0400
-Received: from pb-smtp21.pobox.com ([173.228.157.53]:59787 "EHLO
-        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404038AbfIWDun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 23:50:43 -0400
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 65F40860D1;
-        Sun, 22 Sep 2019 23:50:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=MVUuUH7W9jCasBCGFD14PTolBvQ=; b=KJyIPS
-        aiXmqCPl9caB9ItPEjbFbuxVVrpJblYxdVfziiu2vCJlESeebOvbunMZdjSmoQ3y
-        Od8rW4j9y6dYqzs0FlYJ2BiRgRVaOIDJvrYqo776NAl2sMshWSVcXYdApgB1sUFD
-        gP2U1hT/7eI16K4unQzu6aR9oCpF9SH7WVeL4=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 5D276860CF;
-        Sun, 22 Sep 2019 23:50:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=JVeZEyaxoXe27w9jPQ6cU6lzcXMTRNlh9K+ZFI/BpEo=; b=xcxgKfYimXqlilA6I6Eaz7u7Q5YXB46iRFdt+sJDvsZ0y1WkzehntdYausJ1x14/DQPWaxd9uRhV/5IT8PW8MXN05QRYc1HMYhgLSt+TQ3MIvEj8p6DPJERbBPl/Zjy929IQRiIi/G5JzIY0G4jLnuKlKXNMyVJzIrHajNeQgtY=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 2831F860C7;
-        Sun, 22 Sep 2019 23:50:38 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 1A05E2DA0465;
-        Sun, 22 Sep 2019 23:50:36 -0400 (EDT)
-Date:   Sun, 22 Sep 2019 23:50:35 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>, penberg@cs.helsinki.fi,
-        jslaby@suse.com, textshell@uchuujin.de, sam@ravnborg.org,
-        daniel.vetter@ffwll.ch, mpatocka@redhat.com, ghalat@redhat.com,
-        linux-kernel@vger.kernel.org, yangyingliang@huawei.com,
-        yuehaibing@huawei.com, zengweilin@huawei.com
-Subject: Re: [PATCH] tty:vt: Add check the return value of kzalloc to avoid
- oops
-In-Reply-To: <bee63793-e9f4-ecc4-7966-765207009c75@huawei.com>
-Message-ID: <nycvar.YSQ.7.76.1909222347410.24536@knanqh.ubzr>
-References: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com> <20190919092933.GA2684163@kroah.com> <nycvar.YSQ.7.76.1909192251210.24536@knanqh.ubzr> <20190920060426.GA473496@kroah.com> <bee63793-e9f4-ecc4-7966-765207009c75@huawei.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sun, 22 Sep 2019 23:55:58 -0400
+Received: from mail-eopbgr780135.outbound.protection.outlook.com ([40.107.78.135]:10281
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404038AbfIWDz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 23:55:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZc0OnYUh926rsyyWSGfWuYOTWCue1mbxjFowxY5jizHIG6A286k1v1chHgW8xoP1mFXURnYbjS16WBlH0wF9ihrQL/9EY+H+U83QcCfuTvmSD3moIVxbmtKDRWSOIwJL9tzZu+0TYK593U/gyBh1Qa6rzeAYGsi7ih05TD9I6ngJV/jbfiTkMVIY1z5mdARsOHeXExkI0qyI/2OryXNcGyCpTSe7WujSvIEHqCdhy6JZczhGZFcmm0JAX9vIpz2hUdB0AQ2tChkApzLUa+QZKyBAREw9e4Jotpreb92Fq2KLXLmU04AezmwTKT7zSrtt2N1J5+/9OqVotwQJ5IIAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5rZCDla+ZOw8RIuckNTUIarFxnev7m17JqNc5imAC98=;
+ b=NAyfipsjF2+42YUajnIschZ7rMj6ekNKiMNmahC40r1+bcFk49SgQ/lT9yPIOUhGWtXfuhRHDosYskSPe+2lquLzLunZyWRKuqDQKAWQb/aQNqsadzjpx7GHB5WZyHAC3iW4k3OPszVqBoBCsLvAvki7U0dKkbB93VgdDRlpN6XHU4B7S0N5HPL5L/9ivG4E4Px9OHVtqBJNqHgTTgm7x+9BWLQ4ShsYBPPGoEF4Ki6ZuzWCu1aSLkABNfeMi8wY8pnhZiHtCkCM2r5fa7cxYg+QXBSAQM+khO0S21tw1TpfRelgK3TNOPBzRnHSsKRBnhU44CsfuRN6vqWIXCNU9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5rZCDla+ZOw8RIuckNTUIarFxnev7m17JqNc5imAC98=;
+ b=kzQDPNpzWNUUTsxDhoq26HO78hkpuwVPv4BRy8Tz1s0bGokL8Nvm4+ewf2RyArrApiDE6DPNRiL+/XooslyxR1mu6rSg4tPFH50Xf7NwCCjAJYbRbEf1yCw4V7hVWaOCRaAjH0wNoNQmDPrQoiZ0YY5aoLnrgDA8DAfM7efFwfw=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB6685.namprd04.prod.outlook.com (10.186.147.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.19; Mon, 23 Sep 2019 03:55:49 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
+ 03:55:48 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Topic: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Index: AQHVb3j75RwTQ/LQlEe1c7kQ788vf6c0UZKAgARVAoA=
+Date:   Mon, 23 Sep 2019 03:55:48 +0000
+Message-ID: <20190923035539.GA5916@xin-VirtualBox>
+References: <cover.1568957788.git.xji@analogixsemi.com>
+ <606dba07640f0c9aba930e1dfb5d6a797f393ecc.1568957789.git.xji@analogixsemi.com>
+ <20190920094621.GA12950@pendragon.ideasonboard.com>
+In-Reply-To: <20190920094621.GA12950@pendragon.ideasonboard.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR04CA0017.apcprd04.prod.outlook.com
+ (2603:1096:203:36::29) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [222.35.23.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31f2ea73-14f9-49ad-658b-08d73fd9eb1a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6685;
+x-ms-traffictypediagnostic: MN2PR04MB6685:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB668570FE1C86BDEF2A3C3320C7850@MN2PR04MB6685.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0169092318
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(366004)(136003)(396003)(376002)(39840400004)(189003)(199004)(2906002)(3846002)(6116002)(66066001)(33716001)(25786009)(54906003)(1076003)(316002)(33656002)(4326008)(6306002)(14444005)(256004)(6916009)(305945005)(6512007)(9686003)(86362001)(107886003)(6246003)(229853002)(6436002)(486006)(99286004)(6486002)(7736002)(7416002)(14454004)(476003)(966005)(386003)(6506007)(5660300002)(52116002)(76176011)(71190400001)(71200400001)(26005)(186003)(102836004)(446003)(64756008)(66446008)(66946007)(11346002)(478600001)(8936002)(81166006)(66476007)(66556008)(81156014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6685;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 30JRXtlTVAQ1I9K8EwJpLQ+13TuR/YtQztmHxF41Zmf6E/sNZMmtnckyv6tfybeNw+zJAiSivHCL5gFwMxE7sMzwYLeWN2Khes3/yjWcbKnl+TIMBpqMrDNvUl4OjBFciwAVVDeD986GC1I+/0dzAlLsAB72PGIaTQGO01+FZ6eAobGTs6uwTFY5l43HDlDlusX7j0o50Erfr430diRYn5kc+CZjhyq9Ak87RNV1esVzy7j9gff95/uYe+2JPsvATD3pDciWE0/iIjfmbsO+Y3C5VKq9U5yPOKHi9LJJn1cXr5vB2ClZ+ZAVQ+KTSvH/oHAz8Z1BPNaWYTZkU96CLDJv1kIYjiBXpQoRYFNxZtC1/cZNdY44ifFGUt2thL8ZYr9P3hwv1n8kwpAqjDj7wiXYEcLJcsxP1D8M6BUSFwE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <89EF8D1BB3962448B6334707B56223DD@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 4E2BBE08-DDB5-11E9-8D9B-8D86F504CC47-78420484!pb-smtp21.pobox.com
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31f2ea73-14f9-49ad-658b-08d73fd9eb1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 03:55:48.7909
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1rBaGtbvau8EEnF/+S7kZX3fbnrwSHD0BK+LPME0OSjpT7X1z9xJ5A+JK6gAF6iAyM2MKiHKzKJkt3FjY6XpCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Sep 2019, Xiaoming Ni wrote:
+Hi Laurent Pinchart, thanks for your comment.
 
-> @ Nicolas Pitre
-> Can I make a v2 patch based on your advice ?
-> Or you will submit a patch for "GFP_WONTFAIL" yourself ?
-
-Here's a patch implementing what I had in mind. This is compile tested 
-only.
-
------ >8
-
-Subject: [PATCH] mm: add __GFP_WONTFAIL and GFP_ONBOOT
-
-Some memory allocations are very unlikely to fail during system boot.
-Because of that, the code often doesn't bother to check for allocation
-failure, but this gets reported anyway.
-
-As an alternative to adding code to check for NULL that has almost no
-chance of ever being exercised, let's use a GFP flag to identify those
-cases and panic the kernel if allocation failure ever occurs.
-
-Conversion of one such instance is also included.
-
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 34aa39d1ae..bd0a0e4807 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3356,7 +3356,7 @@ static int __init con_init(void)
- 	}
- 
- 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
--		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-+		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_ONBOOT);
- 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 		tty_port_init(&vc->port);
- 		visual_init(vc, currcons, 1);
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index f33881688f..6f33575cd6 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -39,8 +39,9 @@ struct vm_area_struct;
- #define ___GFP_HARDWALL		0x100000u
- #define ___GFP_THISNODE		0x200000u
- #define ___GFP_ACCOUNT		0x400000u
-+#define ___GFP_WONTFAIL		0x800000u
- #ifdef CONFIG_LOCKDEP
--#define ___GFP_NOLOCKDEP	0x800000u
-+#define ___GFP_NOLOCKDEP	0x1000000u
- #else
- #define ___GFP_NOLOCKDEP	0
- #endif
-@@ -187,6 +188,12 @@ struct vm_area_struct;
-  * definitely preferable to use the flag rather than opencode endless
-  * loop around allocator.
-  * Using this flag for costly allocations is _highly_ discouraged.
-+ *
-+ * %__GFP_WONTFAIL: No allocation error is expected what so ever. The
-+ * caller presumes allocation will always succeed (e.g. the system is still
-+ * booting, the allocation size is relatively small and memory should be
-+ * plentiful) so testing for failure is skipped. If allocation ever fails
-+ * then the kernel will simply panic.
-  */
- #define __GFP_IO	((__force gfp_t)___GFP_IO)
- #define __GFP_FS	((__force gfp_t)___GFP_FS)
-@@ -196,6 +203,7 @@ struct vm_area_struct;
- #define __GFP_RETRY_MAYFAIL	((__force gfp_t)___GFP_RETRY_MAYFAIL)
- #define __GFP_NOFAIL	((__force gfp_t)___GFP_NOFAIL)
- #define __GFP_NORETRY	((__force gfp_t)___GFP_NORETRY)
-+#define __GFP_WONTFAIL	((__force gfp_t)___GFP_WONTFAIL)
- 
- /**
-  * DOC: Action modifiers
-@@ -217,7 +225,7 @@ struct vm_area_struct;
- #define __GFP_NOLOCKDEP ((__force gfp_t)___GFP_NOLOCKDEP)
- 
- /* Room for N __GFP_FOO bits */
--#define __GFP_BITS_SHIFT (23 + IS_ENABLED(CONFIG_LOCKDEP))
-+#define __GFP_BITS_SHIFT (24 + IS_ENABLED(CONFIG_LOCKDEP))
- #define __GFP_BITS_MASK ((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1))
- 
- /**
-@@ -285,6 +293,9 @@ struct vm_area_struct;
-  * available and will not wake kswapd/kcompactd on failure. The _LIGHT
-  * version does not attempt reclaim/compaction at all and is by default used
-  * in page fault path, while the non-light is used by khugepaged.
-+ *
-+ * %GFP_ONBOOT is for relatively small allocations that are not expected
-+ * to fail while the system is booting.
-  */
- #define GFP_ATOMIC	(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
- #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
-@@ -300,6 +311,7 @@ struct vm_area_struct;
- #define GFP_TRANSHUGE_LIGHT	((GFP_HIGHUSER_MOVABLE | __GFP_COMP | \
- 			 __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
- #define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
-+#define GFP_ONBOOT	(GFP_NOWAIT | __GFP_WONTFAIL)
- 
- /* Convert GFP flags to their corresponding migrate type */
- #define GFP_MOVABLE_MASK (__GFP_RECLAIMABLE|__GFP_MOVABLE)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ff5484fdbd..36dee09f7f 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4625,6 +4625,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- fail:
- 	warn_alloc(gfp_mask, ac->nodemask,
- 			"page allocation failure: order:%u", order);
-+	if (gfp_mask & __GFP_WONTFAIL) {
-+		/*
-+		 * The assumption was wrong. This is never supposed to happen.
-+		 * Caller most likely won't check for a returned NULL either.
-+		 * So the only reasonable thing to do is to pannic.
-+		 */
-+		panic("Failed to allocate memory despite GFP_WONTFAIL\n");
-+	}
- got_pg:
- 	return page;
- }
+On Fri, Sep 20, 2019 at 12:46:21PM +0300, Laurent Pinchart wrote:
+> Hello Xin Ji,
+>=20
+> Thank you for the patch.
+>=20
+> On Fri, Sep 20, 2019 at 06:05:03AM +0000, Xin Ji wrote:
+> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
+>=20
+> I assume you meant MIPI DSI ? MIPI has released more standards than DSI,
+> so it doesn't hurt to specify this explicitly.
+It support DSI and DPI, I will to point out.
+>=20
+> According to
+> https://www.analogix.com/en/system/files/AA-002291-PB-6-ANX7625_ProductBr=
+ief_0.pdf,
+> the ANX7625 supports for MIPI DSI and DPI on the input side.
+> Furthermore, it seems to output DisplayPort on USB Type-C. Should this
+> be documented ?
+It can support both eDP output or USB Type-C output.
+>=20
+> > You can add support to your board with binding.
+> >=20
+> > Example:
+> > 	anx_bridge: anx7625@58 {
+> > 		compatible =3D "analogix,anx7625";
+> > 		reg =3D <0x58>;
+> > 		low-power-mode =3D <1>;
+> > 		dsi-supported =3D <1>;
+> > 		dsi-channel-id =3D <1>;
+> > 		dsi-lanes-num =3D <4>;
+> > 		internal-pannel-supported =3D <1>;
+> > 		pon-gpios =3D <&gpio0 45 GPIO_ACTIVE_LOW>;
+> > 		reset-gpios =3D <&gpio0 73 GPIO_ACTIVE_LOW>;
+> > 		status =3D "okay";
+> > 		port {
+> > 			anx7625_1_in: endpoint {
+> > 				remote-endpoint =3D <&mipi_dsi_bridge_1>;
+> > 			};
+> > 		};
+> > 	};
+> >=20
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  .../bindings/display/bridge/anx7625.yaml           | 84 ++++++++++++++=
+++++++++
+> >  1 file changed, 84 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/an=
+x7625.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.y=
+aml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> > new file mode 100644
+> > index 0000000..95fe18b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> > @@ -0,0 +1,84 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 Analogix Semiconductor, Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> > +
+> > +maintainers:
+> > +  - Xin Ji <xji@analogixsemi.com>
+> > +
+> > +description: |
+> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> > +  designed for portable devices.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: analogix,anx7625
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  low-power-gpios:
+> > +    description: Low power mode support feature
+> > +    maxItems: 1
+> > +
+> > +  hpd-gpios:
+> > +    description: used for HPD interrupt
+> > +    maxItems: 1
+> > +
+> > +  pon-gpios:
+> > +    description: used for power on chip control
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    description: used for reset chip control
+> > +    maxItems: 1
+>=20
+> How about mentioning which pin of the ANX7625 each GPIO refers to ? For
+> the low-power, pon and reset GPIOs I assume they directly control the
+> chip. We have standard names for some GPIOs, such as reset or enable. Is
+> there one of the low-power and pon GPIOs that would qualify as an enable
+> signal ?
+OK, I think pon-gpios can qualify as an enable.
+>=20
+> What is the HPD GPIO for ? Does the chip output and HPD signal ?
+Once the anx7625 received eDP HPD signal, the firmware will report HPD
+interrupt to AP through defined gpio interrupt pin "hpd-gpios". It used
+for interrupt between anx7625 and AP, not used for output.
+>=20
+> > +
+> > +  extcon-supported:
+> > +    description: external connector interface support flag
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  internal-pannel-supported:
+> > +    description: indicate does internal pannel exist or not
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+> s/pannel/panel/
+OK, will fix it.
+>=20
+> Are those two properties mutually exclusive ? If so you should combine
+> them in a single required property with two values. My feeling is that
+> they should be dropped though, please see below.
+Yes, they are mutually exclusive.
+There are 3 case, one is support google "external connector" framework,
+one support internal panel, the other is support normal eDP output, so I
+defined two flags to distinguish them here. Based on your comment below,
+I'll define output port to distinguish them.
+>=20
+> > +
+> > +  dsi-supported:
+> > +    description: support MIPI DSI or DPI
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  dsi-channel-id:
+> > +    description: dsi channel index
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+> This does not belong to DT, the virtual channel used by the DSI source
+> should be queried at runtime by communicating between drivers.
+I didn't know where can quiry this value. Can you give me more detail?
+>=20
+> > +
+> > +  dsi-lanes-num:
+> > +    description: dsi lanes used num
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+> Please use the standard data-lanes property as defined in
+> video-interface.txt. It should be specified in the DSI endpoints.
+OK, I'll fetch the dsi lanes from DSI endpoints.
+>=20
+> > +
+> > +  port@0:
+> > +    type: object
+> > +    description:
+> > +      A port node pointing to MIPI DSI host port node.
+>=20
+> You need at least 3 ports:
+>=20
+> - a DPI input port
+I'll add DPI input port.
+> - a DSI input port
+> - an output port
+>=20
+> The dsi-supported property should be dropped, detecting the type of
+> input should be done based on which of the DPI or DSI input port is
+> connected.
+OK.
+>=20
+> Assuming the ANX7625 can also output DisplayPort directly without going
+> through USB Type-C (I can't verify that without the datasheet), I think
+> you should use two output ports, one for USB Type-C and one for
+> DisplayPort. The extcon-supported and internal-pannel-supported
+> properties should be removed, and deduced from the connect output port.
+I think there should exist 3 output port, one is for extern connector,
+one is for normal eDP, other is for internal panel eDP.
+>=20
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - dsi-channel-id
+> > +  - dsi-lanes-num
+> > +  - port@0
+> > +
+> > +example:
+> > +  - |
+> > +    anx_bridge: anx7625@58 {
+> > +        compatible =3D "analogix,anx7625";
+> > +        reg =3D <0x58>;
+> > +        low-power-gpios =3D <0>;
+> > +        dsi-supported =3D <1>;
+> > +        dsi-channel-id =3D <1>;
+> > +        dsi-lanes-num =3D <4>;
+> > +        hpd-gpios =3D <&gpio1 19 IRQ_TYPE_LEVEL_LOW>;
+> > +        status =3D "okay";
+> > +    };
+>=20
+> You mention the port@0 node as being required, but it's missing from the
+> example.
+OK, I'll change it in the next series.
+>=20
+> --=20
+> Regards,
+>=20
+> Laurent Pinchart
