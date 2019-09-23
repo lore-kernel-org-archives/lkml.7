@@ -2,177 +2,80 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8CFC32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C26C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7819220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D1620882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7Zfld4P"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="j1H39S7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440143AbfIWOw5 (ORCPT
+        id S1732523AbfIWOxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:52:57 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38246 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438012AbfIWOw4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:52:56 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j31so17496353qta.5;
-        Mon, 23 Sep 2019 07:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LVRcUBek8WWbtQj9AZ/S3cOqLxD7AVaxe3HBbrsW2Ww=;
-        b=L7Zfld4PTxaRgoXMLVWk6vY/Wl+ixeMhdvwKfimC7AJYgAn6M6OiPIge6hzSBFx0TU
-         qMN0tia9eBrAMCxQypuV5NCH3/2M+ie+9kkinfcyb9IOrYgNP1q5wnlL6uOP78sr+sZO
-         VPYpKKKrJdqyxZfipuVFb17i5TXDEqthzI75rIWHaNS0Tfrtk8+ZADdFXob9LVFuvQeV
-         aXS+EEOaZcbwU47TuhiPFQ7NGulK4jBFO6dHNxLOMvn4/zgsXLOmv1+lAGVx/VQ4KSox
-         cFRw0Bf0PmW3dfa8IJIr4uV2JBYZ7XclW839e+h+3N1jhH7VyTeKg5kZhA0oQEXZfukb
-         T0eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LVRcUBek8WWbtQj9AZ/S3cOqLxD7AVaxe3HBbrsW2Ww=;
-        b=evHn/jzS8a6igD7Tyn6u+ZiSSRsYqv034eSzukcC3sxvuVu+oiOUK2VYtcsXOorf/y
-         dvwIMoREH43Uf55HoRyo5mKtC6jGn7rNuaEiH07PhPtK6p85Dwf0HC+4IoRH7sCU1Bxr
-         P7ni2+4gtgKeuuyTNE08ZyTcDVc6jzYoOflAd+ZFHQ3mQg5vD90YviRLnxfEXBq4I8fJ
-         g6fZmxouwaIC38NZS7rObNVMx4GIoZ1wX7GKY1FrzR26st9gfu6t63bCphFA0W5Az8f3
-         hZIyWRMF8D8P0v3wfH9GF5kwBfuMjupwLMe2lHhmiVjF4v4781LmS9KXnRUqIAoACnyG
-         fL9Q==
-X-Gm-Message-State: APjAAAVe5CsZqSBA8/a0BJ2J9RTYoLT4splRjBVbeFGfU5WP+mKZtOwM
-        vNXtWl5wDL1WNKPlS/fEVXY=
-X-Google-Smtp-Source: APXvYqzK2RfU04ZAT5aTCy6hmMAuaVPVlGVcfejHX21ZYjZDXvW52K0PCay9GoJ4f//Yb4OU2oMGnw==
-X-Received: by 2002:ac8:1208:: with SMTP id x8mr337853qti.32.1569250374869;
-        Mon, 23 Sep 2019 07:52:54 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id e4sm4759521qkl.135.2019.09.23.07.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 07:52:54 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A3EB041105; Mon, 23 Sep 2019 11:52:49 -0300 (-03)
-Date:   Mon, 23 Sep 2019 11:52:49 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/6] tools/lib/traceevent: Man page updates and some file
- movement
-Message-ID: <20190923145249.GF16544@kernel.org>
-References: <20190919212335.400961206@goodmis.org>
- <20190923142839.GD16544@kernel.org>
- <20190923143927.GE16544@kernel.org>
+        Mon, 23 Sep 2019 10:53:04 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:37385 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfIWOxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:53:03 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Sep 2019 10:53:02 EDT
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 46271643;
+        Mon, 23 Sep 2019 14:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=yyymxKdabkTqYObyJhZGJkfA+vU=; b=j1H39S7dE4Mp4+0YGsvk
+        RHmhWaANn0VLxXbjt6ayCpqFzg0UrAP3zQ1DdCEfCO8DjpYEzwCWqo18Tys3u7qH
+        Mw3sd08/jjGus1O8x6UbsDWWVbZ0xlFSDb5OOsQq1dAlriT+lxXbW0lqloc51CkI
+        yTd304TZKnXYrca7sSRu+xc7aKspeUBMjUPuXHrb+e/tqBspt7lPP+X9Zhxjfzd7
+        qMIm3o69SlZiIl2NlhAXsecrWqrhF2PrNhOUPm983e1+G9khhRSi2n+gAbRU2+hV
+        7xRXm0uLAwHH45EGrG+dkUlleXj6MB/WgZJuYp9qHQdrJ4bK9LeZK21uoKIwca9q
+        Mg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 561504fe (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 23 Sep 2019 14:00:52 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org
+Subject: [PATCH] ipv6: Properly check reference count flag before taking reference
+Date:   Mon, 23 Sep 2019 16:46:12 +0200
+Message-Id: <20190923144612.29668-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923143927.GE16544@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Sep 23, 2019 at 11:39:27AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Sep 23, 2019 at 11:28:39AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Sep 19, 2019 at 05:23:35PM -0400, Steven Rostedt escreveu:
-> > > Hi Arnaldo,
-> > > 
-> > > This is a series of man page updates to the libtraceevent code, as
-> > > well as a fix to one missing prototype and some movement of the location
-> > > of the plugins (to have the plugins in their own directory).
->  
-> > Thanks, applied.
-> 
-> Its breaking the build on Ubuntu 19.04 cross building to aarch64, I'll
-> see if I can fix it:
+People are reporting that WireGuard experiences erratic crashes on 5.3,
+and bisected it down to 7d30a7f6424e. Casually flipping through that
+commit I noticed that a flag is checked using `|` instead of `&`, which in
+this current case, means that a reference is never incremented, which
+would result in the use-after-free users are seeing. This commit changes
+the `|` to the proper `&` test.
 
-Makefiles really suck, so I'm removing this one till we get this sorted
-out:
+Cc: stable@vger.kernel.org
+Fixes: 7d30a7f6424e ("Merge branch 'ipv6-avoid-taking-refcnt-on-dst-during-route-lookup'")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ net/ipv6/ip6_fib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-"Move traceevent plugins in its own subdirectory"
-
-Ok?
-
-- Arnaldo
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index 87f47bc55c5e..6e2af411cd9c 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -318,7 +318,7 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
+ 	if (rt->dst.error == -EAGAIN) {
+ 		ip6_rt_put_flags(rt, flags);
+ 		rt = net->ipv6.ip6_null_entry;
+-		if (!(flags | RT6_LOOKUP_F_DST_NOREF))
++		if (!(flags & RT6_LOOKUP_F_DST_NOREF))
+ 			dst_hold(&rt->dst);
+ 	}
  
-> perfbuilder@9660e1237188:~$ m
-> make: Entering directory '/git/perf/tools/perf'
->   BUILD:   Doing 'make -j8' parallel build
-> sh: 1: command: Illegal option -c
-> 
-> Auto-detecting system features:
-> ...                         dwarf: [ on  ]
-> ...            dwarf_getlocations: [ on  ]
-> ...                         glibc: [ on  ]
-> ...                          gtk2: [ OFF ]
-> ...                      libaudit: [ OFF ]
-> ...                        libbfd: [ OFF ]
-> ...                        libcap: [ OFF ]
-> ...                        libelf: [ on  ]
-> ...                       libnuma: [ OFF ]
-> ...        numa_num_possible_cpus: [ OFF ]
-> ...                       libperl: [ OFF ]
-> ...                     libpython: [ OFF ]
-> ...                     libcrypto: [ OFF ]
-> ...                     libunwind: [ OFF ]
-> ...            libdw-dwarf-unwind: [ on  ]
-> ...                          zlib: [ on  ]
-> ...                          lzma: [ OFF ]
-> ...                     get_cpuid: [ OFF ]
-> ...                           bpf: [ on  ]
-> ...                        libaio: [ on  ]
-> ...                       libzstd: [ OFF ]
-> ...        disassembler-four-args: [ OFF ]
-> 
-> Makefile.config:497: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-> Makefile.config:545: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-> Makefile.config:637: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
-> Makefile.config:653: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
-> Makefile.config:670: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
-> Makefile.config:697: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev
-> Makefile.config:724: No python interpreter was found: disables Python support - please install python-devel/python-dev
-> Makefile.config:782: No bfd.h/libbfd found, please install binutils-dev[el]/zlib-static/libiberty-dev to gain symbol demangling
-> Makefile.config:813: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
-> Makefile.config:826: No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR
-> Makefile.config:837: No libcap found, disables capability support, please install libcap-devel/libcap-dev
-> Makefile.config:850: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
-> Makefile.config:905: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-> Makefile.config:931: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
->   DESCEND  plugins
-> make[3]: *** No rule to make target '/tmp/build/perf/libtraceevent-dynamic-list'.  Stop.
-> make[2]: *** [Makefile.perf:740: /tmp/build/perf/libtraceevent-dynamic-list] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [Makefile.perf:221: sub-make] Error 2
-> make: *** [Makefile:70: all] Error 2
-> make: Leaving directory '/git/perf/tools/perf'
-> perfbuilder@9660e1237188:~$ export
-> declare -x ARCH="arm64"
-> declare -x CROSS_COMPILE="aarch64-linux-gnu-"
-> declare -x EXTRA_MAKE_ARGS="CORESIGHT=1"
-> declare -x HOME="/home/perfbuilder"
-> declare -x HOSTNAME="9660e1237188"
-> declare -x OLDPWD="/"
-> declare -x PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-> declare -x PWD="/home/perfbuilder"
-> declare -x SHLVL="1"
-> declare -x TARGET="aarch64-linux-gnu"
-> declare -x TERM="xterm"
-> declare -x container="podman"
-> perfbuilder@9660e1237188:~$
-> 
-> 
-
 -- 
+2.21.0
 
-- Arnaldo
