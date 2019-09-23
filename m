@@ -2,189 +2,121 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A716FC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3354BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837F820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091EA20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="djVMXW2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393931AbfIWOJm (ORCPT
+        id S2394076AbfIWOMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:09:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58430 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389738AbfIWOJm (ORCPT
+        Mon, 23 Sep 2019 10:12:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50650 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389738AbfIWOMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:09:42 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iCP1R-0006LT-48; Mon, 23 Sep 2019 16:09:01 +0200
-Date:   Mon, 23 Sep 2019 16:09:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Yunfeng Cui <cui.yunfeng@zte.com.cn>, christian@brauner.io,
-        keescook@chromium.org, luto@amacapital.net, wad@chromium.org,
-        akpm@linux-foundation.org, mingo@kernel.org, mhocko@suse.com,
-        elena.reshetova@intel.com, aarcange@redhat.com, ldv@altlinux.org,
-        arunks@codeaurora.org, guro@fb.com, joel@joelfernandes.org,
-        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn
-Subject: Re: [PATCH] futex: robust futex maybe never be awaked, on rare
- situation.
-In-Reply-To: <20190923130519.GH2332@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1909231545560.2003@nanos.tec.linutronix.de>
-References: <1569208700-24044-1-git-send-email-cui.yunfeng@zte.com.cn> <20190923130519.GH2332@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 23 Sep 2019 10:12:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NECO3O074073;
+        Mon, 23 Sep 2019 09:12:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569247944;
+        bh=xjCqVaqsfxQUrYb+QYCqmUUgiW6IKZy5ystoyrOScP0=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=djVMXW2xEx7V3DIFjCoijRRDlcfvADAx5fqZdXy+u/aWGj3+z1HJ3cufDqKSpYr0w
+         tlK+Qrxedm0ElKG597iPF29GTsbxqbO4QQIEm85k9njWBbkrsNgd+Wko8acxf+2xTQ
+         lSLGnKSDzBD2V8xpCnwizeQ9vtazvyNNCxaJhKOw=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NECOe5007615;
+        Mon, 23 Sep 2019 09:12:24 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
+ Sep 2019 09:12:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 23 Sep 2019 09:12:18 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NECNH5090850;
+        Mon, 23 Sep 2019 09:12:23 -0500
+Subject: Re: [PATCH v3 2/5] leds: lm3692x: Don't overwrite return value in
+ error path
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1569100154.git.agx@sigxcpu.org>
+ <be4c3e89e6285d8d1529967e6198abb51d28fe8b.1569100154.git.agx@sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b7f48872-b839-6c83-3708-659e84bc02b8@ti.com>
+Date:   Mon, 23 Sep 2019 09:16:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <be4c3e89e6285d8d1529967e6198abb51d28fe8b.1569100154.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019, Peter Zijlstra wrote:
-> On Mon, Sep 23, 2019 at 11:18:20AM +0800, Yunfeng Cui wrote:
-> > I use model checker find a issue of robust and pi futex. On below
-> > situation, the owner can't find something in pi_state_list, while
-> > the requester will be blocked, never be awaked.
-> > 
-> > CPU0                       CPU1
-> >                            futex_lock_pi
-> >                            /*some cs code*/
-> > futex_lock_pi
-> >   futex_lock_pi_atomic
-> >     ...
-> >     newval = uval | FUTEX_WAITERS;
-> >     ret = lock_pi_update_atomic(uaddr, uval, newval);
-> >     ...
-> >     attach_to_pi_owner
-> >      ....
-> >      p = find_get_task_by_vpid(pid);
-> >      if (!p)
-> >        return handle_exit_race(uaddr, uval, NULL);
-> >        ....
-> >        raw_spin_lock_irq(&p->pi_lock);
-> >        ....
-> >        pi_state = alloc_pi_state();
-> >        ....
-> >                            do_exit->mm_release
-> >                            if (unlikely(tsk->robust_list)) {
-> >                              exit_robust_list(tsk);
-> >                              tsk->robust_list = NULL;
-> >                            }
-> >                            if (unlikely(!list_empty(&tsk->pi_state_list)))
-> >                              exit_pi_state_list(tsk); /*WILL MISS*/
-> >       list_add(&pi_state->list, &p->pi_state_list);
-> >     WILL BLOCKED, NEVER WAKEUP!
-> 
-> Did you forget/overlook the pi_lock fiddling in do_exit() ? I'm thinking
-> that would make the above impossible.
+Guido
 
-Right. I was trying to construct a case which allows the above, but failed
-to do so.
+Thanks for the update
 
-Let's look at the exiting task:
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-   exit()
-     exit_signals()
-       tsk->flags |= PF_EXITING;
-
-     smp_mb();
-
-     raw_spin_lock_irq(&tsk->pi_lock);
-(1)
-     raw_spin_unlock_irq(&tsk->pi_lock);
-
-     exit_mm()
-       mm_release()
-         exit_robust_list()
-
-         if (!list_empty(&tsk->pi_state_list)))
-            exit_pi_state_list(tsk);
-
-And now at the attaching task:
-
-attach_to_pi_owner()
-  raw_spin_lock_irq(tsk->pi_lock);
-    if (tsk->flags & PF_EXITING)
-      return;
-
-  pi_state = alloc_pi_state()
-
-  list_add(pi_state, tsk->pi_state_list);
-
-See (1) above. That's the crucial point.
-
-Once the exiting task has set PF_EXITING and acquired tsk->pi_lock, it is
-impossible for the attaching task to queue itself as it _must_ observe
-PF_EXITING after it acquired tsk->pi_lock.
-
-If it manages to acquire tsk->pi_lock _before_ the existing task does that,
-then it either observes PF_EXITING or not.
-
-If it does, it goes out. If it does not, it queues itself on
-tsk->pi_state_list and will be cleaned up by the exiting task.
-
-Simplified concurrency picture:
-
-Case 1: Attacher does not see PF_EXITING
-
-CPU 0				CPU 1
-
-    				lock(&tsk->pi_lock);
- tsk->flags |= PF_EXITING;	if (!(tsk->flags & PF_EXITING))
-				   queue(pi_state, tsk);
- smp_mb();			   unlock(&tsk->pi_lock); 	       			
- lock(&tsk->pi_lock);
-(1)
- unlock(&tsk->pi_lock);
-
- if (!list_empty(&tsk->pi_state_list)))
-   exit_pi_state_list(tsk);
-
-Case 2: Attacher does see PF_EXITING before (1)
-
-CPU 0				CPU 1
-
-    				lock(&tsk->pi_lock);
- tsk->flags |= PF_EXITING;	if (tsk->flags & PF_EXITING) {
- 	    			   unlock(&tsk->pi_lock);
- smp_mb();			   return;
- lock(&tsk->pi_lock);           }
-(1) 
- unlock(&tsk->pi_lock);
-
-The attacher CANNOT be queued in tsk->pi_state_list
-
-Case 2: Attacher does see PF_EXITING after (1)
-
-CPU 0				CPU 1
-
- tsk->flags |= PF_EXITING;	
- smp_mb();
- lock(&tsk->pi_lock);
-				lock(&tsk->pi_lock);
-(1) 
- unlock(&tsk->pi_lock);
-				if (tsk->flags & PF_EXITING) {
- 	    			   unlock(&tsk->pi_lock);
-				   return;
-				}
-
-There are no other cases possible. If the attacher can observe
-
-      !(tsk->flags & PF_EXITING)
-
-_after_ (1) then there is something seriously wrong, but not in the futex
-code. That would be a massive memory ordering issue.
-
-Thanks,
-
-	tglx
+On 9/21/19 4:12 PM, Guido Günther wrote:
+> The driver currently reports successful initialization on every failure
+> as long as it's able to power off the regulator. Don't check the return
+> value of regulator_disable to avoid that.
+>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> ---
+>   drivers/leds/leds-lm3692x.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> index 487228c2bed2..ad76e34455ff 100644
+> --- a/drivers/leds/leds-lm3692x.c
+> +++ b/drivers/leds/leds-lm3692x.c
+> @@ -198,7 +198,7 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
+>   static int lm3692x_init(struct lm3692x_led *led)
+>   {
+>   	int enable_state;
+> -	int ret;
+> +	int ret, reg_ret;
+>   
+>   	if (led->regulator) {
+>   		ret = regulator_enable(led->regulator);
+> @@ -313,14 +313,15 @@ static int lm3692x_init(struct lm3692x_led *led)
+>   		gpiod_direction_output(led->enable_gpio, 0);
+>   
+>   	if (led->regulator) {
+> -		ret = regulator_disable(led->regulator);
+> -		if (ret)
+> +		reg_ret = regulator_disable(led->regulator);
+> +		if (reg_ret)
+>   			dev_err(&led->client->dev,
+> -				"Failed to disable regulator\n");
+> +				"Failed to disable regulator: %d\n", reg_ret);
+>   	}
+>   
+>   	return ret;
+>   }
+> +
+>   static int lm3692x_probe_dt(struct lm3692x_led *led)
+>   {
+>   	struct fwnode_handle *child = NULL;
