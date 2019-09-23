@@ -2,107 +2,138 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119CFC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2315C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BB520B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569245428;
-	bh=CA3jF6Gt7vTntOiNm7Ka9iK9XTY7AzxUYxpyJSRtT+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U3unQ3YCy0WCO99Y0MaS47NTOlsyTFlSjIzdthc1zGqfPU/7VehBqlZCFfej0ZdLV
-	 q4kDK7Yq5pw8cS7fChIef4bOcwevrmqoR3uPH7PWhZNdotKkwNY+EIuWkIpiA/yKNB
-	 ISztqF3/XlfB9LHJJ90IWsgqn7UwQZtqA4x3EvuU=
+	by mail.kernel.org (Postfix) with ESMTP id 708DF21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWy408zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407776AbfIWNa2 (ORCPT
+        id S2407860AbfIWNbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404581AbfIWNa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:30:28 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF5A20867;
-        Mon, 23 Sep 2019 13:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569245427;
-        bh=CA3jF6Gt7vTntOiNm7Ka9iK9XTY7AzxUYxpyJSRtT+o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vs1xNEWZ/cH9GY0nruq1EHVFCmL/BQMrp8GEO7tRzWK4V9PTUO0pDnlnRPn0iPf+z
-         unyrvy+QABye++Z/AdZ7j7DyFrSNT5kc31Aiw3nrmdnv82QGRlg1hCVSRvZFDiEOth
-         /3IHlWp3MAKcOGTobl6cbgCyoqhjSf7HUCglg544=
-Date:   Mon, 23 Sep 2019 09:30:25 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.2 072/185] ALSA: hda: Add codec on bus address
- table lately
-Message-ID: <20190923133025.GE8171@sasha-vm>
-References: <20190922184924.32534-1-sashal@kernel.org>
- <20190922184924.32534-72-sashal@kernel.org>
- <s5h8sqgm9qz.wl-tiwai@suse.de>
+        Mon, 23 Sep 2019 09:31:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40495 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407699AbfIWNbb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:31:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so33353684iof.7;
+        Mon, 23 Sep 2019 06:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3+RYvpW6t7ADMYkerd+xeHNQ43Bh09ixj7XaFyC3Hbg=;
+        b=eWy408zz+ozFC/Lbg71VkerP1XtastaivcX61SsWwiN++zVJvIWGdrzjGsNScWdqY7
+         G3uNY1yjn2gyuy7bOSbCkyn/SoboYis22Z9Dj0Aj17NSHRJIuccQihnCvHwH3pDdjkNX
+         cGnuILaR3IRK/jPlERiwWz0p1QvvzDDh3VeMU8TNLUuB+85zTMc1FJenUfVbx2paHF6X
+         FcaBrAg6Q5KbtvIiarsSq8fsHBPtN14ytb1U+37xsmuI8rUpKRjns34ZsFnq9NXP6ZVK
+         Qa+qKAsHK+d5P5u64lVZzt1HJ1u7JxZpA4Q2z0kaCpfSliUOo0s3kuTGx+b/aoeWXoJB
+         WSEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3+RYvpW6t7ADMYkerd+xeHNQ43Bh09ixj7XaFyC3Hbg=;
+        b=P/QxnNt07+sIY9nFNSTmmusslMaIk8YzvIc82Z4u+Hrlrp/eEXlZMaMv/x7riQa6UH
+         gjK63MQu7QiJLV6vcCM6OtOUbBd9hYrdqeQwmTU6iDr4krt9KCCK8ZHZNBLhfxbINqlw
+         MW7dakpisStZxY+YU63xfwBH7p/Jp+Mv+LTJMB4EhU2jtIqK0NYx0hDmAgctICag/HjR
+         1dB4hGonIcw8isyT15PxZcImFtRFQJpEuZztP7h88QxWJBUy2as3JOIManSLfuq9flrI
+         FkhdGqCnowv3gtwvAYM4NxMsIcRO2Yu0NbqcekHY/kjsIPfMmcakN1vJiaLG/LnSDzFa
+         XAoQ==
+X-Gm-Message-State: APjAAAUmUo8vFE4JvYCyvQWGGS3TcK7BZebxPPN0sXrlRjnuvT8/873q
+        nNIJUvuwWUcd5jBh3CPGMCUy8J+9+v2swmpSeGo=
+X-Google-Smtp-Source: APXvYqw0DEPqirZ/GJL7O38ranF6+/QvHWDJuhu5rwTfjUDwNPVY+dYgCxKdkvUwJorgBrV31AVMzJLj+DOAzQ5GmOg=
+X-Received: by 2002:a02:6017:: with SMTP id i23mr36944468jac.0.1569245490276;
+ Mon, 23 Sep 2019 06:31:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <s5h8sqgm9qz.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190917161214.2913-1-aford173@gmail.com> <20190917161214.2913-2-aford173@gmail.com>
+ <20190921190708.GB32133@ravnborg.org>
+In-Reply-To: <20190921190708.GB32133@ravnborg.org>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 23 Sep 2019 08:31:18 -0500
+Message-ID: <CAHCN7x+j9dsn8R202Y_rQUzO8g3SFatt8TzWUYsgADqCnTR=-Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: Add Logic PD Type 28 display panel
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 09:06:12PM +0200, Takashi Iwai wrote:
->On Sun, 22 Sep 2019 20:47:30 +0200,
->Sasha Levin wrote:
->>
->> From: Takashi Iwai <tiwai@suse.de>
->>
->> [ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
->>
->> The call of snd_hdac_bus_add_device() is needed only for registering
->> the codec onto the bus caddr_tbl[] that is referred essentially only
->> in the unsol event handler.  That is, the reason of this call and the
->> release by the counter-part function snd_hdac_bus_remove_device() is
->> just to assure that the unsol event gets notified to the codec.
->>
->> But the current implementation of the unsol notification wouldn't work
->> properly when the codec is still in a premature init state.  So this
->> patch tries to work around it by delaying the caddr_tbl[] registration
->> at the point of snd_hdac_device_register().
->>
->> Also, the order of snd_hdac_bus_remove_device() and device_del() calls
->> are shuffled to make sure that the unsol event is masked before
->> deleting the device.
->>
->> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
->> Signed-off-by: Takashi Iwai <tiwai@suse.de>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Sat, Sep 21, 2019 at 2:07 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
->The upstream commit was reverted later by 246bb4aaa4f4, which has even
->Fixes tag pointing this.  So please drop this.
+> Hi Adam.
+>
+> Good with even more panels.
+> But for new bindings please use meta-schema (.yaml) format.
+> This is what we use for new bindings as it allows better
+> validation.
 
-I'll drop it, thank you.
+I don't know that syntax, but I'll try to piece together a few
+different examples to come up with something.  I should have a V2
+today.
 
->BTW, this is the second time AUTOSEL overlooked the existing revert.
->I'm afraid something is missing in the check.
-
-Usually it's the case that I check for fixes/reverts once I compile the
-series, and again right before I queue it up to a stable tree. In
-between fixes and reverts tend to sneak in just like in this case.
-
-In general, I also check the -rcs for fixes and reverts during their
-review window, so while sometimes we send out mails with patches that
-have a fix or revert upstream, they rarely make it into a released
-stable kernel.
-
---
-Thanks,
-Sasha
+adam
+>
+>         Sam
+>
+> On Tue, Sep 17, 2019 at 11:12:12AM -0500, Adam Ford wrote:
+> > This patch adds documentation of device tree bindings for the WVGA panel
+> > Logic PD Type 28 display.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> > new file mode 100644
+> > index 000000000000..829fc5210e06
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> > @@ -0,0 +1,26 @@
+> > +Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> > +
+> > +This binding is compatible with the simple-panel binding, which is specified
+> > +in simple-panel.txt in this directory.
+> > +
+> > +Required properties:
+> > +- compatible: should be "logicpd,type28"
+> > +
+> > +Optional properties:
+> > +- power-supply: regulator to provide the supply voltage
+> > +- enable-gpios: GPIO pin to enable or disable the panel
+> > +- backlight: phandle of the backlight device attached to the panel
+> Is it correct that these are optional for the descrivbed panel?
+>
+> > +
+> > +Optional nodes:
+> > +- Video port for RGB input.
+> > +
+> > +Example:
+> > +     lcd0: display {
+> > +             compatible = "logicpd,type28";
+> > +             enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+> > +             port {
+> > +                     lcd_in: endpoint {
+> > +                             remote-endpoint = <&dpi_out>;
+> > +                     };
+> > +             };
+> > +     };
+> > --
+> > 2.17.1
