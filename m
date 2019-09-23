@@ -2,96 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E38AC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81F3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C4420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXBOVmO9"
+	by mail.kernel.org (Postfix) with ESMTP id A26E920835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407447AbfIWJ4w (ORCPT
+        id S2407455AbfIWJ6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:56:52 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40313 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405175AbfIWJ4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:56:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id h144so31854302iof.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9RVgREEtnY7K1Q4RqEFR226fjeu69yeEhgWmLQQ1HSI=;
-        b=bXBOVmO9x51Zeb1vvbz+vROZa/zxo6m/j9+fhWU3iYEUhBW+tRhHBCj5EcvGdGHOE7
-         RyRWRgMzzVGhIXUJJsFWM8XP4FhBptfPxGYmugcvOizueRaMiFAIvw1f16Oq/2HINvQ+
-         rBbM7lH4yeRKpEWewjKe4BxjXyYENOZ7ca9VTaVVrb0ZlwSiI2LRf70LHe9AItCITmMn
-         9h+1ZnjcYoDhUUpeBd5g61NY6tt+av9Mnb3/XFSP4ZxcBsPVZtJgTt95SEGMx/QtoHnI
-         Bkb7iN7y0yjQjyY+n1rPBlhzCz+M2JFHl/TJDFdO0kt0qt0Y0RaXrLGvU42UVNY1f06C
-         VWlw==
+        Mon, 23 Sep 2019 05:58:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57526 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405009AbfIWJ6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:58:01 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E278C054C52
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:58:01 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id k67so4754464wmf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:58:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9RVgREEtnY7K1Q4RqEFR226fjeu69yeEhgWmLQQ1HSI=;
-        b=qPc5lPn51Wh9soPz8k6fTKJ6v3iyCWHlrNsicj6c39LbbjvfifLrSlzbr0CqE8/vw7
-         H+3PhXqsmX1jOiNeU+HZMDGUO++9BNOV2A4CToSZKAjvqeVD765alA6EF8qGw4dizluG
-         zceD88XCH3BmJM6B4YKwnNXUG2mLGHbenhilzmSR2W43revdal/QMVsiC3Ob6DMswIKJ
-         b8tOrwwLnahbEfCUSWGthWTw2TJJWlSAR4/o7qeND75RbhBBhKUJG6TTDbZkaoxduod1
-         wKAz9XWosCfzkc+86zU0QVttQIyBehjIr+AouAsAENNJ2ZH5xSWrPXrLu6qButlzFZha
-         7ehw==
-X-Gm-Message-State: APjAAAViAzrjiJYqGhmzH3JcmFFXtugNTkIPL6q3fv9cWaHqpFfnIO/a
-        qegrYOTgUlCcnLUDbKEtn+YrQ+QgTJd++Hjzsbk=
-X-Google-Smtp-Source: APXvYqxGoKclm6T821IxCLJucK7Nvbhkem6415ZtQLZWjIFbauOnrrsRXTu/LboV91eUGR4OpybVkOpRXt7P3TBYmhU=
-X-Received: by 2002:a5d:8b07:: with SMTP id k7mr28249575ion.20.1569232610529;
- Mon, 23 Sep 2019 02:56:50 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wzehYQ/q/Unr9ua1VQFlkvwitkghryuoSUrqvQKWtys=;
+        b=Z7jh5nhCPEqXNqawRi3YIeViNSknyx5HB9l4ucf93zhMJ2dnMcLFRKyLVFGF4lFFr3
+         JM5DfIo34DcJ44L1nZpU4QsUKs6KLbAh9TFRe9nUfe+/XwyWxmG3fQ4X4SHFLUjU04Yy
+         sg6llhpE2n3OdO9PBv/53mJoE/5unz7GAGSBXdYBXt0Wn3g6FTSNxaEGsFcCQ5KxSISf
+         0pIRHDOQSDq6OSsrbWxayaGejAa7BYeA2njfg1Qq5fzf3gGuIyaSs274Bj/kfxhT6eD5
+         kjaFX1XNz64wEvwM8Y7ye7NG/t4shCXJFwbY7AEuO1jd//0AuhS069TLNVXhPj2y+srn
+         SYvg==
+X-Gm-Message-State: APjAAAWRhT0SVNuFgv3H1081gXsDcWgkb/k1vY8jSEcDMCWxaEgMOkZf
+        kI5Ec4Fb7K+NQmYu7L8eSUoG6T4GVf2ERaSiltsiJZ1EKgZwZ/b/jqs8gbvYnPWdWo8zQt+c6zz
+        WddATK5Rgj2XdQAASy4mv6Ycv
+X-Received: by 2002:adf:f9c9:: with SMTP id w9mr19828665wrr.172.1569232679351;
+        Mon, 23 Sep 2019 02:57:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw+R47KLkJmnU7l8Zxf4zZxqnGS/qkxsg/JQjqPn/GlshVIlfYKQ2eupxBkl7MdJyTJq5f6zQ==
+X-Received: by 2002:adf:f9c9:: with SMTP id w9mr19828652wrr.172.1569232679116;
+        Mon, 23 Sep 2019 02:57:59 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id c1sm8310783wmk.20.2019.09.23.02.57.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 02:57:58 -0700 (PDT)
+Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-16-aarcange@redhat.com>
+ <87o8zb8ik1.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
+Date:   Mon, 23 Sep 2019 11:57:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190922083342.GO13569@xsang-OptiPlex-9020> <20190922150328.6722-1-alexander.kapshuk@gmail.com>
- <20190923091934.GA15355@zn.tnic>
-In-Reply-To: <20190923091934.GA15355@zn.tnic>
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Mon, 23 Sep 2019 12:56:14 +0300
-Message-ID: <CAJ1xhMVrbAYi2=2L1Tt5qdOWGPHgo_htMZTZQVjJyWNTda2z+w@mail.gmail.com>
-Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87o8zb8ik1.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:19 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
-> > This patch fixes the regexp warnings shown below:
-> > GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
-> >
-> > The ':' and '&' characters need not escaping when used in string constants
-> > as part of regular expressions.
->
-> How do you trigger this?
->
-> I don't see it in my builds so it looks like environment thing. What
-> flavor of awk is yours?
->
-> Thx.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+On 23/09/19 11:31, Vitaly Kuznetsov wrote:
+> +#ifdef CONFIG_RETPOLINE
+> +		if (exit_reason == EXIT_REASON_MSR_WRITE)
+> +			return handle_wrmsr(vcpu);
+> +		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
+> +			return handle_preemption_timer(vcpu);
+> +		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
+> +			return handle_interrupt_window(vcpu);
+> +		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+> +			return handle_external_interrupt(vcpu);
+> +		else if (exit_reason == EXIT_REASON_HLT)
+> +			return handle_halt(vcpu);
+> +		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
+> +			return handle_pause(vcpu);
+> +		else if (exit_reason == EXIT_REASON_MSR_READ)
+> +			return handle_rdmsr(vcpu);
+> +		else if (exit_reason == EXIT_REASON_CPUID)
+> +			return handle_cpuid(vcpu);
+> +		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
+> +			return handle_ept_misconfig(vcpu);
+> +#endif
+>  		return kvm_vmx_exit_handlers[exit_reason](vcpu);
 
-gawk 5.0.1-1 on Arch Linux.
+Most of these, while frequent, are already part of slow paths.
+
+I would keep only EXIT_REASON_MSR_WRITE, EXIT_REASON_PREEMPTION_TIMER,
+EXIT_REASON_EPT_MISCONFIG and add EXIT_REASON_IO_INSTRUCTION.
+
+If you make kvm_vmx_exit_handlers const, can the compiler substitute for
+instance kvm_vmx_exit_handlers[EXIT_REASON_MSR_WRITE] with handle_wrmsr?
+ Just thinking out loud, not sure if it's an improvement code-wise.
+
+Paolo
+
+Paolo
