@@ -2,134 +2,210 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03BCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B99C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83CD20865
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD4920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:14:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="AHecwFxj";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="AHecwFxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438917AbfIWKNQ (ORCPT
+        id S2439240AbfIWKOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:13:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51020 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbfIWKNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:13:15 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E3D6681DE8;
-        Mon, 23 Sep 2019 10:13:14 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DDA765D9CA;
-        Mon, 23 Sep 2019 10:13:12 +0000 (UTC)
-Subject: Re: [PATCH RFC v3 1/9] ACPI: NUMA: export pxm_to_node
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-2-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f4d8204e-71a1-855e-3992-35f7ec90440c@redhat.com>
-Date:   Mon, 23 Sep 2019 12:13:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190919142228.5483-2-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 23 Sep 2019 06:14:20 -0400
+Received: from mail-eopbgr50050.outbound.protection.outlook.com ([40.107.5.50]:3097
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406278AbfIWKOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:14:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xo9XvHS0OLKJefPvnTrivtFQ7Xk1F+bXmjZCpLiLxuM=;
+ b=AHecwFxjhGbL1Q1AHniLVbkfKQ3XeuA2tQPFaqmcggL6Ujlibda/cahoftmomCOOvLJ9FztfaBt0KvQy+buKGz6LKBc3UNTQDuehXmzxoHdWsE9mDILZiGbYvyUHQWckz6H/Bi2vyxIFRTn5ZnukxMw3ky47Or3J7VqRrgWkfvo=
+Received: from VI1PR08CA0181.eurprd08.prod.outlook.com (2603:10a6:800:d2::11)
+ by HE1PR08MB2826.eurprd08.prod.outlook.com (2603:10a6:7:31::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.19; Mon, 23 Sep
+ 2019 10:14:15 +0000
+Received: from DB5EUR03FT054.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::207) by VI1PR08CA0181.outlook.office365.com
+ (2603:10a6:800:d2::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.18 via Frontend
+ Transport; Mon, 23 Sep 2019 10:14:14 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT054.mail.protection.outlook.com (10.152.20.248) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Mon, 23 Sep 2019 10:14:13 +0000
+Received: ("Tessian outbound 96594883d423:v31"); Mon, 23 Sep 2019 10:14:06 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 28f9ddc391ad51a0
+X-CR-MTA-TID: 64aa7808
+Received: from a6c42b9a4ed7.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.6.55])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 1B60AD72-FA0C-40B9-8969-202C1731ED53.1;
+        Mon, 23 Sep 2019 10:10:29 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2055.outbound.protection.outlook.com [104.47.6.55])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a6c42b9a4ed7.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Mon, 23 Sep 2019 10:10:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A2sGn3HRZo2qq5GNROI7k2zR+7R8P80Pka6hZtsE7fbm79ai+wA3XMQXHqZrpNm3D77k25UOsWcy1J3TnLogcvI2Xaw9CysAoZT0N71xWlcV0vDp0joHPxWkdXvknsPoG5bPdEf8m0rYxMVVcce9DniC9p/YuqTjK/w4DzX0lRf/kPXcOVGZC5m2sxB+PUBj2kiaBMTDsCxIvKkVgRXB/XWfubMiZVUow/77HkYxldp+eH8wpDv5kgr3H9HlNkULws2oPMdDhgVczsXR9so7FKTrKYxa9lHh8+j/xwMXln0o10IUzt8sJYCwSXgIECFpDxBSs/hxMeLjd4XflRzL2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xo9XvHS0OLKJefPvnTrivtFQ7Xk1F+bXmjZCpLiLxuM=;
+ b=DZGkBDUIEjRwIU/HmcoTkToqJogn2/9iUafbQy+Thr/BrZhDlE1V3ahmM8v2XHI/alT20cxQBelhjPL7XLc4bETCJFLLWpLuIq7IsHgIxb5PThTSObgkseKPhTfuWdE8KCiX1kKtv57m2wAcqdhMw+U29xscQYQba48sYHwMjAGFK9vOguslQz23HNHms1123rmuJPZ3/JewxYMyrR3312gk6rm5wd/zDBDH57uJM1xiOnPi7yH5DXoNHXs6j/PPgxXmZC42f/mJ4UprWS7WcB5Nt+8JEwx3cfmlRyLOCDZfXFaKhXDB1mQWOL15fLS4gantWf98vvrvwZRXFAKgxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xo9XvHS0OLKJefPvnTrivtFQ7Xk1F+bXmjZCpLiLxuM=;
+ b=AHecwFxjhGbL1Q1AHniLVbkfKQ3XeuA2tQPFaqmcggL6Ujlibda/cahoftmomCOOvLJ9FztfaBt0KvQy+buKGz6LKBc3UNTQDuehXmzxoHdWsE9mDILZiGbYvyUHQWckz6H/Bi2vyxIFRTn5ZnukxMw3ky47Or3J7VqRrgWkfvo=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB5503.eurprd08.prod.outlook.com (52.133.246.215) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Mon, 23 Sep 2019 10:10:26 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f%7]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
+ 10:10:26 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] drm/komeda: Workaround for broken FLIP_COMPLETE timestamps
+Thread-Topic: [PATCH v2] drm/komeda: Workaround for broken FLIP_COMPLETE
+ timestamps
+Thread-Index: AQHVcfceR0CHSFhcZEiwMH6z8RYyLQ==
+Date:   Mon, 23 Sep 2019 10:10:26 +0000
+Message-ID: <20190923101017.35114-1-mihail.atanassov@arm.com>
+References: <20190919132759.18358-1-mihail.atanassov@arm.com>
+In-Reply-To: <20190919132759.18358-1-mihail.atanassov@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 23 Sep 2019 10:13:15 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: AM0PR05CA0025.eurprd05.prod.outlook.com
+ (2603:10a6:208:55::38) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.23.0
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: cb56579e-cab8-40de-886a-08d7400ec87c
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB5503;
+X-MS-TrafficTypeDiagnostic: VI1PR08MB5503:|VI1PR08MB5503:|HE1PR08MB2826:
+X-MS-Exchange-PUrlCount: 1
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR08MB28267EA9882DB6D13B0F510A8F850@HE1PR08MB2826.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
+x-forefront-prvs: 0169092318
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(346002)(376002)(136003)(199004)(189003)(54906003)(50226002)(6512007)(446003)(6306002)(476003)(316002)(66066001)(66556008)(99286004)(71200400001)(8936002)(2616005)(4326008)(71190400001)(11346002)(36756003)(6436002)(26005)(8676002)(486006)(6916009)(102836004)(2351001)(6486002)(76176011)(44832011)(2501003)(52116002)(5640700003)(6506007)(386003)(186003)(81166006)(81156014)(6116002)(3846002)(64756008)(66446008)(86362001)(305945005)(7736002)(66476007)(2906002)(25786009)(5660300002)(66946007)(256004)(14444005)(14454004)(478600001)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB5503;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: WRIR6Tf9SUBt14lle3mYAIfwKaMdd6oBgFILXQd5gwitn8FOcMP4lIJUJ01b9n+1UiK86YxbvcFzqwfgqaNEntQiSVrw5mGSfPhCm1RvbXxMyEn1n03W669sLXSAbw2IiFud3J+3pxlzo8Ky9qA7lGZxO2fYrIlp7rRUXEV+igtsyYSu2/EAZKa7WWrNLom6JieBBz/sHy3sOTvzl3S8Xup0z8wF5xtMUyi9ab0GBpnDJQFPigEbF06+lB48wOVX+M5st7SHTsly6KeBU58bQnR6gvsrn1xFkopxkhTtWj63lKal754Db1X1ryzQKxFsCXeDTMiS1WFusB8dgNZav0Ec3UuUNPnb9ZNQaUnq3zJ9rpzP4KsEidDewNbSiPjJKiRmotwIzWGO3aKCbz2S/USwIHPw9abVKuhW/0hHxZY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5503
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT054.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(199004)(189003)(2501003)(14444005)(305945005)(7736002)(6862004)(356004)(4326008)(336012)(54906003)(66066001)(23756003)(316002)(70206006)(6306002)(6116002)(70586007)(50466002)(47776003)(86362001)(6512007)(76130400001)(1076003)(50226002)(8936002)(99286004)(5640700003)(25786009)(76176011)(3846002)(26005)(36756003)(386003)(6506007)(81166006)(8676002)(102836004)(81156014)(8746002)(2906002)(11346002)(186003)(446003)(486006)(26826003)(5660300002)(478600001)(126002)(14454004)(2616005)(476003)(22756006)(63350400001)(6486002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR08MB2826;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 08f56c00-e7f2-4cd9-d976-08d7400e411c
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:HE1PR08MB2826;
+NoDisclaimer: True
+X-Forefront-PRVS: 0169092318
+X-Microsoft-Antispam-Message-Info: 1VmJAPmQld2qt8MtgHk/+AW5nRU1L11G0qY8owB7rg3mxMgHeTPEueEZ/I1MKTtE5dlFNzKkGDZ2SqK/s/kT07VuXgRVpJFUMiQy+BZg2dAZUWtlpJeK0grv/iSIBLb1QKfAf9BWxnfpdx3omb4Mr7hsouPg3DkCh6ejHES/9bd8ldzFZQOUIqleFm2uJcSFQ6BBLXPwOjC6wAeha6lUXXbkVq7K5eC03RqmI1rA64fd1N7Zm6LnbYh5tRirGf5n21t/vi/fna+Az4IJxCHufLakc1mDd19ZeppgqrucJsWDXd/+MJqKbqvfmGfCpuVMknq2nEqw/+nVKFRVBg3SxPFUjOyvGeHrrx3O/wcNccoXQtCe/FdC5QO3Cop6oo8V8QKPZMNLvIGy39XoBymOehb3QK3+eiLpfvd8/EGAVrk=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2019 10:14:13.3058
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb56579e-cab8-40de-886a-08d7400ec87c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2826
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.09.19 16:22, David Hildenbrand wrote:
-> Will be needed by virtio-mem to identify the node from a pxm.
-> 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/acpi/numa.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-> index eadbf90e65d1..d5847fa7ac69 100644
-> --- a/drivers/acpi/numa.c
-> +++ b/drivers/acpi/numa.c
-> @@ -35,6 +35,7 @@ int pxm_to_node(int pxm)
->  		return NUMA_NO_NODE;
->  	return pxm_to_node_map[pxm];
->  }
-> +EXPORT_SYMBOL(pxm_to_node);
+When initially turning a crtc on, drm_reset_vblank_timestamp will
+set the vblank timestamp to 0 for any driver that doesn't provide
+a ->get_vblank_timestamp() hook.
 
-FWIW, this is a fairly old patch I dragged along and I think I'll
-convert this to EXPORT_SYMBOL_GPL now that I know better :)
+Unfortunately, the FLIP_COMPLETE event depends on that timestamp,
+and the only way to regenerate a valid one is to have vblank
+interrupts enabled and have a valid in-ISR call to
+drm_crtc_handle_vblank.
 
->  
->  int node_to_pxm(int node)
->  {
-> 
+Additionally, if the user doesn't request vblanks but _does_ request
+FLIP_COMPLETE events, we still don't have a good timestamp: it'll be the
+same stamp as the last vblank one.
 
+Work around the issue by always enabling vblanks when the CRTC is on.
+Reducing the amount of time that PL0 has to be unmasked would be nice to
+fix at a later time.
 
--- 
+Changes since v1 [https://patchwork.freedesktop.org/patch/331727/]:
+ - moved drm_crtc_vblank_put call to the ->atomic_disable() hook
 
-Thanks,
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-David / dhildenb
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
+/drm/arm/display/komeda/komeda_crtc.c
+index 34bc73ca18bc..d06679afb228 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -489,6 +489,7 @@ komeda_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	pm_runtime_get_sync(crtc->dev->dev);
+ 	komeda_crtc_prepare(to_kcrtc(crtc));
+ 	drm_crtc_vblank_on(crtc);
++	WARN_ON(drm_crtc_vblank_get(crtc));
+ 	komeda_crtc_do_flush(crtc, old);
+ }
+=20
+@@ -581,6 +582,7 @@ komeda_crtc_atomic_disable(struct drm_crtc *crtc,
+ 		komeda_crtc_flush_and_wait_for_flip_done(kcrtc, disable_done);
+ 	}
+=20
++	drm_crtc_vblank_put(crtc);
+ 	drm_crtc_vblank_off(crtc);
+ 	komeda_crtc_unprepare(kcrtc);
+ 	pm_runtime_put(crtc->dev->dev);
+--=20
+2.23.0
+
