@@ -2,164 +2,61 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E5FC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53250C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5889C20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="BX0d9fUZ"
+	by mail.kernel.org (Postfix) with ESMTP id 299E1205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407055AbfIWNJ5 (ORCPT
+        id S2407223AbfIWNQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:09:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52768 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405137AbfIWNJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:09:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x2so9889111wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=POQzEF32pJw+JcJGYwatIQLE1EclVL51HgsgtLA7Qmw=;
-        b=BX0d9fUZ89UyQbARi+EIiuQz7/skB03FkmvzPaRZR3ZECUUjvMHRyuchQCs+a9LAea
-         2G+PIK23wzO+ITkoV9HFRLsgbyKRheMT1vim2zYSLgpWoWWc768/w/OGIxA96QWxNPvq
-         SJEKRVfFuMmfOJ4unliQJ5+TqqUvYFiIxrGMrgtRcVF3bmfjsXCvhjEXGeLH1u++HYAe
-         qbVfRinf3ErfTk1H3EIgzb+9pP38kcbHr+3YQCq6Js11GuGfHHbjTYGjPwlL63q3Y4/U
-         SKvhbtyKQWs8UXSHYGStv9Jl55kLNR8viy0MdL8sHCwy11YhD12ccd5rFMgoUxtK2ykE
-         sItA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=POQzEF32pJw+JcJGYwatIQLE1EclVL51HgsgtLA7Qmw=;
-        b=T816TnvJu4EZfqFd110PCG7DwnktRAB8SDiQvto7+LRdA/9L4NZhoxjM9RSnYLla55
-         sMtmzFKoOCHX//57oakkhj1j1VSJjyR8ou2Pq1vR0zPhF71/xAxkPKFJaUVLSUt45yWT
-         Ol5vlzdG6v5T+zYdQN2XoVYYf/qXkmEvDKUkkvn+5AaJMEP8dAepNWc5EooO1F11L84n
-         XuQdBu8YqhFd8mpAefvvawsdmU2e6HyRKRHW2ijblC39v/qDQEu12J+D/PgXDbRHEBpp
-         In3wEeuf+HuggnQ0unYc3JPLykB0NuDWG0EjOWFKolU8MpzuWndu/gb/R9V+Z0G8zFQ8
-         acMQ==
-X-Gm-Message-State: APjAAAXDaPUbpw8R/+JZWCnA82uR5KecwMsPetvV5F8Bpys+uxy+yGnL
-        lYSut32zn4j9SIVxJiJVzehmjxsNnAyJii07Bs2yyA==
-X-Google-Smtp-Source: APXvYqxmSBlwd2lVkFWxE9RTK2LVohXpZcBHo1U2r2gpRoUOnN9IsM4d5615+AEz4vMLdLGhar/FgZSJ+9bVZz2tU3M=
-X-Received: by 2002:a7b:c84f:: with SMTP id c15mr12094316wml.52.1569244194712;
- Mon, 23 Sep 2019 06:09:54 -0700 (PDT)
+        Mon, 23 Sep 2019 09:16:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39648 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405137AbfIWNQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:16:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BBF0AC0546D5;
+        Mon, 23 Sep 2019 13:16:44 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 355DA60BFB;
+        Mon, 23 Sep 2019 13:16:44 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/2] intel-speed-select: Convert output to tables
+Date:   Mon, 23 Sep 2019 09:16:36 -0400
+Message-Id: <20190923131638.6668-1-prarit@redhat.com>
 MIME-Version: 1.0
-References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-12-anup.patel@wdc.com>
- <8c44ac8a-3fdc-b9dd-1815-06e86cb73047@redhat.com>
-In-Reply-To: <8c44ac8a-3fdc-b9dd-1815-06e86cb73047@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 23 Sep 2019 18:39:43 +0530
-Message-ID: <CAAhSdy1-1yxMnjzppmUBxtSOAuwWaPtNZwW+QH1O7LAnEVP8pg@mail.gmail.com>
-Subject: Re: [PATCH v7 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 23 Sep 2019 13:16:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 4:42 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 04/09/19 18:15, Anup Patel wrote:
-> > +     unsigned long guest_sstatus =
-> > +                     vcpu->arch.guest_context.sstatus | SR_MXR;
-> > +     unsigned long guest_hstatus =
-> > +                     vcpu->arch.guest_context.hstatus | HSTATUS_SPRV;
-> > +     unsigned long guest_vsstatus, old_stvec, tmp;
-> > +
-> > +     guest_sstatus = csr_swap(CSR_SSTATUS, guest_sstatus);
-> > +     old_stvec = csr_swap(CSR_STVEC, (ulong)&__kvm_riscv_unpriv_trap);
-> > +
-> > +     if (read_insn) {
-> > +             guest_vsstatus = csr_read_set(CSR_VSSTATUS, SR_MXR);
->
-> Is this needed?  IIUC SSTATUS.MXR encompasses a wider set of permissions:
->
->   The HS-level MXR bit makes any executable page readable.  {\tt
->   vsstatus}.MXR makes readable those pages marked executable at the VS
->   translation level, but only if readable at the guest-physical
->   translation level.
->
-> So it should be enough to set SSTATUS.MXR=1 I think.  But you also
-> shouldn't set SSTATUS.MXR=1 in the !read_insn case.
+The turbo ratio limits and turbo frequencies add a large amount of
+lines to the output.  The output can be truncated into human and
+machine readable tables to reduce the number of lines of output.
 
-I was being overly cautious here. Initially, I thought SSTATUS.MXR
-applies only to Stage2 and VSSTATUS.MXR applies only to Stage1.
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-I agree with you. The HS-mode should only need to set SSTATUS.MXR.
+Prarit Bhargava (2):
+  intel-speed-select: Display turbo-ratio-limits as a table
+  intel-speed-select: Display turbo frequencies in a table
 
->
-> Also, you can drop the irq save/restore (which is already a save/restore
-> of SSTATUS) since you already write 0 to SSTATUS.SIE in your csr_swap.
-> Perhaps add a BUG_ON(guest_sstatus & SR_SIE) before the csr_swap?
+ .../x86/intel-speed-select/isst-display.c     | 196 +++++++++---------
+ 1 file changed, 94 insertions(+), 102 deletions(-)
 
-I had already dropped irq save/restore in v7 series and having BUG_ON()
-on guest_sstatus here would be better.
+-- 
+2.21.0
 
->
-> > +             asm volatile ("\n"
-> > +                     "csrrw %[hstatus], " STR(CSR_HSTATUS) ", %[hstatus]\n"
-> > +                     "li %[tilen], 4\n"
-> > +                     "li %[tscause], 0\n"
-> > +                     "lhu %[val], (%[addr])\n"
-> > +                     "andi %[tmp], %[val], 3\n"
-> > +                     "addi %[tmp], %[tmp], -3\n"
-> > +                     "bne %[tmp], zero, 2f\n"
-> > +                     "lhu %[tmp], 2(%[addr])\n"
-> > +                     "sll %[tmp], %[tmp], 16\n"
-> > +                     "add %[val], %[val], %[tmp]\n"
-> > +                     "2: csrw " STR(CSR_HSTATUS) ", %[hstatus]"
-> > +             : [hstatus] "+&r"(guest_hstatus), [val] "=&r" (val),
-> > +               [tmp] "=&r" (tmp), [tilen] "+&r" (tilen),
-> > +               [tscause] "+&r" (tscause)
-> > +             : [addr] "r" (addr));
-> > +             csr_write(CSR_VSSTATUS, guest_vsstatus);
->
-> >
-> > +#ifndef CONFIG_RISCV_ISA_C
-> > +                     "li %[tilen], 4\n"
-> > +#else
-> > +                     "li %[tilen], 2\n"
-> > +#endif
->
-> Can you use an assembler directive to force using a non-compressed
-> format for ld and lw?  This would get rid of tilen, which is costing 6
-> bytes (if I did the RVC math right) in order to save two. :)
-
-I tried looking for it but could not find any assembler directive
-to selectively turn-off instruction compression.
-
->
-> Paolo
->
-> > +                     "li %[tscause], 0\n"
-> > +#ifdef CONFIG_64BIT
-> > +                     "ld %[val], (%[addr])\n"
-> > +#else
-> > +                     "lw %[val], (%[addr])\n"
-> > +#endif
-
-Regards,
-Anup
