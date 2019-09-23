@@ -2,275 +2,172 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC027C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4220C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EAD205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8840D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502560AbfIWUXv (ORCPT
+        id S2502571AbfIWUXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:23:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:45688 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfIWUXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:23:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 13:23:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208,223";a="389607898"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Sep 2019 13:23:49 -0700
-Date:   Mon, 23 Sep 2019 13:23:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-Message-ID: <20190923202349.GL18195@linux.intel.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-16-aarcange@redhat.com>
- <87o8zb8ik1.fsf@vitty.brq.redhat.com>
- <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
- <20190923190514.GB19996@redhat.com>
+        Mon, 23 Sep 2019 16:23:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22352 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728856AbfIWUXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:23:53 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NKLptd060389;
+        Mon, 23 Sep 2019 16:23:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72aqw6as-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:23:20 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NKM9tW063386;
+        Mon, 23 Sep 2019 16:23:20 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72aqw6ab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:23:20 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NKJKTN027588;
+        Mon, 23 Sep 2019 20:23:18 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2v5bg6v1em-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 20:23:18 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NKNGNj62259636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 20:23:16 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8847BE051;
+        Mon, 23 Sep 2019 20:23:16 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BE51BE04F;
+        Mon, 23 Sep 2019 20:23:08 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 20:23:08 +0000 (GMT)
+Message-ID: <c64d34118542d5c2d31b8f6b7802d2a29dac71ef.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
+ method to skip serializing
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Allison Randal <allison@lohutok.net>
+Date:   Mon, 23 Sep 2019 17:23:03 -0300
+In-Reply-To: <1568b3ef-cec9-bf47-edaa-c775c2f544fb@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-12-leonardo@linux.ibm.com>
+         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+         <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
+         <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
+         <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
+         <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
+         <dc9fad3577551d34ead36c0f7340a573086c0cab.camel@linux.ibm.com>
+         <1568b3ef-cec9-bf47-edaa-c775c2f544fb@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rL8yHUayTEy37kqretQV"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
-In-Reply-To: <20190923190514.GB19996@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-rL8yHUayTEy37kqretQV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 23, 2019 at 03:05:14PM -0400, Andrea Arcangeli wrote:
-> On Mon, Sep 23, 2019 at 11:57:57AM +0200, Paolo Bonzini wrote:
-> > On 23/09/19 11:31, Vitaly Kuznetsov wrote:
-> > > +#ifdef CONFIG_RETPOLINE
-> > > +		if (exit_reason == EXIT_REASON_MSR_WRITE)
-> > > +			return handle_wrmsr(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
-> > > +			return handle_preemption_timer(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
-> > > +			return handle_interrupt_window(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-> > > +			return handle_external_interrupt(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_HLT)
-> > > +			return handle_halt(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
-> > > +			return handle_pause(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_MSR_READ)
-> > > +			return handle_rdmsr(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_CPUID)
-> > > +			return handle_cpuid(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
-> > > +			return handle_ept_misconfig(vcpu);
-> > > +#endif
-> > >  		return kvm_vmx_exit_handlers[exit_reason](vcpu);
-> > 
-> > Most of these, while frequent, are already part of slow paths.
-> > 
-> > I would keep only EXIT_REASON_MSR_WRITE, EXIT_REASON_PREEMPTION_TIMER,
-> > EXIT_REASON_EPT_MISCONFIG and add EXIT_REASON_IO_INSTRUCTION.
-> 
-> Intuition doesn't work great when it comes to CPU speculative
-> execution runtime. I can however run additional benchmarks to verify
-> your theory that keeping around frequent retpolines will still perform
-> ok.
-> 
-> > If you make kvm_vmx_exit_handlers const, can the compiler substitute for
-> > instance kvm_vmx_exit_handlers[EXIT_REASON_MSR_WRITE] with handle_wrmsr?
-> >  Just thinking out loud, not sure if it's an improvement code-wise.
-> 
-> gcc gets right if you make it const, it calls kvm_emulate_wrmsr in
-> fact. However I don't think const will fly
-> with_vmx_hardware_setup()... in fact at runtime testing nested I just
-> got:
-> 
-> BUG: unable to handle page fault for address: ffffffffa00751e0
-> #PF: supervisor write access in kernel mode
-> #PF: error_code(0x0003) - permissions violation
-> PGD 2424067 P4D 2424067 PUD 2425063 PMD 7cc09067 PTE 80000000741cb161
-> Oops: 0003 [#1] SMP NOPTI
-> CPU: 1 PID: 4458 Comm: insmod Not tainted 5.3.0+ #1
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.or4
-> RIP: 0010:nested_vmx_hardware_setup+0x29a/0x37a [kvm_intel]
-> Code: 41 ff c5 66 89 2c 85 20 92 0b a0 66 44 89 34 85 22 92 0b a0 49 ff c7 e9 e6 fe ff ff 44 89 2d 28 24 fc ff 48
-> RSP: 0018:ffffc90000257c18 EFLAGS: 00010246
-> RAX: ffffffffa001e0b0 RBX: ffffffffa0075140 RCX: 0000000000000000
-> RDX: ffff888078f60000 RSI: 0000000000002401 RDI: 0000000000000018
-> RBP: 0000000000006c08 R08: 0000000000001000 R09: 000000000007ffdc
-> R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000006c08
-> R13: 0000000000000017 R14: 0000000000000268 R15: 0000000000000018
-> FS:  00007f7fb7ef0b80(0000) GS:ffff88807da40000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffffa00751e0 CR3: 0000000079620001 CR4: 0000000000160ee0
-> Call Trace:
->  hardware_setup+0x4df/0x5b2 [kvm_intel]
->  kvm_arch_hardware_setup+0x2f/0x27b [kvm_intel]
->  kvm_init+0x5d/0x26d [kvm_intel]
+On Mon, 2019-09-23 at 12:58 -0700, John Hubbard wrote:
+>=20
+> CPU 0                            CPU 1
+> ------                         --------------
+>                                READ(pte) (re-ordered at run time)
+>                                atomic_inc(val) (no run-time memory barrie=
+r!)
+>                           =20
+> pmd_clear(pte)
+> if (val)
+>     run_on_all_cpus(): IPI
+>                                local_irq_disable() (also not a mem barrie=
+r)
+>=20
+>                                if(pte)
+>                                   walk page tables
 
-The attached patch should do the trick.
+Let me see if I can understand,
+On most patches, it would be:
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-KVM-nVMX-Do-not-dynamically-set-VMX-instruction-exit.patch"
+CPU 0                            CPU 1
+------				--------------
+				ptep =3D __find_linux_pte =20
+				(re-ordered at run time)
+				atomic_inc(val)=20
+pmd_clear(pte)
+smp_mb()
+if (val)
+    run_on_all_cpus(): IPI
+                               local_irq_disable()=20
 
-From 4e0c2d73d796eae03aa289f77bef5f4a7acef655 Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Date: Mon, 23 Sep 2019 13:19:43 -0700
-Subject: [PATCH] KVM: nVMX: Do not dynamically set VMX instruction exit
- handlers
+                               if(ptep)
+                                  pte =3D *ptep;
 
-Handle VMX instructions via a dedicated function and a switch statement
-provided by the nVMX code instead of overwriting kvm_vmx_exit_handlers
-when nested support is enabled.  This will allow a future patch to make
-kvm_vmx_exit_handlers a const, which in turn allows for better compiler
-optimizations, e.g. direct calls instead of retpolined indirect calls.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 52 ++++++++++++++++++++++++++++-----------
- arch/x86/kvm/vmx/nested.h |  3 ++-
- arch/x86/kvm/vmx/vmx.c    |  5 +++-
- 3 files changed, 44 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 6ce83c602e7f..41c7fcf28ab6 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5072,6 +5072,43 @@ static int handle_vmfunc(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+int nested_vmx_handle_vmx_instruction(struct kvm_vcpu *vcpu)
-+{
-+	switch (to_vmx(vcpu)->exit_reason) {
-+	case EXIT_REASON_VMCLEAR:
-+		return handle_vmclear(vcpu);
-+	case EXIT_REASON_VMLAUNCH:
-+		return handle_vmlaunch(vcpu);
-+	case EXIT_REASON_VMPTRLD:
-+		return handle_vmptrld(vcpu);
-+	case EXIT_REASON_VMPTRST:
-+		return handle_vmptrst(vcpu);
-+	case EXIT_REASON_VMREAD:
-+		return handle_vmread(vcpu);
-+	case EXIT_REASON_VMRESUME:
-+		return handle_vmresume(vcpu);
-+	case EXIT_REASON_VMWRITE:
-+		return handle_vmwrite(vcpu);
-+	case EXIT_REASON_VMOFF:
-+		return handle_vmoff(vcpu);
-+	case EXIT_REASON_VMON:
-+		return handle_vmon(vcpu);
-+	case EXIT_REASON_INVEPT:
-+		return handle_invept(vcpu);
-+	case EXIT_REASON_INVVPID:
-+		return handle_invvpid(vcpu);
-+	case EXIT_REASON_VMFUNC:
-+		return handle_vmfunc(vcpu);
-+	}
-+
-+	WARN_ON_ONCE(1);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+	vcpu->run->internal.suberror =
-+	KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON;
-+	vcpu->run->internal.ndata = 1;
-+	vcpu->run->internal.data[0] = to_vmx(vcpu)->exit_reason;
-+	return 0;
-+}
- 
- static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
- 				       struct vmcs12 *vmcs12)
-@@ -5972,7 +6009,7 @@ void nested_vmx_hardware_unsetup(void)
- 	}
- }
- 
--__init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
-+__init int nested_vmx_hardware_setup(void)
- {
- 	int i;
- 
-@@ -5995,19 +6032,6 @@ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
- 		init_vmcs_shadow_fields();
- 	}
- 
--	exit_handlers[EXIT_REASON_VMCLEAR]	= handle_vmclear,
--	exit_handlers[EXIT_REASON_VMLAUNCH]	= handle_vmlaunch,
--	exit_handlers[EXIT_REASON_VMPTRLD]	= handle_vmptrld,
--	exit_handlers[EXIT_REASON_VMPTRST]	= handle_vmptrst,
--	exit_handlers[EXIT_REASON_VMREAD]	= handle_vmread,
--	exit_handlers[EXIT_REASON_VMRESUME]	= handle_vmresume,
--	exit_handlers[EXIT_REASON_VMWRITE]	= handle_vmwrite,
--	exit_handlers[EXIT_REASON_VMOFF]	= handle_vmoff,
--	exit_handlers[EXIT_REASON_VMON]		= handle_vmon,
--	exit_handlers[EXIT_REASON_INVEPT]	= handle_invept,
--	exit_handlers[EXIT_REASON_INVVPID]	= handle_invvpid,
--	exit_handlers[EXIT_REASON_VMFUNC]	= handle_vmfunc,
--
- 	kvm_x86_ops->check_nested_events = vmx_check_nested_events;
- 	kvm_x86_ops->get_nested_state = vmx_get_nested_state;
- 	kvm_x86_ops->set_nested_state = vmx_set_nested_state;
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 187d39bf0bf1..0da48c83cccf 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -10,9 +10,10 @@ void vmx_leave_nested(struct kvm_vcpu *vcpu);
- void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
- 				bool apicv);
- void nested_vmx_hardware_unsetup(void);
--__init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
-+__init int nested_vmx_hardware_setup(void);
- void nested_vmx_vcpu_setup(void);
- void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
-+int nested_vmx_handle_vmx_instruction(struct kvm_vcpu *vcpu);
- int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
- bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
- void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 73bf9a2e6fb6..229b3a5e0695 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5459,6 +5459,9 @@ static int handle_preemption_timer(struct kvm_vcpu *vcpu)
-  */
- static int handle_vmx_instruction(struct kvm_vcpu *vcpu)
- {
-+	if (nested)
-+		return nested_vmx_handle_vmx_instruction(vcpu);
-+
- 	kvm_queue_exception(vcpu, UD_VECTOR);
- 	return 1;
- }
-@@ -7631,7 +7634,7 @@ static __init int hardware_setup(void)
- 		nested_vmx_setup_ctls_msrs(&vmcs_config.nested,
- 					   vmx_capability.ept, enable_apicv);
- 
--		r = nested_vmx_hardware_setup(kvm_vmx_exit_handlers);
-+		r = nested_vmx_hardware_setup();
- 		if (r)
- 			return r;
- 	}
--- 
-2.22.0
+Is that what you meant?
 
 
---r5Pyd7+fXNt84Ff3--
+
+--=-rL8yHUayTEy37kqretQV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JKacACgkQlQYWtz9S
+ttQNQQ//YZoIqwIEI8Lrj+C7R1TaXBuOjUoK9YNDTE6IjHRf1s5nkhUpn68/joo+
+VKKvccIS6lJFZOMq9cpBn8/UtitXlmTwmM3zmfSRzKjXQJZJk2IeioBlB5d16L9q
+Y8IS8kojfI3DoDDF5XRGU+FQbwMUqTNkKpvWevAotkldLhE2ZvUkoJSEUM7X4MqQ
+C67Pbbgpsz+q5ZcEW6JbAolW6/nQXYCevzRj8hJ1+inreFKp7KoiBsOebVvW4LMD
+L6GhEJiKvgFK2HpqEECNApqDDFnPDh0CxELo/sf4J0eV5hVKSkZrpJaJBVUmCQ+9
+Z6rn7BHQd/uM0P9bqWvv6+M+IVriOuwNZ/jRe312heD7IlWDccytoqRjo5xfuBUp
+PTowmJ/zUUH7bpPEAnVP3qzEqyvMsUKiVuYK9Fxnfx+fMLVokjbXvosRoLJ8+I8d
+71xd5iyjyIGRoxntKukRNpwrPoftF7dTVFHTpYwstM7FQXrGEex5wnnLwXGeOwUF
+gevW1ayr2mu0u/TchxKO0tvCeu8gVnbiBmtEsJYIXMTAt8RGNqKBcekYnuFUAIuq
+hF7Qg2DGeGlwjMwdpWZBNSBv8Fvq45Y/m0ggvH3Ey18WF3rwS9FDWbT/ix4PEJUC
+x2GH0X9bTNwrhVLjwRPuHyOVMfulhA1DVbRq+H+/2cNXr6ewLNE=
+=DGT/
+-----END PGP SIGNATURE-----
+
+--=-rL8yHUayTEy37kqretQV--
+
