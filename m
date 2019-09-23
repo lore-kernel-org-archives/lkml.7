@@ -2,95 +2,65 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FC6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F05FC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C69E20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u7+3Ouht"
+	by mail.kernel.org (Postfix) with ESMTP id 386DD21907
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392926AbfIWGoi (ORCPT
+        id S2393007AbfIWGtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:44:38 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:26653 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389082AbfIWGoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:44:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569221076; x=1600757076;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=RgSUTh1W/pPjW8MoN9jzPoRAZYLQRC12Kn961QLA8zA=;
-  b=u7+3OuhtCMoFA19TtAD/1vEuFVraI2lkHLGG5SgjDj1PChGXOuhFxCzp
-   l11rIj+PcJOoHSwc45NxvEDSO0U/Z+cKTkNr9E2XMjhbAtabk6f/tOsPv
-   FFKCA0TygoURNmUXUAEDIvHIvxCbuRqAUkgscjqcQGdcwc5ggnGIRviwS
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,539,1559520000"; 
-   d="scan'208";a="416897595"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 23 Sep 2019 06:44:35 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id EC80DC0C6A;
-        Mon, 23 Sep 2019 06:44:30 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 23 Sep 2019 06:44:30 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.74) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 23 Sep 2019 06:44:25 +0000
-Subject: Re: [PATCH v7 06/21] RISC-V: KVM: Implement VCPU create, init and
- destroy functions
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190904161245.111924-1-anup.patel@wdc.com>
- <20190904161245.111924-8-anup.patel@wdc.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <520eed26-9332-1519-44b1-fb08b6410116@amazon.com>
-Date:   Mon, 23 Sep 2019 08:44:22 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 23 Sep 2019 02:49:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45148 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729913AbfIWGtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:49:36 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1CB4DF3B17BFAFAFF9E5;
+        Mon, 23 Sep 2019 14:49:34 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 23 Sep
+ 2019 14:49:25 +0800
+Subject: Re: [PATCH v2 1/1] f2fs: update multi-dev metadata in resize_fs
+To:     sunqiuyang <sunqiuyang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <jaegeuk@kernel.org>
+References: <20190923042139.36470-1-sunqiuyang@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3f9b09b7-43fc-c4af-ab20-b7589d3fb347@huawei.com>
+Date:   Mon, 23 Sep 2019 14:49:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190904161245.111924-8-anup.patel@wdc.com>
+In-Reply-To: <20190923042139.36470-1-sunqiuyang@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-X-Originating-IP: [10.43.162.74]
-X-ClientProxiedBy: EX13D29UWA004.ant.amazon.com (10.43.160.33) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAwNC4wOS4xOSAxODoxNCwgQW51cCBQYXRlbCB3cm90ZToKPiBUaGlzIHBhdGNoIGltcGxl
-bWVudHMgVkNQVSBjcmVhdGUsIGluaXQgYW5kIGRlc3Ryb3kgZnVuY3Rpb25zCj4gcmVxdWlyZWQg
-YnkgZ2VuZXJpYyBLVk0gbW9kdWxlLiBXZSBkb24ndCBoYXZlIG11Y2ggZHluYW1pYwo+IHJlc291
-cmNlcyBpbiBzdHJ1Y3Qga3ZtX3ZjcHVfYXJjaCBzbyB0aGVzdCBmdW5jdGlvbnMgYXJlIHF1aXRl
-CgpTaW5jZSB5b3UncmUgcmVzcGlubmluZyBmb3IgdjggYW55d2F5LCBwbGVhc2Ugcy90aGVzdC90
-aGVzZS8gOikKCkFsZXgKCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJI
-CktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlh
-biBTY2hsYWVnZXIsIFJhbGYgSGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hh
-cmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4
-OSAyMzcgODc5CgoK
+On 2019/9/23 12:21, sunqiuyang wrote:
+> From: Qiuyang Sun <sunqiuyang@huawei.com>
+> 
+> Multi-device metadata should be updated in resize_fs as well.
+> 
+> Also, we check that the new FS size still reaches the last device.
+> 
+> --
+> Changelog v1 => v2:
+> Use f2fs_is_multi_device() and some minor cleanup.
+> 
+> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
 
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
