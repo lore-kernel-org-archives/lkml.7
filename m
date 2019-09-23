@@ -2,166 +2,87 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7542FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B95EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5017E2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01412087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jefdjzgg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZEUFMhZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406740AbfIWIZE (ORCPT
+        id S2406842AbfIWIZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:25:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34715 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406125AbfIWIZE (ORCPT
+        Mon, 23 Sep 2019 04:25:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53086 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406076AbfIWIZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:25:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCJeW-000794-FX; Mon, 23 Sep 2019 10:25:00 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCJeV-0008W6-GZ; Mon, 23 Sep 2019 10:24:59 +0200
-Date:   Mon, 23 Sep 2019 10:24:59 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
-Message-ID: <20190923082459.huqpbz5eseonkscv@pengutronix.de>
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-2-linux@rasmusvillemoes.dk>
+        Mon, 23 Sep 2019 04:25:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4088660850; Mon, 23 Sep 2019 08:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569227111;
+        bh=WOFRHwq7H+xLOuFoB5NSwTtl8vKLqopZli8GexNDdAg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=jefdjzggo1SuHyUOqv5y/m6CCjHi7L9q3YXcxvsEl3p3zAp/ib+Q5Y6uwHvoBmPdE
+         sCqnlzlKavjH6mwyEvtT0J/Ne9BKDx4wIl7l3PZr15x40POFM5tbR445QkWH8+LMpA
+         cKUQHN1C3FAZL/GnM3NASSzuic5SuAny6ja1fTQU=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D73C60850;
+        Mon, 23 Sep 2019 08:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569227110;
+        bh=WOFRHwq7H+xLOuFoB5NSwTtl8vKLqopZli8GexNDdAg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=ZEUFMhZTZofECZ+NjFNcRCX33MNFX7u+h5sr5xTlGF7oCdrSlgjW7hssDpm0GNXbh
+         WHhbH4Hw7IfDjt0r6012c3MR9Na8Y+ChLA6bOq7sIRhp81jySN2lFaE810OWN4vJ/7
+         ndayYPXUE6zXfrCEiEF6iwKibTicvoWZDP6bum+s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D73C60850
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190923081348.6843-2-linux@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath: fix various spelling mistakes
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190702123904.8786-1-colin.king@canonical.com>
+References: <20190702123904.8786-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Maya Erez <merez@codeaurora.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        wil6210@qti.qualcomm.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190923082511.4088660850@smtp.codeaurora.org>
+Date:   Mon, 23 Sep 2019 08:25:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Rasmus,
+Colin King <colin.king@canonical.com> wrote:
 
-On Mon, Sep 23, 2019 at 10:13:45AM +0200, Rasmus Villemoes wrote:
-> In preparation for supporting setting the polarity, switch the driver
-> to support the ->apply method.
+> There are a bunch of spelling mistakes in two ath drivers, fix
+> these.
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->  drivers/pwm/pwm-mxs.c | 62 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-> index 04c0f6b95c1a..c70c26a9ff68 100644
-> --- a/drivers/pwm/pwm-mxs.c
-> +++ b/drivers/pwm/pwm-mxs.c
-> @@ -26,6 +26,7 @@
->  #define  PERIOD_PERIOD_MAX	0x10000
->  #define  PERIOD_ACTIVE_HIGH	(3 << 16)
->  #define  PERIOD_INACTIVE_LOW	(2 << 18)
-> +#define  PERIOD_POLARITY_NORMAL	(PERIOD_ACTIVE_HIGH | PERIOD_INACTIVE_LOW)
->  #define  PERIOD_CDIV(div)	(((div) & 0x7) << 20)
->  #define  PERIOD_CDIV_MAX	8
->  
-> @@ -41,6 +42,66 @@ struct mxs_pwm_chip {
->  
->  #define to_mxs_pwm_chip(_chip) container_of(_chip, struct mxs_pwm_chip, chip)
->  
-> +static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 struct pwm_state *state)
-> +{
-> +	struct mxs_pwm_chip *mxs = to_mxs_pwm_chip(chip);
-> +	int ret, div = 0;
-> +	unsigned int period_cycles, duty_cycles;
-> +	unsigned long rate;
-> +	unsigned long long c;
-> +
-> +	if (state->polarity != PWM_POLARITY_NORMAL)
-> +		return -ENOTSUPP;
-> +
-> +	rate = clk_get_rate(mxs->clk);
-> +	while (1) {
-> +		c = rate / cdiv[div];
-> +		c = c * state->period;
-> +		do_div(c, 1000000000);
-> +		if (c < PERIOD_PERIOD_MAX)
-> +			break;
-> +		div++;
-> +		if (div >= PERIOD_CDIV_MAX)
-> +			return -EINVAL;
-> +	}
-> +
-> +	period_cycles = c;
-> +	c *= state->duty_cycle;
-> +	do_div(c, state->period);
-> +	duty_cycles = c;
-> +
-> +	/*
-> +	 * If the PWM channel is disabled, make sure to turn on the clock
-> +	 * before writing the register. Otherwise, keep it enabled.
-> +	 */
-> +	if (!pwm_is_enabled(pwm)) {
-> +		ret = clk_prepare_enable(mxs->clk);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	writel(duty_cycles << 16,
-> +	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
-> +	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
-> +	       mxs->base + PWM_PERIOD0 + pwm->hwpwm * 0x20);
-> +
-> +	if (state->enabled) {
-> +		if (!pwm_is_enabled(pwm)) {
-> +			/*
-> +			 * The clock was enabled above. Just enable
-> +			 * the channel in the control register.
-> +			 */
-> +			writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + SET);
-> +		}
-> +	} else {
-> +		if (pwm_is_enabled(pwm))
-> +			writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
-> +		clk_disable_unprepare(mxs->clk);
-> +	}
-> +	return 0;
-> +}
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Maybe it would be easier to review when converting from .config +
-.enable + .disable to .apply in a single step. (Note this "maybe" is
-honest, I'm not entirely sure.)
+Patch applied to ath-next branch of ath.git, thanks.
 
-There is a bug: If the PWM is running at (say) period=100ms, duty=0ms
-and we call
-pwm_apply_state(pwm, { .enabled = false, duty=100000, period=1000000 });
-the output might get high which it should not.
-
-Also there is a bug already in .config: You are not supposed to call
-clk_get_rate if the clk might be off.
-
-Best regards
-Uwe
+80ce8ca7a647 ath: fix various spelling mistakes
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+https://patchwork.kernel.org/patch/11027799/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
