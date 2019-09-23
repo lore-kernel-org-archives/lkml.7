@@ -2,139 +2,149 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF3DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E674BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E6420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Xosq1/0u"
+	by mail.kernel.org (Postfix) with ESMTP id C159A2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393524AbfIWIS5 (ORCPT
+        id S2393636AbfIWIUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:18:57 -0400
-Received: from mail-eopbgr40095.outbound.protection.outlook.com ([40.107.4.95]:11266
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388933AbfIWIS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:18:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i82nAsjazQ0wi8/b2mGaYFfUMdjJZkXg0o30N9ICCiQOqVb99e2RUUCvokJbXPESScYgtugQAYfXnLpKrNlpukzUEDcQb/uTdRXdD8H0BQjueH2ab55JP+a9Ee4kAdXkVSstljV9rWIz04zyG9Omnh/ew/dTNo1RJWnIcBAvClmIDuf0bUD9l5bALge/TfBGPxQQxg7892GTphNDavJwvbaqOzdD4OtUCuJBkrKB76v+h6JwrKKUNk4UpIwG5rrGRuY/EfNCJ8pacQd9FVuSo1vdoj8O43388j1Z+IaxUGz7mDF5/b6RNwgMgOi6vAnD/BukwrYIcUULlYgeRclvkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ouc8B1fyULoPu0k5IaAFty3VQHQRF8moAhSQy9SBOEQ=;
- b=CWKclOXYf0yKCMPVr2k22cyb8NekVHA50h94TacemrijXfAnVk7Al6KrUpzr3eT05HPOmkzN2BtK2NxytSzEBbSErYQkdssXxZjSaJamaAH/7f1txKSi4t2rLH7ZvILQHPoeqtkAqIshyESYJIiz7sRqbs1bskVxjOAWZGfJqeXdrkZ3DxL2JFnDxzzQBuuVQKnTF9jmI2OIGGYHT/ENShtbFtWRENGCphVyTfI8d5RJk2kC6hPpUoyhE2unHGe+7rLMXXt3W42y2ql3SLKY9fi18edhCjvvMApZwORp9FOTywqLMrUNpWIAowdLfGbBHkwPXojR2hG70rYAauQMpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ouc8B1fyULoPu0k5IaAFty3VQHQRF8moAhSQy9SBOEQ=;
- b=Xosq1/0uuinoWxw5bGqW1l4RQw5qk4sZqNRzo2ZkcUUJZ9HzbWDMzPivkas6ttNufIPyb3ucK9soannqdJp2rD5H+ztZX+PL9zGTgTwcHHJqfUwZ6Vx74JxYnV38iao/maAaH83fnDyid/yRlECcyOIBRvH9XBfLlH25I+iyD8o=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB4064.eurprd05.prod.outlook.com (52.134.18.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Mon, 23 Sep 2019 08:18:50 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::1179:c881:a516:644d]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::1179:c881:a516:644d%3]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 08:18:50 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Luka Pivk <luka.pivk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH] dt-bindings: fixed-regulator: fix compatible enum
-Thread-Topic: [PATCH] dt-bindings: fixed-regulator: fix compatible enum
-Thread-Index: AQHVceeHVIIm60zvTk22ZU5xn+t7mg==
-Date:   Mon, 23 Sep 2019 08:18:49 +0000
-Message-ID: <20190923081840.23391-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR2P264CA0036.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:101:1::24) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:23::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.23.0
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a431d751-c87e-4b88-fcfa-08d73ffea9b5
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB4064;
-x-ms-traffictypediagnostic: VI1PR0502MB4064:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB40641CBA4E1D9467080DB529F4850@VI1PR0502MB4064.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39840400004)(376002)(136003)(346002)(189003)(199004)(71190400001)(186003)(81156014)(81166006)(54906003)(4326008)(44832011)(66556008)(64756008)(66446008)(66946007)(8676002)(476003)(2616005)(99286004)(107886003)(14454004)(66066001)(26005)(66476007)(316002)(486006)(478600001)(25786009)(8936002)(110136005)(2501003)(305945005)(36756003)(52116002)(50226002)(6512007)(6116002)(5660300002)(7736002)(86362001)(6436002)(1076003)(256004)(386003)(3846002)(102836004)(6486002)(4744005)(6506007)(71200400001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB4064;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bdj9mrTebMJrdW/e+9n+9UcvFgoA+xB2VXcWBO4W1Dn843lnJ59Ae2znSaHQImai+sfwzncE8OZIu74A6zaLMlXxWBknIdILaFkLWGhiNcTLcKLjdGyZQZsPZgfvcPe01H49KGavI/izkGOcxelfCCvNCtK1/ZiL1cXn9cYvLL1iwD1sRANkRT187WPhYwZZ6dYHBgbEvOyaYXhB0+HlZnxdoORY5KqaNIqE66HwwXweib3P9/0B2JpSgdsvD4SKKnVZGKRdwNE3EkvKZPkDNtStsUpOqvg0UsFRF0aACozV4+27sTZdVlhg5pdNQU6ptNG5IVZNwPdKY2aSEf+wGjZAK2w2sfDew5rpY07q1gLOb7c6x/j5Y1zTapIzWwIunb0aQz0aVCLBltNEXMfVf9U52swk3q5AWAMQsJ93tKU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Sep 2019 04:20:20 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:42619 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393536AbfIWIUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:20:20 -0400
+X-Originating-IP: 90.63.246.187
+Received: from gandi.net (lmontsouris-657-1-214-187.w90-63.abo.wanadoo.fr [90.63.246.187])
+        (Authenticated sender: thibaut.sautereau@clip-os.org)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 300A2E0012;
+        Mon, 23 Sep 2019 08:20:17 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 10:20:16 +0200
+From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+To:     Mike Snitzer <snitzer@redhat.com>,
+        Milan Broz <gmazyland@gmail.com>, dm-devel@redhat.com,
+        Alasdair Kergon <agk@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [dm-devel] dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
+Message-ID: <20190923082016.GA913@gandi.net>
+References: <20190920154434.GA923@gandi.net>
+ <20190920173707.GA21143@redhat.com>
+ <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
+ <20190920212746.GA22061@redhat.com>
+ <20190920214758.GA162854@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a431d751-c87e-4b88-fcfa-08d73ffea9b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 08:18:50.0242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cHA4jz8caEPD33i+sTcif7sz6TBPCLCuhvzTmOWl5TedrrId57yuPS0kGljx/WHMrsfunw+K6s3wLvOlF6uKszG/Hv5MinG+yATu6TRX2+Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB4064
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190920214758.GA162854@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove 'const:' in the compatible enum. This was breaking
-make dt_binding_check since it has more than one compatible string.
+On Fri, Sep 20, 2019 at 02:47:59PM -0700, Eric Biggers wrote:
+> On Fri, Sep 20, 2019 at 05:27:46PM -0400, Mike Snitzer wrote:
+> > On Fri, Sep 20 2019 at  3:21pm -0400,
+> > Milan Broz <gmazyland@gmail.com> wrote:
+> > 
+> > > On 20/09/2019 19:37, Mike Snitzer wrote:
+> > > > On Fri, Sep 20 2019 at 11:44am -0400,
+> > > > Thibaut Sautereau <thibaut.sautereau@clip-os.org> wrote:
+> > > > 
+> > > >> Hi,
+> > > >>
+> > > >> I just got a dm-crypt "crypt: Error allocating crypto tfm" error when
+> > > >> trying to "cryptsetup open" a volume. I found out that it was only
+> > > >> happening when I disabled CONFIG_CRYPTO_AUTHENC.
+> > > >>
+> > > >> drivers/md/dm-crypt.c includes the crypto/authenc.h header and seems to
+> > > >> use some CRYPTO_AUTHENC-related stuff. Therefore, shouldn't
+> > > >> CONFIG_DM_CRYPT select CONFIG_CRYPTO_AUTHENC?
+> > > > 
+> > > > Yes, it looks like commit ef43aa38063a6 ("dm crypt: add cryptographic
+> > > > data integrity protection (authenticated encryption)") should've added
+> > > > 'select CRYPTO_AUTHENC' to dm-crypt's Kconfig.  I'll let Milan weigh-in
+> > > > but that seems like the right way forward.
+> > > 
+> > > No, I don't this so. It is like you use some algorithm that is just not compiled-in,
+> > > or it is disabled in the current state (because of FIPS mode od so) - it fails
+> > > to initialize it.
+> > > 
+> > > I think we should not force dm-crypt to depend on AEAD - most users
+> > > do not use authenticated encryption, it is perfectly ok to keep this compiled out.
+> > > 
+> > > I do not see any principal difference from disabling any other crypto
+> > > (if you disable XTS mode, it fails to open device that uses it).
 
-Fixes: 9c86d003d620 ("dt-bindings: regulator: add regulator-fixed-clock bin=
-ding")
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Fair enough. However, in the XTS case you mention, I think it's easier
+to remember that you set up XTS mode for your disk encryption and thus
+that you should enable it in your config. By the way, the CRYPTO_AUTHENC
+Kconfig help text only and specifically mentions IPsec, which can be a
+lot confusing for people trying to find out what option of which they
+got rid is actually causing an issue.
 
----
+On top of that, there's no hint in kernel logs about a particular
+algorithm, feature or Kconfig option that could be missing. Do we really
+expect people simply tuning their kernel configuration to go and read
+the source code to ensure they are not breaking their system?
 
- .../devicetree/bindings/regulator/fixed-regulator.yaml        | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+As for your "most users do not use authenticated encryption" argument, I
+agree, but note that cryptsetup with LUKS2 makes it quite easy to setup
+authenticated disk encryption, and I bet more and more people are using
+it. It's working most of the time because people are either using a
+distro kernel with everything enabled, or compiling their own one but
+being security-minded enough to use stuff like IPsec which then selects
+CRYPTO_AUTHENC.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.ya=
-ml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index a78150c47aa2..f32416968197 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -30,8 +30,8 @@ if:
- properties:
-   compatible:
-     enum:
--      - const: regulator-fixed
--      - const: regulator-fixed-clock
-+      - regulator-fixed
-+      - regulator-fixed-clock
-=20
-   regulator-name: true
-=20
---=20
-2.23.0
+> > > 
+> > > IMO the current config dependence is ok.
+> > 
+> > That is a good point.  I hadn't considered the kernel compiles just fine
+> > without CRYPTO_AUTHENC.. which it clearly does.
+> > 
+> > SO I retract the question/thought of updating the Kconfig for dm-crypt
+> > in my previous mail.
+> > 
+> > Though in hindsight: wonder whether the dm-integrity based dm-crypt
+> > authenticated encryption support should have been exposed as a proper
+> > CONFIG option within the DM_CRYPT section?  Rather than lean on the
+> > crypto subsystem to happily stub out the dm-crypt AEAD and AUTHENC
+> > related code dm-crypt could've established #ifdef boundaries for that
+> > code.
+> > 
+> > I'm open to suggestions and/or confirmation that the way things are now
+> > is perfectly fine.  But I do see this report as something that should
+> > drive some improvement.
+> > 
+> 
+> FWIW, I think you're being saved right now by the craziness in the crypto
+> subsystem Kconfig options: CONFIG_DM_CRYPT selects CONFIG_CBC, which selects
+> CONFIG_CRYPTO_MANAGER, which selects CONFIG_CRYPTO_MANAGER2, which selects
+> CONFIG_CRYPTO_AEAD2 (and all the other algorithm types, for that matter).
+> This makes the AEAD API available.
+> 
+> If this wasn't the case, dm-crypt's use of crypto_alloc_aead() would be causing
+> a link error in some kernel configurations, since CONFIG_DM_CRYPT doesn't
+> actually select the AEAD API itself.
+> 
+> At some point I (or someone else up to the task) might try to fix the crypto
+> subsystem to not make every template select every algorithm type.  In that
+> happens, we'll need to update the users like dm-crypt to explicitly select the
+> algorithm types they're using, if they were being implicitly selected before.
+> 
+> In any case, allowing users to compile out the AEAD support in dm-crypt would
+> also be nice if it's not too difficult, since not everyone needs it.
 
+After reading all that, I'm wondering if this is not a good example of
+where the "imply" keyword should be used.
+
+Thanks for your hindsight,
+
+-- 
+Thibaut Sautereau
+CLIP OS developer
