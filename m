@@ -2,100 +2,119 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6164C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9361FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6ABA2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFwU3oII"
+	by mail.kernel.org (Postfix) with ESMTP id 6315120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbfIWQMm (ORCPT
+        id S2388472AbfIWQNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:12:42 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43152 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbfIWQMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:12:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u3so10550110lfl.10;
-        Mon, 23 Sep 2019 09:12:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hzRvLmUM+ysGZky33iPZSKotjWOEXjXtFvGtAqUHW0=;
-        b=KFwU3oIIuCsBoUbTlON6Ye3xOEX1qg4RElY+lAR4eAhlleuHeZRzS418f9YNW5ONPD
-         ICDQZc7C6ZDCWoQST5RUU5CWJYkqY39FRY87a7jpH/4vITDuzLQ4VW9AmgKqpcZ2Ps5X
-         ZFjiabeek2WH8HUJ9SJy8rBMDxgWNpp19ZRPDcGQg9HPSnjdCDoss6o9O7cCq/MdDPGd
-         CC5fjnwswE7vGvevXiqD17ZZrFi3nzMnbCQRruaS40lnGxzLz63kGlBtKyxhrLbtOexp
-         JYigpZQtzRw85JGhV+QoAdNI6EBtKLYOfH4do+MqOtTyTH1g1aezJa4lfwc5n570ba3l
-         MOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hzRvLmUM+ysGZky33iPZSKotjWOEXjXtFvGtAqUHW0=;
-        b=Z03FGsOPJf3djlLNcZJNsl2pHbZ3VfSNqquZwOPVcFzMskqyPwsi+S4g4IQnlTpGQN
-         Oj2jdCHV3Y72V3cEFpn4gtI+FrSmbO/X7Ix/JDBv5FjXLsrUtD176SDgW0SL2Ta++SLy
-         aYaEN/t9xR00dAtAbClP6f2roJaWtIyR9vhuzZNKUSmoVKeSdL+adp5cbu9rI0vnVfKC
-         Z9ErEXl2hoLaa/e5+mXTarvYICStBXnseHv3BgHWVV5s4qAd1EGhTnyUnV2dOdDGU4qU
-         NCf3r/KFMs+H0mIJK8N/TXvw1CKCWpGQ54NrPSEomperRwvMVpGGOJwN4r4/mc9RP8Ee
-         upyg==
-X-Gm-Message-State: APjAAAUpUiQvpzBkq4ZcQDNnPuARl9abu8gFu/9wzPU9LU0wlEwZy8Xz
-        DUIMUZzwBXu5bZEOmN9SOV6XIdYlcljHGcwvYXA=
-X-Google-Smtp-Source: APXvYqxCaLtqla4IXcVqTac5HqTY/oD5Unli/bJZAhH0Tw01CYJFkAE93ed3DzQbUW3I7SVs6tFeBPdykxbJX2qVK/c=
-X-Received: by 2002:ac2:47e3:: with SMTP id b3mr236808lfp.80.1569255159037;
- Mon, 23 Sep 2019 09:12:39 -0700 (PDT)
+        Mon, 23 Sep 2019 12:13:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43957 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387827AbfIWQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:13:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 09:13:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
+   d="scan'208";a="213374766"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Sep 2019 09:13:52 -0700
+Date:   Mon, 23 Sep 2019 09:13:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/17] KVM: monolithic: x86: convert the kvm_x86_ops
+ methods to external functions
+Message-ID: <20190923161352.GC18195@linux.intel.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-3-aarcange@redhat.com>
+ <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
 MIME-Version: 1.0
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com> <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
-In-Reply-To: <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 23 Sep 2019 13:12:42 -0300
-Message-ID: <CAOMZO5AOVfBpz2Azh65iT_W3CBZUxf9KnqA=kdow7XWd4j--Qg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: imx8mq: add DCSS node
-To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurentiu,
+On Mon, Sep 23, 2019 at 12:19:30PM +0200, Paolo Bonzini wrote:
+> On 20/09/19 23:24, Andrea Arcangeli wrote:
+> > diff --git a/arch/x86/kvm/svm_ops.c b/arch/x86/kvm/svm_ops.c
+> > new file mode 100644
+> > index 000000000000..2aaabda92179
+> > --- /dev/null
+> > +++ b/arch/x86/kvm/svm_ops.c
+> > @@ -0,0 +1,672 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + *  arch/x86/kvm/svm_ops.c
+> > + *
+> > + *  Copyright 2019 Red Hat, Inc.
+> > + */
+> > +
+> > +int kvm_x86_ops_cpu_has_kvm_support(void)
+> > +{
+> > +	return has_svm();
+> > +}
+> 
+> Can you just rename all the functions in vmx/ and svm.c, instead of
+> adding forwarders?
 
-On Mon, Sep 23, 2019 at 11:14 AM Laurentiu Palcu
-<laurentiu.palcu@nxp.com> wrote:
+Yeah, having kvm_x86_ be analogous to kvm_arch_ seems like the obvious
+approach.  The necessary VMX and SVM renaming can be done in separate
+preparatory patches, and the conversion from kvm_x86_ops to direct calls
+would be fairly straightforward.
 
-> +
-> +                       dcss: dcss@0x32e00000 {
+Alternatively, what if we use macros in the call sites, e.g. keep/require
+vmx_ and svm_ prefixes for all functions, renaming VMX and SVM code as
+needed?  E.g.:
 
-Node names should be generic, so:
+  cpu_has_vmx_support -> vmx_supported_by_cpu 
+  cpu_has_svm_support -> svm_supported_by_cpu
 
-dcss: display-controller@32e00000
+  int vmx_disabled_by_bios(void)
+  int svm_disabled_by_bios(void)
 
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               compatible = "nxp,imx8mq-dcss";
-> +                               reg = <0x32e00000 0x2D000>, <0x32e2f000 0x1000>;
 
-0x2d000 for consistency.
+  #define X86_OP(name) kvm_x86_vendor##_##name
 
-> +                               interrupts = <6>, <8>, <9>;
+  int kvm_arch_init(void *opaque)
+  {
+	if (X86_OP(supported_by_cpu())) {
+		printk(KERN_ERR "kvm: no hardware support\n");
+		r = -EOPNOTSUPP;
+		goto out;
+	}
+	if (X86_OP(disabled_by_bios())) {
+		printk(KERN_ERR "kvm: disabled by bios\n");
+		r = -EOPNOTSUPP;
+		goto out;
+	}	
+  }
 
-The interrupts are passed in the <GIC_SPI xxx IRQ_TYPE_LEVEL_HIGH> format.
+Pros:
+  - Smaller patches due to less renaming in VMX and SVM
+  - Calls to vendor code are very obvious
+  - Stack traces contain vmx vs. svm instead of kvm_x86
+
+Cons:
+  - Macros
+  - Annoying development environment, e.g. editors tend to struggle with
+    macrofied funtion/variable names.
