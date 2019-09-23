@@ -2,90 +2,76 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB7CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A07BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF19E2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588B72064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dWoKUwJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406258AbfIWJSI (ORCPT
+        id S2406552AbfIWJTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:18:08 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51197 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfIWJSH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:18:07 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCKTc-0005wP-Px; Mon, 23 Sep 2019 11:17:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCKTZ-0001wK-TP; Mon, 23 Sep 2019 11:17:45 +0200
-Date:   Mon, 23 Sep 2019 11:17:45 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
-Message-ID: <20190923091745.ehvz4zi2riyanmug@pengutronix.de>
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-2-linux@rasmusvillemoes.dk>
- <20190923082459.huqpbz5eseonkscv@pengutronix.de>
- <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
+        Mon, 23 Sep 2019 05:19:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45716 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406312AbfIWJTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:19:35 -0400
+Received: from zn.tnic (p200300EC2F060400856443B6AC31000F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:400:8564:43b6:ac31:f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 05BBB1EC0A9C;
+        Mon, 23 Sep 2019 11:19:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569230374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5pwsAyj8PZScyXe4qBM2nWIssrzB6uzFre3kbh+SHZg=;
+        b=dWoKUwJz6Qm7+hRFvB2tRcKgOul7jqHdTs0YLawetWMz3v3zVthRaQqC8SIK9GWWsAWfOg
+        I4asrhdfkkzCK7EeNi4CrPFp1kcKXnq0PEu8coT5WnAEMHCIki30BzZtePrmJ4dcHL2plw
+        tOT282T1i+NQX53DOQMePZA8e23nabg=
+Date:   Mon, 23 Sep 2019 11:19:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
+Message-ID: <20190923091934.GA15355@zn.tnic>
+References: <20190922083342.GO13569@xsang-OptiPlex-9020>
+ <20190922150328.6722-1-alexander.kapshuk@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190922150328.6722-1-alexander.kapshuk@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-[expanded the recipents to include RMK and the clk list]
-
-On Mon, Sep 23, 2019 at 11:04:39AM +0200, Rasmus Villemoes wrote:
-> On 23/09/2019 10.24, Uwe Kleine-König wrote:
-> > Also there is a bug already in .config: You are not supposed to call
-> > clk_get_rate if the clk might be off.
+On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
+> This patch fixes the regexp warnings shown below:
+> GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+> awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+> awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
 > 
-> Interesting, I didn't know that. So the prepare_enable logic needs to be
-> moved before we start computing the period/duty cycles. Do you know why
-> it has apparently worked so far? I would have thought such a rule would
-> be enforced by the clock framework, or at least produced a warning.
+> The ':' and '&' characters need not escaping when used in string constants
+> as part of regular expressions.
 
-FTR: This is documented in the kerneldoc code comment to clk_get_rate in
-include/linux/clk.h.
+How do you trigger this?
 
-Assuming this is relevant, it might indeed make sense to add a
-WARN_ONCE for this.
+I don't see it in my builds so it looks like environment thing. What
+flavor of awk is yours?
 
-Best regards
-Uwe
+Thx.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
