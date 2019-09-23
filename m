@@ -2,144 +2,106 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E223AC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81552C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00892064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579F62087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iweD1MXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438714AbfIWIec (ORCPT
+        id S2406677AbfIWIfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:34:32 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:17196 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438235AbfIWIe3 (ORCPT
+        Mon, 23 Sep 2019 04:35:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44262 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405465AbfIWIfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:34:29 -0400
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 23 Sep 2019
- 16:35:23 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] reset: add support for the Meson-A1 SoC Reset Controller
-Date:   Mon, 23 Sep 2019 16:34:21 +0800
-Message-ID: <1569227661-4261-4-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com>
-References: <1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com>
+        Mon, 23 Sep 2019 04:35:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i18so12841058wru.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=DonLaU+ALkUO4XcKRBTGh6tkB6YDwuQS1LIpYKsRKI0=;
+        b=iweD1MXsqfvUS94mRK6CuoKUGcj8JkfPP+1CofV6Ctqi9Zgrez1OViiWsNU4+5c9b3
+         1v+Wlc6urwR5u48jExvDWPNV+b3xTmp577z0x9kdXFBVyFQUebSuMf8E1et5vWygC0wh
+         BGMI+Q+gK2RunsyXNXM/I2ECIP6ap5PQQ7tlDaI6PWhk+9y+/59I2ld9Hl5Ce53t0s5n
+         WMnZyjd6MyeGecXc+z8N8DfSowIX3WoHhi+euxfLNBkWSNJdv+aX7jtMW49/86y3zCOg
+         XrPPRlfpPeHWL/GRo/wLm827Cc9vJJJ0CxfzJN1eBxB8tUI1uGbW6TfE5JcNWgejWrbv
+         JIUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=DonLaU+ALkUO4XcKRBTGh6tkB6YDwuQS1LIpYKsRKI0=;
+        b=aIJ9Pd/n1mg3M7B+2gbXoXc9hquem52CrdIPUIeSQr4SY+QkGqG4Pu8g45mFZ0dH53
+         YOLAq0DHB/iQ9x/CUU0UKcazsk1jEBNvtnRBsHGHMxUJkSjwA/f+2clvUcxBH3ASp8JG
+         8lTzblkGtLHXFqaiAGbBlj47U8mqZ3r8qnnuSHXNbQ0/L4jkjesrXoTb+nqUnW5DJyo2
+         AdRNt3s52P77+fJ5gK7vQoc2IJwPozcon+WoWu4CmOKn5ZVzy64y3CvHcKYnWfVF65M7
+         ubtRfbngC6RbWxe2qndzPLo7EpvTnUZ1Oq+PxTY3ej2wTq9kHV2IjgUwv3aV94AwwQ0g
+         yq/g==
+X-Gm-Message-State: APjAAAWHJGDs/jp5QWBFy+NUJvMvJ9LcE9ai+GEq0DBTZx7aKblVC66W
+        HUv47HN6WvpkYxI6jBnSfezUDw==
+X-Google-Smtp-Source: APXvYqxJcD4Iva8LjauXdRv7MdXdwAKMDkOV0VwKKJWiJJiS8vUfgnWZhmg47YeFRhHeSnOuDhR7JQ==
+X-Received: by 2002:adf:fac3:: with SMTP id a3mr20173795wrs.24.1569227737278;
+        Mon, 23 Sep 2019 01:35:37 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id r6sm9279229wmh.38.2019.09.23.01.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 01:35:36 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.3 034/203] ASoC: meson: g12a-tohdmitx: override codec2codec params
+In-Reply-To: <20190922184350.30563-34-sashal@kernel.org>
+References: <20190922184350.30563-1-sashal@kernel.org> <20190922184350.30563-34-sashal@kernel.org>
+Date:   Mon, 23 Sep 2019 10:35:35 +0200
+Message-ID: <1j7e5ztnoo.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The number of RESET registers and offset of RESET_LEVEL register for
-Meson-A1 are different from previous SoCs, In order to describe these
-differences, we introduce the struct meson_reset_param.
+On Sun 22 Sep 2019 at 14:41, Sasha Levin <sashal@kernel.org> wrote:
 
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/reset/reset-meson.c | 35 ++++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
+> From: Jerome Brunet <jbrunet@baylibre.com>
+>
+> [ Upstream commit 2c4956bc1e9062e5e3c5ea7612294f24e6d4fbdd ]
+>
+> So far, forwarding the hw_params of the input to output relied on the
+> .hw_params() callback of the cpu side of the codec2codec link to be called
+> first. This is a bit weak.
+>
+> Instead, override the stream params of the codec2codec to link to set it up
+> correctly.
 
-diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-index 7d05d76..94d7ba8 100644
---- a/drivers/reset/reset-meson.c
-+++ b/drivers/reset/reset-meson.c
-@@ -15,12 +15,16 @@
- #include <linux/types.h>
- #include <linux/of_device.h>
- 
--#define REG_COUNT	8
- #define BITS_PER_REG	32
--#define LEVEL_OFFSET	0x7c
-+
-+struct meson_reset_param {
-+	int reg_count;
-+	int level_offset;
-+};
- 
- struct meson_reset {
- 	void __iomem *reg_base;
-+	const struct meson_reset_param *param;
- 	struct reset_controller_dev rcdev;
- 	spinlock_t lock;
- };
-@@ -46,10 +50,12 @@ static int meson_reset_level(struct reset_controller_dev *rcdev,
- 		container_of(rcdev, struct meson_reset, rcdev);
- 	unsigned int bank = id / BITS_PER_REG;
- 	unsigned int offset = id % BITS_PER_REG;
--	void __iomem *reg_addr = data->reg_base + LEVEL_OFFSET + (bank << 2);
-+	void __iomem *reg_addr;
- 	unsigned long flags;
- 	u32 reg;
- 
-+	reg_addr = data->reg_base + data->param->level_offset + (bank << 2);
-+
- 	spin_lock_irqsave(&data->lock, flags);
- 
- 	reg = readl(reg_addr);
-@@ -81,10 +87,21 @@ static const struct reset_control_ops meson_reset_ops = {
- 	.deassert	= meson_reset_deassert,
- };
- 
-+static const struct meson_reset_param meson8b_param = {
-+	.reg_count	= 8,
-+	.level_offset	= 0x7c,
-+};
-+
-+static const struct meson_reset_param meson_a1_param = {
-+	.reg_count	= 3,
-+	.level_offset	= 0x40,
-+};
-+
- static const struct of_device_id meson_reset_dt_ids[] = {
--	 { .compatible = "amlogic,meson8b-reset" },
--	 { .compatible = "amlogic,meson-gxbb-reset" },
--	 { .compatible = "amlogic,meson-axg-reset" },
-+	 { .compatible = "amlogic,meson8b-reset",    .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-gxbb-reset", .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-axg-reset",  .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-a1-reset",   .data = &meson_a1_param},
- 	 { /* sentinel */ },
- };
- 
-@@ -102,12 +119,16 @@ static int meson_reset_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->reg_base))
- 		return PTR_ERR(data->reg_base);
- 
-+	data->param = of_device_get_match_data(&pdev->dev);
-+	if (!data->param)
-+		return -ENODEV;
-+
- 	platform_set_drvdata(pdev, data);
- 
- 	spin_lock_init(&data->lock);
- 
- 	data->rcdev.owner = THIS_MODULE;
--	data->rcdev.nr_resets = REG_COUNT * BITS_PER_REG;
-+	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_REG;
- 	data->rcdev.ops = &meson_reset_ops;
- 	data->rcdev.of_node = pdev->dev.of_node;
- 
--- 
-2.7.4
+Hi Sasha
 
+This change depends on the following series in ASoC:
+https://lore.kernel.org/r/20190725165949.29699-1-jbrunet@baylibre.com
+which has also been merged in this merge window.
+
+With this change, things are done (IMO) in a better way but there was no
+known issue before that.
+
+I don't think it is worth backporting the mentioned ASoC series to
+5.3. I would suggest to just drop this change from stable.
+
+Regards
+Jerome
+
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Link: https://lore.kernel.org/r/20190729080139.32068-1-jbrunet@baylibre.com
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
