@@ -2,157 +2,77 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C4DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF65C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC5620673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24308205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JekV9Lb2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BX3GqwsB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502549AbfIWUW2 (ORCPT
+        id S2387500AbfIWUXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:22:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34644 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfIWUW1 (ORCPT
+        Mon, 23 Sep 2019 16:23:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54672 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfIWUXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:22:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y135so46552wmc.1;
-        Mon, 23 Sep 2019 13:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sABo8fLMmTTmo2WcsGn2dlPsS9QgOD70KLdhw5rDeGk=;
-        b=JekV9Lb2cMDaSOrgeBz8Tn9/0nx6HQ6EVSgTz/JQ8h7n5jlEXZevyQVgO/LRuqyiGl
-         LmfXXexf/2f/Wh1RnH1/JX3/lL4lMdUuh0PZ7+Byh2TTyk5Hrp90LcHtlVW2iPI29/2P
-         Yeie3y6t/iZGO3hIvelLPRGUPMZ/MG27pt1fK7UvI8+2QL75w4IBfVfWL2ZtIzjOKSDy
-         KWC6qhsxMndz0dm3yunmJns07e5qNiV/ONwHtq3K95GmMPy27awR8p0ioxArtrQb5T8e
-         ZKFfFHoKr4LYqsIb54AmzuKD7GXsCV+f8VBu169S5J2SwbvYdjKaYbLMTU8bzmSXWGn5
-         pBMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sABo8fLMmTTmo2WcsGn2dlPsS9QgOD70KLdhw5rDeGk=;
-        b=srZfMKkBK36bNjCEHv/jIDHzXJecrFvBSa5fRY41xRwwGFzOAhUkROUPZTvkgUSaN2
-         uubQ7GqEn3qvm0blSP6tFEtO8NEAuaeoBwxWNR0+ak+J0e64rAoPsXuSjFLNwXXE7FXZ
-         7u2aYpchO3voYSG4yJ2k5+t7JTzvWp8HS60gC7PIhiwNrjG6064GhHLGTyQRXTLFdQDu
-         +/Mig2/aODdCgKmUN2iBvkaDdgWJA4dUii4F9hEiQj7dKlJko2cdHE7U2f1TAdoete/R
-         t0xkfojVKuquGrTNwzSZZtWiJ4rScG9aHl95ghCDZN2eME2sroyNGN7hmYkVGjYFfkKU
-         NO7g==
-X-Gm-Message-State: APjAAAVjPD+MvrfwrMeGrl/Q2ZHjeYkbc1NjV8LXbRALMxz3s95fl4eR
-        nlFoMADUwlpAsSLVkssWtQE=
-X-Google-Smtp-Source: APXvYqz48BF1OX5tCIYtwrl2pglXhd4mgeM4GQHOc01MiZ8dCkcAlC5rWIPKpoQkfzJ70dhv+/CSQA==
-X-Received: by 2002:a7b:c932:: with SMTP id h18mr950909wml.86.1569270143968;
-        Mon, 23 Sep 2019 13:22:23 -0700 (PDT)
-Received: from ?IPv6:2001:a61:243d:bf01:c49e:ef23:e680:96b1? ([2001:a61:243d:bf01:c49e:ef23:e680:96b1])
-        by smtp.gmail.com with ESMTPSA id g185sm23169800wme.10.2019.09.23.13.22.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 13:22:23 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: For review: pidfd_open(2) manual page
-To:     Daniel Colascione <dancol@google.com>,
-        Florian Weimer <fw@deneb.enyo.de>
-References: <90399dee-53d8-a82c-3871-9ec8f94601ce@gmail.com>
- <87tv939td6.fsf@mid.deneb.enyo.de>
- <CAKOZuetTgKjgWZpCaBz8q662MwVQ-UhrV4oWFqKEWr35mQTFLw@mail.gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <39790bc7-f417-1172-0f06-5cdefabda7e1@gmail.com>
-Date:   Mon, 23 Sep 2019 22:22:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 23 Sep 2019 16:23:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aA6G5j/GWFQWf58bWS2Roiwr5zclNDQNpoKs51CyLPM=; b=BX3GqwsBgnQQgV++O4xX6CkcI
+        JhotC/8SeJ562+p9UL/7eJKXVJBN0CSZRnC6ua7vx2gicvuDtoLdPz283sNtiDMcVuPdnW8j8pkpv
+        mERlNKstfpOaXZa8+uONVcrkp50NFFOiWfrusLXapduXsF+SEtqUrSynFqDjd7x+S2OK9bLgCWbyf
+        6RtphSKrMLULAL9Swczng10X0aonz1hJidhrTOn7dHI+Xd17ClfcSO/0EJpNxGKHc5icWscGkMKPp
+        edRY97RSGf2vs78ZpvIcbZZJTfmz/OYdCuN0VeoNTLYYBDM9ypOuwlTBTwEHYrIUubeo0stALWp8l
+        Bh5h/Fy3w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCUrY-0007gq-ND; Mon, 23 Sep 2019 20:23:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 65451305E42;
+        Mon, 23 Sep 2019 22:22:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ADE2420D80D40; Mon, 23 Sep 2019 22:23:10 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 22:23:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH v2 1/2] sched/wait: Add wait_threshold
+Message-ID: <20190923202310.GA2386@hirez.programming.kicks-ass.net>
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
+ <20190923071932.GD2349@hirez.programming.kicks-ass.net>
+ <3e359937-5b19-8a4c-4243-ba2edff68504@gmail.com>
+ <20190923192742.GH2369@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuetTgKjgWZpCaBz8q662MwVQ-UhrV4oWFqKEWr35mQTFLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923192742.GH2369@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Daniel,
+On Mon, Sep 23, 2019 at 09:27:42PM +0200, Peter Zijlstra wrote:
 
-Than you for reviewing the page!
+> Also, is anything actually using wait_queue_entry::private ? I'm
+> not finding any in a hurry.
 
-On 9/23/19 1:26 PM, Daniel Colascione wrote:
-> On Mon, Sep 23, 2019 at 3:53 AM Florian Weimer <fw@deneb.enyo.de> wrote:
->>
->> * Michael Kerrisk:
->>
->>> SYNOPSIS
->>>        int pidfd_open(pid_t pid, unsigned int flags);
->>
->> Should this mention <sys/types.h> for pid_t?
->>
->>> ERRORS
->>>        EINVAL flags is not 0.
->>>
->>>        EINVAL pid is not valid.
->>>
->>>        ESRCH  The process specified by pid does not exist.
->>
->> Presumably, EMFILE and ENFILE are also possible errors, and so is
->> ENOMEM.
->>
->>>        A  PID  file descriptor can be monitored using poll(2), select(2),
->>>        and epoll(7).  When the process that it refers to terminates,  the
->>>        file descriptor indicates as readable.
-> 
-> The phrase "becomes readable" is simpler than "indicates as readable"
-> and conveys the same meaning. I agree with Florian's comment on this
-> point below.
+That is; outside of default_wake_function(). I don't see a sensible
+reason for that field to be 'void *' nor for the name 'private'.
 
-See my reply to Florian. (I did change the text here.)
-
->>> Note, however, that in the
->>>        current implementation, nothing can be read from the file descrip‐
->>>        tor.
->>
->> “is indicated as readable” or “becomes readable”?  Will reading block?
->>
->>>        The  pidfd_open()  system call is the preferred way of obtaining a
->>>        PID file descriptor.  The alternative is to obtain a file descrip‐
->>>        tor by opening a /proc/[pid] directory.  However, the latter tech‐
->>>        nique is possible only if the proc(5) file system is mounted; fur‐
->>>        thermore,  the  file  descriptor  obtained in this way is not pol‐
->>>        lable.
-> 
-> Referring to procfs directory FDs as pidfds will probably confuse
-> people. I'd just omit this paragraph.
-
-See my reply to Christian (and feel free to argue the point, please).
-So far, I have made no change here.
-
->> One question is whether the glibc wrapper should fall back back to the
->> /proc subdirectory if it is not available.  Probably not.
-> 
-> I'd prefer that glibc not provide this kind of fallback.
-> posix_fallocate-style emulation is, IMHO, too surprising.
-
-Agreed.
-
-Cheers,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+But _that_ is something we can fix later.
