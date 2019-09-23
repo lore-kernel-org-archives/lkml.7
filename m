@@ -2,105 +2,95 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE050C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930B1C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F3F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A9420665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439791AbfIWNgB (ORCPT
+        id S2439784AbfIWNgQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:36:01 -0400
-Received: from www62.your-server.de ([213.133.104.62]:50092 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730669AbfIWNgA (ORCPT
+        Mon, 23 Sep 2019 09:36:16 -0400
+Received: from sender3-pp-o92.zoho.com.cn ([124.251.121.251]:25802 "EHLO
+        sender3-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439687AbfIWNgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:36:00 -0400
-Received: from [178.197.248.15] (helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iCOVK-0004dR-Id; Mon, 23 Sep 2019 15:35:50 +0200
-Date:   Mon, 23 Sep 2019 15:35:50 +0200
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 30/32] tools lib bpf: Renaming pr_warning to pr_warn
-Message-ID: <20190923133550.GA9880@pc-63.home>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20190920062544.180997-31-wangkefeng.wang@huawei.com>
- <CAEf4BzbD98xeU2dSrXYkVi+mK=kuq+5DsroNDZwOzBGYbMH1-w@mail.gmail.com>
- <20190923082039.GA2530@pc-63.home>
- <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
+        Mon, 23 Sep 2019 09:36:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1569245766; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=ZC3gdLc+3mh0WiUrzn/M+msLuKISRLHC/6RbdAkfNtFYWpBON2Epss8XmJFBm1izJcm+V0eA3q5twRGHFDG9CFco9+VndDqETI47eor8iHRbZfQmsf6bg8aryTQ3Aw3ZqoU40rslb/EIHpmGhX9vr/mfv9+bbYTep13Fw4qTAV0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1569245766; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To:ARC-Authentication-Results; 
+        bh=Or9lhSPRldOrRHgxvmXgv/CvuF7iRY43maV/E0M3pbg=; 
+        b=e6vg/8GmohMkNShW5u/OyQ4D42EWXwXfHakRZL7WE7EUGZe29mfP8sYsGB0NGtycR96udyNq4fB4NLnhOwagqBFWKtiWjBP7xOTdpNuE3QcfxSe08Cv5zcI5wuyG+35jfCQJUH7yv/uJzvJMzIA5v/g5RGOakrdt9MZBnqE+jvE=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=zoho.com.cn;
+        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
+        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 1569245764007604.909783495709; Mon, 23 Sep 2019 21:36:04 +0800 (CST)
+Received: from  [113.116.51.134] by mail.zoho.com.cn
+        with HTTP;Mon, 23 Sep 2019 21:36:04 +0800 (CST)
+Date:   Mon, 23 Sep 2019 21:36:04 +0800
+From:   admin <cgxu519@zoho.com.cn>
+Reply-To: cgxu519@zoho.com.cn
+To:     "Jan Kara" <jack@suse.cz>
+Cc:     "Jan Kara" <jack@suse.com>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Message-ID: <16d5e5619a4.eae7877614758.1000116132119001499@zoho.com.cn>
+In-Reply-To: <20190923100259.GD20367@quack2.suse.cz>
+References: <20190921015628.54335-1-cgxu519@zoho.com.cn> <20190923100259.GD20367@quack2.suse.cz>
+Subject: Re: [PATCH] quota: code cleanup for hash bits calculation
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25581/Mon Sep 23 10:20:21 2019)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 01:03:06PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-23 10:20:39, Daniel Borkmann wrote:
-> > On Sun, Sep 22, 2019 at 02:07:21PM -0700, Andrii Nakryiko wrote:
-> > > On Fri, Sep 20, 2019 at 10:06 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
-> > > >
-> > > > For kernel logging macro, pr_warning is completely removed and
-> > > > replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
-> > > > to kernel logging macro, then we could drop pr_warning in the
-> > > > whole linux code.
-> > > >
-> > > > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> > > > ---
-> > > >  tools/lib/bpf/btf.c             |  56 +--
-> > > >  tools/lib/bpf/btf_dump.c        |  20 +-
-> > > >  tools/lib/bpf/libbpf.c          | 652 ++++++++++++++++----------------
-> > > >  tools/lib/bpf/libbpf_internal.h |   2 +-
-> > > >  tools/lib/bpf/xsk.c             |   4 +-
-> > > >  5 files changed, 363 insertions(+), 371 deletions(-)
-> > > 
-> > > Thanks! This will allow to get rid of tons warnings from checkpatch.pl.
-> > > 
-> > > Alexei, Daniel, can we take this through bpf-next tree once it's open?
-> > 
-> > I'd be fine with that, in fact, it probably should be in order to avoid
-> > merge conflicts since pr_warn{ing}() is used all over the place in libbpf.
-> 
-> The entire patchset modifies many files all over the tree.
-> This is from https://lkml.kernel.org/r/20190920062544.180997-1-wangkefeng.wang@huawei.com
-> 
->     120 files changed, 882 insertions(+), 927 deletions(-)
-> 
-> Would it make sense to push everything at the end of the merge window
-> or for 5.4-rc2 after master settles down?
-
-If all over the tree it would probably make more sense for e.g. Andrew Morton to
-pick it up if there are no other objections, and try to merge it during mentioned
-time frame.
+ ---- 在 星期一, 2019-09-23 18:02:53 Jan Kara <jack@suse.cz> 撰写 ----
+ > On Sat 21-09-19 09:56:28, Chengguang Xu wrote:
+ > > Code cleanup for hash bits calculation by
+ > > calling rounddown_pow_of_two() and ilog2()
+ > > 
+ > > Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+ > 
+ > Thanks for the patch! One comment below:
+ > 
+ > > diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+ > > index 6e826b454082..679dd3b5db70 100644
+ > > --- a/fs/quota/dquot.c
+ > > +++ b/fs/quota/dquot.c
+ > > @@ -2983,13 +2983,9 @@ static int __init dquot_init(void)
+ > >  
+ > >      /* Find power-of-two hlist_heads which can fit into allocation */
+ > >      nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
+ > > -    dq_hash_bits = 0;
+ > > -    do {
+ > > -        dq_hash_bits++;
+ > > -    } while (nr_hash >> dq_hash_bits);
+ > > -    dq_hash_bits--;
+ > > +    nr_hash = rounddown_pow_of_two(nr_hash);
+ > > +    dq_hash_bits = ilog2(nr_hash);
+ > >  
+ > > -    nr_hash = 1UL << dq_hash_bits;
+ > 
+ > Why not just:
+ >     dq_hash_bits = ilog2(nr_hash);
+ >     nr_hash = 1UL << dq_hash_bits;
+ > 
+ > That way we need to compute fls() only once...
+ 
+Yeah, you are right, I'll update in v2.
 
 Thanks,
-Daniel
+Chengguang
+
