@@ -2,597 +2,316 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B00AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BB3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1904E20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C392087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EUpY4vHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437309AbfIWIQG (ORCPT
+        id S2437621AbfIWIQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:16:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59356 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405105AbfIWIQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:16:05 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EB7F8C049E32
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:16:04 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id p56so16463640qtj.14
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yzze/fKTke6egRSSfwjTToqtiF+63OmJYlLiFjbw63I=;
-        b=Ov1hgkcGHfE64R8fuTFrDPqsAFyr4ozQvSQKS1nVeV1gl7IgLTlx2rVQ0Y6QEyolr1
-         n2ekTmBcOet9bwsHXiysI+RTg5Hu3RhfV2yp/bndebio/P66b5fTjmFA76CYLqHR7qQM
-         Wl7xValJ65ewgIkR2Cs9gCz3EZcgoiK6EUifPvQWHGg+4TAkijvikiklgqHgPPD6tpMR
-         piWCI2aNhSR4wredHK4gP/qf85QEykdYg5inq43FVU65/peG8W1dp5NVpIsysnHU08NC
-         o5eYBejIOXpsv6lGHTI31d1V393pd94JU5SHn4Rp1PfoGOIhHuuxj86edmqvyvLjbg2e
-         JFNg==
-X-Gm-Message-State: APjAAAV3W9LOk2rCTsbOe/9HG7LYh98kmUrdwq+/W470MXtrTbE7QbkS
-        HLEDVxGglZLkzPWl8+HzIADh/m6rdCXVf9b36NAYhnKIh/9/NGhjaCknK8yf+zmdLbthquBn7z6
-        Vywz/Yt0eUPPXWh4wrFeD0DpU
-X-Received: by 2002:aed:316d:: with SMTP id 100mr15614538qtg.20.1569226564194;
-        Mon, 23 Sep 2019 01:16:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwRl9TeWrWoPnRtD5gLZGmyq7Ek5tjkSY3JDtUC4tg6EvloLG6CnrwEhuwOjMyXaOzdpCwt0w==
-X-Received: by 2002:aed:316d:: with SMTP id 100mr15614508qtg.20.1569226563903;
-        Mon, 23 Sep 2019 01:16:03 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id d16sm4657038qkl.7.2019.09.23.01.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 01:16:02 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 04:15:54 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
-Message-ID: <20190923041330-mutt-send-email-mst@kernel.org>
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
- <20190918175249.23474.51171.stgit@localhost.localdomain>
+        Mon, 23 Sep 2019 04:16:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36267 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406068AbfIWIQk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:16:40 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190923081637euoutp0261b06cd96e415bb01a98d95b6dc62b88~HA0bPdNS62410524105euoutp02M
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:16:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190923081637euoutp0261b06cd96e415bb01a98d95b6dc62b88~HA0bPdNS62410524105euoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569226597;
+        bh=rJetcVoZjhe5yu8zaqk9R4p8QFVoTZCo42vYfkzWAdU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=EUpY4vHwL4tvFKsDe84yomWDO4oc34G0rsqaxMieCgSFT/QXLb7WRDqQ14jutdo6d
+         XVYFcFH+hhtPU07R6REeaVlHFt/iZ4pDV+rsvZEY0YU2yRUTsNZ6HU4tA3CV5BgT5J
+         RXPp6ss6dBi/H02zwmJRTxgyN79mk6jhodF7n0hQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190923081637eucas1p250f7da714c920ad7048ba7d95b2803bf~HA0bCrZA40956409564eucas1p2Y;
+        Mon, 23 Sep 2019 08:16:37 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 5B.A1.04309.56F788D5; Mon, 23
+        Sep 2019 09:16:37 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190923081637eucas1p1d166a7748daa77049b5253a3345766c9~HA0at_iaL3037830378eucas1p1H;
+        Mon, 23 Sep 2019 08:16:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190923081637eusmtrp1f1c3bec4882cca4cbaad8ec2ae9b2a8d~HA0atA1wU2602926029eusmtrp17;
+        Mon, 23 Sep 2019 08:16:37 +0000 (GMT)
+X-AuditID: cbfec7f4-afbff700000010d5-3a-5d887f65f3fe
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8E.76.04117.56F788D5; Mon, 23
+        Sep 2019 09:16:37 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190923081636eusmtip1e77cef5247ec7fb57f0c8582d7cbaade~HA0aOLyXa2739227392eusmtip1w;
+        Mon, 23 Sep 2019 08:16:36 +0000 (GMT)
+Subject: Re: [PATCH] drm/panel: samsung: s6e8aa0: Add backlight control
+ support
+To:     =?UTF-8?Q?Joonas_Kylm=c3=a4l=c3=a4?= <joonas.kylmala@iki.fi>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     paul.kocialkowski@bootlin.com, GNUtoo@cyberdimension.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <d8a8bf25-0c5e-8d94-9406-b1f74e3edfac@samsung.com>
+Date:   Mon, 23 Sep 2019 10:16:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918175249.23474.51171.stgit@localhost.localdomain>
+In-Reply-To: <20190921124843.6967-1-joonas.kylmala@iki.fi>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOKsWRmVeSWpSXmKPExsWy7djP87qp9R2xBq2b5C16z51ksvi/bSKz
+        xZWv79ksWq8/Zrf433KD3eLyrjlsFpe/9jFarPi5ldHi5655LA6cHvPWVHscPdDI7LH32wIW
+        j52z7rJ7HP66kMVj+7cHrB73u48zeSyZdpXN4/MmuQDOKC6blNSczLLUIn27BK6MTRvnshTs
+        0K5oX/SHsYHxkFIXIyeHhICJxIb/HaxdjFwcQgIrGCVONUyFcr4wShy5tp8NwvnMKDF/9QNm
+        mJbGeY9YQWwhgeWMEqtmqUIUvWWU+PDjLRtIQlggUKJh7nF2kISIwGQmia43v9lBEswCNhJ9
+        W3cygthsApoSfzffBGvgFbCT2DrlL9hUFgFVifNNz8DiogIREp8eHGaFqBGUODnzCQuIzSlg
+        JbHm829GiJnyEs1bZzND2OISt57MZ4K49Ba7xMaH/BC2i8SUj/tYIWxhiVfHt7BD2DISpyf3
+        sEDY9RL3V7QwgxwtIdDBKLF1w06ol60lDh+/CNTMAbRAU2L9Ln2IsKPE5TnNYGEJAT6JG28F
+        IU7gk5i0bTozRJhXoqNNCKJaUeL+2a1QA8Ulll74yjaBUWkWksdmIXlmFpJnZiHsXcDIsopR
+        PLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMweZ3+d/zLDsZdf5IOMQpwMCrx8H7Y2B4rxJpY
+        VlyZe4hRgoNZSYR3k1ZbrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWp
+        RTBZJg5OqQbGZRUd8wx2nktkDy2QTZKOCzvpmDxb9wrHpKdWMTIibIxFJbw1Ph+T5GRkHvyu
+        Z03a0jfTKSud/UJ6amzqjKLkmpsbDQXlDTS7t1cvWKfXwby11Fki2X9RQXfeklOvDotHm+zj
+        aDtro7ikcDdbZ1r45EchLyvMPp+eoLIxQubEIc3405XH+5RYijMSDbWYi4oTAVAnXYlaAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xu7qp9R2xBn0veCx6z51ksvi/bSKz
+        xZWv79ksWq8/Zrf433KD3eLyrjlsFpe/9jFarPi5ldHi5655LA6cHvPWVHscPdDI7LH32wIW
+        j52z7rJ7HP66kMVj+7cHrB73u48zeSyZdpXN4/MmuQDOKD2bovzSklSFjPziElulaEMLIz1D
+        Sws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MTRvnshTs0K5oX/SHsYHxkFIXIyeHhICJ
+        ROO8R6xdjFwcQgJLGSWWtJxmhkiIS+ye/xbKFpb4c62LDaLoNaPE/JNvWUESwgKBEg1zj7OD
+        2CICk5kktt0wArGZBWwk+rbuZIRo6GWUOPVpOyNIgk1AU+Lv5ptsIDavgJ3E1il/wQaxCKhK
+        nG96BhYXFYiQOLxjFiNEjaDEyZlPWEBsTgEriTWffzNCLFCX+DPvEjOELS/RvHU2lC0ucevJ
+        fKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG7LZjP7fs
+        YOx6F3yIUYCDUYmH98PG9lgh1sSy4srcQ4wSHMxKIrybtNpihXhTEiurUovy44tKc1KLDzGa
+        Aj03kVlKNDkfmEzySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUw
+        1tbO27Pf5GFNttkdvZ3xOey1ksGalocan9t2swndzbL+NfHk98SAb7Z52v3ujxh+Tgm2O5R3
+        6YYr+9cJ54/YsuS9+jRh6vItpVXlfmecY613iHoe+/rjW0g6n/WxGN6EudnHuy2n6Rl0cL6J
+        rnQ5xr6BleNUBpsd70um8MJTifMl7Z+xcBQpsRRnJBpqMRcVJwIA/M6+I+4CAAA=
+X-CMS-MailID: 20190923081637eucas1p1d166a7748daa77049b5253a3345766c9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190921125017epcas3p2f5661cca04f0959f9707f6111102435d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190921125017epcas3p2f5661cca04f0959f9707f6111102435d
+References: <CGME20190921125017epcas3p2f5661cca04f0959f9707f6111102435d@epcas3p2.samsung.com>
+        <20190921124843.6967-1-joonas.kylmala@iki.fi>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:52:49AM -0700, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> In order to pave the way for free page reporting in virtualized
-> environments we will need a way to get pages out of the free lists and
-> identify those pages after they have been returned. To accomplish this,
-> this patch adds the concept of a Reported Buddy, which is essentially
-> meant to just be the Uptodate flag used in conjunction with the Buddy
-> page type.
-> 
-> It adds a set of pointers we shall call "reported_boundary" which
-> represent the upper boundary between the unreported and reported pages.
-> The general idea is that in order for a page to cross from one side of the
-> boundary to the other it will need to verify that it went through the
-> reporting process. Ultimately a free list has been fully processed when
-> the boundary has been moved from the tail all they way up to occupying the
-> first entry in the list.
-> 
-> One limitation to this approach is that it is essentially a linear search
-> and in the case of the free lists we can have pages added to either the
-> head or the tail of the list. In order to place limits on this we only
-> allow pages to be added before the reported_boundary instead of adding
-> to the tail itself. An added advantage to this approach is that we should
-> be reducing the overall memory footprint of the guest as it will be more
-> likely to recycle warm pages versus trying to allocate the reported pages
-> that were likely evicted from the guest memory.
-> 
-> Since we will only be reporting one zone at a time we keep the boundary
-> limited to being defined for just the zone we are currently reporting pages
-> from. Doing this we can keep the number of additional pointers needed quite
-> small. To flag that the boundaries are in place we use a single bit
-> in the zone to indicate that reporting and the boundaries are active.
-> 
-> We store the index of the boundary pointer used to track the reported page
-> in the page->index value. Doing this we can avoid unnecessary computation
-> to determine the index value again. There should be no issues with this as
-> the value is unused when the page is in the buddy allocator, and is reset
-> as soon as the page is removed from the free list.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Hi Joonas,
+
+
+On 21.09.2019 14:48, Joonas Kylmälä wrote:
+> This makes the backlight brightness controllable from the
+> userspace.
+>
+> Signed-off-by: Joonas Kylmälä <joonas.kylmala@iki.fi>
 > ---
->  include/linux/mmzone.h     |   16 ++++
->  include/linux/page-flags.h |   11 +++
->  mm/Kconfig                 |   11 +++
->  mm/compaction.c            |    5 +
->  mm/memory_hotplug.c        |    2 
->  mm/page_alloc.c            |   67 +++++++++++++++--
->  mm/page_reporting.h        |  178 ++++++++++++++++++++++++++++++++++++++++++++
->  7 files changed, 283 insertions(+), 7 deletions(-)
->  create mode 100644 mm/page_reporting.h
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 270a7b493174..53922c30b8d8 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -463,6 +463,14 @@ struct zone {
->  	seqlock_t		span_seqlock;
->  #endif
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	/*
-> +	 * Pointer to reported page tracking statistics array. The size of
-> +	 * the array is MAX_ORDER - PAGE_REPORTING_MIN_ORDER. NULL when
-> +	 * unused page reporting is not present.
-> +	 */
-> +	unsigned long		*reported_pages;
-> +#endif
->  	int initialized;
->  
->  	/* Write-intensive fields used from the page allocator */
-> @@ -538,6 +546,14 @@ enum zone_flags {
->  	ZONE_BOOSTED_WATERMARK,		/* zone recently boosted watermarks.
->  					 * Cleared when kswapd is woken.
->  					 */
-> +	ZONE_PAGE_REPORTING_ACTIVE,	/* zone enabled page reporting and is
-> +					 * activly flushing the data out of
-> +					 * higher order pages.
-> +					 */
-> +	ZONE_PAGE_REPORTING_REQUESTED,	/* zone enabled page reporting and has
-> +					 * requested flushing the data out of
-> +					 * higher order pages.
-> +					 */
->  };
->  
->  static inline unsigned long zone_managed_pages(struct zone *zone)
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index f91cb8898ff0..759a3b3956f2 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -163,6 +163,9 @@ enum pageflags {
->  
->  	/* non-lru isolated movable page */
->  	PG_isolated = PG_reclaim,
-> +
-> +	/* Buddy pages. Used to track which pages have been reported */
-> +	PG_reported = PG_uptodate,
->  };
->  
->  #ifndef __GENERATING_BOUNDS_H
-> @@ -432,6 +435,14 @@ static inline bool set_hwpoison_free_buddy_page(struct page *page)
->  #endif
->  
->  /*
-> + * PageReported() is used to track reported free pages within the Buddy
-> + * allocator. We can use the non-atomic version of the test and set
-> + * operations as both should be shielded with the zone lock to prevent
-> + * any possible races on the setting or clearing of the bit.
-> + */
-> +__PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
-> +
-> +/*
->   * On an anonymous page mapped into a user virtual memory area,
->   * page->mapping points to its anon_vma, not to a struct address_space;
->   * with the PAGE_MAPPING_ANON bit set to distinguish it.  See rmap.h.
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index a5dae9a7eb51..0419b2a9be3e 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -237,6 +237,17 @@ config COMPACTION
->            linux-mm@kvack.org.
->  
->  #
-> +# support for unused page reporting
-> +config PAGE_REPORTING
-> +	bool "Allow for reporting of unused pages"
-> +	def_bool n
-> +	help
-> +	  Unused page reporting allows for the incremental acquisition of
-> +	  unused pages from the buddy allocator for the purpose of reporting
-> +	  those pages to another entity, such as a hypervisor, so that the
-> +	  memory can be freed up for other uses.
-> +
-> +#
->  # support for page migration
->  #
->  config MIGRATION
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index ce08b39d85d4..60e064330b3a 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -24,6 +24,7 @@
->  #include <linux/page_owner.h>
->  #include <linux/psi.h>
->  #include "internal.h"
-> +#include "page_reporting.h"
->  
->  #ifdef CONFIG_COMPACTION
->  static inline void count_compact_event(enum vm_event_item item)
-> @@ -1325,6 +1326,8 @@ static int next_search_order(struct compact_control *cc, int order)
->  			continue;
->  
->  		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		page_reporting_free_area_release(cc->zone, order,
-> +						 MIGRATE_MOVABLE);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry_reverse(freepage, freelist, lru) {
->  			unsigned long pfn;
-> @@ -1681,6 +1684,8 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->  			continue;
->  
->  		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		page_reporting_free_area_release(cc->zone, order,
-> +						 MIGRATE_MOVABLE);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry(freepage, freelist, lru) {
->  			unsigned long free_pfn;
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 49f7bf91c25a..09c6f52e2bc5 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -41,6 +41,7 @@
->  
->  #include "internal.h"
->  #include "shuffle.h"
-> +#include "page_reporting.h"
->  
->  /*
->   * online_page_callback contains pointer to current page onlining function.
-> @@ -1613,6 +1614,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  	if (!populated_zone(zone)) {
->  		zone_pcp_reset(zone);
->  		build_all_zonelists(NULL);
-> +		page_reporting_reset_zone(zone);
->  	} else
->  		zone_pcp_update(zone);
->  
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index f8271ec8e06e..ed0128c65936 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -74,6 +74,7 @@
->  #include <asm/div64.h>
->  #include "internal.h"
->  #include "shuffle.h"
-> +#include "page_reporting.h"
->  
->  /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
->  static DEFINE_MUTEX(pcp_batch_high_lock);
-> @@ -891,10 +892,15 @@ static inline void add_to_free_list(struct page *page, struct zone *zone,
->  static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
->  					 unsigned int order, int migratetype)
->  {
-> -	struct free_area *area = &zone->free_area[order];
-> +	struct list_head *tail = get_unreported_tail(zone, order, migratetype);
->  
-> -	list_add_tail(&page->lru, &area->free_list[migratetype]);
-> -	area->nr_free++;
-> +	/*
-> +	 * To prevent the unreported pages from slipping behind our iterator
-> +	 * we will force them to be inserted in front of it. By doing this
-> +	 * we should only need to make one pass through the freelist.
-> +	 */
-> +	list_add_tail(&page->lru, tail);
-> +	zone->free_area[order].nr_free++;
->  }
->  
->  /* Used for pages which are on another list */
-> @@ -903,12 +909,20 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
->  {
->  	struct free_area *area = &zone->free_area[order];
->  
-> +	/* Make certain the page isn't occupying the boundary */
-> +	if (unlikely(PageReported(page)))
-> +		__del_page_from_reported_list(page, zone);
-> +
->  	list_move(&page->lru, &area->free_list[migratetype]);
->  }
->  
->  static inline void del_page_from_free_list(struct page *page, struct zone *zone,
->  					   unsigned int order)
->  {
-> +	/* remove page from reported list, and clear reported state */
-> +	if (unlikely(PageReported(page)))
-> +		del_page_from_reported_list(page, zone, order);
-> +
->  	list_del(&page->lru);
->  	__ClearPageBuddy(page);
->  	set_page_private(page, 0);
-> @@ -972,7 +986,7 @@ static inline void del_page_from_free_list(struct page *page, struct zone *zone,
->  static inline void __free_one_page(struct page *page,
->  		unsigned long pfn,
->  		struct zone *zone, unsigned int order,
-> -		int migratetype)
-> +		int migratetype, bool reported)
->  {
->  	struct capture_control *capc = task_capc(zone);
->  	unsigned long uninitialized_var(buddy_pfn);
-> @@ -1048,7 +1062,9 @@ static inline void __free_one_page(struct page *page,
->  done_merging:
->  	set_page_order(page, order);
->  
-> -	if (is_shuffle_order(order))
-> +	if (reported)
-> +		to_tail = true;
-> +	else if (is_shuffle_order(order))
->  		to_tail = shuffle_pick_tail();
->  	else
->  		to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
-> @@ -1367,7 +1383,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
->  		if (unlikely(isolated_pageblocks))
->  			mt = get_pageblock_migratetype(page);
->  
-> -		__free_one_page(page, page_to_pfn(page), zone, 0, mt);
-> +		__free_one_page(page, page_to_pfn(page), zone, 0, mt, false);
->  		trace_mm_page_pcpu_drain(page, 0, mt);
->  	}
->  	spin_unlock(&zone->lock);
-> @@ -1383,7 +1399,7 @@ static void free_one_page(struct zone *zone,
->  		is_migrate_isolate(migratetype))) {
->  		migratetype = get_pfnblock_migratetype(page, pfn);
->  	}
-> -	__free_one_page(page, pfn, zone, order, migratetype);
-> +	__free_one_page(page, pfn, zone, order, migratetype, false);
->  	spin_unlock(&zone->lock);
->  }
->  
-> @@ -2245,6 +2261,43 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
->  	return NULL;
->  }
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +struct list_head **reported_boundary __read_mostly;
-> +
-> +/**
-> + * free_reported_page - Return a now-reported page back where we got it
-> + * @page: Page that was reported
-> + * @order: Order of the reported page
+>  drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c | 82 ++++++++++++++++++++-------
+>  1 file changed, 60 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c b/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
+> index dbced6501204..aa75934f5bed 100644
+> --- a/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
+> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
+> @@ -10,8 +10,12 @@
+>   * Eunchul Kim <chulspro.kim@samsung.com>
+>   * Tomasz Figa <t.figa@samsung.com>
+>   * Andrzej Hajda <a.hajda@samsung.com>
 > + *
-> + * This function will pull the migratetype and order information out
-> + * of the page and attempt to return it where it found it. If the page
-> + * is added to the free list without changes we will mark it as being
-> + * reported.
-> + */
-> +void free_reported_page(struct page *page, unsigned int order)
+> + * Derived from panel-samsung-s6e63m0.c:
+> + *  Copyright (C) 2019 Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+>  */
+>  
+> +#include <linux/backlight.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+> @@ -85,6 +89,8 @@
+>  #define AID_2				(0x6)
+>  #define AID_3				(0x7)
+>  
+> +#define MAX_BRIGHTNESS (GAMMA_LEVEL_NUM - 1)
+> +
+>  typedef u8 s6e8aa0_gamma_table[GAMMA_TABLE_LEN];
+>  
+>  struct s6e8aa0_variant {
+> @@ -95,6 +101,7 @@ struct s6e8aa0_variant {
+>  struct s6e8aa0 {
+>  	struct device *dev;
+>  	struct drm_panel panel;
+> +	struct backlight_device *bl_dev;
+>  
+>  	struct regulator_bulk_data supplies[2];
+>  	struct gpio_desc *reset_gpio;
+> @@ -110,7 +117,6 @@ struct s6e8aa0 {
+>  	u8 version;
+>  	u8 id;
+>  	const struct s6e8aa0_variant *variant;
+> -	int brightness;
+>  
+>  	/* This field is tested by functions directly accessing DSI bus before
+>  	 * transfer, transfer is skipped if it is set. In case of transfer
+> @@ -321,9 +327,10 @@ static void s6e8aa0_etc_elvss_control(struct s6e8aa0 *ctx)
+>  
+>  static void s6e8aa0_elvss_nvm_set_v142(struct s6e8aa0 *ctx)
+>  {
+> +	struct backlight_device *bd = ctx->bl_dev;
+>  	u8 br;
+>  
+> -	switch (ctx->brightness) {
+> +	switch (bd->props.brightness) {
+>  	case 0 ... 6: /* 30cd ~ 100cd */
+>  		br = 0xdf;
+>  		break;
+> @@ -762,24 +769,6 @@ static const struct s6e8aa0_variant s6e8aa0_variants[] = {
+>  	}
+>  };
+>  
+> -static void s6e8aa0_brightness_set(struct s6e8aa0 *ctx)
+> -{
+> -	const u8 *gamma;
+> -
+> -	if (ctx->error)
+> -		return;
+> -
+> -	gamma = ctx->variant->gamma_tables[ctx->brightness];
+> -
+> -	if (ctx->version >= 142)
+> -		s6e8aa0_elvss_nvm_set(ctx);
+> -
+> -	s6e8aa0_dcs_write(ctx, gamma, GAMMA_TABLE_LEN);
+> -
+> -	/* update gamma table. */
+> -	s6e8aa0_dcs_write_seq_static(ctx, 0xf7, 0x03);
+> -}
+> -
+>  static void s6e8aa0_panel_init(struct s6e8aa0 *ctx)
+>  {
+>  	s6e8aa0_apply_level_1_key(ctx);
+> @@ -791,7 +780,7 @@ static void s6e8aa0_panel_init(struct s6e8aa0 *ctx)
+>  
+>  	s6e8aa0_panel_cond_set(ctx);
+>  	s6e8aa0_display_condition_set(ctx);
+> -	s6e8aa0_brightness_set(ctx);
+> +	backlight_enable(ctx->bl_dev);
+>  	s6e8aa0_etc_source_control(ctx);
+>  	s6e8aa0_etc_pentile_control(ctx);
+>  	s6e8aa0_elvss_nvm_set(ctx);
+> @@ -974,6 +963,53 @@ static int s6e8aa0_parse_dt(struct s6e8aa0 *ctx)
+>  	return 0;
+>  }
+>  
+> +static int s6e8aa0_set_brightness(struct backlight_device *bd)
 > +{
-> +	struct zone *zone = page_zone(page);
-> +	unsigned long pfn;
-> +	unsigned int mt;
+> +	struct s6e8aa0 *ctx = bl_get_data(bd);
+> +	const u8 *gamma;
 > +
-> +	/* zone lock should be held when this function is called */
-> +	lockdep_assert_held(&zone->lock);
-> +
-> +	pfn = page_to_pfn(page);
-> +	mt = get_pfnblock_migratetype(page, pfn);
-> +	__free_one_page(page, pfn, zone, order, mt, true);
-> +
-> +	/*
-> +	 * If page was not comingled with another page we can consider
-> +	 * the result to be "reported" since part of the page hasn't been
-> +	 * modified, otherwise we would need to report on the new larger
-> +	 * page.
-> +	 */
-> +	if (PageBuddy(page) && page_order(page) == order)
-> +		add_page_to_reported_list(page, zone, order, mt);
-> +}
-> +#endif /* CONFIG_PAGE_REPORTING */
-> +
->  /*
->   * This array describes the order lists are fallen back to when
->   * the free lists for the desirable migrate type are depleted
-> diff --git a/mm/page_reporting.h b/mm/page_reporting.h
-> new file mode 100644
-> index 000000000000..c5e1bb58ad96
-> --- /dev/null
-> +++ b/mm/page_reporting.h
-> @@ -0,0 +1,178 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _MM_PAGE_REPORTING_H
-> +#define _MM_PAGE_REPORTING_H
-> +
-> +#include <linux/mmzone.h>
-> +#include <linux/pageblock-flags.h>
-> +#include <linux/page-isolation.h>
-> +#include <linux/jump_label.h>
-> +#include <linux/slab.h>
-> +#include <asm/pgtable.h>
-> +
-> +#define PAGE_REPORTING_MIN_ORDER	pageblock_order
-> +#define PAGE_REPORTING_HWM		32
-> +
-> +#ifdef CONFIG_PAGE_REPORTING
-> +/* Reported page accessors, defined in page_alloc.c */
-> +void free_reported_page(struct page *page, unsigned int order);
-> +
-> +/* Free reported_pages and reset reported page tracking count to 0 */
-> +static inline void page_reporting_reset_zone(struct zone *zone)
-> +{
-> +	kfree(zone->reported_pages);
-> +	zone->reported_pages = NULL;
-> +}
-> +
-> +/* Boundary functions */
-> +static inline pgoff_t
-> +get_reporting_index(unsigned int order, unsigned int migratetype)
-> +{
-> +	/*
-> +	 * We will only ever be dealing with pages greater-than or equal to
-> +	 * PAGE_REPORTING_MIN_ORDER. Since that is the case we can avoid
-> +	 * allocating unused space by limiting our index range to only the
-> +	 * orders that are supported for page reporting.
-> +	 */
-> +	return (order - PAGE_REPORTING_MIN_ORDER) * MIGRATE_TYPES + migratetype;
-> +}
-> +
-> +extern struct list_head **reported_boundary __read_mostly;
-> +
-> +static inline void
-> +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
-> +{
-> +	int index;
-> +
-> +	if (order < PAGE_REPORTING_MIN_ORDER)
+> +	if (ctx->error)
 > +		return;
-> +	if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> +		return;
 > +
-> +	index = get_reporting_index(order, mt);
-> +	reported_boundary[index] = &zone->free_area[order].free_list[mt];
+> +	gamma = ctx->variant->gamma_tables[bd->props.brightness];
+> +
+> +	if (ctx->version >= 142)
+> +		s6e8aa0_elvss_nvm_set(ctx);
+> +
+> +	s6e8aa0_dcs_write(ctx, gamma, GAMMA_TABLE_LEN);
+> +
+> +	/* update gamma table. */
+> +	s6e8aa0_dcs_write_seq_static(ctx, 0xf7, 0x03);
+> +
+> +	return s6e8aa0_clear_error(ctx);
 > +}
-
-So this seems to be costly.
-I'm guessing it's the access to flags:
-
-
-        /* zone flags, see below */
-        unsigned long           flags;
-
-        /* Primarily protects free_area */
-        spinlock_t              lock;
-
-
-
-which is in the same cache line as the lock.
+> +
+> +static const struct backlight_ops s6e8aa0_backlight_ops = {
+> +	.update_status	= s6e8aa0_set_brightness,
 
 
+This is racy, update_status can be called in any time between probe and
+remove, particularly:
+
+a) before panel enable,
+
+b) during panel enable,
+
+c) when panel is enabled,
+
+d) during panel disable,
+
+e) after panel disable,
+
+
+b and d are racy for sure - backlight and drm callbacks are async.
+
+IMO the best solution would be to register backlight after attaching
+panel to drm, but for this drm_panel_funcs should have attach/detach
+callbacks (like drm_bridge_funcs),
+
+then update_status callback should take some drm_connector lock to
+synchronize with drm, and write to hw only when pipe is enabled.
+
+
+Regards
+
+Andrzej
+
+
+
+> +};
 > +
-> +static inline void page_reporting_disable_boundaries(struct zone *zone)
+> +static int s6e8aa0_backlight_register(struct s6e8aa0 *ctx)
 > +{
-> +	/* zone lock should be held when this function is called */
-> +	lockdep_assert_held(&zone->lock);
+> +	struct backlight_properties props = {
+> +		.type		= BACKLIGHT_RAW,
+> +		.brightness	= MAX_BRIGHTNESS,
+> +		.max_brightness = MAX_BRIGHTNESS
+> +	};
+> +	struct device *dev = ctx->dev;
+> +	int ret = 0;
 > +
-> +	__clear_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags);
+> +	ctx->bl_dev = devm_backlight_device_register(dev, "panel", dev, ctx,
+> +						     &s6e8aa0_backlight_ops,
+> +						     &props);
+> +	if (IS_ERR(ctx->bl_dev)) {
+> +		ret = PTR_ERR(ctx->bl_dev);
+> +		DRM_DEV_ERROR(dev, "error registering backlight device (%d)\n",
+> +			      ret);
+> +	}
+> +
+> +	return ret;
 > +}
 > +
-> +static inline void
-> +page_reporting_free_area_release(struct zone *zone, unsigned int order, int mt)
-> +{
-> +	page_reporting_reset_boundary(zone, order, mt);
-> +}
-> +
-> +/*
-> + * Method for obtaining the tail of the free list. Using this allows for
-> + * tail insertions of unreported pages into the region that is currently
-> + * being scanned so as to avoid interleaving reported and unreported pages.
-> + */
-> +static inline struct list_head *
-> +get_unreported_tail(struct zone *zone, unsigned int order, int migratetype)
-> +{
-> +	if (order >= PAGE_REPORTING_MIN_ORDER &&
-> +	    test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> +		return reported_boundary[get_reporting_index(order,
-> +							     migratetype)];
-> +
-> +	return &zone->free_area[order].free_list[migratetype];
-> +}
-> +
-> +/*
-> + * Functions for adding/removing reported pages to the freelist.
-> + * All of them expect the zone lock to be held to maintain
-> + * consistency of the reported list as a subset of the free list.
-> + */
-> +static inline void
-> +add_page_to_reported_list(struct page *page, struct zone *zone,
-> +			  unsigned int order, unsigned int mt)
-> +{
-> +	/*
-> +	 * Default to using index 0, this will be updated later if the zone
-> +	 * is still being processed.
-> +	 */
-> +	page->index = 0;
-> +
-> +	/* flag page as reported */
-> +	__SetPageReported(page);
-> +
-> +	/* update areated page accounting */
-> +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]++;
-> +}
-> +
-> +static inline void page_reporting_pull_boundary(struct page *page)
-> +{
-> +	struct list_head **tail = &reported_boundary[page->index];
-> +
-> +	if (*tail == &page->lru)
-> +		*tail = page->lru.next;
-> +}
-> +
-> +static inline void
-> +__del_page_from_reported_list(struct page *page, struct zone *zone)
-> +{
-> +	/*
-> +	 * Since the page is being pulled from the list we need to update
-> +	 * the boundary, after that we can just update the index so that
-> +	 * the correct boundary will be checked in the future.
-> +	 */
-> +	if (test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> +		page_reporting_pull_boundary(page);
-> +}
-> +
-> +static inline void
-> +del_page_from_reported_list(struct page *page, struct zone *zone,
-> +			    unsigned int order)
-> +{
-> +	__del_page_from_reported_list(page, zone);
-> +
-> +	/* page_private will contain the page order, so just use it directly */
-> +	zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER]--;
-> +
-> +	/* clear the flag so we can report on it when it returns */
-> +	__ClearPageReported(page);
-> +}
-> +
-> +#else /* CONFIG_PAGE_REPORTING */
-> +static inline void page_reporting_reset_zone(struct zone *zone)
-> +{
-> +}
-> +
-> +static inline void
-> +page_reporting_free_area_release(struct zone *zone, unsigned int order, int mt)
-> +{
-> +}
-> +
-> +static inline struct list_head *
-> +get_unreported_tail(struct zone *zone, unsigned int order, int migratetype)
-> +{
-> +	return &zone->free_area[order].free_list[migratetype];
-> +}
-> +
-> +static inline void
-> +add_page_to_reported_list(struct page *page, struct zone *zone,
-> +			  int order, int migratetype)
-> +{
-> +}
-> +
-> +static inline void
-> +__del_page_from_reported_list(struct page *page, struct zone *zone)
-> +{
-> +}
-> +
-> +static inline void
-> +del_page_from_reported_list(struct page *page, struct zone *zone,
-> +			    unsigned int order)
-> +{
-> +}
-> +
-> +static inline void
-> +move_page_to_reported_list(struct page *page, struct zone *zone, int dest_mt)
-> +{
-> +}
-> +#endif /* CONFIG_PAGE_REPORTING */
-> +#endif /*_MM_PAGE_REPORTING_H */
+>  static int s6e8aa0_probe(struct mipi_dsi_device *dsi)
+>  {
+>  	struct device *dev = &dsi->dev;
+> @@ -1015,7 +1051,9 @@ static int s6e8aa0_probe(struct mipi_dsi_device *dsi)
+>  		return PTR_ERR(ctx->reset_gpio);
+>  	}
+>  
+> -	ctx->brightness = GAMMA_LEVEL_NUM - 1;
+> +	ret = s6e8aa0_backlight_register(ctx);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	drm_panel_init(&ctx->panel, dev, &s6e8aa0_drm_funcs,
+>  		       DRM_MODE_CONNECTOR_DSI);
+
+
