@@ -2,105 +2,173 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7009EC88CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1689C88CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441B8207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:48:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GivnRW5m"
+	by mail.kernel.org (Postfix) with ESMTP id A5A28207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389461AbfIWUsq (ORCPT
+        id S2389800AbfIWUtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:48:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43572 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389052AbfIWUsq (ORCPT
+        Mon, 23 Sep 2019 16:49:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389052AbfIWUtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:48:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v27so2566639pgk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 13:48:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nUgRSkoDI5HIlvd1QcYFDyolqVga7j1qtEHfJ+8gxnQ=;
-        b=GivnRW5mV4+6/svlNvgJuoze4kT8deBE3EL4DtQlUdbdSlSdqH3zrkcK585VAc2DkX
-         N8Q+YY94IdMGkrs79yTc7ghVyfPdUTB3jrxnyOC9kTm32sOYByPVQRXxbTXSaAaZo+S7
-         M4JFDJhRDy8ml1pJ7p0xevCWFJTSy1z6QclkBvh43GzVu/cnAqS4VU7nTwZ1iEE2j1JN
-         +rfWJ0BdV/+BVDF+XEuNLAJCp3+QdHj+OsiamWsnBPYHCv7/bCvL5wYAPqbJXSCETC8i
-         X9YY2Rmyv+SuYcjj1/g4cy4ooggS0ro/5+6/1U09TfqFTjAvTwM/8ZEi2b01yMSnpE8e
-         OMaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nUgRSkoDI5HIlvd1QcYFDyolqVga7j1qtEHfJ+8gxnQ=;
-        b=V+Q0fJyWZWiPcAGsy24yRzM8uoR2Nx9mFtHpcnvMNwcQjYkk5cj7JvAgbcD9gtVLJX
-         i0co2s1NhYSRUItvrtezamieUMTJl+xlp0WLXn8b2Y4mCrxSsIEMlTQoX21ZrMYI8EfN
-         jrtEp6fxEpKgCDGnKBgHy6W+xi3pjmueGLZHva+KdMGzDPOmRLXiDtA/aHf37hxfS2px
-         xZZOQbA6ydq5QLXzeduyrO6ymWcVMti0AFvNdRLtX7gANwdm21lYvRyA6P2yoc6rPkTy
-         Gs59fAC1DqSxf7O2/AkEkElVRWUkav5D7xTd7poEsuKTwvmIr3PdNqVR32yTPSz29ZvO
-         6Qgg==
-X-Gm-Message-State: APjAAAXcLizu1f1SwmzR6+6cugkh80W81drj8grBw107MZ8560+sBUx/
-        xQx9n4g0qupddg9Nm0IjsYc6MpifpaXAGw==
-X-Google-Smtp-Source: APXvYqw48cSQQjn+PidujI2PTC9qv93Tm8GIvX9VsJPAws6pbfuG9DkxwCiWL7PrBYLzRzUWJbrHHQ==
-X-Received: by 2002:a62:5847:: with SMTP id m68mr1649730pfb.23.1569271723341;
-        Mon, 23 Sep 2019 13:48:43 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id a13sm13504968pfg.10.2019.09.23.13.48.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 13:48:42 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
-Date:   Mon, 23 Sep 2019 14:48:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 16:49:14 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NKkwRM135938;
+        Mon, 23 Sep 2019 16:48:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72aqwu2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:48:34 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NKlkf4142544;
+        Mon, 23 Sep 2019 16:48:33 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72aqwu1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:48:33 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NKjFNG008412;
+        Mon, 23 Sep 2019 20:48:32 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04wdc.us.ibm.com with ESMTP id 2v5bg6xjm4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 20:48:32 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NKmVNo16057158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 20:48:31 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84B4DAC060;
+        Mon, 23 Sep 2019 20:48:31 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EA1CAC059;
+        Mon, 23 Sep 2019 20:48:28 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 20:48:27 +0000 (GMT)
+Message-ID: <007934281451e843a0428dc1e674f9dae149b75b.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 02/11] asm-generic/pgtable: Adds dummy functions to
+ monitor lockless pgtable walks
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Keith Busch <keith.busch@intel.com>,
+        Linux-MM <linux-mm@kvack.org>
+Date:   Mon, 23 Sep 2019 17:48:24 -0300
+In-Reply-To: <cb7d4196-c646-82c7-d61f-b28ee9ab47b9@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-3-leonardo@linux.ibm.com>
+         <cb7d4196-c646-82c7-d61f-b28ee9ab47b9@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-gscBM7V3X0iJvvOlmKSv"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 10:32 AM, Pavel Begunkov wrote:
-> Sorry, mixed the threads.
-> 
->>>
->>> I'm not sure an extension is needed for such a special interface, why not
->>> just put a ->threshold value next to the ctx->wait field and use either
->>> the regular wait_event() APIs with the proper condition, or
->>> wait_event_cmd() style APIs if you absolutely need something more complex
->>> to happen inside?
-> Ingo,
-> io_uring works well without this patch just using wait_event_*() with
-> proper condition, but there are performance issues with spurious
-> wakeups. Detailed description in the previous mail.
-> Am I missing something?
 
-I think we can do the same thing, just wrapping the waitqueue in a
-structure with a count in it, on the stack. Got some flight time
-coming up later today, let me try and cook up a patch.
+--=-gscBM7V3X0iJvvOlmKSv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+Thanks for the feedback,
+
+On Mon, 2019-09-23 at 13:39 -0700, John Hubbard wrote:
+> Please remember to include linux-mm if there is a v2.
+
+Sure, I will include on v3.
+
+> Nit: seems like it would be nicer to just put it all in one place, and us=
+e
+> positive logic, and also I think people normally don't compress the empty
+> functions quite that much. So like this:
+
+I did this by following the default on the rest of this file.
+As you can see, all other features use the standard of=20
+#ifndef SOMETHING
+dummy/generic functions
+#endif
+
+Declaring the functions become responsibility of the arch.
+
+> #ifdef __HAVE_ARCH_LOCKLESS_PGTBL_WALK_COUNTER
+> void start_lockless_pgtbl_walk(struct mm_struct *mm);=20
+> void end_lockless_pgtbl_walk(struct mm_struct *mm);=20
+> int running_lockless_pgtbl_walk(struct mm_struct *mm);=20
+>=20
+> #else
+> static inline void start_lockless_pgtbl_walk(struct mm_struct *mm)
+> {
+> }
+> static inline void end_lockless_pgtbl_walk(struct mm_struct *mm)
+> {
+> }
+> static inline int running_lockless_pgtbl_walk(struct mm_struct *mm)
+> {
+>         return 0;
+> }
+> #endif
+>=20
+> thanks,
+
+--=-gscBM7V3X0iJvvOlmKSv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JL5gACgkQlQYWtz9S
+ttQ/dxAAmqh1JwzGgrYEa6AI0XaKTKXfH+bFIB1fqsi0Gli4dmGUVNOz/qhFJa4d
+HVBKm2Xq2FoNnqNfrihl527mry0pJnpUZTJLHiga3Pu9c6oY8bdSAeqfTh4xR74S
+FIP+zgEvZBk6IKZaNit1tlHCkD1dRaPLcCaYUBmSVf0nsya+5zE3hkCgHU0vcsRc
+ttmSNmOtglF+Y5zrOhBDrXcHUkHR5242AraOWaqAEh++ijgu4zMP3gsUitjtPPOF
+4ZDNSg9/98JUZWd15+29J1f6Zknn8XhCQpiKCzAZQecNZ3xkWiWf0Mtgl7XDKZn6
+bHOKBEyKXXLcgwlljlhW5QBHmmwGwPYhOuUhl49eM00jIebyU9JZFjyFR7907dGT
+eziIXPFrQDndRxZNbpjTKH9bO7+MUj3X7fdL4RqPM3dJghMGD3SsfQpHVydMCod6
+VHNxF3x/uHuqY0lH7zJt98v+qk5TycFFARZGOO0IZ5OCsqNzKxkPqCyVZlK1PiIY
+vs0FExh8GZbJ2g2rX0QZqKY4OcgNxKpKRlpAhIHGIV1GQchV8PHcj1icghNzXzX9
+7bNyoczCO5atCCJDlrGaNLVE22+LKCciaDKFAN8noZFzhMGGWzGhrfQ/mSbOvAxt
+3IuAflLfYMrYZRlyu+Zx8YVXlG6nqzyJpIK2rlTQ/YR2IR19bno=
+=ZXCk
+-----END PGP SIGNATURE-----
+
+--=-gscBM7V3X0iJvvOlmKSv--
 
