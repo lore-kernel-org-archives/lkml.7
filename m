@@ -2,104 +2,159 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2482BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF79C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A7E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87668208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6ZVsVKj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLnayBw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391572AbfIWCY4 (ORCPT
+        id S2391690AbfIWCY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 22:24:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37468 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389942AbfIWCYz (ORCPT
+        Sun, 22 Sep 2019 22:24:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42664 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389942AbfIWCY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 22:24:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y5so8184910pfo.4;
-        Sun, 22 Sep 2019 19:24:55 -0700 (PDT)
+        Sun, 22 Sep 2019 22:24:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z12so7105909pgp.9;
+        Sun, 22 Sep 2019 19:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jl6nStrj8n1KdRcUctb22FcHDz6z46Ab7ioA1mr+peM=;
-        b=J6ZVsVKjKAbYuB7+uWgC6QXykq5twUFH/96mbBz2Ovd8H9w+TKnUMRsh2s5IgUGkwX
-         EWPCtkvs9wipVFIsLyztIFilOBtVVC4DYIzPzpEbnYiff+1fHVnv3VABUSPcgg2JWndM
-         Gf3d5923BCtoj2BBf8pjyg4BaTZkrXgV4YTbNsdegxaMq4kOBOJniwlUfP1LzCoVyMJU
-         JDpKkTKvOO7Dh+zEAR90aF77p/77H+n9lYbWS5T7SCTmNyySk4+0tK0PyGjkAbJh8MdF
-         ZSDHzghDqDJVgD0KFFBZX6pPWGoSfqioUUfGKDvzAgC2YJKG/xZPtogl/Gq6kJfZW/lk
-         tlpw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=aY/BKnDI/88NXwfuI9VMBOVirG9SdPdDsfV1k3v+hLY=;
+        b=mLnayBw3yrjgoV4kgyUTkALYEhAoITnSQ7AAH6NKyRN7qa+4zsy4WW1qkA3MLVZ3r+
+         a1YUH1s4v/BATnwqzJDFLnzNrJDnfSGbMKqv3+2CHjNfxtywVWI9Pm/GJylVTNRrVszm
+         +o7WBSFVBvVo0fkjmyNque+iU7+GvysvHWlE3cRxZWOdQJ000tzpUBoUgei9W8FF6HeL
+         63xn96Zue15ScgHuggJ7VbESf28TQh/J6teuXjqSTz3NuQ3KRV0M2f6tkiApguCDIsEZ
+         OPzrY0NHRPocdN/jI7odRojfgpF+bvbXsLHkGshmID8Desi82E2J0mGCGGLb/vxU3fKE
+         Cc+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jl6nStrj8n1KdRcUctb22FcHDz6z46Ab7ioA1mr+peM=;
-        b=dMj+VDeruRb1BJSxbF+qoTrwxe1gs3QUhdbkGbrjy59xTjZzS1WVgkOYqSzYY7YxxO
-         DJoQEOVy5/6Oyb99IedXQCV+hGDarcq78AKVzbH5c9H7RelmO4TJmMaK81C1yJHH05gH
-         dgKsNJcn3T75OLnkDcwmJYDRYgaoJMfcisBAzYIVkxDhy6jzajeS3QvbFCQr+HF/ef3n
-         Cns5ZFoKXWR1E54DrWLkdsaFyLIrNj6EG4NyOtaDYN/yAiHxCsS0SMz43DG+gHlsvpJF
-         3JXh5c6AMResVz7c1eiSGr6OME1ix57iW5GTRFMq9pAHn3ia1KikaamrAjur4lyw0aTo
-         Ayew==
-X-Gm-Message-State: APjAAAVUCXotZWTWODhXACFfC/yGL4UnOctwEkpfZbOI9TsLlpZdZAcl
-        8qeKdMGGJQGPrQlY+WVi7MOTmJCJ
-X-Google-Smtp-Source: APXvYqxaHBRrQtOH8qvqEa4S0igLP5Ed+A34G12nHMCnZ8ZKxEiwAdp33qBGsDin1ezJ9/ZoxJKoGg==
-X-Received: by 2002:a17:90a:fb85:: with SMTP id cp5mr18596193pjb.42.1569205494746;
-        Sun, 22 Sep 2019 19:24:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=aY/BKnDI/88NXwfuI9VMBOVirG9SdPdDsfV1k3v+hLY=;
+        b=lJEZZmdlFNu4A2mCELjsQowkqS5ccwEXJdSxv97qFKqFk+PJcz48TMdgHFZbm+JI3o
+         OgCJpvjs9ijMoy760RaHON37j2DVlP/ZAqqiIdo7kiIl2Leteijg5MoozZNYiQUlFlMX
+         7oM40algwL27aop0/wLrsVzWF67/k16gekivuowOvEIx3A7fy6n3UuQjOOKkRuSIXHkV
+         7N9lZsjwLYT1tmz7FaUY1TUbdDESCp7jLJ3gctBcdb/Eq3fTFowIqCs9UOfjCUJ/jxx6
+         RG8xtHTRdsMqiN0ozd6xE9f6Z3Br5WkGhTDTfYDcJZCuaGhlTmyouF3gbMcezFqggE9g
+         5UBA==
+X-Gm-Message-State: APjAAAVL7bD32rNXu3DxyCRivOkmuu4mUmXW9VD7RSYCEIXJ1TL08CYL
+        KSWpOk0HfySL/scU5GdtEyuJ8X8e
+X-Google-Smtp-Source: APXvYqyc11+ML3LCRK9q6OJyAt8Kj6lnHbHIdfpDpWRXrhydB0oSUNszpJfYl9HHw5vsyshtt6kucg==
+X-Received: by 2002:a65:5186:: with SMTP id h6mr26981100pgq.304.1569205497619;
+        Sun, 22 Sep 2019 19:24:57 -0700 (PDT)
 Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id h70sm10204523pgc.48.2019.09.22.19.24.53
+        by smtp.gmail.com with ESMTPSA id q30sm10348854pja.18.2019.09.22.19.24.56
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Sep 2019 19:24:54 -0700 (PDT)
+        Sun, 22 Sep 2019 19:24:57 -0700 (PDT)
 From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
 X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
 To:     johan@kernel.org
 Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
         "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [PATCH V2 0/7] Add Fintek F81534A series usb-to-serial driver
-Date:   Mon, 23 Sep 2019 10:24:42 +0800
-Message-Id: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V2 1/7] USB: serial: f81232: Extract LSR handler
+Date:   Mon, 23 Sep 2019 10:24:43 +0800
+Message-Id: <20190923022449.10952-2-hpeter+linux_kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
+References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
-and the serial port is default disabled when plugin computer.
+Extract LSR handler to function.
 
-The part number is a bit same with F81532/534, but F81534A series UART
-core is enhanced from F81232, not F81532/534.  
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+---
+ drivers/usb/serial/f81232.c | 53 +++++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 23 deletions(-)
 
-The IC is contains devices as following:
-	1. HUB (all devices is connected with this hub)
-	2. GPIO/Control device. (enable serial port and control all GPIOs)
-	3. serial port 1 to x (2/4/8/12)
-
-It's most same with F81232, the UART device is difference as follow:
-	1. TX/RX bulk size is 128/512bytes
-	2. RX bulk layout change:
-		F81232: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
-		F81534A:[LEN][Data.....][LSR]
-
-We'll try to do some code refacting before add F81534A series.
-
-Ji-Ze Hong (Peter Hong) (7):
-  USB: serial: f81232: Extract LSR handler
-  USB: serial: f81232: Add tx_empty function
-  USB: serial: f81232: Use devm_kzalloc
-  USB: serial: f81232: Add F81534A support
-  USB: serial: f81232: Set F81534A serial port with RS232 mode
-  USB: serial: f81232: Add generator for F81534A
-  USB: serial: f81232: Add gpiolib to GPIO device
-
- drivers/usb/serial/f81232.c | 604 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 570 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+index 43fa1f0716b7..c07d376c743d 100644
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -322,10 +322,38 @@ static void f81232_read_int_callback(struct urb *urb)
+ 			__func__, retval);
+ }
+ 
++static char f81232_handle_lsr(struct usb_serial_port *port, u8 lsr)
++{
++	struct f81232_private *priv = usb_get_serial_port_data(port);
++	char tty_flag = TTY_NORMAL;
++
++	if (!(lsr & UART_LSR_BRK_ERROR_BITS))
++		return tty_flag;
++
++	if (lsr & UART_LSR_BI) {
++		tty_flag = TTY_BREAK;
++		port->icount.brk++;
++		usb_serial_handle_break(port);
++	} else if (lsr & UART_LSR_PE) {
++		tty_flag = TTY_PARITY;
++		port->icount.parity++;
++	} else if (lsr & UART_LSR_FE) {
++		tty_flag = TTY_FRAME;
++		port->icount.frame++;
++	}
++
++	if (lsr & UART_LSR_OE) {
++		port->icount.overrun++;
++		schedule_work(&priv->lsr_work);
++		tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
++	}
++
++	return tty_flag;
++}
++
+ static void f81232_process_read_urb(struct urb *urb)
+ {
+ 	struct usb_serial_port *port = urb->context;
+-	struct f81232_private *priv = usb_get_serial_port_data(port);
+ 	unsigned char *data = urb->transfer_buffer;
+ 	char tty_flag;
+ 	unsigned int i;
+@@ -341,29 +369,8 @@ static void f81232_process_read_urb(struct urb *urb)
+ 	/* bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]... */
+ 
+ 	for (i = 0; i < urb->actual_length; i += 2) {
+-		tty_flag = TTY_NORMAL;
+ 		lsr = data[i];
+-
+-		if (lsr & UART_LSR_BRK_ERROR_BITS) {
+-			if (lsr & UART_LSR_BI) {
+-				tty_flag = TTY_BREAK;
+-				port->icount.brk++;
+-				usb_serial_handle_break(port);
+-			} else if (lsr & UART_LSR_PE) {
+-				tty_flag = TTY_PARITY;
+-				port->icount.parity++;
+-			} else if (lsr & UART_LSR_FE) {
+-				tty_flag = TTY_FRAME;
+-				port->icount.frame++;
+-			}
+-
+-			if (lsr & UART_LSR_OE) {
+-				port->icount.overrun++;
+-				schedule_work(&priv->lsr_work);
+-				tty_insert_flip_char(&port->port, 0,
+-						TTY_OVERRUN);
+-			}
+-		}
++		tty_flag = f81232_handle_lsr(port, lsr);
+ 
+ 		if (port->port.console && port->sysrq) {
+ 			if (usb_serial_handle_sysrq_char(port, data[i + 1]))
 -- 
 2.17.1
 
