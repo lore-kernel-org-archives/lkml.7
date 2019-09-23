@@ -2,159 +2,83 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA59C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C55C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD7020835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B98D20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408033AbfIWNu4 (ORCPT
+        id S2408137AbfIWNwi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:50:56 -0400
-Received: from ngcobalt01.manitu.net ([217.11.48.101]:45108 "EHLO
-        ngcobalt01.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407710AbfIWNu4 (ORCPT
+        Mon, 23 Sep 2019 09:52:38 -0400
+Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25438 "EHLO
+        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2408054AbfIWNwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:50:56 -0400
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Sep 2019 09:50:55 EDT
-Received: from server.passau (ipbcc3eb9d.dynamic.kabel-deutschland.de [188.195.235.157])
-        (Authenticated sender: smtp-send)
-        by ngcobalt01.manitu.net (Postfix) with ESMTPSA id A4F2033E076A;
-        Mon, 23 Sep 2019 15:43:39 +0200 (CEST)
-Received: from [172.18.159.113] (unknown [46.183.103.17])
-        by server.passau (Postfix) with ESMTPSA id E6E0F814C1;
-        Mon, 23 Sep 2019 15:43:10 +0200 (CEST)
-Subject: Re: For review: rewritten pivot_root(2) manual page
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Reid Priedhorsky <reidpr@lanl.gov>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Yang Bo <rslovers@yandex.com>, Jakub Wilk <jwilk@jwilk.net>,
-        Joseph Sible <josephcsible@gmail.com>,
-        Al Viro <viro@ftp.linux.org.uk>, werner@almesberger.net
-Cc:     linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>
-References: <620c691a-065e-b894-4f06-7453012bc8d3@gmail.com>
-From:   Philipp Wendler <ml@philippwendler.de>
-Message-ID: <d449305b-f87c-f26e-e43f-d193fd8f4332@philippwendler.de>
-Date:   Mon, 23 Sep 2019 15:42:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 09:52:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1569246753; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=J+RAoR9tomNVZU/mzeKkMqlwAouomzOPjyiwdjBgbV3GvXnZj+SJe8pYusoWr0Lu7CH7qVSSkBsgbxTXw7krWWhYAj3oAM1Cm0dC3yjaXZ6N4/IklR6Q2IRksE1qZp6tSR9s5otGxEQiMwyq7Fng0DYZBLu/w40askmksYd9v8M=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1569246753; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=e6Khvy3mu9aDU7zyjkFNrandNk8BohZOJUQrMc7mULw=; 
+        b=obaB91txsk+YzAyGYQooQMEbrT2k3nvDAV9xVKv4vsyzfdKECBHpnl5kVBBwUt1f7sTLG4q+pKg6dzUgwrKxw55Ct15a0/0MI0mE7ru7CACeoTKDW0bimRJlXvCua3CVSixkM446HPo68rzZA+A51/jANc8lo/86P4mOczTiOv0=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=zoho.com.cn;
+        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
+        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
+Received: from localhost.localdomain.localdomain (113.116.51.134 [113.116.51.134]) by mx.zoho.com.cn
+        with SMTPS id 156924675002389.18761640130299; Mon, 23 Sep 2019 21:52:30 +0800 (CST)
+From:   Chengguang Xu <cgxu519@zoho.com.cn>
+To:     jack@suse.com
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>
+Message-ID: <20190923135223.27674-1-cgxu519@zoho.com.cn>
+Subject: [PATCH v2] quota: code cleanup for hash bits calculation
+Date:   Mon, 23 Sep 2019 21:52:23 +0800
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <620c691a-065e-b894-4f06-7453012bc8d3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michael,
+Code cleanup for hash bits calculation by
+calling ilog2().
 
-Am 23.09.19 um 14:04 schrieb Michael Kerrisk (man-pages):
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+---
+v1->v2:
+- Calculate hash bits by directly calling ilog2().
 
-> I'm considering to rewrite these pieces to exactly
-> describe what the system call does (which I already
-> do in the third paragraph) and remove the "may or may not"
-> pieces in the second paragraph. I'd welcome comments
-> on making that change.
+ fs/quota/dquot.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-I think that it would make the man page significantly easier to
-understand if if the vague wording and the meta discussion about it are
-removed.
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 6e826b454082..fde1b94ea587 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2983,11 +2983,7 @@ static int __init dquot_init(void)
+ 
+ 	/* Find power-of-two hlist_heads which can fit into allocation */
+ 	nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
+-	dq_hash_bits = 0;
+-	do {
+-		dq_hash_bits++;
+-	} while (nr_hash >> dq_hash_bits);
+-	dq_hash_bits--;
++	dq_hash_bits = ilog2(nr_hash);
+ 
+ 	nr_hash = 1UL << dq_hash_bits;
+ 	dq_hash_mask = nr_hash - 1;
+-- 
+2.21.0
 
-> DESCRIPTION
-[...]>        pivot_root()  changes  the
->        root  directory  and the current working directory of each process
->        or thread in the same mount namespace to new_root if they point to
->        the  old  root  directory.   (See also NOTES.)  On the other hand,
->        pivot_root() does not change the caller's current  working  direc‐
->        tory  (unless it is on the old root directory), and thus it should
->        be followed by a chdir("/") call.
 
-There is a contradiction here with the NOTES (cf. below).
 
->        The following restrictions apply:
-> 
->        -  new_root and put_old must be directories.
-> 
->        -  new_root and put_old must not be on the same filesystem as  the
->           current root.  In particular, new_root can't be "/" (but can be
->           a bind mounted directory on the current root filesystem).
-
-Wouldn't "must not be on the same mountpoint" or something similar be
-more clear, at least for new_root? The note in parentheses indicates
-that new_root can actually be on the same filesystem as the current
-note. However, ...
-
->        -  put_old must be at or underneath new_root; that  is,  adding  a
->           nonnegative  number  of /.. to the string pointed to by put_old
->           must yield the same directory as new_root.
-> 
->        -  new_root must be a mount point.  (If  it  is  not  otherwise  a
->           mount  point,  it  suffices  to  bind  mount new_root on top of
->           itself.)
-
-... this item actually makes the above item almost redundant regarding
-new_root (except for the "/") case. So one could replace this item with
-something like this:
-
-- new_root must be a mount point different from "/". (If it is not
-  otherwise a mount point, it suffices  to bind mount new_root on top
-  of itself.)
-
-The above item would then only mention put_old (and maybe use clarified
-wording on whether actually a different file system is necessary for
-put_old or whether a different mount point is enough).
-
-> NOTES
-[...]
->        pivot_root() allows the caller to switch to a new root  filesystem
->        while  at  the  same time placing the old root mount at a location
->        under new_root from where it can subsequently be unmounted.   (The
->        fact  that  it  moves  all processes that have a root directory or
->        current working directory on the old root filesystem  to  the  new
->        root  filesystem  frees the old root filesystem of users, allowing
->        it to be unmounted more easily.)
-
-Here is the contradiction:
-The DESCRIPTION says that root and current working dir are only changed
-"if they point to the old root directory". Here in the NOTES it says
-that any root or working directories on the old root file system (i.e.,
-even if somewhere below the root) are changed.
-
-Which is correct?
-
-If it indeed affects all processes with root and/or current working
-directory below the old root, the text here does not clearly state what
-the new root/current working directory of theses processes is.
-E.g., if a process is at /foo and we pivot to /bar, will the process be
-moved to /bar (i.e., at / after pivot_root), or will the kernel attempt
-to move it to some location like /bar/foo? Because the latter might not
-even exist, I suspect that everything is just moved to new_root, but
-this could be stated explicitly by replacing "to the new root
-filesystem" in the above paragraph with "to the new root directory"
-(after checking whether this is true).
-
-> EXAMPLE>        The program below demonstrates the use of  pivot_root()  inside  a
->        mount namespace that is created using clone(2).  After pivoting to
->        the root directory named in the program's first command-line argu‐
->        ment,  the  child  created  by  clone(2) then executes the program
->        named in the remaining command-line arguments.
-
-Why not use the pivot_root(".", ".") in the example program?
-It would make the example shorter, and also works if the process cannot
-write to new_root (e..g., in a user namespace).
-
-Regards,
-Philipp
