@@ -2,393 +2,169 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B5BC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A327BC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D2C20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7744E20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732197AbfIWMUb (ORCPT
+        id S1732307AbfIWMVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:20:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56340 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfIWMUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:20:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 275AD283BCE
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/rockchip: Add AFBC support
-Date:   Mon, 23 Sep 2019 14:20:13 +0200
-Message-Id: <20190923122014.18229-1-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Sep 2019 08:21:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58616 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730399AbfIWMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 08:21:52 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1830989AC7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:21:51 +0000 (UTC)
+Received: by mail-qk1-f197.google.com with SMTP id o133so17371615qke.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 05:21:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a9/IjKSOTtP+H0DwvJWJwjvwhzIswSQaCoNDgf8fYiY=;
+        b=TUtoZqAby2gXnnNBLwFd+RGVvcYHS3kvQeU+PR4atoRz33xHasJa6ke/NEoLhd+sbX
+         aWcKCKJ7hcRctL5YV1dyrqXDH6bu0zNGGm0HvI6bQPlMrDsx9Rkt8EVUGnVtdStQ6lRA
+         4Ydy2rFvByDwVgNh3haBBQxnrrBtyl38likT/uGOkQQ1XTekl2Buf+TQNax0Z6FVKnl5
+         bfOUk3mV94BNVMM8bw23hJEXzqxNxOfigdA4d8e2Uruu8tnwF+kb+AtUL1GhdDCuizVK
+         1UVQG++EnIfQUavJnvvZ7EB90bHkuaJBBJEtPs71PJCu4U6hzESLDK7rAUI8oMu7uqBw
+         MrFg==
+X-Gm-Message-State: APjAAAXArJAoRTf4JcC+1EGQEmO65EkAB2WxHXEM6nyfcBPQKlDjXCxy
+        sxLICp9oTB3Jw8QL5nbUnqD2i+o6tsJUN4LfcVvm9smfVbX94vEj+tBlhNQ3/3yWeUD5RPqw1EU
+        wabm/w535ibLdvcyYa4jZNRMH
+X-Received: by 2002:ac8:7117:: with SMTP id z23mr16276181qto.309.1569241310357;
+        Mon, 23 Sep 2019 05:21:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy19kCOwHbgejDjIiixAFXfW0feeppk9Ux+t6GtFmBM+eqf5FZ/rCyZVT2dupdlVrgcrW4SDA==
+X-Received: by 2002:ac8:7117:: with SMTP id z23mr16276147qto.309.1569241310042;
+        Mon, 23 Sep 2019 05:21:50 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id o38sm6573805qtc.39.2019.09.23.05.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 05:21:48 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 08:21:34 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, lingshan.zhu@intel.com,
+        idos@mellanox.com, eperezma@redhat.com, lulu@redhat.com
+Subject: Re: [RFC PATCH V2 0/6] mdev based hardware virtio offloading support
+Message-ID: <20190923074913-mutt-send-email-mst@kernel.org>
+References: <20190920082050.19352-1-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920082050.19352-1-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+On Fri, Sep 20, 2019 at 04:20:44PM +0800, Jason Wang wrote:
+> Hi all:
+> 
+> There are hardware that can do virtio datapath offloading while having
+> its own control path. This path tries to implement a mdev based
+> unified API to support using kernel virtio driver to drive those
+> devices. This is done by introducing a new mdev transport for virtio
+> (virtio_mdev) and register itself as a new kind of mdev driver. Then
+> it provides a unified way for kernel virtio driver to talk with mdev
+> device implementation.
 
-AFBC is a proprietary lossless image compression protocol and format.
-It helps reduce memory bandwidth of the graphics pipeline operations.
-This, in turn, improves power efficiency.
+This is actually simple enough that I'm inclined to just
+put this into linux-next.
+This mixes virtio and vfio so the code can thinkably
+be merged through either tree.
+Alex, any strong opinions on any of this?
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-[locking improvements]
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-[squashing the above, commit message and Rockchip AFBC modifier]
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c  | 27 ++++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 94 ++++++++++++++++++++-
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 12 +++
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 18 ++++
- include/uapi/drm/drm_fourcc.h               |  3 +
- 5 files changed, 151 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 64ca87cf6d50..5178939a9c29 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -24,6 +24,27 @@ static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
- 	.dirty	       = drm_atomic_helper_dirtyfb,
- };
- 
-+static int
-+rockchip_verify_afbc_mod(struct drm_device *dev,
-+			 const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	if (mode_cmd->modifier[0] &
-+	    ~DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
-+		DRM_DEV_ERROR(dev->dev,
-+			      "Unsupported format modifier 0x%llx\n",
-+			      mode_cmd->modifier[0]);
-+		return -EINVAL;
-+	}
-+
-+	if (mode_cmd->width > 2560) {
-+		DRM_DEV_ERROR(dev->dev,
-+			      "Unsupported width %d\n", mode_cmd->width);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static struct drm_framebuffer *
- rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cmd,
- 		  struct drm_gem_object **obj, unsigned int num_planes)
-@@ -32,6 +53,12 @@ rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cm
- 	int ret;
- 	int i;
- 
-+	if (mode_cmd->modifier[0]) {
-+		ret = rockchip_verify_afbc_mod(dev, mode_cmd);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
- 	fb = kzalloc(sizeof(*fb), GFP_KERNEL);
- 	if (!fb)
- 		return ERR_PTR(-ENOMEM);
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 21b68eea46cc..50bf214d21da 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -46,6 +46,13 @@
- 		vop_reg_set(vop, &win->phy->scl->ext->name, \
- 			    win->base, ~0, v, #name)
- 
-+#define VOP_AFBC_SET(x, name, v) \
-+	do { \
-+		if (vop->data->afbc) \
-+			vop_reg_set(vop, &vop->data->afbc->name, \
-+				0, ~0, v, #name); \
-+	} while (0)
-+
- #define VOP_WIN_YUV2YUV_SET(vop, win_yuv2yuv, name, v) \
- 	do { \
- 		if (win_yuv2yuv && win_yuv2yuv->name.mask) \
-@@ -123,6 +130,8 @@ struct vop {
- 	struct drm_device *drm_dev;
- 	bool is_enabled;
- 
-+	struct vop_win *afbc_win;
-+
- 	struct completion dsp_hold_completion;
- 
- 	/* protected by dev->event_lock */
-@@ -245,6 +254,30 @@ static bool has_rb_swapped(uint32_t format)
- 	}
- }
- 
-+#define AFBC_FMT_RGB565        0x0
-+#define AFBC_FMT_U8U8U8U8      0x5
-+#define AFBC_FMT_U8U8U8        0x4
-+
-+static int vop_convert_afbc_format(uint32_t format)
-+{
-+	switch (format) {
-+	case DRM_FORMAT_XRGB8888:
-+	case DRM_FORMAT_ARGB8888:
-+	case DRM_FORMAT_XBGR8888:
-+	case DRM_FORMAT_ABGR8888:
-+		return AFBC_FMT_U8U8U8U8;
-+	case DRM_FORMAT_RGB888:
-+	case DRM_FORMAT_BGR888:
-+		return AFBC_FMT_U8U8U8;
-+	case DRM_FORMAT_RGB565:
-+	case DRM_FORMAT_BGR565:
-+		return AFBC_FMT_RGB565;
-+	default:
-+		DRM_ERROR("unsupported afbc format[%08x]\n", format);
-+		return -EINVAL;
-+	}
-+}
-+
- static enum vop_data_format vop_convert_format(uint32_t format)
- {
- 	switch (format) {
-@@ -587,10 +620,16 @@ static int vop_enable(struct drm_crtc *crtc)
- 
- 		vop_win_disable(vop, win);
- 	}
--	spin_unlock(&vop->reg_lock);
-+
-+	if (vop->data->afbc) {
-+		VOP_AFBC_SET(vop, enable, 0);
-+		vop->afbc_win = NULL;
-+	}
- 
- 	vop_cfg_done(vop);
- 
-+	spin_unlock(&vop->reg_lock);
-+
- 	/*
- 	 * At here, vop clock & iommu is enable, R/W vop regs would be safe.
- 	 */
-@@ -719,6 +758,32 @@ static int vop_plane_atomic_check(struct drm_plane *plane,
- 		return -EINVAL;
- 	}
- 
-+	if (fb->modifier & DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
-+		struct vop *vop = to_vop(crtc);
-+
-+		if (!vop->data->afbc) {
-+			DRM_ERROR("VOP does not support AFBC\n");
-+			return -EINVAL;
-+		}
-+
-+		ret = vop_convert_afbc_format(fb->format->format);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (state->src.x1 || state->src.y1) {
-+			DRM_ERROR("AFBC does not support offset display\n");
-+			DRM_ERROR("xpos=%d, ypos=%d, offset=%d\n",
-+				state->src.x1, state->src.y1, fb->offsets[0]);
-+			return -EINVAL;
-+		}
-+
-+		if (state->rotation && state->rotation != DRM_MODE_ROTATE_0) {
-+			DRM_ERROR("AFBC does not support rotation\n");
-+			DRM_ERROR("rotation=%d\n", state->rotation);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -732,6 +797,9 @@ static void vop_plane_atomic_disable(struct drm_plane *plane,
- 	if (!old_state->crtc)
- 		return;
- 
-+	if (vop->afbc_win == vop_win)
-+		vop->afbc_win = NULL;
-+
- 	spin_lock(&vop->reg_lock);
- 
- 	vop_win_disable(vop, win);
-@@ -774,6 +842,9 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
- 	if (WARN_ON(!vop->is_enabled))
- 		return;
- 
-+	if (vop->afbc_win == vop_win)
-+		vop->afbc_win = NULL;
-+
- 	if (!state->visible) {
- 		vop_plane_atomic_disable(plane, old_state);
- 		return;
-@@ -808,6 +879,20 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
- 
- 	spin_lock(&vop->reg_lock);
- 
-+	if (fb->modifier & DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
-+		int afbc_format = vop_convert_afbc_format(fb->format->format);
-+
-+		VOP_AFBC_SET(vop, format, afbc_format | 1 << 4);
-+		VOP_AFBC_SET(vop, hreg_block_split, 0);
-+		VOP_AFBC_SET(vop, win_sel, win_index);
-+		VOP_AFBC_SET(vop, hdr_ptr, dma_addr);
-+		VOP_AFBC_SET(vop, pic_size, act_info);
-+
-+		vop->afbc_win = vop_win;
-+
-+		pr_info("AFBC on plane %s\n", plane->name);
-+	}
-+
- 	VOP_WIN_SET(vop, win, format, format);
- 	VOP_WIN_SET(vop, win, yrgb_vir, DIV_ROUND_UP(fb->pitches[0], 4));
- 	VOP_WIN_SET(vop, win, yrgb_mst, dma_addr);
-@@ -1163,6 +1248,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
- 
- 	spin_lock(&vop->reg_lock);
- 
-+	VOP_AFBC_SET(vop, enable, vop->afbc_win ? 0x1 : 0);
- 	vop_cfg_done(vop);
- 
- 	spin_unlock(&vop->reg_lock);
-@@ -1471,7 +1557,8 @@ static int vop_create_crtc(struct vop *vop)
- 					       0, &vop_plane_funcs,
- 					       win_data->phy->data_formats,
- 					       win_data->phy->nformats,
--					       NULL, win_data->type, NULL);
-+					       win_data->phy->format_modifiers,
-+					       win_data->type, NULL);
- 		if (ret) {
- 			DRM_DEV_ERROR(vop->dev, "failed to init plane %d\n",
- 				      ret);
-@@ -1511,7 +1598,8 @@ static int vop_create_crtc(struct vop *vop)
- 					       &vop_plane_funcs,
- 					       win_data->phy->data_formats,
- 					       win_data->phy->nformats,
--					       NULL, win_data->type, NULL);
-+					       win_data->phy->format_modifiers,
-+					       win_data->type, NULL);
- 		if (ret) {
- 			DRM_DEV_ERROR(vop->dev, "failed to init overlay %d\n",
- 				      ret);
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-index 2149a889c29d..dc8b12025269 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-@@ -77,6 +77,16 @@ struct vop_misc {
- 	struct vop_reg global_regdone_en;
- };
- 
-+struct vop_afbc {
-+	struct vop_reg enable;
-+	struct vop_reg win_sel;
-+	struct vop_reg format;
-+	struct vop_reg hreg_block_split;
-+	struct vop_reg pic_size;
-+	struct vop_reg hdr_ptr;
-+	struct vop_reg rstn;
-+};
-+
- struct vop_intr {
- 	const int *intrs;
- 	uint32_t nintrs;
-@@ -128,6 +138,7 @@ struct vop_win_phy {
- 	const struct vop_scl_regs *scl;
- 	const uint32_t *data_formats;
- 	uint32_t nformats;
-+	const uint64_t *format_modifiers;
- 
- 	struct vop_reg enable;
- 	struct vop_reg gate;
-@@ -169,6 +180,7 @@ struct vop_data {
- 	const struct vop_output *output;
- 	const struct vop_win_yuv2yuv_data *win_yuv2yuv;
- 	const struct vop_win_data *win;
-+	const struct vop_afbc *afbc;
- 	unsigned int win_size;
- 
- #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 7b9c74750f6d..e9ff0c43c396 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -30,6 +30,12 @@
- #define VOP_REG_MASK_SYNC(off, _mask, _shift) \
- 		_VOP_REG(off, _mask, _shift, true, false)
- 
-+static const uint64_t format_modifiers_afbc[] = {
-+	DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP),
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
- static const uint32_t formats_win_full[] = {
- 	DRM_FORMAT_XRGB8888,
- 	DRM_FORMAT_ARGB8888,
-@@ -667,6 +673,7 @@ static const struct vop_win_phy rk3368_win01_data = {
- 	.scl = &rk3288_win_full_scl,
- 	.data_formats = formats_win_full,
- 	.nformats = ARRAY_SIZE(formats_win_full),
-+	.format_modifiers = format_modifiers_afbc,
- 	.enable = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 0),
- 	.format = VOP_REG(RK3368_WIN0_CTRL0, 0x7, 1),
- 	.rb_swap = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 12),
-@@ -758,6 +765,16 @@ static const struct vop_data rk3366_vop = {
- 	.win_size = ARRAY_SIZE(rk3368_vop_win_data),
- };
- 
-+static const struct vop_afbc rk3399_afbc = {
-+	.rstn = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 3),
-+	.enable = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 0),
-+	.win_sel = VOP_REG(RK3399_AFBCD0_CTRL, 0x3, 1),
-+	.format = VOP_REG(RK3399_AFBCD0_CTRL, 0x1f, 16),
-+	.hreg_block_split = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 21),
-+	.hdr_ptr = VOP_REG(RK3399_AFBCD0_HDR_PTR, 0xffffffff, 0),
-+	.pic_size = VOP_REG(RK3399_AFBCD0_PIC_SIZE, 0xffffffff, 0),
-+};
-+
- static const struct vop_output rk3399_output = {
- 	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0xf, 16),
- 	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
-@@ -808,6 +825,7 @@ static const struct vop_data rk3399_vop_big = {
- 	.modeset = &rk3288_modeset,
- 	.output = &rk3399_output,
- 	.misc = &rk3368_misc,
-+	.afbc = &rk3399_afbc,
- 	.win = rk3368_vop_win_data,
- 	.win_size = ARRAY_SIZE(rk3368_vop_win_data),
- 	.win_yuv2yuv = rk3399_vop_big_win_yuv2yuv_data,
-diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-index 3feeaa3f987a..ba6caf06c824 100644
---- a/include/uapi/drm/drm_fourcc.h
-+++ b/include/uapi/drm/drm_fourcc.h
-@@ -742,6 +742,9 @@ extern "C" {
-  */
- #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
- 
-+#define AFBC_FORMAT_MOD_ROCKCHIP \
-+	(AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | AFBC_FORMAT_MOD_SPARSE)
-+
- /*
-  * Allwinner tiled modifier
-  *
--- 
-2.17.1
-
+> Though the series only contain kernel driver support, the goal is to
+> make the transport generic enough to support userspace drivers. This
+> means vhost-mdev[1] could be built on top as well by resuing the
+> transport.
+> 
+> A sample driver is also implemented which simulate a virito-net
+> loopback ethernet device on top of vringh + workqueue. This could be
+> used as a reference implementation for real hardware driver.
+> 
+> Consider mdev framework only support VFIO device and driver right now,
+> this series also extend it to support other types. This is done
+> through introducing class id to the device and pairing it with
+> id_talbe claimed by the driver. On top, this seris also decouple
+> device specific parents ops out of the common ones.
+> 
+> Pktgen test was done with virito-net + mvnet loop back device.
+> 
+> Please review.
+> 
+> Changes from V1:
+> 
+> - rename device id to class id
+> - add docs for class id and device specific ops (device_ops)
+> - split device_ops into seperate headers
+> - drop the mdev_set_dma_ops()
+> - use device_ops to implement the transport API, then it's not a part
+>   of UAPI any more
+> - use GFP_ATOMIC in mvnet sample device and other tweaks
+> - set_vring_base/get_vring_base support for mvnet device
+> 
+> Jason Wang (6):
+>   mdev: class id support
+>   mdev: introduce device specific ops
+>   mdev: introduce virtio device and its device ops
+>   virtio: introudce a mdev based transport
+>   vringh: fix copy direction of vringh_iov_push_kern()
+>   docs: Sample driver to demonstrate how to implement virtio-mdev
+>     framework
+> 
+>  .../driver-api/vfio-mediated-device.rst       |  11 +-
+>  drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
+>  drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
+>  drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
+>  drivers/vfio/mdev/Kconfig                     |   7 +
+>  drivers/vfio/mdev/Makefile                    |   1 +
+>  drivers/vfio/mdev/mdev_core.c                 |  21 +-
+>  drivers/vfio/mdev/mdev_driver.c               |  14 +
+>  drivers/vfio/mdev/mdev_private.h              |   1 +
+>  drivers/vfio/mdev/vfio_mdev.c                 |  37 +-
+>  drivers/vfio/mdev/virtio_mdev.c               | 418 +++++++++++
+>  drivers/vhost/vringh.c                        |   8 +-
+>  include/linux/mdev.h                          |  46 +-
+>  include/linux/mod_devicetable.h               |   8 +
+>  include/linux/vfio_mdev.h                     |  50 ++
+>  include/linux/virtio_mdev.h                   | 141 ++++
+>  samples/Kconfig                               |   7 +
+>  samples/vfio-mdev/Makefile                    |   1 +
+>  samples/vfio-mdev/mbochs.c                    |  19 +-
+>  samples/vfio-mdev/mdpy.c                      |  19 +-
+>  samples/vfio-mdev/mtty.c                      |  17 +-
+>  samples/vfio-mdev/mvnet.c                     | 688 ++++++++++++++++++
+>  22 files changed, 1473 insertions(+), 89 deletions(-)
+>  create mode 100644 drivers/vfio/mdev/virtio_mdev.c
+>  create mode 100644 include/linux/vfio_mdev.h
+>  create mode 100644 include/linux/virtio_mdev.h
+>  create mode 100644 samples/vfio-mdev/mvnet.c
+> 
+> -- 
+> 2.19.1
