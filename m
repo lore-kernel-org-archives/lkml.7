@@ -2,105 +2,192 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C7FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E95C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4401620882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732112064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:58:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405512AbfIWHyO (ORCPT
+        id S2405668AbfIWH6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 03:54:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54698 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404826AbfIWHyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 03:54:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4FB45B150;
-        Mon, 23 Sep 2019 07:54:12 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Mon, 23 Sep 2019 03:58:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44858 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405523AbfIWH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 03:58:36 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD3D08535C
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:58:35 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id n3so4550328wrt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 00:58:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9WKA+WhADA6m5tO2INYGO3d/2B7vs6iFqq3kcuFfazA=;
+        b=WR85/LxsKSzAsimLgpRSzjyNJWpPBUqUrfPb+5L6JEp+yaHm2EBAc4LtUWAiKrq4jm
+         euskBxhey6v0Gw+SxyJvzNAtrJFs/rtCj2olRy00+4SjLnoNXhD2YzjcFaK33ifm88WV
+         Bk5qkaiasn26FqfNR9aY0Y/UokVm3iFIVwb7yB4vkeYtO5IwNbg+q3pGSu2NWI/IY1+4
+         vUapHOJZMFQ2gExAIOyqIOxrpnMkpvsCtqnWf3rt8Kg3rc7rg9wTdHciA0gtjGIGnqz8
+         Wb3c1tdDMvztRVmIfbCx8oXr5Nkgsod2YWvm61CvDv/aHOqF6gRrA8KgnLHqxE1iodh5
+         C4ow==
+X-Gm-Message-State: APjAAAUn3F5F8aObi/ABKZLGuL7BMGC+/5W9Qq74WJljee7Q0Aj3a2FM
+        qkbf5efx8RPtu3uis9fCCtWaaxTA3IxgXWPQwTTmnqEedGk9PO1G/gJrVELRcgfEx4IcYyf/1M2
+        45iqcxqweu3QM5BTq6O9gV1hL
+X-Received: by 2002:a1c:6508:: with SMTP id z8mr13334124wmb.93.1569225514195;
+        Mon, 23 Sep 2019 00:58:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqywRzpbSPc3I/T0HiQ3vLyqomtoGHN75D+xXsibaZU6MPSciXTHKp4KwamMtyvbmdFON3ncxg==
+X-Received: by 2002:a1c:6508:: with SMTP id z8mr13334103wmb.93.1569225513884;
+        Mon, 23 Sep 2019 00:58:33 -0700 (PDT)
+Received: from steredhat (host170-61-dynamic.36-79-r.retail.telecomitalia.it. [79.36.61.170])
+        by smtp.gmail.com with ESMTPSA id l18sm11651891wrc.18.2019.09.23.00.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 00:58:33 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 09:58:30 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+Cc:     stefanha@redhat.com, davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 rebased] powerpc/fadump: when fadump is supported register the fadump sysfs files.
-Date:   Mon, 23 Sep 2019 09:54:06 +0200
-Message-Id: <20190923075406.5854-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
+Subject: Re: [RFC] VSOCK: add support for MSG_PEEK
+Message-ID: <20190923075830.a6sjwffnkljmyyqm@steredhat>
+References: <1569174507-15267-1-git-send-email-matiasevara@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569174507-15267-1-git-send-email-matiasevara@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Matias,
+thanks for this patch!
 
-Currently it is not possible to distinguish the case when fadump is
-supported by firmware and disabled in kernel and completely unsupported
-using the kernel sysfs interface. User can investigate the devicetree
-but it is more reasonable to provide sysfs files in case we get some
-fadumpv2 in the future.
+Since this patch only concerns virtio_transport,
+I'd use the 'vsock/virtio' prefix in the commit title:
+"vsock/virtio: add support for MSG_PEEK"
 
-With this patch sysfs files are available whenever fadump is supported
-by firmware.
+Some comments below:
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
----
-v2: move the sysfs initialization earlier to avoid condition nesting
-rebase: on top of the powernv fadump support
----
- arch/powerpc/kernel/fadump.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+On Sun, Sep 22, 2019 at 05:48:27PM +0000, Matias Ezequiel Vara Larsen wrote:
+> This patch adds support for MSG_PEEK. In such a case, packets are not
+> removed from the rx_queue and credit updates are not sent.
+> 
+> Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+> ---
+>  net/vmw_vsock/virtio_transport_common.c | 59 +++++++++++++++++++++++++++++++--
+>  1 file changed, 56 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 94cc0fa..830e890 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -264,6 +264,59 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
+>  }
+>  
+>  static ssize_t
+> +virtio_transport_stream_do_peek(struct vsock_sock *vsk,
+> +				struct msghdr *msg,
+> +				size_t len)
+> +{
+> +	struct virtio_vsock_sock *vvs = vsk->trans;
+> +	struct virtio_vsock_pkt *pkt;
+> +	size_t bytes, off = 0, total = 0;
+> +	int err = -EFAULT;
+> +
+> +	spin_lock_bh(&vvs->rx_lock);
+> +
 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index ed59855430b9..cdcdea6c6453 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -1466,16 +1466,20 @@ static void fadump_init_files(void)
-  */
- int __init setup_fadump(void)
- {
--	if (!fw_dump.fadump_enabled)
--		return 0;
--
--	if (!fw_dump.fadump_supported) {
-+	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
- 		printk(KERN_ERR "Firmware-assisted dump is not supported on"
- 			" this hardware\n");
--		return 0;
- 	}
- 
-+	if (!fw_dump.fadump_supported)
-+		return 0;
-+
-+	fadump_init_files();
- 	fadump_show_config();
-+
-+	if (!fw_dump.fadump_enabled)
-+		return 1;
-+
- 	/*
- 	 * If dump data is available then see if it is valid and prepare for
- 	 * saving it to the disk.
-@@ -1492,8 +1496,6 @@ int __init setup_fadump(void)
- 	else if (fw_dump.reserve_dump_area_size)
- 		fw_dump.ops->fadump_init_mem_struct(&fw_dump);
- 
--	fadump_init_files();
--
- 	return 1;
- }
- subsys_initcall(setup_fadump);
--- 
-2.23.0
+What about using list_for_each_entry() to cycle through the queued packets?
 
+> +	if (list_empty(&vvs->rx_queue)) {
+> +		spin_unlock_bh(&vvs->rx_lock);
+> +		return 0;
+> +	}
+> +
+> +	pkt = list_first_entry(&vvs->rx_queue,
+> +			       struct virtio_vsock_pkt, list);
+> +	do {
+
+pkt->off contains the offset inside the packet where the unread data starts.
+So here we should initialize 'off':
+
+		off = pkt->off;
+
+Or just use pkt->off later (without increasing it as in the dequeue).
+
+> +		bytes = len - total;
+> +		if (bytes > pkt->len - off)
+> +			bytes = pkt->len - off;
+> +
+> +		/* sk_lock is held by caller so no one else can dequeue.
+> +		 * Unlock rx_lock since memcpy_to_msg() may sleep.
+> +		 */
+> +		spin_unlock_bh(&vvs->rx_lock);
+> +
+> +		err = memcpy_to_msg(msg, pkt->buf + off, bytes);
+> +		if (err)
+> +			goto out;
+> +
+> +		spin_lock_bh(&vvs->rx_lock);
+> +
+> +		total += bytes;
+
+Using list_for_each_entry(), here we can just do:
+(or better, at the beginning of the cycle)
+
+		if (total == len)
+			break;
+
+removing the next part...
+
+> +		off += bytes;
+> +		if (off == pkt->len) {
+> +			pkt = list_next_entry(pkt, list);
+> +			off = 0;
+> +		}
+> +	} while ((total < len) && !list_is_first(&pkt->list, &vvs->rx_queue));
+
+...until here.
+
+> +
+> +	spin_unlock_bh(&vvs->rx_lock);
+> +
+> +	return total;
+> +
+> +out:
+> +	if (total)
+> +		err = total;
+> +	return err;
+> +}
+> +
+> +static ssize_t
+>  virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>  				   struct msghdr *msg,
+>  				   size_t len)
+> @@ -330,9 +383,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
+>  				size_t len, int flags)
+>  {
+>  	if (flags & MSG_PEEK)
+> -		return -EOPNOTSUPP;
+> -
+> -	return virtio_transport_stream_do_dequeue(vsk, msg, len);
+> +		return virtio_transport_stream_do_peek(vsk, msg, len);
+> +	else
+> +		return virtio_transport_stream_do_dequeue(vsk, msg, len);
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
+>  
+
+The rest looks good to me!
+
+Thanks,
+Stefano
