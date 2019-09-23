@@ -2,110 +2,115 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E709AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B322C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B752920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03832087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UsZPbcuZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K1+zCvsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfIWIqA (ORCPT
+        id S1731590AbfIWIr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:46:00 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33614 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbfIWIqA (ORCPT
+        Mon, 23 Sep 2019 04:47:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58446 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731460AbfIWIrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:46:00 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y127so9485555lfc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BJHjML3SI9D2+EbTLuvMPDk5GTC8ZZ5KbbxFlhyt+ws=;
-        b=UsZPbcuZRmE+Z3GSClH5/Mu9pa0xactT8q65lCY9ZQRMxMBG6shGQrEFWmS0QPKePT
-         NbH/aWlJIVV/9FnXQijrVB5eG14WBp07hOFwnBLnZojOsILfMyD9JEsCCB6pT1OcWCp4
-         eMpNQCu4hZN0omTdSXytMm98/IpN8fCAY9LZQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BJHjML3SI9D2+EbTLuvMPDk5GTC8ZZ5KbbxFlhyt+ws=;
-        b=dTWgZEb7OT6DvG1P8LiPcb6CXttJqW1Y7Fz7ozCCq8IIjb20o0WshYK4E2nd8jHDYt
-         lmhVb0jHbQxpfPfXtNgTxP07NsC+QX+5ZbiPo7VHVzgGl7eACfcusp7hlXgH8OD0QsEl
-         rY2EVXb6OEnnvjYFDbGlCNPgjRX/CioxHf36lQxHvz2PpMiVzCmn+xXqg6yVGaIvHYoC
-         B1SZHhzc8HbMg3XjD613XixcNBR18BzvZWTSPG6dl5UC9ws+bSG6W+SyE3AsxMDBrFIV
-         dASWhptrhG3LCGaYYXuECXq+PxgojYbxxl9eVhZC5YtFQyLpsg5+pL8mOJ9nfPTbrdly
-         oTBQ==
-X-Gm-Message-State: APjAAAV0MCCqCyzNi2c1A47oii35tTo6n4VRIwV3evSR0zIfhQyOPbpc
-        vix1LXtXrWNVSjOQZmG5+Gd4Zg==
-X-Google-Smtp-Source: APXvYqwfwYktaF6d2R/jJPuhIAVMBaQ1LbNQL8tbVJGh4whnsoZQo/JOgdIOZpuQji6Y+7cNLWAfXQ==
-X-Received: by 2002:a19:4f5a:: with SMTP id a26mr15849533lfk.116.1569228358242;
-        Mon, 23 Sep 2019 01:45:58 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id 134sm2072003lfk.70.2019.09.23.01.45.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 01:45:57 -0700 (PDT)
-Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-4-linux@rasmusvillemoes.dk>
- <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
-Date:   Mon, 23 Sep 2019 10:45:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 04:47:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/43GF0QWgIU5tkmUtQcTjX9yL5SM1r1TS8Ahy7IgToA=; b=K1+zCvsaewII+mHTy3eoOME7L
+        8jpgtr+xqiZNxhbLy48TCKcvo0sb5elmojLefPfZOSyoeetH4ZeIRnseyYu/uJxClwyioMtmgZ6+i
+        x3MGNbjz5+DxGOpFMFc+8PGbORulTuI8DGmtoKngWbDpphyXH3sbw7cOz7YbhskSi6WlAevBmuRzF
+        AlXWHcG9wL45968qfB2n0WLK7gVFWkAQJHqi1wgUvxA9iBn63t/6IVyE18WReWeLgDZnjVWMQq9J+
+        uFzIRF52TzH5ONzcbofMAcJ5VdGFE9GoYysFA9GlDN3QkT32YER24V80ZiAvgUIdcffUmhZiVIFo7
+        SpqZplQcg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCK09-0004sR-48; Mon, 23 Sep 2019 08:47:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8222303DFD;
+        Mon, 23 Sep 2019 10:46:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C79032B1204C7; Mon, 23 Sep 2019 10:47:18 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 10:47:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
+Message-ID: <20190923084718.GG2349@hirez.programming.kicks-ass.net>
+References: <20190919150314.054351477@linutronix.de>
+ <20190919150809.446771597@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919150809.446771597@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 10.27, Uwe Kleine-König wrote:
-> On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
->>
->>  
->> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
->> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
->> +
->>  	writel(duty_cycles << 16,
->>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
->> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
->> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
+On Thu, Sep 19, 2019 at 05:03:24PM +0200, Thomas Gleixner wrote:
+> To prepare for converting the exit to usermode code to the generic version,
+> move the irqflags tracing into C code.
 > 
-> When will this affect the output? Only on the next start of a period, or
-> immediatly? Can it happen that this results in a mixed output (i.e. a
-> period that has already the new duty cycle from the line above but not
-> the new polarity (or period)?
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/entry/common.c          |   10 ++++++++++
+>  arch/x86/entry/entry_32.S        |   11 +----------
+>  arch/x86/entry/entry_64.S        |   10 ++--------
+>  arch/x86/entry/entry_64_compat.S |   21 ---------------------
+>  4 files changed, 13 insertions(+), 39 deletions(-)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -102,6 +102,8 @@ static void exit_to_usermode_loop(struct
+>  	struct thread_info *ti = current_thread_info();
+>  	u32 cached_flags;
+>  
+> +	trace_hardirqs_off();
 
-The data sheet says "Also, when the user reprograms the channel in this
-manner, the new register values will not take effect until the beginning
-of a new output period. This eliminates the potential for output
-glitches that could occur if the registers were updated while the
-channel was enabled and in the middle of a cycle.". So I think this
-should be ok. "this manner" refers to the registers being written in the
-proper order (first ACTIVEn, then PERIODn).
+Bah.. so this gets called from:
 
-Rasmus
+ - C code, with IRQs disabled
+ - entry_64.S:error_exit
+ - entry_32.S:resume_userspace
+
+The first obviously doesn't need this annotation, but this patch doesn't
+remove the TRACE_IRQS_OFF from entry_64.S and only the 32bit case is
+changed.
+
+Is that entry_64.S case an oversight, or do we need an extensive comment
+on this one?
+
+>  	addr_limit_user_check();
+>  
+>  	lockdep_assert_irqs_disabled();
+> @@ -137,6 +139,8 @@ static void exit_to_usermode_loop(struct
+>  	user_enter_irqoff();
+>  
+>  	mds_user_clear_cpu_buffers();
+> +
+
+	/* Return to userspace (IRET) will re-enable interrupts */
+> +	trace_hardirqs_on();
+>  }
