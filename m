@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9130C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34361C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA69720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC57F20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404709AbfIWGkx (ORCPT
+        id S2404834AbfIWGmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:40:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2004 "EHLO mga18.intel.com"
+        Mon, 23 Sep 2019 02:42:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16827 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbfIWGkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:40:53 -0400
+        id S2404528AbfIWGmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:42:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:40:52 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:42:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,539,1559545200"; 
-   d="scan'208";a="200434850"
+   d="scan'208";a="200435180"
 Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by orsmga002.jf.intel.com with ESMTP; 22 Sep 2019 23:40:50 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Sep 2019 23:42:36 -0700
 Subject: Re: [PATCH 2/2] mmc: tegra: Implement ->set_dma_mask()
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Nicolin Chen <nicoleotsuka@gmail.com>,
-        inux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20190920145317.11972-1-thierry.reding@gmail.com>
  <20190920145317.11972-3-thierry.reding@gmail.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <26888c45-35a8-b354-a9da-2c63f07ed524@intel.com>
-Date:   Mon, 23 Sep 2019 09:39:34 +0300
+Message-ID: <3532e035-d1b2-265d-1a02-37f10142eb38@intel.com>
+Date:   Mon, 23 Sep 2019 09:41:20 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
@@ -96,6 +96,8 @@ On 20/09/19 5:53 PM, Thierry Reding wrote:
 > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 > [treding@nvidia.com: provide more background in commit message]
 > Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+And again with inux->mmc -> linux-mmc
 
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
