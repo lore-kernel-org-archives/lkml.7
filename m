@@ -2,218 +2,183 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17920C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE485C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32B22087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE3A21928
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xL1Xl396";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xL1Xl396"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="toeq10M+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404844AbfIWGyg (ORCPT
+        id S2405047AbfIWG4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:54:36 -0400
-Received: from mail-eopbgr00077.outbound.protection.outlook.com ([40.107.0.77]:9846
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393389AbfIWGyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:54:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wr/UOvffhiEOEfzGlp/vSELCtLmA3aBVac6SW6glkAQ=;
- b=xL1Xl3962NvpWnvNqScgWnqp+HHmFhGe9+g2DbfN+OM4+0e9BfCbqDSBLf/cCgsYmlmkVTPfjj2s4DZObK0pxOy/jWQiD9F0HsYky0j7ppVk4Tqd46VHfW2dwbTiNqnSzUynmyo5tinB9smt65hqtL2BvGVxxm/B1/Ar5+3FFXs=
-Received: from DB6PR0802CA0047.eurprd08.prod.outlook.com (2603:10a6:4:a3::33)
- by AM4PR0802MB2305.eurprd08.prod.outlook.com (2603:10a6:200:5f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.25; Mon, 23 Sep
- 2019 06:54:31 +0000
-Received: from VE1EUR03FT064.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::209) by DB6PR0802CA0047.outlook.office365.com
- (2603:10a6:4:a3::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
- Transport; Mon, 23 Sep 2019 06:54:31 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT064.mail.protection.outlook.com (10.152.19.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.25 via Frontend Transport; Mon, 23 Sep 2019 06:54:29 +0000
-Received: ("Tessian outbound 968ab6b62146:v31"); Mon, 23 Sep 2019 06:54:25 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 4ed9bbb742a6d71f
-X-CR-MTA-TID: 64aa7808
-Received: from dedbbdc7622c.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.12.57])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 28BC0D02-DC55-4C7C-BDD0-584ACABE3532.1;
-        Mon, 23 Sep 2019 06:54:20 +0000
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2057.outbound.protection.outlook.com [104.47.12.57])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id dedbbdc7622c.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 23 Sep 2019 06:54:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QA44zHr9fZNWgcNlmMR82KkkeXMW79Y+FANWWxtffiC2BCNhDfuORfgxxRAAe1NugzeC18LLesbxUx3zdh9nWMTHDRfklnaoPO9fFVNta5e8aWbwksOEHdgZpbfJEXi6mTm2fWwV5cf+AgVypeg4IAdZwQeDMmo4FcKKKWWLt0ZDTNilh2daFPZ/k3xnBDcakGi0Cnp8SJu90FUIAiwGDdwM/SkQt1osWhShjVww+4YwYku4KYIOq8CQiiqov/cvwlFTh0J5thUFFqlY/y9jy+DNF2zReAYUql6KBCmmr6HEUtP9mBTYDJaA35CNCI7FsA5r94NeLNvnaAsEMRo6dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wr/UOvffhiEOEfzGlp/vSELCtLmA3aBVac6SW6glkAQ=;
- b=js6TgIP9lkJc02r0RTwXENPkUQUyvzxJ2yOvoa4fKQUnWOj6d3+nh36Ntgy5gvaO3eYCrvSqeRuJa3qQ1pevTHNC3AvKbVu74eULHv0hw8nnMBmVvxEjAQN3MP2yOdm2iB27XJ+0Pqt1zjrU3gDbKoa0OchSkRmNxiexJyj4FdEI0BgDAU/x6Ug0/+HcBQXtKn4G+K+vm53naj68tAqmovV79rLjeoRcI52bcxivIaENUVsev3oV3LMi9NnBXZ0MJS9G9aAVJSSWmL/uU4P9A8qp/hkNs+HbvwOtArnjM2EAq0e1uZH2MLDyG8AeavKmZ/nS4nTWiaulAF5xwitkNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wr/UOvffhiEOEfzGlp/vSELCtLmA3aBVac6SW6glkAQ=;
- b=xL1Xl3962NvpWnvNqScgWnqp+HHmFhGe9+g2DbfN+OM4+0e9BfCbqDSBLf/cCgsYmlmkVTPfjj2s4DZObK0pxOy/jWQiD9F0HsYky0j7ppVk4Tqd46VHfW2dwbTiNqnSzUynmyo5tinB9smt65hqtL2BvGVxxm/B1/Ar5+3FFXs=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB4752.eurprd08.prod.outlook.com (10.255.112.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Mon, 23 Sep 2019 06:54:18 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 06:54:18 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Use devm_platform_ioremap_resource() in
- komeda_dev_create()
-Thread-Topic: [PATCH] drm/komeda: Use devm_platform_ioremap_resource() in
- komeda_dev_create()
-Thread-Index: AQHVcKUcmq8GSSSejEasIcMzV2KNa6c41h2A
-Date:   Mon, 23 Sep 2019 06:54:18 +0000
-Message-ID: <20190923065411.GA29903@jamwan02-TSP300>
-References: <64a6ea39-3e4b-2ebe-74f7-98720e581e3e@web.de>
-In-Reply-To: <64a6ea39-3e4b-2ebe-74f7-98720e581e3e@web.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0214.apcprd02.prod.outlook.com
- (2603:1096:201:20::26) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: d47cc6b3-fb34-4c03-548b-08d73ff2e1c0
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4752;
-X-MS-TrafficTypeDiagnostic: VE1PR08MB4752:|VE1PR08MB4752:|AM4PR0802MB2305:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM4PR0802MB230512835EF7C3644B148F35B3850@AM4PR0802MB2305.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:7691;OLM:7691;
-x-forefront-prvs: 0169092318
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(366004)(396003)(376002)(39860400002)(346002)(199004)(189003)(4326008)(81156014)(66946007)(2906002)(6512007)(9686003)(11346002)(476003)(256004)(14444005)(66066001)(71190400001)(33716001)(33656002)(64756008)(8676002)(66446008)(14454004)(66476007)(66556008)(478600001)(486006)(6246003)(7736002)(305945005)(1076003)(446003)(52116002)(5660300002)(6436002)(6916009)(316002)(76176011)(6486002)(71200400001)(186003)(55236004)(386003)(6506007)(102836004)(26005)(229853002)(8936002)(54906003)(25786009)(86362001)(58126008)(81166006)(99286004)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4752;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: NY1OuCZ2BIcKpCt0Sl6gG1UDhSwahwjbSqplYnu3fbLoKMbboMEOCOyXfa582hf65wWg69XPUOjTrGZkhFLq/RwFiUr0H1N97Q6V87QxlWnhNmS0h3fmeo29v9Seolgqn4CxZbkYaqFtCjrSBySkxQIi1gQqEw4Yzok6VnI1v+6vzcKuZREDcnCfhT5ULPniZLVuKxobkYd6AzgioSP88H20/I/g4U2SmmBKDmOWuYrsmT13La6wP4BgDvjWrhgUCGBJ3qxKvcZDjkIkRWLmjDjhzPqZR2CFlzZB/de7/tqX7PGTpNLSgg6IShx1cfL/HfwaUCpWLgZ6VYWPNuvMn/QOKMnkA60lUoUT7rkRdpYTOBPDfoK9gr7rZbY5jbLRnybGvBrtfnQvytb+U7tJ8NrKU3Exjr/pLK0MSOHZ4wg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F4D6190879F7344895855F7CC4AB2ACE@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Sep 2019 02:56:51 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53403 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404880AbfIWG4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:56:51 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190923065648euoutp01a699e5ef45fb7bfe293121e9083cf95b~G-uvOMtod2032320323euoutp01G
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:56:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190923065648euoutp01a699e5ef45fb7bfe293121e9083cf95b~G-uvOMtod2032320323euoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569221808;
+        bh=7Rfe9iUIE3HzKPxCJrJahPXXP+94a5ihjD5YoIEzClk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=toeq10M+xAq369X9H+BtAWRfn8GkrcTxatRqctbTGNRi7ebgEieDYkfNh8EiCwmNt
+         WflvGfWxC+stUc7bfxnQ7+NqQO5AoaPk4/g5p6GHb+KYl/ws2jgxBNvYTmBf815Np8
+         7SbXWMbAK+IOOCpi2Lrx8jOYNF8sBGGmWxWhzaS8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190923065648eucas1p1f200b147807ba647c11906db1e13976f~G-uu2ot6E2705827058eucas1p1Q;
+        Mon, 23 Sep 2019 06:56:48 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 40.23.04374.0BC688D5; Mon, 23
+        Sep 2019 07:56:48 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190923065648eucas1p112eb5c7cbcbd79b8dcb7840f1186e384~G-uuYi76R0835308353eucas1p1E;
+        Mon, 23 Sep 2019 06:56:48 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190923065647eusmtrp1cc5aff0ad8736f373a58777588a19a14~G-uuXhKGC1701517015eusmtrp1c;
+        Mon, 23 Sep 2019 06:56:47 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-cd-5d886cb06ed3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F5.24.04166.FAC688D5; Mon, 23
+        Sep 2019 07:56:47 +0100 (BST)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190923065647eusmtip2b3de707c374bff63e519288d66d1c27f~G-utoGUbP1425114251eusmtip2h;
+        Mon, 23 Sep 2019 06:56:47 +0000 (GMT)
+Subject: Re: [RFT v3 4/8] ARM: dts: exynos: Remove MCT subnode for interrupt
+ map on Exynos4210
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <c1d02aa3-b5f2-1c5b-0b7b-8749e7c0ce9a@samsung.com>
+Date:   Mon, 23 Sep 2019 08:56:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4752
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT064.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(396003)(39850400004)(136003)(346002)(189003)(199004)(8676002)(81156014)(81166006)(476003)(33716001)(450100002)(6116002)(23726003)(3846002)(6512007)(229853002)(9686003)(2906002)(5660300002)(336012)(50466002)(70206006)(86362001)(36906005)(58126008)(76130400001)(14454004)(54906003)(486006)(25786009)(1076003)(126002)(356004)(478600001)(70586007)(26826003)(316002)(305945005)(4326008)(7736002)(6862004)(11346002)(446003)(63350400001)(76176011)(99286004)(102836004)(386003)(186003)(33656002)(26005)(14444005)(8746002)(6506007)(47776003)(8936002)(46406003)(66066001)(6486002)(6246003)(97756001)(22756006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0802MB2305;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 9bdd355b-6fb7-4e9d-17cb-08d73ff2daec
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR0802MB2305;
-NoDisclaimer: True
-X-Forefront-PRVS: 0169092318
-X-Microsoft-Antispam-Message-Info: lkoaIpNqI8L8H9wKrRKCCysOOweR7fhZZPzY6XSMUxxAicv49RcasM9pr4pcVPTeVFQvyBEuY+x322xvHoFR7jrg5jFQ+fQOaaJyWL+It30xQK/2OLKs64ikMcb9lz4VSce5leWWzQVLFm/APgpXZwL8AKt0vbX8QxFTT/IL/93JeDoBSIPZ33g95pUZ3PxrfFTYVgBM1LHJZCR+qRMTZhNfjLDpV4t6qdLTSlVdFRiRM7jVQbZH4u4BIgbvf40F/7DkwPXIex7fIWspc30iAcaPOXPnWbVNwStDlNI420zmG7u7EMTCXRoZYla0HvBdS/Yfpo4hNs4BV8afl+8vkyEpXBDMRYu46fqugcpkqCX7Ap1JH+lCVGj3BfaBvWoV2mRQSDY4KwOaAxDbjGPrC5/zkP2IL3acZ1mH/OxLo+I=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2019 06:54:29.6997
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d47cc6b3-fb34-4c03-548b-08d73ff2e1c0
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2305
+In-Reply-To: <20190921170152.5033-4-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju29nZjsvVcSq+aSkM7CLlBYUOVGIgsfoRJYGgLF158DYvbE6z
+        fkyS1MRSjHQt0XnD+22KeUnDeRmmTc2yMrt4GWG5dbGbUdrm0fLf8z3P877P88JHYIJR3JmI
+        jk+iZfESqZDDY7cPrRgONUuzxN5rea5Ui6oJp4qX91AlAwacyp3/gFFjY81cSjs/hVOTXUUc
+        SjXWy6Iqn02wqGs9A1wq07iIUa3a21iArai+uB6JtLXXOaKZqfsckdlg4IpaK5Sim221SLSs
+        dT3DDeEdjaCl0cm0zMs/nBf1cWQWT2zZeal8epqVhha2ZyMbAkg/6K9Lx7IRjxCQ1Qgm6qsx
+        qyAgvyKYX7ZhhGUE7TVfsM0JvfkRlxGqEGTNpW9MmCyughArtifDoba7EreaHEgzCzQL39dN
+        GElDt2kIt2IO6QPZpmyOFfNJf2hbUq/zbNIdFtW5bCt2JMXw+qceYzx2MHxnYZ23sbTQpY3j
+        zE43uGcq2tjvBNMLJSxrMJBzXNAODHGZ2oFQNv2GzWB7eK9v2+B3w8itHDYzkI5g1tDAZR45
+        CCavqhDjOgL9+glLHGGJOABNXV4MfRwq9aXISgO5A56b7JgSOyC/vRBjaD5kZQgY915Q6xv/
+        xfaNP8bykFC95TT1lnPUW85R/8/VIHYtcqIV8rhIWu4bT6d4yiVxckV8pOfFhDgtsvyxkVX9
+        tw7U+/uCDpEEEtryP7VkigW4JFmeGqdDQGBCB77WI0Ms4EdIUi/TsoQwmUJKy3XIhWALnfhX
+        tr0NFZCRkiQ6lqYTadmmyiJsnNPQw8aw/b3mff1lxiAx2XviQUJ56C7iM3lw8OnhkqrTL4+N
+        jwc3vArKL49dGo7pTFGmVvr9cVQGO04qwd797lr53LlMt1/FZzWDLR2+uFLlcIpn7ntxQ1C4
+        ohkNcPE+2Ww01k31VPT9kK16dWZpVxajY0Znap4sFpxvfZffEVjqoBCy5VESHw9MJpf8BUIT
+        8/hfAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7rrczpiDdYttrTYOGM9q8W8z7IW
+        84+cY7Xof/ya2eL8+Q3sFpseX2O1uLxrDpvFjPP7mCyWXr/IZNG69wi7RfvTl8wWmzdNZXbg
+        8Vgzbw2jx6ZVnWwed67tYfN4d+4cu8fmJfUefVtWMXp83iQXwB6lZ1OUX1qSqpCRX1xiqxRt
+        aGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl/H+9EPWgo38FYtv3WJqYHzC3cXI
+        ySEhYCJx/N1Z9i5GLg4hgaWMEq27HrJAJGQkTk5rYIWwhSX+XOtigyh6zShx6N59JpCEsECC
+        xKrdS1lBEiIC75gk3jxfyw6SYBZIlZjYNJUJomMjo8SNN1OZQRJsAoYSXW9BRnFy8ArYSWx5
+        MwtsBYuAqsTLWf1Aqzk4RAViJTbtNYMoEZQ4OfMJ2EWcQKcearjACjHfTGLe5ofMELa8xPa3
+        c6BscYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMj
+        MHK3Hfu5eQfjpY3BhxgFOBiVeHg/bGyPFWJNLCuuzD3EKMHBrCTCu0mrLVaINyWxsiq1KD++
+        qDQntfgQoynQbxOZpUST84FJJa8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoR
+        TB8TB6dUA2P1KtZOn6lnLn19H7f4yT1+t3bZauc1BVcO6XzbGXhB1M24rKaRtVvi4HaGIx8U
+        HBrEO+/e809QPftyvRT/4n1KwbbiR+NPG+/Y8UhmmpyFZdbkv8qW1s4P1nOnCc7bu4KtTOXV
+        vu+m3dpCgu0MsjPlBNNNm7988l7rGiG1bteUi2npkiKGO5RYijMSDbWYi4oTAR2RidXyAgAA
+X-CMS-MailID: 20190923065648eucas1p112eb5c7cbcbd79b8dcb7840f1186e384
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190921203810epcas3p39f3d9e3224d2c5ef61c1e18df2ab403d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190921203810epcas3p39f3d9e3224d2c5ef61c1e18df2ab403d
+References: <20190921170152.5033-1-krzk@kernel.org>
+        <CGME20190921203810epcas3p39f3d9e3224d2c5ef61c1e18df2ab403d@epcas3p3.samsung.com>
+        <20190921170152.5033-4-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 07:50:46PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 21 Sep 2019 19:43:51 +0200
->=20
-> Simplify this function implementation by using a known wrapper function.
->=20
-> This issue was detected by using the Coccinelle software.
->=20
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Hi Krzysztof,
+
+On 21.09.2019 19:01, Krzysztof Kozlowski wrote:
+> Multi Core Timer node has interrupts routed to two different parents -
+> GIC and combiner.  This was modeled with a interrupt-map within a
+> subnode but can be expressed in an easier and more common way, directly
+> in the node itself.
+
+Maybe we should simply use 'interrupts-extended' based approach and 
+simplify mct node even more (get rid of interrupt-parent, interrupts, 
+size/address cells)?
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
 > ---
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gp=
-u/drm/arm/display/komeda/komeda_dev.c
-> index ca64a129c594..a387d923962e 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -172,19 +172,12 @@ struct komeda_dev *komeda_dev_create(struct device =
-*dev)
->  	struct platform_device *pdev =3D to_platform_device(dev);
->  	const struct komeda_product_data *product;
->  	struct komeda_dev *mdev;
-> -	struct resource *io_res;
->  	int err =3D 0;
->=20
->  	product =3D of_device_get_match_data(dev);
->  	if (!product)
->  		return ERR_PTR(-ENODEV);
->=20
-> -	io_res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!io_res) {
-> -		DRM_ERROR("No registers defined.\n");
-> -		return ERR_PTR(-ENODEV);
-> -	}
+>
+> Not tested.
+> ---
+>   arch/arm/boot/dts/exynos4210.dtsi | 16 ++++++----------
+>   1 file changed, 6 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index 6d3f19562aab..38c49ab8c733 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -109,23 +109,19 @@
+>   		mct: timer@10050000 {
+>   			compatible = "samsung,exynos4210-mct";
+>   			reg = <0x10050000 0x800>;
+> -			interrupt-parent = <&mct_map>;
+> -			interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+>   			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
+>   			clock-names = "fin_pll", "mct";
 > -
->  	mdev =3D devm_kzalloc(dev, sizeof(*mdev), GFP_KERNEL);
->  	if (!mdev)
->  		return ERR_PTR(-ENOMEM);
-> @@ -192,7 +185,7 @@ struct komeda_dev *komeda_dev_create(struct device *d=
-ev)
->  	mutex_init(&mdev->lock);
->=20
->  	mdev->dev =3D dev;
-> -	mdev->reg_base =3D devm_ioremap_resource(dev, io_res);
-> +	mdev->reg_base =3D devm_platform_ioremap_resource(pdev, 0);
+> -			mct_map: mct-map {
+> -				#interrupt-cells = <1>;
+> -				#address-cells = <0>;
+> -				#size-cells = <0>;
+> -				interrupt-map =
+> -					<0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-parent = <&mct>;
+> +			interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+> +			interrupt-map = <0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+>   					<1 &gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
+>   					<2 &combiner 12 6>,
+>   					<3 &combiner 12 7>,
+>   					<4 &gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
+>   					<5 &gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
+> -			};
+>   		};
+>   
+>   		watchdog: watchdog@10060000 {
 
-Hi Markus:
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Thank you for the patch.
-
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
-m>
-
-
->  	if (IS_ERR(mdev->reg_base)) {
->  		DRM_ERROR("Map register space failed.\n");
->  		err =3D PTR_ERR(mdev->reg_base);
-> --
-> 2.23.0
