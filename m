@@ -2,107 +2,136 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F65C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC3FC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090CF2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:23:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHnglSaR"
+	by mail.kernel.org (Postfix) with ESMTP id E334220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440439AbfIWSX0 (ORCPT
+        id S1732977AbfIWS0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:23:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54291 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438123AbfIWSXZ (ORCPT
+        Mon, 23 Sep 2019 14:26:12 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:47785 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726931AbfIWS0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:23:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so11084219wmp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ayq0p6X/ErZzs4hinfPpnJipMcpKRV6Xdv93NSXWlhw=;
-        b=UHnglSaR5xTYUh6u8PEkTLlPY47tCqYiYn4IHYLGLfS8EY8PsHRrH1CDJnrBYJNtur
-         +IZRL1mZKrYDs711H3Y/Vtua56wYSwd2EjDpCC//WFL+n7uIAANJ6Ub5LpdiCRzOFNig
-         lG+VERRbz2/3QhvhyR27nT476KTplwKHDDdVWnjg3u+OBhTCidjyP6TAcYMpaATWuNA5
-         4FjPOyghNJE2MjBSH9VJqvViszHpQaGXDDgVKQm2tncsdLXNTXHeGh4SAQd1N6emzwKN
-         BtCWuRgyw13oz6tafpa0c5B38Kjvc2UCMXKSQB/0bMMdPSCXViiF78bJ8X+C92ZAlMRf
-         3Ppw==
+        Mon, 23 Sep 2019 14:26:11 -0400
+Received: by mail-io1-f70.google.com with SMTP id k14so15951290iot.14
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ayq0p6X/ErZzs4hinfPpnJipMcpKRV6Xdv93NSXWlhw=;
-        b=lSo5MaBFk2hSVVg/o/k4scOdUuXeohtA4ARHNIgdUw6XcDsvVwnobnY6+/IubRBmUP
-         LCm+Qt5H4MFCsLlminkZhmEEQqYA5H+j3g0rhWdx6k/fpjj6CKPrT2moRDfUoQDxG8CC
-         aNwWpkSd2LG80Z25thj8w6b3Fdnf1XCAGPK4wn/UNpXqF0PhrqfY8QVop2bfh8lCRPlA
-         ZxvBldhw+s0FCp78G9xB5e/fq+LwLtl4JTHeuLNplBoe8lm0u6DoJn5mAiFr0OYg6yXJ
-         RHIws++/FnZqg6ftqteXG1p8twIEyo5ZwC06SVcEhhD+3vnXVWUQortbF1wy5oUphzzB
-         zrdQ==
-X-Gm-Message-State: APjAAAXwMDg3H/+2cYxg4wRug9bFbb00395HflJ6gid2SsZzhc3S27k8
-        e153Tz3h/zgsq9eBKeWang==
-X-Google-Smtp-Source: APXvYqySSJxjMUbOQGW9MPHwsn7DPJhlEiwLZfauDT+NUFbYPOv7XvnZQ1fV3xvzKy9bXOXmp09Ycw==
-X-Received: by 2002:a1c:a90b:: with SMTP id s11mr778134wme.92.1569263003383;
-        Mon, 23 Sep 2019 11:23:23 -0700 (PDT)
-Received: from nitro5.fritz.box (business-24-134-37-65.pool2.vodafone-ip.de. [24.134.37.65])
-        by smtp.gmail.com with ESMTPSA id t123sm15679861wma.40.2019.09.23.11.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 11:23:22 -0700 (PDT)
-From:   Gabriel Craciunescu <nix.or.die@gmail.com>
-To:     linux-nvme@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk,
-        crazy@frugalware.org, Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH v3] Added QUIRKs for ADATA XPG SX8200 Pro 512GB
-Date:   Mon, 23 Sep 2019 20:22:56 +0200
-Message-Id: <20190923182256.11062-1-nix.or.die@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FanSXGQI5lw6yGFgc2B75WGYu1kp8UskH2qFwnqdt54=;
+        b=U/8wMXTGI1va2dKqOGSqE9GJCJV6UWGSlJfp70DzNDFCrKE83X1q4/bKxoGkGBgAnL
+         n9VRzEIozNELdUCKUyMVn1ryd+KlmcFxHajlh3OP4IHbKe/9+q57BQDz01QNLk+ggl/K
+         C+xhMigW3tOFiEQXpGpViuBnJfwR+5KhN+esWqxOUrEeZeXKS6Q95k9sJyB0iFHXQnYQ
+         TLAxINrU4lLE1O8496AfeZiFadmTmjWjklvHoSL7KCODvLyb5jmYk5ETJ5K+kUHnaveM
+         +gEvD/bnRzpLOIqmvwqr5r6i4Jhj8BpEIY+hp7QAa4Lk9WIiKN+KsaHSRYZVGzDxTDRY
+         avjQ==
+X-Gm-Message-State: APjAAAUSg8XQiiWYJL2aLL5W1Fh1/2CAOlyfGfy4bKEc4QMfNZ1an2SD
+        fr0BgTTkyUKuKi03Tba9iLW7SCcRqSRPpSWU3D2cUfSd4ZpO
+X-Google-Smtp-Source: APXvYqz+RF9YagAAYHdO3Dw8gF85oVxfTzC7UNEtjE/LDYjvsY8hDi+Wp/NsOAVaqNDCo7WiopdOgCPqjlTN+p/PZwRh06yBCxgN
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:7708:: with SMTP id n8mr768559iom.198.1569263171041;
+ Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 11:26:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de7f8c05933c8de0@google.com>
+Subject: WARNING in blk_mq_sched_free_requests (2)
+From:   syzbot <syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Booting with default_ps_max_latency_us >6000 makes the device fail.
-Also SUBNQN is NULL and gives a warning on each boot/resume.
- $ nvme id-ctrl /dev/nvme0 | grep ^subnqn
-   subnqn    : (null)
+Hello,
 
-I use this device with an Acer Nitro 5 (AN515-43-R8BF) Laptop.
-To be sure is not a Laptop issue only, I tested the device on
-my server board  with the same results.
-( with 2x,4x link on the board and 4x link on a PCI-E card ).
+syzbot found the following crash on:
 
-Signed-off-by: Gabriel Craciunescu <nix.or.die@gmail.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+HEAD commit:    574cc453 Merge tag 'drm-next-2019-09-18' of git://anongit...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=167c3c7e600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c1d6bfa784bebea
+dashboard link: https://syzkaller.appspot.com/bug?extid=da3b7677bb913dc1b737
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9291 at block/blk-mq-sched.c:558  
+blk_mq_sched_free_requests.cold+0x11/0x21 block/blk-mq-sched.c:558
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9291 Comm: syz-executor.1 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:blk_mq_sched_free_requests.cold+0x11/0x21 block/blk-mq-sched.c:558
+Code: fe 45 85 f6 0f 84 ab e9 ff ff e9 29 e8 ff ff 48 89 cf e8 43 0e 7d fe  
+eb ce e8 bc c3 42 fe 48 c7 c7 00 65 e5 87 e8 84 47 2c fe <0f> 0b e9 47 f3  
+ff ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57
+RSP: 0018:ffff88805aa6f9e0 EFLAGS: 00010286
+RAX: 0000000000000024 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c26d6 RDI: ffffed100b54df2e
+RBP: ffff88805aa6fa30 R08: 0000000000000024 R09: ffffed1015d260d1
+R10: ffffed1015d260d0 R11: ffff8880ae930687 R12: 00000000fffffff4
+R13: ffff8880a3100100 R14: ffff88808521e1d8 R15: ffff8880a3100100
+  blk_mq_init_sched+0x32c/0x766 block/blk-mq-sched.c:543
+  elevator_init_mq+0x1d3/0x3f0 block/elevator.c:719
+  __device_add_disk+0xd57/0x1230 block/genhd.c:705
+  device_add_disk+0x2b/0x40 block/genhd.c:763
+  add_disk include/linux/genhd.h:429 [inline]
+  loop_add+0x635/0x8d0 drivers/block/loop.c:2051
+  loop_control_ioctl drivers/block/loop.c:2152 [inline]
+  loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2134
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a09
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4830110c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
+RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000005
+RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f48301116d4
+R13: 00000000004c3118 R14: 00000000004d69f8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
 
 ---
- drivers/nvme/host/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 6b4d7b064b38..f5767741838b 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3088,6 +3088,9 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_LIGHTNVM, },
- 	{ PCI_DEVICE(0x10ec, 0x5762),   /* ADATA SX6000LNP */
- 		.driver_data = NVME_QUIRK_IGNORE_DEV_SUBNQN, },
-+	{ PCI_DEVICE(0x1cc1, 0x8201),   /* ADATA SX8200PNP 512GB */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
-+				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
- 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
--- 
-2.23.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
