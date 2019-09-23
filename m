@@ -2,62 +2,63 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847A2C432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68629C432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E935207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E1A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aKsm2kFN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+jaxj2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503218AbfIWWGk (ORCPT
+        id S2390513AbfIWWH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 18:06:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35185 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502949AbfIWWGk (ORCPT
+        Mon, 23 Sep 2019 18:07:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39310 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388455AbfIWWH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 18:06:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 205so10040263pfw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:06:39 -0700 (PDT)
+        Mon, 23 Sep 2019 18:07:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v4so5408268pff.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qqx3nwmhmvUj1INmgkpz5JOsEs9scYiCKN5Ub764u7Y=;
-        b=aKsm2kFNzCzz74yg7H0cBXIp9vQnYJhsjfxDNK3dRf5szEjnJX0P9AK1lfpl5T5zD5
-         rrok1si6velST616EexzDP5opuTg0rpryQGo1s9HqN6tT1GTECBtbLOY+ySE5y9vxA7s
-         YF88IxcBPAncYgSqhTE3+dQnV0ZkPjRSh42YM2oGujCYL2z5zesYYPMoZzJp6awAvQ5/
-         Rz/BhXjG8TNNBqwp63ThweswzuTuTWce2sHfaI+X1cCakZXKkH8iVIDik1jq5p4PMtgG
-         g3CPgIZVFNDP54OCdKraXLzv3+mFQTqif4ahmGg00GBUK/tk+qAkgtOCKeMP2cEW+TpD
-         YSIQ==
+        bh=2diU/S3ttsPJL07skRAlLasheuTaJLyuG6UizryUnNw=;
+        b=K+jaxj2XUkWomvy4yMBPjq5KlDDiUf8op+dK7VFSyLxOXEiJCYaKllzMFIYF9EskU4
+         6OArTnS5jT7JDUOV9/LWQr5uiph9xOojl3PyTfrDxzK3N8NMgJ3JKdOP6LbMQap7oTSL
+         cDB4WgwqFRWQT8VZeks2UIgF7CnzRzCtIdWhctmTjaX2/MALhFm/HYRChg9AkQwO1GU/
+         yAmwWczpM8mO+3SXAlWwopYmTqXm8Wx7WkTrZJD7EQES8hMpMUUR4ZDgQJ4i3RC2gAJ7
+         zYUr+oj9+SfTw3vaU9YrJeRdcy8H5YC8nbsdQ2jaq/3/OLEQZoVdhiETcIhviSdEOF+K
+         2d7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qqx3nwmhmvUj1INmgkpz5JOsEs9scYiCKN5Ub764u7Y=;
-        b=rTRCI8WZXZAPjHUp0ozDsOG3Urwat94BJKcR0yg+wUvqVwC6RnJRBtnrTHHPq+dlZl
-         Ahl5eIaX15GcPCFEsJWsqURLzJs7KYBlljOcIp2f5hA0Um2fDFU4Dgo28lCL6RSalHC9
-         FizbRF5PPjewaUvdDc8adWu0Aqqee4QFLT0Hd8bZ8ivI2oFzDHC1Yp6GLjMcPoVS6Sor
-         mt4RZTFvj35HjSMbNNgqwMLAAXnGF2CrBcf7c8KvYR9g0pVxtrZrFWKl/vYDae0zimZT
-         nBz23GdUeT0iHIlh6a+QaxwYhtZLgfNJmGKuUNdk/OW5N5C6H4XAgkqZ4Njnd4v3Eudu
-         uL6Q==
-X-Gm-Message-State: APjAAAXuz4+q3X9FS3IjBtpzauNDWZHX1uuJSP8CTjMwWWiuE+bMTXI/
-        PbZLGUkH03cnSoRmIThFYzo0rDjLWFq8MZpbPEZo3XWynRQ=
-X-Google-Smtp-Source: APXvYqz/iWff7PZT9I0zLghMOWwjyl6OK8L8vHVHY1WCJBv+odD1zF/m4UIMfdLOj2TkxqYgdlcvlWfaKwrGnYfXXmI=
-X-Received: by 2002:a62:798e:: with SMTP id u136mr2009080pfc.3.1569276398816;
- Mon, 23 Sep 2019 15:06:38 -0700 (PDT)
+        bh=2diU/S3ttsPJL07skRAlLasheuTaJLyuG6UizryUnNw=;
+        b=ggfPIOqLyQVEfF6f2ulDECgNcSDtsH2q/CkK94tatsiwFQZf04S7REOnibJArrJyKL
+         6tTY6Isdp3+gdcGKdOaD4Xl1Zo7L3pknwL4caPyz56Pk6Zaas03joVvY88UORvKfBYWp
+         2pfLuRAfjrU+O6ApmPvowUtTYmQ6/PV7tRmzV8T8HG8sLNKck9SiG2weu2M6kDAmLrnl
+         29nzh79dVeXICwbMApV251GcC5XIMO1Jgi6uKlR7A7RVGgpZ1/qo5SXlqllxbD4EC0TI
+         ed4UyC3rLdjzvj5SmOYK4o2P6wnApTzrhhHl+dDMO7P5MvXftdTULutRtpF38OqUjJFX
+         t/AQ==
+X-Gm-Message-State: APjAAAW0B4PBqUcTlLiJ1eNX/Y3ybX6vKOdEy8xoXtgKY5/vSDrKJNQy
+        DCcbVaWheNMDa7D1sJga7WxHCFIvMaanbaEZZTjz4A==
+X-Google-Smtp-Source: APXvYqyQYq+yQbDmYyeiFjRrzvwNedBwZ5wJJDmELSmW4Ys2S5y3bwXL2o23kwlkLLnuBWPkfXI4Orvsiy/h/87E6TY=
+X-Received: by 2002:a62:258:: with SMTP id 85mr1969618pfc.165.1569276444993;
+ Mon, 23 Sep 2019 15:07:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190712085908.4146364-1-arnd@arndb.de> <20190712174142.GB127917@archlinux-threadripper>
-In-Reply-To: <20190712174142.GB127917@archlinux-threadripper>
+ <CAKwvOdkhe=WMMTevMd7m_URjuOcjAkHc8zBibUD2_gX79U+p3g@mail.gmail.com>
+In-Reply-To: <CAKwvOdkhe=WMMTevMd7m_URjuOcjAkHc8zBibUD2_gX79U+p3g@mail.gmail.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 23 Sep 2019 15:06:27 -0700
-Message-ID: <CAKwvOdkhe=WMMTevMd7m_URjuOcjAkHc8zBibUD2_gX79U+p3g@mail.gmail.com>
+Date:   Mon, 23 Sep 2019 15:07:13 -0700
+Message-ID: <CAKwvOdka1bSOrS6t-L=J8AYWe-NzpxqvrpSiXPqRwnM9mBEL5w@mail.gmail.com>
 Subject: Re: [PATCH] xen/trace: avoid clang warning on function pointers
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>
@@ -76,58 +77,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:41 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Fri, Jul 12, 2019 at 10:58:48AM +0200, Arnd Bergmann wrote:
-> > clang-9 does not like the way that the is_signed_type() compares
-> > function pointers deep inside of the trace even macros:
-> >
-> > In file included from arch/x86/xen/trace.c:21:
-> > In file included from include/trace/events/xen.h:475:
-> > In file included from include/trace/define_trace.h:102:
-> > In file included from include/trace/trace_events.h:467:
-> > include/trace/events/xen.h:69:7: error: ordered comparison of function pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Werror,-Wordered-compare-function-pointers]
-> >                     __field(xen_mc_callback_fn_t, fn)
-> >                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > include/trace/trace_events.h:415:29: note: expanded from macro '__field'
-> >  #define __field(type, item)     __field_ext(type, item, FILTER_OTHER)
-> >                                 ^
-> > include/trace/trace_events.h:401:6: note: expanded from macro '__field_ext'
-> >                                  is_signed_type(type), filter_type);    \
-> >                                  ^
-> > include/linux/trace_events.h:540:44: note: expanded from macro 'is_signed_type'
-> >  #define is_signed_type(type)    (((type)(-1)) < (type)1)
-> >                                               ^
-> > note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-> > include/trace/trace_events.h:77:16: note: expanded from macro 'TRACE_EVENT'
-> >                              PARAMS(tstruct),                  \
-> >                              ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > include/linux/tracepoint.h:95:25: note: expanded from macro 'PARAMS'
-> >  #define PARAMS(args...) args
-> >                         ^
-> > include/trace/trace_events.h:455:2: note: expanded from macro 'DECLARE_EVENT_CLASS'
-> >         tstruct;                                                        \
-> >         ^~~~~~~
-> >
-> > I guess the warning is reasonable in principle, though this seems to
-> > be the only instance we get in the entire kernel today.
-> > Shut up the warning by making it a void pointer in the exported
-> > structure.
-> >
-> > Fixes: c796f213a693 ("xen/trace: add multicall tracing")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Nick suggested this as well, I think it's reasonable to work around it
-> in this one location since this is indeed the only instance of this
-> warning that I see in the kernel tree across all of my builds.
->
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+On Mon, Sep 23, 2019 at 3:06 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+> Steven, Ingo, would one of you mind picking up this fix, please?  See
+> for multiple reports:
+> https://github.com/ClangBuiltLinux/linux/issues/216
 
-
-Steven, Ingo, would one of you mind picking up this fix, please?  See
-for multiple reports:
-https://github.com/ClangBuiltLinux/linux/issues/216
--- 
+Sorry, https://github.com/ClangBuiltLinux/linux/issues/97 is the link.
+--
 Thanks,
 ~Nick Desaulniers
