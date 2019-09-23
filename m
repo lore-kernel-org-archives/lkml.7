@@ -2,319 +2,193 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9294C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B99C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F9020820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="bkgRAK8T"
+	by mail.kernel.org (Postfix) with ESMTP id 11412205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569269884;
+	bh=1cS+V/2T6hNQDP2dZSXrP1Xl7F2JPVXoQBrGnhIIPto=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=G0O1bf/rE9vEY4GYse6+tK35tBUxBYBsXmtiHYhFcyiw8u9e/XFXnBZ1ztBPJXjk1
+	 BFPeCKmBp9g4gptrQzUjHhLQzTr5pzX6Hp3DGJwfvsKCQTra/NGeW6cNlcnnA7CCBD
+	 NCELbWqU25o8FGzHRHQtmyQ1mBY6B58d9e2BqRwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502500AbfIWUPH (ORCPT
+        id S2502501AbfIWUSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:15:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42209 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfIWUPH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:15:07 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so36660321iod.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 13:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lp6TMonzbuKlj33/BD70j5mcW8fMXi5umrwspsU0yM0=;
-        b=bkgRAK8T3TSB8yADJditMdMUoiZ+K2NcwqoDPIgl7k65NTZgnQe+6AqAyePYWLy6Ju
-         YSZfIBzKKQq5CzFsQrRlizYDZWrDJMWKvJ44aVNFe+3Qv+wpuwLxI2wYkWGvmPHmW3W3
-         f93dMu1/W9JMNKc0jYWvqy2yYCUHWu5Q1Rvwg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lp6TMonzbuKlj33/BD70j5mcW8fMXi5umrwspsU0yM0=;
-        b=olSzPzInAP8FoWXhj1zKMit9ooVjrYoup1e4jqk3GAKLYx9/oWiqzPK9ZgO+6WBORN
-         OQy3CPSEjQjJEa1f0RLXrWNz0m/2MPUGQYxl/GScdznm5ZAbnkknD3Au9LH26AflGdxY
-         qB//3mLRyBS0Tf9kqbRxQtKwxZIWc0ty/9Vl+qRsCZSJcFLP1EfEoj8CBiqgdqUZbq9Z
-         EmyEd7QKfQ4faNCPSz+LojGX/9l4rByHPcY02qJGE4z2716oCktPLShWiJW5BwhxLNVK
-         pjm3/+8Q4iGbyWDpPGgWFs6+JRD0W92UVwHs/TfMK0y2JegaolC6xnqnymgOc3b6NIbO
-         VXug==
-X-Gm-Message-State: APjAAAUeGLw6v8roKRNP5wciT9RBWCoYEvyZ5i6zy16fBn6q2TgwB1C5
-        tT6ripzMFm+v7wT0B3in4muRWps94YzRPPNsY4s=
-X-Google-Smtp-Source: APXvYqwO5Em5+XJuiPV4ZrZ53a6N6x5NEVARmGtsCO+2CLPZiMl0XC+iZXFMJtOR+QaIV4DwlepFcqhJToxVRZ72Y6k=
-X-Received: by 2002:a02:9443:: with SMTP id a61mr1412409jai.35.1569269704624;
- Mon, 23 Sep 2019 13:15:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569209505-15801-1-git-send-email-teawaterz@linux.alibaba.com>
-In-Reply-To: <1569209505-15801-1-git-send-email-teawaterz@linux.alibaba.com>
-From:   Dan Streetman <ddstreet@ieee.org>
-Date:   Mon, 23 Sep 2019 16:14:27 -0400
-Message-ID: <CALZtOND21Lo7_a7a0LKMZzdo1_=+42GgbhAAn0LOJHbFe8yjFA@mail.gmail.com>
-Subject: Re: [RFC v3] zswap: Add CONFIG_ZSWAP_IO_SWITCH to handle swap IO issue
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     Seth Jennings <sjenning@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, chris@chris-wilson.co.uk,
-        Johannes Weiner <hannes@cmpxchg.org>, ziqian.lzq@antfin.com,
-        osandov@fb.com, Huang Ying <ying.huang@intel.com>,
-        aryabinin@virtuozzo.com, vovoy@chromium.org,
-        richard.weiyang@gmail.com, jgg@ziepe.ca, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, jglisse@redhat.com, b.zolnierkie@samsung.com,
-        axboe@kernel.dk, dennis@kernel.org,
-        Josef Bacik <josef@toxicpanda.com>, tj@kernel.org,
-        oleg@redhat.com, Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
+        Mon, 23 Sep 2019 16:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728647AbfIWUSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:18:02 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C996205F4;
+        Mon, 23 Sep 2019 20:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569269881;
+        bh=1cS+V/2T6hNQDP2dZSXrP1Xl7F2JPVXoQBrGnhIIPto=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=uCQg0YOuP/QFqnR+R+RbQxNx8ri4unVWRFrjFAw3XVDUoGJOVcYLXFDm98fFifPCF
+         xhFWllvd7JOhbF6YB82C7hWZ46zQEZp5t2CYtIJhjbBN8gDSWVAEEIPvT/Lf/NO7RV
+         NfF133HbqciMhpf6r0BUlHGlbDyOHVIgaZ1FmiJA=
+Message-ID: <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
+Subject: Re: Lease semantic proposal
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Date:   Mon, 23 Sep 2019 16:17:59 -0400
+In-Reply-To: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 11:32 PM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
->
-> This is the third version of this patch.  The first and second version
-> is in [1] and [2].
-> This verion is updated according to the comments from Randy Dunlap
-> in [3].
->
-> Currently, I use a VM that has 2 CPUs, 4G memory and 4G swap file.
-> I found that swap will affect the IO performance when it is running.
-> So I open zswap to handle it because it just use CPU cycles but not
-> disk IO.
->
-> It work OK but I found that zswap is slower than normal swap in this
-> VM.  zswap is about 300M/s and normal swap is about 500M/s. (The reason
-> is disk inside VM has fscache in host machine.)
+On Mon, 2019-09-23 at 12:08 -0700, Ira Weiny wrote:
+> Since the last RFC patch set[1] much of the discussion of supporting RDMA with
+> FS DAX has been around the semantics of the lease mechanism.[2]  Within that
+> thread it was suggested I try and write some documentation and/or tests for the
+> new mechanism being proposed.  I have created a foundation to test lease
+> functionality within xfstests.[3] This should be close to being accepted.
+> Before writing additional lease tests, or changing lots of kernel code, this
+> email presents documentation for the new proposed "layout lease" semantic.
+> 
+> At Linux Plumbers[4] just over a week ago, I presented the current state of the
+> patch set and the outstanding issues.  Based on the discussion there, well as
+> follow up emails, I propose the following addition to the fcntl() man page.
+> 
+> Thank you,
+> Ira
+> 
+> [1] https://lkml.org/lkml/2019/8/9/1043
+> [2] https://lkml.org/lkml/2019/8/9/1062
+> [3] https://www.spinics.net/lists/fstests/msg12620.html
+> [4] https://linuxplumbersconf.org/event/4/contributions/368/
+> 
+> 
 
-I must be missing something here - if zswap in the guest is *slower*
-than real swap, why are you using zswap?
+Thank you so much for doing this, Ira. This allows us to debate the
+user-visible behavior semantics without getting bogged down in the
+implementation details. More comments below:
 
-Also, I don't see why zswap is slower than normal swap, unless you
-mean that your zswap is full, since once zswap fills up any additional
-swap will absolutely be slower than not having zswap at all.
+> <fcntl man page addition>
+> Layout Leases
+> -------------
+> 
+> Layout (F_LAYOUT) leases are special leases which can be used to control and/or
+> be informed about the manipulation of the underlying layout of a file.
+> 
+> A layout is defined as the logical file block -> physical file block mapping
+> including the file size and sharing of physical blocks among files.  Note that
+> the unwritten state of a block is not considered part of file layout.
+> 
+> **Read layout lease F_RDLCK | F_LAYOUT**
+> 
+> Read layout leases can be used to be informed of layout changes by the
+> system or other users.  This lease is similar to the standard read (F_RDLCK)
+> lease in that any attempt to change the _layout_ of the file will be reported to
+> the process through the lease break process.  But this lease is different
+> because the file can be opened for write and data can be read and/or written to
+> the file as long as the underlying layout of the file does not change.
+> Therefore, the lease is not broken if the file is simply open for write, but
+> _may_ be broken if an operation such as, truncate(), fallocate() or write()
+> results in changing the underlying layout.
+> 
+> **Write layout lease (F_WRLCK | F_LAYOUT)**
+> 
+> Write Layout leases can be used to break read layout leases to indicate that
+> the process intends to change the underlying layout lease of the file.
+> 
+> A process which has taken a write layout lease has exclusive ownership of the
+> file layout and can modify that layout as long as the lease is held.
+> Operations which change the layout are allowed by that process.  But operations
+> from other file descriptors which attempt to change the layout will break the
+> lease through the standard lease break process.  The F_LAYOUT flag is used to
+> indicate a difference between a regular F_WRLCK and F_WRLCK with F_LAYOUT.  In
+> the F_LAYOUT case opens for write do not break the lease.  But some operations,
+> if they change the underlying layout, may.
+> 
+> The distinction between read layout leases and write layout leases is that
+> write layout leases can change the layout without breaking the lease within the
+> owning process.  This is useful to guarantee a layout prior to specifying the
+> unbreakable flag described below.
+> 
+> 
 
-> So open zswap is make memory shrinker slower but good for IO performance
-> in this VM.
-> So I just want zswap work when the disk of the swap file is under high
-> IO load.
->
-> This commit is designed for this idea.
-> It add two parameters read_in_flight_limit and write_in_flight_limit to
-> zswap.
-> In zswap_frontswap_store, pages will be stored to zswap only when
-> the IO in flight number of swap device is bigger than
-> zswap_read_in_flight_limit or zswap_write_in_flight_limit
-> when zswap is enabled.
-> Then the zswap just work when the IO in flight number of swap device
-> is low.
+The above sounds totally reasonable. You're essentially exposing the
+behavior of nfsd's layout leases to userland. To be clear, will F_LAYOUT
+leases work the same way as "normal" leases, wrt signals and timeouts?
 
-Ok, so maybe I understand what you mean, your disk I/O is normally
-very fast, but once your host-side cache is full it starts actually
-writing to your host physical disk, and your guest swap I/O drops way
-down (since caching pages in host memory is much faster than writing
-to a host physical disk).  Is that what's going on?  That was not
-clear at all to me from the commit description...
+I do wonder if we're better off not trying to "or" in flags for this,
+and instead have a separate set of commands (maybe F_RDLAYOUT,
+F_WRLAYOUT, F_UNLAYOUT). Maybe I'm just bikeshedding though -- I don't
+feel terribly strongly about it.
 
-In general I think the description of this commit, as well as the docs
-and even user interface of how to use it, is very confusing.  I can
-see how it would be beneficial in this specific situation, but I'm not
-a fan of the implementation, and I'm very concerned that nobody will
-be able to understand how to use it properly - when should they enable
-it?  What limit values should they use?  Why are there separate read
-and write limits?  None of that is clear to me, and I'm fairly
-certainly it would not be clear to other normal users.
+Also, at least in NFSv4, layouts are handed out for a particular byte
+range in a file. Should we consider doing this with an API that allows
+for that in the future? Is this something that would be desirable for
+your RDMA+DAX use-cases?
 
-Is there a better way this can be done?
+We could add a new F_SETLEASE variant that takes a struct with a byte
+range (something like struct flock).
 
->
-> [1] https://lkml.org/lkml/2019/9/11/935
-> [2] https://lkml.org/lkml/2019/9/20/90
-> [3] https://lkml.org/lkml/2019/9/20/1076
->
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> ---
->  include/linux/swap.h |  3 +++
->  mm/Kconfig           | 18 ++++++++++++++++
->  mm/page_io.c         | 16 +++++++++++++++
->  mm/zswap.c           | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 95 insertions(+)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index de2c67a..82b621f 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -389,6 +389,9 @@ extern void end_swap_bio_write(struct bio *bio);
->  extern int __swap_writepage(struct page *page, struct writeback_control *wbc,
->         bio_end_io_t end_write_func);
->  extern int swap_set_page_dirty(struct page *page);
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +extern void swap_io_in_flight(struct page *page, unsigned int inflight[2]);
-> +#endif
->
->  int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
->                 unsigned long nr_pages, sector_t start_block);
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 56cec63..387c3b5 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -546,6 +546,24 @@ config ZSWAP
->           they have not be fully explored on the large set of potential
->           configurations and workloads that exist.
->
-> +config ZSWAP_IO_SWITCH
-> +       bool "Compressed cache for swap pages according to the IO status"
-> +       depends on ZSWAP
-> +       help
-> +         This function helps the system that normal swap speed is higher
-> +         than zswap speed to handle the swap IO issue.
-> +         For example, a VM where the disk device is not set cache config or
-> +         set cache=writeback.
-> +
-> +         This function makes zswap just work when the disk of the swap file
-> +         is under high IO load.
-> +         It add two parameters (read_in_flight_limit and
-> +         write_in_flight_limit) to zswap.  When zswap is enabled, pages will
-> +         be stored to zswap only when the IO in flight number of swap device
-> +         is bigger than zswap_read_in_flight_limit or
-> +         zswap_write_in_flight_limit.
-> +         If unsure, say "n".
-> +
->  config ZPOOL
->         tristate "Common API for compressed memory storage"
->         help
-> diff --git a/mm/page_io.c b/mm/page_io.c
-> index 24ee600..e66b050 100644
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -434,3 +434,19 @@ int swap_set_page_dirty(struct page *page)
->                 return __set_page_dirty_no_writeback(page);
->         }
->  }
-> +
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +void swap_io_in_flight(struct page *page, unsigned int inflight[2])
-> +{
-> +       struct swap_info_struct *sis = page_swap_info(page);
-> +
-> +       if (!sis->bdev) {
-> +               inflight[0] = 0;
-> +               inflight[1] = 0;
-> +               return;
-> +       }
-> +
-> +       part_in_flight_rw(bdev_get_queue(sis->bdev), sis->bdev->bd_part,
-> +                                         inflight);
+> **Unbreakable Layout Leases (F_UNBREAK)**
+> 
+> In order to support pinning of file pages by direct user space users an
+> unbreakable flag (F_UNBREAK) can be used to modify the read and write layout
+> lease.  When specified, F_UNBREAK indicates that any user attempting to break
+> the lease will fail with ETXTBUSY rather than follow the normal breaking
+> procedure.
+> 
+> Both read and write layout leases can have the unbreakable flag (F_UNBREAK)
+> specified.  The difference between an unbreakable read layout lease and an
+> unbreakable write layout lease are that an unbreakable read layout lease is
+> _not_ exclusive.  This means that once a layout is established on a file,
+> multiple unbreakable read layout leases can be taken by multiple processes and
+> used to pin the underlying pages of that file.
+> 
+> Care must therefore be taken to ensure that the layout of the file is as the
+> user wants prior to using the unbreakable read layout lease.  A safe mechanism
+> to do this would be to take a write layout lease and use fallocate() to set the
+> layout of the file.  The layout lease can then be "downgraded" to unbreakable
+> read layout as long as no other user broke the write layout lease.
+> 
 
-this potentially will read inflight stats info from all possible cpus,
-that's not something I'm a big fan of adding to every single page swap
-call...it's not awful, but there might be scaling issues for systems
-with lots of cpus.
+Will userland require any special privileges in order to set an
+F_UNBREAK lease? This seems like something that could be used for DoS. I
+assume that these will never time out.
 
-> +}
-> +#endif
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 0e22744..0190b2d 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -62,6 +62,14 @@ static u64 zswap_reject_compress_poor;
->  static u64 zswap_reject_alloc_fail;
->  /* Store failed because the entry metadata could not be allocated (rare) */
->  static u64 zswap_reject_kmemcache_fail;
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +/*
-> + * Store failed because zswap_read_in_flight_limit or
-> + * zswap_write_in_flight_limit is bigger than IO in flight number of
-> + * swap device
-> + */
-> +static u64 zswap_reject_io;
-> +#endif
->  /* Duplicate store was encountered (rare) */
->  static u64 zswap_duplicate_entry;
->
-> @@ -114,6 +122,24 @@ static bool zswap_same_filled_pages_enabled = true;
->  module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
->                    bool, 0644);
->
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +/*
-> + * zswap will not try to store the page if zswap_read_in_flight_limit is
-> + * bigger than IO read in flight number of swap device
-> + */
-> +static unsigned int zswap_read_in_flight_limit;
-> +module_param_named(read_in_flight_limit, zswap_read_in_flight_limit,
-> +                  uint, 0644);
-> +
-> +/*
-> + * zswap will not try to store the page if zswap_write_in_flight_limit is
-> + * bigger than IO write in flight number of swap device
-> + */
-> +static unsigned int zswap_write_in_flight_limit;
-> +module_param_named(write_in_flight_limit, zswap_write_in_flight_limit,
-> +                  uint, 0644);
-> +#endif
-> +
->  /*********************************
->  * data structures
->  **********************************/
-> @@ -1009,6 +1035,34 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->                 goto reject;
->         }
->
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +       if (zswap_read_in_flight_limit || zswap_write_in_flight_limit) {
-> +               unsigned int inflight[2];
-> +               bool should_swap = false;
-> +
-> +               swap_io_in_flight(page, inflight);
-> +
-> +               if (zswap_write_in_flight_limit &&
-> +                       inflight[1] < zswap_write_in_flight_limit)
-> +                       should_swap = true;
-> +
-> +               if (zswap_read_in_flight_limit &&
-> +                       (should_swap ||
-> +                        (!should_swap && !zswap_write_in_flight_limit))) {
-> +                       if (inflight[0] < zswap_read_in_flight_limit)
-> +                               should_swap = true;
-> +                       else
-> +                               should_swap = false;
-> +               }
-> +
-> +               if (should_swap) {
-> +                       zswap_reject_io++;
-> +                       ret = -EIO;
-> +                       goto reject;
-> +               }
-> +       }
-> +#endif
-> +
->         /* reclaim space if needed */
->         if (zswap_is_full()) {
->                 zswap_pool_limit_hit++;
-> @@ -1264,6 +1318,10 @@ static int __init zswap_debugfs_init(void)
->                            zswap_debugfs_root, &zswap_reject_kmemcache_fail);
->         debugfs_create_u64("reject_compress_poor", 0444,
->                            zswap_debugfs_root, &zswap_reject_compress_poor);
-> +#ifdef CONFIG_ZSWAP_IO_SWITCH
-> +       debugfs_create_u64("reject_io", 0444,
+How will we deal with the case where something is is squatting on an
+F_UNBREAK lease and isn't letting it go?
 
-"reject_io" is not very clear about why it was rejected; I think most
-people will assume this means pages were rejected because of I/O
-errors, not because the I/O inflight page count was lower than the set
-limit.
+Leases are technically "owned" by the file description -- we can't
+necessarily trace it back to a single task in a threaded program. The
+kernel task that set the lease may have exited by the time we go
+looking.
 
-> +                          zswap_debugfs_root, &zswap_reject_io);
-> +#endif
->         debugfs_create_u64("written_back_pages", 0444,
->                            zswap_debugfs_root, &zswap_written_back_pages);
->         debugfs_create_u64("duplicate_entry", 0444,
-> --
-> 2.7.4
->
+Will we be content trying to determine this using /proc/locks+lsof, etc,
+or will we need something better?
+
+> </fcntl man page addition>
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
