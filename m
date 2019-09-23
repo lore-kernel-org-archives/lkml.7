@@ -2,145 +2,140 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868AEC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF8EC32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C24A20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FD020673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="xZgx83uA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cZCk4z/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfIWPGw (ORCPT
+        id S1726514AbfIWPHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:06:52 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:37068 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfIWPGw (ORCPT
+        Mon, 23 Sep 2019 11:07:08 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57808 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfIWPHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:06:52 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 555682E147E;
-        Mon, 23 Sep 2019 18:06:48 +0300 (MSK)
-Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id LXwfn27u5e-6lL4Kv1i;
-        Mon, 23 Sep 2019 18:06:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1569251208; bh=Y6U3tSiPz0hrvdsJTx8ZUTeNaokC8gQiPkS2jx87AIQ=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=xZgx83uAgxA0VhhQbGmhCg+PnNLqeqd12GXqBk8hHY2zSJIyt8dLriJFw4G9LwGqc
-         GwgYtxnwEHnlSpGcxlpW5CRFFwXeGJRLt07cCKcT3qn59huunmpRnR69Qj9qZrgJ7y
-         O3CdfuF9CB6Oq3/PmR/qvEYAW77O6pBBlVlWaIIs=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:344a:8fe6:6594:f7b2])
-        by vla5-2bf13a090f43.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id BZTsvyuZ7l-6kIG6iKd;
-        Mon, 23 Sep 2019 18:06:47 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
- <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
-Date:   Mon, 23 Sep 2019 18:06:46 +0300
+        Mon, 23 Sep 2019 11:07:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NF73fh089611;
+        Mon, 23 Sep 2019 10:07:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569251223;
+        bh=1dIFHJa5GMgHtqK1tr5O5RDeOMNxuXY7Y8ZccX6G4bg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cZCk4z/y0dO+RmJ7PV1Qj2cEHHFy8oexfcEDpUh3GDzvytWV4n8Jdyr51sSS4Hxx1
+         dpi9rxmEY3LJGkcaNbYEuWHcNGVlhQr1vRmf9K325lsA5YGz7v0/al9uI17P/q/FlR
+         Oz8yjWIsNztf2gCnPd/0jlxKtzn5atAe2/BcLyBM=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NF732w077633;
+        Mon, 23 Sep 2019 10:07:03 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
+ Sep 2019 10:06:57 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 23 Sep 2019 10:06:57 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NF733b047566;
+        Mon, 23 Sep 2019 10:07:03 -0500
+Subject: Re: [PATCH v8 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-7-dmurphy@ti.com>
+ <135685e7-e3cc-da4d-3349-9affba5b89cc@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f371559c-f9f6-d799-d741-afa28c5b89bc@ti.com>
+Date:   Mon, 23 Sep 2019 10:11:28 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <135685e7-e3cc-da4d-3349-9affba5b89cc@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 17.52, Tejun Heo wrote:
-> Hello, Konstantin.
-> 
-> On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
->> With vm.dirty_write_behind 1 or 2 files are written even faster and
-> 
-> Is the faster speed reproducible?  I don't quite understand why this
-> would be.
+Jacek
 
-Writing to disk simply starts earlier.
+On 9/21/19 1:08 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> One more remark below.
+>
+> On 9/20/19 7:41 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The framework allows for dynamically setting individual LEDs
+>> or setting brightness levels of LEDs and updating them virtually
+>> simultaneously.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig                 |  10 +
+>>   drivers/leds/Makefile                |   1 +
+>>   drivers/leds/led-class-multicolor.c  | 316 +++++++++++++++++++++++++++
+>>   include/linux/led-class-multicolor.h |  76 +++++++
+>>   4 files changed, 403 insertions(+)
+>>   create mode 100644 drivers/leds/led-class-multicolor.c
+>>   create mode 100644 include/linux/led-class-multicolor.h
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 6e7703fd03d0..cfb1ebb6517f 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+> [...]
+>> +static int led_multicolor_init_color_dir(struct led_classdev_mc_data *data,
+>> +					 struct led_classdev_mc *mcled_cdev)
+>> +{
+>> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+>> +	u32 color_id;
+>> +	int ret;
+>> +	int i, j = 0;
+>> +
+>> +	data->mcled_cdev = mcled_cdev;
+>> +
+>> +	ret = sysfs_create_group(&led_cdev->dev->kobj, &led_color_group);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	for (i = 0; i < LED_COLOR_ID_MAX; i++) {
+>> +		color_id = (mcled_cdev->available_colors & (1 << i));
+> Please use bitops for accessing available_colors.
+>
+>> +		if (color_id) {
+> Here you need: if (test_bit(i, &mcled_cdev->available_colors))
 
-> 
->> during copying amount of dirty memory always stays around at 16MiB.
-> 
-> The following is the test part of a slightly modified version of your
-> test script which should run fine on any modern systems.
-> 
->    for mode in 0 1; do
-> 	  if [ $mode == 0 ]; then
-> 		  prefix=''
-> 	  else
-> 		  prefix='systemd-run --user --scope -p MemoryMax=64M'
-> 	  fi
-> 
-> 	  echo COPY
-> 	  time $prefix cp -r dummy copy
-> 
-> 	  grep Dirty /proc/meminfo
-> 
-> 	  echo SYNC
-> 	  time sync
-> 
-> 	  rm -fr copy
->    done
-> 
-> and the result looks like the following.
-> 
->    $ ./test-writebehind.sh
->    SIZE
->    3.3G    dummy
->    COPY
-> 
->    real    0m2.859s
->    user    0m0.015s
->    sys     0m2.843s
->    Dirty:           3416780 kB
->    SYNC
-> 
->    real    0m34.008s
->    user    0m0.000s
->    sys     0m0.008s
->    COPY
->    Running scope as unit: run-r69dca5326a9a435d80e036435ff9e1da.scope
-> 
->    real    0m32.267s
->    user    0m0.032s
->    sys     0m4.186s
->    Dirty:             14304 kB
->    SYNC
-> 
->    real    0m1.783s
->    user    0m0.000s
->    sys     0m0.006s
-> 
-> This is how we are solving the massive dirtier problem.  It's easy,
-> works pretty well and can easily be tailored to the specific
-> requirements.
-> 
-> Generic write-behind would definitely have other benefits and also a
-> bunch of regression possibilities.  I'm not trying to say that
-> write-behind isn't a good idea but it'd be useful to consider that a
-> good portion of the benefits can already be obtained fairly easily.
-> 
+Then I can get rid of the color_id and just use test_bit.
 
-I'm afraid this could end badly if each simple task like file copying
-will require own systemd job and container with manual tuning.
+Then your other request for color_mask is not needed because we can just 
+test against the incremental 'i'
+
+Dan
+
+>> +			ret = led_multicolor_init_color(data, mcled_cdev, i, j);
+>> +			if (ret)
+>> +				break;
+>> +
+>> +			j++;
+>> +		}
+>> +	}
+>> +
+>> +	return ret;
+>> +}
