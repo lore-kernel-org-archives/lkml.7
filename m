@@ -2,83 +2,131 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59264C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E338C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B23F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC9820820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbfIWP7j (ORCPT
+        id S1732757AbfIWQA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:59:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
+        Mon, 23 Sep 2019 12:00:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53812 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbfIWP7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:59:39 -0400
-Received: from oasis.local.home (unknown [65.39.69.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732882AbfIWQAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:00:55 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D77420673;
-        Mon, 23 Sep 2019 15:59:36 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 11:59:29 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/6] tools/lib/traceevent: Man page updates and some
- file movement
-Message-ID: <20190923115929.453b68f1@oasis.local.home>
-In-Reply-To: <20190923111248.5ebdbfd5@oasis.local.home>
-References: <20190919212335.400961206@goodmis.org>
-        <20190923142839.GD16544@kernel.org>
-        <20190923143927.GE16544@kernel.org>
-        <20190923145249.GF16544@kernel.org>
-        <20190923111248.5ebdbfd5@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DEA881F31
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:00:54 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id m6so17755663qtk.23
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:00:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FnrZlG9onHbzoUOas395WBpQBkqdPWiXJrz3kgJAMNs=;
+        b=uPrCEuwgYM1mv+vcWdVdM5SGTy3DQsOvwy5Fv5nikjtblwlrersdKhlh7+WPpKITst
+         H4aSg8qQv0eGbyJy7rmpI3OfznYX9CoA8QlvLS7mQ3es0mqeCJ9jMRYAp0Ea+7l0ZFfB
+         MIVkxAdZBvxRnQIkmoKu5II5seD12lZGJpmMKryZKkupFkJgsTCOhsgqHTF5UO+P3kNg
+         JnzXa+6qnQHxJwkk3cncmyA4lQBCxo+NUx1STzFHrMzr4lXMvOyQvqyaNkG05ou8Uh+z
+         gN2xZXi/f+2MnVsNPPoPtyYRcu0CJcn9i4JMTPgg7Ek5A07ndG2p2bl7+cW5pWUqCK1R
+         Aqsw==
+X-Gm-Message-State: APjAAAV57t8EF5ujn1hcEiwXH/x5sa1J5ScNy8UYeCkofw/ByJIFQGnF
+        3+CGRKhQlUSWvSBs2NQ/NoQN3zIJ9nqC1vsjmLp92g2ZKByfUsRg+P4KbOT2oRBDLadTIDuXcOU
+        oD/WZ8rEZLsaID+xeFFtRW1rJ
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662847qvl.38.1569254453722;
+        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzeS0qH7VWztyzQkjfFK33LHuBL/0r9aVYJeACu8zWG4i5I+VaFWBP3hOAewtn9oF8WJysLNw==
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662820qvl.38.1569254453463;
+        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id m125sm5840827qkd.3.2019.09.23.09.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 09:00:52 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 12:00:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
+Subject: Re: [PATCH 5/6] vringh: fix copy direction of vringh_iov_push_kern()
+Message-ID: <20190923115930-mutt-send-email-mst@kernel.org>
+References: <20190923130331.29324-1-jasowang@redhat.com>
+ <20190923130331.29324-6-jasowang@redhat.com>
+ <20190923094559.765da494@x1.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923094559.765da494@x1.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019 11:12:48 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Sep 23, 2019 at 09:45:59AM -0600, Alex Williamson wrote:
+> On Mon, 23 Sep 2019 21:03:30 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+> 
+> > We want to copy from iov to buf, so the direction was wrong.
+> > 
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  drivers/vhost/vringh.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> 
+> Why is this included in the series?  Seems like an unrelated fix being
+> held up within a proposal for a new feature.  Thanks,
+> 
+> Alex
 
-> Yeah. Let's not apply this one yet till we figure out what broke. I'll
-> take a look at it too.
+It's better to have it as patch 1/6, but it's a dependency of the
+example driver in the series. I can reorder when I apply.
 
-Does this help?
 
--- Steve
-
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index f9807d8c005b..7544166dd466 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -292,7 +292,7 @@ endif
- LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
- export LIBTRACEEVENT
- 
--LIBTRACEEVENT_DYNAMIC_LIST = $(TE_PATH)libtraceevent-dynamic-list
-+LIBTRACEEVENT_DYNAMIC_LIST = $(TE_PATH)plugins/libtraceevent-dynamic-list
- 
- #
- # The static build has no dynsym table, so this does not work for
-@@ -737,7 +737,7 @@ libtraceevent_plugins: FORCE
- 	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) plugins
- 
- $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent-dynamic-list
-+	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)plugins/libtraceevent-dynamic-list
- 
- $(LIBTRACEEVENT)-clean:
- 	$(call QUIET_CLEAN, libtraceevent)
-
+> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > index 08ad0d1f0476..a0a2d74967ef 100644
+> > --- a/drivers/vhost/vringh.c
+> > +++ b/drivers/vhost/vringh.c
+> > @@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
+> >  	return 0;
+> >  }
+> >  
+> > +static inline int kern_xfer(void *dst, void *src, size_t len)
+> > +{
+> > +	memcpy(dst, src, len);
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * vringh_init_kern - initialize a vringh for a kernelspace vring.
+> >   * @vrh: the vringh to initialize.
+> > @@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
+> >  ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
+> >  			     const void *src, size_t len)
+> >  {
+> > -	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
+> > +	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
+> >  }
+> >  EXPORT_SYMBOL(vringh_iov_push_kern);
+> >  
