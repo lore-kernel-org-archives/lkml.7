@@ -2,77 +2,169 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38814C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A3DC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D4020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E146320B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfIWTVt (ORCPT
+        id S1733241AbfIWTXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:21:49 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:36248 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbfIWTVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:21:49 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCTu7-0000C1-H5; Mon, 23 Sep 2019 19:21:47 +0000
-Date:   Mon, 23 Sep 2019 20:21:47 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] several more mount API conversions
-Message-ID: <20190923192147.GC26530@ZenIV.linux.org.uk>
+        Mon, 23 Sep 2019 15:23:12 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39669 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728032AbfIWTXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:23:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 12:23:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
+   d="scan'208";a="193192367"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 23 Sep 2019 12:23:10 -0700
+Date:   Mon, 23 Sep 2019 12:27:15 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
+Message-ID: <20190923122715.53de79d0@jacob-builder>
+In-Reply-To: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Assorted conversions of options parsing to new API.
-gfs2 is probably the most serious one here; the rest is
-trivial stuff.  Other things in what used to be #work.mount
-are going to wait for the next cycle (and preferably go via
-git trees of the filesystems involved).
+Hi Baolu,
 
-The following changes since commit 74983ac20aeafc88d9ceed64a8bf2a9024c488d5:
+On Mon, 23 Sep 2019 20:24:50 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-  vfs: Make fs_parse() handle fs_param_is_fd-type params better (2019-09-12 21:06:14 -0400)
+> This patchset aims to move IOVA (I/O Virtual Address) translation
+> to 1st-level page table under scalable mode. The major purpose of
+> this effort is to make guest IOVA support more efficient.
+> 
+> As Intel VT-d architecture offers caching-mode, guest IOVA (GIOVA)
+> support is now implemented in a shadow page manner. The device
+> simulation software, like QEMU, has to figure out GIOVA->GPA mapping
+> and writes to a shadowed page table, which will be used by pIOMMU.
+> Each time when mappings are created or destroyed in vIOMMU, the
+> simulation software will intervene. The change on GIOVA->GPA will be
+> shadowed to host, and the pIOMMU will be updated via VFIO/IOMMU
+> interfaces.
+> 
+> 
+>      .-----------.
+>      |  vIOMMU   |
+>      |-----------|                 .--------------------.
+>      |           |IOTLB flush trap |        QEMU        |
+>      .-----------. (map/unmap)     |--------------------|
+>      | GVA->GPA  |---------------->|      .----------.  |
+>      '-----------'                 |      | GPA->HPA |  |
+>      |           |                 |      '----------'  |
+>      '-----------'                 |                    |
+>                                    |                    |
+>                                    '--------------------'
+>                                                 |
+>             <------------------------------------
+>             |
+>             v VFIO/IOMMU API
+>       .-----------.
+>       |  pIOMMU   |
+>       |-----------|
+>       |           |
+>       .-----------.
+>       | GVA->HPA  |
+>       '-----------'
+>       |           |
+>       '-----------'
+> 
+> In VT-d 3.0, scalable mode is introduced, which offers two level
+> translation page tables and nested translation mode. Regards to
+> GIOVA support, it can be simplified by 1) moving the GIOVA support
+> over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
+> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
+> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
+> dual stage) translation in host. Compared with current shadow GIOVA
+> support, the new approach is more secure and software is simplified
+> as we only need to flush the pIOMMU IOTLB and possible device-IOTLB
+> when an IOVA mapping in vIOMMU is torn down.
+> 
+>      .-----------.
+>      |  vIOMMU   |
+>      |-----------|                 .-----------.
+>      |           |IOTLB flush trap |   QEMU    |
+>      .-----------.    (unmap)      |-----------|
+>      | GVA->GPA  |---------------->|           |
+>      '-----------'                 '-----------'
+>      |           |                       |
+>      '-----------'                       |
+>            <------------------------------
+>            |      VFIO/IOMMU          
+>            |  cache invalidation and  
+>            | guest gpd bind interfaces
+>            v
+For vSVA, the guest PGD bind interface will mark the PASID as guest
+PASID and will inject page request into the guest. In FL gIOVA case, I
+guess we are assuming there is no page fault for GIOVA. I will need to
+add a flag in the gpgd bind such that any PRS will be auto responded
+with invalid.
 
-are available in the git repository at:
+Also, native use of IOVA FL map is not to be supported? i.e. IOMMU API
+and DMA API for native usage will continue to be SL only?
+>      .-----------.
+>      |  pIOMMU   |
+>      |-----------|
+>      .-----------.
+>      | GVA->GPA  |<---First level
+>      '-----------'
+>      | GPA->HPA  |<---Scond level
+>      '-----------'
+>      '-----------'
+> 
+> This patch series only aims to achieve the first goal, a.k.a using
+> first level translation for IOVA mappings in vIOMMU. I am sending
+> it out for your comments. Any comments, suggestions and concerns are
+> welcomed.
+> 
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount3
 
-for you to fetch changes up to 1f52aa08d12f8d359e71b4bfd73ca9d5d668e4da:
+> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+> Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+> Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
+> Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+> 
+> Lu Baolu (4):
+>   iommu/vt-d: Move domain_flush_cache helper into header
+>   iommu/vt-d: Add first level page table interfaces
+>   iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+>   iommu/vt-d: Identify domains using first level page table
+> 
+>  drivers/iommu/Makefile             |   2 +-
+>  drivers/iommu/intel-iommu.c        | 142 ++++++++++--
+>  drivers/iommu/intel-pgtable.c      | 342
+> +++++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
+> 31 ++- include/trace/events/intel_iommu.h |  60 +++++
+>  5 files changed, 553 insertions(+), 24 deletions(-)
+>  create mode 100644 drivers/iommu/intel-pgtable.c
+> 
 
-  gfs2: Convert gfs2 to fs_context (2019-09-18 22:47:05 -0400)
-
-----------------------------------------------------------------
-Andrew Price (1):
-      gfs2: Convert gfs2 to fs_context
-
-David Howells (5):
-      vfs: Convert bpf to use the new mount API
-      vfs: Convert functionfs to use the new mount API
-      hypfs: Fix error number left in struct pointer member
-      vfs: Convert hypfs to use the new mount API
-      vfs: Convert spufs to use the new mount API
-
- arch/powerpc/platforms/cell/spufs/inode.c | 207 +++++++------
- arch/s390/hypfs/inode.c                   | 137 +++++----
- drivers/usb/gadget/function/f_fs.c        | 233 +++++++-------
- fs/gfs2/incore.h                          |   8 +-
- fs/gfs2/ops_fstype.c                      | 495 ++++++++++++++++++++++--------
- fs/gfs2/super.c                           | 333 +-------------------
- fs/gfs2/super.h                           |   3 +-
- kernel/bpf/inode.c                        |  92 ++++--
- 8 files changed, 749 insertions(+), 759 deletions(-)
+[Jacob Pan]
