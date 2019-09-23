@@ -2,217 +2,180 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461E5C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D492C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC81207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3676720882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:49:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xjOY/yJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501937AbfIWLrR (ORCPT
+        id S1729727AbfIWLtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:47:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54676 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729470AbfIWLqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:46:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C867B0E5;
-        Mon, 23 Sep 2019 11:46:49 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v6 1/4] nvmem: core: add nvmem_device_find
-Date:   Mon, 23 Sep 2019 13:46:31 +0200
-Message-Id: <20190923114636.6748-2-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190923114636.6748-1-tbogendoerfer@suse.de>
-References: <20190923114636.6748-1-tbogendoerfer@suse.de>
+        Mon, 23 Sep 2019 07:49:32 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41554 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfIWLtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:49:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ph1WQsqjHm2MqFAqK+Rq1wUKmhEoeBwxc1DezgR1MvQ=; b=xjOY/yJAxhq3pjMxLi2rMPdo1
+        +G+szJYH/C+RE8i4eCh+peXajGrou/54xo/DrAFyJQHEumqz60ByBk8BjnbMQnMwXHFr8m1gmN7X8
+        g60ACSYpGBFCKbGMbUczJe1op8OLUaNboInW2OhqIqatD8eLrcJVGmjCsvFw09/AFjZ33E/OvsQy8
+        46/AVmIOgZvrmvPoCPMqUBTdb4LZTmGi+J8g2IpreKxNjfIgcrsHCWjQgey+n0iuuuueMxQG24cAp
+        9ga4ah4xiGBi0giLBwYxLDU8vB52cOokTqGNZdPweaavVQ7Z2RjpIsH7LMXvbijU/mNKOah3iAjPM
+        onquEZ/VA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCMqI-0002oW-EL; Mon, 23 Sep 2019 11:49:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1954301A7A;
+        Mon, 23 Sep 2019 13:48:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB7D820C3E177; Mon, 23 Sep 2019 13:49:20 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 13:49:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, jgross@suse.com
+Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
+Message-ID: <20190923114920.GF2332@hirez.programming.kicks-ass.net>
+References: <20190919150314.054351477@linutronix.de>
+ <20190919150809.446771597@linutronix.de>
+ <20190923084718.GG2349@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1909231227050.2003@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909231227050.2003@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvmem_device_find provides a way to search for nvmem devices with
-the help of a match function simlair to bus_find_device.
+On Mon, Sep 23, 2019 at 12:27:47PM +0200, Thomas Gleixner wrote:
+> On Mon, 23 Sep 2019, Peter Zijlstra wrote:
+> 
+> > On Thu, Sep 19, 2019 at 05:03:24PM +0200, Thomas Gleixner wrote:
+> > > To prepare for converting the exit to usermode code to the generic version,
+> > > move the irqflags tracing into C code.
+> > > 
+> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > > ---
+> > >  arch/x86/entry/common.c          |   10 ++++++++++
+> > >  arch/x86/entry/entry_32.S        |   11 +----------
+> > >  arch/x86/entry/entry_64.S        |   10 ++--------
+> > >  arch/x86/entry/entry_64_compat.S |   21 ---------------------
+> > >  4 files changed, 13 insertions(+), 39 deletions(-)
+> > > 
+> > > --- a/arch/x86/entry/common.c
+> > > +++ b/arch/x86/entry/common.c
+> > > @@ -102,6 +102,8 @@ static void exit_to_usermode_loop(struct
+> > >  	struct thread_info *ti = current_thread_info();
+> > >  	u32 cached_flags;
+> > >  
+> > > +	trace_hardirqs_off();
+> > 
+> > Bah.. so this gets called from:
+> > 
+> >  - C code, with IRQs disabled
+> >  - entry_64.S:error_exit
+> >  - entry_32.S:resume_userspace
+> > 
+> > The first obviously doesn't need this annotation, but this patch doesn't
+> > remove the TRACE_IRQS_OFF from entry_64.S and only the 32bit case is
+> > changed.
+> > 
+> > Is that entry_64.S case an oversight, or do we need an extensive comment
+> > on this one?
+> 
+> Lemme stare at that again. At some point I probably lost track in that maze.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- Documentation/driver-api/nvmem.rst |  2 ++
- drivers/nvmem/core.c               | 61 +++++++++++++++++---------------------
- include/linux/nvmem-consumer.h     |  9 ++++++
- 3 files changed, 38 insertions(+), 34 deletions(-)
+While walking the kids to school I wondered WTH we need to call
+TRACE_IRQS_OFF in the first place. If this is the return from exception
+path, interrupts had better be disabled already (in exception enter).
 
-diff --git a/Documentation/driver-api/nvmem.rst b/Documentation/driver-api/nvmem.rst
-index d9d958d5c824..287e86819640 100644
---- a/Documentation/driver-api/nvmem.rst
-+++ b/Documentation/driver-api/nvmem.rst
-@@ -129,6 +129,8 @@ To facilitate such consumers NVMEM framework provides below apis::
-   struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
-   struct nvmem_device *devm_nvmem_device_get(struct device *dev,
- 					   const char *name);
-+  struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data));
-   void nvmem_device_put(struct nvmem_device *nvmem);
-   int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
- 		      size_t bytes, void *buf);
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 057d1ff87d5d..9f1ee9c766ec 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -76,33 +76,6 @@ static struct bus_type nvmem_bus_type = {
- 	.name		= "nvmem",
- };
- 
--static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
--{
--	struct device *d;
--
--	if (!nvmem_np)
--		return NULL;
--
--	d = bus_find_device_by_of_node(&nvmem_bus_type, nvmem_np);
--
--	if (!d)
--		return NULL;
--
--	return to_nvmem_device(d);
--}
--
--static struct nvmem_device *nvmem_find(const char *name)
--{
--	struct device *d;
--
--	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
--
--	if (!d)
--		return NULL;
--
--	return to_nvmem_device(d);
--}
--
- static void nvmem_cell_drop(struct nvmem_cell *cell)
- {
- 	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_CELL_REMOVE, cell);
-@@ -532,13 +505,16 @@ int devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem)
- }
- EXPORT_SYMBOL(devm_nvmem_unregister);
- 
--static struct nvmem_device *__nvmem_device_get(struct device_node *np,
--					       const char *nvmem_name)
-+static struct nvmem_device *__nvmem_device_get(void *data,
-+			int (*match)(struct device *dev, const void *data))
- {
- 	struct nvmem_device *nvmem = NULL;
-+	struct device *dev;
- 
- 	mutex_lock(&nvmem_mutex);
--	nvmem = np ? of_nvmem_find(np) : nvmem_find(nvmem_name);
-+	dev = bus_find_device(&nvmem_bus_type, NULL, data, match);
-+	if (dev)
-+		nvmem = to_nvmem_device(dev);
- 	mutex_unlock(&nvmem_mutex);
- 	if (!nvmem)
- 		return ERR_PTR(-EPROBE_DEFER);
-@@ -587,7 +563,7 @@ struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-ENOENT);
- 
--	return __nvmem_device_get(nvmem_np, NULL);
-+	return __nvmem_device_get(nvmem_np, device_match_of_node);
- }
- EXPORT_SYMBOL_GPL(of_nvmem_device_get);
- #endif
-@@ -613,10 +589,26 @@ struct nvmem_device *nvmem_device_get(struct device *dev, const char *dev_name)
- 
- 	}
- 
--	return __nvmem_device_get(NULL, dev_name);
-+	return __nvmem_device_get((void *)dev_name, device_match_name);
- }
- EXPORT_SYMBOL_GPL(nvmem_device_get);
- 
-+/**
-+ * nvmem_device_find() - Find nvmem device with matching function
-+ *
-+ * @data: Data to pass to match function
-+ * @match: Callback function to check device
-+ *
-+ * Return: ERR_PTR() on error or a valid pointer to a struct nvmem_device
-+ * on success.
-+ */
-+struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data))
-+{
-+	return __nvmem_device_get(data, match);
-+}
-+EXPORT_SYMBOL_GPL(nvmem_device_find);
-+
- static int devm_nvmem_device_match(struct device *dev, void *res, void *data)
- {
- 	struct nvmem_device **nvmem = res;
-@@ -710,7 +702,8 @@ nvmem_cell_get_from_lookup(struct device *dev, const char *con_id)
- 		if ((strcmp(lookup->dev_id, dev_id) == 0) &&
- 		    (strcmp(lookup->con_id, con_id) == 0)) {
- 			/* This is the right entry. */
--			nvmem = __nvmem_device_get(NULL, lookup->nvmem_name);
-+			nvmem = __nvmem_device_get((void *)lookup->nvmem_name,
-+						   device_match_name);
- 			if (IS_ERR(nvmem)) {
- 				/* Provider may not be registered yet. */
- 				cell = ERR_CAST(nvmem);
-@@ -780,7 +773,7 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-EINVAL);
- 
--	nvmem = __nvmem_device_get(nvmem_np, NULL);
-+	nvmem = __nvmem_device_get(nvmem_np, device_match_of_node);
- 	of_node_put(nvmem_np);
- 	if (IS_ERR(nvmem))
- 		return ERR_CAST(nvmem);
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b00060..02dc4aa992b2 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -89,6 +89,9 @@ void nvmem_del_cell_lookups(struct nvmem_cell_lookup *entries,
- int nvmem_register_notifier(struct notifier_block *nb);
- int nvmem_unregister_notifier(struct notifier_block *nb);
- 
-+struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data));
-+
- #else
- 
- static inline struct nvmem_cell *nvmem_cell_get(struct device *dev,
-@@ -204,6 +207,12 @@ static inline int nvmem_unregister_notifier(struct notifier_block *nb)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline struct nvmem_device *nvmem_device_find(void *data,
-+			int (*match)(struct device *dev, const void *data))
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_NVMEM */
- 
- #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
--- 
-2.13.7
+For entry_64.S we have:
 
+  - idtentry_part; which does TRACE_IRQS_OFF at the start and error_exit
+    at the end.
+
+  - xen_do_hypervisor_callback, xen_failsafe_callback -- which are
+    confusing.
+
+So in the normal case, it appears we can simply do:
+
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index b7c3ea4cb19d..e9cf59ac554e 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1368,8 +1368,6 @@ END(error_entry)
+ 
+ ENTRY(error_exit)
+ 	UNWIND_HINT_REGS
+-	DISABLE_INTERRUPTS(CLBR_ANY)
+-	TRACE_IRQS_OFF
+ 	testb	$3, CS(%rsp)
+ 	jz	retint_kernel
+ 	jmp	retint_user
+
+and all should be well. This leaves Xen...
+
+For entry_32.S it looks like nothing uses 'resume_userspace' so that
+ENTRY can go away. Which then leaves:
+
+ * ret_from_intr:
+  - common_spurious: TRACE_IRQS_OFF
+  - common_interrupt: TRACE_IRQS_OFF
+  - BUILD_INTERRUPT3: TRACE_IRQS_OFF
+  - xen_do_upcall: ...
+
+ * ret_from_exception:
+  - xen_failsafe_callback: ...
+  - common_exception_read_cr2: TRACE_IRQS_OFF
+  - common_exception: TRACE_IRQS_OFF
+  - int3: TRACE_IRQS_OFF
+
+Which again suggests:
+
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index f83ca5aa8b77..7a19e7413a8e 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -825,9 +825,6 @@ END(ret_from_fork)
+ 	cmpl	$USER_RPL, %eax
+ 	jb	restore_all_kernel		# not returning to v8086 or userspace
+ 
+-ENTRY(resume_userspace)
+-	DISABLE_INTERRUPTS(CLBR_ANY)
+-	TRACE_IRQS_OFF
+ 	movl	%esp, %eax
+ 	call	prepare_exit_to_usermode
+ 	jmp	restore_all
+
+with the notable exception (oh teh pun!) being Xen... _again_.
+
+With these patchlets on, we'd want prepare_exit_to_usermode() to
+validate the IRQ state, but AFAICT it _should_ all just 'work' (famous
+last words).
+
+Cc Juergen because Xen
