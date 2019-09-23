@@ -2,118 +2,175 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB3C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DCFC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EDB20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i8rP3w8H"
+	by mail.kernel.org (Postfix) with ESMTP id 6DCFE20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407427AbfIWRZe (ORCPT
+        id S2407581AbfIWR1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:25:34 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39231 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389167AbfIWRZe (ORCPT
+        Mon, 23 Sep 2019 13:27:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59086 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407411AbfIWR1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:25:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v4so4905525pff.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L3+53+4tDqcisH8nEn571hrd9nXBXU/wwqjTnECUQJw=;
-        b=i8rP3w8H7XdRZzQC+vEtNbIOw2PeTLnH4pc4n+PfWkBuD6VjnLKHotKRieESI8WjSm
-         JjZwAvWJhfKceU+qeK6fooGbCYweulh8jCh64Yz5EGZ1jzK8AozeErEi4H3XF4eEXBPh
-         uCGqhTWoQMKGi9U0WOrIXVYcs5bNWMxlrTVs/He24GaBoNyTc9mSMmH/4A175a3IaX27
-         Ib0jnP4AFA6g/nkI2nu+ZO9C5qjYMZOKSD3G0da4lcjdVTa17aGrH1lzHRqH02mAkVI1
-         4ghF493+SAr863MhjVdpGXL2IhkO1ycALDeTCLWCb6jUt1cW3S1jINQnz14FGfI3EvZ7
-         0g+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L3+53+4tDqcisH8nEn571hrd9nXBXU/wwqjTnECUQJw=;
-        b=Ii/1yiFttzD1HUM8Ry+C2+56qQawOb0dvsmvNaJG99P9m8DzNI2rBYoa07l0f6YqNs
-         HpbHnZPqkHIRWezOwWp6+jErg6hxQ7RIrJa2xRsLrQ2Gr9jzPxzP64TqcRNNGETG21fu
-         ilXwVLxgVFDcpN8xuhg16r9y/kFnPwAIO4JoNgnP8cX41XSVLtPl5EMlfJs9EIFZq4K7
-         ObcTRK9bzFEEihToxlfxvM2ABcJaMWe0FCwijK/dzXLkIv0v4KM5ZYhwZ+dvnfo+h3LL
-         FMYjVByN6LIZ4CxofTc7idPOxPPu+ct9HGfwkmkIbBvqMLljfWgD2PJUbSkYd6cDcvEq
-         WXtw==
-X-Gm-Message-State: APjAAAUnDFnyJdSyRbnkJwICbfBJa2ogQlB5O4mV6Fxzl05tHPAC9YfU
-        FLGb/XR/klmWoDK64CPpD3ymGibhdjzS05ZNWWy9sw==
-X-Google-Smtp-Source: APXvYqzPebvl4GooiI4/1Ommn9k5fln0V+QYnrzWrMivCXE4C96/PAtt1lM1qELnrjqrWt506wH4mQ/oJ0m2QGgjYtA=
-X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr597914pja.73.1569259533361;
- Mon, 23 Sep 2019 10:25:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190922173241.GA44503@rani.riverdale.lan> <CAKwvOd=X9+uxQSzKad8B-Lw=ZarBT+SfNpBm_TE0k+DeJZmrsw@mail.gmail.com>
- <20190923171753.GA2252517@rani.riverdale.lan>
-In-Reply-To: <20190923171753.GA2252517@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 23 Sep 2019 10:25:22 -0700
-Message-ID: <CAKwvOdk86AdyiuM1iHPCYQ8CAhg9Y68e=ELzNCgTaOaUjNO0JQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/purgatory: Add $(DISABLE_STACKLEAK_PLUGIN)
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mon, 23 Sep 2019 13:27:04 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NHN69O047941;
+        Mon, 23 Sep 2019 13:26:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v70cvce19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 13:26:02 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NHN7wV048081;
+        Mon, 23 Sep 2019 13:26:01 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v70cvce0r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 13:26:01 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NHPD51024308;
+        Mon, 23 Sep 2019 17:26:00 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04dal.us.ibm.com with ESMTP id 2v5bg72k8b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 17:26:00 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NHPxRQ11076200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 17:25:59 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5037BAC05E;
+        Mon, 23 Sep 2019 17:25:59 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 555A3AC059;
+        Mon, 23 Sep 2019 17:25:56 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 17:25:56 +0000 (GMT)
+Message-ID: <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
+ method to skip serializing
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Allison Randal <allison@lohutok.net>
+Date:   Mon, 23 Sep 2019 14:25:51 -0300
+In-Reply-To: <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-12-leonardo@linux.ibm.com>
+         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+         <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
+         <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-QkhmEMJu3huKrEpzj07X"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=661 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:17 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Since commit b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than
-> reset KBUILD_CFLAGS") kexec breaks is GCC_PLUGIN_STACKLEAK is enabled, as
-> the purgatory contains undefined references to stackleak_track_stack.
-> Attempting to load a kexec kernel results in:
->         kexec: Undefined symbol: stackleak_track_stack
->         kexec-bzImage64: Loading purgatory failed
->
-> Fix this by disabling the stackleak plugin for purgatory.
->
-> Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-(Sorry for the fallout from b059f801a937, but this is giving us a
-pretty good idea about what "runtime" requirements certain configs
-have.  It would be cool to eventually have some kind of kexec test
-case that folks could run in QEMU).
+--=-QkhmEMJu3huKrEpzj07X
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  arch/x86/purgatory/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> index 527749066d31..fb4ee5444379 100644
-> --- a/arch/x86/purgatory/Makefile
-> +++ b/arch/x86/purgatory/Makefile
-> @@ -25,6 +25,7 @@ KCOV_INSTRUMENT := n
->
->  PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
->  PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-> +PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
->
->  # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
->  # in turn leaves some undefined symbols like __fentry__ in purgatory and not
-> --
-> 2.21.0
->
+On Fri, 2019-09-20 at 17:48 -0700, John Hubbard wrote:
+>=20
+[...]
+> So it seems that full memory barriers (not just compiler barriers) are re=
+quired.
+> If the irq enable/disable somehow provides that, then your new code just =
+goes
+> along for the ride and Just Works. (You don't have any memory barriers in
+> start_lockless_pgtbl_walk() / end_lockless_pgtbl_walk(), just the compile=
+r
+> barriers provided by the atomic inc/dec.)
+>=20
+> So it's really a pre-existing question about the correctness of the gup_f=
+ast()
+> irq disabling approach.
 
+I am not experienced in other archs, and I am still pretty new to
+Power, but by what I could understand, this behavior is better
+explained in serialize_against_pte_lookup.=20
 
--- 
-Thanks,
-~Nick Desaulniers
+What happens here is that, before doing a THP split/collapse, the
+function does a update of the pmd and a serialize_against_pte_lookup,
+in order do avoid a invalid output on a lockless pagetable walk.
+
+Serialize basically runs a do_nothing in every cpu related to the
+process, and wait for it to return.=20
+
+This running depends on interrupt being enabled, so disabling it before
+gup_pgd_range() and re-enabling after the end, makes the THP
+split/collapse wait for gup_pgd_range() completion in every cpu before
+continuing. (here happens the lock)
+
+(As told before, every gup_pgd_range() that occurs after it uses a
+updated pmd, so no problem.)
+
+I am sure other archs may have a similar mechanism using
+local_irq_{disable,enable}.
+
+Did it answer your questions?
+
+Best regards,
+
+Leonardo Bras
+
+--=-QkhmEMJu3huKrEpzj07X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JAB8ACgkQlQYWtz9S
+ttRr1Q//T4jMYmkfmx27+Bg69sKonvlgnqSo2pOluY9vzcehO8orfWtP3QQO2WNv
+ruCYAfCtzUh9x6sByQylolwbt1e/8dI82HBybU4Cy0lgP7ZfDTe+YiWJzMUiUh1l
+Mm36hPPdVyN3EC0UgWQ7nnfnk2xR7UDOfw701rOzvIsK9P568qP65Iryf7uu0V3n
+jvZ5JhVJX9eit1OMfEfVBvZigAuv4eAMvu0LK4ko2uTRUgRdkgZa+Pgf9N38Ok8/
+iaHvDIcbUaZM/PiHkMSdh1iypyAnkGEYb9zpu0He41DiMOsjSkspvcJPRv19/N7X
+p71AztGoVXZd02F6tAMkO+794GqIT2/sixX3gUPCCY7d1uhae2d/u5lMhvXK+sCS
+ktivTMvPqwVfAOGpMheFkugQAu7GhGkUvhslC+YXcZUZJDShK1exMfpbF9slvpEy
+x8/IkF0EGNWei1jw9iW5ic6b9Abk0WoxwbAAjCgZIkbSliZp9O5eD5+woyMn6DRT
+c9CSagzNt6ztFsoAMFbtGHq0bgyW8THVNt9Oq1mijpPEwmfGoa7yfMRmt4+KU4bh
+n6NHbeStFsqhe+59pFTpLRRFkTbMoTQHWsNCLVRlG6fTVZOp0kurs2IjywGqVV8X
+KyFpkCPlUtX8N69af3sVNbUHG11DDvFF4F+FPPjpRnCpqiyRs3E=
+=BjCh
+-----END PGP SIGNATURE-----
+
+--=-QkhmEMJu3huKrEpzj07X--
+
