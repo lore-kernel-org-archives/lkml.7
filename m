@@ -2,140 +2,80 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957F5C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC9C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6898E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYNE4Tvn"
+	by mail.kernel.org (Postfix) with ESMTP id DD1B620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407921AbfIWNcY (ORCPT
+        id S2407952AbfIWNcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:32:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40804 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404581AbfIWNcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:32:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so33361224iof.7;
-        Mon, 23 Sep 2019 06:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Gkx6KfsI/v7RjesbZJM0miCqFfmb10UpE9xFSBSG4M=;
-        b=XYNE4TvnKpcq7LW/JhTVMgCt4cU8pZLEMVe7XH0UwDBfwwE+o6ExtyHMX7nBaHe8oT
-         mI7NYIP5AataRCuGAJ9tg0nC4owo4+fPvB8vTXk8V2I7hcC2NzGbs30N4UdJ3ZLGAUm5
-         11l/j7vKPnT6VC3RW/0y71fviHmelkldDJtMmvkB5SSvJNtV5ZE2LUhUL9QK4uY8zvyX
-         Vxg3fgCBY+HUMOz63RFY89I3hAIzJYpXfjSRFey6zsSLkPZrBNHkJSnsbkU8U1fp0042
-         vBPielQ6d5yeAsaZc2jCoSqLXCtgU6M1IPmsrRcQEqdki+kZtXOmiRP1l8oD/1F8Wq4+
-         NyYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Gkx6KfsI/v7RjesbZJM0miCqFfmb10UpE9xFSBSG4M=;
-        b=LD6GXgA6pNEeuPFfExT91C/FutejA+pkcEngURmkPNw7WTcvmQ068fFv5WH9bhWkPE
-         KGyf01YqJ2UlOcIVazsfONHO4Cic94qxk1Ixs56gF/gX0ahJg7+KfoI5RlXK2pFe02FE
-         28ot3Ae2ZKFLR5cD0S1XtIhDXPEhRSs0ONii2dFj0kqp9YtABC9iu3wq6UUp2EMYYeGT
-         3FF3ZDDhY8GopmNVbCu0BKZi5NfQqR6H54uArQU4uqKDFqKb+r/0n6N945na3POM+aek
-         6hZqALa+y9L39fO0zAas11cAKefg+dpPmqB/OvU+IIQeHVs8WlWZE3QeExIDUbacQ4y2
-         QksQ==
-X-Gm-Message-State: APjAAAWehUgtzwvFABPYy4FpMM44E+DUK4HIUD1czmiL22MeKM482GiR
-        qIv0ezVLxWHRrdMckChVUGt7oKhqXUj3zI6px1U=
-X-Google-Smtp-Source: APXvYqwJR3QJD1jIZYV2jbJW2R5s+jizFtekkek5ZBdhPG1M8UvVC0BL2Whi5uGAdV9CgEENkoGzDWq5OShcNE+n+v8=
-X-Received: by 2002:a02:6a22:: with SMTP id l34mr25692766jac.33.1569245543173;
- Mon, 23 Sep 2019 06:32:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190917161214.2913-1-aford173@gmail.com> <20190917161214.2913-3-aford173@gmail.com>
- <20190921190941.GD32133@ravnborg.org>
-In-Reply-To: <20190921190941.GD32133@ravnborg.org>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 23 Sep 2019 08:32:11 -0500
-Message-ID: <CAHCN7xKqiNxrR+DVDV_7pE0vmQAXQkhf-0RPS3GGgZU=81RC-A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference new
- DRM panel
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Mon, 23 Sep 2019 09:32:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:42190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404581AbfIWNce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:32:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC971000;
+        Mon, 23 Sep 2019 06:32:34 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 155783F694;
+        Mon, 23 Sep 2019 06:32:32 -0700 (PDT)
+Subject: Re: [PATCH v2 03/11] drm/shmem: drop VM_DONTDUMP
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sean Paul <sean@poorly.run>
+References: <20190917092404.9982-1-kraxel@redhat.com>
+ <20190917092404.9982-4-kraxel@redhat.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <f1bd2517-f49f-34c0-6b75-3181c4698f60@arm.com>
+Date:   Mon, 23 Sep 2019 14:32:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190917092404.9982-4-kraxel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 2:09 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Adam.
->
-> On Tue, Sep 17, 2019 at 11:12:13AM -0500, Adam Ford wrote:
-> > With the removal of the panel-dpi from the omap drivers, the
-> > LCD no longer works.  This patch points the device tree to
-> > a newly created panel named "logicpd,type28"
-> >
-> > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> Looks good.
-> One nit below.
->
-> With this addressed:
->
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
->
->         Sam
-> >
-> > diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> > index 07ac99b9cda6..00c426bd51a0 100644
-> > --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> > +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> > @@ -11,22 +11,8 @@
-> >  #include "logicpd-torpedo-37xx-devkit.dts"
-> >
-> >  &lcd0 {
-> > -
-> > +     /* This isn't the exact LCD, but the timings meet spec */
-> > +     /* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-> > +     compatible = "logicpd,type28";
-> >       label = "28";
-> You left this property - but us it documented and what use has it?
+On 17/09/2019 10:23, Gerd Hoffmann wrote:
+> Not obvious why this is needed.  According to Deniel Vetter this is most
+> likely a historic artefact dating back to the days where drm drivers
+> exposed hardware registers as mmap'able gem objects, to avoid dumping
+> touching those registers.  shmem gem objects surely don't need that ...
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-Good catch, I'll remove it and post a V2 today once I can figure out
-the yaml stuff.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-adam
->
-> > -
-> > -     panel-timing {
-> > -             clock-frequency = <9000000>;
-> > -             hactive = <480>;
-> > -             vactive = <272>;
-> > -             hfront-porch = <3>;
-> > -             hback-porch = <2>;
-> > -             hsync-len = <42>;
-> > -             vback-porch = <3>;
-> > -             vfront-porch = <2>;
-> > -             vsync-len = <11>;
-> > -             hsync-active = <1>;
-> > -             vsync-active = <1>;
-> > -             de-active = <1>;
-> > -             pixelclk-active = <0>;
-> > -     };
-> >  };
-> > --
-> > 2.17.1
+> ---
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index a9a586630517..6efedab15016 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -536,7 +536,7 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+>  		return ret;
+>  	}
+>  
+> -	vma->vm_flags |= VM_IO | VM_MIXEDMAP | VM_DONTEXPAND | VM_DONTDUMP;
+> +	vma->vm_flags |= VM_IO | VM_MIXEDMAP | VM_DONTEXPAND;
+>  	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+>  	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+>  	vma->vm_ops = &drm_gem_shmem_vm_ops;
+> 
+
