@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEAFC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6943C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644C520B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF3A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KscoU/sk"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fO39l9GW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbfIWApk (ORCPT
+        id S2389994AbfIWApp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 20:45:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42220 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730404AbfIWApi (ORCPT
+        Sun, 22 Sep 2019 20:45:45 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35870 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730404AbfIWApl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 20:45:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so5738042pls.9
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
+        Sun, 22 Sep 2019 20:45:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so4443081pgb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 17:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Chejk/4+FmCtrFrzQ3cdh4eTfnbOVSILTOMfH5BS3rg=;
-        b=KscoU/skknCbbY8YZs5H+cAOddHExj4kT3l2GqX65Qs42T2g2BLJ54/9rRxImmw1UJ
-         4T+vSMp30+jX7EQr7yLlnw1/JMWgD1jPDci+wH8ngsQUbX4sOABn5I6dcBkOO1Q2eVAm
-         MM/HVsl6/x48oqbevT5I/loUiE1aaPKLNzNxdzPT+wjfs6/aFJl4CPxyN2uTncujwFEG
-         RQhmbpjr/TruZWtqmbjS3M+ObiSvMNaBcUCcY1cUu2v5Kr9hJFHGVj4JOZD91LiZKs0Z
-         3KBUDZghfRVtT/2ak7BUWOsBhPvJwTL74as+9gWJsXjF0GvvNKGQG1lWKJq006JrUP5m
-         DLHA==
+        bh=etFOng1NSMlGr92KlrcTFVrPRQRxbWjcN6/2wjvKnb8=;
+        b=fO39l9GWblA4imhZOOmvXoFwH2V9A46JomP+wWxqplazbuPQxOAopvpwuMhDz6+x//
+         EZ9rQ7jQojULwJl45Z2YA4CLQBGA2Jn5knfHZ7Pv5jo+e2v2yqE5fpO7/po15yIHZdCe
+         xVSpfdNL9/no1QTzYtU6kdrZdi/+LCclix77edyqL21dMfqYMzz0rb7U97Xe+ABc8oYp
+         QezHxT/VqeF0XVKX/v0ibo+OZvYy73cTFqwx4nSPIZryN5qI2C4KsTdV8bSHwKyxLMAJ
+         S+f7Lh5dyiSl7RUB5rvKJwyaLNAZV8lddPDa/LksDBbMylUeVdBhOWw7CypoQVvDwrSy
+         o8EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Chejk/4+FmCtrFrzQ3cdh4eTfnbOVSILTOMfH5BS3rg=;
-        b=BhHpNDfbHXPtMKGfLtzVvC3zg1LSc6O4Fs2dOSWWWTrFOMcYEiJ9kHvq6QXSX4VXJ9
-         XV/7d632I46JoKQCA5kVdrF1hSEk5/DB5m6aTy6YhjpD2YobkoCCT6/NlqpZ1xR62C4H
-         af9DBh6aCdIivVcwDZhD4G/QUCyeDpeG8HDsbnYaIijeM5AqUb2AbJ5Nca4dWNQp0MeJ
-         BjLswl3dKm2OAswIaYLsW81O7VLsrFQVpEnyjktq8+uJFKDyQ12oyGrKLOVSUu3n2MbI
-         3vlKHhwsaN3MHuBnC9m9NnKO4aaHqCcpYLdvTUo1dWjtwyM+Jx34R/5ykve/93M/r25y
-         hLag==
-X-Gm-Message-State: APjAAAWn4VSGQDuCFW3pMhlWDYvQlXoP0HyQ9Ufj6vROcFkB1gap4Xzs
-        qvn/+f9ROdUQhf88ASuBhzEUYA==
-X-Google-Smtp-Source: APXvYqxTVhkh+52M6mkBzcoHkL548c6/8rX+BxMVIXbVMNx8toD/c9dkZqmokUYv/q5COofkwXP/Tg==
-X-Received: by 2002:a17:902:7615:: with SMTP id k21mr28543207pll.116.1569199537599;
-        Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
+        bh=etFOng1NSMlGr92KlrcTFVrPRQRxbWjcN6/2wjvKnb8=;
+        b=lE8oC9QfwbmvKfI+O+PomsRN67UZl6V3sAGzU9F+Q3fIgg+HXg06fD5l+zwpsKAcOZ
+         nxt9TlPb9OUIkv3aWewswfuMj50cE7RY9Mq8sel3FYa5fBoqGdjZMsZ1mdpyDrTbZYv2
+         gE30Xo5QsCjKo1pKqI2q5Yn1BYsci8MaXJLPTRXENkxNDLIrTXns1rKko42m8inTBDn1
+         CadnN/dsWb44DrK7Y3EHeHPpNqXeIO+fnG6Ijp3mlqBAZ6NX38KQWfH5gxe7uz+VqaTY
+         0KD4RiJFFDN6BVzyABNWc57s4IDC4VBl1tHnZsEFuyUI2NznAsCCLH3vDQN5O3HC/ac9
+         AHRQ==
+X-Gm-Message-State: APjAAAWmmpkt8f8F0dfajNmv8mnLhl74oWiXPt7eRu8H9EGlB5f8U8yt
+        xWZCVdRvMbP9Rgii/V2blZJJyQ==
+X-Google-Smtp-Source: APXvYqyxP0lWJyTG/EzXGCE+z0Ba/ovVgEyGLWvJbKiSiuNzBkE6CXeRmeSRUIIaJY5Qr03rNmPIog==
+X-Received: by 2002:a62:8702:: with SMTP id i2mr30820956pfe.187.1569199540103;
+        Sun, 22 Sep 2019 17:45:40 -0700 (PDT)
 Received: from localhost.localdomain (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id l7sm9139392pjy.12.2019.09.22.17.45.36
+        by smtp.gmail.com with ESMTPSA id l7sm9139392pjy.12.2019.09.22.17.45.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
+        Sun, 22 Sep 2019 17:45:39 -0700 (PDT)
 From:   Vincent Chen <vincent.chen@sifive.com>
 To:     linux-riscv@lists.infradead.org
 Cc:     paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
         linux-kernel@vger.kernel.org, vincent.chen@sifive.com
-Subject: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread trapped in WARN()
-Date:   Mon, 23 Sep 2019 08:45:15 +0800
-Message-Id: <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
+Subject: [PATCH 3/4] riscv: Correct the handling of unexpected ebreak in do_trap_break()
+Date:   Mon, 23 Sep 2019 08:45:16 +0800
+Message-Id: <1569199517-5884-4-git-send-email-vincent.chen@sifive.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
 References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
@@ -70,29 +70,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On RISC-V, when the kernel runs code on behalf of a user thread, and the
-kernel executes a WARN() or WARN_ON(), the user thread will be sent
-a bogus SIGTRAP.  Fix the RISC-V kernel code to not send a SIGTRAP when
-a WARN()/WARN_ON() is executed.
+For the kernel space, all ebreak instructions are determined at compile
+time because the kernel space debugging module is currently unsupported.
+Hence, it should be treated as a bug if an ebreak instruction which does
+not belong to BUG_TRAP_TYPE_WARN or BUG_TRAP_TYPE_BUG is executed in
+kernel space. For the userspace, debugging module or user problem may
+intentionally insert an ebreak instruction to trigger a SIGTRAP signal.
+To approach the above two situations, the do_trap_break() will direct
+the BUG_TRAP_TYPE_NONE ebreak exception issued in kernel space to die()
+and will send a SIGTRAP to the trapped process only when the ebreak is
+in userspace.
 
 Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
 ---
- arch/riscv/kernel/traps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/traps.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 055a937aca70..82f42a55451e 100644
+index 82f42a55451e..dd13bc90aeb6 100644
 --- a/arch/riscv/kernel/traps.c
 +++ b/arch/riscv/kernel/traps.c
-@@ -134,7 +134,7 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
- 			break;
+@@ -130,8 +130,6 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
+ 		type = report_bug(regs->sepc, regs);
+ 		switch (type) {
+ #ifdef CONFIG_GENERIC_BUG
+-		case BUG_TRAP_TYPE_NONE:
+-			break;
  		case BUG_TRAP_TYPE_WARN:
  			regs->sepc += get_break_insn_length(regs->sepc);
--			break;
-+			return;
- 		case BUG_TRAP_TYPE_BUG:
- #endif /* CONFIG_GENERIC_BUG */
+ 			return;
+@@ -140,8 +138,9 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
  		default:
+ 			die(regs, "Kernel BUG");
+ 		}
+-	}
+-	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
++	} else
++		force_sig_fault(SIGTRAP, TRAP_BRKPT,
++				(void __user *)(regs->sepc));
+ }
+ 
+ #ifdef CONFIG_GENERIC_BUG
 -- 
 2.7.4
 
