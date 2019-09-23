@@ -2,65 +2,107 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F05FC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9481DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386DD21907
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659BF2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uYhnoC4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393007AbfIWGtg (ORCPT
+        id S2393251AbfIWGuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:49:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45148 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729913AbfIWGtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:49:36 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1CB4DF3B17BFAFAFF9E5;
-        Mon, 23 Sep 2019 14:49:34 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 23 Sep
- 2019 14:49:25 +0800
-Subject: Re: [PATCH v2 1/1] f2fs: update multi-dev metadata in resize_fs
-To:     sunqiuyang <sunqiuyang@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <jaegeuk@kernel.org>
-References: <20190923042139.36470-1-sunqiuyang@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <3f9b09b7-43fc-c4af-ab20-b7589d3fb347@huawei.com>
-Date:   Mon, 23 Sep 2019 14:49:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 23 Sep 2019 02:50:50 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:30412 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393160AbfIWGuu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:50:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569221449; x=1600757449;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=66BxKyEsadOoOfbaqrGNVZTKJUAK251j6+K+EAtqSQE=;
+  b=uYhnoC4cyZ9lbnrInynytpcX3ivXKzE/0SKTGFR8qqXMIG0vy93dnBS5
+   c6Bl+JyLiXLBaGH8QIvtVFFk6iYXuzdYcMWARJl2rjVgO/9ELJQyLsxks
+   +trfa5cSaJzWVz6N5dcByp6vKK+J2x6RqSOCj17FqR0ocDmaXy0n+8whw
+   U=;
+X-IronPort-AV: E=Sophos;i="5.64,539,1559520000"; 
+   d="scan'208";a="752436814"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Sep 2019 06:50:46 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 1C6D1A2423;
+        Mon, 23 Sep 2019 06:50:41 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Sep 2019 06:50:41 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.217) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Sep 2019 06:50:36 +0000
+Subject: Re: [PATCH v7 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190904161245.111924-1-anup.patel@wdc.com>
+ <20190904161245.111924-12-anup.patel@wdc.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <f5bf0227-5066-5fcc-55bd-9a3777826404@amazon.com>
+Date:   Mon, 23 Sep 2019 08:50:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190923042139.36470-1-sunqiuyang@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190904161245.111924-12-anup.patel@wdc.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.43.161.217]
+X-ClientProxiedBy: EX13D29UWC001.ant.amazon.com (10.43.162.143) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/23 12:21, sunqiuyang wrote:
-> From: Qiuyang Sun <sunqiuyang@huawei.com>
-> 
-> Multi-device metadata should be updated in resize_fs as well.
-> 
-> Also, we check that the new FS size still reaches the last device.
-> 
-> --
-> Changelog v1 => v2:
-> Use f2fs_is_multi_device() and some minor cleanup.
-> 
-> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+CgpPbiAwNC4wOS4xOSAxODoxNSwgQW51cCBQYXRlbCB3cm90ZToKPiBXZSB3aWxsIGdldCBzdGFn
+ZTIgcGFnZSBmYXVsdHMgd2hlbmV2ZXIgR3Vlc3QvVk0gYWNjZXNzIFNXIGVtdWxhdGVkCj4gTU1J
+TyBkZXZpY2Ugb3IgdW5tYXBwZWQgR3Vlc3QgUkFNLgo+IAo+IFRoaXMgcGF0Y2ggaW1wbGVtZW50
+cyBNTUlPIHJlYWQvd3JpdGUgZW11bGF0aW9uIGJ5IGV4dHJhY3RpbmcgTU1JTwo+IGRldGFpbHMg
+ZnJvbSB0aGUgdHJhcHBlZCBsb2FkL3N0b3JlIGluc3RydWN0aW9uIGFuZCBmb3J3YXJkaW5nIHRo
+ZQo+IE1NSU8gcmVhZC93cml0ZSB0byB1c2VyLXNwYWNlLiBUaGUgYWN0dWFsIE1NSU8gZW11bGF0
+aW9uIHdpbGwgaGFwcGVuCj4gaW4gdXNlci1zcGFjZSBhbmQgS1ZNIGtlcm5lbCBtb2R1bGUgd2ls
+bCBvbmx5IHRha2UgY2FyZSBvZiByZWdpc3Rlcgo+IHVwZGF0ZXMgYmVmb3JlIHJlc3VtaW5nIHRo
+ZSB0cmFwcGVkIFZDUFUuCj4gCj4gVGhlIGhhbmRsaW5nIGZvciBzdGFnZTIgcGFnZSBmYXVsdHMg
+Zm9yIHVubWFwcGVkIEd1ZXN0IFJBTSB3aWxsIGJlCj4gaW1wbGVtZXRlZCBieSBhIHNlcGFyYXRl
+IHBhdGNoIGxhdGVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFudXAgUGF0ZWwgPGFudXAucGF0ZWxA
+d2RjLmNvbT4KPiBBY2tlZC1ieTogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4K
+PiBSZXZpZXdlZC1ieTogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4KClRoaXMg
+dmVyc2lvbiBpcyBpbmRlZWQgbXVjaCBiZXR0ZXIuIEkgd291bGQgbm90IG1pbmQgYSBiaXQgbW9y
+ZSAKZG9jdW1lbnRhdGlvbiB3aGVuIGl0IGNvbWVzIHRvIGltcGxpY2l0IHJlZ2lzdGVyIHZhbHVl
+IGFzc3VtcHRpb25zIChhMCwgCmExIGluIHRoZSB0cmFwIGhhbmRsZXIpLCBidXQgdGhlIGNvZGUg
+aXMgc21hbGwgZW5vdWdoIHRoYXQgc29tZW9uZSB3aG8gCmNhcmVzIGNhbiBmaWd1cmUgaXQgb3V0
+IHF1aWNrbHkgZW5vdWdoLgoKUmV2aWV3ZWQtYnk6IEFsZXhhbmRlciBHcmFmIDxncmFmQGFtYXpv
+bi5jb20+CgoKQWxleAoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApL
+cmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4g
+U2NobGFlZ2VyLCBSYWxmIEhlcmJyaWNoCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJs
+b3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkg
+MjM3IDg3OQoKCg==
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
