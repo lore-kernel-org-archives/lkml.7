@@ -2,430 +2,469 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDB0C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5452C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0212920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8CF20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="T2Q9YrLm"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OiDWg1Ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406981AbfIWNG4 (ORCPT
+        id S2439683AbfIWNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:06:56 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42738 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404887AbfIWNGz (ORCPT
+        Mon, 23 Sep 2019 09:09:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33751 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394628AbfIWNJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:06:55 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c10so11978147otd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:06:54 -0700 (PDT)
+        Mon, 23 Sep 2019 09:09:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r5so17052269qtd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bWMdX2rIumO1GGvTnOo85SqMCzGocAk99kTMXN+5voM=;
-        b=T2Q9YrLmDbc/dSlsc7YzZ3wdkswPcnBFBPIEQUbWCAZr7QX4BEb8eero1hWbjFx1FU
-         AEEg0Bfdw5oIlOm5UmhjvmOSLVKadCsdLQ2awZ8GHL9w5sLrSiTSQYODuvhbM6aU9ZrJ
-         719vCSSW87KlOjvAUE6Z+pwIWX/Q+f5QUFozM=
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WSzz5XQvxgflxT/FvAaiUFnx8up/v7Hpnevvf+GpZPc=;
+        b=OiDWg1KuS5OTuo5GyVXTLl82icpVWt8MK9+WQaTDDjbyN6Gc3uTgcTRRjDMOM4HaSq
+         xKJ+TxAmW2u5SqPkttXWIJUf5QRndHlT1zVIVqzUBeoM/xv9tGq5rbpxXQ5aStAYds/G
+         iu8Zao+D2nm8vLXTXzuzsaLwqAU8acaMihp3xEl9I7/fQQTi1tQKKwGDbLm5pQuVo3Hr
+         cqG+wtbHegw4VV8s35qMZYbk8/KH+kDDBGwhDpDqoxonsO2fa07m2ixn3VEdws7efEWK
+         g2jgKudAlmfVDyZ5ENAqTahl5KnpjuVxjPptNf9HD8drzPtx4Q8/YYe1FlgzIyC2szcO
+         1hzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bWMdX2rIumO1GGvTnOo85SqMCzGocAk99kTMXN+5voM=;
-        b=XczUrB9KUliEFiDMaqAJHc0d5FS+oMfmtdm8Nck+OBlXVIGJL53RJJRoT55SxCzMFx
-         fiy3i5A3442LFTRLP20hNsNkhccZCSkSoqujnXqyPNpEAVm4j6Cr2cOuD6Scn6nQb1qL
-         qDnNoVKVxjeBRNd8rxs6QFyXJ2qMh/enkFd8tJQiI7+3bTeNymPu4nPlYDPfJCyTs6eu
-         mpQZtDV9vkkr/kXshZNuwY+U46ZHi2sWmfZ50EtFqvXfLDdHEJZPQnSOgO4jxEpfBX5i
-         wkcGmLLY3mELoHQLJrmjIumv/L3otrG048ylgb9LOpNBSRpo8H2iAv6PqHnSOyjl2Oka
-         1z7Q==
-X-Gm-Message-State: APjAAAWf6UP1mlDxt1O384v3Jdr62bHDqGMQuYtdWsuCeMFMdwGHrJ2Y
-        wWjJkp31hf2gYEaH762zQZVIzXsYqc2l7JdW7cZNaQ==
-X-Google-Smtp-Source: APXvYqwgtkLRp8aeEaiNYYBoQy8HuyZotHru36MdoeJ4pAVhvGXFsfJBIa03oIV9otlRW1zKRuc6EwC3ex+GS7G6O3k=
-X-Received: by 2002:a05:6830:17c1:: with SMTP id p1mr9724600ota.188.1569244013467;
- Mon, 23 Sep 2019 06:06:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569242365-182133-1-git-send-email-hjc@rock-chips.com> <1569242365-182133-2-git-send-email-hjc@rock-chips.com>
-In-Reply-To: <1569242365-182133-2-git-send-email-hjc@rock-chips.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 23 Sep 2019 15:06:42 +0200
-Message-ID: <CAKMK7uFSSoahOesvxL2jQVPXUhG=TuWE4GMfXEAkdTRNbAsp+w@mail.gmail.com>
-Subject: Re: [PATCH 01/36] drm/fourcc: Add 2 plane YCbCr 10bit format support
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WSzz5XQvxgflxT/FvAaiUFnx8up/v7Hpnevvf+GpZPc=;
+        b=hqtpfqWz46sN0iXmgMem/C7OCUyQbs4xVPRsHGPMQSNOk7aEm9q7yMjy6N/kzjUxkv
+         f+bNP7C5Y2Md/TOkxXSZ5xvjhKlJUrAcahemdHbSg45+eK6p+ma0C/OQOsqP7oEq8bqD
+         bQIfJMzvfCmruPji9rsNQexnyGOlwkTHPm6WCfz8QeCeAoe0ZuIPF/kTlitufflgi2NF
+         Q+iQG/eQWhPPS1LxRZY1K0ltKKo3ihUbPoBYe6/Ft4E4i7P9HdxMB9TrWigFn+7D9m6Q
+         jDmDlg0ngLOpZUvs7W98uoc/KbakdpTxoHjmup9HcaL5zLBQgLg0DRudsX6uBYdcvfL9
+         677A==
+X-Gm-Message-State: APjAAAVE8KquUyOW//A/tvw3ct5gbnKw6DEHzQVgswXTEet7elmCcKl5
+        2ecgGNFaxIiGRfJSZUu28DGd1Q==
+X-Google-Smtp-Source: APXvYqwh14TKUCZ9URbPOIgMpTyzkBS8i/KA8u2wP08g+3gEm8WjkqF4VRDm3ew76GGGq7EpSHOjNQ==
+X-Received: by 2002:ac8:7644:: with SMTP id i4mr17370824qtr.62.1569244163320;
+        Mon, 23 Sep 2019 06:09:23 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id q49sm6718786qta.60.2019.09.23.06.09.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 06:09:22 -0700 (PDT)
+Message-ID: <1569244161.5576.207.camel@lca.pw>
+Subject: Re: printk() + memory offline deadlock (WAS Re:
+ page_alloc.shuffle=1 + CONFIG_PROVE_LOCKING=y = arm64 hang)
+From:   Qian Cai <cai@lca.pw>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Mon, 23 Sep 2019 09:09:21 -0400
+In-Reply-To: <20190923102100.GA1171@jagdpanzerIV>
+References: <1566509603.5576.10.camel@lca.pw>
+         <1567717680.5576.104.camel@lca.pw> <1568128954.5576.129.camel@lca.pw>
+         <20190911011008.GA4420@jagdpanzerIV> <1568289941.5576.140.camel@lca.pw>
+         <20190916104239.124fc2e5@gandalf.local.home>
+         <1568817579.5576.172.camel@lca.pw>
+         <20190918155059.GA158834@tigerII.localdomain>
+         <1568823006.5576.178.camel@lca.pw> <20190923102100.GA1171@jagdpanzerIV>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 2:40 PM Sandy Huang <hjc@rock-chips.com> wrote:
->
-> The drm_format_info.cpp[3] unit is BytePerPlane, when we add define
-> 10bit YUV format, here have some problem.
-> So we change cpp to bpp, use unit BitPerPlane to describe the data
-> format.
->
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+On Mon, 2019-09-23 at 19:21 +0900, Sergey Senozhatsky wrote:
+> On (09/18/19 12:10), Qian Cai wrote:
+> [..]
+> > > So you have debug objects enabled. Right? This thing does not behave
+> > > when it comes to printing. debug_objects are slightly problematic.
+> > 
+> > Yes, but there is an also a similar splat without the debug_objects. It looks
+> > like anything try to allocate memory in that path will trigger it anyway.
+> 
+> Appears to be different, yet somehow very familiar.
+> 
+> > [  297.425908] WARNING: possible circular locking dependency detected
+> > [  297.425908] 5.3.0-next-20190917 #8 Not tainted
+> > [  297.425909] ------------------------------------------------------
+> > [  297.425910] test.sh/8653 is trying to acquire lock:
+> > [  297.425911] ffffffff865a4460 (console_owner){-.-.}, at:
+> > console_unlock+0x207/0x750
+> > 
+> > [  297.425914] but task is already holding lock:
+> > [  297.425915] ffff88883fff3c58 (&(&zone->lock)->rlock){-.-.}, at:
+> > __offline_isolated_pages+0x179/0x3e0
+> > 
+> > [  297.425919] which lock already depends on the new lock.
+> > 
+> > 
+> > [  297.425920] the existing dependency chain (in reverse order) is:
+> > 
+> > [  297.425922] -> #3 (&(&zone->lock)->rlock){-.-.}:
+> > [  297.425925]        __lock_acquire+0x5b3/0xb40
+> > [  297.425925]        lock_acquire+0x126/0x280
+> > [  297.425926]        _raw_spin_lock+0x2f/0x40
+> > [  297.425927]        rmqueue_bulk.constprop.21+0xb6/0x1160
+> > [  297.425928]        get_page_from_freelist+0x898/0x22c0
+> > [  297.425928]        __alloc_pages_nodemask+0x2f3/0x1cd0
+> > [  297.425929]        alloc_pages_current+0x9c/0x110
+> > [  297.425930]        allocate_slab+0x4c6/0x19c0
+> > [  297.425931]        new_slab+0x46/0x70
+> > [  297.425931]        ___slab_alloc+0x58b/0x960
+> > [  297.425932]        __slab_alloc+0x43/0x70
+> > [  297.425933]        __kmalloc+0x3ad/0x4b0
+> > [  297.425933]        __tty_buffer_request_room+0x100/0x250
+> > [  297.425934]        tty_insert_flip_string_fixed_flag+0x67/0x110
+> > [  297.425935]        pty_write+0xa2/0xf0
+> > [  297.425936]        n_tty_write+0x36b/0x7b0
+> > [  297.425936]        tty_write+0x284/0x4c0
+> > [  297.425937]        __vfs_write+0x50/0xa0
+> > [  297.425938]        vfs_write+0x105/0x290
+> > [  297.425939]        redirected_tty_write+0x6a/0xc0
+> > [  297.425939]        do_iter_write+0x248/0x2a0
+> > [  297.425940]        vfs_writev+0x106/0x1e0
+> > [  297.425941]        do_writev+0xd4/0x180
+> > [  297.425941]        __x64_sys_writev+0x45/0x50
+> > [  297.425942]        do_syscall_64+0xcc/0x76c
+> > [  297.425943]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > 
+> > [  297.425944] -> #2 (&(&port->lock)->rlock){-.-.}:
+> > [  297.425946]        __lock_acquire+0x5b3/0xb40
+> > [  297.425947]        lock_acquire+0x126/0x280
+> > [  297.425948]        _raw_spin_lock_irqsave+0x3a/0x50
+> > [  297.425949]        tty_port_tty_get+0x20/0x60
+> > [  297.425949]        tty_port_default_wakeup+0xf/0x30
+> > [  297.425950]        tty_port_tty_wakeup+0x39/0x40
+> > [  297.425951]        uart_write_wakeup+0x2a/0x40
+> > [  297.425952]        serial8250_tx_chars+0x22e/0x440
+> > [  297.425952]        serial8250_handle_irq.part.8+0x14a/0x170
+> > [  297.425953]        serial8250_default_handle_irq+0x5c/0x90
+> > [  297.425954]        serial8250_interrupt+0xa6/0x130
+> > [  297.425955]        __handle_irq_event_percpu+0x78/0x4f0
+> > [  297.425955]        handle_irq_event_percpu+0x70/0x100
+> > [  297.425956]        handle_irq_event+0x5a/0x8b
+> > [  297.425957]        handle_edge_irq+0x117/0x370
+> > [  297.425958]        do_IRQ+0x9e/0x1e0
+> > [  297.425958]        ret_from_intr+0x0/0x2a
+> > [  297.425959]        cpuidle_enter_state+0x156/0x8e0
+> > [  297.425960]        cpuidle_enter+0x41/0x70
+> > [  297.425960]        call_cpuidle+0x5e/0x90
+> > [  297.425961]        do_idle+0x333/0x370
+> > [  297.425962]        cpu_startup_entry+0x1d/0x1f
+> > [  297.425962]        start_secondary+0x290/0x330
+> > [  297.425963]        secondary_startup_64+0xb6/0xc0
+> > 
+> > [  297.425964] -> #1 (&port_lock_key){-.-.}:
+> > [  297.425967]        __lock_acquire+0x5b3/0xb40
+> > [  297.425967]        lock_acquire+0x126/0x280
+> > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
+> > [  297.425969]        serial8250_console_write+0x3e4/0x450
+> > [  297.425970]        univ8250_console_write+0x4b/0x60
+> > [  297.425970]        console_unlock+0x501/0x750
+> > [  297.425971]        vprintk_emit+0x10d/0x340
+> > [  297.425972]        vprintk_default+0x1f/0x30
+> > [  297.425972]        vprintk_func+0x44/0xd4
+> > [  297.425973]        printk+0x9f/0xc5
+> > [  297.425974]        register_console+0x39c/0x520
+> > [  297.425975]        univ8250_console_init+0x23/0x2d
+> > [  297.425975]        console_init+0x338/0x4cd
+> > [  297.425976]        start_kernel+0x534/0x724
+> > [  297.425977]        x86_64_start_reservations+0x24/0x26
+> > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
+> > [  297.425978]        secondary_startup_64+0xb6/0xc0
+> > 
+> > [  297.425979] -> #0 (console_owner){-.-.}:
+> > [  297.425982]        check_prev_add+0x107/0xea0
+> > [  297.425982]        validate_chain+0x8fc/0x1200
+> > [  297.425983]        __lock_acquire+0x5b3/0xb40
+> > [  297.425984]        lock_acquire+0x126/0x280
+> > [  297.425984]        console_unlock+0x269/0x750
+> > [  297.425985]        vprintk_emit+0x10d/0x340
+> > [  297.425986]        vprintk_default+0x1f/0x30
+> > [  297.425987]        vprintk_func+0x44/0xd4
+> > [  297.425987]        printk+0x9f/0xc5
+> > [  297.425988]        __offline_isolated_pages.cold.52+0x2f/0x30a
+> > [  297.425989]        offline_isolated_pages_cb+0x17/0x30
+> > [  297.425990]        walk_system_ram_range+0xda/0x160
+> > [  297.425990]        __offline_pages+0x79c/0xa10
+> > [  297.425991]        offline_pages+0x11/0x20
+> > [  297.425992]        memory_subsys_offline+0x7e/0xc0
+> > [  297.425992]        device_offline+0xd5/0x110
+> > [  297.425993]        state_store+0xc6/0xe0
+> > [  297.425994]        dev_attr_store+0x3f/0x60
+> > [  297.425995]        sysfs_kf_write+0x89/0xb0
+> > [  297.425995]        kernfs_fop_write+0x188/0x240
+> > [  297.425996]        __vfs_write+0x50/0xa0
+> > [  297.425997]        vfs_write+0x105/0x290
+> > [  297.425997]        ksys_write+0xc6/0x160
+> > [  297.425998]        __x64_sys_write+0x43/0x50
+> > [  297.425999]        do_syscall_64+0xcc/0x76c
+> > [  297.426000]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> I suppose you run with CONFIG_DEBUG_VM...
+> 
+> So we have
+> 
+> port->lock -> MM -> zone->lock
+> 	// from pty_write()->__tty_buffer_request_room()->kmalloc()
+> 
+> vs
+> 
+> zone->lock -> printk() -> port->lock
+> 	// from __offline_pages()->__offline_isolated_pages()->printk()
+> 
+> 
+> A number of debugging options make the kernel less stable.
+> Sad but true.
 
-Whatever the layout you have for these (it's not really defined in
-your patch here down to the level of detail we want) I think this
-should be described with the block_h/w and char_per_block
-functionality. Not by extending the legacy and depcrecated cpp
-somehow.
--Daniel
+I am afraid it does not matter, as it still trigger a splat without either
+CONFIG_DEBUG_VM and debug objects because offline_pages() will still call
+printk() while holding zone->lock in a different path.
 
-> ---
->  drivers/gpu/drm/drm_client.c        |   4 +-
->  drivers/gpu/drm/drm_fb_helper.c     |   8 +-
->  drivers/gpu/drm/drm_format_helper.c |   4 +-
->  drivers/gpu/drm/drm_fourcc.c        | 172 +++++++++++++++++++-----------------
->  drivers/gpu/drm/drm_framebuffer.c   |   2 +-
->  include/drm/drm_fourcc.h            |   4 +-
->  include/uapi/drm/drm_fourcc.h       |  15 ++++
->  7 files changed, 115 insertions(+), 94 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_client.c b/drivers/gpu/drm/drm_client.c
-> index d9a2e36..a36ffbe 100644
-> --- a/drivers/gpu/drm/drm_client.c
-> +++ b/drivers/gpu/drm/drm_client.c
-> @@ -263,7 +263,7 @@ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u
->
->         dumb_args.width = width;
->         dumb_args.height = height;
-> -       dumb_args.bpp = info->cpp[0] * 8;
-> +       dumb_args.bpp = info->bpp[0];
->         ret = drm_mode_create_dumb(dev, &dumb_args, client->file);
->         if (ret)
->                 goto err_delete;
-> @@ -366,7 +366,7 @@ static int drm_client_buffer_addfb(struct drm_client_buffer *buffer,
->         int ret;
->
->         info = drm_format_info(format);
-> -       fb_req.bpp = info->cpp[0] * 8;
-> +       fb_req.bpp = info->bpp[0];
->         fb_req.depth = info->depth;
->         fb_req.width = width;
->         fb_req.height = height;
-> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-> index a7ba5b4..b30e782 100644
-> --- a/drivers/gpu/drm/drm_fb_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_helper.c
-> @@ -382,7 +382,7 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
->                                           struct drm_clip_rect *clip)
->  {
->         struct drm_framebuffer *fb = fb_helper->fb;
-> -       unsigned int cpp = fb->format->cpp[0];
-> +       unsigned int cpp = fb->format->bpp[0] / 8;
->         size_t offset = clip->y1 * fb->pitches[0] + clip->x1 * cpp;
->         void *src = fb_helper->fbdev->screen_buffer + offset;
->         void *dst = fb_helper->buffer->vaddr + offset;
-> @@ -1320,14 +1320,14 @@ int drm_fb_helper_check_var(struct fb_var_screeninfo *var,
->          * Changes struct fb_var_screeninfo are currently not pushed back
->          * to KMS, hence fail if different settings are requested.
->          */
-> -       if (var->bits_per_pixel != fb->format->cpp[0] * 8 ||
-> +       if (var->bits_per_pixel != fb->format->bpp[0] ||
->             var->xres > fb->width || var->yres > fb->height ||
->             var->xres_virtual > fb->width || var->yres_virtual > fb->height) {
->                 DRM_DEBUG("fb requested width/height/bpp can't fit in current fb "
->                           "request %dx%d-%d (virtual %dx%d) > %dx%d-%d\n",
->                           var->xres, var->yres, var->bits_per_pixel,
->                           var->xres_virtual, var->yres_virtual,
-> -                         fb->width, fb->height, fb->format->cpp[0] * 8);
-> +                         fb->width, fb->height, fb->format->bpp[0]);
->                 return -EINVAL;
->         }
->
-> @@ -1678,7 +1678,7 @@ static void drm_fb_helper_fill_var(struct fb_info *info,
->         info->pseudo_palette = fb_helper->pseudo_palette;
->         info->var.xres_virtual = fb->width;
->         info->var.yres_virtual = fb->height;
-> -       info->var.bits_per_pixel = fb->format->cpp[0] * 8;
-> +       info->var.bits_per_pixel = fb->format->bpp[0];
->         info->var.accel_flags = FB_ACCELF_TEXT;
->         info->var.xoffset = 0;
->         info->var.yoffset = 0;
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-> index 0897cb9..eea3afb 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -36,7 +36,7 @@ static unsigned int clip_offset(struct drm_rect *clip,
->  void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
->                    struct drm_rect *clip)
->  {
-> -       unsigned int cpp = fb->format->cpp[0];
-> +       unsigned int cpp = fb->format->bpp[0] / 8;
->         size_t len = (clip->x2 - clip->x1) * cpp;
->         unsigned int y, lines = clip->y2 - clip->y1;
->
-> @@ -63,7 +63,7 @@ void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
->                            struct drm_framebuffer *fb,
->                            struct drm_rect *clip)
->  {
-> -       unsigned int cpp = fb->format->cpp[0];
-> +       unsigned int cpp = fb->format->bpp[0] / 8;
->         unsigned int offset = clip_offset(clip, fb->pitches[0], cpp);
->         size_t len = (clip->x2 - clip->x1) * cpp;
->         unsigned int y, lines = clip->y2 - clip->y1;
-> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-> index c630064..071dc07 100644
-> --- a/drivers/gpu/drm/drm_fourcc.c
-> +++ b/drivers/gpu/drm/drm_fourcc.c
-> @@ -157,89 +157,95 @@ EXPORT_SYMBOL(drm_get_format_name);
->  const struct drm_format_info *__drm_format_info(u32 format)
->  {
->         static const struct drm_format_info formats[] = {
-> -               { .format = DRM_FORMAT_C8,              .depth = 8,  .num_planes = 1, .cpp = { 1, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGB332,          .depth = 8,  .num_planes = 1, .cpp = { 1, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGR233,          .depth = 8,  .num_planes = 1, .cpp = { 1, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XRGB4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XBGR4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGBX4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGRX4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_ARGB4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ABGR4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGBA4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGRA4444,        .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_XRGB1555,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XBGR1555,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGBX5551,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGRX5551,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_ARGB1555,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ABGR1555,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGBA5551,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGRA5551,        .depth = 15, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGB565,          .depth = 16, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGR565,          .depth = 16, .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGB888,          .depth = 24, .num_planes = 1, .cpp = { 3, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGR888,          .depth = 24, .num_planes = 1, .cpp = { 3, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XRGB8888,        .depth = 24, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XBGR8888,        .depth = 24, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGBX8888,        .depth = 24, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGRX8888,        .depth = 24, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGB565_A8,       .depth = 24, .num_planes = 2, .cpp = { 2, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGR565_A8,       .depth = 24, .num_planes = 2, .cpp = { 2, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_XRGB2101010,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XBGR2101010,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_RGBX1010102,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_BGRX1010102,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_ARGB2101010,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ABGR2101010,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGBA1010102,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGRA1010102,     .depth = 30, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ARGB8888,        .depth = 32, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ABGR8888,        .depth = 32, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGBA8888,        .depth = 32, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGRA8888,        .depth = 32, .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_XRGB16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_XBGR16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1 },
-> -               { .format = DRM_FORMAT_ARGB16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_ABGR16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGB888_A8,       .depth = 32, .num_planes = 2, .cpp = { 3, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGR888_A8,       .depth = 32, .num_planes = 2, .cpp = { 3, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_XRGB8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 4, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_XBGR8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 4, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_RGBX8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 4, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_BGRX8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 4, 1, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> -               { .format = DRM_FORMAT_YUV410,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 4, .vsub = 4, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVU410,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 4, .vsub = 4, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YUV411,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 4, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVU411,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 4, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YUV420,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVU420,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YUV422,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVU422,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YUV444,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVU444,          .depth = 0,  .num_planes = 3, .cpp = { 1, 1, 1 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV12,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV21,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV16,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV61,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV24,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_NV42,            .depth = 0,  .num_planes = 2, .cpp = { 1, 2, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YUYV,            .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_YVYU,            .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_UYVY,            .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_VYUY,            .depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_XYUV8888,        .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_VUY888,          .depth = 0,  .num_planes = 1, .cpp = { 3, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_AYUV,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y210,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y212,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y216,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y410,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y412,            .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> -               { .format = DRM_FORMAT_Y416,            .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> -               { .format = DRM_FORMAT_XVYU2101010,     .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_XVYU12_16161616, .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> -               { .format = DRM_FORMAT_XVYU16161616,    .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_C8,              .depth = 8,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGB332,          .depth = 8,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGR233,          .depth = 8,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XRGB4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XBGR4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGBX4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGRX4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_ARGB4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ABGR4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGBA4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGRA4444,        .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_XRGB1555,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XBGR1555,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGBX5551,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGRX5551,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_ARGB1555,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ABGR1555,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGBA5551,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGRA5551,        .depth = 15, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGB565,          .depth = 16, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGR565,          .depth = 16, .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGB888,          .depth = 24, .num_planes = 1, .cpp = { 24, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGR888,          .depth = 24, .num_planes = 1, .cpp = { 24, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XRGB8888,        .depth = 24, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XBGR8888,        .depth = 24, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGBX8888,        .depth = 24, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGRX8888,        .depth = 24, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGB565_A8,       .depth = 24, .num_planes = 2, .cpp = { 16, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGR565_A8,       .depth = 24, .num_planes = 2, .cpp = { 16, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_XRGB2101010,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XBGR2101010,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_RGBX1010102,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_BGRX1010102,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_ARGB2101010,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ABGR2101010,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGBA1010102,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGRA1010102,     .depth = 30, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ARGB8888,        .depth = 32, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ABGR8888,        .depth = 32, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGBA8888,        .depth = 32, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGRA8888,        .depth = 32, .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_XRGB16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_XBGR16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1 },
-> +               { .format = DRM_FORMAT_ARGB16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_ABGR16161616F,   .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGB888_A8,       .depth = 32, .num_planes = 2, .cpp = { 24, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGR888_A8,       .depth = 32, .num_planes = 2, .cpp = { 24, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_XRGB8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 32, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_XBGR8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 32, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_RGBX8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 32, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_BGRX8888_A8,     .depth = 32, .num_planes = 2, .cpp = { 32, 8, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true },
-> +               { .format = DRM_FORMAT_YUV410,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 4, .vsub = 4, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVU410,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 4, .vsub = 4, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YUV411,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 4, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVU411,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 4, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YUV420,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVU420,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YUV422,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVU422,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YUV444,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVU444,          .depth = 0,  .num_planes = 3, .cpp = { 8, 8, 8 },  .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV12,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV21,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV16,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV61,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV24,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV42,            .depth = 0,  .num_planes = 2, .cpp = { 8, 16, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV12_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV21_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 2, .vsub = 2, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV16_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV61_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV24_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_NV42_10,         .depth = 0,  .num_planes = 2, .cpp = { 10, 20, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YUYV,            .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_YVYU,            .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_UYVY,            .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_VYUY,            .depth = 0,  .num_planes = 1, .cpp = { 16, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_XYUV8888,        .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_VUY888,          .depth = 0,  .num_planes = 1, .cpp = { 24, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_AYUV,            .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y210,            .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y212,            .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y216,            .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y410,            .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y412,            .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> +               { .format = DRM_FORMAT_Y416,            .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
-> +               { .format = DRM_FORMAT_XVYU2101010,     .depth = 0,  .num_planes = 1, .cpp = { 32, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_XVYU12_16161616, .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .is_yuv = true },
-> +               { .format = DRM_FORMAT_XVYU16161616,    .depth = 0,  .num_planes = 1, .cpp = { 8, 0, 0 },  .hsub = 1, .vsub = 1, .is_yuv = true },
->                 { .format = DRM_FORMAT_Y0L0,            .depth = 0,  .num_planes = 1,
->                   .char_per_block = { 8, 0, 0 }, .block_w = { 2, 0, 0 }, .block_h = { 2, 0, 0 },
->                   .hsub = 2, .vsub = 2, .has_alpha = true, .is_yuv = true },
-> diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-> index 0b72468..7b29e97 100644
-> --- a/drivers/gpu/drm/drm_framebuffer.c
-> +++ b/drivers/gpu/drm/drm_framebuffer.c
-> @@ -530,7 +530,7 @@ int drm_mode_getfb(struct drm_device *dev,
->         r->height = fb->height;
->         r->width = fb->width;
->         r->depth = fb->format->depth;
-> -       r->bpp = fb->format->cpp[0] * 8;
-> +       r->bpp = fb->format->bpp[0];
->         r->pitch = fb->pitches[0];
->
->         /* GET_FB() is an unprivileged ioctl so we must not return a
-> diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-> index 306d1ef..021358d 100644
-> --- a/include/drm/drm_fourcc.h
-> +++ b/include/drm/drm_fourcc.h
-> @@ -73,12 +73,12 @@ struct drm_format_info {
->                 /**
->                  * @cpp:
->                  *
-> -                * Number of bytes per pixel (per plane), this is aliased with
-> +                * Number of bits per pixel (per plane), this is aliased with
->                  * @char_per_block. It is deprecated in favour of using the
->                  * triplet @char_per_block, @block_w, @block_h for better
->                  * describing the pixel format.
->                  */
-> -               u8 cpp[3];
-> +               u8 bpp[3];
->
->                 /**
->                  * @char_per_block:
-> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> index 3feeaa3..5fe89e9 100644
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -266,6 +266,21 @@ extern "C" {
->  #define DRM_FORMAT_P016                fourcc_code('P', '0', '1', '6') /* 2x2 subsampled Cr:Cb plane 16 bits per channel */
->
->  /*
-> + * 2 plane YCbCr 10bit
-> + * index 0 = Y plane, [9:0] Y
-> + * index 1 = Cr:Cb plane, [19:0] Cr:Cb little endian
-> + * or
-> + * index 1 = Cb:Cr plane, [19:0] Cb:Cr little endian
-> + */
-> +
-> +#define DRM_FORMAT_NV12_10     fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV21_10     fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV16_10     fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV61_10     fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV24_10     fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV42_10     fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
-> +
-> +/*
->   * 3 plane YCbCr
->   * index 0: Y plane, [7:0] Y
->   * index 1: Cb plane, [7:0] Cb
-> --
-> 2.7.4
->
->
->
+offline_pages()
+  start_isolate_page_range()
+    set_migratetype_isolate()
+      has_unmovable_pages()
+        dump_page()
+          printk()
+
+[  377.525562] WARNING: possible circular locking dependency detected
+[  377.525563] 5.3.0-next-20190920+ #9 Not tainted
+[  377.525564] ------------------------------------------------------
+[  377.525565] test.sh/8876 is trying to acquire lock:
+[  377.525565] ffffffffa2da1b80 (console_owner){-.-.}, at:
+console_unlock+0x207/0x750
+
+[  377.525569] but task is already holding lock:
+[  377.525569] ffff88883fff4318 (&(&zone->lock)->rlock){-.-.}, at:
+start_isolate_page_range+0x1ea/0x540
+
+[  377.525573] which lock already depends on the new lock.
 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+[  377.525575] the existing dependency chain (in reverse order) is:
+
+[  377.525576] -> #3 (&(&zone->lock)->rlock){-.-.}:
+[  377.525579]        __lock_acquire+0x5b3/0xb40
+[  377.525579]        lock_acquire+0x126/0x280
+[  377.525580]        _raw_spin_lock+0x2f/0x40
+[  377.525581]        rmqueue_bulk.constprop.21+0xb6/0xf70
+[  377.525582]        get_page_from_freelist+0x89a/0x20d0
+[  377.525582]        __alloc_pages_nodemask+0x2b1/0x1c80
+[  377.525583]        alloc_pages_current+0x9c/0x110
+[  377.525584]        allocate_slab+0xa8f/0x16d0
+[  377.525585]        new_slab+0x46/0x70
+[  377.525586]        ___slab_alloc+0x424/0x630
+[  377.525586]        __slab_alloc+0x43/0x70
+[  377.525587]        __kmalloc+0x3e3/0x490
+[  377.525588]        __tty_buffer_request_room+0x100/0x250
+[  377.525589]        tty_insert_flip_string_fixed_flag+0x67/0x110
+[  377.525590]        pty_write+0xa2/0xf0
+[  377.525591]        n_tty_write+0x36b/0x7b0
+[  377.525592]        tty_write+0x284/0x4c0
+[  377.525593]        __vfs_write+0x50/0xa0
+[  377.525593]        vfs_write+0x105/0x290
+[  377.525595]        ksys_write+0xc6/0x160
+[  377.525596]        __x64_sys_write+0x43/0x50
+[  377.525596]        do_syscall_64+0xcc/0x76c
+[  377.525597]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  377.525598] -> #2 (&(&port->lock)->rlock){-.-.}:
+[  377.525601]        __lock_acquire+0x5b3/0xb40
+[  377.525601]        lock_acquire+0x126/0x280
+[  377.525602]        _raw_spin_lock_irqsave+0x3a/0x50
+[  377.525603]        tty_port_tty_get+0x20/0x60
+[  377.525604]        tty_port_default_wakeup+0xf/0x30
+[  377.525605]        tty_port_tty_wakeup+0x39/0x40
+[  377.525606]        uart_write_wakeup+0x2a/0x40
+[  377.525607]        serial8250_tx_chars+0x22e/0x440
+[  377.525607]        serial8250_handle_irq.part.8+0x14a/0x170
+[  377.525608]        serial8250_default_handle_irq+0x5c/0x90
+[  377.525609]        serial8250_interrupt+0xa6/0x130
+[  377.525610]        __handle_irq_event_percpu+0x78/0x4f0
+[  377.525611]        handle_irq_event_percpu+0x70/0x100
+[  377.525612]        handle_irq_event+0x5a/0x8b
+[  377.525613]        handle_edge_irq+0x117/0x370
+[  377.525614]        do_IRQ+0x9e/0x1e0
+[  377.525614]        ret_from_intr+0x0/0x2a
+[  377.525615]        cpuidle_enter_state+0x156/0x8e0
+[  377.525616]        cpuidle_enter+0x41/0x70
+[  377.525616]        call_cpuidle+0x5e/0x90
+[  377.525617]        do_idle+0x333/0x370
+[  377.525618]        cpu_startup_entry+0x1d/0x1f
+[  377.525619]        start_secondary+0x290/0x330
+[  377.525619]        secondary_startup_64+0xb6/0xc0
+
+[  377.525620] -> #1 (&port_lock_key){-.-.}:
+[  377.525623]        __lock_acquire+0x5b3/0xb40
+[  377.525623]        lock_acquire+0x126/0x280
+[  377.525624]        _raw_spin_lock_irqsave+0x3a/0x50
+[  377.525625]        serial8250_console_write+0x3e4/0x450
+[  377.525626]        univ8250_console_write+0x4b/0x60
+[  377.525627]        console_unlock+0x501/0x750
+[  377.525627]        vprintk_emit+0x10d/0x340
+[  377.525628]        vprintk_default+0x1f/0x30
+[  377.525629]        vprintk_func+0x44/0xd4
+[  377.525629]        printk+0x9f/0xc5
+[  377.525630]        register_console+0x39c/0x520
+[  377.525631]        univ8250_console_init+0x23/0x2d
+[  377.525632]        console_init+0x338/0x4cd
+[  377.525632]        start_kernel+0x52a/0x71a
+[  377.525633]        x86_64_start_reservations+0x24/0x26
+[  377.525634]        x86_64_start_kernel+0xf4/0xfb
+[  377.525635]        secondary_startup_64+0xb6/0xc0
+
+[  377.525636] -> #0 (console_owner){-.-.}:
+[  377.525638]        check_prev_add+0x107/0xea0
+[  377.525639]        validate_chain+0x8fc/0x1200
+[  377.525640]        __lock_acquire+0x5b3/0xb40
+[  377.525641]        lock_acquire+0x126/0x280
+[  377.525641]        console_unlock+0x269/0x750
+[  377.525642]        vprintk_emit+0x10d/0x340
+[  377.525643]        vprintk_default+0x1f/0x30
+[  377.525643]        vprintk_func+0x44/0xd4
+[  377.525644]        printk+0x9f/0xc5
+[  377.525645]        __dump_page.cold.0+0x73/0x20a
+[  377.525645]        dump_page+0x12/0x46
+[  377.525646]        has_unmovable_pages+0x2ff/0x360
+[  377.525647]        start_isolate_page_range+0x3bb/0x540
+[  377.525648]        __offline_pages+0x258/0xfc0
+[  377.525649]        offline_pages+0x11/0x20
+[  377.525649]        memory_subsys_offline+0x7e/0xc0
+[  377.525650]        device_offline+0xd5/0x110
+[  377.525651]        state_store+0xc6/0xe0
+[  377.525651]        dev_attr_store+0x3f/0x60
+[  377.525652]        sysfs_kf_write+0x89/0xb0
+[  377.525653]        kernfs_fop_write+0x188/0x240
+[  377.525654]        __vfs_write+0x50/0xa0
+[  377.525654]        vfs_write+0x105/0x290
+[  377.525655]        ksys_write+0xc6/0x160
+[  377.525656]        __x64_sys_write+0x43/0x50
+[  377.525656]        do_syscall_64+0xcc/0x76c
+[  377.525657]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  377.525658] other info that might help us debug this:
+
+[  377.525660] Chain exists of:
+[  377.525660]   console_owner --> &(&port->lock)->rlock --> &(&zone->lock)-
+>rlock
+
+[  377.525664]  Possible unsafe locking scenario:
+
+[  377.525665]        CPU0                    CPU1
+[  377.525666]        ----                    ----
+[  377.525667]   lock(&(&zone->lock)->rlock);
+[  377.525669]                                lock(&(&port->lock)->rlock);
+[  377.525671]                                lock(&(&zone->lock)->rlock);
+[  377.525672]   lock(console_owner);
+
+[  377.525675]  *** DEADLOCK ***
+
+[  377.525676] 9 locks held by test.sh/8876:
+[  377.525677]  #0: ffff8883bca59408 (sb_writers#4){.+.+}, at:
+vfs_write+0x25f/0x290
+[  377.525681]  #1: ffff888eefb58880 (&of->mutex){+.+.}, at:
+kernfs_fop_write+0x128/0x240
+[  377.525684]  #2: ffff889feb6dcc40 (kn->count#115){.+.+}, at:
+kernfs_fop_write+0x138/0x240
+[  377.525687]  #3: ffffffffa30f7e60 (device_hotplug_lock){+.+.}, at:
+lock_device_hotplug_sysfs+0x16/0x50
+[  377.525690]  #4: ffff88981f55c990 (&dev->mutex){....}, at:
+device_offline+0x70/0x110
+[  377.525693]  #5: ffffffffa2d12d70 (cpu_hotplug_lock.rw_sem){++++}, at:
+__offline_pages+0xdb/0xfc0
+[  377.525696]  #6: ffffffffa2f007b0 (mem_hotplug_lock.rw_sem){++++}, at:
+percpu_down_write+0x87/0x2f0
+[  377.525699]  #7: ffff88883fff4318 (&(&zone->lock)->rlock){-.-.}, at:
+start_isolate_page_range+0x1ea/0x540
+[  377.525703]  #8: ffffffffa2da2040 (console_lock){+.+.}, at:
+vprintk_emit+0x100/0x340
+[  377.525706] stack backtrace:
+[  377.525707] CPU: 10 PID: 8876 Comm: test.sh Not tainted 5.3.0-next-20190920+
+#9
+[  377.525708] Hardware name: HPE ProLiant DL560 Gen10/ProLiant DL560 Gen10,
+BIOS U34 05/21/2019
+[  377.525709] Call Trace:
+[  377.525710]  dump_stack+0x86/0xca
+[  377.525710]  print_circular_bug.cold.31+0x243/0x26e
+[  377.525711]  check_noncircular+0x29e/0x2e0
+[  377.525712]  ? stack_trace_save+0x87/0xb0
+[  377.525712]  ? print_circular_bug+0x120/0x120
+[  377.525713]  check_prev_add+0x107/0xea0
+[  377.525714]  validate_chain+0x8fc/0x1200
+[  377.525714]  ? check_prev_add+0xea0/0xea0
+[  377.525715]  __lock_acquire+0x5b3/0xb40
+[  377.525716]  lock_acquire+0x126/0x280
+[  377.525717]  ? console_unlock+0x207/0x750
+[  377.525717]  ? __kasan_check_read+0x11/0x20
+[  377.525718]  console_unlock+0x269/0x750
+[  377.525719]  ? console_unlock+0x207/0x750
+[  377.525719]  vprintk_emit+0x10d/0x340
+[  377.525720]  vprintk_default+0x1f/0x30
+[  377.525721]  vprintk_func+0x44/0xd4
+[  377.525721]  printk+0x9f/0xc5
+[  377.525722]  ? kmsg_dump_rewind_nolock+0x64/0x64
+[  377.525723]  ? lockdep_hardirqs_off+0x74/0x140
+[  377.525723]  __dump_page.cold.0+0x73/0x20a
+[  377.525724]  dump_page+0x12/0x46
+[  377.525725]  has_unmovable_pages+0x2ff/0x360
+[  377.525725]  start_isolate_page_range+0x3bb/0x540
+[  377.525726]  ? unset_migratetype_isolate+0x260/0x260
+[  377.525727]  ? rcu_read_lock_bh_held+0xc0/0xc0
+[  377.525728]  __offline_pages+0x258/0xfc0
+[  377.525728]  ? __lock_acquire+0x670/0xb40
+[  377.525729]  ? __add_memory+0xc0/0xc0
+[  377.525730]  ? lock_acquire+0x126/0x280
+[  377.525730]  ? device_offline+0x70/0x110
+[  377.525731]  ? __kasan_check_write+0x14/0x20
+[  377.525732]  ? __mutex_lock+0x344/0xcd0
+[  377.525732]  ? _raw_spin_unlock_irqrestore+0x49/0x50
+[  377.525733]  ? device_offline+0x70/0x110
+[  377.525734]  ? klist_next+0x1c1/0x1e0
+[  377.525735]  ? __mutex_add_waiter+0xc0/0xc0
+[  377.525735]  ? __device_link_free_srcu+0x80/0x80
+[  377.525736]  ? klist_next+0x10b/0x1e0
+[  377.525737]  ? klist_iter_exit+0x16/0x40
+[  377.525737]  ? device_for_each_child+0xd0/0x110
+[  377.525738]  offline_pages+0x11/0x20
+[  377.525739]  memory_subsys_offline+0x7e/0xc0
+[  377.525739]  device_offline+0xd5/0x110
+[  377.525740]  ? auto_online_blocks_show+0x70/0x70
+[  377.525741]  state_store+0xc6/0xe0
+[  377.525741]  dev_attr_store+0x3f/0x60
+[  377.525742]  ? device_match_name+0x40/0x40
+[  377.525743]  sysfs_kf_write+0x89/0xb0
+[  377.525744]  ? sysfs_file_ops+0xa0/0xa0
+[  377.525745]  kernfs_fop_write+0x188/0x240
+[  377.525745]  __vfs_write+0x50/0xa0
+[  377.525746]  vfs_write+0x105/0x290
+[  377.525747]  ksys_write+0xc6/0x160
+[  377.525748]  ? __x64_sys_read+0x50/0x50
+[  377.525748]  ? do_syscall_64+0x79/0x76c
+[  377.525749]  ? do_syscall_64+0x79/0x76c
+[  377.525750]  __x64_sys_write+0x43/0x50
+[  377.525751]  do_syscall_64+0xcc/0x76c
+[  377.525752]  ? trace_hardirqs_on_thunk+0x1a/0x20
+[  377.525753]  ? syscall_return_slowpath+0x210/0x210
+[  377.525754]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+[  377.525754]  ? trace_hardirqs_off_caller+0x3a/0x150
+[  377.525755]  ? trace_hardirqs_off_thunk+0x1a/0x20
+[  377.525756]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
