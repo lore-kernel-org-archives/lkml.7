@@ -2,85 +2,77 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B4C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EC9C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A4520835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569235019;
-	bh=BppCWNTpLIPrS0K8rfJOfwEbWt7gnr6BUWkaLs0Xs6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WDzmO5gZGTwg7CWcEhiOSHzIg//EDPOhDKlXcRymrU1brZHL66Kj9yyaZI4+5XC+6
-	 oQxFzJGPu71rlMItGcY4A5BHWsZNZ3GPivbrXYQrsgooZE24GX1Vrci26PuDRo6NAj
-	 QQXPnWM3AeGaULmmpFt6mnXA4uzrPKyTS0xDbOKo=
+	by mail.kernel.org (Postfix) with ESMTP id 914CA20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439399AbfIWKg6 (ORCPT
+        id S2439500AbfIWKhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:36:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36674 "EHLO mx1.suse.de"
+        Mon, 23 Sep 2019 06:37:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36922 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfIWKg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:36:58 -0400
+        id S1729662AbfIWKhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:37:41 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 803F7B018;
-        Mon, 23 Sep 2019 10:36:56 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 12:36:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH RFC v3 1/9] ACPI: NUMA: export pxm_to_node
-Message-ID: <20190923103655.GG6016@dhcp22.suse.cz>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-2-david@redhat.com>
- <f4d8204e-71a1-855e-3992-35f7ec90440c@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4d8204e-71a1-855e-3992-35f7ec90440c@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.suse.de (Postfix) with ESMTP id D4972B152;
+        Mon, 23 Sep 2019 10:37:39 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     QLogic-Storage-Upstream@cavium.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH] scsi: qedf: Add port_id getter
+Date:   Mon, 23 Sep 2019 12:37:38 +0200
+Message-Id: <20190923103738.67749-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23-09-19 12:13:11, David Hildenbrand wrote:
-> On 19.09.19 16:22, David Hildenbrand wrote:
-> > Will be needed by virtio-mem to identify the node from a pxm.
-> > 
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: linux-acpi@vger.kernel.org
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  drivers/acpi/numa.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-> > index eadbf90e65d1..d5847fa7ac69 100644
-> > --- a/drivers/acpi/numa.c
-> > +++ b/drivers/acpi/numa.c
-> > @@ -35,6 +35,7 @@ int pxm_to_node(int pxm)
-> >  		return NUMA_NO_NODE;
-> >  	return pxm_to_node_map[pxm];
-> >  }
-> > +EXPORT_SYMBOL(pxm_to_node);
-> 
-> FWIW, this is a fairly old patch I dragged along and I think I'll
-> convert this to EXPORT_SYMBOL_GPL now that I know better :)
+Add qedf_get_host_port_id() to the transport template.
 
-All other exports in this file are EXPORT_SYMBOL. Why is this one
-considered special to restrict the access?
+The fc_transport_template initializes the port_id member to the
+default value of -1. The new getter ensures that the sysfs entry shows
+the current value and not the default one, e.g by using 'lsscsi -H -t'
+
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/scsi/qedf/qedf_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+index 9c24f3834d70..8fe8c3fdde1b 100644
+--- a/drivers/scsi/qedf/qedf_main.c
++++ b/drivers/scsi/qedf/qedf_main.c
+@@ -1926,6 +1926,13 @@ static int qedf_fcoe_reset(struct Scsi_Host *shost)
+ 	return 0;
+ }
+ 
++static void qedf_get_host_port_id(struct Scsi_Host *shost)
++{
++	struct fc_lport *lport = shost_priv(shost);
++
++	fc_host_port_id(shost) = lport->port_id;
++}
++
+ static struct fc_host_statistics *qedf_fc_get_host_stats(struct Scsi_Host
+ 	*shost)
+ {
+@@ -1996,6 +2003,7 @@ static struct fc_function_template qedf_fc_transport_fn = {
+ 	.show_host_active_fc4s = 1,
+ 	.show_host_maxframe_size = 1,
+ 
++	.get_host_port_id = qedf_get_host_port_id,
+ 	.show_host_port_id = 1,
+ 	.show_host_supported_speeds = 1,
+ 	.get_host_speed = fc_get_host_speed,
 -- 
-Michal Hocko
-SUSE Labs
+2.16.4
+
