@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6D6C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE46C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87D920B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8370A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263230;
-	bh=4P42Ylw8dVD4Bnzt/Kd1oVacqU5UuetRh9pAnUcXzD4=;
+	s=default; t=1569263234;
+	bh=Ryh4XD4zTV9aAPRcs/ZkkCwhTz8yVBXZJmBfOnT2Z98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7KgsfDxvLVZYp8v8/tSk/OPVwtUWwzfi3jsmr2RgtdKbMTSmBn23CmpXh87/0DeE
-	 khFopxmZQTvDFFwS9dCkp9vTgp7qV/7e57ajklllnoWxhWCQPazAR96PoNNTYYFb1n
-	 ObfyYaZKPob6sndR2Z4d1KK5hLx7tsy6nkW0bYBw=
+	b=xZOMpC6H8/laGAkmWYylhu3Fe4E1WvSxfRidirxy8Q3tERohLhEbTil0lJeLM7kBC
+	 rAZyiOrePuL8/+71ppqeIiu/c6OmJfVXxpPhlgSRXMrO3OpY9PxVVMkT72nKVAZJ3a
+	 1CFdAGfxiJxIgJxsVM0aqmk/Eri2c9EbRIgKxKZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502299AbfIWS1J (ORCPT
+        id S2502311AbfIWS1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:27:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:46826 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 14:27:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:46846 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502244AbfIWS1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:27:07 -0400
+        id S2502300AbfIWS1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:27:11 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 468001715;
-        Mon, 23 Sep 2019 11:27:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11EAB1993;
+        Mon, 23 Sep 2019 11:27:11 -0700 (PDT)
 Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C79A23F694;
-        Mon, 23 Sep 2019 11:27:04 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D992B3F694;
+        Mon, 23 Sep 2019 11:27:07 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 11/35] irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
-Date:   Mon, 23 Sep 2019 19:25:42 +0100
-Message-Id: <20190923182606.32100-12-maz@kernel.org>
+Subject: [PATCH 12/35] irqchip/gic-v4.1: Don't use the VPE proxy if RVPEID is set
+Date:   Mon, 23 Sep 2019 19:25:43 +0100
+Message-Id: <20190923182606.32100-13-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
 References: <20190923182606.32100-1-maz@kernel.org>
@@ -56,154 +56,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ITS VMAPP command gains some new fields with GICv4.1:
-- a default doorbell, which allows a single doorbell to be used for
-  all the VLPIs routed to a given VPE
-- a pointer to the configuration table (instead of having it in a register
-  that gets context switched)
-- a flag indicating whether this is the first map or the last unmap for
-  this particulat VPE
-- a flag indicating whether the pending table is known to be zeroed, or not
+The infamous VPE proxy device isn't used with GICv4.1 because:
+- we can invalidate any LPI from the DirectLPI MMIO interface
+- the ITS and redistributors understand the life cycle of
+  the doorbell, so we don't need to enable/disable it all
+  the time
 
-Plumb in the new fields in the VMAPP builder, and add the map/unmap
-refcounting so that the ITS can do the right thing.
+So let's escape early from the proxy related functions.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 60 +++++++++++++++++++++++++++---
- include/linux/irqchip/arm-gic-v4.h | 18 +++++++--
- 2 files changed, 69 insertions(+), 9 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 58c7c40f5ad7..8d6deb75b973 100644
+index 8d6deb75b973..a9976bc81d9a 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -422,6 +422,27 @@ static void its_encode_vpt_size(struct its_cmd_block *cmd, u8 vpt_size)
- 	its_mask_encode(&cmd->raw_cmd[3], vpt_size, 4, 0);
- }
- 
-+static void its_encode_vconf_addr(struct its_cmd_block *cmd, u64 vconf_pa)
-+{
-+	its_mask_encode(&cmd->raw_cmd[0], vconf_pa >> 16, 51, 16);
-+}
-+
-+static void its_encode_alloc(struct its_cmd_block *cmd, bool alloc)
-+{
-+	its_mask_encode(&cmd->raw_cmd[0], alloc, 8, 8);
-+}
-+
-+static void its_encode_ptz(struct its_cmd_block *cmd, bool ptz)
-+{
-+	its_mask_encode(&cmd->raw_cmd[0], ptz, 9, 9);
-+}
-+
-+static void its_encode_vmapp_default_db(struct its_cmd_block *cmd,
-+					u32 vpe_db_lpi)
-+{
-+	its_mask_encode(&cmd->raw_cmd[1], vpe_db_lpi, 31, 0);
-+}
-+
- static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+@@ -3065,7 +3065,7 @@ static const struct irq_domain_ops its_domain_ops = {
+ /*
+  * This is insane.
+  *
+- * If a GICv4 doesn't implement Direct LPIs (which is extremely
++ * If a GICv4.0 doesn't implement Direct LPIs (which is extremely
+  * likely), the only way to perform an invalidate is to use a fake
+  * device to issue an INV command, implying that the LPI has first
+  * been mapped to some event on that device. Since this is not exactly
+@@ -3073,9 +3073,18 @@ static const struct irq_domain_ops its_domain_ops = {
+  * only issue an UNMAP if we're short on available slots.
+  *
+  * Broken by design(tm).
++ *
++ * GICv4.1 actually mandates that we're able to invalidate by writing to a
++ * MMIO register. It doesn't implement the whole of DirectLPI, but that's
++ * good enough. And most of the time, we don't even have to invalidate
++ * anything, so that's actually pretty good!
+  */
+ static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
  {
- 	/* Let's fixup BE commands */
-@@ -605,19 +626,45 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
- 					   struct its_cmd_block *cmd,
- 					   struct its_cmd_desc *desc)
- {
--	unsigned long vpt_addr;
-+	unsigned long vpt_addr, vconf_addr;
- 	u64 target;
--
--	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
--	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
-+	bool alloc;
- 
- 	its_encode_cmd(cmd, GITS_CMD_VMAPP);
- 	its_encode_vpeid(cmd, desc->its_vmapp_cmd.vpe->vpe_id);
- 	its_encode_valid(cmd, desc->its_vmapp_cmd.valid);
-+
-+	if (!desc->its_vmapp_cmd.valid) {
-+		if (is_v4_1(its)) {
-+			alloc = !atomic_dec_return(&desc->its_vmapp_cmd.vpe->vmapp_count);
-+			its_encode_alloc(cmd, alloc);
-+		}
-+
-+		goto out;
-+	}
-+
-+	vpt_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->vpt_page));
-+	target = desc->its_vmapp_cmd.col->target_address + its->vlpi_redist_offset;
-+
- 	its_encode_target(cmd, target);
- 	its_encode_vpt_addr(cmd, vpt_addr);
- 	its_encode_vpt_size(cmd, LPI_NRBITS - 1);
- 
-+	if (!is_v4_1(its))
-+		goto out;
-+
-+	vconf_addr = virt_to_phys(page_address(desc->its_vmapp_cmd.vpe->its_vm->vprop_page));
-+
-+	alloc = atomic_inc_and_test(&desc->its_vmapp_cmd.vpe->vmapp_count);
-+
-+	its_encode_alloc(cmd, alloc);
-+
-+	/* We can only signal PTZ when alloc==1. Why do we have two bits? */
-+	its_encode_ptz(cmd, alloc);
-+	its_encode_vconf_addr(cmd, vconf_addr);
-+	its_encode_vmapp_default_db(cmd, desc->its_vmapp_cmd.vpe->vpe_db_lpi);
-+
-+out:
- 	its_fixup_cmd(cmd);
- 
- 	return valid_vpe(its, desc->its_vmapp_cmd.vpe);
-@@ -3344,7 +3391,10 @@ static int its_vpe_init(struct its_vpe *vpe)
- 
- 	vpe->vpe_id = vpe_id;
- 	vpe->vpt_page = vpt_page;
--	vpe->vpe_proxy_event = -1;
++	/* GICv4.1 doesn't use a proxy, so nothing to do here */
 +	if (gic_rdists->has_rvpeid)
-+		atomic_set(&vpe->vmapp_count, 0);
-+	else
-+		vpe->vpe_proxy_event = -1;
- 
- 	return 0;
- }
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index ab1396afe08a..6213ced6f199 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -37,8 +37,20 @@ struct its_vpe {
- 	irq_hw_number_t		vpe_db_lpi;
- 	/* VPE resident */
- 	bool			resident;
--	/* VPE proxy mapping */
--	int			vpe_proxy_event;
-+	union {
-+		/* GICv4.0 implementations */
-+		struct {
-+			/* VPE proxy mapping */
-+			int	vpe_proxy_event;
-+			/* Implementation Defined Area Invalid */
-+			bool	idai;
-+		};
-+		/* GICv4.1 implementations */
-+		struct {
-+			atomic_t vmapp_count;
-+		};
-+	};
++		return;
 +
- 	/*
- 	 * This collection ID is used to indirect the target
- 	 * redistributor for this VPE. The ID itself isn't involved in
-@@ -47,8 +59,6 @@ struct its_vpe {
- 	u16			col_idx;
- 	/* Unique (system-wide) VPE identifier */
- 	u16			vpe_id;
--	/* Implementation Defined Area Invalid */
--	bool			idai;
- 	/* Pending VLPIs on schedule out? */
- 	bool			pending_last;
- };
+ 	/* Already unmapped? */
+ 	if (vpe->vpe_proxy_event == -1)
+ 		return;
+@@ -3098,6 +3107,10 @@ static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
+ 
+ static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
+ {
++	/* GICv4.1 doesn't use a proxy, so nothing to do here */
++	if (gic_rdists->has_rvpeid)
++		return;
++
+ 	if (!gic_rdists->has_direct_lpi) {
+ 		unsigned long flags;
+ 
+@@ -3109,6 +3122,10 @@ static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
+ 
+ static void its_vpe_db_proxy_map_locked(struct its_vpe *vpe)
+ {
++	/* GICv4.1 doesn't use a proxy, so nothing to do here */
++	if (gic_rdists->has_rvpeid)
++		return;
++
+ 	/* Already mapped? */
+ 	if (vpe->vpe_proxy_event != -1)
+ 		return;
+@@ -3131,6 +3148,10 @@ static void its_vpe_db_proxy_move(struct its_vpe *vpe, int from, int to)
+ 	unsigned long flags;
+ 	struct its_collection *target_col;
+ 
++	/* GICv4.1 doesn't use a proxy, so nothing to do here */
++	if (gic_rdists->has_rvpeid)
++		return;
++
+ 	if (gic_rdists->has_direct_lpi) {
+ 		void __iomem *rdbase;
+ 
 -- 
 2.20.1
 
