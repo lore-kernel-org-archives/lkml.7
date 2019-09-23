@@ -2,61 +2,94 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD1EC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AA82089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD7020835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbfIWFeH (ORCPT
+        id S1730920AbfIWFmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 01:34:07 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:49889 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729173AbfIWFeG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 01:34:06 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 45F3E10059367;
-        Mon, 23 Sep 2019 07:34:04 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id F066E14983A; Mon, 23 Sep 2019 07:34:03 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 07:34:03 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20190923053403.jdjw6ed3sub6iuou@wunner.de>
-References: <20190812143133.75319-1-mika.westerberg@linux.intel.com>
- <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+        Mon, 23 Sep 2019 01:42:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58114 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729356AbfIWFmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 01:42:07 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 83243E3C813AB3B23445;
+        Mon, 23 Sep 2019 13:42:05 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
+ 13:41:55 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <john.garry@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: hisi_sas: Make three functions static
+Date:   Mon, 23 Sep 2019 13:40:35 +0800
+Message-ID: <20190923054035.19036-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:31:33PM +0300, Mika Westerberg wrote:
-> If there are more than one PCIe switch with hotplug downstream ports
-> hot-removing them leads to a following deadlock:
+Fix sparse warnings:
 
-For the record, I think my comments on v1 of this patch still apply:
+drivers/scsi/hisi_sas/hisi_sas_main.c:3686:6:
+ warning: symbol 'hisi_sas_debugfs_release' was not declared. Should it be static?
+drivers/scsi/hisi_sas/hisi_sas_main.c:3708:5:
+ warning: symbol 'hisi_sas_debugfs_alloc' was not declared. Should it be static?
+drivers/scsi/hisi_sas/hisi_sas_main.c:3799:6:
+ warning: symbol 'hisi_sas_debugfs_bist_init' was not declared. Should it be static?
 
-https://patchwork.ozlabs.org/patch/1117870/#2230798
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index d1513fd..0847e68 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -3683,7 +3683,7 @@ void hisi_sas_debugfs_work_handler(struct work_struct *work)
+ }
+ EXPORT_SYMBOL_GPL(hisi_sas_debugfs_work_handler);
+ 
+-void hisi_sas_debugfs_release(struct hisi_hba *hisi_hba)
++static void hisi_sas_debugfs_release(struct hisi_hba *hisi_hba)
+ {
+ 	struct device *dev = hisi_hba->dev;
+ 	int i;
+@@ -3705,7 +3705,7 @@ void hisi_sas_debugfs_release(struct hisi_hba *hisi_hba)
+ 		devm_kfree(dev, hisi_hba->debugfs_port_reg[i]);
+ }
+ 
+-int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
++static int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
+ {
+ 	const struct hisi_sas_hw *hw = hisi_hba->hw;
+ 	struct device *dev = hisi_hba->dev;
+@@ -3796,7 +3796,7 @@ int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
+ 	return -ENOMEM;
+ }
+ 
+-void hisi_sas_debugfs_bist_init(struct hisi_hba *hisi_hba)
++static void hisi_sas_debugfs_bist_init(struct hisi_hba *hisi_hba)
+ {
+ 	hisi_hba->debugfs_bist_dentry =
+ 			debugfs_create_dir("bist", hisi_hba->debugfs_dir);
+-- 
+2.7.4
+
+
