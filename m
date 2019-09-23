@@ -2,115 +2,153 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9863C00300
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324D7C00300
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847A22196E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048F420665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502908AbfIWVAb (ORCPT
+        id S2502919AbfIWVCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:00:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49526 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502897AbfIWVAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:00:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B153308FBA9;
-        Mon, 23 Sep 2019 21:00:31 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BB55194BB;
-        Mon, 23 Sep 2019 21:00:24 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 17:00:21 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Dave Jones <davej@codemonkey.org.uk>, linux-audit@redhat.com,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: ntp audit spew.
-Message-ID: <20190923210021.5vfc2fo4wopennj5@madcap2.tricolour.ca>
-References: <20190923155041.GA14807@codemonkey.org.uk>
- <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+        Mon, 23 Sep 2019 17:02:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49370 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2502584AbfIWVCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:02:32 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NL0l66006094;
+        Mon, 23 Sep 2019 17:02:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v75kf81f9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 17:02:04 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NL0oxS006303;
+        Mon, 23 Sep 2019 17:02:04 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v75kf81e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 17:02:04 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NL0fZ7022838;
+        Mon, 23 Sep 2019 21:02:02 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04wdc.us.ibm.com with ESMTP id 2v5bg6xnbc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 21:02:02 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NL21tO48038320
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 21:02:01 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D9D07805F;
+        Mon, 23 Sep 2019 21:02:00 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 568D87805E;
+        Mon, 23 Sep 2019 21:01:56 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 21:01:56 +0000 (GMT)
+Message-ID: <907304d0599684b3caa6773197fd40e09191b48e.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 03/11] mm/gup: Applies counting method to monitor
+ gup_pgd_range
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Allison Randal <allison@lohutok.net>
+Date:   Mon, 23 Sep 2019 18:01:54 -0300
+In-Reply-To: <2e060677-eadf-c32e-d8c5-8e22c8ca118e@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-4-leonardo@linux.ibm.com>
+         <2e060677-eadf-c32e-d8c5-8e22c8ca118e@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-tW3aXB7tmQ0op8qOIhbV"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 23 Sep 2019 21:00:31 +0000 (UTC)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-23 12:14, Paul Moore wrote:
-> On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
-> >
-> > I have some hosts that are constantly spewing audit messages like so:
-> >
-> > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
-> > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
 
-Odd.  It appears these two above should have the same serial number and
-should be accompanied by a syscall record.  It appears that it has no
-context to update to connect the two records.  Is it possible it is not
-being called in a task context?  If that were the case though, I'd
-expect audit_dummy_context() to return 1...
+--=-tW3aXB7tmQ0op8qOIhbV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Checking audit_enabled should not be necessary but might fix the
-problem, but still not explain why we're getting these records.
+On Mon, 2019-09-23 at 13:27 -0700, John Hubbard wrote:
+> I'd also like a second opinion from the "core" -mm maintainers, but it se=
+ems like
+> there is now too much code around the gup_pgd_range() call. Especially si=
+nce there
+> are two places where it's called--did you forget the other one in=20
+> __get_user_pages_fast(), btw??
+>=20
+Oh, sorry, I missed this one. I will put it on v3.
+(Also I will make sure to include linux-mm on v3.)
 
-> > [48850.604005] audit: type=1333 audit(1569252241.675:222): op=offset old=1850302393317 new=3190241577926
-> > [48850.604008] audit: type=1333 audit(1569252241.675:223): op=freq old=-2436281764244 new=-2413071187316
-> > [49926.567270] audit: type=1333 audit(1569253317.638:224): op=offset old=2453141035832 new=2372389610455
-> > [49926.567273] audit: type=1333 audit(1569253317.638:225): op=freq old=-2413071187316 new=-2403561671476
-> >
-> > This gets emitted every time ntp makes an adjustment, which is apparently very frequent on some hosts.
-> >
-> >
-> > Audit isn't even enabled on these machines.
-> >
-> > # auditctl -l
-> > No rules
-> 
-> [NOTE: added linux-audit to the CC line]
-> 
-> There is an audit mailing list, please CC it when you have audit
-> concerns/questions/etc.
-> 
-> What happens when you run 'auditctl -a never,task'?  That *should*
-> silence those messages as the audit_ntp_log() function has the
-> requisite audit_dummy_context() check.  FWIW, this is the distro
-> default for many (most? all?) distros; for example, check
-> /etc/audit/audit.rules on a stock Fedora system.  A more selective
-> configuration could simply exclude the TIME_ADJNTPVAL record (type
-> 1333) from the records that the kernel emits.
-> 
-> We could also add a audit_enabled check at the top of
-> audit_ntp_log()/__audit_ntp_log(), but I imagine some of that depends
-> on the various security requirements (they can be bizzare and I can't
-> say I'm up to date on all those - Steve Grubb should be able to
-> comment on that).
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-> 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+> Maybe the irq handling and atomic counting should be moved into start/fin=
+ish
+> calls, like this:
+>=20
+>      start_gup_fast_walk()
+>      gup_pgd_range()
+>      finish_gup_fast_walk()
 
-- RGB
+There are cases where interrupt disable/enable is not done around the
+lockless pagetable walk.
+It may come from functions called above on stack, that's why I opted it
+to be only the atomic operation.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+--=-tW3aXB7tmQ0op8qOIhbV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JMsMACgkQlQYWtz9S
+ttRQ0g//YQQCVV8UsFOhuPWAkbMot1RxhjkbduibAKFnSgd4mYSqLLz6n4ikZW+k
+qI4EbNxkdtBL5qiqM1PlXubAk8M1ShbBVRk7+cFbCyzPSWWbuzy4MsNJJY9YV8tR
+QuZEfqhaKyz+SCIz3yWUrVSwQjRkjkAkvRnipBuYa0eRcXtIuKFb2XRU4U085Ocg
+3KZFb+z+4QIiVoSSH03p9yFhh/k89S3ToHHEWdhbKpEblqiY64fsexSsoKOggcJ5
+R01gGhnaVcKxNNCnGvhA/uMF/Bcl6W3cV4MfwNluypWn6AqzxK3i97GtwHdESqez
+aNgyMyuCkLoxPsiBk1nh/AbeGL18dgiU+HXrQ5l49UbLAeW18LL/y3GC+UmITQKA
+F2tSnB8oq9k2lyJtoYj+5++ywSQDiyXxhLrUvgpQScgDV5IoQ5U4q2GgeRcy9CxN
+5ehqygvFulOdz099CrjZd2Nwna5GWEOgdeszgvFIzNZX7wHmOp2lbh6QbpgLerUC
+n/KNTIGN40KTBBm9YFNbMiMW3eBEdyf8hu7tapnO2mll8mWs2g/5+vwt5XDjkwei
+09uJNIRCsA68+8hyPC2c1I+U8ris1ZEFtJf4AL3F+yRtgLgcmlD/UI1xFOe5tdOH
+FUQvh2QN6u0xJfm8Mk+22PVVkadrS6F9BCxai/XpUZtQ73h1p9U=
+=svcq
+-----END PGP SIGNATURE-----
+
+--=-tW3aXB7tmQ0op8qOIhbV--
+
