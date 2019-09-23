@@ -2,74 +2,145 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D52C88CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9700CC88CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942C1207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E33207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502827AbfIWUu0 (ORCPT
+        id S2388043AbfIWUu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:50:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59889 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387437AbfIWUuZ (ORCPT
+        Mon, 23 Sep 2019 16:50:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31046 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387437AbfIWUu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:50:25 -0400
-Received: from pd9ef19d4.dip0.t-ipconnect.de ([217.239.25.212] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iCVHo-0006Gs-RE; Mon, 23 Sep 2019 22:50:20 +0200
-Date:   Mon, 23 Sep 2019 22:50:19 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, James Morse <james.morse@arm.com>
-Subject: Re: [RFC patch 00/15] entry: Provide generic implementation for host
- and guest entry/exit work
-In-Reply-To: <20190920151240.GB55224@lakrids.cambridge.arm.com>
-Message-ID: <alpine.DEB.2.21.1909232244560.1934@nanos.tec.linutronix.de>
-References: <20190919150314.054351477@linutronix.de> <20190920151240.GB55224@lakrids.cambridge.arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 23 Sep 2019 16:50:57 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NKkwoi097671;
+        Mon, 23 Sep 2019 16:50:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72df5w06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:50:13 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NKnpi9103691;
+        Mon, 23 Sep 2019 16:50:12 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v72df5vyg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:50:12 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NKjFb4020590;
+        Mon, 23 Sep 2019 20:50:12 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v5bg6pmpc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 20:50:12 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NKo9di53281104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 20:50:09 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CFF8BE056;
+        Mon, 23 Sep 2019 20:50:09 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6122BE058;
+        Mon, 23 Sep 2019 20:50:04 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 20:50:04 +0000 (GMT)
+Message-ID: <5492a97960d6991e578caa54ba1536a8e38c7175.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 01/11] powerpc/mm: Adds counting method to monitor
+ lockless pgtable walks
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Keith Busch <keith.busch@intel.com>
+Date:   Mon, 23 Sep 2019 17:50:03 -0300
+In-Reply-To: <90ceb0ca-9f04-65a5-586c-e37c2ecc6e4e@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-2-leonardo@linux.ibm.com>
+         <90ceb0ca-9f04-65a5-586c-e37c2ecc6e4e@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-BWWhve4qxaPrBo0dh95w"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019, Mark Rutland wrote:
-> I've been working on converting the arm64 entry code to C for a while
-> now [1], gradually upstreaming the bits I can.
-> 
-> James has picked up some of that [2] as a prerequisite for some RAS
-> error handling, and I think building the arm64 bits atop of that would
-> be preferable. IIUC that should get posted as a series come -rc1.
-> 
-> Since there's immense scope for subtle breakage, I'd prefer that we do
-> the arm64-specific asm->C conversion before migrating arm64 to generic
-> code. That way us arm64 folk can ensure the asm->C conversion retains
-> the existing behaviour, and it'll be easier for everyone to compare the
-> arm64 and generic C implementations.
 
-Right. It still would be nice to have some feedback on the general
-approach.
+--=-BWWhve4qxaPrBo0dh95w
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-That sais I'm happy to let you screw your entry code up yourself :)
+On Mon, 2019-09-23 at 13:42 -0700, John Hubbard wrote:
+> Somewhere, there should be a short comment that explains how the followin=
+g functions
+> are meant to be used. And it should include the interaction with irqs, so=
+ maybe
+> if you end up adding that combined wrapper function that does both, that'=
+s=20
+> where the documentation would go. If not, then here is probably where it =
+goes.
 
-Thanks
+Thanks for the feedback.
+I will make sure to add comments here for v3.
 
-	tglx
+--=-BWWhve4qxaPrBo0dh95w
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JL/sACgkQlQYWtz9S
+ttQPlRAAr5/zXU5MsA8IdhhjpUDWfsoINxRO1MdYODVN3wLbY3JzGRaDX4Gl4nX5
+9pi4o1ghm49t3tq40uisluJEqhavnoGLrjjpfnKIyQCXY/1qg4zpBxPC87G136B6
+wozHzkWXCwjSMbkb58DvPribUYBlxUfYSDnecgnens2axofbN0yQ23cX6Z4Eqce0
+3fS6uTuSw3xy/Y1K81tBz3rStfHCjdBcD1rqf0zijDbXgX2CP3havAll7dVWs4cz
+3WtT9T0EKGP2SQKeaXzKpG6gieuZN0UijRL524A+afKqc8rlY5Vk9MheHMHonLt2
+zsMCcKct4Z+8KKo3KtGfFicVb+TJKl97XQRqiravh/Y6Tu/cd08qUxKT9VNFK47p
+xdv+tuSUza8AvvY4PTzONiqCSODmYkeLpoyARa9/6QGfcURhgQxwKJenT3bUP5HI
+MCR+s6YtqJwMRKPj12Je7k7lqinWD5I6RgUkhJ5E38/c+ei7NyZfDvsD3vfKPrZf
+ey4a9mHuMiEKcTGeG4S11pAHpQOj0DTRl3M7HDJ0xJ1PcI3JbxcwCQFRBB9DDDDP
+9/nKhW/WqaVNqj3AeSoMsKq32YKLsacni3xPGIp4Y1dCwXEM4wHKA0C5U3IjCexH
+xmL/gvd4kx40YhA8RG2N4Uu0Kbv7nE0R+Iqgsa2a+GVPkA4iDp8=
+=Nuqy
+-----END PGP SIGNATURE-----
+
+--=-BWWhve4qxaPrBo0dh95w--
+
