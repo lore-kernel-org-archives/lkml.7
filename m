@@ -2,144 +2,393 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B37C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B5BC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8548E20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D2C20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbfIWMUL (ORCPT
+        id S1732197AbfIWMUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:20:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37750 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfIWMUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:20:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B95520E6;
-        Mon, 23 Sep 2019 12:20:10 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CBA260BF7;
-        Mon, 23 Sep 2019 12:20:06 +0000 (UTC)
-Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        linux-hyperv@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20190909114830.662-1-david@redhat.com>
- <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
- <20190923085807.GD6016@dhcp22.suse.cz>
- <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
- <20190923111559.GK6016@dhcp22.suse.cz>
- <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
- <20190923120719.GM6016@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <b60b783e-a251-f155-3cef-e0fa4a18abd0@redhat.com>
-Date:   Mon, 23 Sep 2019 14:20:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190923120719.GM6016@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 23 Sep 2019 12:20:10 +0000 (UTC)
+        Mon, 23 Sep 2019 08:20:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56340 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfIWMUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 08:20:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 275AD283BCE
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/rockchip: Add AFBC support
+Date:   Mon, 23 Sep 2019 14:20:13 +0200
+Message-Id: <20190923122014.18229-1-andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.09.19 14:07, Michal Hocko wrote:
-> On Mon 23-09-19 13:34:18, David Hildenbrand wrote:
->> On 23.09.19 13:15, Michal Hocko wrote:
-> [...]
->>> I am wondering why those pages get onlined when they are, in fact,
->>> supposed to be offline.
->>>
->>
->> It's the current way of emulating sub-memory-block hotplug on top of the
->> memory bock device API we have. Hyper-V and XEN have been using that for
->> a long time.
-> 
-> Do they really have to use the existing block interface when they in
-> fact do not operate on the block granularity? Zone device memory already
-> acts on sub section/block boundaries.
-> 
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-Yes, we need memory blocks, especially for user space to properly online
-them (as we discussed a while back, to decide on a zone) and for udev
-events, to e.g., properly reload kexec when memory blocks get
-added/removed/onlined/offlined.
+AFBC is a proprietary lossless image compression protocol and format.
+It helps reduce memory bandwidth of the graphics pipeline operations.
+This, in turn, improves power efficiency.
 
-ZONE_DEVICE is special as it doesn't have to worry about
-onlining/offlining/dumping. Also, it doesn't care about
-SECTION_IS_ONLINE, but figuring out how to detect which sub
-sections/blocks have a valid memmap is still something to get fixed and
-is still getting discussed on MM.
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+[locking improvements]
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+[squashing the above, commit message and Rockchip AFBC modifier]
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c  | 27 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 94 ++++++++++++++++++++-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 12 +++
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 18 ++++
+ include/uapi/drm/drm_fourcc.h               |  3 +
+ 5 files changed, 151 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+index 64ca87cf6d50..5178939a9c29 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+@@ -24,6 +24,27 @@ static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+ 	.dirty	       = drm_atomic_helper_dirtyfb,
+ };
+ 
++static int
++rockchip_verify_afbc_mod(struct drm_device *dev,
++			 const struct drm_mode_fb_cmd2 *mode_cmd)
++{
++	if (mode_cmd->modifier[0] &
++	    ~DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
++		DRM_DEV_ERROR(dev->dev,
++			      "Unsupported format modifier 0x%llx\n",
++			      mode_cmd->modifier[0]);
++		return -EINVAL;
++	}
++
++	if (mode_cmd->width > 2560) {
++		DRM_DEV_ERROR(dev->dev,
++			      "Unsupported width %d\n", mode_cmd->width);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static struct drm_framebuffer *
+ rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cmd,
+ 		  struct drm_gem_object **obj, unsigned int num_planes)
+@@ -32,6 +53,12 @@ rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cm
+ 	int ret;
+ 	int i;
+ 
++	if (mode_cmd->modifier[0]) {
++		ret = rockchip_verify_afbc_mod(dev, mode_cmd);
++		if (ret)
++			return ERR_PTR(ret);
++	}
++
+ 	fb = kzalloc(sizeof(*fb), GFP_KERNEL);
+ 	if (!fb)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 21b68eea46cc..50bf214d21da 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -46,6 +46,13 @@
+ 		vop_reg_set(vop, &win->phy->scl->ext->name, \
+ 			    win->base, ~0, v, #name)
+ 
++#define VOP_AFBC_SET(x, name, v) \
++	do { \
++		if (vop->data->afbc) \
++			vop_reg_set(vop, &vop->data->afbc->name, \
++				0, ~0, v, #name); \
++	} while (0)
++
+ #define VOP_WIN_YUV2YUV_SET(vop, win_yuv2yuv, name, v) \
+ 	do { \
+ 		if (win_yuv2yuv && win_yuv2yuv->name.mask) \
+@@ -123,6 +130,8 @@ struct vop {
+ 	struct drm_device *drm_dev;
+ 	bool is_enabled;
+ 
++	struct vop_win *afbc_win;
++
+ 	struct completion dsp_hold_completion;
+ 
+ 	/* protected by dev->event_lock */
+@@ -245,6 +254,30 @@ static bool has_rb_swapped(uint32_t format)
+ 	}
+ }
+ 
++#define AFBC_FMT_RGB565        0x0
++#define AFBC_FMT_U8U8U8U8      0x5
++#define AFBC_FMT_U8U8U8        0x4
++
++static int vop_convert_afbc_format(uint32_t format)
++{
++	switch (format) {
++	case DRM_FORMAT_XRGB8888:
++	case DRM_FORMAT_ARGB8888:
++	case DRM_FORMAT_XBGR8888:
++	case DRM_FORMAT_ABGR8888:
++		return AFBC_FMT_U8U8U8U8;
++	case DRM_FORMAT_RGB888:
++	case DRM_FORMAT_BGR888:
++		return AFBC_FMT_U8U8U8;
++	case DRM_FORMAT_RGB565:
++	case DRM_FORMAT_BGR565:
++		return AFBC_FMT_RGB565;
++	default:
++		DRM_ERROR("unsupported afbc format[%08x]\n", format);
++		return -EINVAL;
++	}
++}
++
+ static enum vop_data_format vop_convert_format(uint32_t format)
+ {
+ 	switch (format) {
+@@ -587,10 +620,16 @@ static int vop_enable(struct drm_crtc *crtc)
+ 
+ 		vop_win_disable(vop, win);
+ 	}
+-	spin_unlock(&vop->reg_lock);
++
++	if (vop->data->afbc) {
++		VOP_AFBC_SET(vop, enable, 0);
++		vop->afbc_win = NULL;
++	}
+ 
+ 	vop_cfg_done(vop);
+ 
++	spin_unlock(&vop->reg_lock);
++
+ 	/*
+ 	 * At here, vop clock & iommu is enable, R/W vop regs would be safe.
+ 	 */
+@@ -719,6 +758,32 @@ static int vop_plane_atomic_check(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
+ 
++	if (fb->modifier & DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
++		struct vop *vop = to_vop(crtc);
++
++		if (!vop->data->afbc) {
++			DRM_ERROR("VOP does not support AFBC\n");
++			return -EINVAL;
++		}
++
++		ret = vop_convert_afbc_format(fb->format->format);
++		if (ret < 0)
++			return ret;
++
++		if (state->src.x1 || state->src.y1) {
++			DRM_ERROR("AFBC does not support offset display\n");
++			DRM_ERROR("xpos=%d, ypos=%d, offset=%d\n",
++				state->src.x1, state->src.y1, fb->offsets[0]);
++			return -EINVAL;
++		}
++
++		if (state->rotation && state->rotation != DRM_MODE_ROTATE_0) {
++			DRM_ERROR("AFBC does not support rotation\n");
++			DRM_ERROR("rotation=%d\n", state->rotation);
++			return -EINVAL;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -732,6 +797,9 @@ static void vop_plane_atomic_disable(struct drm_plane *plane,
+ 	if (!old_state->crtc)
+ 		return;
+ 
++	if (vop->afbc_win == vop_win)
++		vop->afbc_win = NULL;
++
+ 	spin_lock(&vop->reg_lock);
+ 
+ 	vop_win_disable(vop, win);
+@@ -774,6 +842,9 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+ 	if (WARN_ON(!vop->is_enabled))
+ 		return;
+ 
++	if (vop->afbc_win == vop_win)
++		vop->afbc_win = NULL;
++
+ 	if (!state->visible) {
+ 		vop_plane_atomic_disable(plane, old_state);
+ 		return;
+@@ -808,6 +879,20 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+ 
+ 	spin_lock(&vop->reg_lock);
+ 
++	if (fb->modifier & DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP)) {
++		int afbc_format = vop_convert_afbc_format(fb->format->format);
++
++		VOP_AFBC_SET(vop, format, afbc_format | 1 << 4);
++		VOP_AFBC_SET(vop, hreg_block_split, 0);
++		VOP_AFBC_SET(vop, win_sel, win_index);
++		VOP_AFBC_SET(vop, hdr_ptr, dma_addr);
++		VOP_AFBC_SET(vop, pic_size, act_info);
++
++		vop->afbc_win = vop_win;
++
++		pr_info("AFBC on plane %s\n", plane->name);
++	}
++
+ 	VOP_WIN_SET(vop, win, format, format);
+ 	VOP_WIN_SET(vop, win, yrgb_vir, DIV_ROUND_UP(fb->pitches[0], 4));
+ 	VOP_WIN_SET(vop, win, yrgb_mst, dma_addr);
+@@ -1163,6 +1248,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
+ 
+ 	spin_lock(&vop->reg_lock);
+ 
++	VOP_AFBC_SET(vop, enable, vop->afbc_win ? 0x1 : 0);
+ 	vop_cfg_done(vop);
+ 
+ 	spin_unlock(&vop->reg_lock);
+@@ -1471,7 +1557,8 @@ static int vop_create_crtc(struct vop *vop)
+ 					       0, &vop_plane_funcs,
+ 					       win_data->phy->data_formats,
+ 					       win_data->phy->nformats,
+-					       NULL, win_data->type, NULL);
++					       win_data->phy->format_modifiers,
++					       win_data->type, NULL);
+ 		if (ret) {
+ 			DRM_DEV_ERROR(vop->dev, "failed to init plane %d\n",
+ 				      ret);
+@@ -1511,7 +1598,8 @@ static int vop_create_crtc(struct vop *vop)
+ 					       &vop_plane_funcs,
+ 					       win_data->phy->data_formats,
+ 					       win_data->phy->nformats,
+-					       NULL, win_data->type, NULL);
++					       win_data->phy->format_modifiers,
++					       win_data->type, NULL);
+ 		if (ret) {
+ 			DRM_DEV_ERROR(vop->dev, "failed to init overlay %d\n",
+ 				      ret);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+index 2149a889c29d..dc8b12025269 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+@@ -77,6 +77,16 @@ struct vop_misc {
+ 	struct vop_reg global_regdone_en;
+ };
+ 
++struct vop_afbc {
++	struct vop_reg enable;
++	struct vop_reg win_sel;
++	struct vop_reg format;
++	struct vop_reg hreg_block_split;
++	struct vop_reg pic_size;
++	struct vop_reg hdr_ptr;
++	struct vop_reg rstn;
++};
++
+ struct vop_intr {
+ 	const int *intrs;
+ 	uint32_t nintrs;
+@@ -128,6 +138,7 @@ struct vop_win_phy {
+ 	const struct vop_scl_regs *scl;
+ 	const uint32_t *data_formats;
+ 	uint32_t nformats;
++	const uint64_t *format_modifiers;
+ 
+ 	struct vop_reg enable;
+ 	struct vop_reg gate;
+@@ -169,6 +180,7 @@ struct vop_data {
+ 	const struct vop_output *output;
+ 	const struct vop_win_yuv2yuv_data *win_yuv2yuv;
+ 	const struct vop_win_data *win;
++	const struct vop_afbc *afbc;
+ 	unsigned int win_size;
+ 
+ #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
+diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+index 7b9c74750f6d..e9ff0c43c396 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
++++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+@@ -30,6 +30,12 @@
+ #define VOP_REG_MASK_SYNC(off, _mask, _shift) \
+ 		_VOP_REG(off, _mask, _shift, true, false)
+ 
++static const uint64_t format_modifiers_afbc[] = {
++	DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_ROCKCHIP),
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID
++};
++
+ static const uint32_t formats_win_full[] = {
+ 	DRM_FORMAT_XRGB8888,
+ 	DRM_FORMAT_ARGB8888,
+@@ -667,6 +673,7 @@ static const struct vop_win_phy rk3368_win01_data = {
+ 	.scl = &rk3288_win_full_scl,
+ 	.data_formats = formats_win_full,
+ 	.nformats = ARRAY_SIZE(formats_win_full),
++	.format_modifiers = format_modifiers_afbc,
+ 	.enable = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 0),
+ 	.format = VOP_REG(RK3368_WIN0_CTRL0, 0x7, 1),
+ 	.rb_swap = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 12),
+@@ -758,6 +765,16 @@ static const struct vop_data rk3366_vop = {
+ 	.win_size = ARRAY_SIZE(rk3368_vop_win_data),
+ };
+ 
++static const struct vop_afbc rk3399_afbc = {
++	.rstn = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 3),
++	.enable = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 0),
++	.win_sel = VOP_REG(RK3399_AFBCD0_CTRL, 0x3, 1),
++	.format = VOP_REG(RK3399_AFBCD0_CTRL, 0x1f, 16),
++	.hreg_block_split = VOP_REG(RK3399_AFBCD0_CTRL, 0x1, 21),
++	.hdr_ptr = VOP_REG(RK3399_AFBCD0_HDR_PTR, 0xffffffff, 0),
++	.pic_size = VOP_REG(RK3399_AFBCD0_PIC_SIZE, 0xffffffff, 0),
++};
++
+ static const struct vop_output rk3399_output = {
+ 	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0xf, 16),
+ 	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
+@@ -808,6 +825,7 @@ static const struct vop_data rk3399_vop_big = {
+ 	.modeset = &rk3288_modeset,
+ 	.output = &rk3399_output,
+ 	.misc = &rk3368_misc,
++	.afbc = &rk3399_afbc,
+ 	.win = rk3368_vop_win_data,
+ 	.win_size = ARRAY_SIZE(rk3368_vop_win_data),
+ 	.win_yuv2yuv = rk3399_vop_big_win_yuv2yuv_data,
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index 3feeaa3f987a..ba6caf06c824 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -742,6 +742,9 @@ extern "C" {
+  */
+ #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
+ 
++#define AFBC_FORMAT_MOD_ROCKCHIP \
++	(AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | AFBC_FORMAT_MOD_SPARSE)
++
+ /*
+  * Allwinner tiled modifier
+  *
 -- 
+2.17.1
 
-Thanks,
-
-David / dhildenb
