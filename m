@@ -2,158 +2,103 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64BC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254D7C4CED2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B73217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D5820820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvIurzkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390939AbfIWRHb (ORCPT
+        id S2437522AbfIWRKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:07:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35720 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730985AbfIWRHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:07:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 10:07:29 -0700
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="200604852"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 10:07:28 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id DA0B520C9F; Mon, 23 Sep 2019 20:07:25 +0300 (EEST)
-Date:   Mon, 23 Sep 2019 20:07:25 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
- handling
-Message-ID: <20190923170725.GE9467@paasikivi.fi.intel.com>
-References: <20190919203955.15125-1-bparrot@ti.com>
- <20190919203955.15125-6-bparrot@ti.com>
- <20190920101706.GX5781@paasikivi.fi.intel.com>
- <20190920165529.it7urirm6epg4woq@ti.com>
- <20190923061731.GZ5781@paasikivi.fi.intel.com>
- <20190923170557.mggr5gcov43pcmfs@ti.com>
+        Mon, 23 Sep 2019 13:10:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36398 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732910AbfIWRKP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 13:10:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569258614;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=brtnUNEATJxaiEmZJMG7ZyzZu+Ldb+R0Iih2eWtZNa8=;
+        b=CvIurzkUgXXwWaeRZFHy9j301sh+XRjQ129axRbcz3vxYFAltnTcG+DS10099kKtvNAnWm
+        hyAZ0mDMFjBhAqdZoio/LZFJNydHiaBpDSKBNHQiHt3PEbZOizDET2hG4HOPPjkOXrVTiB
+        ZeymYIv3TDz4WM1/u9bTNwcvWatQKUI=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-fNfUA78ZPEO3DDUuqgQ4vQ-1; Mon, 23 Sep 2019 13:10:13 -0400
+Received: by mail-io1-f70.google.com with SMTP id m3so24518191ion.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:10:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=rh1uvaNsooagBW4WOK11wp/OzNbWIxJmJoNftck7Ang=;
+        b=ef/BQiNpkD1F1ezldh4OJRPna0IOXBXwo9j7SBhxZ0pOgDL+Uj5vWC1TCWxEkUMfJa
+         zrRtgG/97yZH6Lyu21Yx7XzhJVq23CuqeZ/5+U/qdZYKJkLSTHaPV47nNiCercSqUmg8
+         iYOwuMcO4Uf784xnM2Iog0kSELsLnHgtU5ZRczXgo0B9uowDAzShZ9rLZHu4eEi6Nm3z
+         y/i8BSNvLhv9f8xPARwSjI5BrbKb7VoeU4f7tHnQvmrojdQWzWf86b/4UIyaCDoLbfQs
+         Zhlz8TFm5FKVA5ECRexQPE8TptUxNfV0fPM1hvstWRI56palTFIF2XZUZEG9CQxFNt9y
+         QOig==
+X-Gm-Message-State: APjAAAVL98WxQfHJr0cTvbsm+lBP+4LUsigO+U/hTZjcfGEsBY5uRhmu
+        TGDx9s9KHm0UR4kIED+Mk3DJRLpqlAXPLNGN+ug2DOFooDGXg2mTC4w5tHraLTz5wJLFAJHCRKj
+        0h9w5yu7JkuUgV5Z9j80BJI5z
+X-Received: by 2002:a5e:9917:: with SMTP id t23mr308427ioj.141.1569258612799;
+        Mon, 23 Sep 2019 10:10:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxXT9PS2Bv55kiYnVhChrkQQVSNPJh291rae4rfNmJB3BZ6AEfm4CLIiEf4j7x0kpdjPLYidA==
+X-Received: by 2002:a5e:9917:: with SMTP id t23mr308405ioj.141.1569258612538;
+        Mon, 23 Sep 2019 10:10:12 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id w7sm11707131iob.17.2019.09.23.10.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 10:10:11 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 10:10:10 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-efi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [RFC PATCH] tpm: only set efi_tpm_final_log_size after
+ successful event log parsing
+Message-ID: <20190923171010.csz4js3xs2mixmpq@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20190918191626.5741-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20190918191626.5741-1-jsnitsel@redhat.com>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: fNfUA78ZPEO3DDUuqgQ4vQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20190923170557.mggr5gcov43pcmfs@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:05:57PM -0500, Benoit Parrot wrote:
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2019-Sep-23 09:17:32 +0300]:
-> > Hi Benoit,
-> > 
-> > On Fri, Sep 20, 2019 at 11:55:29AM -0500, Benoit Parrot wrote:
-> > ...
-> > > > > @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
-> > > > >  	    ov2659->xvclk_frequency > 27000000)
-> > > > >  		return -EINVAL;
-> > > > >  
-> > > > > +	/* Optional gpio don't fail if not present */
-> > > > > +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> > > > > +						    GPIOD_OUT_LOW);
-> > > > > +	if (IS_ERR(ov2659->pwdn_gpio))
-> > > > > +		return PTR_ERR(ov2659->pwdn_gpio);
-> > > > > +
-> > > > > +	/* Optional gpio don't fail if not present */
-> > > > > +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> > > > > +						      GPIOD_OUT_HIGH);
-> > > > > +	if (IS_ERR(ov2659->resetb_gpio))
-> > > > > +		return PTR_ERR(ov2659->resetb_gpio);
-> > > > > +
-> > > > >  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
-> > > > >  	ov2659->link_frequency =
-> > > > >  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
-> > > > > @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
-> > > > >  	ov2659->frame_size = &ov2659_framesizes[2];
-> > > > >  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
-> > > > >  
-> > > > > +	pm_runtime_enable(&client->dev);
-> > > > > +	pm_runtime_get_sync(&client->dev);
-> > > > 
-> > > > This makes the driver depend on runtime PM.
-> > > 
-> > > Obviously.
-> > > Why? Is that bad?
-> > 
-> > Well, if it is, then it should be listed in driver's dependencies in
-> > Kconfig.
-> 
-> And I see that most camera driver using pm_runtime calls don't mark it as a
-> dependency in their own Kconfig. There is actually only one that does.
+Any thoughts on this? I know of at least 2 Lenovo models that are
+running into this problem.
 
-Drivers should also work without runtime PM even if they can use it.
+In the case of the one I have currently have access to the problem is
+that the hash algorithm id for an event isn't one that is currently in
+the TCG registry, and it fails to find a match when walking the
+digest_sizes array. That seems like an issue for the vendor to fix in the b=
+ios,
+but we should look at the return value of tpm2_calc_event_log_size and not
+stick a negative value in efi_tpm_final_log_size.
 
-> 
-> > 
-> > > 
-> > > > 
-> > > > See e.g. the smiapp driver for an example how to make it work without. It
-> > > > wasn't trivial. :I You won't need autosuspend.
-> > > 
-> > > I took a look at that driver, but I don't get your reference to being able
-> > > to work without runtime pm!
-> > 
-> > The driver didn't need runtime PM, so it'd be nice to continue work
-> > without.
-> 
-> Ok.
-> 
-> > 
-> > What smiapp does is that it powers the sensor on first *without* runtime
-> > PM, and then proceeds to set up runtime PM if it's available. The sensor
-> > will only be powered off when the device is unbound with runtime PM
-> > disabled.
-> 
-> In that case in your original reply you suggested that I move the content
-> of ov2659_set_power() into the pm_runtime callback, but based on this
-> comments then I should keep ov2659_set_power() as is as I  would need to
-> use it for this specific purpose.
-
-No need to; you can call the same function elsewhere in the driver (just
-like the smiapp driver does).
-
-> 
-> > 
-> > Regarding the smiapp driver, you can replace pm_runtime_get_noresume() and
-> > all the autoidle lines with pm_runtime_idle() call after
-> > pm_runtime_enable() in the ov2659 driver.
-> 
-> Ok, I'll study this mechanics a little more, as this is not immediately
-> clear.
-> 
-> Benoit
-> 
-> > 
-> > > That driver looks pretty similar to ov7740.c which I used as a reference
-> > > for this.
-> > 
-> > I guess in practice many sensor drivers don't work without it on DT-based
-> > systems I'm afraid. :-( They should be fixed.
-> > 
-> > -- 
-> > Kind regards,
-> > 
-> > Sakari Ailus
-> > sakari.ailus@linux.intel.com
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
