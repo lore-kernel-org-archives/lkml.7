@@ -2,242 +2,188 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D1C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AE5C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD13214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF58207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394395AbfIWO3y (ORCPT
+        id S2439926AbfIWObL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:29:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41335 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389590AbfIWO3y (ORCPT
+        Mon, 23 Sep 2019 10:31:11 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45718 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437929AbfIWObK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:29:54 -0400
-Received: from [172.58.27.190] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iCPLW-0001df-Gy; Mon, 23 Sep 2019 14:29:47 +0000
-Date:   Mon, 23 Sep 2019 16:29:34 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: For review: pidfd_send_signal(2) manual page
-Message-ID: <20190923142932.2gujbddnzyp4ujeu@wittgenstein>
-References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+        Mon, 23 Sep 2019 10:31:10 -0400
+Received: by mail-io1-f71.google.com with SMTP id o11so23679228iop.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:31:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=IjRWi0jZFV58CzEU6Vz96oJ3ckiiGtQva6OmGGp82do=;
+        b=HMKJA9H9dfWHAhP4XOjPb3rKiv+COeBhk5irVu8EQvkpI75BvO7MZJyT/9Xj39HKiW
+         TxYHfSKpUZk9liDvIDaqNANobzMBP0nHiLSoeylS21zrGg2IvLWsP1hyiBAhwfi3PaMl
+         hk3lvdUHYpjraYVkkkldi0wMfin0Yk3oLftaKtBU3GH6H2VBhH5bmekABC9AoL8vX1X/
+         SLyU7eZevCd0cQQ5K09N2H2NibGXRyXC+2diV5kjx+c1QkXJWrSU5BECF9RMrYXQV3/f
+         czA6WbReLuZE/LSiGPNSmulAmRJZq5hXTrMgohYVJ1Gzgf7rtdTpR8gkbCJbygVdIWCD
+         X8PQ==
+X-Gm-Message-State: APjAAAXd3APhYr2YDkQh4uKfJKCoHg1RHZ1dLkqFC+JM/ktbv1QI7jEB
+        7b8DCBkW437m4xDx+bf89UpapUzOIqFMaP4Xq9ZKNd5FQ5BQ
+X-Google-Smtp-Source: APXvYqyN5oPKaKaKyB9gLvZTbrJM10JGjoZQ7SBJTkcl1Lp0zhZp1sKCMx4gbu74vwXRFFbxm4WmIBHgzuizw49MC+Cr7hIkXc8s
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a02:5ec4:: with SMTP id h187mr36416109jab.101.1569249069062;
+ Mon, 23 Sep 2019 07:31:09 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 07:31:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005365ff0593394532@google.com>
+Subject: KASAN: use-after-free Read in xpad_play_effect
+From:   syzbot <syzbot+bea56e0be9fb9106bcf3@syzkaller.appspotmail.com>
+To:     aicommander@gmail.com, andreyknvl@google.com,
+        dmitry.torokhov@gmail.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        ramzeto@gmail.com, rfontana@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tom@steelseries.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:12:00AM +0200, Michael Kerrisk (man-pages) wrote:
-> Hello Christian and all,
-> 
-> Below, I have the rendered version of the current draft of
-> the pidfd_send_signal(2) manual page that I have written.
-> The page source can be found in a Git branch at:
-> https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/log/?h=draft_pidfd
-> 
-> I would be pleased to receive corrections and notes on any
-> details that should be added. (For example, are there error
-> cases that I have missed?)
-> 
-> Would you be able to review please?
+Hello,
 
-Michael,
+syzbot found the following crash on:
 
-A big big thank you for doing this! Really appreciated.
-I'm happy to review this!
+HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=14aeeab1600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+dashboard link: https://syzkaller.appspot.com/bug?extid=bea56e0be9fb9106bcf3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> 
-> Thanks,
-> 
-> Michael
-> 
-> 
-> NAME
->        pidfd_send_signal - send a signal to a process specified by a file
->        descriptor
-> 
-> SYNOPSIS
->        int pidfd_send_signal(int pidfd, int sig, siginfo_t info,
->                              unsigned int flags);
-> 
-> DESCRIPTION
->        The pidfd_send_signal() system call sends the signal  sig  to  the
->        target  process  referred  to by pidfd, a PID file descriptor that
->        refers to a process.
-> 
->        If the info argument points to a  siginfo_t  buffer,  that  buffer
->        should be populated as described in rt_sigqueueinfo(2).
-> 
->        If  the  info  argument  is  a NULL pointer, this is equivalent to
->        specifying a pointer to a siginfo_t buffer whose fields match  the
->        values  that  are  implicitly supplied when a signal is sent using
->        kill(2):
-> 
->        *  si_signo is set to the signal number;
->        *  si_errno is set to 0;
->        *  si_code is set to SI_USER;
->        *  si_pid is set to the caller's PID; and
->        *  si_uid is set to the caller's real user ID.
-> 
->        The calling process must either be in the same  PID  namespace  as
->        the  process  referred  to  by pidfd, or be in an ancestor of that
->        namespace.
-> 
->        The flags argument is reserved for  future  use;  currently,  this
->        argument must be specified as 0.
-> 
-> RETURN VALUE
->        On  success,  pidfd_send_signal()  returns  0.   On success, -1 is
+Unfortunately, I don't have any reproducer for this crash yet.
 
-This should probably be "On error, -1 is [...]".
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bea56e0be9fb9106bcf3@syzkaller.appspotmail.com
 
->        returned and errno is set to indicate the cause of the error.
-> 
-> ERRORS
->        EBADF  pidfd is not a valid PID file descriptor.
-> 
->        EINVAL sig is not a valid signal.
-> 
->        EINVAL The calling process is not in a PID namespace from which it
->               can send a signal to the target process.
-> 
->        EINVAL flags is not 0.
-> 
->        EPERM  The  calling  process  does not have permission to send the
->               signal to the target process.
-> 
->        EPERM  pidfd  doesn't  refer   to   the   calling   process,   and
->               info.si_code is invalid (see rt_sigqueueinfo(2)).
-> 
->        ESRCH  The target process does not exist.
-> 
-> VERSIONS
->        pidfd_send_signal() first appeared in Linux 5.1.
-> 
-> CONFORMING TO
->        pidfd_send_signal() is Linux specific.
-> 
-> NOTES
->        Currently, there is no glibc wrapper for this system call; call it
->        using syscall(2).
-> 
->    PID file descriptors
->        The pidfd argument is a PID file  descriptor,  a  file  descriptor
->        that  refers  to  process.  Such a file descriptor can be obtained
->        in any of the following ways:
-> 
->        *  by opening a /proc/[pid] directory;
-> 
->        *  using pidfd_open(2); or
-> 
->        *  via the PID file descriptor that  is  returned  by  a  call  to
->           clone(2) or clone3(2) that specifies the CLONE_PIDFD flag.
-> 
->        The  pidfd_send_signal()  system call allows the avoidance of race
->        conditions that occur when using traditional interfaces  (such  as
->        kill(2)) to signal a process.  The problem is that the traditional
->        interfaces specify the target process via a process ID (PID), with
->        the  result  that the sender may accidentally send a signal to the
->        wrong process if the originally intended target process has termi‐
->        nated  and its PID has been recycled for another process.  By con‐
->        trast, a PID file descriptor is a stable reference to  a  specific
->        process;  if  that  process  terminates,  then the file descriptor
->        ceases to be  valid  and  the  caller  of  pidfd_send_signal()  is
->        informed of this fact via an ESRCH error.
-> 
-> EXAMPLE
->        #define _GNU_SOURCE
->        #include <limits.h>
->        #include <signal.h>
->        #include <fcntl.h>
->        #include <stdio.h>
->        #include <string.h>
->        #include <stdlib.h>
->        #include <unistd.h>
->        #include <sys/syscall.h>
-> 
->        #ifndef __NR_pidfd_send_signal
->        #define __NR_pidfd_send_signal 424
->        #endif
-> 
->        static
->        int pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
->                unsigned int flags)
->        {
->            return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
->        }
-> 
->        int
->        main(int argc, char *argv[])
->        {
->            siginfo_t info;
->            char path[PATH_MAX];
->            int pidfd, sig;
-> 
->            if (argc != 3) {
->                fprintf(stderr, "Usage: %s <pid> <signal>\n", argv[0]);
->                exit(EXIT_FAILURE);
->            }
-> 
->            sig = atoi(argv[2]);
-> 
->            /* Obtain a PID file descriptor by opening the /proc/PID directory
->               of the target process */
-> 
->            snprintf(path, sizeof(path), "/proc/%s", argv[1]);
-> 
->            pidfd = open(path, O_RDONLY);
->            if (pidfd == -1) {
->                perror("open");
->                exit(EXIT_FAILURE);
->            }
-> 
->            /* Populate a 'siginfo_t' structure for use with
->               pidfd_send_signal() */
-> 
->            memset(&info, 0, sizeof(info));
->            info.si_code = SI_QUEUE;
->            info.si_signo = sig;
->            info.si_errno = 0;
->            info.si_uid = getuid();
->            info.si_pid = getpid();
->            info.si_value.sival_int = 1234;
-> 
->            /* Send the signal */
-> 
->            if (pidfd_send_signal(pidfd, sig, &info, 0) == -1) {
->                perror("pidfd_send_signal");
->                exit(EXIT_FAILURE);
->            }
-> 
->            exit(EXIT_SUCCESS);
->        }
-> 
-> SEE ALSO
->        clone(2),   kill(2),   pidfd_open(2),  rt_sigqueueinfo(2),  sigac‐
->        tion(2), pid_namespaces(7), signal(7)
-> 
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x3377/0x3eb0  
+kernel/locking/lockdep.c:3828
+Read of size 8 at addr ffff8881ceebdc10 by task syz-executor.4/7298
+
+CPU: 0 PID: 7298 Comm: syz-executor.4 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:618
+  __lock_acquire+0x3377/0x3eb0 kernel/locking/lockdep.c:3828
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+  xpad_play_effect+0xfe/0xc50 drivers/input/joystick/xpad.c:1225
+  ml_play_effects+0x817/0x1270 drivers/input/ff-memless.c:398
+  ml_ff_playback+0x285/0x3d0 drivers/input/ff-memless.c:460
+  input_ff_event+0x13a/0x2e0 drivers/input/ff-core.c:286
+  input_handle_event+0x64e/0x1330 drivers/input/input.c:374
+  input_inject_event+0x30a/0x323 drivers/input/input.c:462
+  evdev_write+0x2c9/0x410 drivers/input/evdev.c:561
+  __vfs_write+0x76/0x100 fs/read_write.c:494
+  vfs_write+0x262/0x5c0 fs/read_write.c:558
+  ksys_write+0x1e8/0x250 fs/read_write.c:611
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a09
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f53d068cc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
+RDX: 0000000000000364 RSI: 00000000200000c0 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f53d068d6d4
+R13: 00000000004c9bfc R14: 00000000004e1480 R15: 00000000ffffffff
+
+Allocated by task 6364:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:493 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
+  slab_post_alloc_hook mm/slab.h:520 [inline]
+  slab_alloc_node mm/slub.c:2770 [inline]
+  __kmalloc_node_track_caller+0xfc/0x3d0 mm/slub.c:4365
+  __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:141
+  __alloc_skb+0xef/0x5a0 net/core/skbuff.c:209
+  alloc_skb include/linux/skbuff.h:1049 [inline]
+  netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+  netlink_sendmsg+0x8cd/0xcc0 net/netlink/af_netlink.c:1892
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xcf/0x120 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0xec/0x1b0 net/socket.c:2356
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 6364:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
+  slab_free_hook mm/slub.c:1423 [inline]
+  slab_free_freelist_hook mm/slub.c:1474 [inline]
+  slab_free mm/slub.c:3016 [inline]
+  kfree+0xe4/0x2f0 mm/slub.c:3957
+  skb_free_head+0x8b/0xa0 net/core/skbuff.c:591
+  skb_release_data+0x41f/0x7c0 net/core/skbuff.c:611
+  skb_release_all+0x46/0x60 net/core/skbuff.c:665
+  __kfree_skb net/core/skbuff.c:679 [inline]
+  consume_skb net/core/skbuff.c:838 [inline]
+  consume_skb+0xd9/0x320 net/core/skbuff.c:832
+  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+  netlink_unicast+0x4d7/0x690 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x802/0xcc0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xcf/0x120 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0xec/0x1b0 net/socket.c:2356
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881ceebdb00
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 272 bytes inside of
+  1024-byte region [ffff8881ceebdb00, ffff8881ceebdf00)
+The buggy address belongs to the page:
+page:ffffea00073baf00 refcount:1 mapcount:0 mapping:ffff8881da002280  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 0000000000000000 0000000100000001 ffff8881da002280
+raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881ceebdb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881ceebdb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881ceebdc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                          ^
+  ffff8881ceebdc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881ceebdd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
