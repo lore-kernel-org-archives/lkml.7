@@ -2,110 +2,134 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96371C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3ABC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAA820882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569227755;
-	bh=i8WkercoXu9v6y0Lw4lHPRJCbJVpFVXvFVfaoT05H5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E4AK9HWXhFcdwwPlGAcOfRuy7cfrWU/+7q19RjFy9zgCDhl1177BzCHOD7f2J7hjD
-	 6N9FdvBD+F7a2DL41h0W2bjjc3lt8K61PBqTmOeBuXwEjqbo+xIboO6WupfSdSqIlO
-	 soU4Rd99SovP98UUs24QkzgU4ACZzCWbc/hLanTo=
+	by mail.kernel.org (Postfix) with ESMTP id 6B0482064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQkGSa2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406927AbfIWIfy (ORCPT
+        id S1729422AbfIWIgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:35:54 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38839 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405465AbfIWIfy (ORCPT
+        Mon, 23 Sep 2019 04:36:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36515 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfIWIgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:35:54 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 3so8240364wmi.3;
-        Mon, 23 Sep 2019 01:35:52 -0700 (PDT)
+        Mon, 23 Sep 2019 04:36:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so12910112wrd.3;
+        Mon, 23 Sep 2019 01:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1B3XXUv7iZ4Dl2+6K8o3oe0tw2nlEw97b0eQ1uBbyUI=;
-        b=jFZT2Eu3VBNhyieGvh6ycdJxGmRFlHILM7r4+/YEWOpinbJkVBUI/3ODDLwjcw6WNi
-         IvTj1BDjBHdPerS1DMqTgJS8ZIsVNm/VcEkUh7JP8I1ZHBF4dHN7SkHSYApanU+tqcGj
-         2BEPLnDjgSPriAKJ4OaCh5YfNoQjBTBw5FdCkL+nMw2F8ryKNGzYxFpM2EHLLpU+4bfS
-         sd6GkqXkNbS6aZgVBnwbiyV23RMZJSlYcRuNqR36ZFS9odCsvlA8wUpY4KFJc8U/yuZD
-         jRJsx9rz9BBMTJ18EyFz/kfBBWfhXnAnQtBXvUb9tYKx+bYWazzvEPkWnrHJY4Jswewe
-         y8dA==
+        bh=5MyWWJmU5w9hACf2FXcPJcFzzYcPTHiwXkpFyd1Cp2A=;
+        b=WQkGSa2SVRBJSY6D9P/vUVX+FDK8mu2KnCBOchlsDJo3IAO8f5tsDmbDhfhJ1HziEZ
+         0aqw4nmplkfwb5uY35pplp5a/dyg5NhnDp2HOvikZnu+U69v/br85XotcLLljY2PmI4C
+         cbKQiH0iVuV6T7apX+L/OL83ZK3fPP9e1PNrVwZrrP9h7RJgJNRyYB6nguRvhUQlU5Eq
+         TdLXfWkKHab7oPUC+AOCnIo/x8lwpO7brgBS/uyXdnYR3mxKUe3tTt+ZRYZyfSXdDr5Y
+         7eubB9/Xl3HmqsafkhIgScgLrAB66HNTXdF9w8mfkiMFXuXcTzZ+Cz08ut8xxFBT0UcC
+         qF8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1B3XXUv7iZ4Dl2+6K8o3oe0tw2nlEw97b0eQ1uBbyUI=;
-        b=IVc3yuVVSIt7bT4Ckj/aDk/k6l4y+fuNpBOX2l3CGR4lO2hCB2owJyD06lwKpf5opH
-         rWFn80B/CrlDUdP/q4l+8vhpSuoRtEqImSu6IWKgW0fMUXj3CrH6Ijj/lqz485R5w8pW
-         xnE1biuxvauU7zlWeH6KuXNOUcgNquv6wQguQt++/lAwgCyY3jsDlIKTirzsx5YMhN/1
-         x0QFL67KyvE8NIoD6gw5Dlxxq6G5x/7WXyvGxLo27TGC6u0wTKyk6CETuNO+CeeOl15I
-         EJVi+fLiwc9X98jv7L+/ErjvDt0nBTBCSmZR6jcsy5cJ8iMcpgVtl/NWFda92BWNVdvB
-         mBrw==
-X-Gm-Message-State: APjAAAWfhMs9mnx2HfIUbXw1dWET3IyWUIoTUK+x2QhYPG9DRdfYsU2E
-        hakLiNPQR98gDX1Vc6a+d7w=
-X-Google-Smtp-Source: APXvYqxYbW0B500odDVP3qV4RPcwp/MtiDHalNNevEpuiSyml7mPOiV6yVDQBirBdA+5mYlbaKFUJw==
-X-Received: by 2002:a05:600c:219a:: with SMTP id e26mr13433766wme.86.1569227752038;
-        Mon, 23 Sep 2019 01:35:52 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u10sm8616394wmm.0.2019.09.23.01.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 01:35:51 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 10:35:49 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-Message-ID: <20190923083549.GA42487@gmail.com>
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5MyWWJmU5w9hACf2FXcPJcFzzYcPTHiwXkpFyd1Cp2A=;
+        b=BjYA4SiPrAwCnLzVENXjjDbZ8usNgwdJeWtYxfI3/6znCzbo6qCEYdcPFsVaDrYtdf
+         c+uSsaYtmp9v5MpM9Gy+IER3/9tyzG136kc6Bm9bF5bl4vjsVvDb1Wi7LfLWzWY47+5R
+         vsuK8Rooa6HBwybrwebdZLIrwt2hCBI0wbXVT9X+8yAanQL7CKPc/AVzNT1LVEGQiV3I
+         hQimx4FjbJXm9zp2ZcWXFq7Qscg+BeZUp4KtPRKH1RGsGVLotJSa5gUb2ZMS8HQDBcxI
+         44Rcsaxcw3iGEYwU9HRLkRSM8CcuMHE39VoBCBcrD2/iWP9SJQXwj8aCsltTPePXZ/wW
+         TliA==
+X-Gm-Message-State: APjAAAW1xBwKarzufXUBt8W01CcfbMGw7+NabVvzXwM418ch6LDSaF9a
+        C9Mgxb8sc2Fh2PXPKC6g5xQ=
+X-Google-Smtp-Source: APXvYqypb/U+eDmb+J3ur64CjTEho7wTo8LwJJWNtXeqd/EE1eaSJNedWltB7YHylnpR4hOdAhvq1w==
+X-Received: by 2002:adf:eb42:: with SMTP id u2mr19395063wrn.307.1569227809649;
+        Mon, 23 Sep 2019 01:36:49 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id b186sm5909174wmd.16.2019.09.23.01.36.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 01:36:49 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 10:36:47 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     mjpeg-users@lists.sourceforge.net, linux-media@vger.kernel.org,
+        mchehab@kernel.org, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: bringing back media/zoran driver
+Message-ID: <20190923083647.GB1599@Red>
+References: <20190921170357.GA26626@Red>
+ <8db38daf-74eb-8218-1cc6-ea9036afac3d@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+In-Reply-To: <8db38daf-74eb-8218-1cc6-ea9036afac3d@xs4all.nl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Jens Axboe <axboe@kernel.dk> wrote:
-
-> On 9/22/19 2:08 AM, Pavel Begunkov (Silence) wrote:
-> > From: Pavel Begunkov <asml.silence@gmail.com>
+On Mon, Sep 23, 2019 at 10:05:09AM +0200, Hans Verkuil wrote:
+> On 9/21/19 7:03 PM, Corentin Labbe wrote:
+> > hello
 > > 
-> > There could be a lot of overhead within generic wait_event_*() used for
-> > waiting for large number of completions. The patchset removes much of
-> > it by using custom wait event (wait_threshold).
+> > I am the owner of a zoran based DC10+ card.
+> > I am in the need of using it since yesterday and I found that its driver was removed.
 > > 
-> > Synthetic test showed ~40% performance boost. (see patch 2)
+> > Reverting the removing patch made to a temporary working situation.
+> > 
+> > If I understand correctly, it was removed due to lack of vb2 convertion.
+> > If I am able to do this vb2 conversion, does bring it back in mainline will be posssible ?
+> > In that case I am ready to assume to be the maintainer if needed.
 > 
-> I'm fine with the io_uring side of things, but to queue this up we
-> really need Peter or Ingo to sign off on the core wakeup bits...
+> It would be nice to get it back. The conversion to vb2 is the main requirement, but in
+> general this driver needed some TLC in general: it's a very old driver and the coding
+> standards were quite a bit lower than they are today.
 > 
-> Peter?
+> But the vb2 conversion is the most important part.
+> 
+> It's unfortunately not the easiest thing to do (if it was, we'd have done it already!),
+> and it is also a 'big bang' patch, i.e. one very large patch that converts the driver
+> to vb2. It's all or nothing, you can't have half a vb2 conversion, so that makes it hard
+> to review.
 
-I'm not sure an extension is needed for such a special interface, why not 
-just put a ->threshold value next to the ctx->wait field and use either 
-the regular wait_event() APIs with the proper condition, or 
-wait_event_cmd() style APIs if you absolutely need something more complex 
-to happen inside?
+Hello
 
-Should result in a much lower linecount and no scheduler changes. :-)
+Yes I started a bit to do it by using other conversion patch as helper and I saw this "one big step" problem.
 
-Thanks,
+> 
+> The easiest way is to use the v4l2-compliance utility to verify the conversion. Running
+> 'v4l2-compliance -s' is a good way of verifying this.
+> 
+> My recommended approach is to:
+> 
+> 1) first revert the removal patch (commit 8dce4b265a53)
+> 2) clean up the coding style. Probably easiest to create one patch per source.
+>    Use 'checkpatch.pl --strict -f <source>' for this. Doing this should make the
+>    source code easier to understand/review.
+> 3) Run v4l2-compliance (without the -s option) and fix any failures it finds.
+> 4) Convert to vb2, using 'v4l2-compliance -s' to test.
+> 
+> Be aware that the code is messy compared to modern standards. Do not be afraid
+> to create cleanup patches, it's probably needed.
+> 
+> The v4l2-compliance utility is part of https://git.linuxtv.org/v4l-utils.git/.
+> See the README on how to build. Always use the v4l2-compliance version from this
+> git repo since that's always the latest and greatest.
+> 
+> I recommend that you join the #v4l irc channel on freenode.org. Most core devs that
+> can help with advice are there during office hours (and often outside of office hours
+> as well). That's for the European timezones since most devs are based in Europe.
+> 
 
-	Ingo
+Thanks, I has planned to ask this question about the priority between v4l2-compliance and vb2.
+
+Regards
