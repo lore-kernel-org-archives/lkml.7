@@ -2,276 +2,106 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3894C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF83C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FCF207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569269306;
-	bh=Ab4rZ4uY05EZoxb5wQEUKbN7XfOxGeM045TcLeQR3/U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JgW2ls1kHDYWhVWQlZ4SoKuoP8pl9hXKsn0iO8fzYaglxzjHRwusIXHSDEqD4NiZI
-	 We3WX1ntUhCIWa0MX/xAs0s1R9mcD+CZSgNfDECTwzvnF3p5+B2odmfNpbW+HN9A5l
-	 4EwBmZ7n9EviaiEsfCw0zHL0fV8z3KMIObYff13U=
+	by mail.kernel.org (Postfix) with ESMTP id 20F1620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njkIaQHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502343AbfIWUIY (ORCPT
+        id S2502483AbfIWUKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:08:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38591 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfIWUIY (ORCPT
+        Mon, 23 Sep 2019 16:10:09 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41557 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502454AbfIWUKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:08:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 3so10616023wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 13:08:21 -0700 (PDT)
+        Mon, 23 Sep 2019 16:10:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id r26so36584918ioh.8;
+        Mon, 23 Sep 2019 13:10:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nXi7/ONuPG7gYM14nxcA/YNbkxLisbAhUdDyufHT4Gs=;
-        b=fXqrhibESWmvhBLMXupTaL/DG2zK28DqaPaZZvgaqsFLXog5heTO9pEli7laAm/oUW
-         bYaZhPMnb3luHIMTA8kPaLIeICU1CE4S2TqcTjQoYbx6JIrZHCdpgGNNpqPYkotQ3GF/
-         XO59WBT5u51cLxZ49BQJdvGjxwghbB2MwVIEvM+nKowb9BJYw7sgFFeRkSY8qtmNyP2E
-         VpH56hz/tDNqoz5U0qk8I9o7yUeRKGJpLS9CBAyK0XjJj4QPl20MHKp3B/GOaoD4iEt5
-         hpcQo7Dze0N+WJgDLp+JcoRhuuYyI+hTi8l2kwaodNjU4TWaXtrb+8WTwibsbe68XZo2
-         pU3w==
+        h=from:to:cc:subject:date:message-id;
+        bh=O4biPIS8QtKs0W4x755+TgKPEkw6EcSzOJulQCgOdjc=;
+        b=njkIaQHgxTxbxvCQR+vWZUivpNX+akdE2x1/MQJw6UKmijwTx7tDcioLHiCWPOR1As
+         2ezrnErR4qB8uh5MPY9oEv+uSM+Yzw/FRYBhw8dUYeyi36bRn1esr9cA/moDArP0sFZO
+         LGNq6sY8q+rH4eZD8M9rBBLYCIA63O53qsuJg3l4L71c0iViJsYoVlmixUSG9VxlEIL9
+         C3EhOLUS41GYEj5FzzL8m5OW+2FjNCBFan5Rp0exvo2AFgkvJbI1M5+zlSAjo9oBDfMA
+         880tkUs8fWGcC0yy1IzZjl/jqMc0dUMUbOBiRvEH3wl02pg2sacrZ15uiGq8kAeBlwgi
+         5zHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nXi7/ONuPG7gYM14nxcA/YNbkxLisbAhUdDyufHT4Gs=;
-        b=izqbQ25g729HxisrXjy8eRoJ1VV0/0tVhpsBRcwP6juORg5mjfp5sh/ru2YwGOQu64
-         YaUrMJPv2obXqc36nIF2PRTwKhczh3EUecNd4hNrIx1xByzWrs9QECZWqBYqrUYJ/zs7
-         AlXk5PLsblpU0bpOqut275c6vfsVsEVkWl46Sv++WL54/JpOevLSLE3BeJ7KpwA/uH4J
-         CZ76oSFbtS8iTh/8UICXLFVYqreCSpOne2I5dH8kOI5L2F2r1GorHm01aQboj4qAxeVm
-         zkhsyVq7tbD7I3h4r4xj1AOh9FtmEHMweDUAuXSxmeyRrb3HXRGlgxrxiFXE09NeGNt/
-         NhDw==
-X-Gm-Message-State: APjAAAXzuu3cHaAguX339NJnPkLsmZ+Xj6L2OUa+OvzmHVrzAFp2gN/v
-        I2JaeGX42cm8S1D3hQENv7g=
-X-Google-Smtp-Source: APXvYqz6QqFmAuPWF0qlmgeG0teQXv9bXiCQCRz5yPkhXriedwepo64WoVb+5v4El7q9IgrSBDD8sw==
-X-Received: by 2002:a1c:a6ca:: with SMTP id p193mr951565wme.103.1569269301100;
-        Mon, 23 Sep 2019 13:08:21 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id h9sm11619066wrv.30.2019.09.23.13.08.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=O4biPIS8QtKs0W4x755+TgKPEkw6EcSzOJulQCgOdjc=;
+        b=rW2nbo+pDSkLeS5ng6kdDtZM5TuPRXOOBzLAeCX/Y/DAmsiYkvm8npK+lW3KhqGDY0
+         3m3CKFlK4HMjoSOLq6tsl05SdgZRa5jDgKVu0XmgnpdR1e/PJTYnVIAzVB9YJOmGKVQ0
+         lqBmH7nKbB30HR6vWSQWtvlcfX25h/7hC3axocJq8j5FxexmiVWJ901S1kl3F+K0Ttj8
+         3K/G1kqBS2TTrzHgyp/wB1Ij9FCyHBYMWitI7iptjnyrREW3d5/hR6+cHTtt411P3q/A
+         3yMoK/1pHhq6prgov44rCWM+wRrKtE+UWdg1Jbb7zJKSleHaDErPIkRDPzLAgTwTHzcF
+         Fz+g==
+X-Gm-Message-State: APjAAAVRYJv86ukZKq8zfgwVZjuTGGgq3QT3h658n3JjpHMwz61TWn/d
+        pjmud3VdMrDfmI6Pf2gnc3c=
+X-Google-Smtp-Source: APXvYqzRCHe8NZfJwm/rb4Y5QIs6ohRRrof7MdIT+Pa/qzCoh0RmIrYSXWnnIw9K2UCgqWwuS2kRUw==
+X-Received: by 2002:a05:6602:2244:: with SMTP id o4mr1238924ioo.107.1569269407973;
+        Mon, 23 Sep 2019 13:10:07 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id d9sm10877889ioq.9.2019.09.23.13.10.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 13:08:20 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 22:08:18 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [RFC, Tree] De-clutter the top level directory, move ipc/ =>
- kernel/ipc/, samples/ => Documentation/samples/ and sound/ => drivers/sound/
-Message-ID: <20190923200818.GA116090@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190922115247.GA2679387@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 23 Sep 2019 13:10:07 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nbd: prevent memory leak
+Date:   Mon, 23 Sep 2019 15:09:58 -0500
+Message-Id: <20190923200959.29643-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In nbd_add_socket when krealloc succeeds, if nsock's allocation fail the
+reallocted memory is leak. The correct behaviour should be assigning the
+reallocted memory to config->socks right after success.
 
-* Greg KH <gregkh@linuxfoundation.org> wrote:
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/block/nbd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> On Sun, Sep 22, 2019 at 01:25:55PM +0200, Ingo Molnar wrote:
-> > 
-> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > 
-> > > On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
-> > > <brendanhiggins@google.com> wrote:
-> > > >
-> > > > Sorry about that. I am surprised that none of the other reviewers
-> > > > brought this up.
-> > > 
-> > > I think I'm "special".
-> > > 
-> > > There was some other similar change a few years ago, which I
-> > > absolutely hated because of how it broke autocomplete for me. Very few
-> > > other people seemed to react to it.
-> > 
-> > FWIW, I am obsessively sensitive to autocomplete and overall source code 
-> > file hieararchy and nomenclature details as well, so it's not just you.
-> > 
-> > Beyond the muscle memory aspect, nonsensical naming and inanely flat file 
-> > hierarchies annoy kernel developers and makes it harder for newbies to 
-> > understand the kernel source as well.
-> > 
-> > The less clutter, the more organization, the better - and there's very 
-> > few valid technical reasons to add any new files or directories to the 
-> > top level directory - we should probably *remove* quite a few.
-> > 
-> > For example 'firmware/' was recently moved to drivers/firmware/, and in a 
-> > similar fashion about a third of the remaining 22 directories should 
-> > probably be moved too:
-> > 
-> >   drwxr-xr-x    arch
-> >   drwxr-xr-x    block
-> >   drwxr-xr-x    certs           # move to build/certs/ dir
-> >   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
-> >   drwxr-xr-x    Documentation
-> >   drwxr-xr-x    drivers
-> >   drwxr-xr-x    fs
-> >   drwxr-xr-x    include
-> >   drwxr-xr-x    init
-> >   drwxr-xr-x    ipc             # move to kernel/ipc/
-> >   drwxr-xr-x    kernel
-> >   drwxr-xr-x    lib
-> >   drwxr-xr-x    LICENSES
-> >   drwxr-xr-x    mm
-> >   drwxr-xr-x    net
-> >   drwxr-xr-x    samples         # move to Documentation/samples/
-> >   drwxr-xr-x    scripts         # move to build/scripts/
-> >   drwxr-xr-x    security
-> >   drwxr-xr-x    sound           # move to drivers/sound/
-> >   drwxr-xr-x    tools
-> >   drwxr-xr-x    usr             # move to build/usr/
-> >   drwxr-xr-x    virt            # move to the already existing drivers/virt/
-> > 
-> >   -rw-r--r--    COPYING
-> >   -rw-r--r--    CREDITS
-> >   -rw-r--r--    Kbuild
-> >   -rw-r--r--    Kconfig
-> >   -rw-r--r--    MAINTAINERS
-> >   -rw-r--r--    Makefile
-> >   -rw-r--r--    README
-> > 
-> > There's a few borderline ones:
-> > 
-> >  - 'block' could in principle move to drivers/block/core/ but it's fine 
-> >    at the top level too I think.
-> > 
-> >  - 'init' could in principle be moved to kernel/init/ - but it's not 
-> >    wrong at the top level either.
-> > 
-> > The remaining top level hierarchy would look pretty sweet and short:
-> > 
-> >   drwxr-xr-x    arch
-> >   drwxr-xr-x    block
-> >   drwxr-xr-x    build             # new
-> >   drwxr-xr-x    Documentation
-> >   drwxr-xr-x    drivers
-> >   drwxr-xr-x    fs
-> >   drwxr-xr-x    include
-> >   drwxr-xr-x    init
-> >   drwxr-xr-x    kernel
-> >   drwxr-xr-x    lib
-> >   drwxr-xr-x    LICENSES
-> >   drwxr-xr-x    mm
-> >   drwxr-xr-x    net
-> >   drwxr-xr-x    security
-> >   drwxr-xr-x    tools
-> > 
-> >   -rw-r--r--    COPYING
-> >   -rw-r--r--    CREDITS
-> >   -rw-r--r--    Kbuild
-> >   -rw-r--r--    Kconfig
-> >   -rw-r--r--    MAINTAINERS
-> >   -rw-r--r--    Makefile
-> >   -rw-r--r--    README
-> > 
-> > I'm volunteering to do this (in a scripted, repeatable, reviewable, 
-> > tweakable and "easy to execute in a quiet moment" fashion), although
-> > I also expect you to balk at the churn. :-)
-> 
-> I for one would love the above changes.  And I'm the one that has to
-> deal with all of the backporting issues that arise with stable backports :)
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index a8e3815295fe..8ae3bd2e7b30 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -987,14 +987,15 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 		sockfd_put(sock);
+ 		return -ENOMEM;
+ 	}
++
++	config->socks = socks;
++
+ 	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
+ 	if (!nsock) {
+ 		sockfd_put(sock);
+ 		return -ENOMEM;
+ 	}
+ 
+-	config->socks = socks;
+-
+ 	nsock->fallback_index = -1;
+ 	nsock->dead = false;
+ 	mutex_init(&nsock->tx_lock);
+-- 
+2.17.1
 
-Oh, that's a pleasant surprise, I didn't expect _100%_ support! :-)
-
-So I started working on this today and whipped up three of these 
-movements, in a 100% scripted fashion.
-
-You can have a sneak preview at the result in this tree:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.core/toplevel
-
-   ...
-
-   2515 files changed, 42476 insertions(+), 42476 deletions(-)
-
-I decided not to post these first patches to lkml, because many of the 
-patches are unreviewably large even with smart rename detection. Even the 
-diffstat was 5,000+ lines so I abbreviated it ...
-
-The tree has 6 commits for now:
-
-  6576382877c0: toplevel: Move ipc/ to kernel/ipc/
-  8f7ace98971a: toplevel: Fix up kernel/ipc/ movement effects
-  cc703bc54b00: toplevel: Move sound/ to drivers/sound/
-  a63bdbd797da: toplevel: Fix up drivers/sound/ movement effects
-  28adaae5ae8f: toplevel: Move samples/ to Documentation/samples/
-  4e9f67e3bc48: toplevel: Fix up samples/ movement effects
-
-Due to the scripting all the commits are auto-generated for the time 
-being - without SOB lines and proper changelogs, etc.
-
-Note that each movement action consists of two commits:
-
-  cc703bc54b00: toplevel: Move sound/ to drivers/sound/
-  a63bdbd797da: toplevel: Fix up drivers/sound/ movement effects
-
-The first one is just the result of the 'git mv', which gets most of the 
-noise.
-
-The second one fixes up the build system, Kconfig system and any 
-references to the old file names. Forward and backward porting of patches 
-across the rename boundary is in most cases a simple matter of fixing up 
-the file names in the patches - I'll put both forward and backward 
-patch-consersion one-liner scripts for that into the changelog itself.
-
-I believe this is easier to review, but it has the disadvantage that 
-bisection will trivially break if it hits any of the base commits. Can 
-combine the commits as well, or can add a suggestion to use
-"git bisect next" to the changelog itself. Either approach is fine to me.
-
-Anyway, I will fix the aforementioned details, but wanted to show the 
-gist of these changes and give you an opportunity to request changes, 
-before I go down this path too much.
-
-The tree is functional here after some light testing - will put it 
-through more rigorous testing before posting future iterations.
-
-The advantage of the scripting is that:
-
- - I can re-run this on any base tree and with any granularity, and my 
-   scripts also have some sanity checks to see whether any old filename 
-   patterns escaped the conversion, etc.
-
- - The order of the movement is discretionary as well, i.e. if you prefer 
-   the sound/ movement in a single tree and at a specific time, that all 
-   can be phased arbitrarily.
-
- - The scripts can be re-run with less than a minute of runtime, so it 
-   can all be timed for maximum convenience to you, Linus and affected 
-   maintainers.
-
-Is this close to what you had in mind?
-
-Thanks,
-
-	Ingo
-
------------------->
-Ingo Molnar (6):
-      toplevel: Move ipc/ to kernel/ipc/
-      toplevel: Fix up kernel/ipc/ movement effects
-      toplevel: Move sound/ to drivers/sound/
-      toplevel: Fix up drivers/sound/ movement effects
-      toplevel: Move samples/ to Documentation/samples/
-      toplevel: Fix up samples/ movement effects
-
- 2515 files changed, 42476 insertions(+), 42476 deletions(-)
