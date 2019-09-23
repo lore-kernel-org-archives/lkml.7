@@ -2,118 +2,152 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C13C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98CEC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17357207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32AA207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394974AbfIWNCl (ORCPT
+        id S2395071AbfIWND6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:02:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59170 "EHLO mx1.redhat.com"
+        Mon, 23 Sep 2019 09:03:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55096 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394853AbfIWNCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:02:41 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2390719AbfIWND5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:03:57 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9801BC01D36C
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 13:02:40 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id e13so17092644qto.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:02:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wo++7OHZ5TF55fscJSREmBycjATg1Pg/3l6GgeJun4o=;
-        b=iS6atO6WglevN3+x845zmu2AIK8UQQssar6JGNVD5C3KyF3QqIB4C6OyA+FfURbT2E
-         z/PE8tGBU18dSj8tVMJS25JQeRI4JQC9l4+KDxYfCFWSOycRnyhUdj89fQvMlw4LrChM
-         2iL88frR8q+MXLXriQ6DlnqBwm8tZiXF6sTw1yPU+Cu7roTHPqZTwPWSPYDiHGfLfSL7
-         v9+V+wHtLpvH0s7TXKw+GRtc17KphPWjGRnS4fhtim2dflQUHdiaSq0Jhnw9/nEi3AnV
-         mq5ClZJ+YxSirHxSWrSlW5dStKs6TsTmeBplElKwipxmLVfxokK6pQOIkIRJ9HB7MOJG
-         WAVw==
-X-Gm-Message-State: APjAAAX51OdvGdhwSKBBIptJidmF6BCW8AaPGaQG9LhV9b+tG+u4znak
-        x3Qenf781B282f7l8GL2n16fpJNwpqQ+xKpkJZ3xLVLupM2IoNovN6hRte7cZ0vxafvR17BlVfY
-        Bp6c8e1vqForebeZROGZ7E7TX
-X-Received: by 2002:a37:bc82:: with SMTP id m124mr17491668qkf.231.1569243759829;
-        Mon, 23 Sep 2019 06:02:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyCoIQZEyUSbcuwAGSvI1U6fLBGUTE9lc6C4NvHGfzFJ+UWHudrlgTu4Dtm9mkQ93wMFUe+yw==
-X-Received: by 2002:a37:bc82:: with SMTP id m124mr17491620qkf.231.1569243759411;
-        Mon, 23 Sep 2019 06:02:39 -0700 (PDT)
-Received: from rhel7lobe ([2600:6c64:4e80:f1:aa45:cafe:5682:368f])
-        by smtp.gmail.com with ESMTPSA id 200sm5125496qkf.65.2019.09.23.06.02.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 06:02:38 -0700 (PDT)
-Message-ID: <8e9c537b7eaabd611968d22ec31f7cfb90e72efe.camel@redhat.com>
-Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
-From:   Laurence Oberman <loberman@redhat.com>
-To:     "Milan P. Gandhi" <mgandhi@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Date:   Mon, 23 Sep 2019 09:02:37 -0400
-In-Reply-To: <20190923060122.GA9603@machine1>
-References: <20190923060122.GA9603@machine1>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 91A0310DCC84;
+        Mon, 23 Sep 2019 13:03:56 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-93.pek2.redhat.com [10.72.12.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B17CD10013D9;
+        Mon, 23 Sep 2019 13:03:33 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 0/6] mdev based hardware virtio offloading support
+Date:   Mon, 23 Sep 2019 21:03:25 +0800
+Message-Id: <20190923130331.29324-1-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 23 Sep 2019 13:03:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-23 at 11:31 +0530, Milan P. Gandhi wrote:
-> Couple of users had requested to print the SCSI command age along 
-> with command failure errors. This is a small change, but allows 
-> users to get more important information about the command that was 
-> failed, it would help the users in debugging the command failures:
-> 
-> Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
-> ---
-> diff --git a/drivers/scsi/scsi_logging.c
-> b/drivers/scsi/scsi_logging.c
-> index ecc5918e372a..ca2182bc53c6 100644
-> --- a/drivers/scsi/scsi_logging.c
-> +++ b/drivers/scsi/scsi_logging.c
-> @@ -437,6 +437,7 @@ void scsi_print_result(const struct scsi_cmnd
-> *cmd, const char *msg,
->  	const char *mlret_string = scsi_mlreturn_string(disposition);
->  	const char *hb_string = scsi_hostbyte_string(cmd->result);
->  	const char *db_string = scsi_driverbyte_string(cmd->result);
-> +	unsigned long cmd_age = (jiffies - cmd->jiffies_at_alloc) / HZ;
->  
->  	logbuf = scsi_log_reserve_buffer(&logbuf_len);
->  	if (!logbuf)
-> @@ -478,10 +479,15 @@ void scsi_print_result(const struct scsi_cmnd
-> *cmd, const char *msg,
->  
->  	if (db_string)
->  		off += scnprintf(logbuf + off, logbuf_len - off,
-> -				 "driverbyte=%s", db_string);
-> +				 "driverbyte=%s ", db_string);
->  	else
->  		off += scnprintf(logbuf + off, logbuf_len - off,
-> -				 "driverbyte=0x%02x", driver_byte(cmd-
-> >result));
-> +				 "driverbyte=0x%02x ",
-> +				 driver_byte(cmd->result));
-> +
-> +	off += scnprintf(logbuf + off, logbuf_len - off,
-> +			 "cmd-age=%lus", cmd_age);
-> +
->  out_printk:
->  	dev_printk(KERN_INFO, &cmd->device->sdev_gendev, "%s", logbuf);
->  	scsi_log_release_buffer(logbuf);
-> 
+Hi all:
 
-This looks to be a useful debug addition to me, and the code looks
-correct.
-I believe this has also been tested by Milan in our lab.
+There are hardware that can do virtio datapath offloading while having
+its own control path. This path tries to implement a mdev based
+unified API to support using kernel virtio driver to drive those
+devices. This is done by introducing a new mdev transport for virtio
+(virtio_mdev) and register itself as a new kind of mdev driver. Then
+it provides a unified way for kernel virtio driver to talk with mdev
+device implementation.
 
-Reviewed-by: Laurence Oberman <loberman@redhat.com> 
+Though the series only contains kernel driver support, the goal is to
+make the transport generic enough to support userspace drivers. This
+means vhost-mdev[1] could be built on top as well by resuing the
+transport.
+
+A sample driver is also implemented which simulate a virito-net
+loopback ethernet device on top of vringh + workqueue. This could be
+used as a reference implementation for real hardware driver.
+
+Consider mdev framework only support VFIO device and driver right now,
+this series also extend it to support other types. This is done
+through introducing class id to the device and pairing it with
+id_talbe claimed by the driver. On top, this seris also decouple
+device specific parents ops out of the common ones.
+
+Pktgen test was done with virito-net + mvnet loop back device.
+
+Please review.
+
+[1] https://lkml.org/lkml/2019/9/16/869
+
+Changes from RFC-V2:
+- silent compile warnings on some specific configuration
+- use u16 instead u8 for class id
+- reseve MDEV_ID_VHOST for future vhost-mdev work
+- introduce "virtio" type for mvnet and make "vhost" type for future
+  work
+- add entries in MAINTAINER
+- tweak and typos fixes in commit log
+
+Changes from RFC-V1:
+
+- rename device id to class id
+- add docs for class id and device specific ops (device_ops)
+- split device_ops into seperate headers
+- drop the mdev_set_dma_ops()
+- use device_ops to implement the transport API, then it's not a part
+  of UAPI any more
+- use GFP_ATOMIC in mvnet sample device and other tweaks
+- set_vring_base/get_vring_base support for mvnet device
+
+Jason Wang (6):
+  mdev: class id support
+  mdev: introduce device specific ops
+  mdev: introduce virtio device and its device ops
+  virtio: introduce a mdev based transport
+  vringh: fix copy direction of vringh_iov_push_kern()
+  docs: sample driver to demonstrate how to implement virtio-mdev
+    framework
+
+ .../driver-api/vfio-mediated-device.rst       |  11 +-
+ MAINTAINERS                                   |   3 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
+ drivers/vfio/mdev/Kconfig                     |   7 +
+ drivers/vfio/mdev/Makefile                    |   1 +
+ drivers/vfio/mdev/mdev_core.c                 |  21 +-
+ drivers/vfio/mdev/mdev_driver.c               |  14 +
+ drivers/vfio/mdev/mdev_private.h              |   1 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  37 +-
+ drivers/vfio/mdev/virtio_mdev.c               | 416 +++++++++++
+ drivers/vhost/vringh.c                        |   8 +-
+ include/linux/mdev.h                          |  47 +-
+ include/linux/mod_devicetable.h               |   8 +
+ include/linux/vfio_mdev.h                     |  53 ++
+ include/linux/virtio_mdev.h                   | 144 ++++
+ samples/Kconfig                               |   7 +
+ samples/vfio-mdev/Makefile                    |   1 +
+ samples/vfio-mdev/mbochs.c                    |  19 +-
+ samples/vfio-mdev/mdpy.c                      |  19 +-
+ samples/vfio-mdev/mtty.c                      |  17 +-
+ samples/vfio-mdev/mvnet.c                     | 688 ++++++++++++++++++
+ 23 files changed, 1481 insertions(+), 89 deletions(-)
+ create mode 100644 drivers/vfio/mdev/virtio_mdev.c
+ create mode 100644 include/linux/vfio_mdev.h
+ create mode 100644 include/linux/virtio_mdev.h
+ create mode 100644 samples/vfio-mdev/mvnet.c
+
+-- 
+2.19.1
 
