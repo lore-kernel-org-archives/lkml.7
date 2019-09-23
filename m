@@ -2,154 +2,77 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F7DC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2536BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6207120835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BDD20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VULaxlov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407251AbfIWJrV (ORCPT
+        id S2407325AbfIWJtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:47:21 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:40840 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390596AbfIWJrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:47:21 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: from pc-niv.weinmann.com (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 7C9944D1BF;
-        Mon, 23 Sep 2019 11:47:18 +0200 (CEST)
-From:   Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org, nv@vosn.de,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Subject: [PATCH] ACPICA: Introduce acpi_load_table_with_index()
-Date:   Mon, 23 Sep 2019 11:47:01 +0200
-Message-Id: <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <6851700.HULMXZj6Ep@kreacher>
-References: <6851700.HULMXZj6Ep@kreacher>
+        Mon, 23 Sep 2019 05:49:17 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50744 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407253AbfIWJtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:49:16 -0400
+Received: from zn.tnic (p200300EC2F060400856443B6AC31000F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:400:8564:43b6:ac31:f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E2BD1EC0819;
+        Mon, 23 Sep 2019 11:49:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569232155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/OX4YybCwZ8WEZGCJvP1SseCQZ1Y013Yl5Cn9n0qEmE=;
+        b=VULaxlovaWUhOyw+mhmgLyRqqxm9woh5jl1y6aEX9yllFsCal2/AW2q+3OfyDyY68xwhny
+        0R8wWfKvFm94TSqgXyq3rRsG26GsoLNNdluBN28ZZR6laEI8yMljh49eikUqtvIiy+9Et3
+        oU/pFJBO/1uT+GnZJKD++h6nUxSDEt8=
+Date:   Mon, 23 Sep 2019 11:49:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        x86@kernel.org
+Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
+Message-ID: <20190923094916.GB15355@zn.tnic>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For unloading an ACPI table, it is necessary to provide the
-index of the table. The method intended for dynamically
-loading or hotplug addition of tables, acpi_load_table(),
-does not provide this information, so a new function
-acpi_load_table_with_index() with the same functionality,
-but an optional pointer to the loaded table index is introduced.
+On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
+> While touching seccomp code I realized that the struct seccomp_data
+> argument to secure_computing() seems to be unused by all current
+> callers. So let's remove it unless there is some subtlety I missed.
+> Note, I only tested this on x86.
 
-The new function is used in the acpi_configfs driver to save the
-index of the newly loaded table in order to unload it later.
+What was amluto thinking in
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
----
- drivers/acpi/acpi_configfs.c   |  2 +-
- drivers/acpi/acpica/tbxfload.c | 43 ++++++++++++++++++++++++++++++++++
- include/acpi/acpixf.h          |  6 +++++
- 3 files changed, 50 insertions(+), 1 deletion(-)
+2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
 
-diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-index 57d9d574d4dd..9e77d5a266c0 100644
---- a/drivers/acpi/acpi_configfs.c
-+++ b/drivers/acpi/acpi_configfs.c
-@@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
- 	if (!table->header)
- 		return -ENOMEM;
- 
--	ret = acpi_load_table(table->header);
-+	ret = acpi_load_table_with_index(table->header, &table->index);
- 	if (ret) {
- 		kfree(table->header);
- 		table->header = NULL;
-diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
-index 86f1693f6d29..7ea4fc879cb6 100644
---- a/drivers/acpi/acpica/tbxfload.c
-+++ b/drivers/acpi/acpica/tbxfload.c
-@@ -309,6 +309,49 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
- 
- ACPI_EXPORT_SYMBOL(acpi_load_table)
- 
-+/*******************************************************************************
-+ *
-+ * FUNCTION:    acpi_load_table_with_index
-+ *
-+ * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
-+ *                                    table to be loaded.
-+ *              table_idx           - Pointer to a u32 for storing the table
-+ *                                    index, might be NULL
-+ * RETURN:      Status
-+ *
-+ * DESCRIPTION: see acpi_load_table() above. Additionally returns the index
-+ *              of the newly created table in table_idx.
-+ *
-+ ******************************************************************************/
-+acpi_status acpi_load_table_with_index(struct acpi_table_header *table,
-+				       u32 *table_idx)
-+{
-+	acpi_status status;
-+	u32 table_index;
-+
-+	ACPI_FUNCTION_TRACE(acpi_load_table_with_index);
-+
-+	/* Parameter validation */
-+	if (!table)
-+		return_ACPI_STATUS(AE_BAD_PARAMETER);
-+
-+	/* Install the table and load it into the namespace */
-+	ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
-+	status = acpi_tb_install_and_load_table(
-+		ACPI_PTR_TO_PHYSADDR(table), ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
-+		FALSE, &table_index);
-+	if (table_idx)
-+		*table_idx = table_index;
-+
-+	if (ACPI_SUCCESS(status)) {
-+		/* Complete the initialization/resolution of new objects */
-+		acpi_ns_initialize_objects();
-+	}
-+
-+	return_ACPI_STATUS(status);
-+}
-+ACPI_EXPORT_SYMBOL(acpi_load_table_with_index)
-+
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_unload_parent_table
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-index e5e041413581..af375ab318de 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -460,6 +460,12 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 			    acpi_load_table(struct acpi_table_header *table))
- 
-+
-+ACPI_EXTERNAL_RETURN_STATUS(acpi_status
-+			    acpi_load_table_with_index(
-+				    struct acpi_table_header *table,
-+				    u32 *table_idx))
-+
- ACPI_EXTERNAL_RETURN_STATUS(acpi_status
- 			    acpi_unload_parent_table(acpi_handle object))
- 
+?
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
