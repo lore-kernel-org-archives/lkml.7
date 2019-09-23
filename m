@@ -2,226 +2,146 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32191C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF982C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0796F217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996F420B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQFMdUYG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qRVNqZVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389527AbfIWQh5 (ORCPT
+        id S2389610AbfIWQib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:37:57 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36886 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389180AbfIWQh4 (ORCPT
+        Mon, 23 Sep 2019 12:38:31 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34423 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389238AbfIWQib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:37:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r4so13529132edy.4;
-        Mon, 23 Sep 2019 09:37:54 -0700 (PDT)
+        Mon, 23 Sep 2019 12:38:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so10867332otp.1;
+        Mon, 23 Sep 2019 09:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=PKL1OnAoqd4fWRaYtf5I4i+d8Fob8QaTlO5UTt3MjN0=;
-        b=LQFMdUYGSHpXKPlyS7ebp1zn/LjmZLaHiTAo3T3VxFEu6sWFedbnnaxTfUlll7fUqe
-         qjv27J4Zm+ezQU39L7TblsF7/xMWCeDZTEhqYuHw7QS+d6kat8GAUwXlxMZg+uTbmFZx
-         f4O7lpaEx9L4FsnDR6y+BqpkWzMGb+fj+/UZhq8d/ZO/54B5MxPjGdnEI6IZOmuyHv62
-         gh3iyleB/WXNBZpNpJD2QlXHFKxdRqdRkf7CkaauSFrrFO93OeEwwIGwnTdmtVOJu3cD
-         Hvnq8aDrQJCLwco1iT8z2HhfeS2KJbBhk0KiPM/EnL78Idm4w7tj++Obn4UpJ0Q2UWMr
-         pfXw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SF02VzI8EhqypWbAcKP7EasITEB4dVs3hCXyC9Xeizg=;
+        b=qRVNqZVvvSssY0UEwzcin5+kUkej3e+FYn59IinXacc8W1CXn7/+7vBLXnudhbK2W5
+         iquR0lD5Kn9MOwzTjBcRmHaQVB5F5N+ZJ24jV+I0q9BymIBDdOHvePt4c1p/YoYeWfkL
+         1xCYTwOrWiEAb1gsjsMnV3jZMJni3vjKwfPii+HqxyHs9Unp3IzSFsOudwP9LKiCu+mt
+         pichqgl1R1yZhfBp0qhSMqGDcIQ7D7q9hrGrr7WDBQ8PQAwQlaoRNauEbxPLRXvnWA9I
+         PpEocVw8FJC8h8+DNh4+LGTAaOB7G+U9arKuo2I0id0aYAdEjVAB3NHJcg4hwYJrCRC+
+         qz4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=PKL1OnAoqd4fWRaYtf5I4i+d8Fob8QaTlO5UTt3MjN0=;
-        b=eFJ5iFnLCETKThXiPFQ7xmRMhBYoY2GofLX0kIdpKKdafVgTNMpv0LmCdFzQlA+o1X
-         7st1Dc+jV0PunEajPmEMz+4FanoFr0j1ghqh9gapdBbpK5nf1sw87gJxPx0n4Pj1clIq
-         /ZevYHKz1ZApLm+jk80adePoam7OxyyjVoJYVQYDDRKxEK0dbWm9XGuOFFEtTc17UU4c
-         s0ed5XMF+uLsLS4EXIStGqM5zR+J8F4CzS9BeU7f4iKreFSTSISq+41YM8knomSrQS5j
-         OwqN5eaL3Vhw/yzeHKTLaFB0p26t52NN06U3svnOHa8hKJ6featJ/sUjS6owfhFGIoxq
-         XecQ==
-X-Gm-Message-State: APjAAAUd2os4v9eqytJ+Qp0lMepODprVKjFYRLkwg/lqCBZBi43Cu9B9
-        VpsL17U0oIH9f/+rLcFa6Dxl9ZFyrXQC2A==
-X-Google-Smtp-Source: APXvYqzogl3ErlrqCY7SRzq4aqKtm4Zx30Hs/q0f+9YTK6RUM0h+the6FF0xtiXEUq2ykJAeWyF7+Q==
-X-Received: by 2002:a50:f0dd:: with SMTP id a29mr999536edm.219.1569256673705;
-        Mon, 23 Sep 2019 09:37:53 -0700 (PDT)
-Received: from [192.168.43.245] ([91.135.68.130])
-        by smtp.gmail.com with ESMTPSA id s24sm2470091edx.5.2019.09.23.09.37.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 09:37:53 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] sched/wait: Add wait_threshold
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
- <20190923071932.GD2349@hirez.programming.kicks-ass.net>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <3e359937-5b19-8a4c-4243-ba2edff68504@gmail.com>
-Date:   Mon, 23 Sep 2019 19:37:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SF02VzI8EhqypWbAcKP7EasITEB4dVs3hCXyC9Xeizg=;
+        b=c3vpMtEGVgYe82EvowULz8YLCwzdUc6B5rPFyzqeaTYinXRhn466pFbuMUg9oxoZKF
+         FyKkkeZt1g69LLoSSmQOB7wZQCZHFRAwTtybDR477junJtQgLxgScxjRnQzw/Ph6Qmm4
+         R8CJ/Ymm29d+p8UFgaddNZHPNOf1hnMDvPraAvfFfUW2nW7+Ysugqk+cRZySxPH97zdy
+         ZtqMduaLh2OUAAXeJQNxUp8fGBfE4HDS1K9JVNwyc/yk9JHQPxKRoJTPWMO426LnHcXF
+         BK1fDpTLcClq4fHKM9hB7SA1ihWKHFvQ31HmP7Ktk82fGU1EyAakxhiyoGHPaU945cci
+         YJgQ==
+X-Gm-Message-State: APjAAAU0yEnOz2S7knRYRcNBaLOIsGZPDwlctJmCudGs9lDzGF617upG
+        BY2A+LAHJMqAbOHh2Z1EQ7CqB5iEkMvXa38rJ4w=
+X-Google-Smtp-Source: APXvYqwDBDpEKcQaBCA+HwxwASxHxDTHnrrEGQSwxjyF6LGzUyQgaiYAFvwUTz4GNfnwZHnQ3vFP8Zx0tLWekcb5FVo=
+X-Received: by 2002:a9d:39b7:: with SMTP id y52mr591845otb.205.1569256709951;
+ Mon, 23 Sep 2019 09:38:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190923071932.GD2349@hirez.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="afwh8Yn56RhJBUf9WB5Zf5rnPoIZsPbEd"
+References: <20190712064206.48249-1-ran.wang_1@nxp.com> <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+In-Reply-To: <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+From:   Yang Li <pku.leo@gmail.com>
+Date:   Mon, 23 Sep 2019 11:38:18 -0500
+Message-ID: <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ran Wang <ran.wang_1@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---afwh8Yn56RhJBUf9WB5Zf5rnPoIZsPbEd
-Content-Type: multipart/mixed; boundary="sioDMMgZJs6jpfgK812OHuEHse6sCnGbc";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <3e359937-5b19-8a4c-4243-ba2edff68504@gmail.com>
-Subject: Re: [PATCH v2 1/2] sched/wait: Add wait_threshold
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
- <20190923071932.GD2349@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190923071932.GD2349@hirez.programming.kicks-ass.net>
+On Thu, Jul 25, 2019 at 4:56 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jul 24, 2019 at 8:29 PM Ran Wang <ran.wang_1@nxp.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Thursday, July 25, 2019 04:42 Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
+> > > > Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter
+> > > > USB detect failues when adding dma-coherent to DWC3 node. This is
+> > > > because the HW default cache type configuration of those SoC are not
+> > > > right, need to be updated in DTS.
+> > > >
+> > > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > > ---
+> > > > Change in v2:
+> > > >     - New file.
+> > > >
+> > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 43
+> > > > ++++++++++++++++++++++++++
+> > > >  1 file changed, 43 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > index 8e5265e..7bc1cef 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > @@ -110,6 +110,43 @@ Optional properties:
+> > > >   - in addition all properties from usb-xhci.txt from the current directory are
+> > > >     supported as well
+> > > >
+> > > > +* Cache type nodes (optional)
+> > > > +
+> > > > +The Cache type node is used to tell how to configure cache type on 4
+> > > > +different transfer types: Data Read, Desc Read, Data Write and Desc
+> > > > +write. For each treasfer type, controller has a 4-bit register field
+> > > > +to enable different cache type. Quoted from DWC3 data book Table 6-5
+> > > Cache Type Bit Assignments:
+> > > > +----------------------------------------------------------------
+> > > > +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> > > > +----------------------------------------------------------------
+> > > > +AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> > > > +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> > > > +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> > > > +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> > > > +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> > > > +----------------------------------------------------------------
+> > > > +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+> > > > +certain signals, which have the same meaning:
+> > > > +  Bufferable = Posted
+> > > > +  Cacheable = Modifiable = Snoop (negation of No Snoop)
+> > >
+> > > This should all be implied from the SoC specific compatible strings.
+> >
+> > Did you mean I could implement a soc driver which can be matched by compatible of 'fsl,ls1088a-dwc3' which will pass known bus type to DWC3 driver? If yes, how to pass?
+>
+> Yes. The DT match table can have data associated with that compatible
+> string. Beyond that, I'm not really familiar with the DWC3 driver.
 
---sioDMMgZJs6jpfgK812OHuEHse6sCnGbc
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-Just in case duplicating a mail from the cover-letter thread:
+It looks like that the current dwc3 binding perfers to define general
+quirks in device tree properties instead of trying to rely on the
+compatible string to determine quirks.  In this case, can we keep
+following the existing preference instead of choosing the other way?
 
-
-It could be done with @cond indeed, that's how it works for now.
-However, this addresses performance issues only.
-
-The problem with wait_event_*() is that, if we have a counter and are
-trying to wake up tasks after each increment, it would schedule each
-waiting task O(threshold) times just for it to spuriously check @cond
-and go back to sleep. All that overhead (memory barriers, registers
-save/load, accounting, etc) turned out to be enough for some workloads
-to slow down the system.
-
-With this specialisation it still traverses a wait list and makes
-indirect calls to the checker callback, but the list supposedly is
-fairly  small, so performance there shouldn't be a problem, at least for
-now.
-
-Regarding semantics; It should wake a task when a value passed to
-wake_up_threshold() is greater or equal then a task's threshold, that is
-specified individually for each task in wait_threshold_*().
-
-In pseudo code:
-```
-def wake_up_threshold(n, wait_queue):
-	for waiter in wait_queue:
-		waiter.wake_up_if(n >=3D waiter.threshold);
-```
-
-Any thoughts how to do it better? Ideas are very welcome.
-
-BTW, this monster is mostly a copy-paste from wait_event_*(),
-wait_bit_*(). We could try to extract some common parts from these
-three, but that's another topic.
-
-
-On 23/09/2019 10:19, Peter Zijlstra wrote:
-> On Sun, Sep 22, 2019 at 11:08:50AM +0300, Pavel Begunkov (Silence) wrot=
-e:
->> From: Pavel Begunkov <asml.silence@gmail.com>
->>
->> Add wait_threshold -- a custom wait_event derivative, that waits until=
-
->> a value is equal to or greater than the specified threshold.
->=20
-> This is quite insufficient justification for this monster... what exact=
-
-> semantics do you want?
->=20
-> Why can't you do this exact same with a slightly more complicated @cond=
-
-> ?
->=20
-
---=20
-Yours sincerely,
-Pavel Begunkov
-
-
---sioDMMgZJs6jpfgK812OHuEHse6sCnGbc--
-
---afwh8Yn56RhJBUf9WB5Zf5rnPoIZsPbEd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2I9NoACgkQWt5b1Glr
-+6Vv+BAAn48KtuECZJP43/AXvRPRyf3HrK7yvgmvlYX8AutwGPo4qO+0SGjwo5kM
-YLdodOixGzYWPUCHPgsdrBTyVhe5LMvUeFrNRGRHxzC+BwAkpAf5vOyiMlN+P+YG
-i0IvOffLgdHR8z14lQjbwwThxlaK7INW1+H/jUBll7sAF3NceH9zjJbDW5f0l2rK
-jPRpVEwahcM9nmSGc4s1XLxiSQpJLuGTStwhQfSilzbFod5A6moj1u63zBUuJ+gc
-oeqN0fZ32uv3DZmegJrQ1yY0QNRN7ck4cAnO0i5aPhOYVwGqrwgUEXNnpxiM6geM
-jnkAErcD7Y5OPFNngnkCY5Zrqucm9x4zy1+Jg8xPHajtC1z+a771v0XGyi5B3WjW
-YrnM8bJhOFj+4C3sam6DCXTSbHgSgsPLvIhYjx3d/JgwcSMbRt9jD3l8caqnv7XH
-Z3/E317auOBfZldTwmAx8WeaBsNw5QcpF+s1HrCnvFBoiso6wXv3baunrK4T8ab0
-uQhwLbJwQ4w6bLhz2MpZzqzi47zc7sPDiSMmMBc5lEyA1P2Scyp6GPvShRgI3bVK
-fYwA+1I+Xdsr2FuUTi87Hi4J2Jif+UTc4gLlE4ib+mRF35mvyj0lt/h5JRb/dsiW
-yz1lA3bqY5uPJGVvhxAlguNo9bOJsNjcFu3csiwa4yxeckwMEcE=
-=HQjJ
------END PGP SIGNATURE-----
-
---afwh8Yn56RhJBUf9WB5Zf5rnPoIZsPbEd--
+Regards,
+Leo
