@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995FDC32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08345C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7699720835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8F62089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439579AbfIWMwJ (ORCPT
+        id S2439590AbfIWMwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:52:09 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:37188 "EHLO
+        Mon, 23 Sep 2019 08:52:10 -0400
+Received: from regular1.263xmail.com ([211.150.70.202]:46430 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404967AbfIWMwH (ORCPT
+        with ESMTP id S2405264AbfIWMwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:52:07 -0400
-Received: from hjc?rock-chips.com (unknown [192.168.167.16])
-        by regular1.263xmail.com (Postfix) with ESMTP id 0DEC2B96;
-        Mon, 23 Sep 2019 20:44:00 +0800 (CST)
+        Mon, 23 Sep 2019 08:52:09 -0400
+Received: from hjc?rock-chips.com (unknown [192.168.167.128])
+        by regular1.263xmail.com (Postfix) with ESMTP id D5DE9212;
+        Mon, 23 Sep 2019 20:52:04 +0800 (CST)
 X-263anti-spam: KSV:0;BIG:0;
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
@@ -32,10 +32,10 @@ X-ABS-CHECKED: 1
 X-SKE-CHECKED: 1
 X-ANTISPAM-LEVEL: 2
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P3051T140289744058112S1569242621440080_;
-        Mon, 23 Sep 2019 20:44:00 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P15436T140160991741696S1569243121384240_;
+        Mon, 23 Sep 2019 20:52:03 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <6e704a054898d3f23dd3220778556226>
+X-UNIQUE-TAG: <d1a443c7a7b4670935fd59fdd2274a54>
 X-RL-SENDER: hjc@rock-chips.com
 X-SENDER: hjc@rock-chips.com
 X-LOGIN-NAME: hjc@rock-chips.com
@@ -44,19 +44,21 @@ X-SENDER-IP: 58.22.7.114
 X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 From:   Sandy Huang <hjc@rock-chips.com>
-To:     dri-devel@lists.freedesktop.org,
-        "James (Qian) Wang" <james.qian.wang@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
+To:     dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     hjc@rock-chips.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/36] drm/arm: use bpp instead of cpp for drm_format_info
-Date:   Mon, 23 Sep 2019 20:41:14 +0800
-Message-Id: <1569242500-182337-11-git-send-email-hjc@rock-chips.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 22/36] drm/atmel-hlcdc: use bpp instead of cpp for drm_format_info
+Date:   Mon, 23 Sep 2019 20:51:45 +0800
+Message-Id: <1569243119-183293-2-git-send-email-hjc@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569242500-182337-7-git-send-email-hjc@rock-chips.com>
-References: <1569242500-182337-7-git-send-email-hjc@rock-chips.com>
+In-Reply-To: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
+References: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,50 +69,22 @@ So we use bpp[BitPerPlane] to instead cpp.
 
 Signed-off-by: Sandy Huang <hjc@rock-chips.com>
 ---
- drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c | 2 +-
- drivers/gpu/drm/arm/malidp_hw.c                         | 2 +-
- drivers/gpu/drm/arm/malidp_planes.c                     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-index 3b0a70e..d02dfc6 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-@@ -89,7 +89,7 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
- 				    alignment_header);
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+index 89f5a75..ab7d423 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+@@ -644,7 +644,7 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
+ 		int xdiv = i ? fb->format->hsub : 1;
+ 		int ydiv = i ? fb->format->vsub : 1;
  
- 	kfb->afbc_size = kfb->offset_payload + n_blocks *
--			 ALIGN(info->cpp[0] * AFBC_SUPERBLK_PIXELS,
-+			 ALIGN(info->bpp[0] / 8 * AFBC_SUPERBLK_PIXELS,
- 			       AFBC_SUPERBLK_ALIGNMENT);
- 	min_size = kfb->afbc_size + fb->offsets[0];
- 	if (min_size > obj->size) {
-diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-index bd8265f..54be8d1 100644
---- a/drivers/gpu/drm/arm/malidp_hw.c
-+++ b/drivers/gpu/drm/arm/malidp_hw.c
-@@ -384,7 +384,7 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
- int malidp_format_get_bpp(u32 fmt)
- {
- 	const struct drm_format_info *info = drm_format_info(fmt);
--	int bpp = info->cpp[0] * 8;
-+	int bpp = info->bpp[0];
+-		state->bpp[i] = fb->format->cpp[i];
++		state->bpp[i] = fb->format->bpp[i] / 8;
+ 		if (!state->bpp[i])
+ 			return -EINVAL;
  
- 	if (bpp == 0) {
- 		switch (fmt) {
-diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-index 3c70a53..628f325 100644
---- a/drivers/gpu/drm/arm/malidp_planes.c
-+++ b/drivers/gpu/drm/arm/malidp_planes.c
-@@ -225,7 +225,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
- 
- 	if (modifier & AFBC_SPLIT) {
- 		if (!info->is_yuv) {
--			if (info->cpp[0] <= 2) {
-+			if (info->bpp[0] <= 16) {
- 				DRM_DEBUG_KMS("RGB formats <= 16bpp are not supported with SPLIT\n");
- 				return false;
- 			}
 -- 
 2.7.4
 
