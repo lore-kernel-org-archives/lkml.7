@@ -2,117 +2,103 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EC3C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5814020856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569262479;
-	bh=9JnE4fmdEWiKSwublyyIWd6j/KzXUP9nRmeoN6pKKxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OnsGVg9+u8DeWfmBaiScSA3w+kcrehND+ls/EsKKePnGYdSBklQPA1G1cue7XnSDp
-	 VCEjOrzr7MK6F0pHb6xr1aUwilB50tz/KUoykrQ70McA2MIGwe+RMuGdEYgUJpg7Am
-	 +VNUNBIjfZPW4xvFLb1Cgrc4pWOot/QORo+Kbxao=
+	by mail.kernel.org (Postfix) with ESMTP id 53B3120856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440360AbfIWSOi (ORCPT
+        id S2440366AbfIWSPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:14:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56794 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437960AbfIWSOi (ORCPT
+        Mon, 23 Sep 2019 14:15:15 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:65320 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394280AbfIWSPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:14:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HCO9H13hsLGlf0IU4gFCSB/WykjOxYi/O/UOB7GTiPU=; b=qUf6Le+pnZyKScoYdTpB1aoFq
-        AyeXuA1UmnNF+LErbecWhBfua3o2ufC5IHbKBRgWrqZzeY3npKa2bANyDYCf2DETARTLeZGOEBUwu
-        hiA6aH6pI1Td2GVPv1GTasB9Nvy46v1Wg5nUH4MxtSnfXLOYAVTdzrumkjwJYlxL4qxpU=;
-Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iCSr3-0004To-Ht; Mon, 23 Sep 2019 18:14:33 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id BB79CD01FE8; Mon, 23 Sep 2019 19:14:31 +0100 (BST)
-Date:   Mon, 23 Sep 2019 11:14:31 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>, zhang.chunyan@linaro.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
- usage
-Message-ID: <20190923181431.GU2036@sirena.org.uk>
-References: <20190917154021.14693-1-m.felsch@pengutronix.de>
- <20190917154021.14693-2-m.felsch@pengutronix.de>
- <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
+        Mon, 23 Sep 2019 14:15:15 -0400
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8NI27Wk031655;
+        Mon, 23 Sep 2019 18:14:41 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2v6pd04jm5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 18:14:41 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 468B45C;
+        Mon, 23 Sep 2019 18:14:40 +0000 (UTC)
+Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id D3F0A5D;
+        Mon, 23 Sep 2019 18:14:38 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 13:14:38 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A.Shutemov" <kirill@shutemov.name>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com, mike.travis@hpe.com
+Subject: [PATCH v2 0/2] x86/boot/64: Avoid mapping reserved ranges in early
+ page tables.
+Message-ID: <cover.1569004922.git.steve.wahl@hpe.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J19t2I20ndwispKK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-23_05:2019-09-23,2019-09-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ clxscore=1011 bulkscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909230158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set narrows the valid space addressed by the page table
+level2_kernel_pgt to only contain ranges checked against the "usable
+RAM" list provided by the BIOS.
 
---J19t2I20ndwispKK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Prior to this, some larger than needed mappings were occasionally
+crossing over into spaces marked reserved, allowing the processor to
+access these reserved spaces, which were caught by the hardware and
+caused BIOS to halt on our platform (UV).
 
-On Mon, Sep 23, 2019 at 11:02:26AM -0700, Doug Anderson wrote:
+Changes since v1:
 
-> I will freely admit my ignorance here, but I've always been slightly
-> confused by the "always-on" vs. "boot-on" distinction...
+* Cover letter added because there's now two patches.
 
-> The bindings say:
+* Patch 1: Added comment and re-worked changelog text.
 
->   regulator-always-on:
->     description: boolean, regulator should never be disabled
+* Patch 2: New change requested by Dave Hansen to handle the case that
+  the mapping of the last PMD page for the kernel image could cross a
+  reserved region boundary.
 
->   regulator-boot-on:
->     description: bootloader/firmware enabled regulator
 
-> For 'boot-on' that's a bit ambiguous about what it means.  The
-> constraints have a bit more details:
+Steve Wahl (2):
+  x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area.
+  x86/boot/64: round memory hole size up to next PMD page.
 
-Boot on means that it's powered on when the kernel starts, it's
-for regulators that we can't read back the status of.
+ arch/x86/boot/compressed/misc.c | 25 +++++++++++++++++++------
+ arch/x86/kernel/head64.c        | 18 ++++++++++++++++--
+ 2 files changed, 35 insertions(+), 8 deletions(-)
 
-> ...but then that begs the question of why we have two attributes?
-> Maybe this has already been discussed before and someone can point me
-> to a previous discussion?  We should probably make it more clear in
-> the bindings and/or the constraints.
+-- 
+2.21.0
 
-boot-on just refers to the status at boot, we can still turn
-those regulators off later on if we want to.
 
---J19t2I20ndwispKK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JC4YACgkQJNaLcl1U
-h9Cw9Qf/ZIeAGiJh/nkJJEspZ/933nlFfSOVQp075WtLBEPxwZcMwK+l3ub1FKtA
-Fgi6KR3Ig/Sh5MSIJKJsqbhtv7bhOuYwPtsFrDoBdfMU6hCfHLrZBb0WxFJMzGfh
-Ta9yCbXOiviw0GaVDSmK7io7Uwle+lxkr3pIU37BfVlyL8HmZ6OlbNJW95SvYFwo
-gIhUdadCTDHOagRMqlA/iDYl1pBX0XexRGT6qcRobrzhYmIJnvRHNnjm1W3V0k6M
-6OJvmtnTUE/s2DnQaNM7MOnuvhHfI39qEAVB9/UefwBLVigLgAvqH4QKj7fk960W
-hvwhs8dPtTgi8o1O9WFNRXQh4uYL+w==
-=aqxZ
------END PGP SIGNATURE-----
-
---J19t2I20ndwispKK--
+-- 
+Steve Wahl, Hewlett Packard Enterprise
