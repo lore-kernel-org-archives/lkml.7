@@ -2,162 +2,218 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E111C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB9C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D0020882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD8A207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="U5VAr7CE"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YARDN5pc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbfIWPnd (ORCPT
+        id S1732668AbfIWPoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:43:33 -0400
-Received: from m12-11.163.com ([220.181.12.11]:45892 "EHLO m12-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732195AbfIWPnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:43:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=UXtouNp0rH6zNZolZM
-        9J5wev9N1CF60dHBAoT9diwwo=; b=U5VAr7CEL+mo9Y0wSZSYHP+j7+j2FUgLKJ
-        yITkxRm4pZoLBe/EFKZ5WI2k7k7s7iyPoU1ZIy8/37HlEFvT6aM/qGW6t35b5ca8
-        RNKJ+WGl0H5I2qUL5sJjcqh25XZn/tU2OaZkv9bWP/2JCn+DR5VBG1n3repwrLGn
-        Nlv242OQ4=
-Received: from localhost.localdomain (unknown [117.173.227.76])
-        by smtp7 (Coremail) with SMTP id C8CowADn77v854hdtt3BOQ--.4942S2;
-        Mon, 23 Sep 2019 23:42:59 +0800 (CST)
-From:   Yu Chen <33988979@163.com>
-To:     linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yu.chen3@zte.com.cn
-Subject: Re: [PATCH] arm: export memblock_reserve()d regions via /proc/iomem
-Date:   Mon, 23 Sep 2019 23:42:54 +0800
-Message-Id: <1569253374-3631-1-git-send-email-33988979@163.com>
-X-Mailer: git-send-email 1.9.1
-X-CM-TRANSID: C8CowADn77v854hdtt3BOQ--.4942S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKF4DuFyxCrykKF17Kr1Dtrb_yoW7Ar17pF
-        W5Xr15Wr48tF1UXF4xJr1Uuw4vva1Fyay7Ar13CrnrZFW8GFnrJ348t34UWFy5tr45trnF
-        qFs7J3sF9w1UAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UuxRgUUUUU=
-X-Originating-IP: [117.173.227.76]
-X-CM-SenderInfo: attzmmqzxzqiywtou0bp/1tbiKwM5slQHRWf+RAAAso
+        Mon, 23 Sep 2019 11:44:12 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:14444 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732362AbfIWPoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:44:11 -0400
+Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
+        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x8NFb82o006988;
+        Mon, 23 Sep 2019 16:43:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=qX9gUJnUPb1Fcd+p95CXTaKPJoXRkYXmCntvF2VuC1U=;
+ b=YARDN5pcyVBafhMU39v9guV9kFLt98byO8ytBI60+09E0lqOkoxfT7kvghI/NnX04W4D
+ 0Ijmpf6SPrf9tQXLN088cHZhxZByMhOVbdayZP5b1EAt+pD+xDSCc3/PwPawgWNbbrn/
+ 1oyckYorcDUV2W6/CsUgs1Dm2yuv3ODE4WGHNsEmr1Nu4yFODxOP4UhvuxXWMzakKs4j
+ q6BF9+wTQezaQkUlb3qltXDfdH4AhF0PCp8mixSZLzq06ZIw0qJNRNNeeAobkD8xFrXL
+ yDgYiYeGkt9ze03HhT9vv8Ofyt1sSjuMQBciAexEw3cx+2PFs9TeKR8sDjzATniRwyP6 jg== 
+Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
+        by m0050096.ppops.net-00190b01. with ESMTP id 2v5c98h2bs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 16:43:59 +0100
+Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
+        by prod-mail-ppoint6.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x8NFZdhT032160;
+        Mon, 23 Sep 2019 11:43:58 -0400
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint6.akamai.com with ESMTP id 2v5f6wamyd-1;
+        Mon, 23 Sep 2019 11:43:58 -0400
+Received: from [172.29.170.83] (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id 1EC661FCAA;
+        Mon, 23 Sep 2019 15:43:58 +0000 (GMT)
+Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
+ CONFIG_DEBUG_LOCK_ALLOC
+From:   Jason Baron <jbaron@akamai.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <normalperson@yhbt.net>
+References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
+ 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
+ JeQ7iQ==
+Message-ID: <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
+Date:   Mon, 23 Sep 2019 11:43:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909230147
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-23_05:2019-09-23,2019-09-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ impostorscore=0 spamscore=0 clxscore=1015 suspectscore=1 phishscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1909230148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <yu.chen3@zte.com.cn>
 
-On Sat, 21 Sep 2019 15:51:38, Russell King - ARM Linux admin wrote:
-> On Sat, Sep 21, 2019 at 09:02:49PM +0800, Yu Chen wrote:
-> > From: Yu Chen <yu.chen3@zte.com.cn> 
-> >  
-> > memblock reserved regions are not reported via /proc/iomem on ARM, kexec's
-> > user-space doesn't know about memblock_reserve()d regions and thus
-> > possible for kexec to overwrite with the new kernel or initrd.
+
+On 9/4/19 4:22 PM, Jason Baron wrote:
+> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
+> ep_call_nested() in order to pass the correct subclass argument to
+> spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
+> checks for epoll depth and loops that are already verified when doing
+> EPOLL_CTL_ADD. This mirrors a conversion that was done for
+> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
+> ep_call_nested() from ep_eventpoll_poll()")
 > 
-> Many reserved regions come from the kernel allocating memory during
-> boot.  We don't want to prevent kexec re-using those regions.
+> Signed-off-by: Jason Baron <jbaron@akamai.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Roman Penyaev <rpenyaev@suse.de>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Eric Wong <normalperson@yhbt.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  fs/eventpoll.c | 36 +++++++++++++-----------------------
+>  1 file changed, 13 insertions(+), 23 deletions(-)
 > 
-> > [    0.000000] Booting Linux on physical CPU 0xf00
-> > [    0.000000] Linux version 4.9.115-rt93-dirty (yuchen@localhost.localdomain) (gcc version 6.2.0 (ZTE Embsys-TSP V3.07.2
-> > 0) ) #62 SMP PREEMPT Fri Sep 20 10:39:29 CST 2019
-> > [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
-> > [    0.000000] CPU: div instructions available: patching division code
-> > [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> > [    0.000000] OF: fdt:Machine model: LS1021A TWR Board
-> > [    0.000000] INITRD: 0x80f7f000+0x03695e40 overlaps in-use memory region - disabling initrd
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index d7f1f50..a9b2737 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls *ncalls,
+>   */
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>  
+> -static struct nested_calls poll_safewake_ncalls;
+> -
+> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int call_nests)
+> -{
+> -	unsigned long flags;
+> -	wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
+> -
+> -	spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
+> -	wake_up_locked_poll(wqueue, EPOLLIN);
+> -	spin_unlock_irqrestore(&wqueue->lock, flags);
+> -
+> -	return 0;
+> -}
+> +static DEFINE_PER_CPU(int, wakeup_nest);
+>  
+>  static void ep_poll_safewake(wait_queue_head_t *wq)
+>  {
+> -	int this_cpu = get_cpu();
+> -
+> -	ep_call_nested(&poll_safewake_ncalls,
+> -		       ep_poll_wakeup_proc, NULL, wq, (void *) (long) this_cpu);
+> +	unsigned long flags;
+> +	int subclass;
+>  
+> -	put_cpu();
+> +	local_irq_save(flags);
+> +	preempt_disable();
+> +	subclass = __this_cpu_read(wakeup_nest);
+> +	spin_lock_nested(&wq->lock, subclass + 1);
+> +	__this_cpu_inc(wakeup_nest);
+> +	wake_up_locked_poll(wq, POLLIN);
+> +	__this_cpu_dec(wakeup_nest);
+> +	spin_unlock(&wq->lock);
+> +	local_irq_restore(flags);
+> +	preempt_enable();
+>  }
+>  
+>  #else
+> @@ -2370,11 +2365,6 @@ static int __init eventpoll_init(void)
+>  	 */
+>  	ep_nested_calls_init(&poll_loop_ncalls);
+>  
+> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
+> -	/* Initialize the structure used to perform safe poll wait head wake ups */
+> -	ep_nested_calls_init(&poll_safewake_ncalls);
+> -#endif
+> -
+>  	/*
+>  	 * We can have many thousands of epitems, so prevent this from
+>  	 * using an extra cache line on 64-bit (and smaller) CPUs
 > 
-> Is the overlapping region one that is marked as reserved in DT?
 
-the overlapping region is not reserved in DT.
 
-> Where is the reserved region that overlaps the initrd coming from?
+Hi,
 
-I found the reserved region that overlaps the initrd is kernel code & data, 
-with memblock=debug cmdline start new kerne:
+Any thoughts on this one?
 
-/ # kexec -l uImage-ls1021a --ramdisk=ramdisk-ls1021a --dtb=fdt --append="root=/
-dev/ram0 rw console=ttyS0,115200 earlyprintk memblock=debug" -d
-Try gzip decompression.
-Try LZMA decompression.
-lzma_decompress_file: read on uImage-ls1021a of 65536 bytes failed
-kernel: 0xb6c71008 kernel_size: 0x317ab8
-MEMORY RANGES
-0000000080000000-00000000bfffffff (0)
-0000000080003000-0000000080007fff (1)
-0000000080e00000-0000000080ffffff (1)
-00000000810c45a4-00000000810c4fff (1)
-0000000081ac4000-0000000085159fff (1)
-000000008515a000-000000008515ffff (1)
-0000000088000000-000000008b695fff (1)
-000000008f000000-000000008f004fff (1)
-00000000af709000-00000000af7eafff (1)
-00000000af7ed000-00000000afffbfff (1)
-00000000afffc000-00000000afffcfff (1)
-00000000afffd000-00000000afffffff (1)
-00000000bc000000-00000000bfffffff (1)
-zImage header: 0x016f2818 0x00000000 0x00317a78
-zImage size 0x317a78, file size 0x317a78
-kexec_load: entry = 0x80008000 flags = 0x280000
-nr_segments = 3
-segment[0].buf   = 0xb6c71048
-segment[0].bufsz = 0x317a78
-segment[0].mem   = 0x80008000
-segment[0].memsz = 0x318000
-segment[1].buf   = 0xb35db048
-segment[1].bufsz = 0x3695e40
-segment[1].mem   = 0x80f7f000
-segment[1].memsz = 0x3696000
-segment[2].buf   = 0x100b108
-segment[2].bufsz = 0x5090
-segment[2].mem   = 0x84615000
-segment[2].memsz = 0x6000
-/ # kexec -e
-[  126.583598] kexec_core: Starting new kernel
-[  126.587815] Disabling non-boot CPUs ...
-[  126.626917] CPU1: shutdown
-[  126.656344] Retrying again to check for CPU kill
-[  126.660947] CPU1 killed.
-[  126.687585] Bye!
-[    0.000000] Booting Linux on physical CPU 0xf00
-[    0.000000] Linux version 4.9.115-rt93-CGEL-V6.02.10.R4-dirty (yuchen@localhost.localdomain) (gcc version 6.2.0 (ZTE Embsys-TSP V3.07.20) ) #62 SMP PREEMPT Fri Sep 20 10:39:29 CST 2019
-[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-[    0.000000] OF: fdt:Machine model: LS1021A TWR Board
-[    0.000000] memblock_reserve: [0x00000080200000-0x000000810c45a3] flags 0x0 arm_memblock_init+0x44/0x23c
-[    0.000000] INITRD: 0x80f7f000+0x03695e40 overlaps in-use memory region - disabling initrd
-[    0.000000] memblock_reserve: [0x00000080003000-0x00000080007fff] flags 0x0 arm_mm_memblock_reserve+0x2c/0x30
-[    0.000000] memblock_reserve: [0x00000084615000-0x0000008461a08f] flags 0x0 early_init_dt_reserve_memory_arch+0x24/0x28
-[    0.000000] memblock_reserve: [0x0000008f000000-0x0000008f004fff] flags 0x0 early_init_dt_reserve_memory_arch+0x24/0x28
-[    0.000000] memblock_reserve: [0x00000088000040-0x0000008b695e3f] flags 0x0 early_init_dt_reserve_memory_arch+0x24/0x28
-[    0.000000] memblock_reserve: [0x000000bc000000-0x000000bfffffff] flags 0x0 memblock_alloc_range_nid+0x78/0x90
- ... 
- ---[ end Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(1,0)
+Thanks,
 
-this overlay region is [0x00000080200000-0x000000810c45a3]
-
-Corresponding kernel source code:
-264 void __init arm_memblock_init(const struct machine_desc *mdesc)
-265 {
-266         /* Register the kernel text, kernel data and initrd with memblock. */
-267         memblock_reserve(__pa(KERNEL_START), KERNEL_END - KERNEL_START);
-
-> 
-> Thanks.
-> 
-> --  
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-
-And Sorry, I sent the wrong arm64 patch. if possible, I will resend the second version of the patch.
-
-Yu Chen
-
+-Jason
