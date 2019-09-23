@@ -2,322 +2,126 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B61AC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA4AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4F220820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="kzQDPNpz"
+	by mail.kernel.org (Postfix) with ESMTP id 4144F20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406158AbfIWDz6 (ORCPT
+        id S1728522AbfIWEBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 23:55:58 -0400
-Received: from mail-eopbgr780135.outbound.protection.outlook.com ([40.107.78.135]:10281
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        Mon, 23 Sep 2019 00:01:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34622 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404038AbfIWDz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 23:55:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KZc0OnYUh926rsyyWSGfWuYOTWCue1mbxjFowxY5jizHIG6A286k1v1chHgW8xoP1mFXURnYbjS16WBlH0wF9ihrQL/9EY+H+U83QcCfuTvmSD3moIVxbmtKDRWSOIwJL9tzZu+0TYK593U/gyBh1Qa6rzeAYGsi7ih05TD9I6ngJV/jbfiTkMVIY1z5mdARsOHeXExkI0qyI/2OryXNcGyCpTSe7WujSvIEHqCdhy6JZczhGZFcmm0JAX9vIpz2hUdB0AQ2tChkApzLUa+QZKyBAREw9e4Jotpreb92Fq2KLXLmU04AezmwTKT7zSrtt2N1J5+/9OqVotwQJ5IIAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rZCDla+ZOw8RIuckNTUIarFxnev7m17JqNc5imAC98=;
- b=NAyfipsjF2+42YUajnIschZ7rMj6ekNKiMNmahC40r1+bcFk49SgQ/lT9yPIOUhGWtXfuhRHDosYskSPe+2lquLzLunZyWRKuqDQKAWQb/aQNqsadzjpx7GHB5WZyHAC3iW4k3OPszVqBoBCsLvAvki7U0dKkbB93VgdDRlpN6XHU4B7S0N5HPL5L/9ivG4E4Px9OHVtqBJNqHgTTgm7x+9BWLQ4ShsYBPPGoEF4Ki6ZuzWCu1aSLkABNfeMi8wY8pnhZiHtCkCM2r5fa7cxYg+QXBSAQM+khO0S21tw1TpfRelgK3TNOPBzRnHSsKRBnhU44CsfuRN6vqWIXCNU9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rZCDla+ZOw8RIuckNTUIarFxnev7m17JqNc5imAC98=;
- b=kzQDPNpzWNUUTsxDhoq26HO78hkpuwVPv4BRy8Tz1s0bGokL8Nvm4+ewf2RyArrApiDE6DPNRiL+/XooslyxR1mu6rSg4tPFH50Xf7NwCCjAJYbRbEf1yCw4V7hVWaOCRaAjH0wNoNQmDPrQoiZ0YY5aoLnrgDA8DAfM7efFwfw=
-Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
- MN2PR04MB6685.namprd04.prod.outlook.com (10.186.147.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.19; Mon, 23 Sep 2019 03:55:49 +0000
-Received: from MN2PR04MB5886.namprd04.prod.outlook.com
- ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
- ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 03:55:48 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Topic: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Index: AQHVb3j75RwTQ/LQlEe1c7kQ788vf6c0UZKAgARVAoA=
-Date:   Mon, 23 Sep 2019 03:55:48 +0000
-Message-ID: <20190923035539.GA5916@xin-VirtualBox>
-References: <cover.1568957788.git.xji@analogixsemi.com>
- <606dba07640f0c9aba930e1dfb5d6a797f393ecc.1568957789.git.xji@analogixsemi.com>
- <20190920094621.GA12950@pendragon.ideasonboard.com>
-In-Reply-To: <20190920094621.GA12950@pendragon.ideasonboard.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR04CA0017.apcprd04.prod.outlook.com
- (2603:1096:203:36::29) To MN2PR04MB5886.namprd04.prod.outlook.com
- (2603:10b6:208:a3::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [222.35.23.38]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31f2ea73-14f9-49ad-658b-08d73fd9eb1a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6685;
-x-ms-traffictypediagnostic: MN2PR04MB6685:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB668570FE1C86BDEF2A3C3320C7850@MN2PR04MB6685.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(366004)(136003)(396003)(376002)(39840400004)(189003)(199004)(2906002)(3846002)(6116002)(66066001)(33716001)(25786009)(54906003)(1076003)(316002)(33656002)(4326008)(6306002)(14444005)(256004)(6916009)(305945005)(6512007)(9686003)(86362001)(107886003)(6246003)(229853002)(6436002)(486006)(99286004)(6486002)(7736002)(7416002)(14454004)(476003)(966005)(386003)(6506007)(5660300002)(52116002)(76176011)(71190400001)(71200400001)(26005)(186003)(102836004)(446003)(64756008)(66446008)(66946007)(11346002)(478600001)(8936002)(81166006)(66476007)(66556008)(81156014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6685;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 30JRXtlTVAQ1I9K8EwJpLQ+13TuR/YtQztmHxF41Zmf6E/sNZMmtnckyv6tfybeNw+zJAiSivHCL5gFwMxE7sMzwYLeWN2Khes3/yjWcbKnl+TIMBpqMrDNvUl4OjBFciwAVVDeD986GC1I+/0dzAlLsAB72PGIaTQGO01+FZ6eAobGTs6uwTFY5l43HDlDlusX7j0o50Erfr430diRYn5kc+CZjhyq9Ak87RNV1esVzy7j9gff95/uYe+2JPsvATD3pDciWE0/iIjfmbsO+Y3C5VKq9U5yPOKHi9LJJn1cXr5vB2ClZ+ZAVQ+KTSvH/oHAz8Z1BPNaWYTZkU96CLDJv1kIYjiBXpQoRYFNxZtC1/cZNdY44ifFGUt2thL8ZYr9P3hwv1n8kwpAqjDj7wiXYEcLJcsxP1D8M6BUSFwE=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <89EF8D1BB3962448B6334707B56223DD@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726047AbfIWEBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 00:01:21 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 609AE3DBB045AC9296C6;
+        Mon, 23 Sep 2019 12:01:19 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
+ 12:01:12 +0800
+From:   sunqiuyang <sunqiuyang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <jaegeuk@kernel.org>,
+        <yuchao0@huawei.com>
+CC:     <sunqiuyang@huawei.com>
+Subject: [PATCH v2 1/1] f2fs: update multi-dev metadata in resize_fs
+Date:   Mon, 23 Sep 2019 12:21:39 +0800
+Message-ID: <20190923042139.36470-1-sunqiuyang@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31f2ea73-14f9-49ad-658b-08d73fd9eb1a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 03:55:48.7909
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1rBaGtbvau8EEnF/+S7kZX3fbnrwSHD0BK+LPME0OSjpT7X1z9xJ5A+JK6gAF6iAyM2MKiHKzKJkt3FjY6XpCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6685
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent Pinchart, thanks for your comment.
+From: Qiuyang Sun <sunqiuyang@huawei.com>
 
-On Fri, Sep 20, 2019 at 12:46:21PM +0300, Laurent Pinchart wrote:
-> Hello Xin Ji,
->=20
-> Thank you for the patch.
->=20
-> On Fri, Sep 20, 2019 at 06:05:03AM +0000, Xin Ji wrote:
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
->=20
-> I assume you meant MIPI DSI ? MIPI has released more standards than DSI,
-> so it doesn't hurt to specify this explicitly.
-It support DSI and DPI, I will to point out.
->=20
-> According to
-> https://www.analogix.com/en/system/files/AA-002291-PB-6-ANX7625_ProductBr=
-ief_0.pdf,
-> the ANX7625 supports for MIPI DSI and DPI on the input side.
-> Furthermore, it seems to output DisplayPort on USB Type-C. Should this
-> be documented ?
-It can support both eDP output or USB Type-C output.
->=20
-> > You can add support to your board with binding.
-> >=20
-> > Example:
-> > 	anx_bridge: anx7625@58 {
-> > 		compatible =3D "analogix,anx7625";
-> > 		reg =3D <0x58>;
-> > 		low-power-mode =3D <1>;
-> > 		dsi-supported =3D <1>;
-> > 		dsi-channel-id =3D <1>;
-> > 		dsi-lanes-num =3D <4>;
-> > 		internal-pannel-supported =3D <1>;
-> > 		pon-gpios =3D <&gpio0 45 GPIO_ACTIVE_LOW>;
-> > 		reset-gpios =3D <&gpio0 73 GPIO_ACTIVE_LOW>;
-> > 		status =3D "okay";
-> > 		port {
-> > 			anx7625_1_in: endpoint {
-> > 				remote-endpoint =3D <&mipi_dsi_bridge_1>;
-> > 			};
-> > 		};
-> > 	};
-> >=20
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> > ---
-> >  .../bindings/display/bridge/anx7625.yaml           | 84 ++++++++++++++=
-++++++++
-> >  1 file changed, 84 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/an=
-x7625.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.y=
-aml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > new file mode 100644
-> > index 0000000..95fe18b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > @@ -0,0 +1,84 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2019 Analogix Semiconductor, Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-> > +
-> > +maintainers:
-> > +  - Xin Ji <xji@analogixsemi.com>
-> > +
-> > +description: |
-> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-> > +  designed for portable devices.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: analogix,anx7625
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  low-power-gpios:
-> > +    description: Low power mode support feature
-> > +    maxItems: 1
-> > +
-> > +  hpd-gpios:
-> > +    description: used for HPD interrupt
-> > +    maxItems: 1
-> > +
-> > +  pon-gpios:
-> > +    description: used for power on chip control
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    description: used for reset chip control
-> > +    maxItems: 1
->=20
-> How about mentioning which pin of the ANX7625 each GPIO refers to ? For
-> the low-power, pon and reset GPIOs I assume they directly control the
-> chip. We have standard names for some GPIOs, such as reset or enable. Is
-> there one of the low-power and pon GPIOs that would qualify as an enable
-> signal ?
-OK, I think pon-gpios can qualify as an enable.
->=20
-> What is the HPD GPIO for ? Does the chip output and HPD signal ?
-Once the anx7625 received eDP HPD signal, the firmware will report HPD
-interrupt to AP through defined gpio interrupt pin "hpd-gpios". It used
-for interrupt between anx7625 and AP, not used for output.
->=20
-> > +
-> > +  extcon-supported:
-> > +    description: external connector interface support flag
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +  internal-pannel-supported:
-> > +    description: indicate does internal pannel exist or not
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->=20
-> s/pannel/panel/
-OK, will fix it.
->=20
-> Are those two properties mutually exclusive ? If so you should combine
-> them in a single required property with two values. My feeling is that
-> they should be dropped though, please see below.
-Yes, they are mutually exclusive.
-There are 3 case, one is support google "external connector" framework,
-one support internal panel, the other is support normal eDP output, so I
-defined two flags to distinguish them here. Based on your comment below,
-I'll define output port to distinguish them.
->=20
-> > +
-> > +  dsi-supported:
-> > +    description: support MIPI DSI or DPI
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +  dsi-channel-id:
-> > +    description: dsi channel index
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->=20
-> This does not belong to DT, the virtual channel used by the DSI source
-> should be queried at runtime by communicating between drivers.
-I didn't know where can quiry this value. Can you give me more detail?
->=20
-> > +
-> > +  dsi-lanes-num:
-> > +    description: dsi lanes used num
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->=20
-> Please use the standard data-lanes property as defined in
-> video-interface.txt. It should be specified in the DSI endpoints.
-OK, I'll fetch the dsi lanes from DSI endpoints.
->=20
-> > +
-> > +  port@0:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to MIPI DSI host port node.
->=20
-> You need at least 3 ports:
->=20
-> - a DPI input port
-I'll add DPI input port.
-> - a DSI input port
-> - an output port
->=20
-> The dsi-supported property should be dropped, detecting the type of
-> input should be done based on which of the DPI or DSI input port is
-> connected.
-OK.
->=20
-> Assuming the ANX7625 can also output DisplayPort directly without going
-> through USB Type-C (I can't verify that without the datasheet), I think
-> you should use two output ports, one for USB Type-C and one for
-> DisplayPort. The extcon-supported and internal-pannel-supported
-> properties should be removed, and deduced from the connect output port.
-I think there should exist 3 output port, one is for extern connector,
-one is for normal eDP, other is for internal panel eDP.
->=20
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - dsi-channel-id
-> > +  - dsi-lanes-num
-> > +  - port@0
-> > +
-> > +example:
-> > +  - |
-> > +    anx_bridge: anx7625@58 {
-> > +        compatible =3D "analogix,anx7625";
-> > +        reg =3D <0x58>;
-> > +        low-power-gpios =3D <0>;
-> > +        dsi-supported =3D <1>;
-> > +        dsi-channel-id =3D <1>;
-> > +        dsi-lanes-num =3D <4>;
-> > +        hpd-gpios =3D <&gpio1 19 IRQ_TYPE_LEVEL_LOW>;
-> > +        status =3D "okay";
-> > +    };
->=20
-> You mention the port@0 node as being required, but it's missing from the
-> example.
-OK, I'll change it in the next series.
->=20
-> --=20
-> Regards,
->=20
-> Laurent Pinchart
+Multi-device metadata should be updated in resize_fs as well.
+
+Also, we check that the new FS size still reaches the last device.
+
+--
+Changelog v1 => v2:
+Use f2fs_is_multi_device() and some minor cleanup.
+
+Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+---
+ fs/f2fs/gc.c | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 5877bd7..ef7686a 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1437,11 +1437,20 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
+ 	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
+ 	raw_sb->block_count = cpu_to_le64(block_count +
+ 					(long long)segs * sbi->blocks_per_seg);
++	if (f2fs_is_multi_device(sbi)) {
++		int last_dev = sbi->s_ndevs - 1;
++		int dev_segs =
++			le32_to_cpu(raw_sb->devs[last_dev].total_segments);
++
++		raw_sb->devs[last_dev].total_segments =
++						cpu_to_le32(dev_segs + segs);
++	}
+ }
+ 
+ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ {
+ 	int segs = secs * sbi->segs_per_sec;
++	long long blks = (long long)segs * sbi->blocks_per_seg;
+ 	long long user_block_count =
+ 				le64_to_cpu(F2FS_CKPT(sbi)->user_block_count);
+ 
+@@ -1449,8 +1458,20 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ 	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
+ 	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
+ 	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
+-	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count +
+-					(long long)segs * sbi->blocks_per_seg);
++	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
++
++	if (f2fs_is_multi_device(sbi)) {
++		int last_dev = sbi->s_ndevs - 1;
++
++		FDEV(last_dev).total_segments =
++				(int)FDEV(last_dev).total_segments + segs;
++		FDEV(last_dev).end_blk =
++				(long long)FDEV(last_dev).end_blk + blks;
++#ifdef CONFIG_BLK_DEV_ZONED
++		FDEV(last_dev).nr_blkz = (int)FDEV(last_dev).nr_blkz +
++					(int)(blks >> sbi->log_blocks_per_blkz);
++#endif
++	}
+ }
+ 
+ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+@@ -1465,6 +1486,15 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 	if (block_count > old_block_count)
+ 		return -EINVAL;
+ 
++	if (f2fs_is_multi_device(sbi)) {
++		int last_dev = sbi->s_ndevs - 1;
++		__u64 last_segs = FDEV(last_dev).total_segments;
++
++		if (block_count + last_segs * sbi->blocks_per_seg <=
++								old_block_count)
++			return -EINVAL;
++	}
++
+ 	/* new fs size should align to section size */
+ 	div_u64_rem(block_count, BLKS_PER_SEC(sbi), &rem);
+ 	if (rem)
+-- 
+1.8.3.1
+
