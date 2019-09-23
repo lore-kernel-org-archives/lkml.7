@@ -3,162 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA7AC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64BC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EDE2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B73217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439949AbfIWREk (ORCPT
+        id S2390939AbfIWRHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:04:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:45666 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 13:07:31 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35720 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732522AbfIWREk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:04:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EBAE1000;
-        Mon, 23 Sep 2019 10:04:39 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E0523F67D;
-        Mon, 23 Sep 2019 10:04:36 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 18:04:34 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jia He <justin.he@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
-Subject: Re: [PATCH v8 3/3] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20190923170433.GE10192@arrakis.emea.arm.com>
-References: <20190921135054.142360-1-justin.he@arm.com>
- <20190921135054.142360-4-justin.he@arm.com>
+        id S1730985AbfIWRHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 13:07:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 10:07:29 -0700
+X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
+   d="scan'208";a="200604852"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 10:07:28 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id DA0B520C9F; Mon, 23 Sep 2019 20:07:25 +0300 (EEST)
+Date:   Mon, 23 Sep 2019 20:07:25 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Message-ID: <20190923170725.GE9467@paasikivi.fi.intel.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
+ <20190919203955.15125-6-bparrot@ti.com>
+ <20190920101706.GX5781@paasikivi.fi.intel.com>
+ <20190920165529.it7urirm6epg4woq@ti.com>
+ <20190923061731.GZ5781@paasikivi.fi.intel.com>
+ <20190923170557.mggr5gcov43pcmfs@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190921135054.142360-4-justin.he@arm.com>
+In-Reply-To: <20190923170557.mggr5gcov43pcmfs@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 09:50:54PM +0800, Jia He wrote:
-> @@ -2151,21 +2163,53 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
->  	 * fails, we just zero-fill it. Live with it.
->  	 */
->  	if (unlikely(!src)) {
-> -		void *kaddr = kmap_atomic(dst);
-> -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-> +		void *kaddr;
-> +		pte_t entry;
-> +		void __user *uaddr = (void __user *)(addr & PAGE_MASK);
->  
-> +		/* On architectures with software "accessed" bits, we would
-> +		 * take a double page fault, so mark it accessed here.
-> +		 */
+On Mon, Sep 23, 2019 at 12:05:57PM -0500, Benoit Parrot wrote:
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2019-Sep-23 09:17:32 +0300]:
+> > Hi Benoit,
+> > 
+> > On Fri, Sep 20, 2019 at 11:55:29AM -0500, Benoit Parrot wrote:
+> > ...
+> > > > > @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
+> > > > >  	    ov2659->xvclk_frequency > 27000000)
+> > > > >  		return -EINVAL;
+> > > > >  
+> > > > > +	/* Optional gpio don't fail if not present */
+> > > > > +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> > > > > +						    GPIOD_OUT_LOW);
+> > > > > +	if (IS_ERR(ov2659->pwdn_gpio))
+> > > > > +		return PTR_ERR(ov2659->pwdn_gpio);
+> > > > > +
+> > > > > +	/* Optional gpio don't fail if not present */
+> > > > > +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > > > > +						      GPIOD_OUT_HIGH);
+> > > > > +	if (IS_ERR(ov2659->resetb_gpio))
+> > > > > +		return PTR_ERR(ov2659->resetb_gpio);
+> > > > > +
+> > > > >  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+> > > > >  	ov2659->link_frequency =
+> > > > >  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> > > > > @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
+> > > > >  	ov2659->frame_size = &ov2659_framesizes[2];
+> > > > >  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+> > > > >  
+> > > > > +	pm_runtime_enable(&client->dev);
+> > > > > +	pm_runtime_get_sync(&client->dev);
+> > > > 
+> > > > This makes the driver depend on runtime PM.
+> > > 
+> > > Obviously.
+> > > Why? Is that bad?
+> > 
+> > Well, if it is, then it should be listed in driver's dependencies in
+> > Kconfig.
+> 
+> And I see that most camera driver using pm_runtime calls don't mark it as a
+> dependency in their own Kconfig. There is actually only one that does.
 
-Nitpick: please follow the kernel coding style for multi-line comments
-(above and the for the rest of the patch):
+Drivers should also work without runtime PM even if they can use it.
 
-		/*
-		 * Your multi-line comment.
-		 */
+> 
+> > 
+> > > 
+> > > > 
+> > > > See e.g. the smiapp driver for an example how to make it work without. It
+> > > > wasn't trivial. :I You won't need autosuspend.
+> > > 
+> > > I took a look at that driver, but I don't get your reference to being able
+> > > to work without runtime pm!
+> > 
+> > The driver didn't need runtime PM, so it'd be nice to continue work
+> > without.
+> 
+> Ok.
+> 
+> > 
+> > What smiapp does is that it powers the sensor on first *without* runtime
+> > PM, and then proceeds to set up runtime PM if it's available. The sensor
+> > will only be powered off when the device is unbound with runtime PM
+> > disabled.
+> 
+> In that case in your original reply you suggested that I move the content
+> of ov2659_set_power() into the pm_runtime callback, but based on this
+> comments then I should keep ov2659_set_power() as is as I  would need to
+> use it for this specific purpose.
 
-> +		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-> +			vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr,
-> +						       &vmf->ptl);
-> +			if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-> +				entry = pte_mkyoung(vmf->orig_pte);
-> +				if (ptep_set_access_flags(vma, addr,
-> +							  vmf->pte, entry, 0))
-> +					update_mmu_cache(vma, addr, vmf->pte);
-> +			} else {
-> +				/* Other thread has already handled the fault
-> +				 * and we don't need to do anything. If it's
-> +				 * not the case, the fault will be triggered
-> +				 * again on the same address.
-> +				 */
-> +				pte_unmap_unlock(vmf->pte, vmf->ptl);
-> +				return false;
-> +			}
-> +			pte_unmap_unlock(vmf->pte, vmf->ptl);
-> +		}
+No need to; you can call the same function elsewhere in the driver (just
+like the smiapp driver does).
 
-Another nit, you could rewrite this block slightly to avoid too much
-indentation. Something like (untested):
-
-		if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-			vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr,
-						       &vmf->ptl);
-			if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte))) {
-				/*
-				 * Other thread has already handled the fault
-				 * and we don't need to do anything. If it's
-				 * not the case, the fault will be triggered
-				 * again on the same address.
-				 */
-				pte_unmap_unlock(vmf->pte, vmf->ptl);
-				return false;
-			}
-			entry = pte_mkyoung(vmf->orig_pte);
-			if (ptep_set_access_flags(vma, addr,
-						  vmf->pte, entry, 0))
-				update_mmu_cache(vma, addr, vmf->pte);
-			pte_unmap_unlock(vmf->pte, vmf->ptl);
-		}
-
-> +
-> +		kaddr = kmap_atomic(dst);
-
-Since you moved the kmap_atomic() here, could the above
-arch_faults_on_old_pte() run in a preemptible context? I suggested to
-add a WARN_ON in patch 2 to be sure.
-
->  		/*
->  		 * This really shouldn't fail, because the page is there
->  		 * in the page tables. But it might just be unreadable,
->  		 * in which case we just give up and fill the result with
->  		 * zeroes.
->  		 */
-> -		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
-> +		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-> +			/* Give a warn in case there can be some obscure
-> +			 * use-case
-> +			 */
-> +			WARN_ON_ONCE(1);
-
-That's more of a question for the mm guys: at this point we do the
-copying with the ptl released; is there anything else that could have
-made the pte old in the meantime? I think unuse_pte() is only called on
-anonymous vmas, so it shouldn't be the case here.
-
->  			clear_page(kaddr);
-> +		}
->  		kunmap_atomic(kaddr);
->  		flush_dcache_page(dst);
->  	} else
-> -		copy_user_highpage(dst, src, va, vma);
-> +		copy_user_highpage(dst, src, addr, vma);
-> +
-> +	return true;
->  }
+> 
+> > 
+> > Regarding the smiapp driver, you can replace pm_runtime_get_noresume() and
+> > all the autoidle lines with pm_runtime_idle() call after
+> > pm_runtime_enable() in the ov2659 driver.
+> 
+> Ok, I'll study this mechanics a little more, as this is not immediately
+> clear.
+> 
+> Benoit
+> 
+> > 
+> > > That driver looks pretty similar to ov7740.c which I used as a reference
+> > > for this.
+> > 
+> > I guess in practice many sensor drivers don't work without it on DT-based
+> > systems I'm afraid. :-( They should be fixed.
+> > 
+> > -- 
+> > Kind regards,
+> > 
+> > Sakari Ailus
+> > sakari.ailus@linux.intel.com
 
 -- 
-Catalin
+Sakari Ailus
+sakari.ailus@linux.intel.com
