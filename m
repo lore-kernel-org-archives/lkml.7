@@ -2,143 +2,142 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0F1C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97361C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8AE20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61322205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YAC7bHog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502574AbfIWUZy (ORCPT
+        id S2502585AbfIWU0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:25:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29910 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387470AbfIWUZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:25:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 13:25:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="388606520"
-Received: from araj-mobl1.jf.intel.com ([10.24.10.67])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Sep 2019 13:25:52 -0700
-Date:   Mon, 23 Sep 2019 13:25:52 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        sanjay.k.kumar@intel.com, kevin.tian@intel.com, yi.l.liu@intel.com,
-        yi.y.sun@intel.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
-Message-ID: <20190923202552.GA21816@araj-mobl1.jf.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122715.53de79d0@jacob-builder>
+        Mon, 23 Sep 2019 16:26:50 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2785 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387796AbfIWU0u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:26:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d892a8f0000>; Mon, 23 Sep 2019 13:26:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 23 Sep 2019 13:26:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 23 Sep 2019 13:26:49 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 20:26:49 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 20:26:48 +0000
+Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
+ method to skip serializing
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Mike Rapoport" <rppt@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Allison Randal" <allison@lohutok.net>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+ <20190920195047.7703-12-leonardo@linux.ibm.com>
+ <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+ <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
+ <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
+ <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
+ <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
+ <dc9fad3577551d34ead36c0f7340a573086c0cab.camel@linux.ibm.com>
+ <1568b3ef-cec9-bf47-edaa-c775c2f544fb@nvidia.com>
+ <c64d34118542d5c2d31b8f6b7802d2a29dac71ef.camel@linux.ibm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <b72cb1db-c341-4963-1a8b-ae71fe936458@nvidia.com>
+Date:   Mon, 23 Sep 2019 13:26:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923122715.53de79d0@jacob-builder>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <c64d34118542d5c2d31b8f6b7802d2a29dac71ef.camel@linux.ibm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1569270415; bh=UcV4RD8PsGQCI3ECb3gttt6xlL6KcQV1be+lYQ3oGQI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YAC7bHogRtgPIDCGrAn3YjCzVWsG5mEgDTDxy0IU3+mLwhkIoPNwCzaPmkkGtXzRh
+         weRUFOOJlmEy9Sz/dY9f8f5cKPG1i70XQiy0zvGnTY5jMbye/VHXDpEJR1T4o9OGfB
+         o5WA9AES+CeS38or7OUyrSaC45pGe6tGv65N4z6JbSKira2HQY3Jd2VySTKp5W9J/A
+         CALJkz1Yl/xD5KTzh+NhlrunFa876dbixft662iNenv3iHTZjqNQKPesiqAn+5QdIw
+         VlJgjCTT0PkI3TlMJExnI6O/TNKmCor4h/aJX5/1Aec/7io6PzXmjPa3eI64+ugo81
+         M/LHDE08SxMkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob
-
-On Mon, Sep 23, 2019 at 12:27:15PM -0700, Jacob Pan wrote:
-> > 
-> > In VT-d 3.0, scalable mode is introduced, which offers two level
-> > translation page tables and nested translation mode. Regards to
-> > GIOVA support, it can be simplified by 1) moving the GIOVA support
-> > over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
-> > 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
-> > second level for GPA->HPA translation, and 4) enable nested (a.k.a.
-> > dual stage) translation in host. Compared with current shadow GIOVA
-> > support, the new approach is more secure and software is simplified
-> > as we only need to flush the pIOMMU IOTLB and possible device-IOTLB
-> > when an IOVA mapping in vIOMMU is torn down.
-> > 
-> >      .-----------.
-> >      |  vIOMMU   |
-> >      |-----------|                 .-----------.
-> >      |           |IOTLB flush trap |   QEMU    |
-> >      .-----------.    (unmap)      |-----------|
-> >      | GVA->GPA  |---------------->|           |
-> >      '-----------'                 '-----------'
-> >      |           |                       |
-> >      '-----------'                       |
-> >            <------------------------------
-> >            |      VFIO/IOMMU          
-> >            |  cache invalidation and  
-> >            | guest gpd bind interfaces
-> >            v
-> For vSVA, the guest PGD bind interface will mark the PASID as guest
-> PASID and will inject page request into the guest. In FL gIOVA case, I
-> guess we are assuming there is no page fault for GIOVA. I will need to
-> add a flag in the gpgd bind such that any PRS will be auto responded
-> with invalid.
-
-Is there real need to enforce this? I'm not sure if there is any
-limitation in the spec, and if so, can the guest check that instead?
-
-Also i believe the idea is to overcommit PASID#0 such uses. Thought
-we had a capability to expose this to the vIOMMU as well. Not sure if this
-is already documented, if not should be up in the next rev.
-
-
+On 9/23/19 1:23 PM, Leonardo Bras wrote:
+> On Mon, 2019-09-23 at 12:58 -0700, John Hubbard wrote:
+>>
+>> CPU 0                            CPU 1
+>> ------                         --------------
+>>                                READ(pte) (re-ordered at run time)
+>>                                atomic_inc(val) (no run-time memory barrier!)
+>>                            
+>> pmd_clear(pte)
+>> if (val)
+>>     run_on_all_cpus(): IPI
+>>                                local_irq_disable() (also not a mem barrier)
+>>
+>>                                if(pte)
+>>                                   walk page tables
 > 
-> Also, native use of IOVA FL map is not to be supported? i.e. IOMMU API
-> and DMA API for native usage will continue to be SL only?
-> >      .-----------.
-> >      |  pIOMMU   |
-> >      |-----------|
-> >      .-----------.
-> >      | GVA->GPA  |<---First level
-> >      '-----------'
-> >      | GPA->HPA  |<---Scond level
-
-s/Scond/Second
-
-> >      '-----------'
-> >      '-----------'
-> > 
-> > This patch series only aims to achieve the first goal, a.k.a using
-> > first level translation for IOVA mappings in vIOMMU. I am sending
-> > it out for your comments. Any comments, suggestions and concerns are
-> > welcomed.
-> > 
+> Let me see if I can understand,
+> On most patches, it would be:
+> 
+> CPU 0                            CPU 1
+> ------				--------------
+> 				ptep = __find_linux_pte  
+> 				(re-ordered at run time)
+> 				atomic_inc(val) 
+> pmd_clear(pte)
+> smp_mb()
+> if (val)
+>     run_on_all_cpus(): IPI
+>                                local_irq_disable() 
+> 
+>                                if(ptep)
+>                                   pte = *ptep;
+> 
+> Is that what you meant?
 > 
 > 
-> > Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
-> > Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
-> > Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
-> > Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-> > 
-> > Lu Baolu (4):
-> >   iommu/vt-d: Move domain_flush_cache helper into header
-> >   iommu/vt-d: Add first level page table interfaces
-> >   iommu/vt-d: Map/unmap domain with mmmap/mmunmap
-> >   iommu/vt-d: Identify domains using first level page table
-> > 
-> >  drivers/iommu/Makefile             |   2 +-
-> >  drivers/iommu/intel-iommu.c        | 142 ++++++++++--
-> >  drivers/iommu/intel-pgtable.c      | 342
-> > +++++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
-> > 31 ++- include/trace/events/intel_iommu.h |  60 +++++
-> >  5 files changed, 553 insertions(+), 24 deletions(-)
-> >  create mode 100644 drivers/iommu/intel-pgtable.c
-> > 
-> 
-> [Jacob Pan]
+
+Yes.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
