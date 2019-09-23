@@ -2,104 +2,86 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164A1C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABCAC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC75920882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569257761;
-	bh=DU2kvNAIuhXyViG+3qbXnYW3t67qH6zaHBJaAJ37H8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f5Sd0fHRuRjZ2Un50ZIKPEGtQlMdNxYiuAxC/7GA+UpILDA8dx1XOKkuBi0FMw3Og
-	 K18cbESCc1lqNrucOn9Oa4aicp+hLmJjUFITVVsOWvGwiYE40FdOQ6XcPTBM/qKMMU
-	 iG/a3omQrhH/gI7Lj8BzcyYMuDQ88OxN8ULbMm1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 22A4F20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502149AbfIWQ4B (ORCPT
+        id S2502155AbfIWQ6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390958AbfIWQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:56:00 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B763D20882
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569257760;
-        bh=DU2kvNAIuhXyViG+3qbXnYW3t67qH6zaHBJaAJ37H8Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W9bfH39DgA7GJ61wpbNIC3KxO+72UURchqn5gujrTaavCAUDeEsPUV9uf/su4G98t
-         qMmk1536yB+trjWQANtZPaq9B3DjabiuDqpJ9G1vk2HjVDkpr12NXwYTI4c3vXsmOS
-         vUZUxAy4xmO8Via5KVHegiMYh0eccmCKMmeMxr1o=
-Received: by mail-wm1-f43.google.com with SMTP id i16so10819410wmd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:55:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAWpobi698bPfhkFv6/NlhAq3hfH6G6wZgQzOmiga0j8+rtrz812
-        LCTJh5lBx6VJlZVyJGEzfnMcTeCTdhFN3MwQIUs=
-X-Google-Smtp-Source: APXvYqynnlhLNQb+vzw7v316LJr1OcvxaOGPR0DH2hBkNnTxi30s7EaaxQQsgqus/AWzlzZEGjzocNaFzXGkZeSdMf4=
-X-Received: by 2002:a1c:9dc1:: with SMTP id g184mr439636wme.77.1569257758290;
- Mon, 23 Sep 2019 09:55:58 -0700 (PDT)
+        Mon, 23 Sep 2019 12:58:09 -0400
+Received: from scorn.kernelslacker.org ([45.56.101.199]:49212 "EHLO
+        scorn.kernelslacker.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390958AbfIWQ6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:58:09 -0400
+Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
+        by scorn.kernelslacker.org with esmtp (Exim 4.92)
+        (envelope-from <davej@codemonkey.org.uk>)
+        id 1iCRf5-0003Pz-D9; Mon, 23 Sep 2019 12:58:07 -0400
+Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
+        id 01610560162; Mon, 23 Sep 2019 12:58:06 -0400 (EDT)
+Date:   Mon, 23 Sep 2019 12:58:06 -0400
+From:   Dave Jones <davej@codemonkey.org.uk>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
+Subject: Re: ntp audit spew.
+Message-ID: <20190923165806.GA21466@codemonkey.org.uk>
+Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
+        Paul Moore <paul@paul-moore.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
+References: <20190923155041.GA14807@codemonkey.org.uk>
+ <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190923143620.29334-1-valentin.schneider@arm.com> <20190923143620.29334-4-valentin.schneider@arm.com>
-In-Reply-To: <20190923143620.29334-4-valentin.schneider@arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 24 Sep 2019 00:55:47 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTT_H3wadP1d1vrnqAXivkrew2X+ShO9nJhJMk77v_VdQw@mail.gmail.com>
-Message-ID: <CAJF2gTT_H3wadP1d1vrnqAXivkrew2X+ShO9nJhJMk77v_VdQw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] csky: entry: Remove unneeded need_resched() loop
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, I'll put in my tree :)
+On Mon, Sep 23, 2019 at 12:14:14PM -0400, Paul Moore wrote:
+ > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
+ > >
+ > > I have some hosts that are constantly spewing audit messages like so:
+ > >
+ > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
+ > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
+ > > [48850.604005] audit: type=1333 audit(1569252241.675:222): op=offset old=1850302393317 new=3190241577926
+ > > [48850.604008] audit: type=1333 audit(1569252241.675:223): op=freq old=-2436281764244 new=-2413071187316
+ > > [49926.567270] audit: type=1333 audit(1569253317.638:224): op=offset old=2453141035832 new=2372389610455
+ > > [49926.567273] audit: type=1333 audit(1569253317.638:225): op=freq old=-2413071187316 new=-2403561671476
+ > >
+ > > This gets emitted every time ntp makes an adjustment, which is apparently very frequent on some hosts.
+ > >
+ > >
+ > > Audit isn't even enabled on these machines.
+ > >
+ > > # auditctl -l
+ > > No rules
+ > 
+ > What happens when you run 'auditctl -a never,task'?  That *should*
+ > silence those messages as the audit_ntp_log() function has the
+ > requisite audit_dummy_context() check.
 
-On Mon, Sep 23, 2019 at 10:36 PM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> Since the enabling and disabling of IRQs within preempt_schedule_irq()
-> is contained in a need_resched() loop, we don't need the outer arch
-> code loop.
->
-> Acked-by: Guo Ren <guoren@kernel.org>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
->  arch/csky/kernel/entry.S | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-> index a7e84ccccbd8..679afbcc2001 100644
-> --- a/arch/csky/kernel/entry.S
-> +++ b/arch/csky/kernel/entry.S
-> @@ -292,11 +292,7 @@ ENTRY(csky_irq)
->         ldw     r8, (r9, TINFO_FLAGS)
->         btsti   r8, TIF_NEED_RESCHED
->         bf      2f
-> -1:
->         jbsr    preempt_schedule_irq    /* irq en/disable is done inside */
-> -       ldw     r7, (r9, TINFO_FLAGS)   /* get new tasks TI_FLAGS */
-> -       btsti   r7, TIF_NEED_RESCHED
-> -       bt      1b                      /* go again */
->  #endif
->  2:
->         jmpi    ret_from_exception
-> --
-> 2.22.0
->
+They still get emitted.
 
+ > FWIW, this is the distro
+ > default for many (most? all?) distros; for example, check
+ > /etc/audit/audit.rules on a stock Fedora system.
 
--- 
-Best Regards
- Guo Ren
+As these machines aren't using audit, they aren't running auditd either.
+Essentially: nothing enables audit, but the kernel side continues to log
+ntp regardless (no other audit messages seem to do this).
 
-ML: https://lore.kernel.org/linux-csky/
+	Dave
+
