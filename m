@@ -2,99 +2,154 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC329C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F7DC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9210820835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXLOA+1T"
+	by mail.kernel.org (Postfix) with ESMTP id 6207120835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392687AbfIWJrA (ORCPT
+        id S2407251AbfIWJrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:47:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38856 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390596AbfIWJrA (ORCPT
+        Mon, 23 Sep 2019 05:47:21 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:40840 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390596AbfIWJrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:47:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so8507425wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5elTXzM6xlr8PjUTcrYvX5g+KiCaroLiG/40wyuwe8s=;
-        b=IXLOA+1T4aETvd3O9XWO8iNbUKNrgVGLqUimU+DN5SdqYCrVRZFp8ITqo/SWtvODY0
-         do42IgUiw7g5IRxm+5mARa1kr+2mJZ9xHZG5RtJdz3jQy78nhtyO+hhK2LRtxaXt6vAA
-         GJSvkFzeWH/nmuHeBbublaFZmxG4xXf7MtqxuhtFTm5rPWEOb0IEx9q5mpsYyQplCcIs
-         2Jp5ygJxcv+yaVO2bscDRYdWJYIHUEZJPZEu9SKFIreP4Y5NTUo6GQBQ05dVJkncyigx
-         5PuEw/l0x/EC+6GoSsSAU7sLk6gnXsA0W/Hofb6yWadlH/VJOt4hIJbHEixQxjNPsFr1
-         FFkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5elTXzM6xlr8PjUTcrYvX5g+KiCaroLiG/40wyuwe8s=;
-        b=RPAkSBnX3TL93zX8GTJr9C9ffGEoSdbYwJ2bySrVi06sjCEwmQMuSoQ6VFta6e3cGh
-         DYvI+Cp7ifKcN76zC5OVynAbMOYWXXyyXGym4Ho0/PQNFjRKPi+eBKKLPI+KXZjxXGlE
-         3Ldm+hLy11nCezYXael7grJWepceQ1yx9SuqUqGvdJpc1v7WLmF4qHZcCq9SvhI5XMZz
-         xvyYqerRNiuQwZH0muMkMkJIUZ907O332nSv6vGFMhd/AZtUH8UNLMXOw8CfRjSTPQRv
-         RxZ7DlIkXBvOEt+jIiZnWENYXEMtkiKeSFBGOE2kfuZpL1A8Ce3Hwc5//4KHEFmCnVQS
-         UOaQ==
-X-Gm-Message-State: APjAAAWGeL4N6+v2TKEvV45LW+JvLLmcSKsdboKNDqWs66WL5GLXlcLn
-        Csn74R/DnSWiX1aLxn+04vQ13Kj6
-X-Google-Smtp-Source: APXvYqy93ietjX1bSVrNtVPwZS+jbfnCafIE+1DjFr1b+2lowlovhD+hOJDzgtxTj7pFEKe6Yu2tnQ==
-X-Received: by 2002:a05:600c:241:: with SMTP id 1mr12931695wmj.162.1569232017788;
-        Mon, 23 Sep 2019 02:46:57 -0700 (PDT)
-Received: from [10.43.17.245] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o19sm13347126wro.50.2019.09.23.02.46.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 02:46:57 -0700 (PDT)
-Subject: Re: [dm-devel] dm-crypt error when CONFIG_CRYPTO_AUTHENC is disabled
-To:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Alasdair Kergon <agk@redhat.com>, linux-kernel@vger.kernel.org
-References: <20190920154434.GA923@gandi.net>
- <20190920173707.GA21143@redhat.com>
- <13e25b01-f344-ea1d-8f6c-9d0a60eb1e0f@gmail.com>
- <20190920212746.GA22061@redhat.com> <20190920214758.GA162854@gmail.com>
- <20190923082016.GA913@gandi.net>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <f820c3e8-8538-ac95-9303-eeee77c903ee@gmail.com>
-Date:   Mon, 23 Sep 2019 11:46:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190923082016.GA913@gandi.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Sep 2019 05:47:21 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: from pc-niv.weinmann.com (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 7C9944D1BF;
+        Mon, 23 Sep 2019 11:47:18 +0200 (CEST)
+From:   Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Moore, Robert" <robert.moore@intel.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org, nv@vosn.de,
+        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Subject: [PATCH] ACPICA: Introduce acpi_load_table_with_index()
+Date:   Mon, 23 Sep 2019 11:47:01 +0200
+Message-Id: <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <6851700.HULMXZj6Ep@kreacher>
+References: <6851700.HULMXZj6Ep@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 10:20, Thibaut Sautereau wrote:
-> 
-> On top of that, there's no hint in kernel logs about a particular
-> algorithm, feature or Kconfig option that could be missing. Do we really
-> expect people simply tuning their kernel configuration to go and read
-> the source code to ensure they are not breaking their system?
+For unloading an ACPI table, it is necessary to provide the
+index of the table. The method intended for dynamically
+loading or hotplug addition of tables, acpi_load_table(),
+does not provide this information, so a new function
+acpi_load_table_with_index() with the same functionality,
+but an optional pointer to the loaded table index is introduced.
 
-AFAIK all standard Linux kernels in distros have these options enabled,
-so it works out of the box.
+The new function is used in the acpi_configfs driver to save the
+index of the newly loaded table in order to unload it later.
 
-So it is the opposite view - if you are setting your kernel options,
-you need to dig much deeper...
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
+Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+---
+ drivers/acpi/acpi_configfs.c   |  2 +-
+ drivers/acpi/acpica/tbxfload.c | 43 ++++++++++++++++++++++++++++++++++
+ include/acpi/acpixf.h          |  6 +++++
+ 3 files changed, 50 insertions(+), 1 deletion(-)
 
-I can perhaps add some hint to userspace if this is detectable from errno though.
+diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+index 57d9d574d4dd..9e77d5a266c0 100644
+--- a/drivers/acpi/acpi_configfs.c
++++ b/drivers/acpi/acpi_configfs.c
+@@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+ 	if (!table->header)
+ 		return -ENOMEM;
+ 
+-	ret = acpi_load_table(table->header);
++	ret = acpi_load_table_with_index(table->header, &table->index);
+ 	if (ret) {
+ 		kfree(table->header);
+ 		table->header = NULL;
+diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
+index 86f1693f6d29..7ea4fc879cb6 100644
+--- a/drivers/acpi/acpica/tbxfload.c
++++ b/drivers/acpi/acpica/tbxfload.c
+@@ -309,6 +309,49 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
+ 
+ ACPI_EXPORT_SYMBOL(acpi_load_table)
+ 
++/*******************************************************************************
++ *
++ * FUNCTION:    acpi_load_table_with_index
++ *
++ * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
++ *                                    table to be loaded.
++ *              table_idx           - Pointer to a u32 for storing the table
++ *                                    index, might be NULL
++ * RETURN:      Status
++ *
++ * DESCRIPTION: see acpi_load_table() above. Additionally returns the index
++ *              of the newly created table in table_idx.
++ *
++ ******************************************************************************/
++acpi_status acpi_load_table_with_index(struct acpi_table_header *table,
++				       u32 *table_idx)
++{
++	acpi_status status;
++	u32 table_index;
++
++	ACPI_FUNCTION_TRACE(acpi_load_table_with_index);
++
++	/* Parameter validation */
++	if (!table)
++		return_ACPI_STATUS(AE_BAD_PARAMETER);
++
++	/* Install the table and load it into the namespace */
++	ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
++	status = acpi_tb_install_and_load_table(
++		ACPI_PTR_TO_PHYSADDR(table), ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
++		FALSE, &table_index);
++	if (table_idx)
++		*table_idx = table_index;
++
++	if (ACPI_SUCCESS(status)) {
++		/* Complete the initialization/resolution of new objects */
++		acpi_ns_initialize_objects();
++	}
++
++	return_ACPI_STATUS(status);
++}
++ACPI_EXPORT_SYMBOL(acpi_load_table_with_index)
++
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_unload_parent_table
+diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
+index e5e041413581..af375ab318de 100644
+--- a/include/acpi/acpixf.h
++++ b/include/acpi/acpixf.h
+@@ -460,6 +460,12 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+ 			    acpi_load_table(struct acpi_table_header *table))
+ 
++
++ACPI_EXTERNAL_RETURN_STATUS(acpi_status
++			    acpi_load_table_with_index(
++				    struct acpi_table_header *table,
++				    u32 *table_idx))
++
+ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+ 			    acpi_unload_parent_table(acpi_handle object))
+ 
+-- 
+2.17.1
 
-Milan
