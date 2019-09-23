@@ -2,82 +2,77 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C428C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38814C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EEB21841
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D4020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfIWTVd (ORCPT
+        id S1728221AbfIWTVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:21:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1455 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfIWTVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:21:32 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DFC213082E4E;
-        Mon, 23 Sep 2019 19:21:32 +0000 (UTC)
-Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BAF2160BFB;
-        Mon, 23 Sep 2019 19:21:32 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 15:21:31 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/17] KVM: monolithic: x86: convert the kvm_x86_ops
- methods to external functions
-Message-ID: <20190923192131.GD19996@redhat.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-3-aarcange@redhat.com>
- <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
+        Mon, 23 Sep 2019 15:21:49 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36248 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbfIWTVt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:21:49 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCTu7-0000C1-H5; Mon, 23 Sep 2019 19:21:47 +0000
+Date:   Mon, 23 Sep 2019 20:21:47 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] several more mount API conversions
+Message-ID: <20190923192147.GC26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 23 Sep 2019 19:21:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:19:30PM +0200, Paolo Bonzini wrote:
-> On 20/09/19 23:24, Andrea Arcangeli wrote:
-> > diff --git a/arch/x86/kvm/svm_ops.c b/arch/x86/kvm/svm_ops.c
-> > new file mode 100644
-> > index 000000000000..2aaabda92179
-> > --- /dev/null
-> > +++ b/arch/x86/kvm/svm_ops.c
-> > @@ -0,0 +1,672 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + *  arch/x86/kvm/svm_ops.c
-> > + *
-> > + *  Copyright 2019 Red Hat, Inc.
-> > + */
-> > +
-> > +int kvm_x86_ops_cpu_has_kvm_support(void)
-> > +{
-> > +	return has_svm();
-> > +}
-> 
-> Can you just rename all the functions in vmx/ and svm.c, instead of
-> adding forwarders?
+	Assorted conversions of options parsing to new API.
+gfs2 is probably the most serious one here; the rest is
+trivial stuff.  Other things in what used to be #work.mount
+are going to wait for the next cycle (and preferably go via
+git trees of the filesystems involved).
 
-I can do that, I thought this was cleaner as it still retained the
-abstraction separated from the mixup of the rest of the vmx/svm code,
-but it'll work the same by dropping the abstraction in kvm_ops.h and
-just maintaining a common name between the svm.c and vmx.c files, gcc
-already built it that way after all.
+The following changes since commit 74983ac20aeafc88d9ceed64a8bf2a9024c488d5:
+
+  vfs: Make fs_parse() handle fs_param_is_fd-type params better (2019-09-12 21:06:14 -0400)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount3
+
+for you to fetch changes up to 1f52aa08d12f8d359e71b4bfd73ca9d5d668e4da:
+
+  gfs2: Convert gfs2 to fs_context (2019-09-18 22:47:05 -0400)
+
+----------------------------------------------------------------
+Andrew Price (1):
+      gfs2: Convert gfs2 to fs_context
+
+David Howells (5):
+      vfs: Convert bpf to use the new mount API
+      vfs: Convert functionfs to use the new mount API
+      hypfs: Fix error number left in struct pointer member
+      vfs: Convert hypfs to use the new mount API
+      vfs: Convert spufs to use the new mount API
+
+ arch/powerpc/platforms/cell/spufs/inode.c | 207 +++++++------
+ arch/s390/hypfs/inode.c                   | 137 +++++----
+ drivers/usb/gadget/function/f_fs.c        | 233 +++++++-------
+ fs/gfs2/incore.h                          |   8 +-
+ fs/gfs2/ops_fstype.c                      | 495 ++++++++++++++++++++++--------
+ fs/gfs2/super.c                           | 333 +-------------------
+ fs/gfs2/super.h                           |   3 +-
+ kernel/bpf/inode.c                        |  92 ++++--
+ 8 files changed, 749 insertions(+), 759 deletions(-)
