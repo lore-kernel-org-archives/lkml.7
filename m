@@ -2,126 +2,100 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C857DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF8C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B4F2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cn+X8r4N"
+	by mail.kernel.org (Postfix) with ESMTP id D157720835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408136AbfIWN5B (ORCPT
+        id S2408273AbfIWN6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:57:01 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40915 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406362AbfIWN5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:57:00 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so8059109pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vh231WMV2ivWs55DEErMfh8G5ByHHFCoNJUSWzLVISU=;
-        b=cn+X8r4N29tWYhUPaIF9sgpCyWWDn5rzKDhmPhMpd6+EovbrDiKU4kleehawYApRCY
-         fCZijjEsZtcLK+chNOmk0QVamPsXX4shbo1HalDXbsFHMbaGBwYYSjkV/lMIsi+9db4Y
-         EhVBWHBjDfy0Kh1IPA4zbFyitBp9jARKh+Kz5eQPSTsW+f/8c3AXscIc+HQju4X8XDpH
-         +uusOt3917tb0v7Fi/Ia49dbzRcJ1ON2KyjoPFDEybGqNdbzbyyNYRkrAbnihbZd42ul
-         eVHMZLPI3/Zq+V4vvDgt3hltjL9KRupNZOaBYoZN5dA4e0s2Rlimp/5v26DIS4hUsaN3
-         dZvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vh231WMV2ivWs55DEErMfh8G5ByHHFCoNJUSWzLVISU=;
-        b=qSxwWg2PWuoDSYou/pPrOMr/AxnRhX5QI7BUMWKAKUTeqzazREP3gtUeWQNUYSHQCS
-         rhMzem7tMe/dvlUNgiw8YKsFzJN8xMgISZvqb+sa0kBkeZ4rETT6eh8DrMrYmIMMBVL+
-         /sLqDgP8BM+VKws7QIZJsUGua3ghMS45l3S19IbuWJlLRUB0Zn4HnnzC9AMiV04qN7Qe
-         okSIwPVwRDrKWPgUvB7n3t9pBTNqwRInYAQJ2uSN+Tuw+XfEXP5xuoYTMTumCI0AZItz
-         0iK2vSTNVisoKeUcseweBXDdUR0OqEg3xsDyOuWgiOjzv8THmiCkPilAKKIXR85MLKZm
-         XqBQ==
-X-Gm-Message-State: APjAAAVifR1NulMODu2KYF+MbL9jQNLSnqDnBGznT4IdjceRUlRiNA9F
-        sDpAvyCNSC94rPXXfmA4+y47QQ==
-X-Google-Smtp-Source: APXvYqy25l2lGHysPit/QeYW2D3xxOswz/kQvKmjC7grygQ6MEygsYLyqXGOeVrHJDihF8TAlwLLkQ==
-X-Received: by 2002:a65:5546:: with SMTP id t6mr59005pgr.441.1569247019584;
-        Mon, 23 Sep 2019 06:56:59 -0700 (PDT)
-Received: from localhost ([12.206.46.61])
-        by smtp.gmail.com with ESMTPSA id 1sm14156061pff.39.2019.09.23.06.56.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Sep 2019 06:56:55 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 19:26:54 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
-        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-Message-ID: <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+        Mon, 23 Sep 2019 09:58:17 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:42102 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408172AbfIWN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:58:16 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 4AA10600EF;
+        Mon, 23 Sep 2019 15:58:14 +0200 (CEST)
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jlu@pengutronix.de, yibin.gong@nxp.com, fugang.duan@nxp.com,
+        l.stach@pengutronix.de, dan.j.williams@intel.com, vkoul@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philipp Puschmann <philipp.puschmann@emlix.com>
+Subject: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
+Date:   Mon, 23 Sep 2019 15:58:06 +0200
+Message-Id: <20190923135808.815-2-philipp.puschmann@emlix.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190923135808.815-1-philipp.puschmann@emlix.com>
+References: <20190923135808.815-1-philipp.puschmann@emlix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-09-19, 23:12, Dmitry Osipenko wrote:
-> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
-> 
-> 
-> [   87.952369] ==================================================================
-> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
-> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
-> 
-> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
-> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
-> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
-> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
-> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
-> (print_address_description.constprop.0+0x3d/0x340)
-> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
-> (__kasan_report+0xe3/0x12c)
-> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
-> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
-> (blocking_notifier_chain_register+0x29/0x3c)
-> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
-> (dev_pm_qos_add_notifier+0x79/0xf8)
-> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
+buffer, when 0 ARM owns it. When processing the buffers in
+sdma_update_channel_loop the ownership of the currently processed
+buffer was set to SDMA again before running the callback function of
+the buffer and while the sdma script may be running in parallel. So
+there was the possibility to get the buffer overwritten by SDMA before
+it has been processed by kernel leading to kind of random errors in the
+upper layers, e.g. bluetooth.
 
-Hi Dmitry,
+Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+---
 
-Unfortunately I am traveling right now and can't test this stuff, though I may
-have found the root cause here. Can you please test the below diff for me ?
+Changelog v5:
+ - no changes
 
-diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
-index 6c90fd7e2ff8..9ac244ee05fe 100644
---- a/drivers/base/power/qos.c
-+++ b/drivers/base/power/qos.c
-@@ -328,6 +328,8 @@ void dev_pm_qos_constraints_destroy(struct device *dev)
-        spin_unlock_irq(&dev->power.lock);
+Changelog v4:
+ - fixed the fixes tag
  
-        kfree(qos->resume_latency.notifiers);
-+       kfree(qos->min_frequency.notifiers);
-+       kfree(qos->max_frequency.notifiers);
-        kfree(qos);
- 
-  out:
+Changelog v3:
+ - use correct dma_wmb() instead of dma_wb()
+ - add fixes tag
 
+Changelog v2:
+ - add dma_wb()
+ 
+ drivers/dma/imx-sdma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 9ba74ab7e912..b42281604e54 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+ 		*/
+ 
+ 		desc->chn_real_count = bd->mode.count;
+-		bd->mode.status |= BD_DONE;
+ 		bd->mode.count = desc->period_len;
+ 		desc->buf_ptail = desc->buf_tail;
+ 		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
+@@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+ 		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
+ 		spin_lock(&sdmac->vc.lock);
+ 
++		dma_wmb();
++		bd->mode.status |= BD_DONE;
++
+ 		if (error)
+ 			sdmac->status = old_status;
+ 	}
 -- 
-viresh
+2.23.0
+
