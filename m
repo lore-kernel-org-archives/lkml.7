@@ -2,133 +2,117 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7251C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC05C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9976E2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08E72089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389028AbfIWQgj (ORCPT
+        id S2389354AbfIWQhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:36:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57188 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732791AbfIWQgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:36:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95C04AF41;
-        Mon, 23 Sep 2019 16:36:35 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
-Date:   Mon, 23 Sep 2019 18:36:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 12:37:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60880 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389180AbfIWQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:37:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 09:37:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
+   d="scan'208";a="389536570"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Sep 2019 09:37:46 -0700
+Date:   Mon, 23 Sep 2019 09:37:46 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+Message-ID: <20190923163746.GE18195@linux.intel.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-16-aarcange@redhat.com>
+ <87o8zb8ik1.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190826111627.7505-3-vbabka@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8zb8ik1.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 1:16 PM, Vlastimil Babka wrote:
-> In most configurations, kmalloc() happens to return naturally aligned (i.e.
-> aligned to the block size itself) blocks for power of two sizes. That means
-> some kmalloc() users might unknowingly rely on that alignment, until stuff
-> breaks when the kernel is built with e.g.  CONFIG_SLUB_DEBUG or CONFIG_SLOB,
-> and blocks stop being aligned. Then developers have to devise workaround such
-> as own kmem caches with specified alignment [1], which is not always practical,
-> as recently evidenced in [2].
+On Mon, Sep 23, 2019 at 11:31:58AM +0200, Vitaly Kuznetsov wrote:
+> Andrea Arcangeli <aarcange@redhat.com> writes:
 > 
-> The topic has been discussed at LSF/MM 2019 [3]. Adding a 'kmalloc_aligned()'
-> variant would not help with code unknowingly relying on the implicit alignment.
-> For slab implementations it would either require creating more kmalloc caches,
-> or allocate a larger size and only give back part of it. That would be
-> wasteful, especially with a generic alignment parameter (in contrast with a
-> fixed alignment to size).
+> > It's enough to check the exit value and issue a direct call to avoid
+> > the retpoline for all the common vmexit reasons.
+> >
+> > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 24 ++++++++++++++++++++++--
+> >  1 file changed, 22 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index a6e597025011..9aa73e216df2 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -5866,9 +5866,29 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+> >  	}
+> >  
+> >  	if (exit_reason < kvm_vmx_max_exit_handlers
+> > -	    && kvm_vmx_exit_handlers[exit_reason])
+> > +	    && kvm_vmx_exit_handlers[exit_reason]) {
+> > +#ifdef CONFIG_RETPOLINE
+> > +		if (exit_reason == EXIT_REASON_MSR_WRITE)
+> > +			return handle_wrmsr(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
+> > +			return handle_preemption_timer(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
+> > +			return handle_interrupt_window(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
+> > +			return handle_external_interrupt(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_HLT)
+> > +			return handle_halt(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
+> > +			return handle_pause(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_MSR_READ)
+> > +			return handle_rdmsr(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_CPUID)
+> > +			return handle_cpuid(vcpu);
+> > +		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
+> > +			return handle_ept_misconfig(vcpu);
+> > +#endif
+> >  		return kvm_vmx_exit_handlers[exit_reason](vcpu);
 > 
-> Ideally we should provide to mm users what they need without difficult
-> workarounds or own reimplementations, so let's make the kmalloc() alignment to
-> size explicitly guaranteed for power-of-two sizes under all configurations.
-> What this means for the three available allocators?
-> 
-> * SLAB object layout happens to be mostly unchanged by the patch. The
->   implicitly provided alignment could be compromised with CONFIG_DEBUG_SLAB due
->   to redzoning, however SLAB disables redzoning for caches with alignment
->   larger than unsigned long long. Practically on at least x86 this includes
->   kmalloc caches as they use cache line alignment, which is larger than that.
->   Still, this patch ensures alignment on all arches and cache sizes.
-> 
-> * SLUB layout is also unchanged unless redzoning is enabled through
->   CONFIG_SLUB_DEBUG and boot parameter for the particular kmalloc cache. With
->   this patch, explicit alignment is guaranteed with redzoning as well. This
->   will result in more memory being wasted, but that should be acceptable in a
->   debugging scenario.
-> 
-> * SLOB has no implicit alignment so this patch adds it explicitly for
->   kmalloc(). The potential downside is increased fragmentation. While
->   pathological allocation scenarios are certainly possible, in my testing,
->   after booting a x86_64 kernel+userspace with virtme, around 16MB memory
->   was consumed by slab pages both before and after the patch, with difference
->   in the noise.
-> 
-> [1] https://lore.kernel.org/linux-btrfs/c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr/
-> [2] https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/
-> [3] https://lwn.net/Articles/787740/
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> I agree with the identified set of most common vmexits, however, this
+> still looks a bit random. Would it be too much if we get rid of
+> kvm_vmx_exit_handlers completely replacing this code with one switch()?
 
-So if anyone thinks this is a good idea, please express it (preferably
-in a formal way such as Acked-by), otherwise it seems the patch will be
-dropped (due to a private NACK, apparently).
+Hmm, that'd require redirects for nVMX functions since they are set at
+runtime.  That isn't necessarily a bad thing.  The approach could also be
+used if Paolo's idea of making kvm_vmx_max_exit_handlers const allows the
+compiler to avoid retpoline.
 
-Otherwise I don't think there can be an objective conclusion. On the one
-hand we avoid further problems and workarounds due to misalignment (or
-objects allocated beyond page boundary, which was only recently
-mentioned), on the other hand we potentially make future changes to
-SLAB/SLUB or hypotetical new implementation either more complicated, or
-less effective due to extra fragmentation. Different people can have
-different opinions on what's more important.
+E.g.:
 
-Let me however explain why I think we don't have to fear the future
-implementation complications that much. There was an argument IIRC that
-extra non-debug metadata could start to be prepended/appended to an
-object in the future (i.e. RCU freeing head?).
+static int handle_vmx_instruction(struct kvm_vcpu *vcpu)
+{
+	if (nested)
+		return nested_vmx_handle_exit(vcpu);
 
-1) Caches can be already created with explicit alignment, so a naive
-pre/appending implementation would already waste memory on such caches.
-2) Even without explicit alignment, a single slab cache for 512k objects
-with few bytes added to each object would waste almost 512k as the
-objects wouldn't fit precisely in an (order-X) page. The percentage
-wasted depends on X.
-3) Roman recently posted a patchset [1] that basically adds a cgroup
-pointer to each object. The implementation doesn't append it to objects
-naively however, but adds a separately allocated array. Alignment is
-thus unchanged.
-
-[1] https://lore.kernel.org/linux-mm/20190905214553.1643060-1-guro@fb.com/
-
+	kvm_queue_exception(vcpu, UD_VECTOR);
+	return 1;
+}
