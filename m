@@ -2,118 +2,102 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56428C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539FBC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1141520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2774D207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIpSBZz7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DUU3BOMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732104AbfIWPg7 (ORCPT
+        id S1732168AbfIWPh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:36:59 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35327 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732063AbfIWPg5 (ORCPT
+        Mon, 23 Sep 2019 11:37:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43380 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfIWPh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:36:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so9361975pfw.2;
-        Mon, 23 Sep 2019 08:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ijALtNMVDCbRngnlUemEOMqxh/pmlAYjBmJTRLvXFqE=;
-        b=DIpSBZz7HEpByiy/fNz+JyvxDoOOZ09A1dZh+X8HnqtM5NW+KIAJsZQmVDgSOuMb51
-         fvaPBwl7+oOS2zuhPyNx2n9sJAlkYZ4uzrWBhgHdJr819RN1sqFlY1Z8Q+foyPZwjpld
-         tGomb12TZLB/14W77hjoI/d/+HRTYEWUnDRyIZSvfvXAt8H7LXJgCqfqE/ggQLVu2BWa
-         skwtb/LGV3PeMt/HfCAG78fsKI0rFSzldjNsCb2AO8odTztYE4nm1kYM1VGzMvRXJWeZ
-         ahHYP/K8Gt1JAQLHv4GJkiaf6LIH6iSvR4y5bhwNkYZSTWUzRj0UkZrtAgeMnB3Kq8Xq
-         ZjeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ijALtNMVDCbRngnlUemEOMqxh/pmlAYjBmJTRLvXFqE=;
-        b=grlbC6rwY5ALT8FU0p1I1Bav5RNSTsVTjpfkk8VWU0ioz18b4Zpv1aYgM7ECQQT+/r
-         BChv7LESWJBJYKWKAvoqw9HXBzVfkkaZ9F2m9OTPo7PTQYY1RSYeMWKeTmpZFtF0kbma
-         J6EloPY+a5Y2wz2wT09nyHlT7hudQUnrs92Mh+ktoculXl7i9Y6GHsTYStg51h8DMmmz
-         y57PP+a3UxkgfQIRIq+czZ/QpkUOYZ+rSmoVeJowxS7avkYW3Pg6W5xUteFKgkMjlrsR
-         qg3B0wXGHRKfq5nZbEjqSkXw3IRTKsrMxfQJSMyIC25fBfiKYWJ+ZzoWv4JxVXVH+R8o
-         wCtw==
-X-Gm-Message-State: APjAAAXxaw/UWx/6M+fJhIubR9A/fZ6t/k/YFNO2+QYmmfr9oVx8Ynse
-        7dZz9/nMH04h+w2qP5+jLATzoipuN6Q=
-X-Google-Smtp-Source: APXvYqxKErLEPgwToF1xjIjSrEMsm45EEQIHxCIhG0rhsc/BFBsX8V6p0M59fQ9mrKhJjz5R5wCksw==
-X-Received: by 2002:a65:4785:: with SMTP id e5mr498575pgs.407.1569253016423;
-        Mon, 23 Sep 2019 08:36:56 -0700 (PDT)
-Received: from [10.230.28.130] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b5sm17838111pfp.38.2019.09.23.08.36.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 08:36:55 -0700 (PDT)
-Subject: Re: [GIT PULL] MIPS changes
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-References: <20190921231022.kawfomtmka737arq@pburton-laptop>
- <CAHk-=wjmJbF3p9vZTW2nbeD4LkG-JZV+uqv8BnxzojJ5SZsLjw@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <ac8e3a45-5efe-0e60-3ee0-1a5dbcfa8fc2@gmail.com>
-Date:   Mon, 23 Sep 2019 08:36:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 23 Sep 2019 11:37:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HwVxnNpp1n9OA+fVGYRWNY81ByHgzbvYySZmkNsPir4=; b=DUU3BOMoLfS6XyZ4vX2N30p+5
+        1mukSx1t4eKaeRVjA11BqrRKFTAlUXc6iPM1lGEnOcBsGGRb9LxT4dtUNab93sI0CVTrvWbrmecj8
+        JvyhmaWm42JOLJOghiqYdNSduNLUY/bcsr58hqmrU8X8zdcWdWV5865p6WY9RDN/DByZ59VpNst0p
+        s91gLm8STVZ8OnfqvYIK0mAN8fNGL9eSf1OnhI5EaKN22egfHntF5r1fPf4g+I3ghGdz3rhy6CxHs
+        FDuuofPY1UKSOCs+kmQ0sWOD03ad93lH8Kj/eAwX/ZTPWB7rEHrgtqN6+fUpVhgAI1GqAfba7Ey6I
+        k+Lqh8JSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCQOp-0004me-Ea; Mon, 23 Sep 2019 15:37:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0037303DFD;
+        Mon, 23 Sep 2019 17:36:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F0CB020D80D44; Mon, 23 Sep 2019 17:37:13 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 17:37:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Subject: Re: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing
+ CPUID bit when SMT is impossible
+Message-ID: <20190923153713.GF2369@hirez.programming.kicks-ass.net>
+References: <20190916162258.6528-1-vkuznets@redhat.com>
+ <20190916162258.6528-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjmJbF3p9vZTW2nbeD4LkG-JZV+uqv8BnxzojJ5SZsLjw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916162258.6528-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 06:22:57PM +0200, Vitaly Kuznetsov wrote:
+> Hyper-V 2019 doesn't expose MD_CLEAR CPUID bit to guests when it cannot
+> guarantee that two virtual processors won't end up running on sibling SMT
+> threads without knowing about it. This is done as an optimization as in
+> this case there is nothing the guest can do to protect itself against MDS
+> and issuing additional flush requests is just pointless. On bare metal the
+> topology is known, however, when Hyper-V is running nested (e.g. on top of
+> KVM) it needs an additional piece of information: a confirmation that the
+> exposed topology (wrt vCPU placement on different SMT threads) is
+> trustworthy.
+> 
+> NoNonArchitecturalCoreSharing (CPUID 0x40000004 EAX bit 18) is described in
+> TLFS as follows: "Indicates that a virtual processor will never share a
+> physical core with another virtual processor, except for virtual processors
+> that are reported as sibling SMT threads." From KVM we can give such
+> guarantee in two cases:
+> - SMT is unsupported or forcefully disabled (just 'disabled' doesn't work
+>  as it can become re-enabled during the lifetime of the guest).
+> - vCPUs are properly pinned so the scheduler won't put them on sibling
+> SMT threads (when they're not reported as such).
+> 
+> This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
+> first case. The second case is outside of KVM's domain of responsibility
+> (as vCPU pinning is actually done by someone who manages KVM's userspace -
+> e.g. libvirt pinning QEMU threads).
 
-
-On 9/22/2019 11:35 AM, Linus Torvalds wrote:
-> On Sat, Sep 21, 2019 at 4:10 PM Paul Burton <paul.burton@mips.com> wrote:
->>
->> Here are the main MIPS changes for v5.4; please pull.
-> 
-> Hmm. I pulled and because initial tests didn't show any issues, I
-> already pushed out.
-> 
-> But some unrelated further testing then shows that this:
-> 
->> Florian Fainelli (2):
->>       firmware: bcm47xx_nvram: Correct size_t printf format
->>       firmware: bcm47xx_nvram: Allow COMPILE_TEST
-> 
-> causes problems, and commit feb4eb060c3a ("firmware: bcm47xx_nvram:
-> Correct size_t printf format") is buggy:
-> 
->   drivers/firmware/broadcom/bcm47xx_nvram.c: In function ‘nvram_init’:
->   drivers/firmware/broadcom/bcm47xx_nvram.c:151: warning: format ‘%zu’
-> expects argument of type ‘size_t’, but argument 2 has type ‘u32’ {aka
-> ‘unsigned int’} [-Wformat=]
-> 
-> and the change to use %zu was completely wrong.
-> 
-> It prints out 'header.len', which is an u32, not nvram_len which is a size_t.
-> 
-> Tssk tssk.
-> 
-> I've fixed it in my tree, but this should have shown up in linux-next,
-> or in MIPS testing. The process clearly failed.
-
-Thanks for fixing that. The process worked, there was an email sent by
-the kbuild robot but I saw it only now somehow and failed to address it
-in time before Paul sent out the pull request.
--- 
-Florian
+This is purely about guest<->guest MDS, right? Ie. not worse than actual
+hardware.
