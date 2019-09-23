@@ -2,88 +2,175 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24518C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EB0C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F383D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1BA207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z2/E6kP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfIWORn (ORCPT
+        id S2437487AbfIWOTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:17:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52899 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730669AbfIWORm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:17:42 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9032A356C9;
-        Mon, 23 Sep 2019 14:17:42 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A92B60852;
-        Mon, 23 Sep 2019 14:17:41 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 2170011DF; Mon, 23 Sep 2019 11:17:38 -0300 (BRT)
-Date:   Mon, 23 Sep 2019 11:17:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@elte.hu,
-        jolsa@redhat.com, namhyung@kernel.org
-Subject: Re: [PATCH v2] perf record: fix priv level with branch sampling for
- paranoid=2
-Message-ID: <20190923141738.GB3617@redhat.com>
-References: <20190920230356.41420-1-eranian@google.com>
- <20190923140345.GA3617@redhat.com>
+        Mon, 23 Sep 2019 10:19:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55670 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfIWOTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:19:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NEJ02l078946;
+        Mon, 23 Sep 2019 09:19:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569248340;
+        bh=4HrGNJ0G06qOuyWPwNF7oHzx92HidaHXsQc7BzZ0wDk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z2/E6kP4ZsKa6S7QBBca3S/itsvmN84EWQlap4RwVKw+aF9AUu2LBN2JC4wqZMABC
+         rCMu6ghdfqgelxlZlIaHfqzLVzC3xawAzjLlF7l1A3Fc743++uorZeaS9BLCb2WFPH
+         57nKsNrzCQCSKhpa7bA7u8Ko4/jhj4QQhsnCqdYo=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8NEJ08p040870
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Sep 2019 09:19:00 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
+ Sep 2019 09:19:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 23 Sep 2019 09:18:54 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NEJ09j015620;
+        Mon, 23 Sep 2019 09:19:00 -0500
+Subject: Re: [PATCH v8 1/9] leds: multicolor: Add sysfs interface definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-2-dmurphy@ti.com>
+ <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e8b19608-91be-ac9f-9aa2-2027993df3d7@ti.com>
+Date:   Mon, 23 Sep 2019 09:23:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923140345.GA3617@redhat.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 23 Sep 2019 14:17:42 +0000 (UTC)
+In-Reply-To: <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Sep 23, 2019 at 11:03:45AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Thanks, tested added Jiri's Acked-by, applied, added this note:
-> 
-> Committer testing:
-> 
-> After aplying the patch we get:
-> 
->   [acme@quaco ~]$ perf record -b -e cycles date
->   WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
->   check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
-> 
->   Samples in kernel functions may not be resolved if a suitable vmlinux
->   file is not found in the buildid cache or in the vmlinux path.
-> 
->   Samples in kernel modules won't be resolved at all.
-> 
->   If some relocation was applied (e.g. kexec) symbols may be misresolved
->   even with a suitable vmlinux or kallsyms file.
-> 
->   Mon 23 Sep 2019 11:00:59 AM -03
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.005 MB perf.data (14 samples) ]
->   [acme@quaco ~]$ perf evlist -v
->   cycles:u: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
->   [acme@quaco ~]$
-> 
-> That warning about restricted kernel maps will be suppressed in a follow
-> up patch, as perf_event_attr.exclude_kernel is set, i.e. no samples for
-> the kernel will be taken and thus no need for those maps
+Jacek
 
-Its there:
+Thanks for the review
 
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=c8b567c8a96a35acff746b1eef6f859e2a9fc195
+On 9/21/19 5:55 AM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 9/20/19 7:41 PM, Dan Murphy wrote:
+>> Add a documentation of LED Multicolor LED class specific
+>> sysfs attributes.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    | 43 +++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..39fc73becfec
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,43 @@
+>> +What:		/sys/class/leds/<led>/brightness
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		Writing to this file will update all LEDs within the group to a
+>> +		calculated percentage of what each color LED intensity is set
+>> +		to. The percentage is calculated via the equation below:
+>> +
+>> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
+> How about:
+>
+> led_brightness = brightness * <color>_intensity/<color>_max_intensity
 
-- Arnaldo
+Ack
+
+
+>> +
+>> +		For additional details please refer to
+>> +		Documentation/leds/leds-class-multicolor.rst.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/max_brightness.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<led_color>_intensity
+> s/led_color/color/
+
+Ack
+
+
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The led_color directory is dynamically created based on the
+>> +		colors defined by the registrar of the class.
+>> +		The value for the led_color is defined in the
+>> +		include/dt-bindings/leds/common.h. There is one directory per
+>> +		color presented.  The intensity file is created under each
+>> +		led_color directory and controls the individual LED color
+>> +		setting.
+> We no longer have led_color directories so this description needs
+> to be adjusted.
+>
+> And I'd not mention where the colors are defined. This is documentation
+> for the user, who does not need to know about implementation details.
+
+I thought I updated this but I will re-write this
+
+Ack
+
+
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/colors/<led_color>_max_intensity.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/<led_color>_max_intensity
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read only
+>> +		Maximum intensity level for the LED color, default is
+>> +		255 (LED_FULL).
+> Mentioning the default value here is pointless IMO. Userspace cannot
+> change it anyway.
+>
+Ack
+
+
+>> +
+>> +		If the LED does not support different intensity levels, this
+>> +		should be 1.
+>>
+> This is less relevant for MC class, and also it is rather obvious.
+> I'd skip this sentence.
+>
+Ack
+
+
+Dan
+
