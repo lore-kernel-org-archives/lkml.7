@@ -2,120 +2,176 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F07C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97720C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B7220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6018020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aSk1Ypud"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rab4KjXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732943AbfIWRNC (ORCPT
+        id S1732957AbfIWRNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:13:02 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39524 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfIWRNC (ORCPT
+        Mon, 23 Sep 2019 13:13:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39241 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfIWRNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:13:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s22so12808014otr.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:13:01 -0700 (PDT)
+        Mon, 23 Sep 2019 13:13:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so8343117pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ue6UnAozTnXqTHe4q9S72zUseEDYm3ZUpXLtLXdgahc=;
-        b=aSk1Ypud7KXulZTThvAKp8fC1VTr2a6gU6cPi5hjPCn2EnoE8iRrXmCpI8fsuK8wAf
-         /pZ2UPQpCAkdSQ1JUV2IOU7FaF0P3AAavBotdSKACYXf5euLG4d5/e41WucJGwq3CeRP
-         bYboSwGPMNvWV2/kMDdgev2p+k2BeYCNaqD30=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tfsTLDFY1ccam3FUWWjnqOYmfdpnpNmRoJABJz0j6Jw=;
+        b=rab4KjXC1CDcjeIdsHH50MINA6B4H/cQqstbVol6cCKHf8vYra1z5ei7gFXzGhZ7EP
+         8UDoshJz8VTK87htqLNecFQnuHN2Ros1upeW6VtbuQutaANFFrZeNKMAo2Mt9+iK13dy
+         iB+LgWZOkjm70B6aiNKMch4exZwDrSmzHvw+3Rr9p3Xr8gDGSQYL3m6BDHsroTlcYXcV
+         y+N8jGyOGGOPIpzuG2w2iOUZDCO/DgEBjv5thouZgICXauIz9IYxe8bsHD2wjU/ro0l/
+         +hyx5B4MwnUTvBXhX7KZZspApVhXEdmo+laC4zAtkrQU8Mu8zGA8ltQVBrNQOUVVidx1
+         hpTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ue6UnAozTnXqTHe4q9S72zUseEDYm3ZUpXLtLXdgahc=;
-        b=fPv/Y0lXxKhvFdoDLX6lYkHknvW2/xHDPNPeRGA8i28b76LbwQA4ppHW3UWCSZ2hJ7
-         ZizNohBDvucUgQfqly4x1S4f5cptc4Cp3S0FCLrchOjl1gH4mqXilKiuQ5e2ST2FNRPM
-         J7Dtc8hWwXMEG/OZa/1fGAmdJZtjq8Ja/3lahuPxXhdRoJ7Bsn6rHHiHgD9P2EPgkGQC
-         AkyNICAwWLpIi+qZd2+4NLTDVtONxgjksn319wuBG2WQOrFLJwTszkjxqI049+W7hA/c
-         E7Hiqv3AATlHrPKU/FH1BxM/SWDNCivST/zW2ghWiozWaFvdZj/CHOPv98FkKJtRNx0s
-         v/Gg==
-X-Gm-Message-State: APjAAAUf6B6mpYkODFbQwo91BiJXHVVaZcNYS51C2SMlfcWjx24D3wEV
-        XGIuAPFozc6pX/fJdLw7LlTHM1K0IhE=
-X-Google-Smtp-Source: APXvYqzHj4/2vahWwsNi7wFYHF5/5pMrJmE0sd6xDGw6ejY+K75vCTabmvCu/eFmVp8UIh+Kd18/cg==
-X-Received: by 2002:a9d:3476:: with SMTP id v109mr750250otb.179.1569258781121;
-        Mon, 23 Sep 2019 10:13:01 -0700 (PDT)
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
-        by smtp.gmail.com with ESMTPSA id l30sm4020359otl.74.2019.09.23.10.12.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 10:12:59 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id g13so12794644otp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:12:59 -0700 (PDT)
-X-Received: by 2002:a9d:5f8d:: with SMTP id g13mr784888oti.268.1569258779445;
- Mon, 23 Sep 2019 10:12:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tfsTLDFY1ccam3FUWWjnqOYmfdpnpNmRoJABJz0j6Jw=;
+        b=odkh0puWuDJySbYGJEpWg8A8ogSHuLHdSTqNyd7n4R62odNzMpPk660Ec1jc5x1Wrw
+         wkoxnVSSiIuNCEBlFslo2uzhWmdnT/F+/HWDVjUeMKab7OI8K/STcfUxPDiCgIY9Izpj
+         0i2yZUsIvO9/jW7M0S+4PgJ3YcJg+aJ6PCI//Isv6FopDmHt0xXxquU/C4ZaTBwOvZXV
+         ZIOV/654SMNpq1OlE/b8xqm4vGgnUV8jUss03IIiCYG5FHTEBIosjLvM/+u9dJOO+/JY
+         R0FmaYJ2+1AdI9+9RFPtCRPHuTgcy/O77oqwgIJ/LKWVJCH47znvm+xqNfD+MsBC2nGY
+         T1Ig==
+X-Gm-Message-State: APjAAAXNP7aeCA13JCmrXucCUPsBA9fjRSPStEAachDaUPnlD4OO8a9b
+        j+BNZR1DDQ6MAzrAxadXF/BRMg==
+X-Google-Smtp-Source: APXvYqy1QDC5+llAVuCG+6Lt9rco93xnDb1jqsxs2nUWrC/qkddy16J7Ri3SZxWDWN2mMuhNCaAgNg==
+X-Received: by 2002:a63:f74a:: with SMTP id f10mr931166pgk.171.1569258808707;
+        Mon, 23 Sep 2019 10:13:28 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([12.206.46.62])
+        by smtp.gmail.com with ESMTPSA id k4sm11217132pjl.9.2019.09.23.10.13.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Sep 2019 10:13:27 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 01:13:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH v2 1/5] perf cs-etm: Refactor instruction size handling
+Message-ID: <20190923171325.GA29675@leoy-ThinkPad-X240s>
+References: <20190923160759.14866-1-leo.yan@linaro.org>
+ <20190923160759.14866-2-leo.yan@linaro.org>
+ <2b675e24-8b06-fbd6-ab73-214a6afb2a07@arm.com>
 MIME-Version: 1.0
-References: <20190916181215.501-1-ncrews@chromium.org> <20190916181215.501-2-ncrews@chromium.org>
- <20190922202947.GA4421@bug> <20190922204353.GD3185@piout.net>
-In-Reply-To: <20190922204353.GD3185@piout.net>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 23 Sep 2019 11:12:48 -0600
-X-Gmail-Original-Message-ID: <CAHX4x86-fhzSqn_OLAkFy_FkoQQTMgtR5K5evJ56YTYZeU-7dA@mail.gmail.com>
-Message-ID: <CAHX4x86-fhzSqn_OLAkFy_FkoQQTMgtR5K5evJ56YTYZeU-7dA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] rtc: wilco-ec: Fix license to GPL from GPLv2
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Benson Leung <bleung@chromium.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b675e24-8b06-fbd6-ab73-214a6afb2a07@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Would you like me to change this patch at all? Perhaps reference
-bf7fbeeae6db in the commit description? I probably should have
-done that since the beginning, I just couldn't find bf7fbeeae6db at first.
+Hi Suzuki,
+
+On Mon, Sep 23, 2019 at 05:51:04PM +0100, Suzuki K Poulose wrote:
+> Hi Leo,
+> 
+> On 23/09/2019 17:07, Leo Yan wrote:
+> > In cs-etm.c there have several functions need to know instruction size
+> > based on address, e.g. cs_etm__instr_addr() and cs_etm__copy_insn()
+> > these two functions both calculate the instruction size separately.
+> > Furthermore, if we consider to add new features later which also might
+> > require to calculate instruction size.
+> > 
+> > For this reason, this patch refactors the code to introduce a new
+> > function cs_etm__instr_size(), it will be a central place to calculate
+> > the instruction size based on ISA type and instruction address.
+> > 
+> > For a neat implementation, cs_etm__instr_addr() will always execute the
+> > loop without checking ISA type, this allows cs_etm__instr_size() and
+> > cs_etm__instr_addr() have no any duplicate code with each other and both
+> > functions can be changed independently later without breaking anything.
+> > As a side effect, cs_etm__instr_addr() will do a few more iterations for
+> > A32/A64 instructions, this would be fine if consider perf tool runs in
+> > the user space.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> Your changes look fine to me. However, please see my comment below.
+> 
+> > ---
+> >   tools/perf/util/cs-etm.c | 48 +++++++++++++++++++++++-----------------
+> >   1 file changed, 28 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index f87b9c1c9f9a..1de3f9361193 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -917,6 +917,26 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
+> >   	return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
+> >   }
+> > +static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
+> > +				     u8 trace_chan_id,
+> > +				     enum cs_etm_isa isa,
+> > +				     u64 addr)
+> > +{
+> > +	int insn_len;
+> > +
+> > +	/*
+> > +	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
+> > +	 * cs_etm__t32_instr_size().
+> > +	 */
+> > +	if (isa == CS_ETM_ISA_T32)
+> > +		insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id, addr);
+> > +	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
+> > +	else
+> > +		insn_len = 4;
+> > +
+> > +	return insn_len;
+> > +}
+> > +
+> >   static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+> >   {
+> >   	/* Returns 0 for the CS_ETM_DISCONTINUITY packet */
+> > @@ -941,19 +961,15 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+> >   				     const struct cs_etm_packet *packet,
+> >   				     u64 offset)
+> >   {
+> > -	if (packet->isa == CS_ETM_ISA_T32) {
+> > -		u64 addr = packet->start_addr;
+> > +	u64 addr = packet->start_addr;
+> > -		while (offset > 0) {
+> > -			addr += cs_etm__t32_instr_size(etmq,
+> > -						       trace_chan_id, addr);
+> > -			offset--;
+> > -		}
+> > -		return addr;
+> > +	while (offset > 0) {
+> 
+> Given that offset is u64, the check above is not appropriate. You could either
+> change it to :
+> 	while (offset) // if you are sure (s64)offset always is a postive
+> integer and we always reduce it by 1.
+> 
+> Otherwise you may switch the offset to a signed type. I understand that this
+> is not introduced by your changes. But you may fix that up in a separate patch.
+
+Thanks a lot for the review.  Seems to me the reliable fix is to change
+to a signed type.  Will add this fix in next spin.
 
 Thanks,
-Nick
-
-On Sun, Sep 22, 2019 at 2:43 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 22/09/2019 22:29:48+0200, Pavel Machek wrote:
-> > On Mon 2019-09-16 12:12:17, Nick Crews wrote:
-> > > Signed-off-by: Nick Crews <ncrews@chromium.org>
-> > > ---
-> > >  drivers/rtc/rtc-wilco-ec.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
-> > > index e84faa268caf..951268f5e690 100644
-> > > --- a/drivers/rtc/rtc-wilco-ec.c
-> > > +++ b/drivers/rtc/rtc-wilco-ec.c
-> > > @@ -184,5 +184,5 @@ module_platform_driver(wilco_ec_rtc_driver);
-> > >
-> > >  MODULE_ALIAS("platform:rtc-wilco-ec");
-> > >  MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-> > > -MODULE_LICENSE("GPL v2");
-> > > +MODULE_LICENSE("GPL");
-> > >  MODULE_DESCRIPTION("Wilco EC RTC driver");
-> >
-> > File spdx header says GPL-2.0, this change would make it inconsistent with that...
-> >
->
-> Commit bf7fbeeae6db ("module: Cure the MODULE_LICENSE "GPL" vs. "GPL v2"
-> bogosity") doesn't agree with you (but I was surprised too).
->
->
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Leo Yan
