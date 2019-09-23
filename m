@@ -2,95 +2,94 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F07C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF2C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61F321841
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A9420867
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569236679;
+	bh=RWSP+mHskHHabLmX2TMnaMLMsT33LtCtWHhyFpnJaPs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BXlG8cJPrmN8JAGsi4/aj5oTpz5+1VzuDLeHpElF4oT7Q5GBh04qIXvTo7eeqze8I
+	 J4ui9Adyls0kTidOQxJQ3P5fjLGz5jHPZ8OBz/xGCHXnkbAJDnxTF4ih5t/6t9+DiV
+	 mIH5rbZrPbOzY8HhXHko0lMutJrMjDfyGiFV04DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392779AbfIWLDK (ORCPT
+        id S2392942AbfIWLEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:03:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54536 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387421AbfIWLDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:03:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4835AED6;
-        Mon, 23 Sep 2019 11:03:07 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 13:03:06 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 30/32] tools lib bpf: Renaming pr_warning to pr_warn
-Message-ID: <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20190920062544.180997-31-wangkefeng.wang@huawei.com>
- <CAEf4BzbD98xeU2dSrXYkVi+mK=kuq+5DsroNDZwOzBGYbMH1-w@mail.gmail.com>
- <20190923082039.GA2530@pc-63.home>
+        Mon, 23 Sep 2019 07:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387507AbfIWLEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:04:37 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E626F206C2;
+        Mon, 23 Sep 2019 11:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569236677;
+        bh=RWSP+mHskHHabLmX2TMnaMLMsT33LtCtWHhyFpnJaPs=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=QNqtprZ79WNy0WIKjIRsE/RkDoZkytgibq1/T5JiFgpSSKHu2Q2Zb9ttYkBtfTWlN
+         Q5Xn6TSVHT07TzQ9CRMtfzcJgWR8wnnK50++niILHddlm/3rJgDNwzaKxooyvZpU8s
+         Wyecb5L9p/yyqWdQvVmLGOrT/ZHgvyc5GljcRTDs=
+Date:   Mon, 23 Sep 2019 13:04:13 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: core: clean up indentation issue
+In-Reply-To: <20190922115054.10880-1-colin.king@canonical.com>
+Message-ID: <nycvar.YFH.7.76.1909231303180.1459@cbobk.fhfr.pm>
+References: <20190922115054.10880-1-colin.king@canonical.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923082039.GA2530@pc-63.home>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-23 10:20:39, Daniel Borkmann wrote:
-> On Sun, Sep 22, 2019 at 02:07:21PM -0700, Andrii Nakryiko wrote:
-> > On Fri, Sep 20, 2019 at 10:06 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
-> > >
-> > > For kernel logging macro, pr_warning is completely removed and
-> > > replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
-> > > to kernel logging macro, then we could drop pr_warning in the
-> > > whole linux code.
-> > >
-> > > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> > > ---
-> > >  tools/lib/bpf/btf.c             |  56 +--
-> > >  tools/lib/bpf/btf_dump.c        |  20 +-
-> > >  tools/lib/bpf/libbpf.c          | 652 ++++++++++++++++----------------
-> > >  tools/lib/bpf/libbpf_internal.h |   2 +-
-> > >  tools/lib/bpf/xsk.c             |   4 +-
-> > >  5 files changed, 363 insertions(+), 371 deletions(-)
-> > 
-> > Thanks! This will allow to get rid of tons warnings from checkpatch.pl.
-> > 
-> > Alexei, Daniel, can we take this through bpf-next tree once it's open?
+On Sun, 22 Sep 2019, Colin King wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> I'd be fine with that, in fact, it probably should be in order to avoid
-> merge conflicts since pr_warn{ing}() is used all over the place in libbpf.
+> There is an if statement that is indented by one extra space,
+> fix this by removing the extraneous space.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/hid/hid-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index 3eaee2c37931..9469c382a182 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -2329,10 +2329,10 @@ int hid_add_device(struct hid_device *hdev)
+>  	/*
+>  	 * Check for the mandatory transport channel.
+>  	 */
+> -	 if (!hdev->ll_driver->raw_request) {
+> +	if (!hdev->ll_driver->raw_request) {
+>  		hid_err(hdev, "transport driver missing .raw_request()\n");
+>  		return -EINVAL;
+> -	 }
+> +	}
 
-The entire patchset modifies many files all over the tree.
-This is from https://lkml.kernel.org/r/20190920062544.180997-1-wangkefeng.wang@huawei.com
+Let's not pollute git blame and wait for an ocasion when we need to touch 
+the code for some more valid reason.
 
-    120 files changed, 882 insertions(+), 927 deletions(-)
+Thanks,
 
-Would it make sense to push everything at the end of the merge window
-or for 5.4-rc2 after master settles down?
+-- 
+Jiri Kosina
+SUSE Labs
 
-Best Regards,
-Petr
