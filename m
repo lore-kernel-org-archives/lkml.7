@@ -2,72 +2,124 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641FEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F3C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C98D20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B5520835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392848AbfIWGQt (ORCPT
+        id S2392929AbfIWGRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:16:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38600 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387519AbfIWGQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:16:49 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 89FF75DFB0AB82F2F953;
-        Mon, 23 Sep 2019 14:16:47 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
- 14:16:36 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <claudiu.manoil@nxp.com>, <davem@davemloft.net>,
-        <jakub.kicinski@netronome.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net] gianfar: Make reset_gfar static
-Date:   Mon, 23 Sep 2019 14:16:03 +0800
-Message-ID: <20190923061603.37064-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 23 Sep 2019 02:17:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47196 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387519AbfIWGRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:17:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:17:36 -0700
+X-IronPort-AV: E=Sophos;i="5.64,539,1559545200"; 
+   d="scan'208";a="179024428"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:17:34 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 249B820C9F; Mon, 23 Sep 2019 09:17:32 +0300 (EEST)
+Date:   Mon, 23 Sep 2019 09:17:32 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Message-ID: <20190923061731.GZ5781@paasikivi.fi.intel.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
+ <20190919203955.15125-6-bparrot@ti.com>
+ <20190920101706.GX5781@paasikivi.fi.intel.com>
+ <20190920165529.it7urirm6epg4woq@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920165529.it7urirm6epg4woq@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+Hi Benoit,
 
-drivers/net/ethernet/freescale/gianfar.c:2070:6:
- warning: symbol 'reset_gfar' was not declared. Should it be static?
+On Fri, Sep 20, 2019 at 11:55:29AM -0500, Benoit Parrot wrote:
+...
+> > > @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
+> > >  	    ov2659->xvclk_frequency > 27000000)
+> > >  		return -EINVAL;
+> > >  
+> > > +	/* Optional gpio don't fail if not present */
+> > > +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> > > +						    GPIOD_OUT_LOW);
+> > > +	if (IS_ERR(ov2659->pwdn_gpio))
+> > > +		return PTR_ERR(ov2659->pwdn_gpio);
+> > > +
+> > > +	/* Optional gpio don't fail if not present */
+> > > +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > > +						      GPIOD_OUT_HIGH);
+> > > +	if (IS_ERR(ov2659->resetb_gpio))
+> > > +		return PTR_ERR(ov2659->resetb_gpio);
+> > > +
+> > >  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+> > >  	ov2659->link_frequency =
+> > >  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> > > @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
+> > >  	ov2659->frame_size = &ov2659_framesizes[2];
+> > >  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+> > >  
+> > > +	pm_runtime_enable(&client->dev);
+> > > +	pm_runtime_get_sync(&client->dev);
+> > 
+> > This makes the driver depend on runtime PM.
+> 
+> Obviously.
+> Why? Is that bad?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/freescale/gianfar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, if it is, then it should be listed in driver's dependencies in
+Kconfig.
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 24bf7f6..51ad864 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -2067,7 +2067,7 @@ static int gfar_change_mtu(struct net_device *dev, int new_mtu)
- 	return 0;
- }
- 
--void reset_gfar(struct net_device *ndev)
-+static void reset_gfar(struct net_device *ndev)
- {
- 	struct gfar_private *priv = netdev_priv(ndev);
- 
+> 
+> > 
+> > See e.g. the smiapp driver for an example how to make it work without. It
+> > wasn't trivial. :I You won't need autosuspend.
+> 
+> I took a look at that driver, but I don't get your reference to being able
+> to work without runtime pm!
+
+The driver didn't need runtime PM, so it'd be nice to continue work
+without.
+
+What smiapp does is that it powers the sensor on first *without* runtime
+PM, and then proceeds to set up runtime PM if it's available. The sensor
+will only be powered off when the device is unbound with runtime PM
+disabled.
+
+Regarding the smiapp driver, you can replace pm_runtime_get_noresume() and
+all the autoidle lines with pm_runtime_idle() call after
+pm_runtime_enable() in the ov2659 driver.
+
+> That driver looks pretty similar to ov7740.c which I used as a reference
+> for this.
+
+I guess in practice many sensor drivers don't work without it on DT-based
+systems I'm afraid. :-( They should be fixed.
+
 -- 
-2.7.4
+Kind regards,
 
-
+Sakari Ailus
+sakari.ailus@linux.intel.com
