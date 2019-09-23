@@ -2,149 +2,136 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCB5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF25C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F272C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8409F21841
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569262685;
+	bh=KQ8YtMSUvBH+IEHZPN4F+9fUdawjUfYBpTtUWbWv5xA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rdPvJDIuAvdEbI+Srt3/1JOezUvbqClZC6rmmzwLaJ75lRg4PdcSNTae7D5gC1PXu
+	 kSZ8k1r+vYSwZ2Z5BOfUNY4Ao5lWgmgbZtKop2A5q76+S3gG7mZv5iRaCuiR4r4fun
+	 3n0/U96yssfqY99ACrLCIZmcoI/iuNxHQ3JRMs0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440403AbfIWSQW (ORCPT
+        id S2440412AbfIWSSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:16:22 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:22210 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2440382AbfIWSQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:16:22 -0400
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8NI1nWv022787;
-        Mon, 23 Sep 2019 18:15:57 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2v6q0rkuxe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 18:15:57 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 683E54F;
-        Mon, 23 Sep 2019 18:15:56 +0000 (UTC)
-Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 997D147;
-        Mon, 23 Sep 2019 18:15:55 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 13:15:55 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: [PATCH v2 2/2] x86/boot/64: round memory hole size up to next PMD
- page.
-Message-ID: <b0c6487fdd8ca33daa2ac1604b60fac8ed5b020f.1569004923.git.steve.wahl@hpe.com>
-References: <cover.1569004922.git.steve.wahl@hpe.com>
+        Mon, 23 Sep 2019 14:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438191AbfIWSSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:18:04 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBFDC21928
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569262683;
+        bh=KQ8YtMSUvBH+IEHZPN4F+9fUdawjUfYBpTtUWbWv5xA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EcTmLIqMPZQJAyFQKFNsUCMcomj2YImlbE7UswNurg5uOjUS7B+ZrDdmYbbiZXoSj
+         7hMyu8oOOf7xnjv5MJ0jhjA717vnLvJOhZys2yHl4jCElJn2dFfYMbs+Ky4tAeStgw
+         U3XBQmOfYiB7wqP6GXpDomgUvdOh8hhcEPuP3gEE=
+Received: by mail-wr1-f52.google.com with SMTP id l11so15063618wrx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:18:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAUG/Ow9KAGX1VCKzP8FSh90f99MSf5mdP4R0FJTufpZdMt8wRsk
+        BFRRVpPC5+zedEYKDNEBih6a6PcdJSxl5lk2Z5aIQw==
+X-Google-Smtp-Source: APXvYqw9QoPpUoxk4JNixTG3ZMLD68/a+CDLIBqUsLls0MSYtDH5cRZnjxNzbm5yL+MNYc9za6vT6Uwp++RwwMYwHhA=
+X-Received: by 2002:a5d:4647:: with SMTP id j7mr578006wrs.106.1569262681278;
+ Mon, 23 Sep 2019 11:18:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1569004922.git.steve.wahl@hpe.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-23_05:2019-09-23,2019-09-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- suspectscore=2 spamscore=0 priorityscore=1501 malwarescore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909230158
+References: <20190919150314.054351477@linutronix.de> <20190919150809.860645841@linutronix.de>
+In-Reply-To: <20190919150809.860645841@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 23 Sep 2019 11:17:50 -0700
+X-Gmail-Original-Message-ID: <CALCETrWjDtcued8nYv=FtcjREz8C4Kj6OaCCirUkbZQForSo+A@mail.gmail.com>
+Message-ID: <CALCETrWjDtcued8nYv=FtcjREz8C4Kj6OaCCirUkbZQForSo+A@mail.gmail.com>
+Subject: Re: [RFC patch 14/15] workpending: Provide infrastructure for work
+ before entering a guest
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel image map is created using PMD pages, which can include
-some extra space beyond what's actually needed.  Round the size of the
-memory hole we search for up to the next PMD boundary, to be certain
-all of the space to be mapped is usable RAM and includes no reserved
-areas.
+On Thu, Sep 19, 2019 at 8:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Entering a guest is similar to exiting to user space. Pending work like
+> handling signals, rescheduling, task work etc. needs to be handled before
+> that.
+>
+> Provide generic infrastructure to avoid duplication of the same handling code
+> all over the place.
+>
+> Update ARM64 struct kvm_vcpu_stat with a signal_exit member so the generic
+> code compiles.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/arm64/include/asm/kvm_host.h |    1
+>  include/linux/entry-common.h      |   66 ++++++++++++++++++++++++++++++++++++++
+>  kernel/entry/common.c             |   44 +++++++++++++++++++++++++
+>  3 files changed, 111 insertions(+)
+>
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -409,6 +409,7 @@ struct kvm_vcpu_stat {
+>         u64 wfi_exit_stat;
+>         u64 mmio_exit_user;
+>         u64 mmio_exit_kernel;
+> +       u64 signal_exits;
+>         u64 exits;
+>  };
+>
+> --- a/include/linux/entry-common.h
+> +++ b/include/linux/entry-common.h
+> @@ -255,4 +255,70 @@ static inline void arch_syscall_exit_tra
+>  /* Common syscall exit function */
+>  void syscall_exit_to_usermode(struct pt_regs *regs, long syscall, long retval);
+>
+> +#if IS_ENABLED(CONFIG_KVM)
+> +
+> +#include <linux/kvm_host.h>
+> +
+> +#ifndef ARCH_EXIT_TO_GUESTMODE_WORK
+> +# define ARCH_EXIT_TO_GUESTMODE_WORK   (0)
+> +#endif
+> +
+> +#define EXIT_TO_GUESTMODE_WORK                                         \
+> +       (_TIF_NEED_RESCHED | _TIF_SIGPENDING | _TIF_NOTIFY_RESUME |     \
+> +        ARCH_EXIT_TO_GUESTMODE_WORK)
+> +
+> +int core_exit_to_guestmode_work(struct kvm *kvm, struct kvm_vcpu *vcpu,
+> +                               unsigned long ti_work);
+> +
+> +/**
+> + * arch_exit_to_guestmode - Architecture specific exit to guest mode function
+> + * @kvm:       Pointer to the guest instance
+> + * @vcpu:      Pointer to current's VCPU data
+> + * @ti_work:   Cached TIF flags gathered in exit_to_guestmode()
+> + *
+> + * Invoked from core_exit_to_guestmode_work(). Can be replaced by
+> + * architecture specific code.
+> + */
+> +static inline int arch_exit_to_guestmode(struct kvm *kvm, struct kvm_vcpu *vcpu,
+> +                                        unsigned long ti_work);
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Cc: stable@vger.kernel.org
----
-Changes since v1:
-  * This patch is completely new to this verison.
-
- arch/x86/boot/compressed/misc.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 53ac0cb2396d..9652d5c2afda 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -345,6 +345,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- {
- 	const unsigned long kernel_total_size = VO__end - VO__text;
- 	unsigned long virt_addr = LOAD_PHYSICAL_ADDR;
-+	unsigned long needed_size;
- 
- 	/* Retain x86 boot parameters pointer passed from startup_32/64. */
- 	boot_params = rmode;
-@@ -379,26 +380,38 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	free_mem_ptr     = heap;	/* Heap */
- 	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
- 
-+	/*
-+	 * The memory hole needed for the kernel is the larger of either
-+	 * the entire decompressed kernel plus relocation table, or the
-+	 * entire decompressed kernel plus .bss and .brk sections.
-+	 *
-+	 * On X86_64, the memory is mapped with PMD pages. Round the
-+	 * size up so that the full extent of PMD pages mapped is
-+	 * included in the check against the valid memory table
-+	 * entries. This ensures the full mapped area is usable RAM
-+	 * and doesn't include any reserved areas.
-+	 */
-+	needed_size = max(output_len, kernel_total_size);
-+#ifdef CONFIG_X86_64
-+	needed_size = ALIGN(needed_size, MIN_KERNEL_ALIGN);
-+#endif
-+
- 	/* Report initial kernel position details. */
- 	debug_putaddr(input_data);
- 	debug_putaddr(input_len);
- 	debug_putaddr(output);
- 	debug_putaddr(output_len);
- 	debug_putaddr(kernel_total_size);
-+	debug_putaddr(needed_size);
- 
- #ifdef CONFIG_X86_64
- 	/* Report address of 32-bit trampoline */
- 	debug_putaddr(trampoline_32bit);
- #endif
- 
--	/*
--	 * The memory hole needed for the kernel is the larger of either
--	 * the entire decompressed kernel plus relocation table, or the
--	 * entire decompressed kernel plus .bss and .brk sections.
--	 */
- 	choose_random_location((unsigned long)input_data, input_len,
- 				(unsigned long *)&output,
--				max(output_len, kernel_total_size),
-+				needed_size,
- 				&virt_addr);
- 
- 	/* Validate memory location choices. */
--- 
-2.21.0
-
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Can you add a comment about whether IRQs are supposed to be off (I
+assume they are) and perhaps a lockdep assertion to verify it?
