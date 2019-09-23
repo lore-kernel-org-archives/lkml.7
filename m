@@ -2,170 +2,150 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E86CC4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC14C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB1E20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931A720B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ql5vbWG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439988AbfIWRrD (ORCPT
+        id S2440215AbfIWRrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:47:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:35881 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389763AbfIWRrD (ORCPT
+        Mon, 23 Sep 2019 13:47:47 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33246 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389763AbfIWRrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:47:03 -0400
-Received: from localhost ([46.183.103.8]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MTikV-1ibaZH1myj-00U6mY; Mon, 23 Sep 2019 19:46:38 +0200
-Date:   Mon, 23 Sep 2019 19:46:34 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-Message-ID: <20190923174605.mhrbmdic3ynaw22o@arbad>
+        Mon, 23 Sep 2019 13:47:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NHdNbD090061;
+        Mon, 23 Sep 2019 17:47:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=yDskfBufBcPBjCvniq+DMnbkW78ezLoVWcAK8svPf2o=;
+ b=Ql5vbWG+kxg7x8Ups95HkSOCpzWtP7UKlTCD+zxH28gfZGKYH4Yz328gucDUXJT6oPmp
+ sE7fD3Qg9ORS/5vusZqCpWBJ8saeGwfEc2Ukl/I3/TKJDNqMl1CR4zZQmvxLgjIxelup
+ ueLksD8fC6fJO/x2UB2VAyzOmxIBGP9hVuOnBhqdWMJt2XaKKV/TBPTCcRVtaMquqUcI
+ MxmYdbpnJdI7rQHCOVdyEerxDxapTPEklcIX65jlGFbnaoOud9SjKHLp+aOcmPUlFSSj
+ GNrFmBAV4Vq7kil71S5KZV+zevmnZfeg8NtJtPc1EaOs39h4aYZiiZ43Qs+PIsEqNjeU AQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2v5cgqrfg7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 17:47:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NHcuvX179186;
+        Mon, 23 Sep 2019 17:47:36 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2v6yvptysg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 17:47:36 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8NHlW2K007596;
+        Mon, 23 Sep 2019 17:47:33 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Sep 2019 10:47:32 -0700
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+To:     Mina Almasry <almasrymina@google.com>,
+        aneesh.kumar@linux.vnet.ibm.com
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org, mkoutny@suse.com
+References: <20190919222421.27408-1-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
+Date:   Mon, 23 Sep 2019 10:47:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:Fan6vgtAYstQ9EsYsO6l1PGcJWJzGhm7B7DfBKFUat6EzC703YH
- 8oI9GI5mpy2w07uxgH3pzFOyGA+jyhV+HoSw7qPEGW7lOWrhvP/UtP+qNJ2cHCueZTUGjSe
- uJDuDulVUzUZgi7U+vahnHcKfRFtfGHdvTm4aklSLU4vNVnUrZMFN71YGTGQYFyArKhFvHf
- QLc6PSodvrixVGZYXXVaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M0QNqFl7cB0=:DTk2VE7Np88/QhC2VQhDWa
- TThd5wzZs/k5hNPjw13wqTzy+v+OGSPwKQlGC6El92OBefoH1p7gf3Hs2a7J/+PlwMm0J2IgU
- DGSrsg5wBOCHeehn6P/dmrmtef6lwJwXrfJ8P0NGI1WncUOOt3zCT6v3knu78XC9CcP6IzZp8
- BBtdUYdZJwvicScAGtN3/y3iYSvK97SPaMFIKqr4fefdJJNILpiqQqmoTH00xWrGe2bx+IUFa
- 4+QBWD/3TJr2mHsuTwvWgo+TbFrEeuOfGTqE1fD0EfWI8twqd6af7ehh/jQTnGt976eAErXOB
- qxyM/i57Zi+uHavej0IB55r1dYcqgfAMiIWv9CISxmQO9HAEjPKv7iIEI0bAhpsJTd6Ss3IpY
- G4b7pOCQIdYUmmnQRP30VRkIpBmt4Q2A9KM6QMj2T5H5EZpAwbcGEXXFmpIISethKeFepW1vy
- MJNCFDBeaGdSwbNH0LFpQ30nCYnICHjTHsvW4vRK93YPfhAjqMRRnx7XPrZYQNmQgb+7+zueq
- nZ9Y3+yrJpb5WRjoiBWBwfUYr9sgAwErZi39p0zwgKOxqhFMxalxlxfyvx5hc9Uh7XYFiznGh
- ELRdmPttS1Ev9iTCFiBoFfXauxsyBphbFLTDmFtcL7iRHTHRXzghTLsKQqJfBnvImIUQIjI6c
- 0sUO7ELi2VnHPY6FCWW9OYlYyiLLRm+/AJYdXTspWbHWXI1Wxmhakr+UThHmo5XBvEE8fECCu
- JjvYIf5PCPf8uUaRDVb3EoRbncW+mlD15qxFTy7eVzjcNaNGnbcS1E30ygmx9tdINg7yo1y78
- zosmwyF3qN2g3vhx5hbQDeI0IQ5shdPqUp1w19hMCzq3onGFeJ/xSxlkzpJOFi4kc9fZHYldg
- FEpI4H+njx+KH9jLzpGBCsDXP++0IDgpR1zNXc4Zw=
+In-Reply-To: <20190919222421.27408-1-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909230157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909230157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-from text documentation format into yaml.
+On 9/19/19 3:24 PM, Mina Almasry wrote:
+> Patch series implements hugetlb_cgroup reservation usage and limits, which
+> track hugetlb reservations rather than hugetlb memory faulted in. Details of
+> the approach is 1/7.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
- .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+Thanks for your continued efforts Mina.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-deleted file mode 100644
-index dd1058fbe9c3..000000000000
---- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
--  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
--  for ranging
--
--Required properties:
-- - compatible:		"maxbotix,mb1202",
--			"maxbotix,mb1212",
--			"maxbotix,mb1222",
--			"maxbotix,mb1232",
--			"maxbotix,mb1242",
--			"maxbotix,mb7040" or
--			"maxbotix,mb7137"
--
-- - reg:			i2c address of the device, see also i2c/i2c.txt
--
--Optional properties:
-- - interrupts:		Interrupt used to announce the preceding reading
--			request has finished and that data is available.
--			If no interrupt is specified the device driver
--			falls back to wait a fixed amount of time until
--			data can be retrieved.
--
--Example:
--proximity@70 {
--	compatible = "maxbotix,mb1232";
--	reg = <0x70>;
--	interrupt-parent = <&gpio2>;
--	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-new file mode 100644
-index 000000000000..8301a1ad2a47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-+  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-+  for ranging
-+
-+  Specifications about the devices can be found at:
-+  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxbotix,mb1202
-+      - maxbotix,mb1212
-+      - maxbotix,mb1222
-+      - maxbotix,mb1232
-+      - maxbotix,mb1242
-+      - maxbotix,mb7040
-+      - maxbotix,mb7137
-+
-+  reg:
-+    description:
-+      i2c address of the device, see also i2c/i2c.txt
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt used to announce the preceding reading request has finished
-+      and that data is available.  If no interrupt is specified the device
-+      driver falls back to wait a fixed amount of time until data can be
-+      retrieved.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    proximity@70 {
-+      compatible = "maxbotix,mb1232";
-+      reg = <0x70>;
-+      interrupt-parent = <&gpio2>;
-+      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+    };
+One thing that has bothered me with this approach from the beginning is that
+hugetlb reservations are related to, but somewhat distinct from hugetlb
+allocations.  The original (existing) huegtlb cgroup implementation does not
+take reservations into account.  This is an issue you are trying to address
+by adding a cgroup support for hugetlb reservations.  However, this new
+reservation cgroup ignores hugetlb allocations at fault time.
+
+I 'think' the whole purpose of any hugetlb cgroup is to manage the allocation
+of hugetlb pages.  Both the existing cgroup code and the reservation approach
+have what I think are some serious flaws.  Consider a system with 100 hugetlb
+pages available.  A sysadmin, has two groups A and B and wants to limit hugetlb
+usage to 50 pages each.
+
+With the existing implementation, a task in group A could create a mmap of
+100 pages in size and reserve all 100 pages.  Since the pages are 'reserved',
+nobody in group B can allocate ANY huge pages.  This is true even though
+no pages have been allocated in A (or B).
+
+With the reservation implementation, a task in group A could use MAP_NORESERVE
+and allocate all 100 pages without taking any reservations.
+
+As mentioned in your documentation, it would be possible to use both the
+existing (allocation) and new reservation cgroups together.  Perhaps if both
+are setup for the 50/50 split things would work a little better.
+
+However, instead of creating a new reservation crgoup how about adding
+reservation support to the existing allocation cgroup support.  One could
+even argue that a reservation is an allocation as it sets aside huge pages
+that can only be used for a specific purpose.  Here is something that
+may work.
+
+Starting with the existing allocation cgroup.
+- When hugetlb pages are reserved, the cgroup of the task making the
+  reservations is charged.  Tracking for the charged cgroup is done in the
+  reservation map in the same way proposed by this patch set.
+- At page fault time,
+  - If a reservation already exists for that specific area do not charge the
+    faulting task.  No tracking in page, just the reservation map.
+  - If no reservation exists, charge the group of the faulting task.  Tracking
+    of this information is in the page itself as implemented today.
+- When the hugetlb object is removed, compare the reservation map with any
+  allocated pages.  If cgroup tracking information exists in page, uncharge
+  that group.  Otherwise, unharge the group (if any) in the reservation map.
+
+One of the advantages of a separate reservation cgroup is that the existing
+code is unmodified.  Combining the two provides a more complete/accurate
+solution IMO.  But, it has the potential to break existing users.
+
+I really would like to get feedback from anyone that knows how the existing
+hugetlb cgroup controller may be used today.  Comments from Aneesh would
+be very welcome to know if reservations were considered in development of the
+existing code.
 -- 
-2.11.0
+Mike Kravetz
