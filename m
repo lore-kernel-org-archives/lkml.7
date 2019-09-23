@@ -2,79 +2,184 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1050FC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E64EC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD99420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569245950;
-	bh=4GEfq3JhuMfGHV5M0hAP5cCNaZf454EFmB/QpMYGM1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2THvXMewNp0jq5cGb8tZSd4SD5BfnzYnETnPvgKKP7eR7oU/2FC03HW4MRlQYyASj
-	 Dn9D9DH1mUtR7Tf3WfvbVRU2dKIAsadFgvCVKisQT5Y5tODG/TD4inDFNf+v7AviKX
-	 KgByRfIjLSJtlQ5dp/bO/DyJbgVBjvqzAEHSdjn4=
+	by mail.kernel.org (Postfix) with ESMTP id 560A920665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Zm3mOYaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfIWNjK (ORCPT
+        id S1730784AbfIWNkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfIWNjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:39:09 -0400
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F6620665;
-        Mon, 23 Sep 2019 13:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569245949;
-        bh=4GEfq3JhuMfGHV5M0hAP5cCNaZf454EFmB/QpMYGM1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ao143w6qjRfY1omRLTI6NrnCGq8uvV9f+H2Lc/SOh6V8qLa1MUwmlx2GwPRehZArv
-         RXJeTGqRLSWmxqPf5SzDiTZLlH4k8qDxbsYgY3kwJZxZ+ybt+XJ9dnDQmjEwvWtkBK
-         xxgIdkj+5vLOLEUwbn4rYxOM7EzoxG+iZ57eSnLA=
-Date:   Mon, 23 Sep 2019 15:39:06 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [patch 4/6] posix-cpu-timers: Restrict clock_gettime()
- permissions
-Message-ID: <20190923133718.GA32669@lenoir>
-References: <20190905120339.561100423@linutronix.de>
- <20190905120539.978233418@linutronix.de>
+        Mon, 23 Sep 2019 09:40:24 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:45221 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfIWNkY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:40:24 -0400
+Received: by mail-yw1-f66.google.com with SMTP id x82so5184849ywd.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D1MqwgCYvbJu6IValUwEPFrYJOmBGkhRNlZvnEbWcYg=;
+        b=Zm3mOYazo3XedQz6SPylC8Ylq9rfusxgBmYG5CjcLe9HBssqdZod3KYjsqQEc2SjSH
+         VY9GjpK8SEfAaSiiM+UNtW9zAFktHUGsjkF61ejpHhEUsSkS+q30aTwpNOK8mWMT20G/
+         t38KbTxznENZbAls0bIDKUWw8Al+B8sV0+wOFQcQmJuqJFPPfZPXjbA581UW8rRNtbFV
+         Y2yLgUnTU67vYXYcNlvFxrsoq+DnRk14/X2+HX0L9zMjrYow+mxgd3q/l0JtQHiocRRQ
+         pz+eP4A0vfnFDAehD6vY9kNEgWFAU30VG70KWlKvjwy1eLsRnV+hvwBeGyAfQirPCtN6
+         +tmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D1MqwgCYvbJu6IValUwEPFrYJOmBGkhRNlZvnEbWcYg=;
+        b=pqqwoGnWEXF1zzlecRb/IgOnujlPWz1q93poS9KSssDU6dGENTRan8W3tuzSJs6J7t
+         iNfMRYVKcikCn3Mw/x6+kXqnhsv/ZSFeel5aWRaXnGZbHDA+BNrT71ntCXeMLFEFsAte
+         Qq9d9AJTuDnfUsZcHcVVjck5gDBywJY91D+uKLP8jBqKlabhZhy7KQ7rnvMISK02H1ya
+         y2P3Cz0f/hkr+h73Okd8225FtAHcc6qSufdyCxy2wcdjK8EjUAQ8digW1IU30HtIbkFL
+         ZpWtzvEqPDXYGBBYxppfY3rtWStqusHkYdtS35IsNqv27fbDfjdCOv26j2Nro1D55wo6
+         66jw==
+X-Gm-Message-State: APjAAAUhICxh3R8srK7JRg8fzv+tn7dCp9HLIQG9WSN+ZdWWhHn+LdJe
+        qBS6CmpCcRWOzyaMFezb5YAlTA==
+X-Google-Smtp-Source: APXvYqzMxqWf5Uy8S6G/gRL1UlXLckbkGLxbW91WuAFX18N1ZuXEoeMIiMarfVDeq9yCRajedp/9og==
+X-Received: by 2002:a0d:d891:: with SMTP id a139mr22398928ywe.52.1569246023080;
+        Mon, 23 Sep 2019 06:40:23 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id v62sm2589761ywc.105.2019.09.23.06.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 06:40:22 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 09:40:22 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, seanpaul@chromium.org,
+        jani.nikula@linux.intel.com,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm: tweak drm_print_bits()
+Message-ID: <20190923134022.GZ218215@art_vandelay>
+References: <20190923065814.4797-1-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905120539.978233418@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190923065814.4797-1-kraxel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 02:03:43PM +0200, Thomas Gleixner wrote:
-> Similar to creating timers on a process there is no restriction at all to
-> read the Posix CPU clocks of any process in the system. Per thread CPU
-> clock access is limited to threads in the same thread group.
+On Mon, Sep 23, 2019 at 08:58:14AM +0200, Gerd Hoffmann wrote:
+> There is little reason for the from/to logic, printing a subset of
+> the bits can be done by simply shifting/masking value if needed.
 > 
-> The per process CPU clocks can be used to observe activity of tasks and
-> reading them can affect the execution of the process to which they are
-> attached as reading can require to lock sighand lock and sum up the fine
-> grained accounting for all threads in the process.
+> Also use for_each_set_bit().
 > 
-> Restrict it by checking ptrace MODE_READ permissions of the reader on the
-> target process.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Sean Paul <sean@poorly.run>
+
+> ---
+>  include/drm/drm_print.h              |  5 ++---
+>  drivers/gpu/drm/drm_gem_ttm_helper.c |  4 ++--
+>  drivers/gpu/drm/drm_print.c          | 20 +++++++++-----------
+>  3 files changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+> index 12d4916254b4..89d38d07316c 100644
+> --- a/include/drm/drm_print.h
+> +++ b/include/drm/drm_print.h
+> @@ -89,9 +89,8 @@ __printf(2, 3)
+>  void drm_printf(struct drm_printer *p, const char *f, ...);
+>  void drm_puts(struct drm_printer *p, const char *str);
+>  void drm_print_regset32(struct drm_printer *p, struct debugfs_regset32 *regset);
+> -void drm_print_bits(struct drm_printer *p,
+> -		    unsigned long value, const char *bits[],
+> -		    unsigned int from, unsigned int to);
+> +void drm_print_bits(struct drm_printer *p, unsigned long value,
+> +		    const char * const bits[], unsigned int nbits);
+>  
+>  __printf(2, 0)
+>  /**
+> diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
+> index 9a4bafcf20df..a534104d8bee 100644
+> --- a/drivers/gpu/drm/drm_gem_ttm_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
+> @@ -23,7 +23,7 @@
+>  void drm_gem_ttm_print_info(struct drm_printer *p, unsigned int indent,
+>  			    const struct drm_gem_object *gem)
+>  {
+> -	static const char const *plname[] = {
+> +	static const char * const plname[] = {
+>  		[ TTM_PL_SYSTEM ] = "system",
+>  		[ TTM_PL_TT     ] = "tt",
+>  		[ TTM_PL_VRAM   ] = "vram",
+> @@ -40,7 +40,7 @@ void drm_gem_ttm_print_info(struct drm_printer *p, unsigned int indent,
+>  	const struct ttm_buffer_object *bo = drm_gem_ttm_of_gem(gem);
+>  
+>  	drm_printf_indent(p, indent, "placement=");
+> -	drm_print_bits(p, bo->mem.placement, plname, 0, ARRAY_SIZE(plname));
+> +	drm_print_bits(p, bo->mem.placement, plname, ARRAY_SIZE(plname));
+>  	drm_printf(p, "\n");
+>  
+>  	if (bo->mem.bus.is_iomem) {
+> diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+> index dfa27367ebb8..52cc7b38eb12 100644
+> --- a/drivers/gpu/drm/drm_print.c
+> +++ b/drivers/gpu/drm/drm_print.c
+> @@ -189,28 +189,26 @@ EXPORT_SYMBOL(drm_printf);
+>   * drm_print_bits - print bits to a &drm_printer stream
+>   *
+>   * Print bits (in flag fields for example) in human readable form.
+> - * The first name in the @bits array is for the bit indexed by @from.
+>   *
+>   * @p: the &drm_printer
+>   * @value: field value.
+>   * @bits: Array with bit names.
+> - * @from: start of bit range to print (inclusive).
+> - * @to: end of bit range to print (exclusive).
+> + * @nbits: Size of bit names array.
+>   */
+> -void drm_print_bits(struct drm_printer *p,
+> -		    unsigned long value, const char *bits[],
+> -		    unsigned int from, unsigned int to)
+> +void drm_print_bits(struct drm_printer *p, unsigned long value,
+> +		    const char * const bits[], unsigned int nbits)
+>  {
+>  	bool first = true;
+>  	unsigned int i;
+>  
+> -	for (i = from; i < to; i++) {
+> -		if (!(value & (1 << i)))
+> -			continue;
+> -		if (WARN_ON_ONCE(!bits[i-from]))
+> +	if (WARN_ON_ONCE(nbits > BITS_PER_TYPE(value)))
+> +		nbits = BITS_PER_TYPE(value);
+> +
+> +	for_each_set_bit(i, &value, nbits) {
+> +		if (WARN_ON_ONCE(!bits[i]))
+>  			continue;
+>  		drm_printf(p, "%s%s", first ? "" : ",",
+> -			   bits[i-from]);
+> +			   bits[i]);
+>  		first = false;
+>  	}
+>  	if (first)
+> -- 
+> 2.18.1
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
