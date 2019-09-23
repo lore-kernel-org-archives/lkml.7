@@ -2,112 +2,136 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E74C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF15C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE1E2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8C520B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oGrEaNna";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QC8zG9kF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392542AbfIWGG6 (ORCPT
+        id S2392628AbfIWGLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:06:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:65031 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfIWGG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:06:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:06:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,539,1559545200"; 
-   d="scan'208";a="188965441"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.6])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Sep 2019 23:06:54 -0700
-Date:   Mon, 23 Sep 2019 14:06:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Ayman Bagabas <ayman.bagabas@gmail.com>
-Cc:     kbuild-all@01.org, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] platform/x86: huawei-wmi: Add battery charging
- thresholds
-Message-ID: <20190923060643.GE15734@shao2-debian>
+        Mon, 23 Sep 2019 02:11:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53134 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfIWGLW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:11:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3CD4C6074F; Mon, 23 Sep 2019 06:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569219081;
+        bh=8DolRLs0GbfRHEgHoy6D7zlaerPJVBczUABbhVDLUi4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oGrEaNnakGpEe5eeevgLZyjKQYarQ+KmOKEku2A2RRy0wOxjPnHLA0jCRA48gJtfb
+         CcoXEeCdUr4oIx8TryxNb4rq5oc936rJnSGL2z+NB2PyzSOz3UKWfDMaVDc3yXdr/S
+         aRtpQIoAPECCKeJPgbAWjby/ArVS9h8tRFiBQZSQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 7830E6076C;
+        Mon, 23 Sep 2019 06:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569219080;
+        bh=8DolRLs0GbfRHEgHoy6D7zlaerPJVBczUABbhVDLUi4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QC8zG9kFbGEwFoxBqr9a42xT6Vl1DJ/YA+GXa+TvHWqdM6AKHxyIlI5No+UCDbaX2
+         rMWKS+dgm6Wy2OuHgNrQXO/Rmz5xf0CoCSStpcQ7zq5KlWDBDjWNuo+RLZCkvNbfCh
+         V5+4DA5Q1OdwVeyVX5e+efrZrKIJ2FjsJELqrzFE=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190920160250.12510-5-ayman.bagabas@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Sep 2019 11:41:20 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh@kernel.org>,
+        evgreen@chromium.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        devicetree@vger.kernel.org, maz@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+In-Reply-To: <5d8550aa.1c69fb81.39edc.83fc@mx.google.com>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+ <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+ <20190903170722.GA31716@codeaurora.org>
+ <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+ <20190913195326.GA3293@codeaurora.org>
+ <20190917215020.GA15853@codeaurora.org>
+ <5d8550aa.1c69fb81.39edc.83fc@mx.google.com>
+Message-ID: <6b6c357d7cccecd70e88852d7c487114@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ayman,
+On 2019-09-21 03:50, Stephen Boyd wrote:
+> Quoting Lina Iyer (2019-09-17 14:50:20)
+>> On Fri, Sep 13 2019 at 13:53 -0600, Lina Iyer wrote:
+>> >On Thu, Sep 05 2019 at 18:03 -0600, Stephen Boyd wrote:
+>> >>Quoting Lina Iyer (2019-09-03 10:07:22)
+>> >>>On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
+>> >>>>On 02/09/2019 14:38, Rob Herring wrote:
+>> >>>>> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+>> >>>These are not GIC registers but located on the PDC interface to the GIC.
+>> >>>They may or may not be secure access controlled, depending on the SoC.
+>> >>>
+>> >>
+>> >>It looks like it falls under this "mailbox" device which is really the
+>> >>catch all bucket for bits with no home besides they're related to the
+>> >>apps CPUs/subsystem.
+>> >>
+>> >Thanks for pointing to this.
+>> >>      apss_shared: mailbox@17990000 {
+>> >>              compatible = "qcom,sdm845-apss-shared";
+>> >>              reg = <0 0x17990000 0 0x1000>;
+>> >But this doesn't seem correct. The registers in this page are all not
+>> >mailbox door bell registers. We should restrict the space allocated to
+>> >the mbox to 0xC or something, definitely, not the whole page. They all
+>> >cannot be treated as a mailbox registers.
+> 
+> Well the binding is already done and this is the compatible string for
+> this node and register region. Sounds like this node is a mailbox plus
+> some more stuff in the same page.
+> 
 
-Thank you for the patch! Perhaps something to improve:
+Bjorn already noticed ^^ during the
+original review. Hence the compatible
+was correctly named "apss-shared"
+instead of following the older bindings.
 
-[auto build test WARNING on next-20190918]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>> >>              #mbox-cells = <1>;
+>> >>      };
+>> >>
+>> >>Can you point to this node with a phandle and then parse the reg
+>> >>property out of it to use in the scm readl/writel APIs? Maybe it can be
+>> >>a two cell property with <&apps_shared 0xf0> to indicate the offset to
+>> >>the registers to read/write? In non-secure mode presumably we need to
+>> >>also write these registers? Good news is that there's a regmap for this
+>> >>driver already, so maybe that can be acquired from the pdc driver.
+>> >>
+>> >The register space collection seems to be mix of different types of
+>> >application processor registers that should probably not be grouped up
+>> >under one subsystem. A single regmap doesn't seem correct either.
+> 
+> Why isn't a single regmap correct? The PDC driver should be able to use
+> it to read/write into this register space. The lock on the regmap will
+> need to be changed to a raw lock though for RT. Otherwise it looks OK 
+> to
+> me.
 
-url:    https://github.com/0day-ci/linux/commits/Ayman-Bagabas/platform-x86-Huawei-WMI-laptop-extras-driver/20190921-072831
-base:   next-20190918
-:::::: branch date: 31 hours ago
-:::::: commit date: 31 hours ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-smatch warnings:
-drivers/platform/x86/huawei-wmi.c:327 huawei_wmi_battery_get() error: buffer overflow 'ret' 256 <= 256
-
-# https://github.com/0day-ci/linux/commit/2b04f79aef9a86ecb9483dd27a82498fa56bc0c9
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 2b04f79aef9a86ecb9483dd27a82498fa56bc0c9
-vim +/ret +327 drivers/platform/x86/huawei-wmi.c
-
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  311  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  312  static int huawei_wmi_battery_get(int *start, int *end)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  313  {
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  314  	u8 ret[0x100];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  315  	int err, i;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  316  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  317  	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  318  	if (err)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  319  		return err;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  320  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  321  	/* Find the last two non-zero values. Return status is ignored. */
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  322  	i = 0x100;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  323  	do {
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  324  		if (start)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  325  			*start = ret[i-1];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  326  		if (end)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20 @327  			*end = ret[i];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  328  	} while (i > 2 && !ret[i--]);
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  329  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  330  	return 0;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  331  }
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  332  
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
