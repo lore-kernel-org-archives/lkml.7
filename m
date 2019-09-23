@@ -2,86 +2,89 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABCAC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497ABC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A4F20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6A020882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502155AbfIWQ6J (ORCPT
+        id S2440089AbfIWQ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:58:09 -0400
-Received: from scorn.kernelslacker.org ([45.56.101.199]:49212 "EHLO
-        scorn.kernelslacker.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390958AbfIWQ6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:58:09 -0400
-Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
-        by scorn.kernelslacker.org with esmtp (Exim 4.92)
-        (envelope-from <davej@codemonkey.org.uk>)
-        id 1iCRf5-0003Pz-D9; Mon, 23 Sep 2019 12:58:07 -0400
-Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
-        id 01610560162; Mon, 23 Sep 2019 12:58:06 -0400 (EDT)
-Date:   Mon, 23 Sep 2019 12:58:06 -0400
-From:   Dave Jones <davej@codemonkey.org.uk>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
-Subject: Re: ntp audit spew.
-Message-ID: <20190923165806.GA21466@codemonkey.org.uk>
-Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
-        Paul Moore <paul@paul-moore.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
-References: <20190923155041.GA14807@codemonkey.org.uk>
- <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+        Mon, 23 Sep 2019 12:59:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53354 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390600AbfIWQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:59:28 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F9EE87521F;
+        Mon, 23 Sep 2019 16:59:27 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C33F60852;
+        Mon, 23 Sep 2019 16:59:24 +0000 (UTC)
+Message-ID: <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
+Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Date:   Mon, 23 Sep 2019 11:59:23 -0500
+In-Reply-To: <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
+References: <20190911165729.11178-1-swood@redhat.com>
+         <20190911165729.11178-4-swood@redhat.com>
+         <20190917075943.qsaakyent4dxjkq4@linutronix.de>
+         <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Mon, 23 Sep 2019 16:59:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:14:14PM -0400, Paul Moore wrote:
- > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
- > >
- > > I have some hosts that are constantly spewing audit messages like so:
- > >
- > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
- > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
- > > [48850.604005] audit: type=1333 audit(1569252241.675:222): op=offset old=1850302393317 new=3190241577926
- > > [48850.604008] audit: type=1333 audit(1569252241.675:223): op=freq old=-2436281764244 new=-2413071187316
- > > [49926.567270] audit: type=1333 audit(1569253317.638:224): op=offset old=2453141035832 new=2372389610455
- > > [49926.567273] audit: type=1333 audit(1569253317.638:225): op=freq old=-2413071187316 new=-2403561671476
- > >
- > > This gets emitted every time ntp makes an adjustment, which is apparently very frequent on some hosts.
- > >
- > >
- > > Audit isn't even enabled on these machines.
- > >
- > > # auditctl -l
- > > No rules
- > 
- > What happens when you run 'auditctl -a never,task'?  That *should*
- > silence those messages as the audit_ntp_log() function has the
- > requisite audit_dummy_context() check.
+On Tue, 2019-09-17 at 09:06 -0500, Scott Wood wrote:
+> On Tue, 2019-09-17 at 09:59 +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-09-11 17:57:27 [+0100], Scott Wood wrote:
+> > > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > > index 885a195dfbe0..32c6175b63b6 100644
+> > > --- a/kernel/cpu.c
+> > > +++ b/kernel/cpu.c
+> > > @@ -308,7 +308,9 @@ void pin_current_cpu(void)
+> > >  	preempt_lazy_enable();
+> > >  	preempt_enable();
+> > >  
+> > > +	rt_invol_sleep_inc();
+> > >  	__read_rt_lock(cpuhp_pin);
+> > > +	rt_invol_sleep_dec();
+> > >  
+> > >  	preempt_disable();
+> > >  	preempt_lazy_disable();
+> > 
+> > I understand the other one. But now looking at it, both end up in
+> > rt_spin_lock_slowlock_locked() which would be the proper place to do
+> > that annotation. Okay.
+> 
+> FWIW, if my lazy migrate patchset is accepted, then there will be no users
+> of __read_rt_lock() outside rwlock-rt.c and it'll be moot.
 
-They still get emitted.
+I missed the "both" -- which is the "other one" that ends up in
+rt_spin_lock_slowlock_locked()?  stop_one_cpu() doesn't...
 
- > FWIW, this is the distro
- > default for many (most? all?) distros; for example, check
- > /etc/audit/audit.rules on a stock Fedora system.
+-Scott
 
-As these machines aren't using audit, they aren't running auditd either.
-Essentially: nothing enables audit, but the kernel side continues to log
-ntp regardless (no other audit messages seem to do this).
-
-	Dave
 
