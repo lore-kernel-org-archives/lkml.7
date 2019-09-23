@@ -2,100 +2,51 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA715C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6345AC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6A3206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569262977;
-	bh=bAM4CSVbzV0vZ0pXGxDrI5dK05r42EGdRkewL3qJKB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fl78hFOzU2G85K4BXdByUh4g/7XXf+c/Tj0AFD1vvzXTYuxiFvGyGya2JT8WPcClf
-	 nmUupFtjxW8vCVwPxUp84+IWHXH0o6+1cnJ9lIZCW6Y1mOFI9V6rT05JZJLNJs3KuW
-	 x4XraGL3AvQ9/tpiuLNcp3XYg7RhsXs2sy1wlCjc=
+	by mail.kernel.org (Postfix) with ESMTP id 3B5FD21783
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502045AbfIWSW4 (ORCPT
+        id S2440358AbfIWSXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:22:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42518 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfIWSW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:22:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bAM4CSVbzV0vZ0pXGxDrI5dK05r42EGdRkewL3qJKB4=; b=L02ahr1eXKpBw8NCRfILxV97x
-        3mm4hd1byFCUn8tOx6I7NX/EwHWSB++P7HTJP3XPAzc6J+9lbbVa7mw1IXRx7door5oViC0dSUm21
-        evu2kBGDAlH8ev9xd5tLZhS8k3bM4PuIroZ27Knm2x4yXdN56jJHFqFFvVHQI7fppTWhE=;
-Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iCSz5-0004Wn-W8; Mon, 23 Sep 2019 18:22:52 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 48C8DD02998; Mon, 23 Sep 2019 19:22:50 +0100 (BST)
-Date:   Mon, 23 Sep 2019 11:22:50 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: Re: [PATCH AUTOSEL 5.3 173/203] ASoC: es8316: support fixed and
- variable both clock rates
-Message-ID: <20190923182250.GW2036@sirena.org.uk>
-References: <20190922184350.30563-1-sashal@kernel.org>
- <20190922184350.30563-173-sashal@kernel.org>
+        Mon, 23 Sep 2019 14:23:24 -0400
+Received: from muru.com ([72.249.23.125]:34348 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438008AbfIWSXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:23:24 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 76DB0809F;
+        Mon, 23 Sep 2019 18:23:55 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 11:23:20 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com, sre@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: omap2plus_defconfig: Enable DRM_TI_TFP410
+Message-ID: <20190923182320.GB5610@atomide.com>
+References: <20190911174647.29721-1-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WkmTq0Xj5pNQBic9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190922184350.30563-173-sashal@kernel.org>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190911174647.29721-1-aford173@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Adam Ford <aford173@gmail.com> [190911 10:47]:
+> The TFP410 driver was removed but the replacement driver was
+> never enabled.  This patch enableds the DRM_TI_TFP410
+> 
+> Fixes: be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
 
---WkmTq0Xj5pNQBic9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applying into fixes thanks.
 
-On Sun, Sep 22, 2019 at 02:43:19PM -0400, Sasha Levin wrote:
-> From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->=20
-> [ Upstream commit ebe02a5b9ef05e3b812af3d628cdf6206d9ba610 ]
->=20
-> This patch supports some type of machine drivers that set 0 to mclk
-> when sound device goes to idle state. After applied this patch,
-> sysclk =3D=3D 0 means there is no constraint of sound rate and other
-> values will set constraints which is derived by sysclk setting.
-
-This is a new feature and clearly out of scope for stable.
-
---WkmTq0Xj5pNQBic9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JDXkACgkQJNaLcl1U
-h9Dp7wf+MIAr6TsZDQrcehy+HNi7BJlZPWx6oxifo4xxvgugWou0IB7MkrqhVq2s
-fr5qlDKKi47Sbl+sZNtu8LfMZbmD6YW3GBC5srcgTSyn9hMsHWPgDJBxLN495Otm
-B5VFn5LwyyK+376tXeoWlXXx2L/7OCmW0fpfJK7cQ290tz7zeRya6Vw6fKrP69hs
-n6FgoAplZPoceSOTNXg3AofsrfVS1MrLHN9MU2GgX6JMEFaXyf3B9G5qX/7KfNfy
-nI1VHrW/FEmb6nwgWsoh4ot3f19q6lsUjY9T8QbwIXlp7xTVdH0kjXidfA3Zuv2n
-R+rIGfl2eQwXmPv6gW9R0qG0YC+Vkg==
-=z+Z1
------END PGP SIGNATURE-----
-
---WkmTq0Xj5pNQBic9--
+Tony
