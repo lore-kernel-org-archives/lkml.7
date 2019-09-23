@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E1C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634BAC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047BB20867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEDE20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394504AbfIWOhE (ORCPT
+        id S2501961AbfIWOhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:37:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:43456 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 10:37:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:43436 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439970AbfIWOgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:36:47 -0400
+        id S2394205AbfIWOgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:36:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF8071597;
-        Mon, 23 Sep 2019 07:36:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1586F15AB;
+        Mon, 23 Sep 2019 07:36:44 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2630B3F59C;
-        Mon, 23 Sep 2019 07:36:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 59A913F59C;
+        Mon, 23 Sep 2019 07:36:43 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Subject: [PATCH v2 7/9] sh: entry: Remove unneeded need_resched() loop
-Date:   Mon, 23 Sep 2019 15:36:18 +0100
-Message-Id: <20190923143620.29334-8-valentin.schneider@arm.com>
+        uclinux-h8-devel@lists.sourceforge.jp
+Subject: [PATCH v2 4/9] h8300: entry: Remove unneeded need_resched() loop
+Date:   Mon, 23 Sep 2019 15:36:15 +0100
+Message-Id: <20190923143620.29334-5-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190923143620.29334-1-valentin.schneider@arm.com>
 References: <20190923143620.29334-1-valentin.schneider@arm.com>
@@ -48,34 +48,32 @@ code loop.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org
+Cc: uclinux-h8-devel@lists.sourceforge.jp
 ---
- arch/sh/kernel/entry-common.S | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/h8300/kernel/entry.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-index d31f66e82ce5..65a105de52a0 100644
---- a/arch/sh/kernel/entry-common.S
-+++ b/arch/sh/kernel/entry-common.S
-@@ -93,7 +93,7 @@ ENTRY(resume_kernel)
- 	mov.l	@(TI_PRE_COUNT,r8), r0	! current_thread_info->preempt_count
- 	tst	r0, r0
- 	bf	noresched
+diff --git a/arch/h8300/kernel/entry.S b/arch/h8300/kernel/entry.S
+index 4ade5f8299ba..6bde028e7d4a 100644
+--- a/arch/h8300/kernel/entry.S
++++ b/arch/h8300/kernel/entry.S
+@@ -323,7 +323,6 @@ restore_all:
+ resume_kernel:
+ 	mov.l	@(TI_PRE_COUNT:16,er4),er0
+ 	bne	restore_all:8
 -need_resched:
-+
- 	mov.l	@(TI_FLAGS,r8), r0	! current_thread_info->flags
- 	tst	#_TIF_NEED_RESCHED, r0	! need_resched set?
- 	bt	noresched
-@@ -107,8 +107,6 @@ need_resched:
- 	mov.l	1f, r0
- 	jsr	@r0			! call preempt_schedule_irq
- 	 nop
--	bra	need_resched
--	 nop
+ 	mov.l	@(TI_FLAGS:16,er4),er0
+ 	btst	#TIF_NEED_RESCHED,r0l
+ 	beq	restore_all:8
+@@ -332,7 +331,7 @@ need_resched:
+ 	mov.l	sp,er0
+ 	jsr	@set_esp0
+ 	jsr	@preempt_schedule_irq
+-	bra	need_resched:8
++	bra	restore_all:8
+ #endif
  
- noresched:
- 	bra	__restore_all
+ ret_from_fork:
 -- 
 2.22.0
 
