@@ -2,109 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47886C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE58C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B56207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NXa4V1GZ"
+	by mail.kernel.org (Postfix) with ESMTP id 37AD9207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408346AbfIWOW2 (ORCPT
+        id S2437828AbfIWOXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:22:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40722 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405915AbfIWOW1 (ORCPT
+        Mon, 23 Sep 2019 10:23:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40997 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437634AbfIWOXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:22:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEJCZE111282;
-        Mon, 23 Sep 2019 14:21:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=ijA5URtv/98vHuAZIGyZ6iuoFF4Fyn/jEc22CmlTEdM=;
- b=NXa4V1GZRACyU93DDdoCr11+k0CdEOiuckcdwo8czwRjYcwhkGkAgGq2fP/TkCXV4+E5
- K/9Klh+oa9OPyZo3clbzVcl2UStzv4mRxtp0SFca0jcIOIzO+0F22ZEgqOAa+CaozuGF
- Tx7jVP1EYC3sxEQvGd0STjaeD7dR4VCqdCvSJPwHZrsvyf7tClONkVD8UM3zwJMByrtz
- UT6k4hzU57Fsb5TzFSdexrU0xL0BsC9cMpQWf4rY8/0Ok9zXmlBWfPZCSO+d9Sn+BngR
- l/8aLHn3wztAIrqtyc7/sPtfl72EYnhUlX1JCRlb4krkrxCUwVfYdjuMwxA+1NMkFZU/ CQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v5b9tf9gx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 14:21:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEJDrK129050;
-        Mon, 23 Sep 2019 14:19:54 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2v5bpgfa06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 14:19:53 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8NEIj3W006948;
-        Mon, 23 Sep 2019 14:18:45 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Sep 2019 07:18:44 -0700
-Date:   Mon, 23 Sep 2019 17:18:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] nvme: fix an error code in nvme_init_subsystem()
-Message-ID: <20190923141836.GA31251@mwanda>
+        Mon, 23 Sep 2019 10:23:48 -0400
+Received: from [172.58.27.190] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCPFc-0000sx-O6; Mon, 23 Sep 2019 14:23:41 +0000
+Date:   Mon, 23 Sep 2019 16:23:27 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: For review: pidfd_send_signal(2) manual page
+Message-ID: <20190923142325.jowzbnwjw7g7si7j@wittgenstein>
+References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+ <87pnjr9rth.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909230140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909230140
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pnjr9rth.fsf@mid.deneb.enyo.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"ret" should be a negative error code here, but it's either success or
-possibly uninitialized.
+On Mon, Sep 23, 2019 at 01:26:34PM +0200, Florian Weimer wrote:
+> * Michael Kerrisk:
+> 
+> > SYNOPSIS
+> >        int pidfd_send_signal(int pidfd, int sig, siginfo_t info,
+> >                              unsigned int flags);
+> 
+> This probably should reference a header for siginfo_t.
 
-Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/nvme/host/core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Agreed.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 63b37d08ac98..f6acbff3e3bc 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2540,8 +2540,9 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		list_add_tail(&subsys->entry, &nvme_subsystems);
- 	}
- 
--	if (sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
--			dev_name(ctrl->device))) {
-+	ret = sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
-+				dev_name(ctrl->device));
-+	if (ret) {
- 		dev_err(ctrl->device,
- 			"failed to create sysfs link from subsystem.\n");
- 		goto out_put_subsystem;
--- 
-2.20.1
+> 
+> >        ESRCH  The target process does not exist.
+> 
+> If the descriptor is valid, does this mean the process has been waited
+> for?  Maybe this can be made more explicit.
 
+If by valid you mean "refers to a process/thread-group leader" aka is a
+pidfd then yes: Getting ESRCH means that the process has exited and has
+already been waited upon.
+If it had only exited but not waited upon aka is a zombie, then sending
+a signal will just work because that's currently how sending signals to
+zombies works, i.e. if you only send a signal and don't do any
+additional checks you won't notice a difference between a process being
+alive and a process being a zombie. The userspace visible behavior in
+terms of signaling them is identical.
+
+> 
+> >        The  pidfd_send_signal()  system call allows the avoidance of race
+> >        conditions that occur when using traditional interfaces  (such  as
+> >        kill(2)) to signal a process.  The problem is that the traditional
+> >        interfaces specify the target process via a process ID (PID), with
+> >        the  result  that the sender may accidentally send a signal to the
+> >        wrong process if the originally intended target process has termi‐
+> >        nated  and its PID has been recycled for another process.  By con‐
+> >        trast, a PID file descriptor is a stable reference to  a  specific
+> >        process;  if  that  process  terminates,  then the file descriptor
+> >        ceases to be  valid  and  the  caller  of  pidfd_send_signal()  is
+> >        informed of this fact via an ESRCH error.
+> 
+> It would be nice to explain somewhere how you can avoid the race using
+> a PID descriptor.  Is there anything else besides CLONE_PIDFD?
+
+If you're the parent of the process you can do this without CLONE_PIDFD:
+pid = fork();
+pidfd = pidfd_open();
+ret = pidfd_send_signal(pidfd, 0, NULL, 0);
+if (ret < 0 && errno == ESRCH)
+	/* pidfd refers to another, recycled process */
+
+> 
+> >        static
+> >        int pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
+> >                unsigned int flags)
+> >        {
+> >            return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
+> >        }
+> 
+> Please use a different function name.  Thanks.
