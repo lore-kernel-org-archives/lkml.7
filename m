@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F05BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F600C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164742087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3483A20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IXapSXZO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SsHciTvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438480AbfIWI06 (ORCPT
+        id S2404750AbfIWI1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:26:58 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8075 "EHLO
+        Mon, 23 Sep 2019 04:27:02 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8085 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438360AbfIWI0y (ORCPT
+        with ESMTP id S2438473AbfIWI06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:26:54 -0400
+        Mon, 23 Sep 2019 04:26:58 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d8881d40000>; Mon, 23 Sep 2019 01:27:00 -0700
+        id <B5d8881d70000>; Mon, 23 Sep 2019 01:27:03 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 23 Sep 2019 01:26:54 -0700
+  Mon, 23 Sep 2019 01:26:57 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 23 Sep 2019 01:26:54 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
- 2019 08:26:54 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
- 2019 08:26:53 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 23 Sep 2019 08:26:53 +0000
+        by hqpgpgate102.nvidia.com on Mon, 23 Sep 2019 01:26:57 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 08:26:57 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 08:26:56 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 23 Sep 2019 08:26:57 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.65.118]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d8881ca0001>; Mon, 23 Sep 2019 01:26:53 -0700
+        id <B5d8881ce0000>; Mon, 23 Sep 2019 01:26:56 -0700
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -48,9 +48,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Nagarjuna Kristam" <nkristam@nvidia.com>
-Subject: [Patch V10 5/8] arm64: tegra: Add xudc node for Tegra210
-Date:   Mon, 23 Sep 2019 13:55:49 +0530
-Message-ID: <1569227152-3030-6-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V10 6/8] arm64: tegra: Enable xudc on Jetson TX1
+Date:   Mon, 23 Sep 2019 13:55:50 +0530
+Message-ID: <1569227152-3030-7-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
 References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
@@ -58,60 +58,83 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1569227220; bh=EotW9WarrX7CtWNEHHlbpDUot4FQQgJb5GwzwlvtykU=;
+        t=1569227223; bh=m4NydnYXlOc5y1vo/JJms31ak7rdoDrJcyGxNlJCVKE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=IXapSXZONIiYa+f0/hd4V6N1mRzahe8XA/h5j8bzGoJt5LIkNAGEIvy7N+XR8rIFS
-         2udS5olsLdrBywvriZ0FUMoT8Rrz4Ht/5jpHML07CPcd0PquYFmS9QoHMVmz6lXVZH
-         27dOvNyHpwpHL3iHVey/RSqC6HPeHFZniFaoCMIBCpMM8fRpZXqY25vgAmR5N2LoXf
-         o7hRmi5J8JMvNbOnzyH4BglfQaiviXVURdFxNQahEFdoNLSBjhqud2lShrZDpLogY1
-         BFPzFodajwtSj48M9CTnW4hTTK6cOaV+fwNhY0L4Ob9cSxNzpkQ3Sk3gLS0D50eHug
-         Zv+sssd1IbePw==
+        b=SsHciTvGfRmNgiwiOmsTKU9wQTkVTcfcEnyS3D6jLpp5gczSJ1TnvKcgX0W2B5rZh
+         nCmkNFVySp8p3L+Z81HKpxiYJRReXlOEEjR4OzX/pUhApe1+8iA3VuXZxIMUJ2OjyM
+         Bzb5HDAr0xIRlkEVzB2E3Q76L2XLdkMe7oaKe2KPIda4PJnvAZs4lIABrzRPsKSaxN
+         as//e3IylhJZWhotuAaK13ZsWPnY4Rb3y0SAeWy6DVeLP/gSTrsJNx24ng9pcHTNR6
+         7zr2mTuSxuDmIXAm0FNQnvVfNUOfqlyI/paLChCSIFPseu4QS+MDvtSj6BVFDelmq7
+         Y4sDbIkcxCbxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 has one XUSB device mode controller, which can be operated
-HS and SS modes. Add DT support for XUSB device mode controller.
+Enable XUSB device mode driver for USB0 slot on Jetson TX1.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 Reviewed-by: JC Kuo <jckuo@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 30a7c48..fe6a708 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1206,6 +1206,25 @@
- 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index a7dc319..489911b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1362,7 +1362,7 @@
+ 				status = "okay";
+ 
+ 				lanes {
+-					usb2-0 {
++					micro_b: usb2-0 {
+ 						nvidia,function = "xusb";
+ 						status = "okay";
+ 					};
+@@ -1483,6 +1483,21 @@
+ 		vmmc-supply = <&vdd_3v3_sd>;
  	};
  
 +	usb@700d0000 {
-+		compatible = "nvidia,tegra210-xudc";
-+		reg = <0x0 0x700d0000 0x0 0x8000>,
-+		      <0x0 0x700d8000 0x0 0x1000>,
-+		      <0x0 0x700d9000 0x0 0x1000>;
-+		reg-names = "base", "fpci", "ipfs";
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
-+		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
-+		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+		power-domain-names = "dev", "ss";
-+		nvidia,xusb-padctl = <&padctl>;
-+		status = "disabled";
++		status = "okay";
++		phys = <&micro_b>;
++		phy-names = "usb2";
++		avddio-usb-supply = <&vdd_3v3_sys>;
++		hvdd-usb-supply = <&vdd_1v8>;
++		usb-role-switch;
++
++		port {
++			usb_role_switch: endpoint {
++				remote-endpoint = <&usb_b_conn_ep>;
++			};
++		};
 +	};
 +
- 	mipi: mipi@700e3000 {
- 		compatible = "nvidia,tegra210-mipi";
- 		reg = <0x0 0x700e3000 0x0 0x100>;
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -1641,4 +1656,18 @@
+ 			linux,code = <KEY_VOLUMEUP>;
+ 		};
+ 	};
++
++	usb_type_b: connector {
++		compatible = "usb-b-connector", "gpio-usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
++
++		port {
++			usb_b_conn_ep: endpoint {
++				remote-endpoint = <&usb_role_switch>;
++			};
++		};
++	};
++
+ };
 -- 
 2.7.4
 
