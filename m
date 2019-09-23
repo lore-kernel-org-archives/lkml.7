@@ -2,131 +2,156 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31496C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE40C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D33217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E898B20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569263190;
+	bh=PYQSpfP3R9Qt4GNq67LYTzixIBSTBWF8HlFGWKRu6ZE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FajMXTchezhl0t4duTKSfSNp70sNIkJ/e2v9Vd3vlDchhK7Mo6jZmBLIuB72AseI1
+	 xKyJ/K21bz5LP3BD68EkMDYZw9eCIFUhCqIkR0w4eRvAhnsn5GEFhQgAtKEyI/4UST
+	 ibZRQ1EihOgLMqri8jN6zqnJbmzAepzsGwazxFWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbfIWS0N (ORCPT
+        id S2438242AbfIWS03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:26:13 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52014 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732942AbfIWS0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:26:12 -0400
-Received: by mail-io1-f69.google.com with SMTP id x13so9770323ioa.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Wp+WOxmIS7xEA02hFIkA48OyPRBkMcKVWO+Q59/ep3w=;
-        b=TaxWI6XIPDvHX5oY6yrN9k5nHnbk1HFSu8ElDI0RS8lvwDFvbhSz28jB/+U/RbVnfw
-         Pjozxd3YCb3zlZftRB+YpYbDeywe/KKssrWMRnxDIJicl1VFcq4R9zjM4tYbE3LdyDd/
-         LSvhdN0qjsbeY1GfPLDiYv3aLpXWssPeBKjjAQarRF84f6GzAS6EA3KZmN0RpV8xke47
-         92aVKyDJdVZQWtg5MbRXMb805s8vBUplfJzMJqAreKw3+PGtMHP9u3qusPizyNkMtzvn
-         ZvNwdY37gAuspwqM5Y8cD2SChtluBZCPrjDP3jXpsrt4vmh1DMfIvgEno3Rbgos7v58q
-         LORg==
-X-Gm-Message-State: APjAAAWqiUwofkM1vcodWpGF6PmtgsyS7Kv6aUqtqm9fNyFN3naclh2c
-        cANh2aXtBICR0/8ERMsoqcGL6ddES1OJtpF9G7Wpx9a51nrT
-X-Google-Smtp-Source: APXvYqxXKvyI6gkF2fxEbgVSBMSnm/K5sNn1xNC4xSjPHJP1Zu+7ehuPVelloZn8PCtalDMPhbxYLmpW2im/PNrqrRraa3dXqS0B
+        Mon, 23 Sep 2019 14:26:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:46600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731405AbfIWS02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:26:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED436142F;
+        Mon, 23 Sep 2019 11:26:27 -0700 (PDT)
+Received: from big-swifty.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEC353F694;
+        Mon, 23 Sep 2019 11:26:24 -0700 (PDT)
+From:   Marc Zyngier <maz@kernel.org>
+To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>
+Subject: [PATCH 00/35] irqchip/gic-v4: GICv4.1 architecture support
+Date:   Mon, 23 Sep 2019 19:25:31 +0100
+Message-Id: <20190923182606.32100-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8c17:: with SMTP id n23mr818164ioj.46.1569263171386;
- Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 11:26:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e3c7de05933c8d39@google.com>
-Subject: general protection fault in finish_writeback_work
-From:   syzbot <syzbot+828abc56e48ada4b0195@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+[Apologies for posting this during the merge window, I'm fighting against
+ another deadline which is incompatible with the -rc1 time frame]
 
-syzbot found the following crash on:
+This rather long series expands the existing GICv4 support to deal with the
+new GICv4.1 architecture, which comes with a set of major improvements
+compared to v4.0:
 
-HEAD commit:    24ccb0ab qede: qede_fp: simplify a bit 'qede_rx_build_skb()'
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a5b229600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dfcf592db22b9132
-dashboard link: https://syzkaller.appspot.com/bug?extid=828abc56e48ada4b0195
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+- One architectural doorbell per vcpu, instead of one doorbell per VLPI
 
-Unfortunately, I don't have any reproducer for this crash yet.
+- Doorbell entirely managed by the HW, with an "at most once" delivery
+  guarantee per non-residency phase and only when requested by the
+  hypervisor
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+828abc56e48ada4b0195@syzkaller.appspotmail.com
+- A shared memory scheme between ITSs and redistributors, allowing for an
+  optimised residency sequence (the use of VMOVP becomes less frequent)
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8777 Comm: kworker/u4:5 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-RIP: 0010:__lock_acquire+0x1265/0x4e70 kernel/locking/lockdep.c:3828
-Code: 00 0f 85 0e 26 00 00 48 81 c4 e8 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
-5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
-85 dd 2a 00 00 49 81 3e a0 25 06 8a 0f 84 4e ee ff
-RSP: 0018:ffff88806930f938 EFLAGS: 00010007
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 03fffe22022b47e2 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff88806930fa48 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff138cf90 R11: ffff8880693002c0 R12: 1ffff110115a3f15
-R13: 0000000000000000 R14: 1ffff110115a3f15 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2136820ea0 CR3: 000000008ab86000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
-  wb_do_writeback fs/fs-writeback.c:2030 [inline]
-  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace b7a1091622454beb ]---
-RIP: 0010:__lock_acquire+0x1265/0x4e70 kernel/locking/lockdep.c:3828
-Code: 00 0f 85 0e 26 00 00 48 81 c4 e8 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
-5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
-85 dd 2a 00 00 49 81 3e a0 25 06 8a 0f 84 4e ee ff
-RSP: 0018:ffff88806930f938 EFLAGS: 00010007
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 03fffe22022b47e2 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff88806930fa48 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff138cf90 R11: ffff8880693002c0 R12: 1ffff110115a3f15
-R13: 0000000000000000 R14: 1ffff110115a3f15 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2136820ea0 CR3: 000000008ab86000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+- Support for direct virtual SGI delivery (the injection path still involves
+  the hypervisor), at the cost of losing the active state on SGIs. It
+  shouldn't be a big deal, but some guest operating systems might notice
+  (Linux definitely won't care)
+
+On the other hand, public documentation is not available yet, so that's a
+bit annoying..
+
+The series is roughly organised in 5 parts:
+
+(1) A bunch of reworks to make the checking of some features more
+    straightforward,
+(2) VPE table allocation, new flavours of VMAPP/VMOVP commands
+(3) v4.1 doorbell management
+(4) Virtual SGI support
+(5) Plumbing of virtual SGIs in KVM
+
+Note that patch #1 has been previously posted, and forms the base of this
+work. This has had *very little* testing on a fairly early model, and some
+behaviours are unexpected (the VSGI feature clearly misbehaves). But it is
+in a shape that should make it possible to review and even debug. Consider
+this an opportunity to influence the shape of this code at an early stage!
+;-)
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Marc Zyngier (35):
+  KVM: arm64: vgic-v4: Move the GICv4 residency flow to be driven by
+    vcpu_load/put
+  irqchip/gic-v3-its: Factor out wait_for_syncr primitive
+  irqchip/gic-v3-its: Allow LPI invalidation via the DirectLPI interface
+  irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
+  irqchip/gic-v3: Add GICv4.1 VPEID size discovery
+  irqchip/gic-v3-its: Make is_v4 use a TYPER copy
+  irqchip/gic-v3-its: Kill its->ite_size and use TYPER copy instead
+  irqchip/gic-v3-its: Kill its->device_ids and use TYPER copy instead
+  irqchip/gic-v3-its: Add get_vlpi_map() helper
+  irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation
+  irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
+  irqchip/gic-v4.1: Don't use the VPE proxy if RVPEID is set
+  irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP
+  irqchip/gic-v4.1: Plumb skeletal VPE irqchip
+  irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
+  irqchip/gic-v4.1: Add VPE residency callback
+  irqchip/gic-v4.1: Add VPE eviction callback
+  irqchip/gic-v4.1: Add VPE INVALL callback
+  irqchip/gic-v4.1: Suppress per-VLPI doorbell
+  irqchip/gic-v4.1: Allow direct invalidation of VLPIs
+  irqchip/gic-v4.1: Advertise support v4.1 to KVM
+  irqchip/gic-v4.1: Map the ITS SGIR register page
+  irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+  irqchip/gic-v4.1: Add initial SGI configuration
+  irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
+  irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
+  irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+  irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction
+    layer
+  irqchip/gic-v4.1: Add VSGI allocation/teardown
+  irqchip/gic-v4.1: Add VSGI property setup
+  irqchip/gic-v4.1: Eagerly vmap vPEs
+  KVM: arm64: GICv4.1: Let doorbells be auto-enabled
+  KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
+  KVM: arm64: GICv4.1: Configure SGIs as HW interrupts
+  KVM: arm64: GICv4.1: Expose HW-based SGIs in debugfs
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ arch/arm/include/asm/arch_gicv3.h      |    2 +
+ arch/arm64/include/asm/arch_gicv3.h    |    1 +
+ drivers/irqchip/irq-gic-v3-its.c       | 1099 +++++++++++++++++++++---
+ drivers/irqchip/irq-gic-v3.c           |   25 +-
+ drivers/irqchip/irq-gic-v4.c           |  143 ++-
+ include/kvm/arm_vgic.h                 |    5 +-
+ include/linux/irqchip/arm-gic-common.h |    2 +
+ include/linux/irqchip/arm-gic-v3.h     |   75 +-
+ include/linux/irqchip/arm-gic-v4.h     |   45 +-
+ virt/kvm/arm/arm.c                     |   12 +-
+ virt/kvm/arm/vgic/vgic-debug.c         |   14 +-
+ virt/kvm/arm/vgic/vgic-mmio-v3.c       |   15 +-
+ virt/kvm/arm/vgic/vgic-mmio.c          |   88 +-
+ virt/kvm/arm/vgic/vgic-v3.c            |    5 +
+ virt/kvm/arm/vgic/vgic-v4.c            |  106 ++-
+ virt/kvm/arm/vgic/vgic.c               |    4 -
+ virt/kvm/arm/vgic/vgic.h               |    2 -
+ 17 files changed, 1466 insertions(+), 177 deletions(-)
+
+-- 
+2.20.1
+
