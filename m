@@ -2,172 +2,54 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B756C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF479C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1166320882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569228766;
-	bh=O+MLhqK9tgR+sNoL6CbPxD3SKCj549qnEbeEGxWxo84=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=OkAgcqZIkq1sJHmU43XkipjkzdX9OJYwW8zpdSB/KP3GlaSZ2jOALtOmIz7d3Gykw
-	 qMwazbawS8c5h7DnZt5l1JLgZ+z8Jt1Vu8de4sLa6nFrHEbn63rY/Le9sat1LlYgil
-	 3AIY6xq/vsK51LNJ4jSJmh/wbxzvu0niT0Aio+x4=
+	by mail.kernel.org (Postfix) with ESMTP id AF7422087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbfIWIwp (ORCPT
+        id S1731970AbfIWIxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:52:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:38874 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731734AbfIWIwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:52:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A56D1000;
-        Mon, 23 Sep 2019 01:52:44 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD0883F59C;
-        Mon, 23 Sep 2019 01:52:42 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
- <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
-Date:   Mon, 23 Sep 2019 09:52:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 23 Sep 2019 04:53:30 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38336 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731943AbfIWIx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:53:29 -0400
+Received: from localhost (unknown [185.13.106.231])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9BE95154467CB;
+        Mon, 23 Sep 2019 01:53:27 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 10:53:23 +0200 (CEST)
+Message-Id: <20190923.105323.344196507088158149.davem@davemloft.net>
+To:     pc@cjr.nz
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        aaptel@suse.com
+Subject: Re: [PATCH v2 1/3] cifs: Add support for root file systems
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190919152116.27076-1-pc@cjr.nz>
+References: <20190716220452.3382-1-paulo@paulo.ac>
+        <20190919152116.27076-1-pc@cjr.nz>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 23 Sep 2019 01:53:29 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/09/2019 20:08, Florian Fainelli wrote:
-> 
-> 
-> On 9/22/2019 5:38 AM, Marc Zyngier wrote:
->> On Fri, 13 Sep 2019 12:15:42 -0700
->> Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->>> On some specific chips like 7211 we need to leave some interrupts
->>> untouched/forwarded to the VPU which is another agent in the system
->>> making use of that interrupt controller hardware (goes to both ARM GIC
->>> and VPU L1 interrupt controller). Make that possible by using the
->>> existing brcm,int-fwd-mask property.
->>>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>> ---
->>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->>>  1 file changed, 13 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
->>> index 0673a44bbdc2..811a34201dd4 100644
->>> --- a/drivers/irqchip/irq-bcm7038-l1.c
->>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->>>  	struct list_head	list;
->>>  	u32			wake_mask[MAX_WORDS];
->>>  #endif
->>> +	u32			irq_fwd_mask[MAX_WORDS];
->>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->>>  };
->>>  
->>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  	resource_size_t sz;
->>>  	struct bcm7038_l1_cpu *cpu;
->>>  	unsigned int i, n_words, parent_irq;
->>> +	int ret;
->>>  
->>>  	if (of_address_to_resource(dn, idx, &res))
->>>  		return -EINVAL;
->>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  	else if (intc->n_words != n_words)
->>>  		return -EINVAL;
->>>  
->>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
->>
->> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
-> 
-> Here it is meant to be "forward", we have defined this property name
-> before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
-> multiplying properties would be appropriate, see patch #4. If you prefer
-> something named brcm,firmware-configured-mask, let me know.
 
-It's just a name, but I found it a bit confusing. Bah, never mind.
+Please resubmit this series when the net-next tree opens back up, and also
+with an appropriate "[PATCH 0/N]" header posting explaining what the patch
+series is doing, how it is doing it, and why it is doing it that way.
 
->>
->>> +					 intc->irq_fwd_mask, n_words);
->>> +	if (ret != 0 && ret != -EINVAL) {
->>> +		/* property exists but has the wrong number of words */
->>> +		pr_err("invalid brcm,int-fwd-mask property\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->>>  					GFP_KERNEL);
->>>  	if (!cpu)
->>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  		return -ENOMEM;
->>>  
->>>  	for (i = 0; i < n_words; i++) {
->>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
->>> -		cpu->mask_cache[i] = 0xffffffff;
->>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
->>> +			  cpu->map_base + reg_mask_set(intc, i));
->>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
->>
->> I seem to remember that (0xffffffff & whatever) == whatever, as long as
->> 'whatever' is a 32bit quantity. So what it this for?
-> 
-> It is 0xffff_ffff & ~whatever here.
-
-Which doesn't change anything.
-
-> In the absence of this property
-> being specified, the data is all zeroed out, so we would have
-> 0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
-> specified, we would have one more or bits set, and it would be e.g.:
-> 0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
-> what we would want here to preserve whatever the firmware has already
-> configured.
-
-OK, I must be stupid:
-
-#include <stdio.h>
-
-int main(int argc, char *argv[])
-{
-	unsigned int v = 0x100;
-	printf ("%x\n", ~v);
-}
-maz@filthy-habit$ ./x
-fffffeff
-
-You might as well OR it with zeroes, if you want.
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Thank you.
