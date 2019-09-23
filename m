@@ -6,162 +6,214 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5616EC32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA9C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3673920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0692920835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439476AbfIWLnp (ORCPT
+        id S2407530AbfIWLnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:43:45 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35308 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726146AbfIWLnp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:43:45 -0400
-X-IronPort-AV: E=Sophos;i="5.64,539,1559512800"; 
-   d="scan'208";a="402978736"
-Received: from unknown (HELO hadrien) ([65.39.69.237])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 13:43:42 +0200
-Date:   Mon, 23 Sep 2019 13:43:41 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Valentin Schneider <valentin.schneider@arm.com>
-cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: sched: make struct task_struct::state 32-bit
-In-Reply-To: <d529c390-546e-a8a4-f475-c3ee41f97645@arm.com>
-Message-ID: <alpine.DEB.2.21.1909231340090.2227@hadrien>
-References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com> <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de> <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com> <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com> <alpine.DEB.2.21.1909231228200.2272@hadrien>
- <d529c390-546e-a8a4-f475-c3ee41f97645@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 23 Sep 2019 07:43:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41994 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbfIWLns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:43:48 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 77850300CA4B;
+        Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
+Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E23345D9E2;
+        Mon, 23 Sep 2019 11:43:44 +0000 (UTC)
+Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
+From:   David Hildenbrand <david@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        linux-hyperv@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20190909114830.662-1-david@redhat.com>
+ <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
+ <20190923085807.GD6016@dhcp22.suse.cz>
+ <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
+ <20190923111559.GK6016@dhcp22.suse.cz>
+ <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <388fdfa4-6cd9-bfcd-3f7b-546e54c11a97@redhat.com>
+Date:   Mon, 23 Sep 2019 13:43:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >> // FIXME: match functions that do something with state_var underneath?
-> >> // How to do recursive rules?
-> >
-> > You want to look at the definitions of called functions?  Coccinelle
-> > doesn't really support that, but there are hackish ways to add that.  How
-> > many function calls would you expect have to be unrolled?
-> >
->
-> I wouldn't expect more than a handful (~5). I suppose this has to do with
-> injecting some Python/Ocaml code? I have some examples bookmarked but
-> haven't gotten to stare at them long enough.
+On 23.09.19 13:34, David Hildenbrand wrote:
+> On 23.09.19 13:15, Michal Hocko wrote:
+>> On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
+>>> On 23.09.19 10:58, Michal Hocko wrote:
+>>>> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
+>>>>> On 09.09.19 13:48, David Hildenbrand wrote:
+>>>>>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
+>>>>>>
+>>>>>> Let's replace the __online_page...() functions by generic_online_page().
+>>>>>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
+>>>>>> can simpy re-use the generic function.
+>>>>>>
+>>>>>> Only compile-tested.
+>>>>>>
+>>>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>>>>>>
+>>>>>> David Hildenbrand (3):
+>>>>>>   mm/memory_hotplug: Export generic_online_page()
+>>>>>>   hv_balloon: Use generic_online_page()
+>>>>>>   mm/memory_hotplug: Remove __online_page_free() and
+>>>>>>     __online_page_increment_counters()
+>>>>>>
+>>>>>>  drivers/hv/hv_balloon.c        |  3 +--
+>>>>>>  include/linux/memory_hotplug.h |  4 +---
+>>>>>>  mm/memory_hotplug.c            | 17 ++---------------
+>>>>>>  3 files changed, 4 insertions(+), 20 deletions(-)
+>>>>>>
+>>>>>
+>>>>> Ping, any comments on this one?
+>>>>
+>>>> Unification makes a lot of sense to me. You can add
+>>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>>
+>>>> I will most likely won't surprise if I asked for more here though ;)
+>>>
+>>> I'm not surprised, but definitely not in a negative sense ;) I was
+>>> asking myself if we could somehow rework this, too.
+>>>
+>>>> I have to confess I really detest the whole concept of a hidden callback
+>>>> with a very weird API. Is this something we can do about? I do realize
+>>>> that adding a callback would require either cluttering the existing APIs
+>>>> but maybe we can come up with something more clever. Or maybe existing
+>>>> external users of online callback can do that as a separate step after
+>>>> the online is completed - or is this impossible due to locking
+>>>> guarantees?
+>>>>
+>>>
+>>> The use case of this (somewhat special) callback really is to avoid
+>>> selected (unbacked in the hypervisor) pages to get put to the buddy just
+>>> now, but instead to defer that (sometimes, defer till infinity ;) ).
+>>> Especially, to hinder these pages from getting touched at all. Pages
+>>> that won't be put to the buddy will usually get PG_offline set (e.g.,
+>>> Hyper-V and XEN) - the only two users I am aware of.
+>>>
+>>> For Hyper-V (and also eventually virtio-mem), it is important to set
+>>> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
+>>> Only this way, PG_offline is properly set on all pfn_to_online_page()
+>>> pages, meaning "don't touch this page" - e.g., used to skip over such
+>>> pages when suspending or by makedumpfile to skip over such offline pages
+>>> when creating a memory dump.
+>>
+>> Thanks for the clarification. I have never really studied what those
+>> callbacks are doing really.
+>>
+>>> So if we would e.g., try to piggy-back onto the memory_notify()
+>>> infrastructure, we could
+>>> 1. Online all pages to the buddy (dropping the callback)
+>>> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
+>>> -> in the notifier, pull pages from the buddy, mark sections online
+>>> 3. Set all involved sections online (online_mem_sections())
+>>
+>> This doesn't really sound any better. For one pages are immediately
+>> usable when they hit the buddy allocator so this is racy and thus not
+>> reliable.
+>>
+>>> However, I am not sure what actually happens after 1. - we are only
+>>> holding the device hotplug lock and the memory hotplug lock, so the
+>>> pages can just get allocated. Also, it sounds like more work and code
+>>> for the same end result (okay, if the rework is really necessary, though).
+>>>
+>>> So yeah, while the current callback might not be optimal, I don't see an
+>>> easy and clean way to rework this. With the change in this series we are
+>>> at least able to simply defer doing what would have been done without
+>>> the callback - not perfect but better.
+>>>
+>>> Do you have anything in mind that could work out and make this nicer?
+>>
+>> I am wondering why those pages get onlined when they are, in fact,
+>> supposed to be offline.
+>>
+> 
+> It's the current way of emulating sub-memory-block hotplug on top of the
+> memory bock device API we have. Hyper-V and XEN have been using that for
+> a long time.
+> 
 
-You can look at iteration.cocci, but it's a bit complex.
+So one idea would be to let clients set pages to PG_offline during
+MEM_GOING_ONLINE. We could then skip any PG_offline pages when onlining
+pages, not onlining them to the buddy.
 
-You could match definitions of functions that do what you are interested
-in, then store the names of these functions in a list (python/ocaml), and
-then look for calls to those functions.  Something like
+But then, there still has to be a way to online pages when required -
+e.g., generic_online_page(). At least the callback could go.
 
-identifier fn : script:ocaml() { in_my_list fn };
+-- 
 
-> >> // Fixup local variables
-> >> @depends on patch && state_access@
-> >> identifier state_var = state_access.state_var;
-> >> @@
-> >> (
-> >> - long
-> >> + int
-> >> |
-> >> - unsigned long
-> >> + unsigned int
-> >> )
-> >> state_var;
-> >>
-> >> // Fixup function parameters
-> >> @depends on patch && state_access@
-> >> identifier fn;
-> >> identifier state_var = state_access.state_var;
-> >> @@
-> >>
-> >> fn(...,
-> >> - long state_var
-> >> + int state_var
-> >> ,...)
-> >> {
-> >> 	...
-> >> }
-> >>
-> >> // FIXME: find a way to squash that with the above?
-> >
-> > I think that you can make a disjunction on a function parameter
-> >
-> > fn(...,
-> > (
-> > - T1 x1
-> > + T2 x2
-> > |
-> > - T3 x3
-> > + T4 x4
-> > )
-> > , ...) { ... }
-> >
->
-> My attempt at this gives me "minus: parse error", which is why I went
-> with the split.
+Thanks,
 
-OK, the split is probably not a major catastrophe...
-
-julia
-
->
-> Something simple like this works:
-> ---
-> virtual patch
-> virtual report
->
-> @@
-> identifier fn;
-> identifier p;
-> @@
->
-> fn(...,
-> - long
-> + int
-> p
-> ,...)
-> {
-> 	...
-> }
-> ---
->
-> but this doesn't:
-> ---
-> virtual patch
-> virtual report
->
-> @@
-> identifier fn;
-> identifier p;
-> @@
->
-> fn(...,
-> (
-> - long p
-> + int p
-> |
-> - unsigned long p
-> + unsigned int p
-> )
-> ,...)
-> {
-> 	...
-> }
-> ---
->
-> > julia
-> >
->
+David / dhildenb
