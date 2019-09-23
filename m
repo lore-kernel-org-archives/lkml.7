@@ -2,195 +2,300 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD66C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 01:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6027BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 01:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 01:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5C22053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 01:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DJwMPcxw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnLpTUrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390819AbfIWBRO (ORCPT
+        id S2390929AbfIWBUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 21:17:14 -0400
-Received: from mail-eopbgr20068.outbound.protection.outlook.com ([40.107.2.68]:34823
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387843AbfIWBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 21:17:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dOHBBvlcrINS2PdQgtVd2JKmLBEnOGn+/di26ec3KQBpBmDQYGDjTQdwYry86n07DAIaxKW36KsMFb35N4sUIfdwAh6PApHCZsUFWFCvxpMq0/J4l7pfknHptH8u9mFq6Gr8mtNKR50+x3UjikXJ91mDPwVS4u/PDNVRT6cpaeV5953W5K5jCbo5GMWizaBwL1o09O899I9uzSkySKGsctok7bcmccMu3oAKWfc95aClT7C9AS3WFUdbHxq5oPD1l/O2YzqkWAQ8RBORWTctZZSBjSgM4Gw2/qu2RRGTr2tlK1/BfMViF5ARVBz1QehR9pCoz19oUgzlB5wlBsU62A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5RWkkE+qNYv/wMXOcrPAKu7EyZ7G9XQtzMkAM07OuBw=;
- b=ZzTynZtnio8S+nXDvm/GmriM+AfktdPWru73CYsPZBIFC3Nj4pVn5DxAqkjRDO4ced4vd6CL3UuU/bdNwNl7g1GKoI8alPZYIiviooxnd7+zo1Nya0XGb8SCD3JOiJmMhGoK7d5DJ67wwecBawfPbTLqjrVPLFt9XpSKQEZ3b9TD5etmU1TDfZh67fd6H+QdwUD67BrgFcQ6+C8Ygyyb7VacaAQ/MXxK1mmiNWS37OSNqupcoFtsIJJnVj0iyxZNL6uUipeGL1LUeOsxyb0Iq05nneLuPqqVV5YiklbS74/IFcxOoltDS+5+fsqAaOVCxl2FxLcSInwM0t3SI1/jHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5RWkkE+qNYv/wMXOcrPAKu7EyZ7G9XQtzMkAM07OuBw=;
- b=DJwMPcxwLDRFtEFZ7KVfu9wLP7BeIlX6cu8scIkxJDzqxumNlVnyeW0gUUyoBNK60wGEkCmS2zgJ4XRY7Au5E4kMp3jKJ5QDYxBnWNNHMfUXSMYMYXoUta2bpmFqOQ37klY1791d17Gpy6UDtwQjB+VXjWC/P8nKGTeT4Ld2YkA=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5937.eurprd04.prod.outlook.com (20.178.114.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Mon, 23 Sep 2019 01:17:08 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::6ca2:ec08:2b37:8ab8]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::6ca2:ec08:2b37:8ab8%6]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 01:17:08 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 2/2] nvmem: imx: scu: support write
-Thread-Topic: [PATCH 2/2] nvmem: imx: scu: support write
-Thread-Index: AQHVV89l2gZHrF0tR0yZfYtuVeLxmqceUPbwgAAs4wCAGiuDYA==
-Date:   Mon, 23 Sep 2019 01:17:08 +0000
-Message-ID: <AM0PR04MB4481D9B6CF392263E2BE7D8F88850@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1566356496-30493-1-git-send-email-peng.fan@nxp.com>
- <1566356496-30493-2-git-send-email-peng.fan@nxp.com>
- <AM0PR04MB448144701DB63A3C9F05B3E488BA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <dd82e84d-ab22-9dd9-f895-776570f46fee@linaro.org>
-In-Reply-To: <dd82e84d-ab22-9dd9-f895-776570f46fee@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d5c3a3d3-65a7-4d62-c015-08d73fc3c0d6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5937;
-x-ms-traffictypediagnostic: AM0PR04MB5937:|AM0PR04MB5937:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB593731361613925D1D05CC7C88850@AM0PR04MB5937.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(39860400002)(366004)(376002)(189003)(199004)(52536014)(3846002)(6116002)(7696005)(76176011)(6506007)(186003)(9686003)(316002)(54906003)(55016002)(2906002)(33656002)(229853002)(446003)(99286004)(6246003)(486006)(66066001)(4326008)(102836004)(44832011)(476003)(74316002)(11346002)(66446008)(64756008)(25786009)(66556008)(66946007)(76116006)(66476007)(14444005)(256004)(6436002)(305945005)(8676002)(2201001)(7736002)(110136005)(8936002)(26005)(478600001)(86362001)(5660300002)(14454004)(81166006)(2501003)(71200400001)(71190400001)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5937;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +u+CM8H6HUguHt29ZmTzU8BwLA1v5AOLk4JCmJpoHq8D1pgGOr2laUEhhug0K4glURap42dzcqfctYoAJV5/oClJ+1ha+gyejuMTgQiZbUqWYb3QFFPnQd+VRH/kz8j8I+CxFR15GRGGMoPPefl/Iz7qrmHCDASpT+L76jFMVwi1IM9vayjw1cq7IcUl8rBWksuhGZ1nfasWpWN/V9bynB/GtSoBotfSKCfjWy0FKlhjhJEAOPj6pSqrEiWZVY7ud9VUbpDg58eBpF4sByVRxuhTaeNUXd5pbWNXjh1+7F1VggaL5Jaiww7waUCtVbr+Q/vzlkBxgZHTb+kACZyeCWo7oBMhgier/8WS4E3wdv9RGdZe5DdExKZqmNgU8BXQSKe/PWyjDV7jxG0Ig4Em2bL9RUyOYETzdNSaEKcPthg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 22 Sep 2019 21:20:39 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44277 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387843AbfIWBUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 21:20:39 -0400
+Received: by mail-ua1-f65.google.com with SMTP id n2so3803833ual.11;
+        Sun, 22 Sep 2019 18:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yBfCu/VUWJ5N3M0v3fGiMsNf7JIKawuMn8mF8bIor2o=;
+        b=qnLpTUrdFJ42xoHGtpbGfhSQwISM7WfrEfelcSMRHhgJf1YKTTKJQa8bKELHKsZOcv
+         wogMS6Gb2byDKPRwWK0NvG0tLbqCVKVgAymbG44yBB4FDXOVvn2nCN6X3swXalE2KnUU
+         bFJFfH6HpdhYxcz/yQDDVXnZFcmCBSZ8V6vrT8FgNBucEwm+NSzBwtWpky7R3UQ5SwUW
+         4xoobQa9jX5p7OIO1a6S99fwhxrQo41NYn8XUGveCAJhWuJpx6ZozaX6L43cTNbKRayw
+         2bvP6/3qaWgvTAWAno6fS9TsS+gqJrFa+IMevX/ZYiN9TTKxmwAbyhrd060OjAVEmPqE
+         eWtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yBfCu/VUWJ5N3M0v3fGiMsNf7JIKawuMn8mF8bIor2o=;
+        b=pMVMfp1eWkjganmYA1S6ZAW/TDMt0DF3CQkIxCYG8kF//0qHaC3+r3bOd/i/z1SeSe
+         abR1nu3QdNcpZfb6jW/4uaTuXH2eQ5HYZPd1M7Aa+qqC0+iL5vQVNvmMsY9kbIlmnANq
+         9WRK6cf4USMLkFZ1iFIbJeVOI43lhYHTkb0amTv48CDIFkcQ0bad0S9VWtbU/K2qM6jp
+         oUOEf93zPJMWU659djbrMWn6WxRwM7/svsZ3Wub3gTpllsd09axjbmdA/lit3joyH0jz
+         IlbSVUgeaYFOFWoicWJg/OQ8LuBjic+ymnKztoqCpLUUHs0yCSFSYg3VQMwoDxfQl2cI
+         JGqw==
+X-Gm-Message-State: APjAAAUwzawgoIWPF9W/n1KaeC7RlBfB3oK61jCEQBljJDgGNfmYv2W2
+        ikK+4GB27iUAoR4gHTtIYu/4ciF+SLeTKRWx7vY=
+X-Google-Smtp-Source: APXvYqwZA9zKm9FQ+UpldegcXBO5c6bNmAKbjCjFRbvO5MvIdAu9g+xlkkWyn307k7vWEW1Z6MNM0/NLwpbqBcszZzc=
+X-Received: by 2002:ab0:2041:: with SMTP id g1mr7798749ual.45.1569201637331;
+ Sun, 22 Sep 2019 18:20:37 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5c3a3d3-65a7-4d62-c015-08d73fc3c0d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 01:17:08.1287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EVnxqjiikXaQJDuW9w2pWwJFQZLzCPTuUvObqYDUAuBl96BjZsSEnhMsQDrjkpB32s5CuQ8740EXVzL/uLfjDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5937
+References: <20190920185843.4096-1-matthew.cover@stackpath.com>
+ <20190922080326-mutt-send-email-mst@kernel.org> <CAGyo_hqGbFdt1PoDrmo=S5iTO8TwbrbtOJtbvGT1WrFFMLwk-Q@mail.gmail.com>
+ <0f4541d9-a405-6185-7e54-112dc9188146@redhat.com>
+In-Reply-To: <0f4541d9-a405-6185-7e54-112dc9188146@redhat.com>
+From:   Matt Cover <werekraken@gmail.com>
+Date:   Sun, 22 Sep 2019 18:20:24 -0700
+Message-ID: <CAGyo_hp-PJUg7GWFK996vqRxn=cCEdE=hcWdYhyf4K-nSU9qYQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] tuntap: Fallback to automq on TUNSETSTEERINGEBPF
+ prog negative return
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, davem@davemloft.net,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com,
+        Eric Dumazet <edumazet@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Matthew Cover <matthew.cover@stackpath.com>,
+        mail@timurcelik.de, pabeni@redhat.com,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        wangli39@baidu.com, lifei.shirley@bytedance.com,
+        tglx@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3Jpbml2YXMsDQoNCj4gPj4gU3ViamVjdDogW1BBVENIIDIvMl0gbnZtZW06IGlteDogc2N1
-OiBzdXBwb3J0IHdyaXRlDQo+ID4NCj4gPiBQaW5nLi4NCj4gPg0KPiBUaGFua3MgZm9yIHlvdXIg
-cGF0aWVuY2UhDQo+IEkgbm9ybWFsbHkgZG8gbm90IHRha2UgcGF0Y2hlcyBhZnRlciByYzUgZm9y
-IG52bWVtLg0KPiBUaGVzZSB3aWxsIGJlIGFwcGxpZWQgYWZ0ZXIgcmMxIGlzIHJlbGVhc2VkIQ0K
-DQpTb3JyeSB0byBwaW5nIGFnYWluLiBXaWxsIHlvdSBwaWNrIHVwIHNpbmNlIG1lcmdlIHdpbmRv
-dyBpcyBvcGVuPw0KDQpUaGFua3MsDQpQZW5nLg0KDQo+IA0KPiBUaGFua3MsDQo+IHNyaW5pDQo+
-ID4gVGhhbmtzLA0KPiA+IFBlbmcuDQo+ID4NCj4gPj4NCj4gPj4gRnJvbTogUGVuZyBGYW4gPHBl
-bmcuZmFuQG54cC5jb20+DQo+ID4+DQo+ID4+IFRoZSBmdXNlIHByb2dyYW1taW5nIGZyb20gbm9u
-LXNlY3VyZSB3b3JsZCBpcyBibG9ja2VkLCBzbyB3ZSBjb3VsZA0KPiA+PiBvbmx5IHVzZSBBcm0g
-VHJ1c3RlZCBGaXJtd2FyZSBTSVAgY2FsbCB0byBsZXQgQVRGIHByb2dyYW0gZnVzZS4NCj4gPj4N
-Cj4gPj4gQmVjYXVzZSB0aGVyZSBpcyBFQ0MgcmVnaW9uIHRoYXQgY291bGQgb25seSBiZSBwcm9n
-cmFtbWVkIG9uY2UsIHNvDQo+ID4+IGFkZCBhIGhlbGVyIGluX2VjYyB0byBjaGVjayB0aGUgZWNj
-IHJlZ2lvbi4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
-cC5jb20+DQo+ID4+IC0tLQ0KPiA+Pg0KPiA+PiBUaGUgQVRGIHBhdGNoIHdpbGwgc29vbiBiZSBw
-b3N0ZWQgdG8gQVRGIGNvbW11bml0eS4NCj4gPj4NCj4gPj4gICBkcml2ZXJzL252bWVtL2lteC1v
-Y290cC1zY3UuYyB8IDczDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKy0NCj4gPj4gICAxIGZpbGUgY2hhbmdlZCwgNzIgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9udm1lbS9pbXgtb2NvdHAt
-c2N1LmMNCj4gPj4gYi9kcml2ZXJzL252bWVtL2lteC1vY290cC1zY3UuYyBpbmRleCAyZjMzOWQ3
-NDMyZTYuLjBmMDY0ZjJlNzRhOA0KPiA+PiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9udm1l
-bS9pbXgtb2NvdHAtc2N1LmMNCj4gPj4gKysrIGIvZHJpdmVycy9udm1lbS9pbXgtb2NvdHAtc2N1
-LmMNCj4gPj4gQEAgLTcsNiArNyw3IEBADQo+ID4+ICAgICogUGVuZyBGYW4gPHBlbmcuZmFuQG54
-cC5jb20+DQo+ID4+ICAgICovDQo+ID4+DQo+ID4+ICsjaW5jbHVkZSA8bGludXgvYXJtLXNtY2Nj
-Lmg+DQo+ID4+ICAgI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9zY2kuaD4NCj4gPj4gICAj
-aW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4+ICAgI2luY2x1ZGUgPGxpbnV4L252bWVtLXBy
-b3ZpZGVyLmg+DQo+ID4+IEBAIC0xNCw2ICsxNSw5IEBADQo+ID4+ICAgI2luY2x1ZGUgPGxpbnV4
-L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+PiAgICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4+
-DQo+ID4+ICsjZGVmaW5lIElNWF9TSVBfT1RQCQkJMHhDMjAwMDAwQQ0KPiA+PiArI2RlZmluZSBJ
-TVhfU0lQX09UUF9XUklURQkJMHgyDQo+ID4+ICsNCj4gPj4gICBlbnVtIG9jb3RwX2RldnR5cGUg
-ew0KPiA+PiAgIAlJTVg4UVhQLA0KPiA+PiAgIH07DQo+ID4+IEBAIC00NSw2ICs0OSw4IEBAIHN0
-cnVjdCBpbXhfc2NfbXNnX21pc2NfZnVzZV9yZWFkIHsNCj4gPj4gICAJdTMyIHdvcmQ7DQo+ID4+
-ICAgfSBfX3BhY2tlZDsNCj4gPj4NCj4gPj4gK3N0YXRpYyBERUZJTkVfTVVURVgoc2N1X29jb3Rw
-X211dGV4KTsNCj4gPj4gKw0KPiA+PiAgIHN0YXRpYyBzdHJ1Y3Qgb2NvdHBfZGV2dHlwZV9kYXRh
-IGlteDhxeHBfZGF0YSA9IHsNCj4gPj4gICAJLmRldnR5cGUgPSBJTVg4UVhQLA0KPiA+PiAgIAku
-bnJlZ3MgPSA4MDAsDQo+ID4+IEBAIC03Myw2ICs3OSwyMyBAQCBzdGF0aWMgYm9vbCBpbl9ob2xl
-KHZvaWQgKmNvbnRleHQsIHUzMiBpbmRleCkNCj4gPj4gICAJcmV0dXJuIGZhbHNlOw0KPiA+PiAg
-IH0NCj4gPj4NCj4gPj4gK3N0YXRpYyBib29sIGluX2VjYyh2b2lkICpjb250ZXh0LCB1MzIgaW5k
-ZXgpIHsNCj4gPj4gKwlzdHJ1Y3Qgb2NvdHBfcHJpdiAqcHJpdiA9IGNvbnRleHQ7DQo+ID4+ICsJ
-Y29uc3Qgc3RydWN0IG9jb3RwX2RldnR5cGVfZGF0YSAqZGF0YSA9IHByaXYtPmRhdGE7DQo+ID4+
-ICsJaW50IGk7DQo+ID4+ICsNCj4gPj4gKwlmb3IgKGkgPSAwOyBpIDwgZGF0YS0+bnVtX3JlZ2lv
-bjsgaSsrKSB7DQo+ID4+ICsJCWlmIChkYXRhLT5yZWdpb25baV0uZmxhZyAmIEVDQ19SRUdJT04p
-IHsNCj4gPj4gKwkJCWlmICgoaW5kZXggPj0gZGF0YS0+cmVnaW9uW2ldLnN0YXJ0KSAmJg0KPiA+
-PiArCQkJICAgIChpbmRleCA8PSBkYXRhLT5yZWdpb25baV0uZW5kKSkNCj4gPj4gKwkJCQlyZXR1
-cm4gdHJ1ZTsNCj4gPj4gKwkJfQ0KPiA+PiArCX0NCj4gPj4gKw0KPiA+PiArCXJldHVybiBmYWxz
-ZTsNCj4gPj4gK30NCj4gPj4gKw0KPiA+PiAgIHN0YXRpYyBpbnQgaW14X3NjX21pc2Nfb3RwX2Z1
-c2VfcmVhZChzdHJ1Y3QgaW14X3NjX2lwYyAqaXBjLCB1MzINCj4gd29yZCwNCj4gPj4gICAJCQkJ
-ICAgICB1MzIgKnZhbCkNCj4gPj4gICB7DQo+ID4+IEBAIC0xMTYsNiArMTM5LDggQEAgc3RhdGlj
-IGludCBpbXhfc2N1X29jb3RwX3JlYWQodm9pZCAqY29udGV4dCwNCj4gPj4gdW5zaWduZWQgaW50
-IG9mZnNldCwNCj4gPj4gICAJaWYgKCFwKQ0KPiA+PiAgIAkJcmV0dXJuIC1FTk9NRU07DQo+ID4+
-DQo+ID4+ICsJbXV0ZXhfbG9jaygmc2N1X29jb3RwX211dGV4KTsNCj4gPj4gKw0KPiA+PiAgIAli
-dWYgPSBwOw0KPiA+Pg0KPiA+PiAgIAlmb3IgKGkgPSBpbmRleDsgaSA8IChpbmRleCArIGNvdW50
-KTsgaSsrKSB7IEBAIC0xMjYsNiArMTUxLDcgQEANCj4gPj4gc3RhdGljIGludCBpbXhfc2N1X29j
-b3RwX3JlYWQodm9pZCAqY29udGV4dCwgdW5zaWduZWQgaW50IG9mZnNldCwNCj4gPj4NCj4gPj4g
-ICAJCXJldCA9IGlteF9zY19taXNjX290cF9mdXNlX3JlYWQocHJpdi0+bnZtZW1faXBjLCBpLCBi
-dWYpOw0KPiA+PiAgIAkJaWYgKHJldCkgew0KPiA+PiArCQkJbXV0ZXhfdW5sb2NrKCZzY3Vfb2Nv
-dHBfbXV0ZXgpOw0KPiA+PiAgIAkJCWtmcmVlKHApOw0KPiA+PiAgIAkJCXJldHVybiByZXQ7DQo+
-ID4+ICAgCQl9DQo+ID4+IEBAIC0xMzQsMTggKzE2MCw2MyBAQCBzdGF0aWMgaW50IGlteF9zY3Vf
-b2NvdHBfcmVhZCh2b2lkICpjb250ZXh0LA0KPiA+PiB1bnNpZ25lZCBpbnQgb2Zmc2V0LA0KPiA+
-Pg0KPiA+PiAgIAltZW1jcHkodmFsLCAodTggKilwICsgb2Zmc2V0ICUgNCwgYnl0ZXMpOw0KPiA+
-Pg0KPiA+PiArCW11dGV4X3VubG9jaygmc2N1X29jb3RwX211dGV4KTsNCj4gPj4gKw0KPiA+PiAg
-IAlrZnJlZShwKTsNCj4gPj4NCj4gPj4gICAJcmV0dXJuIDA7DQo+ID4+ICAgfQ0KPiA+Pg0KPiA+
-PiArc3RhdGljIGludCBpbXhfc2N1X29jb3RwX3dyaXRlKHZvaWQgKmNvbnRleHQsIHVuc2lnbmVk
-IGludCBvZmZzZXQsDQo+ID4+ICsJCQkgICAgICAgdm9pZCAqdmFsLCBzaXplX3QgYnl0ZXMpDQo+
-ID4+ICt7DQo+ID4+ICsJc3RydWN0IG9jb3RwX3ByaXYgKnByaXYgPSBjb250ZXh0Ow0KPiA+PiAr
-CXN0cnVjdCBhcm1fc21jY2NfcmVzIHJlczsNCj4gPj4gKwl1MzIgKmJ1ZiA9IHZhbDsNCj4gPj4g
-Kwl1MzIgdG1wOw0KPiA+PiArCXUzMiBpbmRleDsNCj4gPj4gKwlpbnQgcmV0Ow0KPiA+PiArDQo+
-ID4+ICsJLyogYWxsb3cgb25seSB3cml0aW5nIG9uZSBjb21wbGV0ZSBPVFAgd29yZCBhdCBhIHRp
-bWUgKi8NCj4gPj4gKwlpZiAoKGJ5dGVzICE9IDQpIHx8IChvZmZzZXQgJSA0KSkNCj4gPj4gKwkJ
-cmV0dXJuIC1FSU5WQUw7DQo+ID4+ICsNCj4gPj4gKwlpbmRleCA9IG9mZnNldCA+PiAyOw0KPiA+
-PiArDQo+ID4+ICsJaWYgKGluX2hvbGUoY29udGV4dCwgaW5kZXgpKQ0KPiA+PiArCQlyZXR1cm4g
-LUVJTlZBTDsNCj4gPj4gKw0KPiA+PiArCWlmIChpbl9lY2MoY29udGV4dCwgaW5kZXgpKSB7DQo+
-ID4+ICsJCXByX3dhcm4oIkVDQyByZWdpb24sIG9ubHkgcHJvZ3JhbSBvbmNlXG4iKTsNCj4gPj4g
-KwkJbXV0ZXhfbG9jaygmc2N1X29jb3RwX211dGV4KTsNCj4gPj4gKwkJcmV0ID0gaW14X3NjX21p
-c2Nfb3RwX2Z1c2VfcmVhZChwcml2LT5udm1lbV9pcGMsIGluZGV4LCAmdG1wKTsNCj4gPj4gKwkJ
-bXV0ZXhfdW5sb2NrKCZzY3Vfb2NvdHBfbXV0ZXgpOw0KPiA+PiArCQlpZiAocmV0KQ0KPiA+PiAr
-CQkJcmV0dXJuIHJldDsNCj4gPj4gKwkJaWYgKHRtcCkgew0KPiA+PiArCQkJcHJfd2FybigiRUND
-IHJlZ2lvbiwgYWxyZWFkeSBoYXMgdmFsdWU6ICV4XG4iLCB0bXApOw0KPiA+PiArCQkJcmV0dXJu
-IC1FSU87DQo+ID4+ICsJCX0NCj4gPj4gKwl9DQo+ID4+ICsNCj4gPj4gKwltdXRleF9sb2NrKCZz
-Y3Vfb2NvdHBfbXV0ZXgpOw0KPiA+PiArDQo+ID4+ICsJYXJtX3NtY2NjX3NtYyhJTVhfU0lQX09U
-UCwgSU1YX1NJUF9PVFBfV1JJVEUsIGluZGV4LCAqYnVmLA0KPiA+PiArCQkgICAgICAwLCAwLCAw
-LCAwLCAmcmVzKTsNCj4gPj4gKw0KPiA+PiArCW11dGV4X3VubG9jaygmc2N1X29jb3RwX211dGV4
-KTsNCj4gPj4gKw0KPiA+PiArCXJldHVybiByZXMuYTA7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4g
-ICBzdGF0aWMgc3RydWN0IG52bWVtX2NvbmZpZyBpbXhfc2N1X29jb3RwX252bWVtX2NvbmZpZyA9
-IHsNCj4gPj4gICAJLm5hbWUgPSAiaW14LXNjdS1vY290cCIsDQo+ID4+IC0JLnJlYWRfb25seSA9
-IHRydWUsDQo+ID4+ICsJLnJlYWRfb25seSA9IGZhbHNlLA0KPiA+PiAgIAkud29yZF9zaXplID0g
-NCwNCj4gPj4gICAJLnN0cmlkZSA9IDEsDQo+ID4+ICAgCS5vd25lciA9IFRISVNfTU9EVUxFLA0K
-PiA+PiAgIAkucmVnX3JlYWQgPSBpbXhfc2N1X29jb3RwX3JlYWQsDQo+ID4+ICsJLnJlZ193cml0
-ZSA9IGlteF9zY3Vfb2NvdHBfd3JpdGUsDQo+ID4+ICAgfTsNCj4gPj4NCj4gPj4gICBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBpbXhfc2N1X29jb3RwX2R0X2lkc1tdID0gew0KPiA+
-PiAtLQ0KPiA+PiAyLjE2LjQNCj4gPg0K
+On Sun, Sep 22, 2019 at 5:46 PM Jason Wang <jasowang@redhat.com> wrote:
+>
+>
+> On 2019/9/23 =E4=B8=8A=E5=8D=881:43, Matt Cover wrote:
+> > On Sun, Sep 22, 2019 at 5:37 AM Michael S. Tsirkin <mst@redhat.com> wro=
+te:
+> >> On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
+> >>> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a signa=
+l
+> >>> to fallback to tun_automq_select_queue() for tx queue selection.
+> >>>
+> >>> Compilation of this exact patch was tested.
+> >>>
+> >>> For functional testing 3 additional printk()s were added.
+> >>>
+> >>> Functional testing results (on 2 txq tap device):
+> >>>
+> >>>    [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun no p=
+rog =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returne=
+d '-1'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
+> >>>    [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun prog=
+ -1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returne=
+d '-1'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returne=
+d '-1'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
+> >>>    [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun prog=
+ 0 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returne=
+d '0'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returne=
+d '0'
+> >>>    [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun prog=
+ 1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returne=
+d '1'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returne=
+d '1'
+> >>>    [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D tun prog=
+ 2 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returne=
+d '2'
+> >>>    [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returne=
+d '0'
+> >>>
+> >>> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
+> >>
+> >> Could you add a bit more motivation data here?
+> > Thank you for these questions Michael.
+> >
+> > I'll plan on adding the below information to the
+> > commit message and submitting a v2 of this patch
+> > when net-next reopens. In the meantime, it would
+> > be very helpful to know if these answers address
+> > some of your concerns.
+> >
+> >> 1. why is this a good idea
+> > This change allows TUNSETSTEERINGEBPF progs to
+> > do any of the following.
+> >   1. implement queue selection for a subset of
+> >      traffic (e.g. special queue selection logic
+> >      for ipv4, but return negative and use the
+> >      default automq logic for ipv6)
+>
+>
+> Well, using ebpf means it need to take care of all the cases. E.g you
+> can easily implement the fallback through eBPF as well.
+>
+
+I really think there is value in being
+able to implement a scoped special
+case while leaving the rest of the
+packets in the kernel's hands.
+
+Having to reimplement automq makes
+this hookpoint less accessible to
+beginners and experienced alike.
+
+>
+> >   2. determine there isn't sufficient information
+> >      to do proper queue selection; return
+> >      negative and use the default automq logic
+> >      for the unknown
+>
+>
+> Same as above.
+>
+>
+> >   3. implement a noop prog (e.g. do
+> >      bpf_trace_printk() then return negative and
+> >      use the default automq logic for everything)
+>
+>
+> ditto.
+>
+>
+> >
+> >> 2. how do we know existing userspace does not rely on existing behavio=
+ur
+> > Prior to this change a negative return from a
+> > TUNSETSTEERINGEBPF prog would have been cast
+> > into a u16 and traversed netdev_cap_txqueue().
+> >
+> > In most cases netdev_cap_txqueue() would have
+> > found this value to exceed real_num_tx_queues
+> > and queue_index would be updated to 0.
+> >
+> > It is possible that a TUNSETSTEERINGEBPF prog
+> > return a negative value which when cast into a
+> > u16 results in a positive queue_index less than
+> > real_num_tx_queues. For example, on x86_64, a
+> > return value of -65535 results in a queue_index
+> > of 1; which is a valid queue for any multiqueue
+> > device.
+> >
+> > It seems unlikely, however as stated above is
+> > unfortunately possible, that existing
+> > TUNSETSTEERINGEBPF programs would choose to
+> > return a negative value rather than return the
+> > positive value which holds the same meaning.
+> >
+> > It seems more likely that future
+> > TUNSETSTEERINGEBPF programs would leverage a
+> > negative return and potentially be loaded into
+> > a kernel with the old behavior.
+>
+>
+> Yes, eBPF can return probably wrong value, but what kernel did is just
+> to make sure it doesn't harm anything.
+>
+> I would rather just drop the packet in this case.
+>
+
+In addition to TUN_SSE_ABORT, we can
+add TUN_SSE_DROP. That could be made the
+default for any undefined negative
+return as well.
+
+> Thanks
+>
+>
+> >
+> >> 3. why doesn't userspace need a way to figure out whether it runs on a=
+ kernel with and
+> >>     without this patch
+> > There may be some value in exposing this fact
+> > to the ebpf prog loader. What is the standard
+> > practice here, a define?
+> >
+> >>
+> >> thanks,
+> >> MST
+> >>
+> >>> ---
+> >>>   drivers/net/tun.c | 20 +++++++++++---------
+> >>>   1 file changed, 11 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> >>> index aab0be4..173d159 100644
+> >>> --- a/drivers/net/tun.c
+> >>> +++ b/drivers/net/tun.c
+> >>> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun_s=
+truct *tun, struct sk_buff *skb)
+> >>>        return txq;
+> >>>   }
+> >>>
+> >>> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_b=
+uff *skb)
+> >>> +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk_b=
+uff *skb)
+> >>>   {
+> >>>        struct tun_prog *prog;
+> >>>        u32 numqueues;
+> >>> -     u16 ret =3D 0;
+> >>> +     int ret =3D -1;
+> >>>
+> >>>        numqueues =3D READ_ONCE(tun->numqueues);
+> >>>        if (!numqueues)
+> >>>                return 0;
+> >>>
+> >>> +     rcu_read_lock();
+> >>>        prog =3D rcu_dereference(tun->steering_prog);
+> >>>        if (prog)
+> >>>                ret =3D bpf_prog_run_clear_cb(prog->prog, skb);
+> >>> +     rcu_read_unlock();
+> >>>
+> >>> -     return ret % numqueues;
+> >>> +     if (ret >=3D 0)
+> >>> +             ret %=3D numqueues;
+> >>> +
+> >>> +     return ret;
+> >>>   }
+> >>>
+> >>>   static u16 tun_select_queue(struct net_device *dev, struct sk_buff =
+*skb,
+> >>>                            struct net_device *sb_dev)
+> >>>   {
+> >>>        struct tun_struct *tun =3D netdev_priv(dev);
+> >>> -     u16 ret;
+> >>> +     int ret;
+> >>>
+> >>> -     rcu_read_lock();
+> >>> -     if (rcu_dereference(tun->steering_prog))
+> >>> -             ret =3D tun_ebpf_select_queue(tun, skb);
+> >>> -     else
+> >>> +     ret =3D tun_ebpf_select_queue(tun, skb);
+> >>> +     if (ret < 0)
+> >>>                ret =3D tun_automq_select_queue(tun, skb);
+> >>> -     rcu_read_unlock();
+> >>>
+> >>>        return ret;
+> >>>   }
+> >>> --
+> >>> 1.8.3.1
