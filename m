@@ -2,120 +2,200 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713EFC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD41C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E3020882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E8C20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569264547;
+	bh=dKKAMQxEq0qZ0txahL1t4OC0ZXa/T0p6wRy7JHOYsYo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jviw7Tre9nSn0TRkb3on5L+dL2ml5WrdZ3OzWI/yrh5LB99OXmhcw81uQH7iV/3Lz
+	 W0BNsKA9ZU/El1xKx4YYGJ1fC/c3QsyoHYUjnnxh4yggk5TZtdK2OTm9kwWk4m07HD
+	 H4dICQi2+6xTAhE+1GiK4uuDqjmFmcW7QxDJ6hkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733119AbfIWSoI (ORCPT
+        id S1733080AbfIWStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:44:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36370 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733075AbfIWSoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:44:07 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NIbUoL084013;
-        Mon, 23 Sep 2019 14:43:58 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v71cdvhs4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 14:43:58 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NIgDAB030819;
-        Mon, 23 Sep 2019 18:43:57 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03dal.us.ibm.com with ESMTP id 2v5bg6u7cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 18:43:57 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NIhuqb14484162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 18:43:56 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8BE9112061;
-        Mon, 23 Sep 2019 18:43:56 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA92F112066;
-        Mon, 23 Sep 2019 18:43:55 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.184])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 18:43:55 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 3/3] powerpc/kvm/e500: Replace current->mm by kvm->mm
-Date:   Mon, 23 Sep 2019 15:43:32 -0300
-Message-Id: <20190923184332.412-4-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190923184332.412-1-leonardo@linux.ibm.com>
-References: <20190923184332.412-1-leonardo@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=878 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230160
+        Mon, 23 Sep 2019 14:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbfIWStG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:49:06 -0400
+Received: from devnote2 (unknown [12.206.46.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF70620820;
+        Mon, 23 Sep 2019 18:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569264545;
+        bh=dKKAMQxEq0qZ0txahL1t4OC0ZXa/T0p6wRy7JHOYsYo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wvYBCeIXBQTHnT4L0ChVhOVE9warkiTyZCXbjz3q3qqWAgwO8Vb4MtvfsJEEJpHS3
+         YplFMawpYAsWVwmitpq6L/Ql6OouIUzIJzag13K7gxOdQN43foRHPO14KOd4bd8TcG
+         r9XriXd6/8MTzTw749D/O0KYT4pLWRp0RYRo/qtg=
+Date:   Mon, 23 Sep 2019 11:49:04 -0700
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, kbuild test robot <lkp@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
+Message-Id: <20190923114904.dd63949b3433376aeb4b7789@kernel.org>
+In-Reply-To: <20190923103139.GD15355@zn.tnic>
+References: <20190922083342.GO13569@xsang-OptiPlex-9020>
+        <20190922150328.6722-1-alexander.kapshuk@gmail.com>
+        <20190923103139.GD15355@zn.tnic>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given that in kvm_create_vm() there is:
-kvm->mm = current->mm;
+On Mon, 23 Sep 2019 12:31:39 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-And that on every kvm_*_ioctl we have:
-if (kvm->mm != current->mm)
-        return -EIO;
+> + Masami.
+> 
+> On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
+> > This patch fixes the regexp warnings shown below:
+> 
+> Avoid having "This patch" or "This commit" in the commit message. It is
+> tautologically useless.
+> 
+> Also, do
+> 
+> $ git grep 'This patch' Documentation/process
+> 
+> for more details.
+> 
+> > GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
+> > 
+> > The ':' and '&' characters need not escaping when used in string constants
+> > as part of regular expressions.
+> 
+> I could use a reasoning here, as in, "gawk manual doesn't have those two
+> characters in the list here:
+> 
+> https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html"
 
-I see no reason to keep using current->mm instead of kvm->mm.
+Thank you for pointing it out. It is good to refer this page as the
+reason of this patch.
 
-By doing so, we would reduce the use of 'global' variables on code, relying
-more in the contents of kvm struct.
+I couldn't remember why I added those escapes on those... (maybe for
+compatibility with mawk? anyway, nowadays there seems no problem)
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/kvm/e500_mmu_host.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> or so.
+> 
+> > 
+> > [Test-run]
+> > awk -f arch/x86/tools/gen-insn-attr-x86.awk \
+> > 	arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+> > 
+> > diff arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+> > 0
+> > 
+> > awk -f tools/arch/x86/tools/gen-insn-attr-x86.awk \
+> > 	tools/arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+> > 
+> > diff tools/objtool/arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+> > 0
+> 
+> No need for that - just say that diffing the output before and after
+> shows no changes.
+> 
+> > [Debugging output]
+> > DBG:ext:(66&F2)
+> > DBG:match(ext, ...):(66&F2)
+> > DBG:match(..., lprefix3_expr):\((F2|!F3|66&F2)\)
+> 
+> That is supposed to say what exactly? That it still does what it is
+> expected to do?
+> 
+> Leaving in the rest for Masami.
 
-diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
-index 321db0fdb9db..425d13806645 100644
---- a/arch/powerpc/kvm/e500_mmu_host.c
-+++ b/arch/powerpc/kvm/e500_mmu_host.c
-@@ -355,9 +355,9 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 
- 	if (tlbsel == 1) {
- 		struct vm_area_struct *vma;
--		down_read(&current->mm->mmap_sem);
-+		down_read(&kvm->mm->mmap_sem);
- 
--		vma = find_vma(current->mm, hva);
-+		vma = find_vma(kvm->mm, hva);
- 		if (vma && hva >= vma->vm_start &&
- 		    (vma->vm_flags & VM_PFNMAP)) {
- 			/*
-@@ -441,7 +441,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 			tsize = max(BOOK3E_PAGESZ_4K, tsize & ~1);
- 		}
- 
--		up_read(&current->mm->mmap_sem);
-+		up_read(&kvm->mm->mmap_sem);
- 	}
- 
- 	if (likely(!pfnmap)) {
+This looks good to me, except for the description pointed above.
+So feel free to add my ack on your patch on next version.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+> 
+> Thx.
+> 
+> > Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > ---
+> >  arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
+> >  tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
+> > index b02a36b2c14f..a42015b305f4 100644
+> > --- a/arch/x86/tools/gen-insn-attr-x86.awk
+> > +++ b/arch/x86/tools/gen-insn-attr-x86.awk
+> > @@ -69,7 +69,7 @@ BEGIN {
+> > 
+> >  	lprefix1_expr = "\\((66|!F3)\\)"
+> >  	lprefix2_expr = "\\(F3\\)"
+> > -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
+> > +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+> >  	lprefix_expr = "\\((66|F2|F3)\\)"
+> >  	max_lprefix = 4
+> > 
+> > @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+> >  	return add_flags(imm, mod)
+> >  }
+> > 
+> > -/^[0-9a-f]+\:/ {
+> > +/^[0-9a-f]+:/ {
+> >  	if (NR == 1)
+> >  		next
+> >  	# get index
+> > diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > index b02a36b2c14f..a42015b305f4 100644
+> > --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > @@ -69,7 +69,7 @@ BEGIN {
+> > 
+> >  	lprefix1_expr = "\\((66|!F3)\\)"
+> >  	lprefix2_expr = "\\(F3\\)"
+> > -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
+> > +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+> >  	lprefix_expr = "\\((66|F2|F3)\\)"
+> >  	max_lprefix = 4
+> > 
+> > @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+> >  	return add_flags(imm, mod)
+> >  }
+> > 
+> > -/^[0-9a-f]+\:/ {
+> > +/^[0-9a-f]+:/ {
+> >  	if (NR == 1)
+> >  		next
+> >  	# get index
+> > --
+> > 2.23.0
+> > 
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
