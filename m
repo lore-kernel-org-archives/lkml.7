@@ -2,108 +2,97 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A0AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E58C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3037820835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="IeVleuB0"
+	by mail.kernel.org (Postfix) with ESMTP id 25DBA20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387895AbfIWQGA (ORCPT
+        id S2387912AbfIWQGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:06:00 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:38112 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387866AbfIWQGA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:06:00 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 0B7432E1493;
-        Mon, 23 Sep 2019 19:05:57 +0300 (MSK)
-Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 5DFzfrorlR-5uE8IrZq;
-        Mon, 23 Sep 2019 19:05:57 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1569254757; bh=IXcoUvIXF995IhaYye9MIGZQTDEPJgvaMrA8NeaSgm4=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=IeVleuB0zPc0Ac/Wy3UG/+YJdbPerDRmG86tkmfYqhk6L4jnUbAL9UAlFmedok+Ee
-         BHflD7BFVXSvcRZ9KDAbKF/exr68OX1tyy5z8z6v33qaYDuFel1WGJl0mOlA19dKWp
-         HC665E7zR8I0cHJLG5taFdeOEfoQNaLaKrItvI5w=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id YPqHsg4d3K-5uIK39Dl;
-        Mon, 23 Sep 2019 19:05:56 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-To:     Jens Axboe <axboe@kernel.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <CAHk-=whmCZvYcR10Pe9fEy912fc8xywbiP9mn054Jg_9+0TqCg@mail.gmail.com>
- <CAHk-=wi+G1MfSu79Ayi-yxbmhdyuLnZ5e1tmBTc69v9Zvd-NKg@mail.gmail.com>
- <1882a6da-a599-b820-6257-11bbac02b220@kernel.dk>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <a5e769db-823d-9a48-b5f9-a4b406710c6f@yandex-team.ru>
-Date:   Mon, 23 Sep 2019 19:05:55 +0300
+        Mon, 23 Sep 2019 12:06:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:44744 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387866AbfIWQGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:06:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D9D61000;
+        Mon, 23 Sep 2019 09:06:11 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB6D73F67D;
+        Mon, 23 Sep 2019 09:06:10 -0700 (PDT)
+Subject: Re: [PATCH] sched: fix migration to invalid cpu in
+ __set_cpus_allowed_ptr
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        shikemeng <shikemeng@huawei.com>, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
+ <1568535662-14956-1-git-send-email-shikemeng@huawei.com>
+ <5dfd4844-6c36-3b8d-203b-564d7ad7103d@arm.com>
+ <40680310-60b3-589a-d0e8-b4dd723db10a@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <1d8e6aab-5258-494c-c4cd-1802eda34d59@arm.com>
+Date:   Mon, 23 Sep 2019 17:06:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1882a6da-a599-b820-6257-11bbac02b220@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <40680310-60b3-589a-d0e8-b4dd723db10a@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 18.36, Jens Axboe wrote:
-> On 9/20/19 5:10 PM, Linus Torvalds wrote:
->> On Fri, Sep 20, 2019 at 4:05 PM Linus Torvalds
->> <torvalds@linux-foundation.org> wrote:
->>>
->>>
->>> Now, I hear you say "those are so small these days that it doesn't
->>> matter". And maybe you're right. But particularly for slow media,
->>> triggering good streaming write behavior has been a problem in the
->>> past.
->>
->> Which reminds me: the writebehind trigger should likely be tied to the
->> estimate of the bdi write speed.
->>
->> We _do_ have that avg_write_bandwidth thing in the bdi_writeback
->> structure, it sounds like a potentially good idea to try to use that
->> to estimate when to do writebehind.
->>
->> No?
+On 23/09/2019 16:43, Dietmar Eggemann wrote:
+> I'm not sure that CONFIG_DEBUG_PER_CPU_MAPS=y will help you here.
 > 
-> I really like the feature, and agree it should be tied to the bdi write
-> speed. How about just making the tunable acceptable time of write behind
-> dirty? Eg if write_behind_msec is 1000, allow 1s of pending dirty before
-> starting writbeack.
+> __set_cpus_allowed_ptr(...)
+> {
+>     ...
+>     dest_cpu = cpumask_any_and(...)
+>     ...
+> }
+> 
+> With:
+> 
+> #define cpumask_any_and(mask1, mask2) cpumask_first_and((mask1), (mask2))
+> #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p),
+> (src2p))
+> 
+> cpumask_next_and() is called with n = -1 and in this case does not
+> invoke cpumask_check().
 > 
 
-I haven't digged into it yet.
+It won't warn here because it's still a valid return value, but it should
+warn in the cpumask_test_cpu() that follows (in is_cpu_allowed()) because
+it would be passed a value >= nr_cpu_ids. So at the very least this config
+does catch cpumask_any*() return values being blindly passed to
+cpumask_test_cpu().
 
-But IIRR writeback speed estimation has some problems:
+Calls to cpumask_any*() without relevant return value check can easily be
+spotted by the coccinelle snippet I sent earlier. If this one fix gets
+merged, I'll go and stare at / fixup the others (and maybe add the semantic
+patch to coccicheck).
 
-There is no "slow start" - initial speed is 100MiB/s.
-This is especially bad for slow usb disks - right after plugging
-we'll accumulate too much dirty cache before starting writeback.
+> ---
+> 
+> BTW, I can recreate the issue quite easily with:
+> 
+>   qemu-system-x86_64 ... -smp cores=64 ... -enable-kvm
+> 
+> with the default kernel config.
+> 
+> 
 
-And I've seen problems with cgroup-writeback:
-each cgroup has own estimation, doesn't work well for short-living cgroups.
+Might want to send your tested-by to [1] then :)
+
+[1]: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+
+> 
