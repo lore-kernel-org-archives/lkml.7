@@ -2,134 +2,104 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49537C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59508C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1935A20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E30020856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="tQwuvZSv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNgZ8Xlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440324AbfIWSHf (ORCPT
+        id S2440335AbfIWSIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:07:35 -0400
-Received: from mail-eopbgr730137.outbound.protection.outlook.com ([40.107.73.137]:6328
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438123AbfIWSHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:07:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JhGBwZOgKF9uMI9kFlEHlv/eqAfsLR4/NPnTk0ewderXPkWbX6vwkWzMlcLg1/ksfP0uK/WucepxFjboycvMREnYiNT79s5pLtIOT5LpqcEfaP5NdvXd0Ju1V1Kag3EhJ27ZqcpsXfbvh/tuF35fd9WLeqoLH4RsWW8xxCMVaEyVY0tw2bdiPDWzXzU1brM4t5bd6fBPN0sYcXH2POFT7HCQvDtqKSBBSJWvjDGSwGsAI/c83tNFYvQ9e5th1jEF20AOSAjQ/CCKZ/48b91sr+onmf+vFD9NGvUrmavjanXwfsWfmtRkQp3G2Z+p4G5UuUH5Ycbcl1qPf1hY7q01sQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bhZKmkL2FC/vbycMA+2tP6QfvuPaFPAPQcd1LF1/c2A=;
- b=cbnZlcHquMYo/mc/f4gwuQaQyl7xH5b0Hsdp1jREooQy20/jLaY4SnSGX8kWv4CkUr7mTXZT5pPu5lXJcghZag1rq3TokRLe3mjTTA3IYrBXEuYlKmiZ8dyJbiN1L2lUQw3M1lc7OasqsU34QMlxgw2i2HnbzpNPMONyUTYLlX8kpV5Fi/tDC8XST5nfPZ2QB4+gnCNyLOy6JcDEYDRP44O2UtxXQuOpUbFpaWbKNSusn6R9LmoWjiFEkOKhvWsR4sUoJxY3A1Eza35WohnzNu94tzFzwE/w3TCtW2tac+655HzqXo/5pCwrQ+qnaBZX1lOXGNDziIg7TiVgh80kWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bhZKmkL2FC/vbycMA+2tP6QfvuPaFPAPQcd1LF1/c2A=;
- b=tQwuvZSvZjkEAIUXyYhbRojxcOCtc10B5XHk3xLDOyoVxmtl5lqvjZ24/H4502moHIgBwhTBvfgeEKrxBDMEFrMLYEYwYwhoJrbn/C6nR4hv9afdgVBIHFnygw+9BmIx+bFBUZxxMhrvvAt8fe/PyVk8IhPvWmnd87gqlu/oWyU=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1390.namprd22.prod.outlook.com (10.174.162.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Mon, 23 Sep 2019 18:07:30 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2284.023; Mon, 23 Sep
- 2019 18:07:30 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [GIT PULL] MIPS changes
-Thread-Topic: [GIT PULL] MIPS changes
-Thread-Index: AQHVcjnDwc5rEfS1+0+Wv+DUIcjh9w==
-Date:   Mon, 23 Sep 2019 18:07:30 +0000
-Message-ID: <20190923180728.flp6jx4jc2bh7cys@pburton-laptop>
-References: <20190921231022.kawfomtmka737arq@pburton-laptop>
- <CAHk-=wjmJbF3p9vZTW2nbeD4LkG-JZV+uqv8BnxzojJ5SZsLjw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjmJbF3p9vZTW2nbeD4LkG-JZV+uqv8BnxzojJ5SZsLjw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0030.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::43) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 838e750c-2939-4ae4-8cb1-08d74050e63a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR2201MB1390;
-x-ms-traffictypediagnostic: MWHPR2201MB1390:
-x-microsoft-antispam-prvs: <MWHPR2201MB13906A7F895A7062224683CDC1850@MWHPR2201MB1390.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(366004)(39840400004)(396003)(376002)(136003)(189003)(199004)(14454004)(99286004)(66946007)(6916009)(446003)(71190400001)(42882007)(66556008)(71200400001)(486006)(8936002)(11346002)(76176011)(8676002)(6486002)(25786009)(386003)(6506007)(256004)(14444005)(33716001)(6246003)(81166006)(81156014)(9686003)(6512007)(7736002)(5660300002)(52116002)(64756008)(476003)(66476007)(44832011)(478600001)(58126008)(66446008)(66066001)(53546011)(54906003)(4326008)(6436002)(26005)(6116002)(3846002)(305945005)(102836004)(229853002)(316002)(1076003)(186003)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1390;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QEsQHvSlvpTO+13MHMiLcgDRps24e3Fi70yUKQatsT9mWwMPsATaKN9xVrkGJa4GvdNGZ9MnSfHbQ4nZ7S/Ck4m4ZAOPA7PtO8jE97EsB2NnRIWkcrsi9jed+i7qNaLMvx9UilZd2f+6A+NOjbBm3uzu4w2bchZKjNN0mtpvXG0/30wjmlVT1/teQXRAm82EsXsi6ebRhqkbGhoV067DpVuYz7y/ZQi0varUndnLClTNDQad1cfptU2yJEP9Y37zrSERUdHPjXjVEA677QuZuX6pje+TJJAbwjhymlj6GT/F+M5pCqn0EdWUP5U0gxWbzxXJ+Zk2x35OZt7ZBU+M6sNJ+7d6/CZVCD++jGcrP4C01oZW84S7NvyMmjDqEMQBH5CgTV6vX8dTTJruWTctfqhJvG9HucfstfEoibRPGAw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BEEEF671CAE0E24894FA514926C67763@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 23 Sep 2019 14:08:10 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]:46103 "EHLO
+        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438279AbfIWSIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:08:09 -0400
+Received: by mail-qk1-f174.google.com with SMTP id 201so16357901qkd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WaN44oA6b5/tAnNHC3BPVUq5YRUC75SWyO2ra2AcB2g=;
+        b=VNgZ8Xlge6IGXUzXjlrG39OIERNp/l11spswrRWUICljsnNbu4wcZBe+bJwzk+w2w5
+         +JgizpDi+hzzyycfjYiyFJGyHPSHgN+AyU1hK+iE4nINUVFP+svALT/x0+u3NhZ60DFH
+         KgZV1JGJUP/ZLtoTWdOCOID+fRSKaw8xPkSYEiCiynTCdLUYrk05isuM5g6d0zlwgImL
+         OV9cD8qZgncqC7au+nVYFhrfH7ySGfxdVJReFJkJ6vWnkcJ1EfHuEJOPnM2Ci+pq8pwv
+         cpXDMYB9R9JthHrlsGTz3QkmnFiY0/hUImZVxkCVUOFPUWtC1n/EOzJHTLrPSJsE97cv
+         fXCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WaN44oA6b5/tAnNHC3BPVUq5YRUC75SWyO2ra2AcB2g=;
+        b=R6AKjObMmj8GoLRPXqnZiyCeHOCc5rNhjGy2ap86k5R0aAnfdMUDcrN3mBlQqkIHz/
+         hqxS6mbWlfcljk+gVgWvYBmuf6Eq458klijvQh4HyMgD9gxza5WWvmAqo9yYjvDO0Zsm
+         wGrIgjjrtxw1vogtEhs/qPjilmnsDD8c1GXTDH39UuRe1SL9E3qGf4bnCTBGvbN86oxG
+         377iOwSkJyUt7aYftdLszi3/mhDyGTH1esdMsmBIDoEPeKSDk2ykIymKA/ZNc1VcG5Ba
+         l/0rfMInbnAv8BACOotQPOyVGM8d9PyreVLAZrhWaGi1xJOWnhk8K0q+MX2O+mpCpUFQ
+         oFww==
+X-Gm-Message-State: APjAAAV/yhtQ/3sAgJt9x6xLQdVyABr8SoKNCS1ud1r8ElOemaRS96yo
+        VN6k1xiyMPfbclF+mPVP1fCbghrm
+X-Google-Smtp-Source: APXvYqz83AGtJaZXT8SK+j0xU4qqrLPKxmRLGxVKl/r0yz1g99wYKYIFDSs0FjsPShXE9OGW/w4PbA==
+X-Received: by 2002:a37:5cc1:: with SMTP id q184mr1256013qkb.212.1569262088921;
+        Mon, 23 Sep 2019 11:08:08 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (189-94-129-1.3g.claro.net.br. [189.94.129.1])
+        by smtp.gmail.com with ESMTPSA id m15sm5035819qka.104.2019.09.23.11.08.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 11:08:07 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 99D3C41105; Mon, 23 Sep 2019 15:08:02 -0300 (-03)
+Date:   Mon, 23 Sep 2019 15:08:02 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 19/73] libperf: Move system_wide from struct evsel to
+ struct perf_evsel
+Message-ID: <20190923180802.GA13508@kernel.org>
+References: <20190913132355.21634-1-jolsa@kernel.org>
+ <20190913132355.21634-20-jolsa@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 838e750c-2939-4ae4-8cb1-08d74050e63a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 18:07:30.2931
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b32VhWYDNMWk3kBZaxQOh+Yycpt4+r//y2nKvCAgaMaEnd2fEQE5u8NP7oPnSK1P3qyTXSCPAU7XI6BCP+tL1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1390
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913132355.21634-20-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNCk9uIFN1biwgU2VwIDIyLCAyMDE5IGF0IDExOjM1OjM2QU0gLTA3MDAsIExp
-bnVzIFRvcnZhbGRzIHdyb3RlOg0KPiBPbiBTYXQsIFNlcCAyMSwgMjAxOSBhdCA0OjEwIFBNIFBh
-dWwgQnVydG9uIDxwYXVsLmJ1cnRvbkBtaXBzLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIZXJlIGFy
-ZSB0aGUgbWFpbiBNSVBTIGNoYW5nZXMgZm9yIHY1LjQ7IHBsZWFzZSBwdWxsLg0KPiANCj4gSG1t
-LiBJIHB1bGxlZCBhbmQgYmVjYXVzZSBpbml0aWFsIHRlc3RzIGRpZG4ndCBzaG93IGFueSBpc3N1
-ZXMsIEkNCj4gYWxyZWFkeSBwdXNoZWQgb3V0Lg0KPiANCj4gQnV0IHNvbWUgdW5yZWxhdGVkIGZ1
-cnRoZXIgdGVzdGluZyB0aGVuIHNob3dzIHRoYXQgdGhpczoNCj4gDQo+ID4gRmxvcmlhbiBGYWlu
-ZWxsaSAoMik6DQo+ID4gICAgICAgZmlybXdhcmU6IGJjbTQ3eHhfbnZyYW06IENvcnJlY3Qgc2l6
-ZV90IHByaW50ZiBmb3JtYXQNCj4gPiAgICAgICBmaXJtd2FyZTogYmNtNDd4eF9udnJhbTogQWxs
-b3cgQ09NUElMRV9URVNUDQo+IA0KPiBjYXVzZXMgcHJvYmxlbXMsIGFuZCBjb21taXQgZmViNGVi
-MDYwYzNhICgiZmlybXdhcmU6IGJjbTQ3eHhfbnZyYW06DQo+IENvcnJlY3Qgc2l6ZV90IHByaW50
-ZiBmb3JtYXQiKSBpcyBidWdneToNCj4gDQo+ICAgZHJpdmVycy9maXJtd2FyZS9icm9hZGNvbS9i
-Y200N3h4X252cmFtLmM6IEluIGZ1bmN0aW9uIOKAmG52cmFtX2luaXTigJk6DQo+ICAgZHJpdmVy
-cy9maXJtd2FyZS9icm9hZGNvbS9iY200N3h4X252cmFtLmM6MTUxOiB3YXJuaW5nOiBmb3JtYXQg
-4oCYJXp14oCZDQo+IGV4cGVjdHMgYXJndW1lbnQgb2YgdHlwZSDigJhzaXplX3TigJksIGJ1dCBh
-cmd1bWVudCAyIGhhcyB0eXBlIOKAmHUzMuKAmSB7YWthDQo+IOKAmHVuc2lnbmVkIGludOKAmX0g
-Wy1XZm9ybWF0PV0NCj4gDQo+IGFuZCB0aGUgY2hhbmdlIHRvIHVzZSAlenUgd2FzIGNvbXBsZXRl
-bHkgd3JvbmcuDQo+IA0KPiBJdCBwcmludHMgb3V0ICdoZWFkZXIubGVuJywgd2hpY2ggaXMgYW4g
-dTMyLCBub3QgbnZyYW1fbGVuIHdoaWNoIGlzIGEgc2l6ZV90Lg0KPiANCj4gVHNzayB0c3NrLg0K
-DQpPb3BzaWUuDQoNCj4gSSd2ZSBmaXhlZCBpdCBpbiBteSB0cmVlLCBidXQgdGhpcyBzaG91bGQg
-aGF2ZSBzaG93biB1cCBpbiBsaW51eC1uZXh0LA0KPiBvciBpbiBNSVBTIHRlc3RpbmcuIFRoZSBw
-cm9jZXNzIGNsZWFybHkgZmFpbGVkLg0KDQpMb29raW5nIGJhY2sgSSBkbyBzZWUgdGhhdCB0aGUg
-a2J1aWxkIHRlc3Qgcm9ib3QgcmVwb3J0ZWQgYW4gaXNzdWUgaGVyZSwNCnNvIG9uZSBhc3BlY3Qg
-b2YgdGhlIGZhaWx1cmUgaXMgc3F1YXJlbHkgb24gbXkgbm90IGhhdmluZyBjYXVnaHQgdXAgb24N
-CmVtYWlsIHByb3Blcmx5IHlldC4NCg0KQW5vdGhlciBpc3N1ZSBpcyB0aGF0IHRoZXJlIGFyZSBj
-dXJyZW50bHkgJ2V4cGVjdGVkJyB3YXJuaW5ncyBkb3R0ZWQNCnRocm91Z2ggdGhlIHRyZWUgZm9y
-IHZhcmlvdXMgZGVmY29uZmlncywgc28gd2hpbHN0IEkgZG8gcGVyZm9ybSB0ZXN0DQpidWlsZHMg
-YmVmb3JlIHN1Ym1pdHRpbmcgcHVsbCByZXF1ZXN0cyBJIGdlbmVyYWxseSBkb24ndCBwYXkgdG9v
-IG11Y2gNCmF0dGVudGlvbiB0byB3YXJuaW5ncy4uLiBTbyBhbiBpbXByb3ZlbWVudCBJJ2xsIGxv
-b2sgYXQgaXMgZml4aW5nIHVwDQp0aG9zZSB3YXJuaW5ncyAmIGJ1aWxkaW5nIHdpdGggLVdlcnJv
-ciwgb3IgYXQgbGVhc3Qgbm90IGlnbm9yaW5nDQp3YXJuaW5ncy4NCg0KTXkgYXBvbG9naWVzIGFu
-ZCB0aGFua3MgZm9yIGZpeGluZyB0aGlzIHVwLA0KDQpQYXVsDQo=
+Em Fri, Sep 13, 2019 at 03:23:01PM +0200, Jiri Olsa escreveu:
+> diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
+> index 8b854d1c9b45..220cb2e2b54e 100644
+> --- a/tools/perf/lib/include/internal/evsel.h
+> +++ b/tools/perf/lib/include/internal/evsel.h
+> @@ -18,6 +18,7 @@ struct perf_evsel {
+>  
+>  	/* parse modifier helper */
+>  	int			 nr_members;
+> +	bool			 system_wide;
+>  };
+
+Forgot to add:
+
+#include <stdbool.h>
+
+Added.
+
+- Arnaldo
