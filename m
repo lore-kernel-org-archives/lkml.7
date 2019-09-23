@@ -2,99 +2,120 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D863C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06991C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194C220882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2B1208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SLNeZWRK"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="IU9T2ogO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rdX3MdZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393600AbfIWHbD (ORCPT
+        id S2393642AbfIWHbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 03:31:03 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:33332 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393547AbfIWHbD (ORCPT
+        Mon, 23 Sep 2019 03:31:34 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:59861 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392971AbfIWHbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 03:31:03 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 423F3C0389;
-        Mon, 23 Sep 2019 07:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569223863; bh=Xe7pJOKmi9PdaROLmoA5GLu3+ELilg5mJJ8WIbPwsjM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SLNeZWRKs9a98d13s37oxkygB2cM6X8LCVDsxufZJaTgnV48wee/FlPvgEglew6TJ
-         TIlR3RHbDQH+jlUROGsyU3BdEo5T/ejWA2fmmIzy236/VGQRt/EJm3G5hWI151Pabf
-         67lKHOybZbEb38u2qP6KnLGdFjzxUih1YNgcthppD82QF3Dk6xWx12ZttWMXfk841L
-         nor99mvPb2CCynvVXMvAzPxfFaNoYqnWiHJGal7pnNSLvElNjQUUZqLAqwEXmbHkKv
-         LhUxbwFpbicOBOyhUmR0sDQlmR/cYqMu8XAVK1jaCJeBgXEHonUQb5JQmXcwKVcyoc
-         RZ8BCftF8VMgw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BFD84A005F;
-        Mon, 23 Sep 2019 07:30:59 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: stmmac: selftests: Flow Control test can also run with ASYM Pause
-Date:   Mon, 23 Sep 2019 09:30:43 +0200
-Message-Id: <da7e2fb08061b4b89332c0ef014e053f98832894.1569223775.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 23 Sep 2019 03:31:33 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 8B463411;
+        Mon, 23 Sep 2019 03:31:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 23 Sep 2019 03:31:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=r
+        xsMSOP5XeiSeGHz7OFZXR7UFFdSRMCjzoz5TVekqzk=; b=IU9T2ogObc4GOXfVw
+        cDKExsM/z4MhupAhl7wTXi58GNueTRNtjy74yhP+kR6VoJiLIM3papLy8/LBQFrw
+        AZ+oAD1lE1s+tBBnyOyB/TfwpFOq95NRIPlQu2x1W26QdrS+MC2j6fAAJ1yhlGju
+        PLMbWVoASchDH8pdvgqDCTq5uXT4vifxXqO324rW85IQt8MdJRDs3yYEwQfUKCDJ
+        0RVQ8Yf+335PB3z8cLpdrg6Vo4nytorI5rdMD/eoC6/mxiB5xowk4DMPoep60++K
+        46Xkd49bSngAMpmRvQggg114RuGmxSqbdLmyxweX4/3qIOcv6WyeMwoDc3NHQAXs
+        WfgxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=rxsMSOP5XeiSeGHz7OFZXR7UFFdSRMCjzoz5TVekq
+        zk=; b=rdX3MdZzimSqenjfAPRmB0LpcTlHcwTyuPRElEz7EWS1jDXStgiB0DYVo
+        A6NsHHJtGWImOwcoi0EDq/E0UO0Xquj7VUBo2BWKWwdiTel1QV83+2Ixb605O69d
+        VDC4Tk05Rzr65KqgyLMW98Hu/kHNQ9RIn1HFLZZnJCiPL0ih4EDZQ7uDY66Kk+x5
+        2GU76AN0h/uEwg8Rm3PYw/yl9nYyg1N/ln+Kzenk2KJWYUXksEt5RYNBzkFlDe3b
+        JymN5OI9TPlsVP7DLkpmahPDWQ0JEyJ6aaVUC4n02k9p8g0uvuZnJ9dLWCT6LiyN
+        X2ucApqgr09EAdWRcyJJU8nINqF/Q==
+X-ME-Sender: <xms:03SIXesps-KQELljUBJecmJ7kXLhMjKqIKm5WM4lSW7e2SiY85qUIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdejgdduvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjggfsehtkeertddtredunecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvg
+    hlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhf
+    rhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:03SIXfznQK4LgEKDeFBju_nN68H2rKyO6cL1QSBI94T-9vUrBEZdFQ>
+    <xmx:03SIXcg3XvWUxQWMtLRcatQSEqU3Zi85yD9n6aa0UQzha1704RejVg>
+    <xmx:03SIXbAPL9Ts6dNraW3aTlKdx5MoYJINnGUiN0i5EH5m7CbGhx85Tg>
+    <xmx:03SIXQkq_DSDv3ZxyOej92OjnYMxb-M_KaLmWaJEp4g-Cl2PFfNKkA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E360FD6005B;
+        Mon, 23 Sep 2019 03:31:30 -0400 (EDT)
+Date:   Mon, 23 Sep 2019 09:31:29 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Greg Kurz <groug@kaod.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/xive: Fix bogus error code returned by OPAL
+Message-ID: <20190923073129.GA2749134@kroah.com>
+References: <156922009207.910857.10785273696571088534.stgit@bahia.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <156922009207.910857.10785273696571088534.stgit@bahia.lan>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <joabreu@synopsys.com>
+On Mon, Sep 23, 2019 at 08:29:40AM +0200, Greg Kurz wrote:
+> There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+> to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+> Unfortunatelty, OPAL return values are signed 64-bit entities and
+> errors are supposed to be negative. If that happens, the linux code
+> confusingly treats 0xffffffff as a valid IRQ number and panics at some
+> point.
+> 
+> A fix was recently merged in skiboot:
+> 
+> e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+> 
+> but we need a workaround anyway to support older skiboots already
+> in the field.
+> 
+> Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+> returned upon resource exhaustion.
+> 
+> Cc: stable@vger.kernel.org # v4.12+
+> Signed-off-by: Greg Kurz <groug@kaod.org>
+> Reviewed-by: Cédric Le Goater <clg@kaod.org>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> Link: https://lore.kernel.org/r/156821713818.1985334.14123187368108582810.stgit@bahia.lan
+> (cherry picked from commit 6ccb4ac2bf8a35c694ead92f8ac5530a16e8f2c8,
+>  groug: fix arch/powerpc/platforms/powernv/opal-wrappers.S instead of
+>         non-existing arch/powerpc/platforms/powernv/opal-call.c)
+> Signed-off-by: Greg Kurz <groug@kaod.org>
+> ---
+> 
+> This is for 4.14 and 4.19.
 
-The Flow Control selftest is also available with ASYM Pause. Lets add
-this check to the test and fix eventual false positive failures.
+Thanks for the backport, now queued up.
 
-Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 9c8d210b2d6a..5f66f6161629 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -670,7 +670,7 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
- 	unsigned int pkt_count;
- 	int i, ret = 0;
- 
--	if (!phydev || !phydev->pause)
-+	if (!phydev || (!phydev->pause && !phydev->asym_pause))
- 		return -EOPNOTSUPP;
- 
- 	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
--- 
-2.7.4
-
+greg k-h
