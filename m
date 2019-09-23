@@ -2,301 +2,406 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0634CC4320D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3FBC432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF4D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:00:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Icoz3Q+Y"
+	by mail.kernel.org (Postfix) with ESMTP id 85C1820673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502948AbfIWWAE (ORCPT
+        id S2503094AbfIWWCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 18:00:04 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37205 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389997AbfIWWAD (ORCPT
+        Mon, 23 Sep 2019 18:02:47 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49405 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502959AbfIWWCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 18:00:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i1so15625961wro.4;
-        Mon, 23 Sep 2019 15:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NnnDZeev726m2OmJw6ekee+oEaPokMPQdAEJQYuZ6nE=;
-        b=Icoz3Q+YEJSeumSHmhXpOVM4zAWUNcbTbCmxdlSgone7+rk0VCH579nz6gkqt0MURf
-         PLAHEaxi1kwnbn+umT3WWQUc8fuUbzsykw5y5DVQb+Bo2Us1m1rxcjB6bJw02UQb0zzE
-         c4jtX7wu2ztz/8R8VJcnHlldS3TOjzYQsSb1Flv8M7yGo/cZxSUB5yblirdmWX4JY+2/
-         vdTwOTtno4Az+hx0mi+GlxhiEz94rifJTvSOUjWRNYgPu5sRn3214GQVLjHM5OlkcOkm
-         MVQ2BeRyvsAMyF7H2CfMr3a2szsRlRCUEAKpc82DSr21lExvKyZk4+ibfABmgitSrQsH
-         /Xlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NnnDZeev726m2OmJw6ekee+oEaPokMPQdAEJQYuZ6nE=;
-        b=kRbHhKHHY52rbS0mEiiAr4PREXqOPC6PS9MoOPf+2JLQzx4l+tdcIe9+SwzQ1y8FjH
-         Z5G51j/oIE0MjFK1/V2ZPZVekdgLaShnec+Sza+oIYx0DTYdA0h4toQMExk8Ag1HlwWF
-         f3mQR3S6WJeSIxfguhFhcRntD198lRQz5A3bgRrxEezfu3OgXZbSJBr/Gmx/hyJc5rsD
-         wwKDQB+NA7z1XYpZgDiZQda55vcSd+A/vYL8iFt0Uv46Kci/ziV7MqLOQyFCCAswrmYw
-         caydWxk+A93gPZvn7bi3kz/1d2Imh+KW/gfjMs6NM6SuUZ/NhvG/P8VtTKiUDPJnwfJT
-         EMjA==
-X-Gm-Message-State: APjAAAUk6tsGv/LQa+mVRpPBX06LEBWaJ7TmdildZpKL1p1VzjOLe01k
-        E+mYro9S0c/RrNf2rSEKxLPlklNI
-X-Google-Smtp-Source: APXvYqyDZEenBDNPTPeZs9sTkE+UylvQPbv4d/ak9FW9dWgVfwsmrqWA3zWxzhqyCEcWfJYZAJPbtw==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr967077wrq.257.1569275998947;
-        Mon, 23 Sep 2019 14:59:58 -0700 (PDT)
-Received: from [192.168.1.19] (bdr247.neoplus.adsl.tpnet.pl. [83.28.3.247])
-        by smtp.gmail.com with ESMTPSA id t4sm7294018wrm.13.2019.09.23.14.59.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 14:59:58 -0700 (PDT)
-Subject: Re: [PATCH v8 8/9] leds: lp50xx: Add the LP50XX family of the RGB LED
- driver
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-9-dmurphy@ti.com>
- <b6a09f76-3663-9bce-e009-24e31940517e@gmail.com>
- <c063774f-9397-31ae-4ca8-24d50114296e@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c8972136-7489-e5a1-6d25-87108806c9cc@gmail.com>
-Date:   Mon, 23 Sep 2019 23:59:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 23 Sep 2019 18:02:47 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iCWPn-0005Km-TL; Tue, 24 Sep 2019 00:02:39 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iCWPn-0004mH-3Q; Tue, 24 Sep 2019 00:02:39 +0200
+Date:   Tue, 24 Sep 2019 00:02:39 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5] regulator: da9062: fix suspend_enable/disable
+ preparation
+Message-ID: <20190923220239.bcir5hjuqxti5b5e@pengutronix.de>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-2-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994BD2F5D5635085B836A7980850@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <c063774f-9397-31ae-4ca8-24d50114296e@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB0994BD2F5D5635085B836A7980850@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 00:01:25 up 129 days,  4:19, 80 users,  load average: 0.52, 0.19,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+Hi Adam,
 
-On 9/23/19 7:56 PM, Dan Murphy wrote:
-> Jacek
+On 19-09-23 16:03, Adam Thomson wrote:
+> On 17 September 2019 13:43, Marco Felsch wrote:
 > 
-> On 9/21/19 10:11 AM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 9/20/19 7:41 PM, Dan Murphy wrote:
->>> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
->>> The difference in these parts are the number of
->>> LED outputs where the:
->>>
->>> LP5036 can control 36 LEDs
->>> LP5030 can control 30 LEDs
->>> LP5024 can control 24 LEDs
->>> LP5018 can control 18 LEDs
->>> LP5012 can control 12 LEDs
->>> LP509 can control 9 LEDs
->>>
->>> The device has the ability to group LED output into control banks
->>> so that multiple LED banks can be controlled with the same mixing and
->>> brightness.  Inversely the LEDs can also be controlled independently.
->>>
->>> Signed-off-by: Dan Murphy<dmurphy@ti.com>
->>> ---
->>>   drivers/leds/Kconfig       |   7 +
->>>   drivers/leds/Makefile      |   1 +
->>>   drivers/leds/leds-lp50xx.c | 785 +++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 793 insertions(+)
->>>   create mode 100644 drivers/leds/leds-lp50xx.c
->>>
->>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>> index cfb1ebb6517f..1c0cacb100e6 100644
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -363,6 +363,13 @@ config LEDS_LP3952
->>>         To compile this driver as a module, choose M here: the
->>>         module will be called leds-lp3952.
->>>   +config LEDS_LP50XX
->>> +    tristate "LED Support for TI LP5036/30/24/18 LED driver chip"
->>> +    depends on LEDS_CLASS && REGMAP_I2C
->> && OF
+> > Currently the suspend reg_field maps to the pmic voltage selection bits
+> > and is used during suspend_enabe/disable() and during get_mode(). This
+> > seems to be wrong for both use cases.
+> >
+> > Use case one (suspend_enabe/disable):
+> > Those callbacks are used to mark a regulator device as enabled/disabled
+> > during suspend. Marking the regulator enabled during suspend is done by
+> > the LDOx_CONF/BUCKx_CONF bit within the LDOx_CONT/BUCKx_CONT
+> > registers.
+> > Setting this bit tells the DA9062 PMIC state machine to keep the
+> > regulator on in POWERDOWN mode and switch to suspend voltage.
+> >
+> > Use case two (get_mode):
+> > The get_mode callback is used to retrieve the active mode state. Since
+> > the regulator-setting-A is used for the active state and
+> > regulator-setting-B for the suspend state there is no need to check
+> > which regulator setting is active.
+> >
 > 
-> Not sure why I would add that since we are using fw_node calls not
-> of_property calls.
+> So I believe you're correct with the above statements. The driver, rather than
+> enabling/disabling a regulator in system suspend, will instead put the regulator
+> to a low power state, which is definitely not the desired outcome. Thanks for
+> rectifying this.
 > 
-> The fw_node calls are built in as default kernel so these should always
-> be available.
+> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
-Ah, right. Forget it.
+Thanks a lot for reviewing the patch :) Can you also have a look on the
+other patches within this series?
 
-[...]
->>> +static int lp50xx_brightness_set(struct led_classdev *cdev,
->>> +                 enum led_brightness brightness)
->>> +{
->>> +    struct lp50xx_led *led = container_of(cdev, struct lp50xx_led,
->>> led_dev);
->>> +    int ret = 0;
->>> +    u8 reg_val;
->>> +
->>> +    mutex_lock(&led->priv->lock);
->>> +
->>> +    if (led->ctrl_bank_enabled)
->>> +        reg_val = led->priv->chip_info->bank_brt_reg;
->>> +    else
->>> +        reg_val = led->priv->chip_info->led_brightness0_reg +
->>> +              led->led_number;
->>> +
->>> +    ret = regmap_write(led->priv->regmap, reg_val, brightness);
->>> +    if (ret)
->>> +        goto err_out;
->>> +
->>> +    ret = lp50xx_set_intensity(led);
->>> +err_out:
->>> +    mutex_unlock(&led->priv->lock);
->>> +    return ret;
->>> +}
->>> +
->>> +static enum led_brightness lp50xx_brightness_get(struct led_classdev
->>> *cdev)
->> Do we really need this op? Is it possible that the device will alter
->> brightness autonomously ? IOW can't we rely on what we've written
->> previously to the hw?
+Regards,
+  Marco
+
+> > Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/regulator/da9062-regulator.c | 118 +++++++++++----------------
+> >  1 file changed, 47 insertions(+), 71 deletions(-)
+> >
+> > diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-
+> > regulator.c
+> > index 2ffc64622451..9b2ca472f70c 100644
+> > --- a/drivers/regulator/da9062-regulator.c
+> > +++ b/drivers/regulator/da9062-regulator.c
+> > @@ -136,7 +136,6 @@ static int da9062_buck_set_mode(struct regulator_dev
+> > *rdev, unsigned mode)
+> >  static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
+> >  {
+> >  	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
+> > -	struct regmap_field *field;
+> >  	unsigned int val, mode = 0;
+> >  	int ret;
+> >
+> > @@ -158,18 +157,7 @@ static unsigned da9062_buck_get_mode(struct
+> > regulator_dev *rdev)
+> >  		return REGULATOR_MODE_NORMAL;
+> >  	}
+> >
+> > -	/* Detect current regulator state */
+> > -	ret = regmap_field_read(regl->suspend, &val);
+> > -	if (ret < 0)
+> > -		return 0;
+> > -
+> > -	/* Read regulator mode from proper register, depending on state */
+> > -	if (val)
+> > -		field = regl->suspend_sleep;
+> > -	else
+> > -		field = regl->sleep;
+> > -
+> > -	ret = regmap_field_read(field, &val);
+> > +	ret = regmap_field_read(regl->sleep, &val);
+> >  	if (ret < 0)
+> >  		return 0;
+> >
+> > @@ -208,21 +196,9 @@ static int da9062_ldo_set_mode(struct regulator_dev
+> > *rdev, unsigned mode)
+> >  static unsigned da9062_ldo_get_mode(struct regulator_dev *rdev)
+> >  {
+> >  	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
+> > -	struct regmap_field *field;
+> >  	int ret, val;
+> >
+> > -	/* Detect current regulator state */
+> > -	ret = regmap_field_read(regl->suspend, &val);
+> > -	if (ret < 0)
+> > -		return 0;
+> > -
+> > -	/* Read regulator mode from proper register, depending on state */
+> > -	if (val)
+> > -		field = regl->suspend_sleep;
+> > -	else
+> > -		field = regl->sleep;
+> > -
+> > -	ret = regmap_field_read(field, &val);
+> > +	ret = regmap_field_read(regl->sleep, &val);
+> >  	if (ret < 0)
+> >  		return 0;
+> >
+> > @@ -408,10 +384,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK1_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9061_ID_BUCK2,
+> > @@ -444,10 +420,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK3_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9061_ID_BUCK3,
+> > @@ -480,10 +456,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK4_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9061_ID_LDO1,
+> > @@ -509,10 +485,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO1_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO1_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -542,10 +518,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO2_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO2_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -575,10 +551,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO3_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO3_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -608,10 +584,10 @@ static const struct da9062_regulator_info
+> > local_da9061_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO4_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO4_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -652,10 +628,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK1_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9062_ID_BUCK2,
+> > @@ -688,10 +664,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK2_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK2_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK2_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK2_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK2_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9062_ID_BUCK3,
+> > @@ -724,10 +700,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK3_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9062_ID_BUCK4,
+> > @@ -760,10 +736,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_BUCK4_CONT,
+> > +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
+> >  	},
+> >  	{
+> >  		.desc.id = DA9062_ID_LDO1,
+> > @@ -789,10 +765,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO1_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO1_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -822,10 +798,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO2_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO2_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -855,10 +831,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO3_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO3_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > @@ -888,10 +864,10 @@ static const struct da9062_regulator_info
+> > local_da9062_regulator_info[] = {
+> >  			sizeof(unsigned int) * 8 -
+> >  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
+> >  		.suspend_vsel_reg = DA9062AA_VLDO4_B,
+> > -		.suspend = REG_FIELD(DA9062AA_DVC_1,
+> > -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
+> > +		.suspend = REG_FIELD(DA9062AA_LDO4_CONT,
+> > +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
+> > +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
+> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
+> >  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
+> >  			sizeof(unsigned int) * 8 -
+> > --
+> > 2.20.1
 > 
-> How can we be sure that the previous I/O actually wrote to the device?
-
-brightness_set* op returned 0?
-
-> If set_brightness fails does the LED class not modify the current
-> brightness setting?
-
-It does modify it on every brightness setting op in
-led_set_brightness_nosleep().
-
-> So we have mismatched values and with this call back we can refresh the
-> right setting.
 > 
-> But I can remove it if you see no value in doing get_brightness call back.
-
-If write to the device fails it signifies much more serious problem
-than resulting mismatched values. Have you experienced that?
-
->>> +{
->>> +    struct lp50xx_led *led = container_of(cdev, struct lp50xx_led,
->>> led_dev);
->>> +    unsigned int brt_val;
->>> +    u8 reg_val;
->>> +    int ret;
->>> +
->>> +    mutex_lock(&led->priv->lock);
->>> +
->>> +    if (led->ctrl_bank_enabled)
->>> +        reg_val = led->priv->chip_info->bank_brt_reg;
->>> +    else
->>> +        reg_val = led->priv->chip_info->led_brightness0_reg +
->>> led->led_number;
->>> +
->>> +    ret = regmap_read(led->priv->regmap, reg_val, &brt_val);
->>> +
->>> +    mutex_unlock(&led->priv->lock);
->>> +
->>> +    return brt_val;
->>> +}
->>> +
->>> +static int lp50xx_set_color(struct led_classdev_mc *mcled_cdev,
->>> +                int color, int value)
->>> +{
->>> +    struct lp50xx_led *led = mcled_cdev_to_led(mcled_cdev);
->>> +
->>> +    led->led_intensity[color] = value;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int lp50xx_set_banks(struct lp50xx *priv, u32 led_strings[])
->> This is a bit misleading to introduce "strings" when the function
->> claims to set "banks". Let's have the parameter name "led_banks".
-> Ack
->>
->>> +{
->>> +    u8 led_ctrl_enable = 0;
->>> +    u8 led1_ctrl_enable = 0;
->>> +    u8 ctrl_ext = 0;
->> Let's have below instead of the above three variables:
->>
->>     u32 bank_enable_mask = 0;
->>     u8 led_config_lo, led_config_hi;
-> 
-> Ack but I have to keep the initialization to 0 as the compiler
-> complained that these values may not be set.
-
-It was because in your code values are assigned in a loop that
-may or may not execute at all, depending on num_leds.
-In my example variables will be assigned unconditionally
-so there should be no compiler complaints.
-
 
 -- 
-Best regards,
-Jacek Anaszewski
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
