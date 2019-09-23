@@ -2,124 +2,141 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE81C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7251AC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BE320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4583720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0ykRchr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbfIWKyf (ORCPT
+        id S1732154AbfIWKzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:54:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60622 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729976AbfIWKyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:54:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A99F780F6D;
-        Mon, 23 Sep 2019 10:54:34 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DA07119C58;
-        Mon, 23 Sep 2019 10:54:32 +0000 (UTC)
-Subject: Re: [PATCH] mm/hotplug: Reorder memblock_[free|remove]() calls in
- try_remove_memory()
-To:     Michal Hocko <mhocko@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
- <20190923105224.GH6016@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <9b85f517-fee5-650a-4e18-29408ca85804@redhat.com>
-Date:   Mon, 23 Sep 2019 12:54:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 06:55:00 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43993 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732137AbfIWKzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:55:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id v2so32180805iob.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 03:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zAz98ftW/ay0lQ4bae6Z/Yn3V+3lhWPPD/nVcG/OPtA=;
+        b=I0ykRchrp+bZMimYc6rZPefTMgQ+YdysTBMH3/s22l0qgsQLsJ3SO+oaJiMvZCwhdq
+         ADeeduJvXcMh1n8ow219/FpT7w2ZKRzjNewpg1ZpV5EZkOotC+BqGRwqHOTz3IzaEEFF
+         6sHF5sqR8+hCgvx0lZeo86zpVPi9UQ6BbIiCK9tri205zGqV1kpulixp72dUFrSx08Ua
+         3o66E9Z5LsuQbZ73OZ6I/rOXyDZ5wayF/X7Uyd5ldHfH5mQv3MyI1Yg061QrfrQPOwIm
+         a1KoMXLe3SqtR8XPvoTivisyfBXkF47+fSjJeEKmcxnZPfhhIc3zG9R4turUdY59JMsb
+         AQog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zAz98ftW/ay0lQ4bae6Z/Yn3V+3lhWPPD/nVcG/OPtA=;
+        b=N9EJ+Z8RyUzFOGVbwUHCab2vo0KZxHSzphQjBfLRgye3kV2uwv9voMaIR9iGHjA3hB
+         IJh9R8CUeav5meKpGL0Ql++D3NytUB9sfOiHnZ73XsqlbSjsXuhjJ/MxuW7bPYeSTimq
+         MIymrqwjafqRr5sBgwk1WTXsbjHcsAySWXe2nQACJAr+7Syu5g3D2hBzrdqYyPrOGuY8
+         BWADh2qji0/t5Gy2M/9Sn2kF/o18lRDh5PmigjBrKMnD/sfeYlHaGWs0RMMRosK5Wlmy
+         OukR/k6LBT/WKFhRcQPC6pPO8ivmzkbYb1NJoAPOAXOVu5JZUS4IvU1s/NM57y9nPlgg
+         f67g==
+X-Gm-Message-State: APjAAAUrUjD5epAYgpOxBJp+Mel/OU9KCdfXLltrcUF9LOPVPQPVYPTr
+        gHlb/hl5rlhzml2MBiqfk8k/FXNW+u67tOkY34w=
+X-Google-Smtp-Source: APXvYqxx3OiIzddOwXVAQy4YZ3AyJGN3Vmnt0gHnEYdC3dKp5btKFk6n/ObSK+18FLxtRyAmiDcftj17xqQqdLRJTGc=
+X-Received: by 2002:a5d:9a86:: with SMTP id c6mr16301061iom.118.1569236099164;
+ Mon, 23 Sep 2019 03:54:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190923105224.GH6016@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 23 Sep 2019 10:54:34 +0000 (UTC)
+References: <20190922083342.GO13569@xsang-OptiPlex-9020> <20190922150328.6722-1-alexander.kapshuk@gmail.com>
+ <20190923103139.GD15355@zn.tnic>
+In-Reply-To: <20190923103139.GD15355@zn.tnic>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Mon, 23 Sep 2019 13:54:22 +0300
+Message-ID: <CAJ1xhMX6jssVJgE1BUR1DGfUfcePV5yEihLOgp0Xeump8h3oFA@mail.gmail.com>
+Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.09.19 12:52, Michal Hocko wrote:
-> On Mon 16-09-19 11:17:37, Anshuman Khandual wrote:
->> In add_memory_resource() the memory range to be hot added first gets into
->> the memblock via memblock_add() before arch_add_memory() is called on it.
->> Reverse sequence should be followed during memory hot removal which already
->> is being followed in add_memory_resource() error path. This now ensures
->> required re-order between memblock_[free|remove]() and arch_remove_memory()
->> during memory hot-remove.
-> 
-> This changelog is not really easy to follow. First of all please make
-> sure to explain whether there is any actual problem to solve or this is
-> an aesthetic matter. Please think of people reading this changelog in
-> few years and scratching their heads what you were thinking back then...
-> 
+On Mon, Sep 23, 2019 at 1:31 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> + Masami.
+>
+> On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
+> > This patch fixes the regexp warnings shown below:
+>
+> Avoid having "This patch" or "This commit" in the commit message. It is
+> tautologically useless.
+>
+> Also, do
+>
+> $ git grep 'This patch' Documentation/process
+>
+> for more details.
+>
+> > GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+> > awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
+> >
+> > The ':' and '&' characters need not escaping when used in string constants
+> > as part of regular expressions.
+>
+> I could use a reasoning here, as in, "gawk manual doesn't have those two
+> characters in the list here:
+>
+> https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html"
+>
+> or so.
+>
+> >
+> > [Test-run]
+> > awk -f arch/x86/tools/gen-insn-attr-x86.awk \
+> >       arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+> >
+> > diff arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+> > 0
+> >
+> > awk -f tools/arch/x86/tools/gen-insn-attr-x86.awk \
+> >       tools/arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
+> >
+> > diff tools/objtool/arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
+> > 0
+>
+> No need for that - just say that diffing the output before and after
+> shows no changes.
+>
+> > [Debugging output]
+> > DBG:ext:(66&F2)
+> > DBG:match(ext, ...):(66&F2)
+> > DBG:match(..., lprefix3_expr):\((F2|!F3|66&F2)\)
+>
+> That is supposed to say what exactly? That it still does what it is
+> expected to do?
 
-I think it would make sense to just draft the current call sequence in
-the add and the removal path (instead of describing it) - then it
-becomes obvious why this is a cosmetic change.
+That was the intention.
 
--- 
+Thanks for reviewing the patch.
+I'll wait to hear from Masami before resending the patch.
 
-Thanks,
-
-David / dhildenb
+>
+> Leaving in the rest for Masami.
+>
+> Thx.
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
