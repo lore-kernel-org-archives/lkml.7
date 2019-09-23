@@ -2,122 +2,206 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CF1C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3043C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E26020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D168217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="oyQ71NyO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vtr+dwiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733260AbfIWTN0 (ORCPT
+        id S1733270AbfIWTQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:13:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41513 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfIWTNZ (ORCPT
+        Mon, 23 Sep 2019 15:16:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36694 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727284AbfIWTQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:13:25 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f20so13993508edv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:13:23 -0700 (PDT)
+        Mon, 23 Sep 2019 15:16:36 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m18so10502086wmc.1;
+        Mon, 23 Sep 2019 12:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=stujTPtuGxuh59HTJ15B3m0skvzv4BxR2W0z7AHqmAs=;
-        b=oyQ71NyOLCUCt3yrY4nzC3lmDE+RcloHR0cEYYRhtoJqaMrnTmBYWSRql93lKpdu/2
-         bQrXfU9nfGQiEaAJlAXpotQPEAdsSUEJzcK1TJZdtDuOUgQpzT68LYoBtLzhCFlZpTRJ
-         sOnLNz+ZCb/ooZ7Iz+F3s9J4d0eKTxzB9FAn34SubnMWewIiyOjoe9FDaI1tIMpIlgun
-         AK+RuOBGaMOfBm1D/kLl4+++0qsBgwRznMqymwyisovqATfNnGBGb/epBk1cSr2HYziZ
-         oBCaqwi4skj15AXxVrdUY03bPLGkEMGpebrDS+lLUEFOg8+Rrbn4NAaqNBqr7ymyjR8s
-         BdVw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N70iF5Ril6x+kuthj8owD8WnByk3GKR1KwVknhgziqU=;
+        b=Vtr+dwiIKuQXiTZgLPj4hl0kz+dzNFsR+hqcNBFDW1cVsTXQep+fbZMAU+8ju7Gax6
+         KeheXQJmc1K25xdMbr6V+n4XAKwyZDNmqYPR71TD38unLK7dMvP0N8fU/72JpcVTGwxq
+         pCowQWgcKtkdGnYId6LE2v0+uGmpauqCD8jtJ/ki6rL6HhmGu0J2Hd7nF/ftTw6XKvoN
+         oUXjZYnmm669opWAoZP5rIMP4Y33t2dANKkholNH8D6+ImmZBJ9b2GS5EiCVOWKfieQC
+         HSHOt6l0ZYqN5r0OrcrzK2dWYZgDNPTKmcGtfyF2+zFXe2Jk5s8txvAptiNMsZ9dg0L5
+         FqVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=stujTPtuGxuh59HTJ15B3m0skvzv4BxR2W0z7AHqmAs=;
-        b=jQyZ2E1ZAiGNtOn1UTLX2cEkGkPu3REUZ2k6awoLktELBbyHkxMkOaPQfC6i8Q75WF
-         wGhE+zLTUgbYEvM2Sheb6kkN5cVIshqOuEx/Vod8SuLHxYKWMO1XaMPYrcr72amP9P3H
-         oWh2JLms3tzkU41B8rWUiYKkOvpjYCKaeloXgywwQqSRMFtkuTlyqAXKcBUBhRHyP2en
-         4sT7J1biAJ2qb+BMXp999RBFwqFvtEGcF9X9hxbWffGnfSsuuZ6MaggoFVnkA9ENXTbk
-         r5NCCyeeTo1n6n93wRY2BT1N+gUz3Wy3FMDYBBnWF0ha952jbL4JO8J6WPN2kM2Hu6VQ
-         WGAQ==
-X-Gm-Message-State: APjAAAU4j2Oya4tz5a9QmNA6yqp6HV/spw5ocQU60qlPpXnV57h1E06N
-        Ur0eWL1mPD10vx8Io244qTpo5DlZUQpRrSQRQW9Rfw==
-X-Google-Smtp-Source: APXvYqwRmTK/cSlvNliNjYHt44n1Pba7VrLA3KdlnvROdyhykOSCNlF6ArPxqorDu7Day5E1074ogmGxE30V3X5XG3E=
-X-Received: by 2002:aa7:d7d3:: with SMTP id e19mr1824376eds.80.1569266002752;
- Mon, 23 Sep 2019 12:13:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N70iF5Ril6x+kuthj8owD8WnByk3GKR1KwVknhgziqU=;
+        b=Ae7V7zM9Eurs8WChlTxwT5aIiSPBNen810fKf+ZRMACFW4NHVHHRCbtyxi+IOW2NHa
+         L7pWIouDyq9RFbaKIXmeE1ZDz0tYyNXON9/gGuBwjGjGBWHV2IfxhBjmFQBWXFB5sP7C
+         ZnRt5YR51ee8ZRkqveKu+x58suthN4M9Xia/+rXwQNhBDcTrhdWbsFqSKnwaRDSx8uZp
+         Bgt6lmBk4tqaov38ICpE2v5wfyryk8/mPh21B3HVtboVx7PXhKhuc/MDSuiwzOvk1iSX
+         gne1WdD8BBct2uJqxL9wFHwC5wRU42qSugmXSPWXZIXr5razDlVMT0N3UNAAFdSMgvE0
+         Lbsw==
+X-Gm-Message-State: APjAAAWQu7kh9VqsBXsKPOkxgnmizZB8/eRgjnuCUDgJZMAn8Qw/rc2j
+        AQiys1KdAGmbGIrwwKmDfxfL0EboAaJUbw==
+X-Google-Smtp-Source: APXvYqxljmMAEInhWmJYkQWWGT84zJm46FmLzQjSt99ud97QP62BxVPMRy6+h1u4JbXwo4frrDLQKA==
+X-Received: by 2002:a1c:a94b:: with SMTP id s72mr853673wme.9.1569266193606;
+        Mon, 23 Sep 2019 12:16:33 -0700 (PDT)
+Received: from scw-93ddc8.cloud.online.net ([2001:bc8:4400:2400::302d])
+        by smtp.gmail.com with ESMTPSA id r28sm24038655wrr.94.2019.09.23.12.16.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 12:16:33 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 19:16:26 +0000
+From:   Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     stefanha@redhat.com, davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] VSOCK: add support for MSG_PEEK
+Message-ID: <20190923191626.GA2342@scw-93ddc8.cloud.online.net>
+References: <1569174507-15267-1-git-send-email-matiasevara@gmail.com>
+ <20190923075830.a6sjwffnkljmyyqm@steredhat>
 MIME-Version: 1.0
-References: <20190722103330.255312-1-marc.zyngier@arm.com> <CA+CK2bAFgDcc6ySCz7zzyeN0wg5WTcxFrKYQ6y5sz7grw-BfAw@mail.gmail.com>
- <86k1c9nrsa.wl-marc.zyngier@arm.com>
-In-Reply-To: <86k1c9nrsa.wl-marc.zyngier@arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 23 Sep 2019 15:13:11 -0400
-Message-ID: <CA+CK2bBzoxDz2BgqbJn8-MzL-aaSon+mqKuAmikH-nBnwm0O2g@mail.gmail.com>
-Subject: Re: [PATCH 0/3] arm64: Allow early timestamping of kernel log
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923075830.a6sjwffnkljmyyqm@steredhat>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 3:17 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
->
-> On Mon, 22 Jul 2019 21:52:42 +0100,
-> Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
-> >
-> > On Mon, Jul 22, 2019 at 3:33 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > >
-> > > So far, we've let the arm64 kernel start its meaningful time stamping
-> > > of the kernel log pretty late, which is caused by sched_clock() being
-> > > initialised rather late compared to other architectures.
-> > >
-> > > Pavel Tatashin proposed[1] to move the initialisation of sched_clock
-> > > much earlier, which I had objections to. The reason for initialising
-> > > sched_clock late is that a number of systems have broken counters, and
-> > > we need to apply all kind of terrifying workarounds to avoid time
-> > > going backward on the affected platforms. Being able to identify the
-> > > right workaround comes pretty late in the kernel boot, and providing
-> > > an unreliable sched_clock, even for a short period of time, isn't an
-> > > appealing prospect.
-> > >
-> > > To address this, I'm proposing that we allow an architecture to chose
-> > > to (1) divorce time stamping and sched_clock during the early phase of
-> > > booting, and (2) inherit the time stamping clock as the new epoch the
-> > > first time a sched_sched clock gets registered.
+On Mon, Sep 23, 2019 at 09:58:30AM +0200, Stefano Garzarella wrote:
+> Hi Matias,
+> thanks for this patch!
+> 
+> Since this patch only concerns virtio_transport,
+> I'd use the 'vsock/virtio' prefix in the commit title:
+> "vsock/virtio: add support for MSG_PEEK"
+> 
+> Some comments below:
+> 
+> On Sun, Sep 22, 2019 at 05:48:27PM +0000, Matias Ezequiel Vara Larsen wrote:
+> > This patch adds support for MSG_PEEK. In such a case, packets are not
+> > removed from the rx_queue and credit updates are not sent.
+> > 
+> > Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+> > ---
+> >  net/vmw_vsock/virtio_transport_common.c | 59 +++++++++++++++++++++++++++++++--
+> >  1 file changed, 56 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index 94cc0fa..830e890 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -264,6 +264,59 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
+> >  }
+> >  
+> >  static ssize_t
+> > +virtio_transport_stream_do_peek(struct vsock_sock *vsk,
+> > +				struct msghdr *msg,
+> > +				size_t len)
+> > +{
+> > +	struct virtio_vsock_sock *vvs = vsk->trans;
+> > +	struct virtio_vsock_pkt *pkt;
+> > +	size_t bytes, off = 0, total = 0;
+> > +	int err = -EFAULT;
+> > +
+> > +	spin_lock_bh(&vvs->rx_lock);
+> > +
+> 
+> What about using list_for_each_entry() to cycle through the queued packets?
+> 
+> > +	if (list_empty(&vvs->rx_queue)) {
+> > +		spin_unlock_bh(&vvs->rx_lock);
+> > +		return 0;
+> > +	}
+> > +
+> > +	pkt = list_first_entry(&vvs->rx_queue,
+> > +			       struct virtio_vsock_pkt, list);
+> > +	do {
+> 
+> pkt->off contains the offset inside the packet where the unread data starts.
+> So here we should initialize 'off':
+> 
+> 		off = pkt->off;
+> 
+> Or just use pkt->off later (without increasing it as in the dequeue).
+> 
+> > +		bytes = len - total;
+> > +		if (bytes > pkt->len - off)
+> > +			bytes = pkt->len - off;
+> > +
+> > +		/* sk_lock is held by caller so no one else can dequeue.
+> > +		 * Unlock rx_lock since memcpy_to_msg() may sleep.
+> > +		 */
+> > +		spin_unlock_bh(&vvs->rx_lock);
+> > +
+> > +		err = memcpy_to_msg(msg, pkt->buf + off, bytes);
+> > +		if (err)
+> > +			goto out;
+> > +
+> > +		spin_lock_bh(&vvs->rx_lock);
+> > +
+> > +		total += bytes;
+> 
+> Using list_for_each_entry(), here we can just do:
+> (or better, at the beginning of the cycle)
+> 
+> 		if (total == len)
+> 			break;
+> 
+> removing the next part...
+> 
+> > +		off += bytes;
+> > +		if (off == pkt->len) {
+> > +			pkt = list_next_entry(pkt, list);
+> > +			off = 0;
+> > +		}
+> > +	} while ((total < len) && !list_is_first(&pkt->list, &vvs->rx_queue));
+> 
+> ...until here.
+> 
+> > +
+> > +	spin_unlock_bh(&vvs->rx_lock);
+> > +
+> > +	return total;
+> > +
+> > +out:
+> > +	if (total)
+> > +		err = total;
+> > +	return err;
+> > +}
+> > +
+> > +static ssize_t
+> >  virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+> >  				   struct msghdr *msg,
+> >  				   size_t len)
+> > @@ -330,9 +383,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
+> >  				size_t len, int flags)
+> >  {
+> >  	if (flags & MSG_PEEK)
+> > -		return -EOPNOTSUPP;
+> > -
+> > -	return virtio_transport_stream_do_dequeue(vsk, msg, len);
+> > +		return virtio_transport_stream_do_peek(vsk, msg, len);
+> > +	else
+> > +		return virtio_transport_stream_do_dequeue(vsk, msg, len);
+> >  }
+> >  EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
+> >  
+> 
+> The rest looks good to me!
+> 
+> Thanks,
+> Stefano
+Thanks Stefano. Based on your comments, I will modify the patch and
+resubmit it.
 
-Hi Marc,
-
-I know we briefly discussed this at plumbers, but I want to bring it
-up again, because I am still puzzled why it is not possible to
-stabilize unstable clock early in boot.
-
-Here is an example where clock is stabilized:
-https://soleen.com/source/xref/linux/kernel/sched/clock.c?r=457c8996#265
-
-It uses a value that is read at last ticks to normalize clock, and
-because ticks are not available early in boot instead we can make sure
-that early in boot sched_clock() never returns value smaller than
-previously returned value, and if we want to be extra careful, we can
-also make sure that sched_clock() early in boot does not jump ahead by
-more than some fixed amount of time i.e. more than one hour.
-
-If sched_clock() is available early we will get the benefit of having
-other tracers that use it to debug early boot information.
-
-Pasha
+Matias
