@@ -2,266 +2,109 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E879AC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47886C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B921320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B56207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NXa4V1GZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407921AbfIWOUS (ORCPT
+        id S2408346AbfIWOW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:20:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:43176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407008AbfIWOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:20:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9C161000;
-        Mon, 23 Sep 2019 07:20:16 -0700 (PDT)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8091C3F59C;
-        Mon, 23 Sep 2019 07:20:14 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 01/12] smp: add generic SMP-stop support to common
- code
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, mark.rutland@arm.com,
-        peterz@infradead.org, catalin.marinas@arm.com,
-        takahiro.akashi@linaro.org, james.morse@arm.com,
-        hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, will@kernel.org,
-        dave.martin@arm.com, linux-arm-kernel@lists.infradead.org,
-        mingo@redhat.com, x86@kernel.org, dzickus@redhat.com,
-        ehabkost@redhat.com, linux@armlinux.org.uk, davem@davemloft.net,
-        sparclinux@vger.kernel.org, hch@infradead.org
-References: <20190913181953.45748-1-cristian.marussi@arm.com>
- <20190913181953.45748-2-cristian.marussi@arm.com>
-Message-ID: <1d7e90b7-71d8-3c12-9c1b-7049a1d7e32f@arm.com>
-Date:   Mon, 23 Sep 2019 15:20:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 10:22:28 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40722 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405915AbfIWOW1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:22:27 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEJCZE111282;
+        Mon, 23 Sep 2019 14:21:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=ijA5URtv/98vHuAZIGyZ6iuoFF4Fyn/jEc22CmlTEdM=;
+ b=NXa4V1GZRACyU93DDdoCr11+k0CdEOiuckcdwo8czwRjYcwhkGkAgGq2fP/TkCXV4+E5
+ K/9Klh+oa9OPyZo3clbzVcl2UStzv4mRxtp0SFca0jcIOIzO+0F22ZEgqOAa+CaozuGF
+ Tx7jVP1EYC3sxEQvGd0STjaeD7dR4VCqdCvSJPwHZrsvyf7tClONkVD8UM3zwJMByrtz
+ UT6k4hzU57Fsb5TzFSdexrU0xL0BsC9cMpQWf4rY8/0Ok9zXmlBWfPZCSO+d9Sn+BngR
+ l/8aLHn3wztAIrqtyc7/sPtfl72EYnhUlX1JCRlb4krkrxCUwVfYdjuMwxA+1NMkFZU/ CQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2v5b9tf9gx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 14:21:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEJDrK129050;
+        Mon, 23 Sep 2019 14:19:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2v5bpgfa06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 14:19:53 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8NEIj3W006948;
+        Mon, 23 Sep 2019 14:18:45 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Sep 2019 07:18:44 -0700
+Date:   Mon, 23 Sep 2019 17:18:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] nvme: fix an error code in nvme_init_subsystem()
+Message-ID: <20190923141836.GA31251@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20190913181953.45748-2-cristian.marussi@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909230140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909230140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/2019 19:19, Cristian Marussi wrote:
-> There was a lot of code duplication across architectures regarding the
-> SMP stop procedures' logic; moreover some of this duplicated code logic
-> happened to be similarly faulty across a few architectures: while fixing
-> such logic, move such generic logic as much as possible inside common
-> code.
-> 
-> Collect all the common logic related to SMP stop operations into the
-> common SMP code; any architecture willing to use such centralized logic
-> can select CONFIG_ARCH_USE_COMMON_STOP=y and provide the related
-> arch-specific helpers: in such a scenario, those architectures will
-> transparently start using the common code provided by smp_send_stop()
-> common function.
-> 
-> On the other side, Architectures not willing to use common code SMP stop
-> logic will simply leave CONFIG_ARCH_USE_COMMON_STOP undefined and carry
-> on executing their local arch-specific smp_send_stop() as before.
-> 
-> Suggested-by: Dave Martin <Dave.Martin@arm.com>
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> ---
-> v1 --> v2
-> - moved related Kconfig to common code inside arch/Kconfig
-> - introduced additional CONFIG_USE_COMMON_STOP selected by
->   CONFIG_ARCH_USE_COMMON_STOP
-> - introduced helpers to let architectures optionally alter
->   the default common code behaviour while waiting for CPUs:
->   change timeout or wait for ever. (will be needed by x86)
-> ---
->  arch/Kconfig        |  7 +++++
->  include/linux/smp.h | 55 +++++++++++++++++++++++++++++++++++++
->  kernel/smp.c        | 67 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 129 insertions(+)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index a7b57dd42c26..89766e6c0ac8 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -166,6 +166,13 @@ config ARCH_USE_BUILTIN_BSWAP
->  	 instructions should set this. And it shouldn't hurt to set it
->  	 on architectures that don't have such instructions.
->  
-> +config ARCH_USE_COMMON_SMP_STOP
-> +       def_bool n
-> +
-> +config USE_COMMON_SMP_STOP
-> +       depends on SMP && ARCH_USE_COMMON_SMP_STOP
-> +       def_bool y
-> +
->  config KRETPROBES
->  	def_bool y
->  	depends on KPROBES && HAVE_KRETPROBES
-> diff --git a/include/linux/smp.h b/include/linux/smp.h
-> index 6fc856c9eda5..381a14bfcd96 100644
-> --- a/include/linux/smp.h
-> +++ b/include/linux/smp.h
-> @@ -77,6 +77,61 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd);
->   */
->  extern void smp_send_stop(void);
->  
-> +#ifdef CONFIG_USE_COMMON_SMP_STOP
-> +static atomic_t wait_forever;
-> +static atomic_t wait_timeout = ATOMIC_INIT(USEC_PER_SEC);
-> +
-> +/*
-> + * An Architecture can optionally decide to use this helper to change the
-> + * waiting behaviour of common STOP logic, forcing to wait forever for
-> + * all CPUs to be stopped.
-> + */
-> +static inline void smp_stop_set_wait_forever(int wait)
-> +{
-> +	atomic_set(&wait_forever, wait);
-> +	/* ensure wait atomic-op is visible */
-> +	smp_mb__after_atomic();
-> +}
-> +
+"ret" should be a negative error code here, but it's either success or
+possibly uninitialized.
 
-These new helpers I added in V2 to let x86 configure wait/timeout SMP common stop behavior
-are in fact deadly broken as of now since based on underlying static header-globals.
-I'll fix in V3.
+Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/nvme/host/core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Cheers
-
-Cristian
-
-
-> +/*
-> + * An Architecture can optionally decide to use this helper to change the
-> + * waiting timeout of common STOP logic. A ZERO timeout means no timeout
-> + * at all as long as wait_forever was not previously set.
-> + *
-> + * Note that wait_forever and timeout must remain individually selectable:
-> + * so you can temporarily request wait_forever while keeping the same timeout
-> + * settings.
-> + */
-> +static inline void smp_stop_set_wait_timeout_us(unsigned long timeout)
-> +{
-> +	atomic_set(&wait_timeout, timeout);
-> +	/* ensure timeout atomic-op is visible */
-> +	smp_mb__after_atomic();
-> +}
-> +
-> +/* Retrieve the current wait settings. */
-> +static inline bool smp_stop_get_wait_timeout_us(unsigned long *timeout)
-> +{
-> +	if (timeout)
-> +		*timeout = atomic_read(&wait_timeout);
-> +	return atomic_read(&wait_forever);
-> +}
-> +
-> +/*
-> + * Any Architecture willing to use STOP common logic implementation
-> + * MUST at least provide the arch_smp_stop_call() helper which is in
-> + * charge of its own arch-specific CPU-stop mechanism.
-> + */
-> +extern void arch_smp_stop_call(cpumask_t *cpus);
-> +
-> +/*
-> + * An Architecture CAN also provide the arch_smp_cpus_stop_complete()
-> + * dedicated helper, to perform any final arch-specific operation on
-> + * the local CPU once the other CPUs have been successfully stopped.
-> + */
-> +void arch_smp_cpus_stop_complete(void);
-> +#endif
-> +
->  /*
->   * sends a 'reschedule' event to another CPU:
->   */
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 7dbcb402c2fc..72f99bf13fd0 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -20,6 +20,7 @@
->  #include <linux/sched.h>
->  #include <linux/sched/idle.h>
->  #include <linux/hypervisor.h>
-> +#include <linux/delay.h>
->  
->  #include "smpboot.h"
->  
-> @@ -817,3 +818,69 @@ int smp_call_on_cpu(unsigned int cpu, int (*func)(void *), void *par, bool phys)
->  	return sscs.ret;
->  }
->  EXPORT_SYMBOL_GPL(smp_call_on_cpu);
-> +
-> +#ifdef CONFIG_USE_COMMON_SMP_STOP
-> +void __weak arch_smp_cpus_stop_complete(void) { }
-> +
-> +static inline bool any_other_cpus_online(cpumask_t *mask,
-> +					 unsigned int this_cpu_id)
-> +{
-> +	cpumask_copy(mask, cpu_online_mask);
-> +	cpumask_clear_cpu(this_cpu_id, mask);
-> +
-> +	return !cpumask_empty(mask);
-> +}
-> +
-> +/*
-> + * This centralizes the common logic to:
-> + *
-> + *  - evaluate which CPUs are online and needs to be notified for stop,
-> + *    while considering properly the status of the calling CPU
-> + *
-> + *  - call the arch-specific helpers to request the effective stop
-> + *
-> + *  - wait for the stop operation to be completed across all involved CPUs
-> + *    monitoring the cpu_online_mask
-> + */
-> +void smp_send_stop(void)
-> +{
-> +	unsigned int this_cpu_id;
-> +	cpumask_t mask;
-> +
-> +	this_cpu_id = smp_processor_id();
-> +	if (any_other_cpus_online(&mask, this_cpu_id)) {
-> +		bool wait;
-> +		unsigned long timeout;
-> +		unsigned int this_cpu_online = cpu_online(this_cpu_id);
-> +
-> +		if (system_state <= SYSTEM_RUNNING)
-> +			pr_crit("stopping secondary CPUs\n");
-> +		arch_smp_stop_call(&mask);
-> +
-> +		/*
-> +		 * Defaults to wait up to one second for other CPUs to stop;
-> +		 * architectures can modify the default timeout or request
-> +		 * to wait forever.
-> +		 *
-> +		 * Here we rely simply on cpu_online_mask to sync with
-> +		 * arch-specific stop code without bloating the code with an
-> +		 * additional atomic_t ad-hoc counter.
-> +		 *
-> +		 * As a consequence we'll need proper explicit memory barriers
-> +		 * in case the other CPUs running the arch-specific stop-code
-> +		 * would need to commit to memory some data (like saved_regs).
-> +		 */
-> +		wait = smp_stop_get_wait_timeout_us(&timeout);
-> +		while (num_online_cpus() > this_cpu_online &&
-> +		       (wait || timeout--))
-> +			udelay(1);
-> +		/* ensure any stopping-CPUs memory access is made visible */
-> +		smp_rmb();
-> +		if (num_online_cpus() > this_cpu_online)
-> +			pr_warn("failed to stop secondary CPUs %*pbl\n",
-> +				cpumask_pr_args(cpu_online_mask));
-> +	}
-> +	/* Perform final (possibly arch-specific) work on this CPU */
-> +	arch_smp_cpus_stop_complete();
-> +}
-> +#endif
-> 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 63b37d08ac98..f6acbff3e3bc 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2540,8 +2540,9 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		list_add_tail(&subsys->entry, &nvme_subsystems);
+ 	}
+ 
+-	if (sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
+-			dev_name(ctrl->device))) {
++	ret = sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
++				dev_name(ctrl->device));
++	if (ret) {
+ 		dev_err(ctrl->device,
+ 			"failed to create sysfs link from subsystem.\n");
+ 		goto out_put_subsystem;
+-- 
+2.20.1
 
