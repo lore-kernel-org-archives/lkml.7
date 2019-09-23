@@ -2,151 +2,101 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08C1C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11DCC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E0D20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gysmm9Se"
+	by mail.kernel.org (Postfix) with ESMTP id BEC5E20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfIWOz7 (ORCPT
+        id S1731416AbfIWO4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:55:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35077 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731128AbfIWOz6 (ORCPT
+        Mon, 23 Sep 2019 10:56:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58796 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbfIWO4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:55:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id q10so34224383iop.2;
-        Mon, 23 Sep 2019 07:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aJSkN3O3R055m+qpJx/Tm2HyfkEZX9CoGjygiAHKo+g=;
-        b=gysmm9SedIHwKk43YK3DQp+CGCZC3a0JoqbVuZXFDfM7s7tI05+eBgvd9zlJT0ufYF
-         LNSj++cFYfxLREA8TSOtM6d7szFNRwrQfRYyHBxbb7EzfUL86rthVAOWZeCOfNTmU+gk
-         lwt8SF1824iQXKk3ma3/8RrREG4xDzdnjOsv2h5Bj0SBCRrrvscqW4MBz959+gL0hBMh
-         M5vjZz+QeRZX3QTSVjt/05/sWJf7zcoY8h8en678AqXCzGJU3hfndwTJuA5nYAAS8asV
-         +QlrgBF0YTWeDwT0J+zXbwuAfLgJWtBap6FVa5NEJ3/xyP+J2QIrazfvRecu5Voax5dC
-         4L9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aJSkN3O3R055m+qpJx/Tm2HyfkEZX9CoGjygiAHKo+g=;
-        b=XaN8/fo9c+Ww6oVGzGEuQRG5OQ7BElt2aDeSc0/uRJLBrl11Uj8xZ1UT8nPUDwBTDY
-         3+Ihu4ZsjlTb5wPwxEe53wVCyt/HaU0aAfhIHCM/zwHIS6Lv2/NLrZl6S6E57Bd3qi50
-         YP6HyLBgREASmTuvBXf9Qzy1xJUVOqS1R9/pknlLxz0wGUSx5oBBLz9k0t/zBy3j2DFS
-         afFv7/J+8OOvVGvaTPTE1HFxNGQmAyFTRZr/t1+Y5o03qfprStjvRxxJQBpnEjJR5+zu
-         I8+3r0A7WsKOEw7jm7YjaEEVALCAbVXMGRz6NKGpDSFnZLrUjpvuY78PZFNs78+xnXyo
-         zt0Q==
-X-Gm-Message-State: APjAAAUI9H2yFmewHG1Q/cit3mWJheTu7wBtosLBUCnuF8flfI2ei5L+
-        rNRwkCxJiIExWM1OmXbG7D9BzooCIVopUFNhcpg=
-X-Google-Smtp-Source: APXvYqz3umQLZs1WqpUvvzKbf1OvBAzKpjy4hK6udNDouR2tEvv08QtBYHQKN8m3xT72wndDH8FytOxzmRkmAiayeiE=
-X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr672385iof.276.1569250557575;
- Mon, 23 Sep 2019 07:55:57 -0700 (PDT)
+        Mon, 23 Sep 2019 10:56:47 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iCPld-0007aN-Dt; Mon, 23 Sep 2019 16:56:45 +0200
+Message-Id: <20190923145528.473070168@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 23 Sep 2019 16:54:36 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michael Kerrisk <mtk.manpages@googlemail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [patch V2 1/6] posix-cpu-timers: Restrict timer_create() permissions
+References: <20190923145435.507024424@linutronix.de>
 MIME-Version: 1.0
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
-In-Reply-To: <20190923135808.815-1-philipp.puschmann@emlix.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 23 Sep 2019 09:55:46 -0500
-Message-ID: <CAHCN7xJL_x1ryOoNW+R2hOZ9dMFem9wni8Uo8QOA3wxpzKLbqQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Fix UART DMA freezes for i.MX SOCs
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        fugang.duan@nxp.com, jlu@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>, vkoul@kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        Robin Gong <yibin.gong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:58 AM Philipp Puschmann
-<philipp.puschmann@emlix.com> wrote:
->
-> For some years and since many kernel versions there are reports that
-> RX UART DMA channel stops working at one point. So far the usual
-> workaround was to disable RX DMA. This patches fix the underlying
-> problem.
->
-> When a running sdma script does not find any usable destination buffer
-> to put its data into it just leads to stopping the channel being
-> scheduled again. As solution we manually retrigger the sdma script for
-> this channel and by this dissolve the freeze.
->
-> While this seems to work fine so far, it may come to buffer overruns
-> when the channel - even temporary - is stopped. This case has to be
-> addressed by device drivers by increasing the number of DMA periods.
->
-> This patch series was tested with the current kernel and backported to
-> kernel 4.15 with a special use case using a WL1837MOD via UART and
-> provoking the hanging of UART RX DMA within seconds after starting a
-> test application. It resulted in well known
->   "Bluetooth: hci0: command 0x0408 tx timeout"
-> errors and complete stop of UART data reception. Our Bluetooth traffic
-> consists of many independent small packets, mostly only a few bytes,
-> causing high usage of periods.
->
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Using the 4.19.y branch, this seems to working just fine for me with an i.MX6Q
-with WL1837MOD Bluetooth connected to UART2.  I am still seeing some
-timeouts with 5.3, but I'm going to continue to run some tests.
+Right now there is no restriction at all to attach a Posix CPU timer to any
+process in the system. Per thread CPU timers are limited to be created by
+threads in the same thread group.
 
-Tested-by: Adam Ford <aford173@gmail.com> #imx6q w/ 4.19 Kernel
+Timers can be used to observe activity of tasks and also impose overhead on
+the process to which they are attached because that process needs to do the
+fine grained CPU time accounting.
 
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-> Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
->
-> ---
->
-> Changelog v5:
->  - join with patch version from Jan Luebbe
->  - adapt comments and patch descriptions
->  - add Reviewed-by
->
-> Changelog v4:
->  - fixed the fixes tags
->
-> Changelog v3:
->  - fixes typo in dma_wmb
->  - add fixes tags
->
-> Changelog v2:
->  - adapt title (this patches are not only for i.MX6)
->  - improve some comments and patch descriptions
->  - add a dma_wb() around BD_DONE flag
->  - add Reviewed-by tags
->  - split off  "serial: imx: adapt rx buffer and dma periods"
->
-> Philipp Puschmann (3):
->   dmaengine: imx-sdma: fix buffer ownership
->   dmaengine: imx-sdma: fix dma freezes
->   dmaengine: imx-sdma: drop redundant variable
->
->  drivers/dma/imx-sdma.c | 37 +++++++++++++++++++++++++++----------
->  1 file changed, 27 insertions(+), 10 deletions(-)
->
-> --
-> 2.23.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Limit the ability to attach timers to a process by checking whether the
+task which is creating the timer has permissions to attach ptrace on the
+target process.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+
+---
+ kernel/time/posix-cpu-timers.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -6,6 +6,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/cputime.h>
+ #include <linux/posix-timers.h>
++#include <linux/ptrace.h>
+ #include <linux/errno.h>
+ #include <linux/math64.h>
+ #include <linux/uaccess.h>
+@@ -82,7 +83,20 @@ static struct task_struct *lookup_task(c
+ 	/*
+ 	 * For processes require that p is group leader.
+ 	 */
+-	return has_group_leader_pid(p) ? p : NULL;
++	if (!has_group_leader_pid(p))
++		return NULL;
++
++	/*
++	 * Avoid the ptrace overhead when this is current's process
++	 */
++	if (same_thread_group(p, current))
++		return p;
++
++	/*
++	 * Creating timers on processes which cannot be ptraced is not
++	 * permitted:
++	 */
++	return ptrace_may_access(p, PTRACE_MODE_ATTACH_REALCREDS) ? p : NULL;
+ }
+ 
+ static struct task_struct *__get_task_for_clock(const clockid_t clock,
+
+
