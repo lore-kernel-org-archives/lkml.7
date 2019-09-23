@@ -2,168 +2,137 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3E0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26BBC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8283920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DF620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437024AbfIWIFa (ORCPT
+        id S2437103AbfIWIHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:05:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:38226 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 04:07:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59248 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436751AbfIWIF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:05:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B41541000;
-        Mon, 23 Sep 2019 01:05:28 -0700 (PDT)
-Received: from [192.168.1.113] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FE1A3F59C;
-        Mon, 23 Sep 2019 01:08:00 -0700 (PDT)
-Subject: Re: [PATCH 1/1] sched/eas: introduce system-wide overutil indicator
-To:     YT Chang <yt.chang@mediatek.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1568877622-28073-1-git-send-email-yt.chang@mediatek.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <17c5f3bf-b739-b041-c71a-3d568be6f46d@arm.com>
-Date:   Mon, 23 Sep 2019 10:05:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2405512AbfIWIHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:07:22 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1726199C42
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:07:22 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id c8so16380517qtd.20
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:07:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GtkVLxajS9qecd1iiLjWKYP8KasxkZAd70jCNiNzvoI=;
+        b=QkFDvwpKA2q2v50wvMBYwfIkSeClS8rsAm6AsubdD2aWlR9f/19WnpOjWrWLYD9Fu5
+         HGPyqbOD1E28zfwTgydfpnYW7jpr5cparSYozt4xxw3BKhImpiFgepl5KJJdxDRU+KMg
+         1iyBQWnTI9pQwvXlWTeGOn4fWnrK5bXypu8B/FPlVUsWC33wUKiqwhot5yMy0KwSClRZ
+         LWO88j/oP86umJcX2sXbMFEUNiceJOr9pEIVFWqxZ7nxTYEL+frYduNNLILIyqQMSD6W
+         TW7vc4igRjb7giWMBF0NuncrVt5du9w8jjOaGprZZcAOZlUVw6VBEYkfbSmihVlmRlXt
+         yChQ==
+X-Gm-Message-State: APjAAAXnJFGiK+KYBF6E0MoIzfpR0eGxFDpHP6yIefQU3+IFEtojuniM
+        ZwTceBrLT8ye/KLiNXNgJxVK9xwvRuuo4jxJXlfAQFBf5LRZLxu9KkF5R75ZJKkEc5eW0meTbyI
+        Vh5X4DPzqOgfC0ow7Sb8pl0Nd
+X-Received: by 2002:ac8:1767:: with SMTP id u36mr15795735qtk.152.1569226041444;
+        Mon, 23 Sep 2019 01:07:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxTFCDVmbYMZjvOnYtH+mE9geB7di4826uJa+jSeyr2GrwRD/VkW9bYWy7gYlmWOdfHPTBHMg==
+X-Received: by 2002:ac8:1767:: with SMTP id u36mr15795722qtk.152.1569226041292;
+        Mon, 23 Sep 2019 01:07:21 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id 60sm5445508qta.77.2019.09.23.01.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 01:07:20 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 04:07:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     wangxu <wangxu72@huawei.com>
+Cc:     jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vhost: It's better to use size_t for the 3rd parameter
+ of vhost_exceeds_weight()
+Message-ID: <20190923040518-mutt-send-email-mst@kernel.org>
+References: <1569224801-101248-1-git-send-email-wangxu72@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1568877622-28073-1-git-send-email-yt.chang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569224801-101248-1-git-send-email-wangxu72@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 9:20 AM, YT Chang wrote:
-> When the system is overutilization, the load-balance crossing
-> clusters will be triggered and scheduler will not use energy
-> aware scheduling to choose CPUs.
-
-We're currently transitioning from traditional big.LITTLE (the CPUs of 1
-cluster (all having the same CPU (original) capacity) represent a DIE
-Sched Domain (SD) level Sched Group (SG)) to DynamIQ systems. Later can
-share CPUs with different CPU (original) capacity in one cluster.
-In Linux mainline with today's DynamIQ systems (1 cluster) you will
-only have 1 cluster, i.e. 1 MC SD level SG.
-
-For those systems the current approach is much more applicable.
-
-Or do you apply the out-of-tree Phantom Domain concept, which creates n
-(n=2 or 3 ((huge,) big, little)) DIE SGs on your 1 cluster DynamIQ system?
-
-> The overutilization means the loading of  ANY CPUs
-> exceeds threshold (80%).
+On Mon, Sep 23, 2019 at 03:46:41PM +0800, wangxu wrote:
+> From: Wang Xu <wangxu72@huawei.com>
 > 
-> However, only 1 heavy task or while-1 program will run on highest
-> capacity CPUs and it still result to trigger overutilization. So
-> the system will not use Energy Aware scheduling.
-
-The patch-header of commit 2802bf3cd936 ("sched/fair: Add
-over-utilization/tipping point indicator") mentioned why the current
-approach is so conservatively defined.
-
-> To avoid it, a system-wide over-utilization indicator to trigger
-> load-balance cross clusters.
+> Caller of vhost_exceeds_weight(..., total_len) in drivers/vhost/net.c
+> usually pass size_t total_len, which may be affected by rx/tx package.
 > 
-> The policy is:
-> 	The loading of "ALL CPUs in the highest capacity"
-> 						exceeds threshold(80%) or
-> 	The loading of "Any CPUs not in the highest capacity"
-> 						exceed threshold(80%)
+> Signed-off-by: Wang Xu <wangxu72@huawei.com>
 
-We experimented with an overutilized (tipping point) indicator per SD
-from Thara Gopinath (Linaro), mentioned by Vincent already, till v2 of
-the Energy Aware Scheduling patch-set in 2018 but we couldn't find any
-advantage using it over the one you now find in mainline.
 
-https://lore.kernel.org/r/20180406153607.17815-4-dietmar.eggemann@arm.com
+Puts a bit more pressure on the register file ...
+why do we care? Is there some way that it can
+exceed INT_MAX?
 
-Maybe you can have a look at this patch and see if it gives you an
-advantage with your use cases and system topology layout?
-
-The 'system-wide' in the name of the patch is misleading. The current
-approach is also system-wide, we have the overutilized information on
-the root domain (system here stands for root domain). You change the
-detection mechanism from per-CPU to a mixed-mode detection (per-CPU and
-per-SG).
-
-> Signed-off-by: YT Chang <yt.chang@mediatek.com>
 > ---
->  kernel/sched/fair.c | 76 +++++++++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 65 insertions(+), 11 deletions(-)
+>  drivers/vhost/vhost.c | 4 ++--
+>  drivers/vhost/vhost.h | 7 ++++---
+>  2 files changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 036be95..f4c3d70 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5182,10 +5182,71 @@ static inline bool cpu_overutilized(int cpu)
->  static inline void update_overutilized_status(struct rq *rq)
->  {
->  	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
-> -		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
-> -		trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
-> +		if (capacity_orig_of(cpu_of(rq)) < rq->rd->max_cpu_capacity) {
-> +			WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
-> +			trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
-> +		}
->  	}
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 36ca2cf..159223a 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -412,7 +412,7 @@ static void vhost_dev_free_iovecs(struct vhost_dev *dev)
 >  }
-> +
-> +static
-> +void update_system_overutilized(struct sched_domain *sd, struct cpumask *cpus)
-> +{
-> +	unsigned long group_util;
-> +	bool intra_overutil = false;
-> +	unsigned long max_capacity;
-> +	struct sched_group *group = sd->groups;
-> +	struct root_domain *rd;
-> +	int this_cpu;
-> +	bool overutilized;
-> +	int i;
-> +
-> +	this_cpu = smp_processor_id();
-> +	rd = cpu_rq(this_cpu)->rd;
-> +	overutilized = READ_ONCE(rd->overutilized);
-> +	max_capacity = rd->max_cpu_capacity;
-> +
-> +	do {
-> +		group_util = 0;
-> +		for_each_cpu_and(i, sched_group_span(group), cpus) {
-> +			group_util += cpu_util(i);
-> +			if (cpu_overutilized(i)) {
-> +				if (capacity_orig_of(i) < max_capacity) {
-> +					intra_overutil = true;
-> +					break;
-> +				}
-> +			}
-> +		}
-> +
-> +		/*
-> +		 * A capacity base hint for over-utilization.
-> +		 * Not to trigger system overutiled if heavy tasks
-> +		 * in Big.cluster, so
-> +		 * add the free room(20%) of Big.cluster is impacted which means
-> +		 * system-wide over-utilization,
-> +		 * that considers whole cluster not single cpu
-> +		 */
-> +		if (group->group_weight > 1 && (group->sgc->capacity * 1024 <
-> +						group_util * capacity_margin)) {
+>  
+>  bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
+> -			  int pkts, int total_len)
+> +			  int pkts, size_t total_len)
+>  {
+>  	struct vhost_dev *dev = vq->dev;
+>  
+> @@ -454,7 +454,7 @@ static size_t vhost_get_desc_size(struct vhost_virtqueue *vq,
+>  
+>  void vhost_dev_init(struct vhost_dev *dev,
+>  		    struct vhost_virtqueue **vqs, int nvqs,
+> -		    int iov_limit, int weight, int byte_weight)
+> +		    int iov_limit, int weight, size_t byte_weight)
+>  {
+>  	struct vhost_virtqueue *vq;
+>  	int i;
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index e9ed272..8d80389d 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -172,12 +172,13 @@ struct vhost_dev {
+>  	wait_queue_head_t wait;
+>  	int iov_limit;
+>  	int weight;
+> -	int byte_weight;
+> +	size_t byte_weight;
+>  };
+>  
 
-Why 'group->group_weight > 1' ? Do you have some out-of-tree code which
-lets SGs with 1 CPU survive?
 
-[...]
+This just costs extra memory, and value is never large,
+so I don't think this matters.
+
+> -bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+> +bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts,
+> +			  size_t total_len);
+>  void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
+> -		    int nvqs, int iov_limit, int weight, int byte_weight);
+> +		    int nvqs, int iov_limit, int weight, size_t byte_weight);
+>  long vhost_dev_set_owner(struct vhost_dev *dev);
+>  bool vhost_dev_has_owner(struct vhost_dev *dev);
+>  long vhost_dev_check_owner(struct vhost_dev *);
+> -- 
+> 1.8.5.6
