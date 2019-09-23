@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BBC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B07EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C69A20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181CC20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 04:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730629AbfIWEZt (ORCPT
+        id S1730722AbfIWEZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 00:25:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46832 "EHLO mx1.redhat.com"
+        Mon, 23 Sep 2019 00:25:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54352 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfIWEZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 00:25:49 -0400
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+        id S1726536AbfIWEZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 00:25:56 -0400
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43941C051688
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:25:48 +0000 (UTC)
-Received: by mail-pf1-f200.google.com with SMTP id u12so9392645pfn.19
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 21:25:48 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 356D42CD7E5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:25:56 +0000 (UTC)
+Received: by mail-pl1-f200.google.com with SMTP id v4so7950344plp.23
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 21:25:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oIX66W7ZMb/5JfByU6MkGyWo2hWcSJBtpdabai9VliU=;
-        b=p6XRMr0HKyOHpuxVg7NtnyW33lQACj/LSgIfJSZPka2i+nFJHl0IwurGIZf3+9y8NY
-         7VWDOof791o7GORU44NGI7HHCWRflIyvEzI8MVBk4kqeKybFkEE0MtRLxnlt0G8qi1Sk
-         BqrS/p6JUUa38vE3FuZmcYK+rvqckreep6zd143p+/sVRVEeZfE8YMeIYYAW2duY//s6
-         1v+2sqJQkBufwDrZX/acdZMdHDjsZ0ar3sqaCwytpLIi8uyaUCI+GKtCpZ3RIo7vcfMk
-         KKAGIUmk1vTrEIZbsVh61zsQJT0cjmQmLnTbanVnumj60J5m4mtW+qhft2VrLdkVwpi8
-         KOYg==
-X-Gm-Message-State: APjAAAW/hMZD6KNkjQVPGnW0HYlVqC2nO2OKgPstm07jzVI1wCGZgY0G
-        43zZ+e6ttYd95srR21Uh1/sXnzsGj3vQHUTWSWTmyTWbHV4weLdEdgO2h0JpkRZPlqHPvBnk4t+
-        uP0u2ELowLZU2upO+sZz54ubi
-X-Received: by 2002:a63:be48:: with SMTP id g8mr26991640pgo.193.1569212747609;
-        Sun, 22 Sep 2019 21:25:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz9prJ2K+BCMpveKciJuYN8A8mPKLRBwb9nuCBgKGvLdS+4PO22/QE9L/qvks5N0S0+7vBcSA==
-X-Received: by 2002:a63:be48:: with SMTP id g8mr26991618pgo.193.1569212747203;
-        Sun, 22 Sep 2019 21:25:47 -0700 (PDT)
+        bh=nL20lZzBbwkIGL5V1u5lEN6f2V609pKVyYfWwZ4NMZQ=;
+        b=iKDzWQCvOKCbLdimkNEhApuUxI6rJnxEwADWSfVprDP5xUwTRTlO+1BizeDW9fVUxh
+         ZBuNByEtLRwWtPe9g6xdT9ojdh1B2qzE4K+kzThtFCJzK3Jd7qEsX6E1+yCd7Ni+eZuI
+         TLasWtCqACAmh2k+a8WGkkca1Fl+Yy3FyskZEqNijnOFqBAjnvNdrzBjGmN8m/Qmziea
+         RfumQbYYhHU8ULMy1Q+e4RTb2nGiSRuTYz66KtniqFizfma7W1y0wxCdeJoNTYc1mgCY
+         VmBiibTJDKNvxl/4xuo0V1/xzSoGLMJaTFzsWVrpxw/uyHQ9YvwuWGRm1PwVi7jzHpwx
+         1VuQ==
+X-Gm-Message-State: APjAAAWnQJUV2DeyqUAvQVsnREgn2v09ZLnILQlLEnzvu6b926Rha/XH
+        wGV3oC5RYtktLTAntRJtyf2oAtwH0ylCVuGeMgvbcFpR4dZO85fQQIa0fMM9arrXlxFgiLCpI4W
+        zvfdeVgX15Mc+83W2SFFTQejg
+X-Received: by 2002:a65:67d4:: with SMTP id b20mr27376180pgs.445.1569212755561;
+        Sun, 22 Sep 2019 21:25:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyxuxMhYGvH4EJC3+piC4YcWYwZ7eWeZxL3c1t1HTqZSY/8jbiqPCLTpPP6LH9KEz2RQOBjDg==
+X-Received: by 2002:a65:67d4:: with SMTP id b20mr27376164pgs.445.1569212755347;
+        Sun, 22 Sep 2019 21:25:55 -0700 (PDT)
 Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x20sm11781867pfp.120.2019.09.22.21.25.40
+        by smtp.gmail.com with ESMTPSA id x20sm11781867pfp.120.2019.09.22.21.25.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2019 21:25:46 -0700 (PDT)
+        Sun, 22 Sep 2019 21:25:54 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -67,9 +67,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v4 01/10] mm/gup: Rename "nonblocking" to "locked" where proper
-Date:   Mon, 23 Sep 2019 12:25:14 +0800
-Message-Id: <20190923042523.10027-2-peterx@redhat.com>
+Subject: [PATCH v4 02/10] mm/gup: Fix __get_user_pages() on fault retry of hugetlb
+Date:   Mon, 23 Sep 2019 12:25:15 +0800
+Message-Id: <20190923042523.10027-3-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190923042523.10027-1-peterx@redhat.com>
 References: <20190923042523.10027-1-peterx@redhat.com>
@@ -80,195 +80,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's plenty of places around __get_user_pages() that has a parameter
-"nonblocking" which does not really mean that "it won't block" (because
-it can really block) but instead it shows whether the mmap_sem is
-released by up_read() during the page fault handling mostly when
-VM_FAULT_RETRY is returned.
+When follow_hugetlb_page() returns with *locked==0, it means we've got
+a VM_FAULT_RETRY within the fauling process and we've released the
+mmap_sem.  When that happens, we should stop and bail out.
 
-We have the correct naming in e.g. get_user_pages_locked() or
-get_user_pages_remote() as "locked", however there're still many places
-that are using the "nonblocking" as name.
-
-Renaming the places to "locked" where proper to better suite the
-functionality of the variable.  While at it, fixing up some of the
-comments accordingly.
-
-Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Reviewed-by: Jerome Glisse <jglisse@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- mm/gup.c     | 44 +++++++++++++++++++++-----------------------
- mm/hugetlb.c |  8 ++++----
- 2 files changed, 25 insertions(+), 27 deletions(-)
+ mm/gup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index 98f13ab37bac..eddbb95dcb8f 100644
+index eddbb95dcb8f..e60d32f1674d 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -622,12 +622,12 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
- }
- 
- /*
-- * mmap_sem must be held on entry.  If @nonblocking != NULL and
-- * *@flags does not include FOLL_NOWAIT, the mmap_sem may be released.
-- * If it is, *@nonblocking will be set to 0 and -EBUSY returned.
-+ * mmap_sem must be held on entry.  If @locked != NULL and *@flags
-+ * does not include FOLL_NOWAIT, the mmap_sem may be released.  If it
-+ * is, *@locked will be set to 0 and -EBUSY returned.
-  */
- static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
--		unsigned long address, unsigned int *flags, int *nonblocking)
-+		unsigned long address, unsigned int *flags, int *locked)
- {
- 	unsigned int fault_flags = 0;
- 	vm_fault_t ret;
-@@ -639,7 +639,7 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
- 		fault_flags |= FAULT_FLAG_WRITE;
- 	if (*flags & FOLL_REMOTE)
- 		fault_flags |= FAULT_FLAG_REMOTE;
--	if (nonblocking)
-+	if (locked)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
- 	if (*flags & FOLL_NOWAIT)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
-@@ -665,8 +665,8 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
- 	}
- 
- 	if (ret & VM_FAULT_RETRY) {
--		if (nonblocking && !(fault_flags & FAULT_FLAG_RETRY_NOWAIT))
--			*nonblocking = 0;
-+		if (locked && !(fault_flags & FAULT_FLAG_RETRY_NOWAIT))
-+			*locked = 0;
- 		return -EBUSY;
- 	}
- 
-@@ -743,7 +743,7 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-  *		only intends to ensure the pages are faulted in.
-  * @vmas:	array of pointers to vmas corresponding to each page.
-  *		Or NULL if the caller does not require them.
-- * @nonblocking: whether waiting for disk IO or mmap_sem contention
-+ * @locked:     whether we're still with the mmap_sem held
-  *
-  * Returns number of pages pinned. This may be fewer than the number
-  * requested. If nr_pages is 0 or negative, returns 0. If no pages
-@@ -772,13 +772,11 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-  * appropriate) must be called after the page is finished with, and
-  * before put_page is called.
-  *
-- * If @nonblocking != NULL, __get_user_pages will not wait for disk IO
-- * or mmap_sem contention, and if waiting is needed to pin all pages,
-- * *@nonblocking will be set to 0.  Further, if @gup_flags does not
-- * include FOLL_NOWAIT, the mmap_sem will be released via up_read() in
-- * this case.
-+ * If @locked != NULL, *@locked will be set to 0 when mmap_sem is
-+ * released by an up_read().  That can happen if @gup_flags does not
-+ * have FOLL_NOWAIT.
-  *
-- * A caller using such a combination of @nonblocking and @gup_flags
-+ * A caller using such a combination of @locked and @gup_flags
-  * must therefore hold the mmap_sem for reading only, and recognize
-  * when it's been released.  Otherwise, it must be held for either
-  * reading or writing and will not be released.
-@@ -790,7 +788,7 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
- static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 		unsigned long start, unsigned long nr_pages,
- 		unsigned int gup_flags, struct page **pages,
--		struct vm_area_struct **vmas, int *nonblocking)
-+		struct vm_area_struct **vmas, int *locked)
- {
- 	long ret = 0, i = 0;
- 	struct vm_area_struct *vma = NULL;
-@@ -834,7 +832,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 			if (is_vm_hugetlb_page(vma)) {
+@@ -833,6 +833,16 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
  				i = follow_hugetlb_page(mm, vma, pages, vmas,
  						&start, &nr_pages, i,
--						gup_flags, nonblocking);
-+						gup_flags, locked);
+ 						gup_flags, locked);
++				if (locked && *locked == 0) {
++					/*
++					 * We've got a VM_FAULT_RETRY
++					 * and we've lost mmap_sem.
++					 * We must stop here.
++					 */
++					BUG_ON(gup_flags & FOLL_NOWAIT);
++					BUG_ON(ret != 0);
++					goto out;
++				}
  				continue;
  			}
  		}
-@@ -852,7 +850,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 		page = follow_page_mask(vma, start, foll_flags, &ctx);
- 		if (!page) {
- 			ret = faultin_page(tsk, vma, start, &foll_flags,
--					nonblocking);
-+					   locked);
- 			switch (ret) {
- 			case 0:
- 				goto retry;
-@@ -1178,7 +1176,7 @@ EXPORT_SYMBOL(get_user_pages_remote);
-  * @vma:   target vma
-  * @start: start address
-  * @end:   end address
-- * @nonblocking:
-+ * @locked: whether the mmap_sem is still held
-  *
-  * This takes care of mlocking the pages too if VM_LOCKED is set.
-  *
-@@ -1186,14 +1184,14 @@ EXPORT_SYMBOL(get_user_pages_remote);
-  *
-  * vma->vm_mm->mmap_sem must be held.
-  *
-- * If @nonblocking is NULL, it may be held for read or write and will
-+ * If @locked is NULL, it may be held for read or write and will
-  * be unperturbed.
-  *
-- * If @nonblocking is non-NULL, it must held for read only and may be
-- * released.  If it's released, *@nonblocking will be set to 0.
-+ * If @locked is non-NULL, it must held for read only and may be
-+ * released.  If it's released, *@locked will be set to 0.
-  */
- long populate_vma_page_range(struct vm_area_struct *vma,
--		unsigned long start, unsigned long end, int *nonblocking)
-+		unsigned long start, unsigned long end, int *locked)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long nr_pages = (end - start) / PAGE_SIZE;
-@@ -1228,7 +1226,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
- 	 * not result in a stack expansion that recurses back here.
- 	 */
- 	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
--				NULL, NULL, nonblocking);
-+				NULL, NULL, locked);
- }
- 
- /*
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6d7296dd11b8..31c2a6275023 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4270,7 +4270,7 @@ int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm,
- long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
- 			 struct page **pages, struct vm_area_struct **vmas,
- 			 unsigned long *position, unsigned long *nr_pages,
--			 long i, unsigned int flags, int *nonblocking)
-+			 long i, unsigned int flags, int *locked)
- {
- 	unsigned long pfn_offset;
- 	unsigned long vaddr = *position;
-@@ -4341,7 +4341,7 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
- 				spin_unlock(ptl);
- 			if (flags & FOLL_WRITE)
- 				fault_flags |= FAULT_FLAG_WRITE;
--			if (nonblocking)
-+			if (locked)
- 				fault_flags |= FAULT_FLAG_ALLOW_RETRY;
- 			if (flags & FOLL_NOWAIT)
- 				fault_flags |= FAULT_FLAG_ALLOW_RETRY |
-@@ -4358,9 +4358,9 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
- 				break;
- 			}
- 			if (ret & VM_FAULT_RETRY) {
--				if (nonblocking &&
-+				if (locked &&
- 				    !(fault_flags & FAULT_FLAG_RETRY_NOWAIT))
--					*nonblocking = 0;
-+					*locked = 0;
- 				*nr_pages = 0;
- 				/*
- 				 * VM_FAULT_RETRY must not return an
 -- 
 2.21.0
 
