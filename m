@@ -2,193 +2,85 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B99C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AC2C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11412205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569269884;
-	bh=1cS+V/2T6hNQDP2dZSXrP1Xl7F2JPVXoQBrGnhIIPto=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=G0O1bf/rE9vEY4GYse6+tK35tBUxBYBsXmtiHYhFcyiw8u9e/XFXnBZ1ztBPJXjk1
-	 BFPeCKmBp9g4gptrQzUjHhLQzTr5pzX6Hp3DGJwfvsKCQTra/NGeW6cNlcnnA7CCBD
-	 NCELbWqU25o8FGzHRHQtmyQ1mBY6B58d9e2BqRwI=
+	by mail.kernel.org (Postfix) with ESMTP id B9F62205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502501AbfIWUSD (ORCPT
+        id S2502505AbfIWUTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbfIWUSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:18:02 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C996205F4;
-        Mon, 23 Sep 2019 20:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569269881;
-        bh=1cS+V/2T6hNQDP2dZSXrP1Xl7F2JPVXoQBrGnhIIPto=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=uCQg0YOuP/QFqnR+R+RbQxNx8ri4unVWRFrjFAw3XVDUoGJOVcYLXFDm98fFifPCF
-         xhFWllvd7JOhbF6YB82C7hWZ46zQEZp5t2CYtIJhjbBN8gDSWVAEEIPvT/Lf/NO7RV
-         NfF133HbqciMhpf6r0BUlHGlbDyOHVIgaZ1FmiJA=
-Message-ID: <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
-Subject: Re: Lease semantic proposal
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Mon, 23 Sep 2019 16:17:59 -0400
-In-Reply-To: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
-References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 23 Sep 2019 16:19:41 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35551 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfIWUTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:19:41 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 08151C0009;
+        Mon, 23 Sep 2019 20:19:38 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 22:19:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Benson Leung <bleung@chromium.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>
+Subject: Re: [PATCH v2 1/2] rtc: wilco-ec: Remove yday and wday calculations
+Message-ID: <20190923201938.GB4141@piout.net>
+References: <20190916181215.501-1-ncrews@chromium.org>
+ <20190922161306.GA1999@bug>
+ <20190922190542.GC3185@piout.net>
+ <CAHX4x876iDn_6Q1+p1SNMncHJezSUQysfM+py0gjD2ytMKBj=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHX4x876iDn_6Q1+p1SNMncHJezSUQysfM+py0gjD2ytMKBj=w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-23 at 12:08 -0700, Ira Weiny wrote:
-> Since the last RFC patch set[1] much of the discussion of supporting RDMA with
-> FS DAX has been around the semantics of the lease mechanism.[2]  Within that
-> thread it was suggested I try and write some documentation and/or tests for the
-> new mechanism being proposed.  I have created a foundation to test lease
-> functionality within xfstests.[3] This should be close to being accepted.
-> Before writing additional lease tests, or changing lots of kernel code, this
-> email presents documentation for the new proposed "layout lease" semantic.
+On 23/09/2019 11:20:42-0600, Nick Crews wrote:
+> > This is coming from struct tm, it is part of C89 but I think I was not
+> > born when this decision was made. man rtc properly reports that those
+> > fields are unused and no userspace tools are actually making use of
+> > them. Nobody cares about the broken down representation of the time.
+> > What is done is use the ioctl then mktime to have a UNIX timestamp.
+> >
+> > "The mktime function ignores the specified contents of the tm_wday,
+> > tm_yday, tm_gmtoff, and tm_zone members of the broken-down time
+> > structure. It uses the values of the other components to determine the
+> > calendar time; it’s permissible for these components to have
+> > unnormalized values outside their normal ranges. The last thing that
+> > mktime does is adjust the components of the brokentime structure,
+> > including the members that were initially ignored."
 > 
-> At Linux Plumbers[4] just over a week ago, I presented the current state of the
-> patch set and the outstanding issues.  Based on the discussion there, well as
-> follow up emails, I propose the following addition to the fcntl() man page.
-> 
-> Thank you,
-> Ira
-> 
-> [1] https://lkml.org/lkml/2019/8/9/1043
-> [2] https://lkml.org/lkml/2019/8/9/1062
-> [3] https://www.spinics.net/lists/fstests/msg12620.html
-> [4] https://linuxplumbersconf.org/event/4/contributions/368/
-> 
+> This is very non-obvious and I only knew this from talking to you,
+> Alexandre. Perhaps we should add this note to the RTC core,
+> such as in the description for rtc_class_ops?
 > 
 
-Thank you so much for doing this, Ira. This allows us to debate the
-user-visible behavior semantics without getting bogged down in the
-implementation details. More comments below:
+I'm planning to add documentation on what should be done in an RTC
+driver, I'll ensure to add something on this topic.
 
-> <fcntl man page addition>
-> Layout Leases
-> -------------
-> 
-> Layout (F_LAYOUT) leases are special leases which can be used to control and/or
-> be informed about the manipulation of the underlying layout of a file.
-> 
-> A layout is defined as the logical file block -> physical file block mapping
-> including the file size and sharing of physical blocks among files.  Note that
-> the unwritten state of a block is not considered part of file layout.
-> 
-> **Read layout lease F_RDLCK | F_LAYOUT**
-> 
-> Read layout leases can be used to be informed of layout changes by the
-> system or other users.  This lease is similar to the standard read (F_RDLCK)
-> lease in that any attempt to change the _layout_ of the file will be reported to
-> the process through the lease break process.  But this lease is different
-> because the file can be opened for write and data can be read and/or written to
-> the file as long as the underlying layout of the file does not change.
-> Therefore, the lease is not broken if the file is simply open for write, but
-> _may_ be broken if an operation such as, truncate(), fallocate() or write()
-> results in changing the underlying layout.
-> 
-> **Write layout lease (F_WRLCK | F_LAYOUT)**
-> 
-> Write Layout leases can be used to break read layout leases to indicate that
-> the process intends to change the underlying layout lease of the file.
-> 
-> A process which has taken a write layout lease has exclusive ownership of the
-> file layout and can modify that layout as long as the lease is held.
-> Operations which change the layout are allowed by that process.  But operations
-> from other file descriptors which attempt to change the layout will break the
-> lease through the standard lease break process.  The F_LAYOUT flag is used to
-> indicate a difference between a regular F_WRLCK and F_WRLCK with F_LAYOUT.  In
-> the F_LAYOUT case opens for write do not break the lease.  But some operations,
-> if they change the underlying layout, may.
-> 
-> The distinction between read layout leases and write layout leases is that
-> write layout leases can change the layout without breaking the lease within the
-> owning process.  This is useful to guarantee a layout prior to specifying the
-> unbreakable flag described below.
-> 
+> For this patch, do you want me to make any further changes?
 > 
 
-The above sounds totally reasonable. You're essentially exposing the
-behavior of nfsd's layout leases to userland. To be clear, will F_LAYOUT
-leases work the same way as "normal" leases, wrt signals and timeouts?
+No need for any changes, however, I can't apply it right now because we
+are in the middle of the merge window.
 
-I do wonder if we're better off not trying to "or" in flags for this,
-and instead have a separate set of commands (maybe F_RDLAYOUT,
-F_WRLAYOUT, F_UNLAYOUT). Maybe I'm just bikeshedding though -- I don't
-feel terribly strongly about it.
-
-Also, at least in NFSv4, layouts are handed out for a particular byte
-range in a file. Should we consider doing this with an API that allows
-for that in the future? Is this something that would be desirable for
-your RDMA+DAX use-cases?
-
-We could add a new F_SETLEASE variant that takes a struct with a byte
-range (something like struct flock).
-
-> **Unbreakable Layout Leases (F_UNBREAK)**
-> 
-> In order to support pinning of file pages by direct user space users an
-> unbreakable flag (F_UNBREAK) can be used to modify the read and write layout
-> lease.  When specified, F_UNBREAK indicates that any user attempting to break
-> the lease will fail with ETXTBUSY rather than follow the normal breaking
-> procedure.
-> 
-> Both read and write layout leases can have the unbreakable flag (F_UNBREAK)
-> specified.  The difference between an unbreakable read layout lease and an
-> unbreakable write layout lease are that an unbreakable read layout lease is
-> _not_ exclusive.  This means that once a layout is established on a file,
-> multiple unbreakable read layout leases can be taken by multiple processes and
-> used to pin the underlying pages of that file.
-> 
-> Care must therefore be taken to ensure that the layout of the file is as the
-> user wants prior to using the unbreakable read layout lease.  A safe mechanism
-> to do this would be to take a write layout lease and use fallocate() to set the
-> layout of the file.  The layout lease can then be "downgraded" to unbreakable
-> read layout as long as no other user broke the write layout lease.
-> 
-
-Will userland require any special privileges in order to set an
-F_UNBREAK lease? This seems like something that could be used for DoS. I
-assume that these will never time out.
-
-How will we deal with the case where something is is squatting on an
-F_UNBREAK lease and isn't letting it go?
-
-Leases are technically "owned" by the file description -- we can't
-necessarily trace it back to a single task in a threaded program. The
-kernel task that set the lease may have exited by the time we go
-looking.
-
-Will we be content trying to determine this using /proc/locks+lsof, etc,
-or will we need something better?
-
-> </fcntl man page addition>
 
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
