@@ -2,81 +2,98 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18064C4320D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D46C432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB29206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D440B206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8Q/uBGS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RsebLDQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503125AbfIWVbJ (ORCPT
+        id S2503142AbfIWVbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:31:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39029 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbfIWVbI (ORCPT
+        Mon, 23 Sep 2019 17:31:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58418 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729120AbfIWVbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:31:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so5331494pff.6;
-        Mon, 23 Sep 2019 14:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M2IFVrWJfMOAbZ8zA9rzidNehYbIVV/clhh3kKcrw9E=;
-        b=o8Q/uBGSu8ZdsYS0hUd/MewIisiM0eWQnwEplzkf+gYm/+TEQ0x7wO5DVHWHHVe/1B
-         0R0x1l1ZgAZL2svOvsBblBhkx5ehvs33a2hc77H9E6JVDuHr4xO8nflmbNTSSO5jD9iQ
-         h4hdHieLDX+zxUZwtq2k28rij1Zk4LOQEoC4vll4zH/9+V+z8ZHdrlLNkJ9veJHtkxnt
-         PLv3/AUQxmm8hLJdIYeGw2crjNLORwJVUzqMuxBVVf9cgcI4a5WWmlBYmZKVDoesuY+l
-         kJhKM/vSQcJ9fjG9cZDQzi+wF15QqnJHsXhg3AnAD4+JcbXEzmxJwwEhbqD4zA/IVwoE
-         TxiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M2IFVrWJfMOAbZ8zA9rzidNehYbIVV/clhh3kKcrw9E=;
-        b=o9ZOte/izGDEaX426hAhp0oZlnRj9vetu0m2ce6mteC2OjvhqX/Oucp+S3JyKOtlQZ
-         d+uHIsZns5E8zMOIdtuzwbYLEJ0Lk4P/A4ZWLR9zR4t7kGDtn6MODbENmokM50kgtcpd
-         dcf2mjgtKznOzoaIJCmXCRL//aT0sI4qnL2Kt53foyyEsoghLtCKA942fp9V/j936DIN
-         32mjHvTe2xT1AsKhMuG6vdnKsHua70JCiHqjCHmsZgCSg3iCdoh9fMh0SoCd+INoMyMr
-         G9RPG6q7puGjSg9Iva/OdNXrZezaEIQr4LQw1Ioaq09q+pBzrHbewKm2RqXjI4iOhSl8
-         dlDA==
-X-Gm-Message-State: APjAAAWa6Pzdpd1qYL2W9Lm3tsF/otwWmuBrAGBTqRqbgUmxCssItAyu
-        rF65gMwOZWT+iTI/SowUTNLuUUoK
-X-Google-Smtp-Source: APXvYqz11dgh3msJRTJFiRiQ3k2P7vA2ePQWKiABBwCaAzm+nc2axjz7y3bjzbHGSmKtH1j4Z0C4gg==
-X-Received: by 2002:a17:90a:8d13:: with SMTP id c19mr1716231pjo.142.1569274267670;
-        Mon, 23 Sep 2019 14:31:07 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id z22sm12576337pgf.10.2019.09.23.14.31.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 14:31:06 -0700 (PDT)
-Subject: Re: [PATCH] kcm: use BPF_PROG_RUN
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tom Herbert <tom@herbertland.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190905211528.97828-1-samitolvanen@google.com>
- <0f77cc31-4df5-a74f-5b64-a1e3fc439c6d@fb.com>
- <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <048e82f4-5b31-f9f4-5bf7-82dfbf7ec8f3@gmail.com>
-Date:   Mon, 23 Sep 2019 14:31:04 -0700
+        Mon, 23 Sep 2019 17:31:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=O4AJzqwx8UNRh0+dCT8Ph5aKpjRexgGPb//cNFsda+Y=; b=RsebLDQx/T22kd9NN7O9OTg5V
+        3+HWJNeFeZV/brf5F4kVky0J3WD+Z+J5wsncdtuiDeJ+I8f7U2CGR85reETvmwKxf5biit/usSFwR
+        3cftnFOqk8YwTtJFcihOFpkCr1jCDWydkdIIBYrKxjyBx2d/G8rpQuaa8QU4v4cPfVfqn19BeZQ5g
+        fSFL5NQWTeG0vsDULREYmkyX7fRbz7/KMJepTGQnSicewM6G9fyfXHKlb0mKqJ9X3DgwMnDHkXoUl
+        F+E8CXXrYh6HFgMbuPhRs1smdzdW8pn/gcbnOYVKmIlZ5b95l20n2HvhukC3CB2lp3GnAEnMttbsH
+        CxzckVOxw==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCVuZ-0003lg-TH; Mon, 23 Sep 2019 21:30:23 +0000
+Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
+ KUnit
+To:     shuah <shuah@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Felix Guo <felixguoxiuping@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20190923090249.127984-16-brendanhiggins@google.com>
+ <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
+ <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+ <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
+ <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <437bc2d1-f26b-0f04-324f-cbdca989e42c@infradead.org>
+Date:   Mon, 23 Sep 2019 14:30:21 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
+In-Reply-To: <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,42 +102,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/23/19 2:18 PM, shuah wrote:
 
-
-On 9/6/19 10:06 AM, Alexei Starovoitov wrote:
-> On Fri, Sep 6, 2019 at 3:03 AM Yonghong Song <yhs@fb.com> wrote:
->>
->>
->>
->> On 9/5/19 2:15 PM, Sami Tolvanen wrote:
->>> Instead of invoking struct bpf_prog::bpf_func directly, use the
->>> BPF_PROG_RUN macro.
->>>
->>> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
->>
->> Acked-by: Yonghong Song <yhs@fb.com>
+> I would like to apply the series very soon so it gets some soak time
+> after this move in linux-next and it can still make the rc1.
 > 
-> Applied. Thanks
+> Since there changes can be addressed after rc1, I would like to not
+> require Brendan to do another version before I apply.
 > 
+> Hope you are okay with that Randy!
+> 
+> thanks,
+> -- Shuah
 
-Then we probably need this as well, what do you think ?
+Sure, no problem, go for it .
 
-diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-index 8f12f5c6ab875ebaa6c59c6268c337919fb43bb9..6508e88efdaf57f206b84307f5ad5915a2ed21f7 100644
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -378,8 +378,13 @@ static int kcm_parse_func_strparser(struct strparser *strp, struct sk_buff *skb)
- {
-        struct kcm_psock *psock = container_of(strp, struct kcm_psock, strp);
-        struct bpf_prog *prog = psock->bpf_prog;
-+       int res;
- 
--       return BPF_PROG_RUN(prog, skb);
-+       preempt_disable();
-+       res = BPF_PROG_RUN(prog, skb);
-+       preempt_enable();
-+
-+       return res;
- }
- 
- static int kcm_read_sock_done(struct strparser *strp, int err)
+-- 
+~Randy
