@@ -2,83 +2,121 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8E9C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D4C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD9D20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D79020882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569263617;
+	bh=Fie3J0526jnQEvDaVDkC2sqZvgFQ5cq4HZDj0LraLR4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t2HwMGaF8ZgtZvT0ICMvzR6BZ23YVXNnpYySkXJkTqWWB+2XYNf8pIoitJXT8vz8y
+	 V/hqefCPaQj/fEBRuttYGje/mxf/Jb9LLTHNmxDmANEzb/ot9CfbUexQJ6MktpJTzW
+	 y7lvAGLrUjz0I15WcT2LVlMQ6g49ysQbczLFQRgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfIWSa7 (ORCPT
+        id S1727459AbfIWSdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:30:59 -0400
-Received: from muru.com ([72.249.23.125]:34366 "EHLO muru.com"
+        Mon, 23 Sep 2019 14:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfIWSa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:30:59 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 566C1809F;
-        Mon, 23 Sep 2019 18:31:30 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 11:30:55 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Russell King <linux@armlinux.org.uk>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] ARM: omap2plus_defconfig: Update for removed items
-Message-ID: <20190923183055.GC5610@atomide.com>
-References: <20190911145226.21088-1-aford173@gmail.com>
- <20190911165021.qr5i37mpnua3fvw5@earth.universe>
- <CAHCN7xKin45Hqr1fgoOmbBKaM_hM_xnvrs2_5nnxAifHL2Sz0A@mail.gmail.com>
+        id S1727253AbfIWSdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:33:36 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E9621971
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569263614;
+        bh=Fie3J0526jnQEvDaVDkC2sqZvgFQ5cq4HZDj0LraLR4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ricmx6tsBotMizJ+zHuuwiK2sol3/KXTKuRSEaSbi4iNFGpYtcgU8fx6hbXIOtwaX
+         P9gJoaBeCHGASmi/tA+dwD5hiyK6FCTQ3UDeDeOQLhImRntdL3JnvsM11Rg41te5yB
+         kX1HIBhO+w7V09bFtjrwR/YRPapbcuUrcR3ps7/Y=
+Received: by mail-wr1-f46.google.com with SMTP id l11so15108296wrx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:33:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAWWYK96EWQO/Ogn0V8mQ4ZioOOTBzoADX2/hD7wZvuMQ04ADM+Q
+        0tVDaE0CubGSWkdDLkauRZsvS3X1XzJNDWBUCWzf+Q==
+X-Google-Smtp-Source: APXvYqw4487lN/sv3jAQj37UY8zoRCqY7v0vsTXZ2t6ri4Fp48K86SQBOeh3CooGzzPErjZR5xwdGy1Bm2skBTf77KQ=
+X-Received: by 2002:adf:dbc6:: with SMTP id e6mr562368wrj.149.1569263612970;
+ Mon, 23 Sep 2019 11:33:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xKin45Hqr1fgoOmbBKaM_hM_xnvrs2_5nnxAifHL2Sz0A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
+ <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
+ <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
+ <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com> <87blvefai7.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87blvefai7.fsf@oldenburg2.str.redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 23 Sep 2019 11:33:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrWM9opVj+BBrHnnTakTLunW_fB9RM+VSNpNSkR9drDjMw@mail.gmail.com>
+Message-ID: <CALCETrWM9opVj+BBrHnnTakTLunW_fB9RM+VSNpNSkR9drDjMw@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
+ introduce getrandom2()
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [190911 17:14]:
-> On Wed, Sep 11, 2019 at 11:50 AM Sebastian Reichel <sre@kernel.org> wrote:
+On Fri, Sep 20, 2019 at 11:07 PM Florian Weimer <fweimer@redhat.com> wrote:
+>
+> * Linus Torvalds:
+>
+> > Violently agreed. And that's kind of what the GRND_EXPLICIT is really
+> > aiming for.
 > >
-> > Hi,
-> >
-> > On Wed, Sep 11, 2019 at 09:52:25AM -0500, Adam Ford wrote:
-> > > The omap panel-dpi driver was removed in
-> > > Commit 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> > >
-> > > The tFP410 and DVI connector was remove in
-> > > Commit be3143d8b27f ("drm/omap: Remove TFP410 and DVI connector drivers")
-> > >
-> > > This patch removes these items from the omap2plus_defconfig.
-> >
-> > The omapdrm specific drivers have generic replacements, that
-> > should be added to the defconfig instead:
-> >
-> > DRM_OMAP_PANEL_DPI -> DRM_PANEL_SIMPLE
-> > DRM_OMAP_ENCODER_TFP410 -> DRM_TI_TFP410
-> >
-> > Nothing should be required for DRM_OMAP_CONNECTOR_DVI.
-> 
-> The DPI panel was already done.
-> 
-> https://patchwork.kernel.org/patch/11119569/
-> 
-> I'll submit a patch for the TFP410
+> > However, it's worth noting that nobody should ever use GRND_EXPLICIT
+> > directly. That's just the name for the bit. The actual users would use
+> > GRND_INSECURE or GRND_SECURE.
+>
+> Should we switch glibc's getentropy to GRND_EXPLICIT?  Or something
+> else?
+>
+> I don't think we want to print a kernel warning for this function.
+>
 
-I picked that one into fixes, will apply the rest
-of defconfig changes into omap-for-v5.5/defconfig.
-Not planning on pushing it out until after -rc1
-though.
+Contemplating this question, I think the answer is that we should just
+not introduce GRND_EXPLICIT or anything like it.  glibc is going to
+have to do *something*, and getentropy() is unlikely to just go away.
+The explicitly documented semantics are that it blocks if the RNG
+isn't seeded.
 
-Regards,
+Similarly, FreeBSD has getrandom():
 
-Tony
+https://www.freebsd.org/cgi/man.cgi?query=getrandom&sektion=2&manpath=freebsd-release-ports
+
+and if we make getrandom(..., 0) warn, then we have a situation where
+the *correct* (if regrettable) way to use the function on FreeBSD
+causes a warning on Linux.
+
+Let's just add GRND_INSECURE, make the blocking mode work better, and,
+if we're feeling a bit more adventurous, add GRND_SECURE_BLOCKING as a
+better replacement for 0, convince FreeBSD to add it too, and then
+worry about deprecating 0 once we at least get some agreement from the
+FreeBSD camp.
