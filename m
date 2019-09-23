@@ -2,161 +2,386 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2994FC4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EEFC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0055C205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F5920882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569253806;
+	bh=FFzbPPyzstoUTQIh5AyphTjoKpbu5dT+XJPhAdHJBEY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0w790mmaNVYaGZhNOWum4oYHycrqQhjzVJgYPkQ74Mny7/Bc/G9/vBbwhy/ckL889
+	 RN8BSIpQ9impPLkFhSCIxE/kX5GFnArsyGXpHJ3aygQXvtsmG4Bb6b0GDgKRsFlVyI
+	 f/MHHbh4jGT9OaLKEUSQFMHYd1IOZWXIbC5h720w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbfIWPtP (ORCPT
+        id S1732774AbfIWPuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:49:15 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42499 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbfIWPtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:49:14 -0400
-Received: by mail-io1-f72.google.com with SMTP id w1so1139753ioj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:49:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=aTe9vFgxnQSUbqzD1uvP+ahz/Hl3A6XwhKJCZ9nDuOs=;
-        b=BHrLhwuTZmR6mZKAGY5WzZj6QwB39SbIiYy0i+bob6qMt15rQlC5hwIMK1fXu96cKq
-         hDiOFaCjdzLD7FN7u0DYs8cxm/8Lx6MrMB+ZbgdTTrcxFyPgWGa1JTUpcJAtUIpHHdch
-         2KApt8g1YI850r51cuzyAsluYL1J+AXdK7wo2xBC4fnYWQbbEQ4NB4QYVl3UASomkGfb
-         a79Yfl+mLlB05yAGMmy8BC0U0OBn1PyyqYn77JkzFu0L8Ogz0v888dIWJasfkYD8uKim
-         +G5OP7Hz5n4/boMsRRCR+azAZj9lCLzMYuWxYOU4IeiZepeyr+zWDpxudNPgxCqxVupW
-         X3bg==
-X-Gm-Message-State: APjAAAUyjA3yHwCcvVREbrbr2KueDIroj/12NkdK8OEusso1K/4CdsNo
-        NkmY29TVH4Df8sqBmsDt+PlI9+zBz8NAyHIg8HvggS48EYaZ
-X-Google-Smtp-Source: APXvYqxPjdQBB4Fscqb4QFuBDGFKVQVQx/4U6ZEhKpwVw/nNziP7PXssR1WqgphK6lL3xLS8f87kiSF4AJU/MRIDv/RT2Bht86lN
-MIME-Version: 1.0
-X-Received: by 2002:a5d:814f:: with SMTP id f15mr16445345ioo.134.1569253751401;
- Mon, 23 Sep 2019 08:49:11 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 08:49:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006a3a2f05933a5c53@google.com>
-Subject: general protection fault in xsk_map_update_elem
-From:   syzbot <syzbot+491c1b7565ba9069ecae@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bjorn.topel@intel.com, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        jonathan.lemon@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+        Mon, 23 Sep 2019 11:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbfIWPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:50:05 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38AB4205F4;
+        Mon, 23 Sep 2019 15:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569253804;
+        bh=FFzbPPyzstoUTQIh5AyphTjoKpbu5dT+XJPhAdHJBEY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WBIhvdLMxJGUloK7m32dwhWXk2Pzythdg85Y3TSxn4AHNwXEWcHxcw+rY7vVpAs+Q
+         4dhoLEiE6ZtMnGhsyFxIqOBxx6+90XwCjhNUtY1//+iHfp7u1ky5Fhe0MJZ5gEjI9k
+         6r7Wug9n5vYaVA7XEoPXnv+IcQKMLQJqAU7x4fjc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH trivial] usb: Fix Kconfig indentation
+Date:   Mon, 23 Sep 2019 17:49:56 +0200
+Message-Id: <20190923154956.6868-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgYjQxZGFlMDYgTWVyZ2UgdGFnICd4ZnMtNS40LW1lcmdlLTcnIG9mIGdpdDovL2dp
-dC5rZXJuZWwuby4uDQpnaXQgdHJlZTogICAgICAgbmV0LW5leHQNCmNvbnNvbGUgb3V0cHV0OiBo
-dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xMzBiMjVhZDYwMDAwMA0K
-a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
-PWRmY2Y1OTJkYjIyYjkxMzINCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
-cG90LmNvbS9idWc/ZXh0aWQ9NDkxYzFiNzU2NWJhOTA2OWVjYWUNCmNvbXBpbGVyOiAgICAgICBn
-Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCnN5eiByZXBybzogICAgICBo
-dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJvLnN5ej94PTE1NWEwYzI5NjAwMDAw
-DQpDIHJlcHJvZHVjZXI6ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5j
-P3g9MTcyYmY2ZDk2MDAwMDANCg0KVGhlIGJ1ZyB3YXMgYmlzZWN0ZWQgdG86DQoNCmNvbW1pdCAw
-NDAyYWNkNjgzYzY3ODg3NGRmNmJkYmMyMzUzMGNhMDdlYTE5MzUzDQpBdXRob3I6IEJqw7ZybiBU
-w7ZwZWwgPGJqb3JuLnRvcGVsQGludGVsLmNvbT4NCkRhdGU6ICAgVGh1IEF1ZyAxNSAwOTozMDox
-MyAyMDE5ICswMDAwDQoNCiAgICAgeHNrOiByZW1vdmUgQUZfWERQIHNvY2tldCBmcm9tIG1hcCB3
-aGVuIHRoZSBzb2NrZXQgaXMgcmVsZWFzZWQNCg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6
-a2FsbGVyLmFwcHNwb3QuY29tL3gvYmlzZWN0LnR4dD94PTEwZDRhODIzNjAwMDAwDQpmaW5hbCBj
-cmFzaDogICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTJk
-NGE4MjM2MDAwMDANCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNv
-bS94L2xvZy50eHQ/eD0xNGQ0YTgyMzYwMDAwMA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhl
-IGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0
-ZWQtYnk6IHN5emJvdCs0OTFjMWI3NTY1YmE5MDY5ZWNhZUBzeXprYWxsZXIuYXBwc3BvdG1haWwu
-Y29tDQpGaXhlczogMDQwMmFjZDY4M2M2ICgieHNrOiByZW1vdmUgQUZfWERQIHNvY2tldCBmcm9t
-IG1hcCB3aGVuIHRoZSBzb2NrZXQgaXMgIA0KcmVsZWFzZWQiKQ0KDQpSRFg6IDAwMDAwMDAwMDAw
-MDAwMjAgUlNJOiAwMDAwMDAwMDIwMDAwMTAwIFJESTogMDAwMDAwMDAwMDAwMDAwMg0KUkJQOiAw
-MDAwMDAwMDAwMDAwMDA1IFIwODogMDAwMDAwMDAwMDAwMDAwMSBSMDk6IDAwMDA3ZmZlZjQ1MDAw
-MzMNClIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAw
-MDAwMDAwNDAxZmYwDQpSMTM6IDAwMDAwMDAwMDA0MDIwODAgUjE0OiAwMDAwMDAwMDAwMDAwMDAw
-IFIxNTogMDAwMDAwMDAwMDAwMDAwMA0Ka2FzYW46IENPTkZJR19LQVNBTl9JTkxJTkUgZW5hYmxl
-ZA0Ka2FzYW46IEdQRiBjb3VsZCBiZSBjYXVzZWQgYnkgTlVMTC1wdHIgZGVyZWYgb3IgdXNlciBt
-ZW1vcnkgYWNjZXNzDQpnZW5lcmFsIHByb3RlY3Rpb24gZmF1bHQ6IDAwMDAgWyMxXSBQUkVFTVBU
-IFNNUCBLQVNBTg0KQ1BVOiAxIFBJRDogODg3OCBDb21tOiBzeXotZXhlY3V0b3I4MzUgTm90IHRh
-aW50ZWQgNS4zLjArICMwDQpIYXJkd2FyZSBuYW1lOiBHb29nbGUgR29vZ2xlIENvbXB1dGUgRW5n
-aW5lL0dvb2dsZSBDb21wdXRlIEVuZ2luZSwgQklPUyAgDQpHb29nbGUgMDEvMDEvMjAxMQ0KUklQ
-OiAwMDEwOl9fbGlzdF9hZGQgaW5jbHVkZS9saW51eC9saXN0Lmg6NjQgW2lubGluZV0NClJJUDog
-MDAxMDpsaXN0X2FkZF90YWlsIGluY2x1ZGUvbGludXgvbGlzdC5oOjkzIFtpbmxpbmVdDQpSSVA6
-IDAwMTA6eHNrX21hcF9zb2NrX2FkZCBrZXJuZWwvYnBmL3hza21hcC5jOjYyIFtpbmxpbmVdDQpS
-SVA6IDAwMTA6eHNrX21hcF91cGRhdGVfZWxlbSsweDc5Yy8weGFjMCBrZXJuZWwvYnBmL3hza21h
-cC5jOjI2NQ0KQ29kZTogMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgODAgM2MgMDIgMDAgMGYgODUg
-ZWYgMDIgMDAgMDAgNGMgODkgZTIgNGQgODkgIA0KYTcgZDggMDUgMDAgMDAgNDggYjggMDAgMDAg
-MDAgMDAgMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAwZiAgDQo4NSBjMCAw
-MiAwMCAwMCA0OSA4ZCA3YyAyNCAwOCA0OSA4ZCA4NyBkMCAwNSAwMCAwMA0KUlNQOiAwMDE4OmZm
-ZmY4ODgwOWE1MTdiYjggRUZMQUdTOiAwMDAxMDI0Ng0KUkFYOiBkZmZmZmMwMDAwMDAwMDAwIFJC
-WDogZmZmZjg4ODA5Y2NjNDlkMCBSQ1g6IGZmZmZmZmZmODE4NjgwNzANClJEWDogMDAwMDAwMDAw
-MDAwMDAwMCBSU0k6IGZmZmZmZmZmODE4NjgwODUgUkRJOiAwMDAwMDAwMDAwMDAwMDAxDQpSQlA6
-IGZmZmY4ODgwOWE1MTdjNzggUjA4OiBmZmZmODg4MGExMGQyMDAwIFIwOTogZmZmZmVkMTAxMzRh
-MmY2NQ0KUjEwOiBmZmZmZWQxMDEzNGEyZjY0IFIxMTogMDAwMDAwMDAwMDAwMDAwMyBSMTI6IDAw
-MDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA5Y2NjNDllMCBSMTQ6IGZmZmY4ODgwODlkYjU1
-ODAgUjE1OiBmZmZmODg4MDljY2M0NDAwDQpGUzogIDAwMDA1NTU1NTVkZjI4ODAoMDAwMCkgR1M6
-ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpDUzogIDAwMTAg
-RFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6IDAwMDAwMDAwMjAw
-MDAwNDAgQ1IzOiAwMDAwMDAwMDk4NWU1MDAwIENSNDogMDAwMDAwMDAwMDE0MDZlMA0KRFIwOiAw
-MDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAwMDAwMDAwMDAwMDAw
-MDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAw
-MDAwMDAwMDAwNDAwDQpDYWxsIFRyYWNlOg0KICBtYXBfdXBkYXRlX2VsZW0rMHhjODIvMHgxMGIw
-IGtlcm5lbC9icGYvc3lzY2FsbC5jOjk2Ng0KICBfX2RvX3N5c19icGYrMHg4YjUvMHgzMzUwIGtl
-cm5lbC9icGYvc3lzY2FsbC5jOjI4NTQNCiAgX19zZV9zeXNfYnBmIGtlcm5lbC9icGYvc3lzY2Fs
-bC5jOjI4MjUgW2lubGluZV0NCiAgX194NjRfc3lzX2JwZisweDczLzB4YjAga2VybmVsL2JwZi9z
-eXNjYWxsLmM6MjgyNQ0KICBkb19zeXNjYWxsXzY0KzB4ZmEvMHg3NjAgYXJjaC94ODYvZW50cnkv
-Y29tbW9uLmM6MjkwDQogIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ5LzB4YmUN
-ClJJUDogMDAzMzoweDQ0MDcwOQ0KQ29kZTogMTggODkgZDAgYzMgNjYgMmUgMGYgMWYgODQgMDAg
-MDAgMDAgMDAgMDAgMGYgMWYgMDAgNDggODkgZjggNDggODkgZjcgIA0KNDggODkgZDYgNDggODkg
-Y2EgNGQgODkgYzIgNGQgODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBm
-ZiAgDQpmZiAwZiA4MyA1YiAxNCBmYyBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMA0K
-UlNQOiAwMDJiOjAwMDA3ZmZlZjQ1MDM0NzggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAw
-MDAwMDAwMDAwMDE0MQ0KUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAwMDdmZmVmNDUwMzQ4
-MCBSQ1g6IDAwMDAwMDAwMDA0NDA3MDkNClJEWDogMDAwMDAwMDAwMDAwMDAyMCBSU0k6IDAwMDAw
-MDAwMjAwMDAxMDAgUkRJOiAwMDAwMDAwMDAwMDAwMDAyDQpSQlA6IDAwMDAwMDAwMDAwMDAwMDUg
-UjA4OiAwMDAwMDAwMDAwMDAwMDAxIFIwOTogMDAwMDdmZmVmNDUwMDAzMw0KUjEwOiAwMDAwMDAw
-MDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDA0MDFmZjANClIx
-MzogMDAwMDAwMDAwMDQwMjA4MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiAwMDAwMDAwMDAw
-MDAwMDAwDQpNb2R1bGVzIGxpbmtlZCBpbjoNCi0tLVsgZW5kIHRyYWNlIGE5NWI5YjkyNmY4NTYw
-NzcgXS0tLQ0KUklQOiAwMDEwOl9fbGlzdF9hZGQgaW5jbHVkZS9saW51eC9saXN0Lmg6NjQgW2lu
-bGluZV0NClJJUDogMDAxMDpsaXN0X2FkZF90YWlsIGluY2x1ZGUvbGludXgvbGlzdC5oOjkzIFtp
-bmxpbmVdDQpSSVA6IDAwMTA6eHNrX21hcF9zb2NrX2FkZCBrZXJuZWwvYnBmL3hza21hcC5jOjYy
-IFtpbmxpbmVdDQpSSVA6IDAwMTA6eHNrX21hcF91cGRhdGVfZWxlbSsweDc5Yy8weGFjMCBrZXJu
-ZWwvYnBmL3hza21hcC5jOjI2NQ0KQ29kZTogMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgODAgM2Mg
-MDIgMDAgMGYgODUgZWYgMDIgMDAgMDAgNGMgODkgZTIgNGQgODkgIA0KYTcgZDggMDUgMDAgMDAg
-NDggYjggMDAgMDAgMDAgMDAgMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAw
-ZiAgDQo4NSBjMCAwMiAwMCAwMCA0OSA4ZCA3YyAyNCAwOCA0OSA4ZCA4NyBkMCAwNSAwMCAwMA0K
-UlNQOiAwMDE4OmZmZmY4ODgwOWE1MTdiYjggRUZMQUdTOiAwMDAxMDI0Ng0KUkFYOiBkZmZmZmMw
-MDAwMDAwMDAwIFJCWDogZmZmZjg4ODA5Y2NjNDlkMCBSQ1g6IGZmZmZmZmZmODE4NjgwNzANClJE
-WDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZmZmZmODE4NjgwODUgUkRJOiAwMDAwMDAwMDAw
-MDAwMDAxDQpSQlA6IGZmZmY4ODgwOWE1MTdjNzggUjA4OiBmZmZmODg4MGExMGQyMDAwIFIwOTog
-ZmZmZmVkMTAxMzRhMmY2NQ0KUjEwOiBmZmZmZWQxMDEzNGEyZjY0IFIxMTogMDAwMDAwMDAwMDAw
-MDAwMyBSMTI6IDAwMDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA5Y2NjNDllMCBSMTQ6IGZm
-ZmY4ODgwODlkYjU1ODAgUjE1OiBmZmZmODg4MDljY2M0NDAwDQpGUzogIDAwMDA1NTU1NTVkZjI4
-ODAoMDAwMCkgR1M6ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAw
-DQpDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6
-IDAwMDAwMDAwMjAwMDAwNDAgQ1IzOiAwMDAwMDAwMDk4NWU1MDAwIENSNDogMDAwMDAwMDAwMDE0
-MDZlMA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAw
-MDAwMDAwMDAwMDAwMDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBm
-ZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQg
-YnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90cHNt
-RUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVycyBj
-YW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90IHdp
-bGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmdsL3Rw
-c21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCkZvciBpbmZv
-cm1hdGlvbiBhYm91dCBiaXNlY3Rpb24gcHJvY2VzcyBzZWU6IGh0dHBzOi8vZ29vLmdsL3Rwc21F
-SiNiaXNlY3Rpb24NCnN5emJvdCBjYW4gdGVzdCBwYXRjaGVzIGZvciB0aGlzIGJ1ZywgZm9yIGRl
-dGFpbHMgc2VlOg0KaHR0cHM6Ly9nb28uZ2wvdHBzbUVKI3Rlc3RpbmctcGF0Y2hlcw0K
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+    $ sed -e 's/^        /\t/' -i */Kconfig
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/usb/dwc3/Kconfig           |  4 +-
+ drivers/usb/gadget/legacy/Kconfig  | 20 ++++-----
+ drivers/usb/gadget/udc/Kconfig     |  2 +-
+ drivers/usb/host/Kconfig           | 68 +++++++++++++++---------------
+ drivers/usb/misc/Kconfig           |  8 ++--
+ drivers/usb/misc/sisusbvga/Kconfig |  2 +-
+ drivers/usb/serial/Kconfig         | 44 +++++++++----------
+ 7 files changed, 74 insertions(+), 74 deletions(-)
+
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 89abc6078703..cc431376fcd0 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -103,7 +103,7 @@ config USB_DWC3_MESON_G12A
+        default USB_DWC3
+        select USB_ROLE_SWITCH
+        help
+-         Support USB2/3 functionality in Amlogic G12A platforms.
++	 Support USB2/3 functionality in Amlogic G12A platforms.
+ 	 Say 'Y' or 'M' if you have one such device.
+ 
+ config USB_DWC3_OF_SIMPLE
+@@ -111,7 +111,7 @@ config USB_DWC3_OF_SIMPLE
+        depends on OF && COMMON_CLK
+        default USB_DWC3
+        help
+-         Support USB2/3 functionality in simple SoC integrations.
++	 Support USB2/3 functionality in simple SoC integrations.
+ 	 Currently supports Xilinx and Qualcomm DWC USB3 IP.
+ 	 Say 'Y' or 'M' if you have one such device.
+ 
+diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
+index 69ff7f8c86f5..38eaa9417b38 100644
+--- a/drivers/usb/gadget/legacy/Kconfig
++++ b/drivers/usb/gadget/legacy/Kconfig
+@@ -154,16 +154,16 @@ config USB_ETH_EEM
+ 	select USB_LIBCOMPOSITE
+ 	select USB_F_EEM
+        help
+-         CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
+-         and therefore can be supported by more hardware.  Technically ECM and
+-         EEM are designed for different applications.  The ECM model extends
+-         the network interface to the target (e.g. a USB cable modem), and the
+-         EEM model is for mobile devices to communicate with hosts using
+-         ethernet over USB.  For Linux gadgets, however, the interface with
+-         the host is the same (a usbX device), so the differences are minimal.
+-
+-         If you say "y" here, the Ethernet gadget driver will use the EEM
+-         protocol rather than ECM.  If unsure, say "n".
++	 CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
++	 and therefore can be supported by more hardware.  Technically ECM and
++	 EEM are designed for different applications.  The ECM model extends
++	 the network interface to the target (e.g. a USB cable modem), and the
++	 EEM model is for mobile devices to communicate with hosts using
++	 ethernet over USB.  For Linux gadgets, however, the interface with
++	 the host is the same (a usbX device), so the differences are minimal.
++
++	 If you say "y" here, the Ethernet gadget driver will use the EEM
++	 protocol rather than ECM.  If unsure, say "n".
+ 
+ config USB_G_NCM
+ 	tristate "Network Control Model (NCM) support"
+diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+index d7e611645533..485c92ef888a 100644
+--- a/drivers/usb/gadget/udc/Kconfig
++++ b/drivers/usb/gadget/udc/Kconfig
+@@ -123,7 +123,7 @@ config USB_GR_UDC
+        tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driver"
+        depends on HAS_DMA
+        help
+-          Select this to support Aeroflex Gaisler GRUSBDC cores from the GRLIB
++	  Select this to support Aeroflex Gaisler GRUSBDC cores from the GRLIB
+ 	  VHDL IP core library.
+ 
+ config USB_OMAP
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 79b2e79dddd0..d6164ede63d3 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -220,12 +220,12 @@ config USB_EHCI_HCD_ORION
+ 	  Marvell PXA/MMP USB controller" for those.
+ 
+ config USB_EHCI_HCD_SPEAR
+-        tristate "Support for ST SPEAr on-chip EHCI USB controller"
+-        depends on USB_EHCI_HCD && PLAT_SPEAR
+-        default y
+-        ---help---
+-          Enables support for the on-chip EHCI controller on
+-          ST SPEAr chips.
++	tristate "Support for ST SPEAr on-chip EHCI USB controller"
++	depends on USB_EHCI_HCD && PLAT_SPEAR
++	default y
++	---help---
++	  Enables support for the on-chip EHCI controller on
++	  ST SPEAr chips.
+ 
+ config USB_EHCI_HCD_STI
+ 	tristate "Support for ST STiHxxx on-chip EHCI USB controller"
+@@ -237,12 +237,12 @@ config USB_EHCI_HCD_STI
+ 	  STMicroelectronics consumer electronics SoC's.
+ 
+ config USB_EHCI_HCD_AT91
+-        tristate  "Support for Atmel on-chip EHCI USB controller"
+-        depends on USB_EHCI_HCD && ARCH_AT91
+-        default y
+-        ---help---
+-          Enables support for the on-chip EHCI controller on
+-          Atmel chips.
++	tristate  "Support for Atmel on-chip EHCI USB controller"
++	depends on USB_EHCI_HCD && ARCH_AT91
++	default y
++	---help---
++	  Enables support for the on-chip EHCI controller on
++	  Atmel chips.
+ 
+ config USB_EHCI_TEGRA
+        tristate "NVIDIA Tegra HCD support"
+@@ -250,8 +250,8 @@ config USB_EHCI_TEGRA
+        select USB_EHCI_ROOT_HUB_TT
+        select USB_TEGRA_PHY
+        help
+-         This driver enables support for the internal USB Host Controllers
+-         found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
++	 This driver enables support for the internal USB Host Controllers
++	 found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
+ 
+ config USB_EHCI_HCD_PPC_OF
+ 	bool "EHCI support for PPC USB controller on OF platform bus"
+@@ -409,12 +409,12 @@ config USB_OHCI_HCD_OMAP1
+ 	  Enables support for the OHCI controller on OMAP1/2 chips.
+ 
+ config USB_OHCI_HCD_SPEAR
+-        tristate "Support for ST SPEAr on-chip OHCI USB controller"
+-        depends on USB_OHCI_HCD && PLAT_SPEAR
+-        default y
+-        ---help---
+-          Enables support for the on-chip OHCI controller on
+-          ST SPEAr chips.
++	tristate "Support for ST SPEAr on-chip OHCI USB controller"
++	depends on USB_OHCI_HCD && PLAT_SPEAR
++	default y
++	---help---
++	  Enables support for the on-chip OHCI controller on
++	  ST SPEAr chips.
+ 
+ config USB_OHCI_HCD_STI
+ 	tristate "Support for ST STiHxxx on-chip OHCI USB controller"
+@@ -426,12 +426,12 @@ config USB_OHCI_HCD_STI
+ 	  STMicroelectronics consumer electronics SoC's.
+ 
+ config USB_OHCI_HCD_S3C2410
+-        tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
+-        depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX)
+-        default y
+-        ---help---
+-          Enables support for the on-chip OHCI controller on
+-          S3C24xx/S3C64xx chips.
++	tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
++	depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX)
++	default y
++	---help---
++	  Enables support for the on-chip OHCI controller on
++	  S3C24xx/S3C64xx chips.
+ 
+ config USB_OHCI_HCD_LPC32XX
+ 	tristate "Support for LPC on-chip OHCI USB controller"
+@@ -440,8 +440,8 @@ config USB_OHCI_HCD_LPC32XX
+ 	depends on USB_ISP1301
+ 	default y
+ 	---help---
+-          Enables support for the on-chip OHCI controller on
+-          NXP chips.
++	  Enables support for the on-chip OHCI controller on
++	  NXP chips.
+ 
+ config USB_OHCI_HCD_PXA27X
+ 	tristate "Support for PXA27X/PXA3XX on-chip OHCI USB controller"
+@@ -456,8 +456,8 @@ config USB_OHCI_HCD_AT91
+ 	depends on USB_OHCI_HCD && ARCH_AT91 && OF
+ 	default y
+ 	---help---
+-          Enables support for the on-chip OHCI controller on
+-          Atmel chips.
++	  Enables support for the on-chip OHCI controller on
++	  Atmel chips.
+ 
+ config USB_OHCI_HCD_OMAP3
+ 	tristate "OHCI support for OMAP3 and later chips"
+@@ -716,11 +716,11 @@ config USB_IMX21_HCD
+        tristate "i.MX21 HCD support"
+        depends on ARM && ARCH_MXC
+        help
+-         This driver enables support for the on-chip USB host in the
+-         i.MX21 processor.
++	 This driver enables support for the on-chip USB host in the
++	 i.MX21 processor.
+ 
+-         To compile this driver as a module, choose M here: the
+-         module will be called "imx21-hcd".
++	 To compile this driver as a module, choose M here: the
++	 module will be called "imx21-hcd".
+ 
+ config USB_HCD_BCMA
+ 	tristate "BCMA usb host driver"
+diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+index bdae62b2ffe0..664d27bb6086 100644
+--- a/drivers/usb/misc/Kconfig
++++ b/drivers/usb/misc/Kconfig
+@@ -191,8 +191,8 @@ config USB_TEST
+ 	  including sample test device firmware and "how to use it".
+ 
+ config USB_EHSET_TEST_FIXTURE
+-        tristate "USB EHSET Test Fixture driver"
+-        help
++	tristate "USB EHSET Test Fixture driver"
++	help
+ 	  Say Y here if you want to support the special test fixture device
+ 	  used for the USB-IF Embedded Host High-Speed Electrical Test procedure.
+ 
+@@ -247,13 +247,13 @@ config USB_HSIC_USB3503
+        depends on I2C
+        select REGMAP_I2C
+        help
+-         This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
++	 This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
+ 
+ config USB_HSIC_USB4604
+        tristate "USB4604 HSIC to USB20 Driver"
+        depends on I2C
+        help
+-         This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
++	 This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
+ 
+ config USB_LINK_LAYER_TEST
+ 	tristate "USB Link Layer Test driver"
+diff --git a/drivers/usb/misc/sisusbvga/Kconfig b/drivers/usb/misc/sisusbvga/Kconfig
+index 9b632ab24f03..c16121276a21 100644
+--- a/drivers/usb/misc/sisusbvga/Kconfig
++++ b/drivers/usb/misc/sisusbvga/Kconfig
+@@ -4,7 +4,7 @@ config USB_SISUSBVGA
+ 	tristate "USB 2.0 SVGA dongle support (Net2280/SiS315)"
+ 	depends on (USB_MUSB_HDRC || USB_EHCI_HCD)
+ 	select FONT_SUPPORT if USB_SISUSBVGA_CON
+-        ---help---
++	---help---
+ 	  Say Y here if you intend to attach a USB2VGA dongle based on a
+ 	  Net2280 and a SiS315 chip.
+ 
+diff --git a/drivers/usb/serial/Kconfig b/drivers/usb/serial/Kconfig
+index 67279c6bce33..0a8c16a8cda2 100644
+--- a/drivers/usb/serial/Kconfig
++++ b/drivers/usb/serial/Kconfig
+@@ -271,17 +271,17 @@ config USB_SERIAL_F8153X
+ config USB_SERIAL_GARMIN
+        tristate "USB Garmin GPS driver"
+        help
+-         Say Y here if you want to connect to your Garmin GPS.
+-         Should work with most Garmin GPS devices which have a native USB port.
++	 Say Y here if you want to connect to your Garmin GPS.
++	 Should work with most Garmin GPS devices which have a native USB port.
+ 
+-         See <http://sourceforge.net/projects/garmin-gps> for the latest
+-         version of the driver.
++	 See <http://sourceforge.net/projects/garmin-gps> for the latest
++	 version of the driver.
+ 
+-         To compile this driver as a module, choose M here: the
+-         module will be called garmin_gps.
++	 To compile this driver as a module, choose M here: the
++	 module will be called garmin_gps.
+ 
+ config USB_SERIAL_IPW
+-        tristate "USB IPWireless (3G UMTS TDD) Driver"
++	tristate "USB IPWireless (3G UMTS TDD) Driver"
+ 	select USB_SERIAL_WWAN
+ 	help
+ 	  Say Y here if you want to use a IPWireless USB modem such as
+@@ -341,20 +341,20 @@ config USB_SERIAL_KLSI
+ 	  module will be called kl5kusb105.
+ 
+ config USB_SERIAL_KOBIL_SCT
+-        tristate "USB KOBIL chipcard reader"
+-        ---help---
+-          Say Y here if you want to use one of the following KOBIL USB chipcard
+-          readers:
+-
+-            - USB TWIN
+-            - KAAN Standard Plus
+-            - KAAN SIM
+-            - SecOVID Reader Plus
+-            - B1 Professional
+-            - KAAN Professional
+-
+-          Note that you need a current CT-API.
+-          To compile this driver as a module, choose M here: the
++	tristate "USB KOBIL chipcard reader"
++	---help---
++	  Say Y here if you want to use one of the following KOBIL USB chipcard
++	  readers:
++
++	    - USB TWIN
++	    - KAAN Standard Plus
++	    - KAAN SIM
++	    - SecOVID Reader Plus
++	    - B1 Professional
++	    - KAAN Professional
++
++	  Note that you need a current CT-API.
++	  To compile this driver as a module, choose M here: the
+ 	  module will be called kobil_sct.
+ 
+ config USB_SERIAL_MCT_U232
+@@ -458,7 +458,7 @@ config USB_SERIAL_OTI6858
+ 	tristate "USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller"
+ 	help
+ 	  Say Y here if you want to use the OTi-6858 single port USB to serial
+-          converter device.
++	  converter device.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called oti6858.
+-- 
+2.17.1
+
