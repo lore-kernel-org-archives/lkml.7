@@ -2,287 +2,123 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C16C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB22C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC9620867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6E8206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439414AbfIWKPk (ORCPT
+        id S2439241AbfIWKTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:15:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57827 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439389AbfIWKPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:15:38 -0400
-Received: from [5.158.153.52] (helo=kurt.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1iCLNS-0001oR-LH; Mon, 23 Sep 2019 12:15:30 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        devicetree@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
-Subject: [PATCH v6 1/2] irqchip: Add support for Layerscape external interrupt lines
-Date:   Mon, 23 Sep 2019 12:15:12 +0200
-Message-Id: <20190923101513.32719-2-kurt@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190923101513.32719-1-kurt@linutronix.de>
-References: <20190923101513.32719-1-kurt@linutronix.de>
+        Mon, 23 Sep 2019 06:19:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35320 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbfIWKTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:19:16 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C20FC054C52
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:19:15 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id s19so2344070wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 03:19:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nAyRQH3H07FmS67tnT6hsF/Qfh+8LuStTKrVaQ9zhw8=;
+        b=FEBwvuAPI4vtSfsQTQ3mnf60V224XyisBHc6JOrxX1iGDYdGQFhV2dZWx7NE8SjVMS
+         ECcokWXmxyMxE+lHIYjHzI10ZB1708eGm2crEgi8iiYVdl/ErV0+FgaOCtwBn18BWNmu
+         vTHIWtE8zR3DRXSj0UJcoGtYJRtLoMJ1115gKOM/pwcZmfbvoofiKswFX+aGbkbQq/f1
+         bDslgNFZ1Tv3TAHQGFQFtAD3Z1Kt134LHSEI0sQkKIE3ShjSAAGkZ0Q9leU/HJCr/uG/
+         Xw+t5zSQS52wFK8hgCetV2yHhZyb5fXv8iKPQaL37NHUF3M/ROxOYyBm1gioReTSgVJc
+         ++AA==
+X-Gm-Message-State: APjAAAV6vIEC5wYjgDD9hFGaMMsPhTCozlW7kRD6EyyHUcOoDe+xJeRy
+        8D3KweoyhScpcS5ru7AdVIa+2mITNW8UM7B4+QFx7176wpc9Y4lG9nqWe0ErlOoAGrUQSEAdYTY
+        7UkVLRnBlByDuqX2ZX0iFJXc0
+X-Received: by 2002:a5d:458b:: with SMTP id p11mr905177wrq.160.1569233953900;
+        Mon, 23 Sep 2019 03:19:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwmjLwnJ4DSwFegz6v4hMA/TVeGpRaJTbLpRqq1I+EuABUIXRx+oS++kj9174kVqcS9ORfEpQ==
+X-Received: by 2002:a5d:458b:: with SMTP id p11mr905161wrq.160.1569233953665;
+        Mon, 23 Sep 2019 03:19:13 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id s9sm10669778wme.36.2019.09.23.03.19.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 03:19:13 -0700 (PDT)
+Subject: Re: [PATCH 14/17] KVM: monolithic: x86: inline more exit handlers in
+ vmx.c
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-15-aarcange@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6a1d66a1-74c0-25b9-692f-8875e33b2fae@redhat.com>
+Date:   Mon, 23 Sep 2019 12:19:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190920212509.2578-15-aarcange@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+On 20/09/19 23:25, Andrea Arcangeli wrote:
+> They can be called directly more efficiently, so we can as well mark
+> some of them inline in case gcc doesn't decide to inline them.
 
-The LS1021A allows inverting the polarity of six interrupt lines
-IRQ[0:5] via the scfg_intpcr register, effectively allowing
-IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_EDGE_FALLING for those. We just need to
-check the type, set the relevant bit in INTPCR accordingly, and fixup
-the type argument before calling the GIC's irq_set_type.
+What is the output of size(1) before and after?
 
-In fact, the power-on-reset value of the INTPCR register on the LS1021A
-is so that all six lines have their polarity inverted. Hence any
-hardware connected to those lines is unusable without this: If the line
-is indeed active low, the generic GIC code will reject an irq spec with
-IRQ_TYPE_LEVEL_LOW, while if the line is active high, we must obviously
-disable the polarity inversion (writing 0 to the relevant bit) before
-unmasking the interrupt.
+Paolo
 
-Some other Layerscape SOCs (LS1043A, LS1046A, LS2088A) reportedly have a
-similar feature, just with a different number of external interrupt lines
-(and a different POR value for the INTPCR register). This driver should be
-prepared for supporting those by properly filling out the device tree
-node, but I don't have the full reference manual, nor the hardware to be
-able to test it. I do know, from a tiny clipout from one of the other
-reference manuals I was shown, that 1U<<n is the right formula to
-use for setting/clearing the bit corresponding to the external IRQn, but
-I don't know which interrupts on the GIC those lines represent.
-
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
----
-
-Changes since v5:
-
- - Adjust order of local variables
- - Cleanup of irq headers
- - Use irq_chip_set_type_parent()
- - Compile with ARCH_LAYERSCAPE
- - Removed last paragraph of changelog, as ARCH_LAYERSCAPE should be used
- - Also mention the LS2088A SoC in changelog
-
-drivers/irqchip/Makefile        |   1 +
- drivers/irqchip/irq-ls-extirq.c | 174 ++++++++++++++++++++++++++++++++
- 2 files changed, 175 insertions(+)
- create mode 100644 drivers/irqchip/irq-ls-extirq.c
-
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 8d0fcec6ab23..ce6db511124a 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
-+obj-$(CONFIG_ARCH_LAYERSCAPE)		+= irq-ls-extirq.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
- obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
-diff --git a/drivers/irqchip/irq-ls-extirq.c b/drivers/irqchip/irq-ls-extirq.c
-new file mode 100644
-index 000000000000..c1d1bfee585c
---- /dev/null
-+++ b/drivers/irqchip/irq-ls-extirq.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define pr_fmt(fmt) "irq-ls-extirq: " fmt
-+
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#define MAXIRQ 12
-+
-+struct extirq_chip_data {
-+	struct regmap *syscon;
-+	u32           intpcr;
-+	bool          bit_reverse;
-+	u32           nirq;
-+	u32           parent_irq[MAXIRQ];
-+};
-+
-+static int
-+ls_extirq_set_type(struct irq_data *data, unsigned int type)
-+{
-+	struct extirq_chip_data *chip_data = data->chip_data;
-+	irq_hw_number_t hwirq = data->hwirq;
-+	u32 value, mask;
-+
-+	if (chip_data->bit_reverse)
-+		mask = 1U << (31 - hwirq);
-+	else
-+		mask = 1U << hwirq;
-+
-+	switch (type) {
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type = IRQ_TYPE_LEVEL_HIGH;
-+		value = mask;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		type = IRQ_TYPE_EDGE_RISING;
-+		value = mask;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+	case IRQ_TYPE_EDGE_RISING:
-+		value = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(chip_data->syscon, chip_data->intpcr, mask, value);
-+
-+	return irq_chip_set_type_parent(data, type);
-+}
-+
-+static struct irq_chip extirq_chip = {
-+	.name			= "extirq",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_type		= ls_extirq_set_type,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.flags                  = IRQCHIP_SET_TYPE_MASKED,
-+};
-+
-+static int
-+ls_extirq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
-+			   unsigned long *hwirq, unsigned int *type)
-+{
-+	if (!is_of_node(fwspec->fwnode))
-+		return -EINVAL;
-+
-+	if (fwspec->param_count != 2)
-+		return -EINVAL;
-+
-+	*hwirq = fwspec->param[0];
-+	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	return 0;
-+}
-+
-+static int
-+ls_extirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+		       unsigned int nr_irqs, void *arg)
-+{
-+	irq_hw_number_t hwirq;
-+	struct irq_fwspec *fwspec = arg;
-+	struct irq_fwspec gic_fwspec;
-+	struct extirq_chip_data *chip_data = domain->host_data;
-+
-+	if (fwspec->param_count != 2)
-+		return -EINVAL;
-+
-+	hwirq = fwspec->param[0];
-+	if (hwirq >= chip_data->nirq)
-+		return -EINVAL;
-+
-+	irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &extirq_chip,
-+				      chip_data);
-+
-+	gic_fwspec.fwnode = domain->parent->fwnode;
-+	gic_fwspec.param_count = 3;
-+	gic_fwspec.param[0] = GIC_SPI;
-+	gic_fwspec.param[1] = chip_data->parent_irq[hwirq];
-+	gic_fwspec.param[2] = fwspec->param[1];
-+
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &gic_fwspec);
-+}
-+
-+static const struct irq_domain_ops extirq_domain_ops = {
-+	.translate	= ls_extirq_domain_translate,
-+	.alloc		= ls_extirq_domain_alloc,
-+	.free		= irq_domain_free_irqs_common,
-+};
-+
-+static int __init
-+ls_extirq_of_init(struct device_node *node, struct device_node *parent)
-+{
-+
-+	struct irq_domain *domain, *domain_parent;
-+	struct extirq_chip_data *chip;
-+	const __be32 *intpcr;
-+	int ret;
-+
-+	domain_parent = irq_find_host(parent);
-+	if (!domain_parent) {
-+		pr_err("interrupt-parent not found\n");
-+		return -EINVAL;
-+	}
-+
-+	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->syscon = syscon_node_to_regmap(node->parent);
-+	if (IS_ERR(chip->syscon)) {
-+		ret = PTR_ERR(chip->syscon);
-+		pr_err("Failed to lookup parent regmap\n");
-+		goto err;
-+	}
-+	intpcr = of_get_address(node, 0, NULL, NULL);
-+	if (!intpcr) {
-+		ret = -ENOENT;
-+		pr_err("Missing INTPCR offset value\n");
-+		goto err;
-+	}
-+	chip->intpcr = __be32_to_cpu(*intpcr);
-+
-+	ret = of_property_read_variable_u32_array(node, "fsl,extirq-map",
-+						  chip->parent_irq,
-+						  1, ARRAY_SIZE(chip->parent_irq));
-+	if (ret < 0)
-+		goto err;
-+	chip->nirq = ret;
-+	chip->bit_reverse = of_property_read_bool(node, "fsl,bit-reverse");
-+
-+	domain = irq_domain_add_hierarchy(domain_parent, 0, chip->nirq, node,
-+					  &extirq_domain_ops, chip);
-+	if (!domain) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	kfree(chip);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(ls1021a_extirq, "fsl,ls1021a-extirq", ls_extirq_of_init);
--- 
-2.20.1
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ff46008dc514..a6e597025011 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4588,7 +4588,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> -static int handle_external_interrupt(struct kvm_vcpu *vcpu)
+> +static __always_inline int handle_external_interrupt(struct kvm_vcpu *vcpu)
+>  {
+>  	++vcpu->stat.irq_exits;
+>  	return 1;
+> @@ -4860,7 +4860,7 @@ static void vmx_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
+>  	vmcs_writel(GUEST_DR7, val);
+>  }
+>  
+> -static int handle_cpuid(struct kvm_vcpu *vcpu)
+> +static __always_inline int handle_cpuid(struct kvm_vcpu *vcpu)
+>  {
+>  	return kvm_emulate_cpuid(vcpu);
+>  }
+> @@ -4891,7 +4891,7 @@ static int handle_interrupt_window(struct kvm_vcpu *vcpu)
+>  	return 1;
+>  }
+>  
+> -static int handle_halt(struct kvm_vcpu *vcpu)
+> +static __always_inline int handle_halt(struct kvm_vcpu *vcpu)
+>  {
+>  	return kvm_emulate_halt(vcpu);
+>  }
+> 
 
