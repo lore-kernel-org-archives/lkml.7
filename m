@@ -2,74 +2,105 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4CBC88C95
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7009EC88CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C28620673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441B8207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GivnRW5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389020AbfIWUnM (ORCPT
+        id S2389461AbfIWUsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:43:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59856 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbfIWUnL (ORCPT
+        Mon, 23 Sep 2019 16:48:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43572 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389052AbfIWUsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:43:11 -0400
-Received: from pd9ef19d4.dip0.t-ipconnect.de ([217.239.25.212] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iCVAn-00066s-Nt; Mon, 23 Sep 2019 22:43:05 +0200
-Date:   Mon, 23 Sep 2019 22:43:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Mon, 23 Sep 2019 16:48:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v27so2566639pgk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 13:48:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nUgRSkoDI5HIlvd1QcYFDyolqVga7j1qtEHfJ+8gxnQ=;
+        b=GivnRW5mV4+6/svlNvgJuoze4kT8deBE3EL4DtQlUdbdSlSdqH3zrkcK585VAc2DkX
+         N8Q+YY94IdMGkrs79yTc7ghVyfPdUTB3jrxnyOC9kTm32sOYByPVQRXxbTXSaAaZo+S7
+         M4JFDJhRDy8ml1pJ7p0xevCWFJTSy1z6QclkBvh43GzVu/cnAqS4VU7nTwZ1iEE2j1JN
+         +rfWJ0BdV/+BVDF+XEuNLAJCp3+QdHj+OsiamWsnBPYHCv7/bCvL5wYAPqbJXSCETC8i
+         X9YY2Rmyv+SuYcjj1/g4cy4ooggS0ro/5+6/1U09TfqFTjAvTwM/8ZEi2b01yMSnpE8e
+         OMaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nUgRSkoDI5HIlvd1QcYFDyolqVga7j1qtEHfJ+8gxnQ=;
+        b=V+Q0fJyWZWiPcAGsy24yRzM8uoR2Nx9mFtHpcnvMNwcQjYkk5cj7JvAgbcD9gtVLJX
+         i0co2s1NhYSRUItvrtezamieUMTJl+xlp0WLXn8b2Y4mCrxSsIEMlTQoX21ZrMYI8EfN
+         jrtEp6fxEpKgCDGnKBgHy6W+xi3pjmueGLZHva+KdMGzDPOmRLXiDtA/aHf37hxfS2px
+         xZZOQbA6ydq5QLXzeduyrO6ymWcVMti0AFvNdRLtX7gANwdm21lYvRyA6P2yoc6rPkTy
+         Gs59fAC1DqSxf7O2/AkEkElVRWUkav5D7xTd7poEsuKTwvmIr3PdNqVR32yTPSz29ZvO
+         6Qgg==
+X-Gm-Message-State: APjAAAXcLizu1f1SwmzR6+6cugkh80W81drj8grBw107MZ8560+sBUx/
+        xQx9n4g0qupddg9Nm0IjsYc6MpifpaXAGw==
+X-Google-Smtp-Source: APXvYqw48cSQQjn+PidujI2PTC9qv93Tm8GIvX9VsJPAws6pbfuG9DkxwCiWL7PrBYLzRzUWJbrHHQ==
+X-Received: by 2002:a62:5847:: with SMTP id m68mr1649730pfb.23.1569271723341;
+        Mon, 23 Sep 2019 13:48:43 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id a13sm13504968pfg.10.2019.09.23.13.48.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 13:48:42 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [RFC patch 02/15] x86/entry: Remove _TIF_NOHZ from
- _TIF_WORK_SYSCALL_ENTRY
-In-Reply-To: <CALCETrWHkRiXx_r8x6k=ArxTZc5YS0DewMQDVHFrjVY3Xt+H7A@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1909232242370.1934@nanos.tec.linutronix.de>
-References: <20190919150314.054351477@linutronix.de> <20190919150808.617944343@linutronix.de> <CALCETrWHkRiXx_r8x6k=ArxTZc5YS0DewMQDVHFrjVY3Xt+H7A@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+Date:   Mon, 23 Sep 2019 14:48:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019, Andy Lutomirski wrote:
-
-> On Thu, Sep 19, 2019 at 8:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Evaluating _TIF_NOHZ to decide whether to use the slow syscall entry path
-> > is not only pointless, it's actually counterproductive:
-> >
-> >  1) Context tracking code is invoked unconditionally before that flag is
-> >     evaluated.
-> >
-> >  2) If the flag is set the slow path is invoked for nothing due to #1
+On 9/23/19 10:32 AM, Pavel Begunkov wrote:
+> Sorry, mixed the threads.
 > 
-> Can we also get rid of TIF_NOHZ on x86?
+>>>
+>>> I'm not sure an extension is needed for such a special interface, why not
+>>> just put a ->threshold value next to the ctx->wait field and use either
+>>> the regular wait_event() APIs with the proper condition, or
+>>> wait_event_cmd() style APIs if you absolutely need something more complex
+>>> to happen inside?
+> Ingo,
+> io_uring works well without this patch just using wait_event_*() with
+> proper condition, but there are performance issues with spurious
+> wakeups. Detailed description in the previous mail.
+> Am I missing something?
 
-If we make the usage in context_tracking_cpu_set() conditional.
+I think we can do the same thing, just wrapping the waitqueue in a
+structure with a count in it, on the stack. Got some flight time
+coming up later today, let me try and cook up a patch.
 
-Thanks,
-
-	tglx
+-- 
+Jens Axboe
 
