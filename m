@@ -2,175 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC61DC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD33C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C309A20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqGv8Br4"
+	by mail.kernel.org (Postfix) with ESMTP id AD2C02168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569257685;
+	bh=WIRo18P9vD/7u8trD2h5S5GUAMjZkH6LD3wnIxh+LOU=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=lQwrYT3s1i1I4R71lFzWzDquHZuGVQPLBIRRz0HsOHudxeDHPYyW/voXj1jz6u1Tn
+	 j5k0RLJM7WPSSAnFVqb8AWw26kFZZZ4hoiCqvAvwxAnS13K4Q7DsKsylO5MVUbZQu9
+	 E2AFCluli58ziecCbOwMHJGq6FkOKIEypY9UA5gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502128AbfIWQxz (ORCPT
+        id S2502135AbfIWQyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:53:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44842 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390877AbfIWQxy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:53:54 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r16so13520024edq.11;
-        Mon, 23 Sep 2019 09:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Vx10m/Lm/wy8maAuBSI7giwMG2Vidy5dikUf4oqhTM=;
-        b=YqGv8Br482S2VTJcI04+h9KF8ITUDIpyq75eXpGc9nitcFdXrIUzkdfRWKyIQ8Mn/b
-         ckFPQIxMfRtjvnCf1+iVD0bkS7xSFQ7cF1v7p2BCcPbmj7B8SqpR/AYqYk3bmR1jjcE1
-         fK/5wbGy+CcaeeaurWFJnZpdRXR9KFIonubI4XN4zRvgLv6pDY9yQjnSNzUja0fqNsVn
-         bDH0LQOKOZ+ocjqUSxtMDZdGOxcKAc5E1T6vb5wypCUFyktOeYTEoX1WBzeXXZF3S1MX
-         drfoRsQiM0IQAcaB9UT1oZx4cSZT/DJmdQBK3GIIXAxHcl11YpqfT3ofaCDMWW0dktPC
-         ePVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Vx10m/Lm/wy8maAuBSI7giwMG2Vidy5dikUf4oqhTM=;
-        b=ufvgm+CbKRIK3UDpFuyGj50Ed0lnq32W8dyOBP2bqhmCdqe5vTLHlUU0t3sV5roFjE
-         ICYWBjPEdk+6SQpFRtK/2oKJvUeAPDXkYXd9J0UTenMHb7Qm1IP5Q9zaploqrYks6J6s
-         e81mVaeQXtT+3VhTQnnuLWpBdP2onUUCWZhKw83u3OSD04YxJnivUVYN/0tlcN7b5nts
-         IEKqZJMJXaRPHvuUb2Cj7/ERwJLr/mJbzvfCPN4Cc0ZruJQvdexdsB1jA54RBaLY1TRq
-         L1lfJofVGwI26tPMS5SewYsIJHQuWotUBj0HcbAIX2z4bKx6f0LX5FZXLvHKFMm5YsXk
-         7dsg==
-X-Gm-Message-State: APjAAAVL7hNI4xDz0fGTPtRSygAm0CXmTd4WSRO3cC5wTMZ0Nfpd6Lx2
-        nnAIesxqi3fcLEpkCGqgH+56KRsLybh4XWTaxv4=
-X-Google-Smtp-Source: APXvYqxbBOuu3hw0QIpTFiEv+Mi/YVA/FXFTAT3e/DBdocyEZ+BEQIdCppRPGcSakXQ32XfSXojTeY9Vl6bzMHjEzk8=
-X-Received: by 2002:a17:906:2542:: with SMTP id j2mr775950ejb.278.1569257632256;
- Mon, 23 Sep 2019 09:53:52 -0700 (PDT)
+        Mon, 23 Sep 2019 12:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390806AbfIWQyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:54:44 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B1C20882;
+        Mon, 23 Sep 2019 16:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569257683;
+        bh=WIRo18P9vD/7u8trD2h5S5GUAMjZkH6LD3wnIxh+LOU=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=fX3kSzm/O/ZTERhPGEutWFuA1d/8Ed2hikLwxeh5MenpYAXPjUKlP3dfXISawejj5
+         xeQc8eKDua9XPOO55Rrz9O1fkhEVBinMe2ccKxfmk32T4jNVJEwGulEIAeRQ2UPToM
+         y5+IBkiYLYvmn4dwpBZ97FWmejIAmww4YSNNsOXs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1569242500-182337-7-git-send-email-hjc@rock-chips.com> <1569242500-182337-9-git-send-email-hjc@rock-chips.com>
-In-Reply-To: <1569242500-182337-9-git-send-email-hjc@rock-chips.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 23 Sep 2019 09:53:40 -0700
-Message-ID: <CAF6AEGvsE_hxYYA123=55uvXVsDMkhfwvXW+gBMQJksE1WoQeg@mail.gmail.com>
-Subject: Re: [PATCH 08/36] drm/msm: use bpp instead of cpp for drm_format_info
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Allison Randal <allison@lohutok.net>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
+References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com> <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
+Cc:     devicetree@vger.kernel.org, agx@sigxcpu.org,
+        linux-kernel@vger.kernel.org,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+To:     Fabio Estevam <festevam@gmail.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 5/5] arm64: dts: imx8mq: add DCSS node
+User-Agent: alot/0.8.1
+Date:   Mon, 23 Sep 2019 09:54:42 -0700
+Message-Id: <20190923165443.D1B1C20882@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 5:44 AM Sandy Huang <hjc@rock-chips.com> wrote:
->
-> cpp[BytePerPlane] can't describe the 10bit data format correctly,
-> So we use bpp[BitPerPlane] to instead cpp.
->
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  | 4 ++--
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 2 +-
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c  | 2 +-
->  drivers/gpu/drm/msm/msm_fb.c              | 2 +-
->  4 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index b3417d5..c57731c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -1148,8 +1148,8 @@ static int _dpu_debugfs_status_show(struct seq_file *s, void *data)
->                                 fb->base.id, (char *) &fb->format->format,
->                                 fb->width, fb->height);
->                         for (i = 0; i < ARRAY_SIZE(fb->format->cpp); ++i)
-> -                               seq_printf(s, "cpp[%d]:%u ",
-> -                                               i, fb->format->cpp[i]);
-> +                               seq_printf(s, "bpp[%d]:%u ",
-> +                                               i, fb->format->bpp[i]);
->                         seq_puts(s, "\n\t");
->
->                         seq_printf(s, "modifier:%8llu ", fb->modifier);
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> index ff14555..61ab4dc 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> @@ -790,7 +790,7 @@ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
->         width = mdp5_crtc->cursor.width;
->         height = mdp5_crtc->cursor.height;
->
-> -       stride = width * info->cpp[0];
-> +       stride = width * info->bpp[0] / 8;
->
->         get_roi(crtc, &roi_w, &roi_h);
->
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> index 776337f..992477d 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> @@ -147,7 +147,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
->         for (i = 0; i < nplanes; i++) {
->                 int n, fetch_stride, cpp;
->
-> -               cpp = info->cpp[i];
-> +               cpp = info->bpp[i] / 8;
+Quoting Laurentiu Palcu (2019-09-23 07:13:19)
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mq.dtsi
+> index 52aae34..d4aa778 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -871,6 +871,31 @@
+>                                 interrupt-controller;
+>                                 #interrupt-cells =3D <1>;
+>                         };
+> +
+> +                       dcss: dcss@0x32e00000 {
 
-Unless I missed something in your first patch, I don't think this
-series is bisectable, ie. replacing cpp w/ bpp would cause everything
-else not to compile.  Looks like there was an alternative proposal on
-the first patch, but if we do end up going this route, I think you
-should add bpp in the first patch, and remove cpp in the last patch.
-(And also probably sprinkle around WARN_ON(info->bpp[n] % 8) in places
-were it is expected to be a multiple of 8)
+Drop the 0x prefix on node names.
 
-BR,
--R
+> +                               #address-cells =3D <1>;
+> +                               #size-cells =3D <0>;
+> +                               compatible =3D "nxp,imx8mq-dcss";
+> +                               reg =3D <0x32e00000 0x2D000>, <0x32e2f000=
+ 0x1000>;
+> +                               interrupts =3D <6>, <8>, <9>;
+> +                               interrupt-names =3D "ctx_ld", "ctxld_kick=
+", "vblank";
+> +                               interrupt-parent =3D <&irqsteer>;
+> +                               clocks =3D <&clk IMX8MQ_CLK_DISP_APB_ROOT=
+>,
+> +                                        <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
+> +                                        <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
+> +                                        <&clk IMX8MQ_VIDEO2_PLL_OUT>,
+> +                                        <&clk IMX8MQ_CLK_DISP_DTRC>;
+> +                               clock-names =3D "apb", "axi", "rtrm", "pi=
+x", "dtrc";
+> +                               assigned-clocks =3D <&clk IMX8MQ_CLK_DISP=
+_AXI>,
+> +                                                 <&clk IMX8MQ_CLK_DISP_R=
+TRM>,
+> +                                                 <&clk IMX8MQ_VIDEO2_PLL=
+1_REF_SEL>;
+> +                               assigned-clock-parents =3D <&clk IMX8MQ_S=
+YS1_PLL_800M>,
+> +                                                        <&clk IMX8MQ_SYS=
+1_PLL_800M>,
+> +                                                        <&clk IMX8MQ_CLK=
+_27M>;
+> +                               assigned-clock-rates =3D <800000000>,
+> +                                                          <400000000>;
+> +                               status =3D "disabled";
+> +                       };
 
-
->                 fetch_stride = width * cpp / (i ? hsub : 1);
->
->                 n = DIV_ROUND_UP(fetch_stride * nlines, smp->blk_size);
-> diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
-> index 5bcd5e5..4545fa1 100644
-> --- a/drivers/gpu/drm/msm/msm_fb.c
-> +++ b/drivers/gpu/drm/msm/msm_fb.c
-> @@ -172,7 +172,7 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
->                 unsigned int min_size;
->
->                 min_size = (height - 1) * mode_cmd->pitches[i]
-> -                        + width * info->cpp[i]
-> +                        + width * info->bpp[i] / 8
->                          + mode_cmd->offsets[i];
->
->                 if (bos[i]->size < min_size) {
-> --
-> 2.7.4
->
->
->
