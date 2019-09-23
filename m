@@ -2,120 +2,232 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73593C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B74C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C6720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3101A206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IWsVG8Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502431AbfIWTtz (ORCPT
+        id S2502439AbfIWTuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:49:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52486 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502394AbfIWTtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:49:55 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 147E48980F5;
-        Mon, 23 Sep 2019 19:49:55 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.11.216.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CD911001B05;
-        Mon, 23 Sep 2019 19:49:52 +0000 (UTC)
-Message-ID: <d5d92540ca5aab8916ac4d93f6b5677ab52d2e7d.camel@redhat.com>
-Subject: Re: ntp audit spew.
-From:   Eric Paris <eparis@redhat.com>
-To:     Dave Jones <davej@codemonkey.org.uk>,
-        Paul Moore <paul@paul-moore.com>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>, linux-audit@redhat.com
-Date:   Mon, 23 Sep 2019 15:49:52 -0400
-In-Reply-To: <20190923194901.GA2787@codemonkey.org.uk>
-References: <20190923155041.GA14807@codemonkey.org.uk>
-         <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-         <20190923165806.GA21466@codemonkey.org.uk>
-         <CAHC9VhTh+cD5pkb8JAHnG1wa9-UgivSb7+-yjjYaD+6vhyYKjA@mail.gmail.com>
-         <20190923194901.GA2787@codemonkey.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
+        Mon, 23 Sep 2019 15:50:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51074 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfIWTug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:50:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eUUUPJp8Q+5PlAv7/AOGceOtoVnI1K3PZLVv987cVRU=; b=IWsVG8Im3Z8uUrSD/S3h+TdHQ
+        xHv1A9gVSzgMJ+kavZxPZT1xVWv/jjm2sfWSXfFzdZXciz5sTxLQIXQbckhIgFNYBWXOW56MeYtce
+        RDRk8PXLYa9JQjzqNAneuoj1DvrREkcaGQzDzLU/3LMcEVdSMIHU76lE/eq38yRXFCg081K4ExSo1
+        3FzbuLuNzJemUVQmfTaqi81/oFTUI+Th3OPTWOS6vX+oxZcGfA5LtBulYnbTXPP5bCHavi6YOqx9z
+        e56+yGYscXzBmfqZYNNhNJZMvVMvRWVJ5BD1Js8eMwTSDhc/tN/DGap0FCPAVWCU6SvBatYXJP2Hz
+        KnM7z0gbQ==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCULM-0004hv-CB; Mon, 23 Sep 2019 19:49:56 +0000
+Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
+ KUnit
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Felix Guo <felixguoxiuping@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20190923090249.127984-16-brendanhiggins@google.com>
+ <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
+ <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
+Date:   Mon, 23 Sep 2019 12:49:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Mon, 23 Sep 2019 19:49:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Is this the thing where systemd is listening on the multicast netlink
-socket and causes everything to come out kmesg as well?
+On 9/23/19 11:06 AM, Brendan Higgins wrote:
+> On Mon, Sep 23, 2019 at 8:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 9/23/19 2:02 AM, Brendan Higgins wrote:
+>>> Add documentation for KUnit, the Linux kernel unit testing framework.
+>>> - Add intro and usage guide for KUnit
+>>> - Add API reference
+>>>
+>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>> Cc: Jonathan Corbet <corbet@lwn.net>
+>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>>> ---
+>>>  Documentation/dev-tools/index.rst           |   1 +
+>>>  Documentation/dev-tools/kunit/api/index.rst |  16 +
+>>>  Documentation/dev-tools/kunit/api/test.rst  |  11 +
+>>>  Documentation/dev-tools/kunit/faq.rst       |  62 +++
+>>>  Documentation/dev-tools/kunit/index.rst     |  79 +++
+>>>  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
+>>>  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
+>>>  7 files changed, 925 insertions(+)
+>>>  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
+>>>  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
+>>>  create mode 100644 Documentation/dev-tools/kunit/faq.rst
+>>>  create mode 100644 Documentation/dev-tools/kunit/index.rst
+>>>  create mode 100644 Documentation/dev-tools/kunit/start.rst
+>>>  create mode 100644 Documentation/dev-tools/kunit/usage.rst
+>>
+>>
+>>> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+>>> new file mode 100644
+>>> index 000000000000..6dc229e46bb3
+>>> --- /dev/null
+>>> +++ b/Documentation/dev-tools/kunit/start.rst
+>>> @@ -0,0 +1,180 @@
+>>> +.. SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +===============
+>>> +Getting Started
+>>> +===============
+>>> +
+>>> +Installing dependencies
+>>> +=======================
+>>> +KUnit has the same dependencies as the Linux kernel. As long as you can build
+>>> +the kernel, you can run KUnit.
+>>> +
+>>> +KUnit Wrapper
+>>> +=============
+>>> +Included with KUnit is a simple Python wrapper that helps format the output to
+>>> +easily use and read KUnit output. It handles building and running the kernel, as
+>>> +well as formatting the output.
+>>> +
+>>> +The wrapper can be run with:
+>>> +
+>>> +.. code-block:: bash
+>>> +
+>>> +   ./tools/testing/kunit/kunit.py run
+>>> +
+>>> +Creating a kunitconfig
+>>> +======================
+>>> +The Python script is a thin wrapper around Kbuild as such, it needs to be
+>>
+>>                                        around Kbuild. As such,
+> 
+> Thanks for pointing this out.
+> 
+>>
+>>> +configured with a ``kunitconfig`` file. This file essentially contains the
+>>> +regular Kernel config, with the specific test targets as well.
+>>> +
+>>> +.. code-block:: bash
+>>> +
+>>> +     git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
+>>> +     cd $PATH_TO_LINUX_REPO
+>>> +     ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
+>>> +
+>>> +You may want to add kunitconfig to your local gitignore.
+>>> +
+>>> +Verifying KUnit Works
+>>> +---------------------
+>>> +
+>>> +To make sure that everything is set up correctly, simply invoke the Python
+>>> +wrapper from your kernel repo:
+>>> +
+>>> +.. code-block:: bash
+>>> +
+>>> +     ./tools/testing/kunit/kunit.py
+>>> +
+>>> +.. note::
+>>> +   You may want to run ``make mrproper`` first.
+>>
+>> I normally use O=builddir when building kernels.
+>> Does this support using O=builddir ?
+> 
+> Yep, it supports specifying a separate build directory.
+> 
+>>> +
+>>> +If everything worked correctly, you should see the following:
+>>> +
+>>> +.. code-block:: bash
+>>> +
+>>> +     Generating .config ...
+>>> +     Building KUnit Kernel ...
+>>> +     Starting KUnit Kernel ...
+>>> +
+>>> +followed by a list of tests that are run. All of them should be passing.
+>>> +
+>>> +.. note::
+>>> +   Because it is building a lot of sources for the first time, the ``Building
+>>> +   kunit kernel`` step may take a while.
+>>> +
+>>> +Writing your first test
+>>> +=======================
+>>
+>> [snip]
+>>
+>>> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+>>> new file mode 100644
+>>> index 000000000000..c6e69634e274
+>>> --- /dev/null
+>>> +++ b/Documentation/dev-tools/kunit/usage.rst
+>>
+>> TBD...
+> 
+> What did you mean by this comment?
 
-On Mon, 2019-09-23 at 15:49 -0400, Dave Jones wrote:
-> On Mon, Sep 23, 2019 at 02:57:08PM -0400, Paul Moore wrote:
->  > On Mon, Sep 23, 2019 at 12:58 PM Dave Jones <
-> davej@codemonkey.org.uk> wrote:
->  > > On Mon, Sep 23, 2019 at 12:14:14PM -0400, Paul Moore wrote:
->  > >  > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <
-> davej@codemonkey.org.uk> wrote:
->  > >  > >
->  > >  > > I have some hosts that are constantly spewing audit
-> messages like so:
->  > >  > >
->  > >  > > [46897.591182] audit: type=1333 audit(1569250288.663:220):
-> op=offset old=2543677901372 new=2980866217213
->  > >  > > [46897.591184] audit: type=1333 audit(1569250288.663:221):
-> op=freq old=-2443166611284 new=-2436281764244
->  > >  > > [48850.604005] audit: type=1333 audit(1569252241.675:222):
-> op=offset old=1850302393317 new=3190241577926
->  > >  > > [48850.604008] audit: type=1333 audit(1569252241.675:223):
-> op=freq old=-2436281764244 new=-2413071187316
->  > >  > > [49926.567270] audit: type=1333 audit(1569253317.638:224):
-> op=offset old=2453141035832 new=2372389610455
->  > >  > > [49926.567273] audit: type=1333 audit(1569253317.638:225):
-> op=freq old=-2413071187316 new=-2403561671476
->  > >  > >
->  > >  > > This gets emitted every time ntp makes an adjustment, which
-> is apparently very frequent on some hosts.
->  > >  > >
->  > >  > >
->  > >  > > Audit isn't even enabled on these machines.
->  > >  > >
->  > >  > > # auditctl -l
->  > >  > > No rules
->  > >  >
->  > >  > What happens when you run 'auditctl -a never,task'?  That
-> *should*
->  > >  > silence those messages as the audit_ntp_log() function has
-> the
->  > >  > requisite audit_dummy_context() check.
->  > >
->  > > They still get emitted.
->  > >
->  > >  > FWIW, this is the distro
->  > >  > default for many (most? all?) distros; for example, check
->  > >  > /etc/audit/audit.rules on a stock Fedora system.
->  > >
->  > > As these machines aren't using audit, they aren't running auditd
-> either.
->  > > Essentially: nothing enables audit, but the kernel side
-> continues to log
->  > > ntp regardless (no other audit messages seem to do this).
->  > 
->  > What does your kernel command line look like?  Do you have
-> "audit=1"
->  > somewhere in there?
-> 
-> nope.
-> 
-> ro root=LABEL=/ biosdevname=0 net.ifnames=0 fsck.repair=yes
-> systemd.gpt_auto=0 pcie_pme=nomsi ipv6.autoconf=0 erst_disable
-> crashkernel=128M console=tty0 console=ttyS1,57600
-> intel_iommu=tboot_noforce
-> 
-> 	Dave
-> 
+I plan to review usage.rst soon... (To Be Done :)
 
+-- 
+~Randy
