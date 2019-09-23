@@ -2,105 +2,214 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA3FC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80214C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7FF217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569236836;
-	bh=W0KNg5xYO1RpjuUgzP6+f9w0r6wSlpxmvibubDyLGNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EtWjUz2QP04ufHPo9jkTw7i+NN63q/5yTUjhQCfJAdJMsZGhKrIxNgrY+GzAjXnC7
-	 lCwoxSmXZHIQ71+HtXCw0TP0TfWHUdSDjim8CPdgzs3PqSCLInrlR28LqZHPk+zbae
-	 KJ5/DgxDI8dzIHKNj5k5esg5WF1D7s5o1uHJ5oWY=
+	by mail.kernel.org (Postfix) with ESMTP id 4D032206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8SDD/2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393624AbfIWLHP (ORCPT
+        id S1728516AbfIWLLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393136AbfIWLHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:07:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E173206C2;
-        Mon, 23 Sep 2019 11:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569236834;
-        bh=W0KNg5xYO1RpjuUgzP6+f9w0r6wSlpxmvibubDyLGNM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QKfhuDUP7h7hvtym8KIgPYGx1JBz6O6Es0ztrwChHx3yTuQQDgIxu2ueTFWKBj8E7
-         Ilh966pCG2d/hu6Mm7a5QFZxoF7HZaePPJfls1fHVjwFNRh0O5FoPG6ff9quWABy2V
-         wTn6iW001Grrg/sIwvNnKd2Z2YwoP88e/iFdk0SY=
-Date:   Mon, 23 Sep 2019 13:07:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: hub add filter for device with specific VID&PID
-Message-ID: <20190923110712.GA2796979@kroah.com>
-References: <20190923105102.37413-1-ran.wang_1@nxp.com>
+        Mon, 23 Sep 2019 07:11:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37202 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfIWLLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:11:01 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i1so13443826wro.4;
+        Mon, 23 Sep 2019 04:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qtQ45fwloWjBlifREEUJV5bQdHg/Ixd1tAtGl3/qHQY=;
+        b=o8SDD/2Icte4oZCfSphkKpTh1ZO8m6SvLc4ALLi+3AK9muyEWmsAjKuureFZ0oGs7D
+         WHQcG9wcTUqcaLrGUOtN9Ihb49re8ZbwjVJC2htaCP7Ps8V/HJr1ztuGfCvE3WNWx10q
+         gSU/0+LaaEazotMFOy0lCbO7hy0C6U0TyBOl4QPt7Ha+oXXDlRBD6wfXzjGXr6ty0g8N
+         y6yNmzJUFV1+jaWcwWSvwmkhVC2VrFhdxH8DrauXJRBEH38WPL4zZgiVEELxYeFT4i7Y
+         WgMVBKW7thyvW3jIRsWrWrJBf/HmJQ6xX/zzObiSqd995zwd38jC6r6Np+fr/p2yGR1h
+         q6Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qtQ45fwloWjBlifREEUJV5bQdHg/Ixd1tAtGl3/qHQY=;
+        b=S0CFrgMx836FKFrB+RDV8+Tl1ibFc+kg6d3YGmQJUEdKbhSbfkx/8OlCKBtyQJO0EK
+         ZQzeZQul/7cMaStBcxm0lSZtaLNHhO2FwwPx2ORKKpnJ1iAI/sJOYKy10c+u5DtgX5TP
+         qfqadgk8SFj/3Q6KU5YIw2395wH8n1YVsUB9T61iqToDacga43VsbAi5/nsXppycPKI6
+         uA1guaYvUbX507N0CaTZ5Au3i23MNuEVywhP/FWbPhz6mIDkr+5lulV9T4RO7jo4iaKj
+         3p0w/OyQwb07u0mb73P2JNx5PgVT7K0qLxQHTm7uzx11fMJmN4LT02gePg72yaUW32c7
+         u03g==
+X-Gm-Message-State: APjAAAUdEyikRiF4e5jMMZVweDRWTQsJJIVk2gxO+BPi3G8jXXwXYge4
+        S3i1f1pe/O7bwgXjQX/ltEo=
+X-Google-Smtp-Source: APXvYqyyAhG5GzXGG0OOBrW89t4gOdDg7ww0VFg0o4kN5sqV0yxdpjnqFaCIJmaMng/Nln/0Qzo35w==
+X-Received: by 2002:a5d:6785:: with SMTP id v5mr22057575wru.9.1569237058047;
+        Mon, 23 Sep 2019 04:10:58 -0700 (PDT)
+Received: from [10.0.20.253] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id 207sm20220357wme.17.2019.09.23.04.10.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 04:10:57 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+ <20190805103630.tu4kytsbi5evfrhi@mikami>
+ <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+ <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+ <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+ <87r24piwhm.fsf@x220.int.ebiederm.org>
+ <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+ <87ftl5donm.fsf@x220.int.ebiederm.org>
+ <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
+ <20190910111551.scam5payogqqvlri@wittgenstein>
+ <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
+ <871rwnda47.fsf@x220.int.ebiederm.org>
+ <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
+ <87ef0hbezt.fsf@x220.int.ebiederm.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <cc21557f-1568-68c3-e322-47ceb52fdf53@gmail.com>
+Date:   Mon, 23 Sep 2019 13:10:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923105102.37413-1-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <87ef0hbezt.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 06:51:02PM +0800, Ran Wang wrote:
-> USB 2.0 Embedded Host PET Automated Test (CH6) 6.7.23 A-UUT "Unsupported
-> Device" Message require to stop enumerating device with VID=0x1a0a PID=0x0201
-> and pop message to declare this device is not supported.
+Hello Eric,
 
-Why is this a requirement?
-
-And why those specific vid/pid values?  What do they refer to?
-
+On 9/15/19 8:17 PM, Eric W. Biederman wrote:
+> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
->  drivers/usb/core/hub.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>> Hello Eric,
+>>
+>> On 9/11/19 1:06 AM, Eric W. Biederman wrote:
+>>> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>>>
+>>>> Hello Christian,
+>>>>
+>>>>>> All: I plan to add the following text to the manual page:
+>>>>>>
+>>>>>>        new_root and put_old may be the same  directory.   In  particular,
+>>>>>>        the following sequence allows a pivot-root operation without need‐
+>>>>>>        ing to create and remove a temporary directory:
+>>>>>>
+>>>>>>            chdir(new_root);
+>>>>>>            pivot_root(".", ".");
+>>>>>>            umount2(".", MNT_DETACH);
+>>>>>
+>>>>> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
+>>>>> before the umount2()? Especially for the container case... I think we
+>>>>> discussed this briefly yesterday in person.
+>>>> Thanks for noticing. That detail (more precisely: not MS_SHARED) is
+>>>> already covered in the numerous other changes that I have pending
+>>>> for this page:
+>>>>
+>>>>        The following restrictions apply:
+>>>>        ...
+>>>>        -  The propagation type of new_root and its parent mount must  not
+>>>>           be MS_SHARED; similarly, if put_old is an existing mount point,
+>>>>           its propagation type must not be MS_SHARED.
+>>>
+>>> Ugh.  That is close but not quite correct.
+>>>
+>>> A better explanation:
+>>>
+>>>     The pivot_root system call will never propagate any changes it makes.
+>>>     The pivot_root system call ensures this is safe by verifying that
+>>>     none of put_old, the parent of new_root, and parent of the root directory
+>>>     have a propagation type of MS_SHARED.
+>>
+>> Thanks for that. However, another question. You text has two changes.
+>> First, I understand why you reword the discussion to indicate the
+>> _purpose_ of the rules. However, you also, AFAICS, list a different set of
+>> of directories that can't be MS_SHARED:
+>>
+>> I said: new_root, the parent of new_root, and put_old
+>> You said: the parent of new_root, and put_old, and parent of the
+>> root directory.
 > 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index bbcfa63..3cda0da 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -4982,6 +4982,18 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
->  		if (status < 0)
->  			goto loop;
->  
-> +		 /* USB 2.0 Embedded Host PET Automated Test (CH6)
-> +		 * 6.7.23 A-UUT "Unsupported Device" Message
-> +		 * require to filter out below device when enumeration
-> +		 */
+> 
+>> Was I wrong on this detail also?
+> 
+> That is how I read the code.  The code says:
+> 
+> 	if (IS_MNT_SHARED(old_mnt) ||
+> 		IS_MNT_SHARED(new_mnt->mnt_parent) ||
+> 		IS_MNT_SHARED(root_mnt->mnt_parent))
+> 		goto out4;
+> 
+> We both agree on put_old and the parent of new_mnt.
+> 
+> When I look at the code root_mnt comes from the root directory, not new_mnt.
 
-Nit, can you align your comment lines, to match the other multi-line
-comments in this file?  Otherwise it starts to look bad over time.
+Hmm -- I had checked the code when I wrote my text, but somehow
+I misread things. Going back to recheck the code, you are obviously
+correct. Thanks for catching that.
 
+> Furthermore those checks fundamentally makes sense as the root directory
+> and new_root that are moving.  The directory put_old simply has
+> something moving onto it.
+> 
+>>> The concern from our conversation at the container mini-summit was that
+>>> there is a pathology if in your initial mount namespace all of the
+>>> mounts are marked MS_SHARED like systemd does (and is almost necessary
+>>> if you are going to use mount propagation), that if new_root itself
+>>> is MS_SHARED then unmounting the old_root could propagate.
+>>>
+>>> So I believe the desired sequence is:
+>>>
+>>>>>>            chdir(new_root);
+>>> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
+>>>>>>            pivot_root(".", ".");
+>>>>>>            umount2(".", MNT_DETACH);
+>>>
+>>> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
+>>> long as it is not MS_SHARED the mount won't propagate back to the
+>>> parent mount namespace.
+>>
+>> Thanks. I made that change.
+> 
+> For what it is worth.  The sequence above without the change in mount
+> attributes will fail if it is necessary to change the mount attributes
+> as "." is both put_old as well as new_root.
+> 
+> When I initially suggested the change I saw "." was new_root and forgot
+> "." was also put_old.  So I thought there was a silent danger without
+> that sequence.
 
+So, now I am a little confused by the comments you added here. Do you
+now mean that the 
 
-> +		if ((udev->descriptor.idVendor == 0x1a0a)
-> +		 && (udev->descriptor.idProduct == 0x0201)) {
+mount("", ".", MS_SLAVE | MS_REC, NULL);
 
-Are you sure you don't have to convert this value into cpu endian before
-checking it?
+call is not actually necessary?
 
-thanks,
+Thanks,
 
-greg k-h
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
