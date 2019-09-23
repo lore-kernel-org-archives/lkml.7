@@ -2,121 +2,363 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D4C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F092C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D79020882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263617;
-	bh=Fie3J0526jnQEvDaVDkC2sqZvgFQ5cq4HZDj0LraLR4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t2HwMGaF8ZgtZvT0ICMvzR6BZ23YVXNnpYySkXJkTqWWB+2XYNf8pIoitJXT8vz8y
-	 V/hqefCPaQj/fEBRuttYGje/mxf/Jb9LLTHNmxDmANEzb/ot9CfbUexQJ6MktpJTzW
-	 y7lvAGLrUjz0I15WcT2LVlMQ6g49ysQbczLFQRgE=
+	by mail.kernel.org (Postfix) with ESMTP id 3DB3F20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BY+CMg4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfIWSdg (ORCPT
+        id S1727735AbfIWSfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbfIWSdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:33:36 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E9621971
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569263614;
-        bh=Fie3J0526jnQEvDaVDkC2sqZvgFQ5cq4HZDj0LraLR4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ricmx6tsBotMizJ+zHuuwiK2sol3/KXTKuRSEaSbi4iNFGpYtcgU8fx6hbXIOtwaX
-         P9gJoaBeCHGASmi/tA+dwD5hiyK6FCTQ3UDeDeOQLhImRntdL3JnvsM11Rg41te5yB
-         kX1HIBhO+w7V09bFtjrwR/YRPapbcuUrcR3ps7/Y=
-Received: by mail-wr1-f46.google.com with SMTP id l11so15108296wrx.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:33:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAWWYK96EWQO/Ogn0V8mQ4ZioOOTBzoADX2/hD7wZvuMQ04ADM+Q
-        0tVDaE0CubGSWkdDLkauRZsvS3X1XzJNDWBUCWzf+Q==
-X-Google-Smtp-Source: APXvYqw4487lN/sv3jAQj37UY8zoRCqY7v0vsTXZ2t6ri4Fp48K86SQBOeh3CooGzzPErjZR5xwdGy1Bm2skBTf77KQ=
-X-Received: by 2002:adf:dbc6:: with SMTP id e6mr562368wrj.149.1569263612970;
- Mon, 23 Sep 2019 11:33:32 -0700 (PDT)
+        Mon, 23 Sep 2019 14:35:02 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32798 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbfIWSfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:35:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id z19so13769958ior.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/YECtlhpDnaFwK1IOiuPd/4Cs+yhfo5ueLmz6MhEiP8=;
+        b=BY+CMg4oVDaXNAMUSWzMcaGynNeN31Gs6a57yyNwe0PJrByQcTRe0E8D/uJW8/dSuB
+         8/YH2PkCTeSsjwQCShqktLImC/+KFWypNLlfi48tpQrzXCqVW6W04lBfijfJEB92VN0v
+         zx3A8SmO4Bsk/ahMz5kA4xL9aNgfmiTsdPGK5Ht6bibBm8AA436dzA6LnCRzzWs4aNHM
+         HmmrL0tDf6m6UaVN28WXo13jJqSEBBVNNsuycoeGLPNUz/q84qE7RNqbkIHzlqlT+QIz
+         pRHwQM6JjzqNIi541hvo0EXa4OUv8T2+VdkhBUw7MWKVN7Hbkjdt0v+BmV9TiF/07knq
+         uhmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/YECtlhpDnaFwK1IOiuPd/4Cs+yhfo5ueLmz6MhEiP8=;
+        b=CumLLcr9lywzgXnMXTveUfeah0KmFTnS/nTEjBJB/C2sT0B+Qxpn2rLw2yfSfJWgHf
+         2NBRBuGd7qO26YwkSmccS2xmH95c6fikeAoxrkshieiJlB/rzvGI70tePOJQH8XlKb2m
+         9rKSF5vrPBI0xdhAhYXzI2zSmPjqW83I4glOxLF0wlxY5NpekdbFTCC+4tmlIIT99so+
+         b/E6lf7QBevD317zxkTGIVTAHF93KoOt5080oD19UxCP7KNKnjiV0jIehAlxD/FN+FmT
+         xa8dPVaDZKl887YK1ZXtiVHm5MtF6tXuADclrphKOU+wSn2gAYPfG6GI1Zbg30Lc6fvn
+         SxLQ==
+X-Gm-Message-State: APjAAAWpNr1C7GCC71lwfCvbR9s9ry3Qh5YXnCT64q/TbBwZYbHSevZj
+        S9Gwpo/LcE448giRNxE4vHY6fl5rtpzeLI4iFMqRfsPz
+X-Google-Smtp-Source: APXvYqzFmByrgwsxRHl2fyT5JN2VDyxbZKmFDEXQJsEg5w4zcFYsd2QNtvlLiCYLZRmHt2QDWJqiQGPF9D1S2pBjROw=
+X-Received: by 2002:a05:6638:1f2:: with SMTP id t18mr895443jaq.67.1569263697796;
+ Mon, 23 Sep 2019 11:34:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190920134609.GA2113@pc> <CALCETrWvE5es3i+to33y6jw=Yf0Tw6ZfV-6QWjZT5v0fo76tWw@mail.gmail.com>
- <CAHk-=wgW8rN2EVL_Rdn63V9vQO0GkZ=RQFeqqsYJM==8fujpPg@mail.gmail.com>
- <CALCETrV=4TX2a4uV5t2xOFzv+zM_jnOtMLJna8Vb7uXz6S=wSw@mail.gmail.com>
- <CAHk-=wjpTWgpo6d24pTv+ubfea_uEomX-sHjjOkdACfV-8Nmkg@mail.gmail.com> <87blvefai7.fsf@oldenburg2.str.redhat.com>
-In-Reply-To: <87blvefai7.fsf@oldenburg2.str.redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 23 Sep 2019 11:33:21 -0700
-X-Gmail-Original-Message-ID: <CALCETrWM9opVj+BBrHnnTakTLunW_fB9RM+VSNpNSkR9drDjMw@mail.gmail.com>
-Message-ID: <CALCETrWM9opVj+BBrHnnTakTLunW_fB9RM+VSNpNSkR9drDjMw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/1] random: WARN on large getrandom() waits and
- introduce getrandom2()
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
+References: <20190923175211.2060-1-brgl@bgdev.pl> <b3a3ca68-45ab-c60a-7f48-636b102b32c1@axentia.se>
+In-Reply-To: <b3a3ca68-45ab-c60a-7f48-636b102b32c1@axentia.se>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 23 Sep 2019 20:34:46 +0200
+Message-ID: <CAMRc=MfEtSg9eABT5Zb=KQWqXn4BiWxC9eTibSSMAOnHMw8DGQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:07 PM Florian Weimer <fweimer@redhat.com> wrote:
+pon., 23 wrz 2019 o 20:30 Peter Rosin <peda@axentia.se> napisa=C5=82(a):
 >
-> * Linus Torvalds:
->
-> > Violently agreed. And that's kind of what the GRND_EXPLICIT is really
-> > aiming for.
+> On 2019-09-23 19:52, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> > However, it's worth noting that nobody should ever use GRND_EXPLICIT
-> > directly. That's just the name for the bit. The actual users would use
-> > GRND_INSECURE or GRND_SECURE.
+> > Convert the binding document for at24 EEPROMs from txt to yaml. The
+> > compatible property uses a regex pattern to address all the possible
+> > combinations of "vendor,model" strings.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../devicetree/bindings/eeprom/at24.txt       |  90 +--------------
+> >  .../devicetree/bindings/eeprom/at24.yaml      | 107 ++++++++++++++++++
+> >  MAINTAINERS                                   |   2 +-
+> >  3 files changed, 109 insertions(+), 90 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Docume=
+ntation/devicetree/bindings/eeprom/at24.txt
+> > index 22aead844d0f..c94acbb8cb0c 100644
+> > --- a/Documentation/devicetree/bindings/eeprom/at24.txt
+> > +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+> > @@ -1,89 +1 @@
+> > -EEPROMs (I2C)
+> > -
+> > -Required properties:
+> > -
+> > -  - compatible: Must be a "<manufacturer>,<model>" pair. The following=
+ <model>
+> > -                values are supported (assuming "atmel" as manufacturer=
+):
+> > -
+> > -                "atmel,24c00",
+> > -                "atmel,24c01",
+> > -                "atmel,24cs01",
+> > -                "atmel,24c02",
+> > -                "atmel,24cs02",
+> > -                "atmel,24mac402",
+> > -                "atmel,24mac602",
+> > -                "atmel,spd",
+> > -                "atmel,24c04",
+> > -                "atmel,24cs04",
+> > -                "atmel,24c08",
+> > -                "atmel,24cs08",
+> > -                "atmel,24c16",
+> > -                "atmel,24cs16",
+> > -                "atmel,24c32",
+> > -                "atmel,24cs32",
+> > -                "atmel,24c64",
+> > -                "atmel,24cs64",
+> > -                "atmel,24c128",
+> > -                "atmel,24c256",
+> > -                "atmel,24c512",
+> > -                "atmel,24c1024",
+> > -                "atmel,24c2048",
+> > -
+> > -                If <manufacturer> is not "atmel", then a fallback must=
+ be used
+> > -                with the same <model> and "atmel" as manufacturer.
+> > -
+> > -                Example:
+> > -                        compatible =3D "microchip,24c128", "atmel,24c1=
+28";
+> > -
+> > -                Supported manufacturers are:
+> > -
+> > -                "catalyst",
+> > -                "microchip",
+> > -                "nxp",
+> > -                "ramtron",
+> > -                "renesas",
+> > -                "rohm",
+> > -                "st",
+> > -
+> > -                Some vendors use different model names for chips which=
+ are just
+> > -                variants of the above. Known such exceptions are liste=
+d below:
+> > -
+> > -                "nxp,se97b" - the fallback is "atmel,24c02",
+> > -                "renesas,r1ex24002" - the fallback is "atmel,24c02"
+> > -                "renesas,r1ex24016" - the fallback is "atmel,24c16"
+> > -                "renesas,r1ex24128" - the fallback is "atmel,24c128"
+> > -                "rohm,br24t01" - the fallback is "atmel,24c01"
+> > -
+> > -  - reg: The I2C address of the EEPROM.
+> > -
+> > -Optional properties:
+> > -
+> > -  - pagesize: The length of the pagesize for writing. Please consult t=
+he
+> > -              manual of your device, that value varies a lot. A wrong =
+value
+> > -              may result in data loss! If not specified, a safety valu=
+e of
+> > -              '1' is used which will be very slow.
+> > -
+> > -  - read-only: This parameterless property disables writes to the eepr=
+om.
+> > -
+> > -  - size: Total eeprom size in bytes.
+> > -
+> > -  - no-read-rollover: This parameterless property indicates that the
+> > -                      multi-address eeprom does not automatically roll=
+ over
+> > -                      reads to the next slave address. Please consult =
+the
+> > -                      manual of your device.
+> > -
+> > -  - wp-gpios: GPIO to which the write-protect pin of the chip is conne=
+cted.
+> > -
+> > -  - address-width: number of address bits (one of 8, 16).
+> > -
+> > -  - num-addresses: total number of i2c slave addresses this device tak=
+es
+> > -
+> > -Example:
+> > -
+> > -eeprom@52 {
+> > -     compatible =3D "atmel,24c32";
+> > -     reg =3D <0x52>;
+> > -     pagesize =3D <32>;
+> > -     wp-gpios =3D <&gpio1 3 0>;
+> > -     num-addresses =3D <8>;
+> > -};
+> > +This file has been moved to at24.yaml.
+> > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Docum=
+entation/devicetree/bindings/eeprom/at24.yaml
+> > new file mode 100644
+> > index 000000000000..28c8b068c8a1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > @@ -0,0 +1,107 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright 2019 BayLibre SAS
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: I2C EEPROMs compatible with Atmel's AT24
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    additionalItems: true
+> > +    maxItems: 2
+> > +    pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),=
+24(c|cs|mac)[0-9]+$"
+> > +    oneOf:
+> > +      - const: nxp,se97b
+> > +      - const: renesas,r1ex24002
+> > +      - const: renesas,r1ex24016
+> > +      - const: renesas,r1ex24128
+> > +      - const: rohm,br24t01
+> > +    contains:
+> > +      enum:
+> > +        - atmel,24c00
+> > +        - atmel,24c01
+> > +        - atmel,24cs01
+> > +        - atmel,24c02
+> > +        - atmel,24cs02
+> > +        - atmel,24mac402
+> > +        - atmel,24mac602
+> > +        - atmel,spd
+> > +        - atmel,24c04
+> > +        - atmel,24cs04
+> > +        - atmel,24c08
+> > +        - atmel,24cs08
+> > +        - atmel,24c16
+> > +        - atmel,24cs16
+> > +        - atmel,24c32
+> > +        - atmel,24cs32
+> > +        - atmel,24c64
+> > +        - atmel,24cs64
+> > +        - atmel,24c128
+> > +        - atmel,24c256
+> > +        - atmel,24c512
+> > +        - atmel,24c1024
+> > +        - atmel,24c2048
 >
-> Should we switch glibc's getentropy to GRND_EXPLICIT?  Or something
-> else?
+> The previous binding allows more e.g.
 >
-> I don't think we want to print a kernel warning for this function.
+>         compatible =3D "nxp,spd", "atmel,spd";
 >
 
-Contemplating this question, I think the answer is that we should just
-not introduce GRND_EXPLICIT or anything like it.  glibc is going to
-have to do *something*, and getentropy() is unlikely to just go away.
-The explicitly documented semantics are that it blocks if the RNG
-isn't seeded.
+Ugh, I was thinking about spd and then forgot it anyway. :(
 
-Similarly, FreeBSD has getrandom():
+> which is no longer allowed. That might be a problem? The previous binding
+> also allows less e.g.
+>
+>         compatible =3D "atmel,24c00", "renesas,24mac402";
+>
 
-https://www.freebsd.org/cgi/man.cgi?query=getrandom&sektion=2&manpath=freebsd-release-ports
+Right, but I'm not really sure how to express fallbacks in yaml. Any hint?
 
-and if we make getrandom(..., 0) warn, then we have a situation where
-the *correct* (if regrettable) way to use the function on FreeBSD
-causes a warning on Linux.
+Bart
 
-Let's just add GRND_INSECURE, make the blocking mode work better, and,
-if we're feeling a bit more adventurous, add GRND_SECURE_BLOCKING as a
-better replacement for 0, convince FreeBSD to add it too, and then
-worry about deprecating 0 once we at least get some agreement from the
-FreeBSD camp.
+> which of course is nonsense but AFAIU now allowed.
+>
+> The new formal rules are therefore not "right", and it might be impossibl=
+e
+> to express the subtleties of this weird binding with the current spec so
+> there might be little to do about it? But either way, these issues are no=
+t
+> mentioned neither in the binding nor the commit message. Should they be
+> mentioned?
+>
+> Cheers,
+> Peter
+>
+> > +
+> > +  reg:
+> > +    description:
+> > +      The I2C slave address of the EEPROM.
+> > +    maxItems: 1
+> > +
+> > +  pagesize:
+> > +    description:
+> > +      The length of the pagesize for writing. Please consult the
+> > +      manual of your device, that value varies a lot. A wrong value
+> > +      may result in data loss! If not specified, a safety value of
+> > +      '1' is used which will be very slow.
+> > +    type: integer
+> > +
+> > +  read-only:
+> > +    description:
+> > +      This parameterless property disables writes to the eeprom.
+> > +    type: boolean
+> > +
+> > +  size:
+> > +    description:
+> > +      Total eeprom size in bytes.
+> > +    type: integer
+> > +
+> > +  no-read-rollover:
+> > +    description:
+> > +      This parameterless property indicates that the multi-address
+> > +      eeprom does not automatically roll over reads to the next slave
+> > +      address. Please consult the manual of your device.
+> > +    type: boolean
+> > +
+> > +  wp-gpios:
+> > +    description:
+> > +      GPIO to which the write-protect pin of the chip is connected.
+> > +    maxItems: 1
+> > +
+> > +  address-width:
+> > +    description:
+> > +      Number of address bits (one of 8, 16).
+> > +    type: integer
+> > +
+> > +  num-addresses:
+> > +    description:
+> > +      Total number of i2c slave addresses this device takes.
+> > +    type: integer
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    eeprom@52 {
+> > +        compatible =3D "microchip,24c32", "atmel,24c32";
+> > +        reg =3D <0x52>;
+> > +        pagesize =3D <32>;
+> > +        wp-gpios =3D <&gpio1 3 0>;
+> > +        num-addresses =3D <8>;
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index a400af0501c9..3c7ced686966 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2698,7 +2698,7 @@ M:      Bartosz Golaszewski <bgolaszewski@baylibr=
+e.com>
+> >  L:   linux-i2c@vger.kernel.org
+> >  T:   git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+> >  S:   Maintained
+> > -F:   Documentation/devicetree/bindings/eeprom/at24.txt
+> > +F:   Documentation/devicetree/bindings/eeprom/at24.yaml
+> >  F:   drivers/misc/eeprom/at24.c
+> >
+> >  ATA OVER ETHERNET (AOE) DRIVER
+> >
+>
