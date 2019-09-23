@@ -2,105 +2,105 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A1C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE050C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4609320B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569245703;
-	bh=hXQkKliC0S2X43voVjhiTVkMxCC4tIPV9acNAETqUso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CzXqC4gjbGJBX+z+xpkh5DTv/cYXFpduuDy8oOm0dp7qc12WtL/BnLCWuR+Z2lL1R
-	 y+4fHG4GZhW2q/mL3XDfVVs2CwzVaArvGRn69IEQFtCt8PJge12DZJ4lCofZQQogbv
-	 6QFy9DNnvmYQm9fKRYwr89/tjXQgf4f0qcOjErAU=
+	by mail.kernel.org (Postfix) with ESMTP id 97F3F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408090AbfIWNfC (ORCPT
+        id S2439791AbfIWNgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404581AbfIWNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:35:02 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C0920820;
-        Mon, 23 Sep 2019 13:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569245701;
-        bh=hXQkKliC0S2X43voVjhiTVkMxCC4tIPV9acNAETqUso=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FeeJhFEYpa8NQNgnmMZ03oC875vWZGIk2sDIDJW6viNc1wFklKbOaxWAIJZiDv3z9
-         VPL+5mYyMBGkryM57asvTYICU4x115rVu0DFVAjBJvQeXxR61BtdSSXkhiv2dR+/em
-         4ofSqLwfC02dVakvOgrS63rQNTOJczJ7yNnUIGkc=
-Date:   Mon, 23 Sep 2019 09:35:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.3 084/203] media: omap3isp: Don't set streaming
- state on random subdevs
-Message-ID: <20190923133500.GF8171@sasha-vm>
-References: <20190922184350.30563-1-sashal@kernel.org>
- <20190922184350.30563-84-sashal@kernel.org>
- <20190923071942.GJ5525@valkosipuli.retiisi.org.uk>
- <20190923072503.GA5056@pendragon.ideasonboard.com>
+        Mon, 23 Sep 2019 09:36:01 -0400
+Received: from www62.your-server.de ([213.133.104.62]:50092 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730669AbfIWNgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:36:00 -0400
+Received: from [178.197.248.15] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iCOVK-0004dR-Id; Mon, 23 Sep 2019 15:35:50 +0200
+Date:   Mon, 23 Sep 2019 15:35:50 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 30/32] tools lib bpf: Renaming pr_warning to pr_warn
+Message-ID: <20190923133550.GA9880@pc-63.home>
+References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
+ <20190920062544.180997-31-wangkefeng.wang@huawei.com>
+ <CAEf4BzbD98xeU2dSrXYkVi+mK=kuq+5DsroNDZwOzBGYbMH1-w@mail.gmail.com>
+ <20190923082039.GA2530@pc-63.home>
+ <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923072503.GA5056@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25581/Mon Sep 23 10:20:21 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:25:03AM +0300, Laurent Pinchart wrote:
->On Mon, Sep 23, 2019 at 10:19:42AM +0300, Sakari Ailus wrote:
->> Hi Sasha,
->>
->> On Sun, Sep 22, 2019 at 02:41:50PM -0400, Sasha Levin wrote:
->> > From: Sakari Ailus <sakari.ailus@linux.intel.com>
->> >
->> > [ Upstream commit 7ef57be07ac146e70535747797ef4aee0f06e9f9 ]
->> >
->> > The streaming state should be set to the first upstream sub-device only,
->> > not everywhere, for a sub-device driver itself knows how to best control
->> > the streaming state of its own upstream sub-devices.
->> >
->> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->> I don't disagree with this going to the stable trees as well, but in that
->> case it *must* be accompanied by commit e9eb103f0277 ("media: omap3isp: Set
->> device on omap3isp subdevs") or the driver will mostly cease to work.
->>
->> Could you pick that up as well?
->
->While I don't disagree either, I also think there's no requirement to
->get this commit backported to stable branches. It seems to be the result
->of a too aggressive auto-selection.
+On Mon, Sep 23, 2019 at 01:03:06PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-23 10:20:39, Daniel Borkmann wrote:
+> > On Sun, Sep 22, 2019 at 02:07:21PM -0700, Andrii Nakryiko wrote:
+> > > On Fri, Sep 20, 2019 at 10:06 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+> > > >
+> > > > For kernel logging macro, pr_warning is completely removed and
+> > > > replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
+> > > > to kernel logging macro, then we could drop pr_warning in the
+> > > > whole linux code.
+> > > >
+> > > > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> > > > ---
+> > > >  tools/lib/bpf/btf.c             |  56 +--
+> > > >  tools/lib/bpf/btf_dump.c        |  20 +-
+> > > >  tools/lib/bpf/libbpf.c          | 652 ++++++++++++++++----------------
+> > > >  tools/lib/bpf/libbpf_internal.h |   2 +-
+> > > >  tools/lib/bpf/xsk.c             |   4 +-
+> > > >  5 files changed, 363 insertions(+), 371 deletions(-)
+> > > 
+> > > Thanks! This will allow to get rid of tons warnings from checkpatch.pl.
+> > > 
+> > > Alexei, Daniel, can we take this through bpf-next tree once it's open?
+> > 
+> > I'd be fine with that, in fact, it probably should be in order to avoid
+> > merge conflicts since pr_warn{ing}() is used all over the place in libbpf.
+> 
+> The entire patchset modifies many files all over the tree.
+> This is from https://lkml.kernel.org/r/20190920062544.180997-1-wangkefeng.wang@huawei.com
+> 
+>     120 files changed, 882 insertions(+), 927 deletions(-)
+> 
+> Would it make sense to push everything at the end of the merge window
+> or for 5.4-rc2 after master settles down?
 
-I'd very much agree that AUTOSEL is trying to be aggressive with it's
-patch selection (it's actually sort of like a "dial" I can adjust and
-now it's adjusted pretty high).
+If all over the tree it would probably make more sense for e.g. Andrew Morton to
+pick it up if there are no other objections, and try to merge it during mentioned
+time frame.
 
-However, please don't see it as something that is forced on you; if the
-maintainers disagree with patch selection please just let me know and it
-will dropped. The only reason I'm being aggressive with AUTOSEL is that
-I'm hopefull it will provide better experience for our users.
-
---
 Thanks,
-Sasha
+Daniel
