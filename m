@@ -2,218 +2,127 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA9C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89412C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0692920835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A9620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407530AbfIWLnt (ORCPT
+        id S2439014AbfIWLqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:43:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41994 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbfIWLns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:43:48 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 77850300CA4B;
-        Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E23345D9E2;
-        Mon, 23 Sep 2019 11:43:44 +0000 (UTC)
-Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
-From:   David Hildenbrand <david@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        linux-hyperv@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20190909114830.662-1-david@redhat.com>
- <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
- <20190923085807.GD6016@dhcp22.suse.cz>
- <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
- <20190923111559.GK6016@dhcp22.suse.cz>
- <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <388fdfa4-6cd9-bfcd-3f7b-546e54c11a97@redhat.com>
-Date:   Mon, 23 Sep 2019 13:43:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
+        Mon, 23 Sep 2019 07:46:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54678 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726146AbfIWLqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:46:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0BB35AFCC;
+        Mon, 23 Sep 2019 11:46:49 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v6 0/4] Use MFD framework for SGI IOC3 drivers
+Date:   Mon, 23 Sep 2019 13:46:30 +0200
+Message-Id: <20190923114636.6748-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.09.19 13:34, David Hildenbrand wrote:
-> On 23.09.19 13:15, Michal Hocko wrote:
->> On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
->>> On 23.09.19 10:58, Michal Hocko wrote:
->>>> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
->>>>> On 09.09.19 13:48, David Hildenbrand wrote:
->>>>>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
->>>>>>
->>>>>> Let's replace the __online_page...() functions by generic_online_page().
->>>>>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
->>>>>> can simpy re-use the generic function.
->>>>>>
->>>>>> Only compile-tested.
->>>>>>
->>>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
->>>>>>
->>>>>> David Hildenbrand (3):
->>>>>>   mm/memory_hotplug: Export generic_online_page()
->>>>>>   hv_balloon: Use generic_online_page()
->>>>>>   mm/memory_hotplug: Remove __online_page_free() and
->>>>>>     __online_page_increment_counters()
->>>>>>
->>>>>>  drivers/hv/hv_balloon.c        |  3 +--
->>>>>>  include/linux/memory_hotplug.h |  4 +---
->>>>>>  mm/memory_hotplug.c            | 17 ++---------------
->>>>>>  3 files changed, 4 insertions(+), 20 deletions(-)
->>>>>>
->>>>>
->>>>> Ping, any comments on this one?
->>>>
->>>> Unification makes a lot of sense to me. You can add
->>>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>>
->>>> I will most likely won't surprise if I asked for more here though ;)
->>>
->>> I'm not surprised, but definitely not in a negative sense ;) I was
->>> asking myself if we could somehow rework this, too.
->>>
->>>> I have to confess I really detest the whole concept of a hidden callback
->>>> with a very weird API. Is this something we can do about? I do realize
->>>> that adding a callback would require either cluttering the existing APIs
->>>> but maybe we can come up with something more clever. Or maybe existing
->>>> external users of online callback can do that as a separate step after
->>>> the online is completed - or is this impossible due to locking
->>>> guarantees?
->>>>
->>>
->>> The use case of this (somewhat special) callback really is to avoid
->>> selected (unbacked in the hypervisor) pages to get put to the buddy just
->>> now, but instead to defer that (sometimes, defer till infinity ;) ).
->>> Especially, to hinder these pages from getting touched at all. Pages
->>> that won't be put to the buddy will usually get PG_offline set (e.g.,
->>> Hyper-V and XEN) - the only two users I am aware of.
->>>
->>> For Hyper-V (and also eventually virtio-mem), it is important to set
->>> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
->>> Only this way, PG_offline is properly set on all pfn_to_online_page()
->>> pages, meaning "don't touch this page" - e.g., used to skip over such
->>> pages when suspending or by makedumpfile to skip over such offline pages
->>> when creating a memory dump.
->>
->> Thanks for the clarification. I have never really studied what those
->> callbacks are doing really.
->>
->>> So if we would e.g., try to piggy-back onto the memory_notify()
->>> infrastructure, we could
->>> 1. Online all pages to the buddy (dropping the callback)
->>> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
->>> -> in the notifier, pull pages from the buddy, mark sections online
->>> 3. Set all involved sections online (online_mem_sections())
->>
->> This doesn't really sound any better. For one pages are immediately
->> usable when they hit the buddy allocator so this is racy and thus not
->> reliable.
->>
->>> However, I am not sure what actually happens after 1. - we are only
->>> holding the device hotplug lock and the memory hotplug lock, so the
->>> pages can just get allocated. Also, it sounds like more work and code
->>> for the same end result (okay, if the rework is really necessary, though).
->>>
->>> So yeah, while the current callback might not be optimal, I don't see an
->>> easy and clean way to rework this. With the change in this series we are
->>> at least able to simply defer doing what would have been done without
->>> the callback - not perfect but better.
->>>
->>> Do you have anything in mind that could work out and make this nicer?
->>
->> I am wondering why those pages get onlined when they are, in fact,
->> supposed to be offline.
->>
-> 
-> It's the current way of emulating sub-memory-block hotplug on top of the
-> memory bock device API we have. Hyper-V and XEN have been using that for
-> a long time.
-> 
+SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
+NIC (number in a can), GPIO and a byte  bus. By attaching a
+SuperIO chip to it, it also supports serial lines and a parallel
+port. The chip is used on a variety of SGI systems with different
+configurations. This patchset moves code out of the network driver,
+which doesn't belong there, into its new place a MFD driver and
+specific platform drivers for the different subfunctions.
 
-So one idea would be to let clients set pages to PG_offline during
-MEM_GOING_ONLINE. We could then skip any PG_offline pages when onlining
-pages, not onlining them to the buddy.
+Changes in v6:
+ - dropped patches accepted for v5.4-rc1
+ - moved serio patch to ip30 patch series
+ - adapted nvmem patch
 
-But then, there still has to be a way to online pages when required -
-e.g., generic_online_page(). At least the callback could go.
+Changes in v5:
+ - requested by Jakub I've splited ioc3 ethernet driver changes into
+   more steps to make the transition more visible; on the way there 
+   I've "checkpatched" the driver and reduced code reorderings
+ - dropped all uint16_t and uint32_t
+ - added nvmem API extension to the documenation file
+ - changed to use request_irq/free_irq in serio driver
+ - removed wrong kfree() in serio error path
+
+Changes in v4:
+ - added w1 drivers to the series after merge in 5.3 failed because
+   of no response from maintainer and other parts of this series
+   won't work without that drivers
+ - moved ip30 systemboard support to the ip30 series, which will
+   deal with rtc oddity Lee found
+ - converted to use devm_platform_ioremap_resource
+ - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
+ - fixed reverse christmas order in ioc3-eth.c
+ - formating issue found by Lee
+ - re-worked irq request/free in serio driver to avoid crashes during
+   probe/remove
+
+Changes in v3:
+ - use 1-wire subsystem for handling proms
+ - pci-xtalk driver uses prom information to create PCI subsystem
+   ids for use in MFD driver
+ - changed MFD driver to only use static declared mfd_cells
+ - added IP30 system board setup to MFD driver
+ - mac address is now read from ioc3-eth driver with nvmem framework
+
+Changes in v2:
+ - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
+ - merged IP27 RTC removal and 8250 serial driver addition into
+   main MFD patch to keep patches bisectable
+
+Thomas Bogendoerfer (4):
+  nvmem: core: add nvmem_device_find
+  MIPS: PCI: use information from 1-wire PROM for IOC3 detection
+  mfd: ioc3: Add driver for SGI IOC3 chip
+  MIPS: SGI-IP27: fix readb/writeb addressing
+
+ Documentation/driver-api/nvmem.rst            |   2 +
+ arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
+ arch/mips/include/asm/pci/bridge.h            |   1 +
+ arch/mips/include/asm/sn/ioc3.h               |  47 ++-
+ arch/mips/pci/pci-xtalk-bridge.c              | 135 +++++-
+ arch/mips/sgi-ip27/ip27-timer.c               |  20 -
+ arch/mips/sgi-ip27/ip27-xtalk.c               |  38 +-
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ioc3.c                            | 585 ++++++++++++++++++++++++++
+ drivers/net/ethernet/sgi/Kconfig              |   4 +-
+ drivers/net/ethernet/sgi/ioc3-eth.c           | 561 +++++-------------------
+ drivers/nvmem/core.c                          |  61 ++-
+ drivers/rtc/rtc-m48t35.c                      |  11 +
+ drivers/tty/serial/8250/8250_ioc3.c           |  98 +++++
+ drivers/tty/serial/8250/Kconfig               |  11 +
+ drivers/tty/serial/8250/Makefile              |   1 +
+ include/linux/nvmem-consumer.h                |   9 +
+ 18 files changed, 1054 insertions(+), 548 deletions(-)
+ create mode 100644 drivers/mfd/ioc3.c
+ create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
 
 -- 
+2.13.7
 
-Thanks,
-
-David / dhildenb
