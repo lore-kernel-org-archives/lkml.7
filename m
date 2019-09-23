@@ -2,135 +2,266 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15BCC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E879AC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81B620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="abcoxhvN"
+	by mail.kernel.org (Postfix) with ESMTP id B921320820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407481AbfIWOUN (ORCPT
+        id S2407921AbfIWOUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:20:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36434 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407008AbfIWOUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:20:13 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so13925167ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:20:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
-        b=abcoxhvNE4QzsWdjpcm4fIk+YAxDnJvfoFRGb46mpPwEFg0aOpeJ0eaheg3tZgT4ZG
-         ojpl8m/oDAh+qYbzYsIcSeNXc5m5DY3mfdWvxLXTBeWP7wfLsaIXItCLI6UZUPW+vtJ1
-         VGOT858b8NEkfBIvrgsoW5+e3A7n18FZCZM84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
-        b=LAtc8ShgXk2+0UKtsHYeivajA3MhggtFWOJi6VA/piH+qHMeBPhcfjn+W/nDoll6WD
-         AMZDUx4moceBEnSsLG3oofO4KU979FnzuXFGSUeHnmfHM81ApXPz6Ddx43KO7Vcm1ygu
-         daHdw9601BUvAfUeIca34Ogt+JbkV8Id/9l8U95nPB8a7VNomKa7V2sF07NoN43vwBpz
-         qZKF3lqUjN73CWOnpCmfmht+mpnS5yflrwNAzirt0YbgoHNQrjO8bmzYpmcU/xc+UkhE
-         DKW6vs0w5IMHaRmw8tDAAkMcbor3jrlVxewfjlaRIGX0QOO6XDRih5/gLCXchiQoCJNd
-         tVjg==
-X-Gm-Message-State: APjAAAUprvBtbLKeNA4YCS84MeOXMA05jQm7BnRMVAI2Ph9ZbSYhr8tm
-        bJhdKyC+MwpIcjG3xqjbk29UuyCZ+X7So4nV
-X-Google-Smtp-Source: APXvYqy+Ki9LgN+TwomD1Y4hGoRYgJaAEevteVNzRvde3/6GQAoELKo5qYA33O6wCDX/Pq8W4P59VQ==
-X-Received: by 2002:a2e:3902:: with SMTP id g2mr17815555lja.196.1569248411411;
-        Mon, 23 Sep 2019 07:20:11 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id b21sm2230125lff.96.2019.09.23.07.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 07:20:10 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: devicetree.c: remove orphan pinctrl_dt_has_hogs()
-Date:   Mon, 23 Sep 2019 16:20:05 +0200
-Message-Id: <20190923142005.5632-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
+        Mon, 23 Sep 2019 10:20:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:43176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407008AbfIWOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:20:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9C161000;
+        Mon, 23 Sep 2019 07:20:16 -0700 (PDT)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8091C3F59C;
+        Mon, 23 Sep 2019 07:20:14 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 01/12] smp: add generic SMP-stop support to common
+ code
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, mark.rutland@arm.com,
+        peterz@infradead.org, catalin.marinas@arm.com,
+        takahiro.akashi@linaro.org, james.morse@arm.com,
+        hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, will@kernel.org,
+        dave.martin@arm.com, linux-arm-kernel@lists.infradead.org,
+        mingo@redhat.com, x86@kernel.org, dzickus@redhat.com,
+        ehabkost@redhat.com, linux@armlinux.org.uk, davem@davemloft.net,
+        sparclinux@vger.kernel.org, hch@infradead.org
+References: <20190913181953.45748-1-cristian.marussi@arm.com>
+ <20190913181953.45748-2-cristian.marussi@arm.com>
+Message-ID: <1d7e90b7-71d8-3c12-9c1b-7049a1d7e32f@arm.com>
+Date:   Mon, 23 Sep 2019 15:20:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190913181953.45748-2-cristian.marussi@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper pinctrl_dt_has_hogs() was introduced in
-99e4f67508e1 (pinctrl: core: Use delayed work for hogs), but the sole
-use then got removed shortly after in 950b0d91dc10 (pinctrl: core: Fix
-regression caused by delayed work for hogs).
+On 13/09/2019 19:19, Cristian Marussi wrote:
+> There was a lot of code duplication across architectures regarding the
+> SMP stop procedures' logic; moreover some of this duplicated code logic
+> happened to be similarly faulty across a few architectures: while fixing
+> such logic, move such generic logic as much as possible inside common
+> code.
+> 
+> Collect all the common logic related to SMP stop operations into the
+> common SMP code; any architecture willing to use such centralized logic
+> can select CONFIG_ARCH_USE_COMMON_STOP=y and provide the related
+> arch-specific helpers: in such a scenario, those architectures will
+> transparently start using the common code provided by smp_send_stop()
+> common function.
+> 
+> On the other side, Architectures not willing to use common code SMP stop
+> logic will simply leave CONFIG_ARCH_USE_COMMON_STOP undefined and carry
+> on executing their local arch-specific smp_send_stop() as before.
+> 
+> Suggested-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ---
+> v1 --> v2
+> - moved related Kconfig to common code inside arch/Kconfig
+> - introduced additional CONFIG_USE_COMMON_STOP selected by
+>   CONFIG_ARCH_USE_COMMON_STOP
+> - introduced helpers to let architectures optionally alter
+>   the default common code behaviour while waiting for CPUs:
+>   change timeout or wait for ever. (will be needed by x86)
+> ---
+>  arch/Kconfig        |  7 +++++
+>  include/linux/smp.h | 55 +++++++++++++++++++++++++++++++++++++
+>  kernel/smp.c        | 67 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 129 insertions(+)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index a7b57dd42c26..89766e6c0ac8 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -166,6 +166,13 @@ config ARCH_USE_BUILTIN_BSWAP
+>  	 instructions should set this. And it shouldn't hurt to set it
+>  	 on architectures that don't have such instructions.
+>  
+> +config ARCH_USE_COMMON_SMP_STOP
+> +       def_bool n
+> +
+> +config USE_COMMON_SMP_STOP
+> +       depends on SMP && ARCH_USE_COMMON_SMP_STOP
+> +       def_bool y
+> +
+>  config KRETPROBES
+>  	def_bool y
+>  	depends on KPROBES && HAVE_KRETPROBES
+> diff --git a/include/linux/smp.h b/include/linux/smp.h
+> index 6fc856c9eda5..381a14bfcd96 100644
+> --- a/include/linux/smp.h
+> +++ b/include/linux/smp.h
+> @@ -77,6 +77,61 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd);
+>   */
+>  extern void smp_send_stop(void);
+>  
+> +#ifdef CONFIG_USE_COMMON_SMP_STOP
+> +static atomic_t wait_forever;
+> +static atomic_t wait_timeout = ATOMIC_INIT(USEC_PER_SEC);
+> +
+> +/*
+> + * An Architecture can optionally decide to use this helper to change the
+> + * waiting behaviour of common STOP logic, forcing to wait forever for
+> + * all CPUs to be stopped.
+> + */
+> +static inline void smp_stop_set_wait_forever(int wait)
+> +{
+> +	atomic_set(&wait_forever, wait);
+> +	/* ensure wait atomic-op is visible */
+> +	smp_mb__after_atomic();
+> +}
+> +
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- drivers/pinctrl/devicetree.c | 15 ---------------
- drivers/pinctrl/devicetree.h |  7 -------
- 2 files changed, 22 deletions(-)
+These new helpers I added in V2 to let x86 configure wait/timeout SMP common stop behavior
+are in fact deadly broken as of now since based on underlying static header-globals.
+I'll fix in V3.
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 5d6d8b1e9062..6716a406d128 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -166,21 +166,6 @@ static int dt_remember_dummy_state(struct pinctrl *p, const char *statename)
- 	return dt_remember_or_free_map(p, statename, NULL, map, 1);
- }
- 
--bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
--{
--	struct device_node *np;
--	struct property *prop;
--	int size;
--
--	np = pctldev->dev->of_node;
--	if (!np)
--		return false;
--
--	prop = of_find_property(np, "pinctrl-0", &size);
--
--	return prop ? true : false;
--}
--
- int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
- {
- 	struct device_node *np = p->dev->of_node;
-diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
-index 00e645d7fac7..efa80779de4f 100644
---- a/drivers/pinctrl/devicetree.h
-+++ b/drivers/pinctrl/devicetree.h
-@@ -9,8 +9,6 @@ struct of_phandle_args;
- 
- #ifdef CONFIG_OF
- 
--bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev);
--
- void pinctrl_dt_free_maps(struct pinctrl *p);
- int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev);
- 
-@@ -23,11 +21,6 @@ int pinctrl_parse_index_with_args(const struct device_node *np,
- 
- #else
- 
--static inline bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
--{
--	return false;
--}
--
- static inline int pinctrl_dt_to_map(struct pinctrl *p,
- 				    struct pinctrl_dev *pctldev)
- {
--- 
-2.20.1
+Cheers
+
+Cristian
+
+
+> +/*
+> + * An Architecture can optionally decide to use this helper to change the
+> + * waiting timeout of common STOP logic. A ZERO timeout means no timeout
+> + * at all as long as wait_forever was not previously set.
+> + *
+> + * Note that wait_forever and timeout must remain individually selectable:
+> + * so you can temporarily request wait_forever while keeping the same timeout
+> + * settings.
+> + */
+> +static inline void smp_stop_set_wait_timeout_us(unsigned long timeout)
+> +{
+> +	atomic_set(&wait_timeout, timeout);
+> +	/* ensure timeout atomic-op is visible */
+> +	smp_mb__after_atomic();
+> +}
+> +
+> +/* Retrieve the current wait settings. */
+> +static inline bool smp_stop_get_wait_timeout_us(unsigned long *timeout)
+> +{
+> +	if (timeout)
+> +		*timeout = atomic_read(&wait_timeout);
+> +	return atomic_read(&wait_forever);
+> +}
+> +
+> +/*
+> + * Any Architecture willing to use STOP common logic implementation
+> + * MUST at least provide the arch_smp_stop_call() helper which is in
+> + * charge of its own arch-specific CPU-stop mechanism.
+> + */
+> +extern void arch_smp_stop_call(cpumask_t *cpus);
+> +
+> +/*
+> + * An Architecture CAN also provide the arch_smp_cpus_stop_complete()
+> + * dedicated helper, to perform any final arch-specific operation on
+> + * the local CPU once the other CPUs have been successfully stopped.
+> + */
+> +void arch_smp_cpus_stop_complete(void);
+> +#endif
+> +
+>  /*
+>   * sends a 'reschedule' event to another CPU:
+>   */
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 7dbcb402c2fc..72f99bf13fd0 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/sched/idle.h>
+>  #include <linux/hypervisor.h>
+> +#include <linux/delay.h>
+>  
+>  #include "smpboot.h"
+>  
+> @@ -817,3 +818,69 @@ int smp_call_on_cpu(unsigned int cpu, int (*func)(void *), void *par, bool phys)
+>  	return sscs.ret;
+>  }
+>  EXPORT_SYMBOL_GPL(smp_call_on_cpu);
+> +
+> +#ifdef CONFIG_USE_COMMON_SMP_STOP
+> +void __weak arch_smp_cpus_stop_complete(void) { }
+> +
+> +static inline bool any_other_cpus_online(cpumask_t *mask,
+> +					 unsigned int this_cpu_id)
+> +{
+> +	cpumask_copy(mask, cpu_online_mask);
+> +	cpumask_clear_cpu(this_cpu_id, mask);
+> +
+> +	return !cpumask_empty(mask);
+> +}
+> +
+> +/*
+> + * This centralizes the common logic to:
+> + *
+> + *  - evaluate which CPUs are online and needs to be notified for stop,
+> + *    while considering properly the status of the calling CPU
+> + *
+> + *  - call the arch-specific helpers to request the effective stop
+> + *
+> + *  - wait for the stop operation to be completed across all involved CPUs
+> + *    monitoring the cpu_online_mask
+> + */
+> +void smp_send_stop(void)
+> +{
+> +	unsigned int this_cpu_id;
+> +	cpumask_t mask;
+> +
+> +	this_cpu_id = smp_processor_id();
+> +	if (any_other_cpus_online(&mask, this_cpu_id)) {
+> +		bool wait;
+> +		unsigned long timeout;
+> +		unsigned int this_cpu_online = cpu_online(this_cpu_id);
+> +
+> +		if (system_state <= SYSTEM_RUNNING)
+> +			pr_crit("stopping secondary CPUs\n");
+> +		arch_smp_stop_call(&mask);
+> +
+> +		/*
+> +		 * Defaults to wait up to one second for other CPUs to stop;
+> +		 * architectures can modify the default timeout or request
+> +		 * to wait forever.
+> +		 *
+> +		 * Here we rely simply on cpu_online_mask to sync with
+> +		 * arch-specific stop code without bloating the code with an
+> +		 * additional atomic_t ad-hoc counter.
+> +		 *
+> +		 * As a consequence we'll need proper explicit memory barriers
+> +		 * in case the other CPUs running the arch-specific stop-code
+> +		 * would need to commit to memory some data (like saved_regs).
+> +		 */
+> +		wait = smp_stop_get_wait_timeout_us(&timeout);
+> +		while (num_online_cpus() > this_cpu_online &&
+> +		       (wait || timeout--))
+> +			udelay(1);
+> +		/* ensure any stopping-CPUs memory access is made visible */
+> +		smp_rmb();
+> +		if (num_online_cpus() > this_cpu_online)
+> +			pr_warn("failed to stop secondary CPUs %*pbl\n",
+> +				cpumask_pr_args(cpu_online_mask));
+> +	}
+> +	/* Perform final (possibly arch-specific) work on this CPU */
+> +	arch_smp_cpus_stop_complete();
+> +}
+> +#endif
+> 
 
