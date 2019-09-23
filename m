@@ -2,206 +2,107 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3043C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3C7C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D168217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vtr+dwiI"
+	by mail.kernel.org (Postfix) with ESMTP id 6251B2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569266263;
+	bh=HSTtGYfqyQ7E2gn/3lA+KpauEkGyRLGkzwWNcYJ0b6c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C88JO8ZNlhbZyzdKwp2rE4MrVRKgsR2YABxs+ndoDNrdtQpVUKLjUfH/Dwmo/t8c7
+	 dk660hdAWr1xGgrAVk5Zks5PvBlet2kKqm8VopYTyFlhgsYJP5d6dD//NL9syRI7pE
+	 0T9OBnZ6w+o1qDdfiG++7hRV2bH0Ql+AG5H+Mk4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733270AbfIWTQg (ORCPT
+        id S1733288AbfIWTRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:16:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36694 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727284AbfIWTQg (ORCPT
+        Mon, 23 Sep 2019 15:17:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36754 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfIWTRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:16:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m18so10502086wmc.1;
-        Mon, 23 Sep 2019 12:16:34 -0700 (PDT)
+        Mon, 23 Sep 2019 15:17:42 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x80so11034292lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N70iF5Ril6x+kuthj8owD8WnByk3GKR1KwVknhgziqU=;
-        b=Vtr+dwiIKuQXiTZgLPj4hl0kz+dzNFsR+hqcNBFDW1cVsTXQep+fbZMAU+8ju7Gax6
-         KeheXQJmc1K25xdMbr6V+n4XAKwyZDNmqYPR71TD38unLK7dMvP0N8fU/72JpcVTGwxq
-         pCowQWgcKtkdGnYId6LE2v0+uGmpauqCD8jtJ/ki6rL6HhmGu0J2Hd7nF/ftTw6XKvoN
-         oUXjZYnmm669opWAoZP5rIMP4Y33t2dANKkholNH8D6+ImmZBJ9b2GS5EiCVOWKfieQC
-         HSHOt6l0ZYqN5r0OrcrzK2dWYZgDNPTKmcGtfyF2+zFXe2Jk5s8txvAptiNMsZ9dg0L5
-         FqVA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrRLQn3RzqvLOL/i6mhPpJ10+RmKd1euOe+YMl2OYp0=;
+        b=f1ffZU2sPanOCuHiBceitjTlbhQE9vji8lZ1iD711xp+ldw6uJgEuKLN8+GC7Byalb
+         nwAAiPg7+uP3R5SZCV+80m9S4HOJl9DPeuyxvFQv5NWy9NXmONOgY1hB9hDLeuHfYCdW
+         +1/jkugNzglnZ4KwGRBl0e6c1DD4gcxsNkFuY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N70iF5Ril6x+kuthj8owD8WnByk3GKR1KwVknhgziqU=;
-        b=Ae7V7zM9Eurs8WChlTxwT5aIiSPBNen810fKf+ZRMACFW4NHVHHRCbtyxi+IOW2NHa
-         L7pWIouDyq9RFbaKIXmeE1ZDz0tYyNXON9/gGuBwjGjGBWHV2IfxhBjmFQBWXFB5sP7C
-         ZnRt5YR51ee8ZRkqveKu+x58suthN4M9Xia/+rXwQNhBDcTrhdWbsFqSKnwaRDSx8uZp
-         Bgt6lmBk4tqaov38ICpE2v5wfyryk8/mPh21B3HVtboVx7PXhKhuc/MDSuiwzOvk1iSX
-         gne1WdD8BBct2uJqxL9wFHwC5wRU42qSugmXSPWXZIXr5razDlVMT0N3UNAAFdSMgvE0
-         Lbsw==
-X-Gm-Message-State: APjAAAWQu7kh9VqsBXsKPOkxgnmizZB8/eRgjnuCUDgJZMAn8Qw/rc2j
-        AQiys1KdAGmbGIrwwKmDfxfL0EboAaJUbw==
-X-Google-Smtp-Source: APXvYqxljmMAEInhWmJYkQWWGT84zJm46FmLzQjSt99ud97QP62BxVPMRy6+h1u4JbXwo4frrDLQKA==
-X-Received: by 2002:a1c:a94b:: with SMTP id s72mr853673wme.9.1569266193606;
-        Mon, 23 Sep 2019 12:16:33 -0700 (PDT)
-Received: from scw-93ddc8.cloud.online.net ([2001:bc8:4400:2400::302d])
-        by smtp.gmail.com with ESMTPSA id r28sm24038655wrr.94.2019.09.23.12.16.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 12:16:33 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 19:16:26 +0000
-From:   Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     stefanha@redhat.com, davem@davemloft.net, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] VSOCK: add support for MSG_PEEK
-Message-ID: <20190923191626.GA2342@scw-93ddc8.cloud.online.net>
-References: <1569174507-15267-1-git-send-email-matiasevara@gmail.com>
- <20190923075830.a6sjwffnkljmyyqm@steredhat>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrRLQn3RzqvLOL/i6mhPpJ10+RmKd1euOe+YMl2OYp0=;
+        b=P50pUsPBVUbvVP4vltgwVfqNlGzY6seXAnoiAt4CmdhbSqX3F9jNz8UtRD+y+7IkB6
+         RFXMYLc+8KJ3/3EfSUAyoklmyakFzQJ3t05vP/SQd6xgfOSwRLln0KElW8s7k9gS1pig
+         gAnEusKWDkYqvktbWVooji//5KWOmWdoHA5Ok3bSnXJXr7YIX7lS1T6kHVPsizKsr3J+
+         2KhQVs3OaMdK18yOwP//878lwYb/h756v8wJ9pdljqA9V/sQmi9ZnvRJ5viW8zqwizQY
+         fKTxuAxYTaUYUW3LujaehrEhMPAdRjY9bmOL5hwB6FIYLkU9f9tS7daP7HWe9usHKlXw
+         eCNg==
+X-Gm-Message-State: APjAAAX+4WRrc6Yl8BH+FGRJ4r2oRjF41pbnA2Z+nwPZr8NffDHTICev
+        e67c7rFJ+lsw27fuitb6Kju96jKjO/E=
+X-Google-Smtp-Source: APXvYqzK2dU34889JQ7TczvVoWoOb3nJR7HfoHYRYIyLzEQHW7GaPR8i4TP9k2hSrxCF0IA0DTPolQ==
+X-Received: by 2002:ac2:568c:: with SMTP id 12mr644601lfr.133.1569266259990;
+        Mon, 23 Sep 2019 12:17:39 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id k23sm2525253ljc.13.2019.09.23.12.17.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 12:17:39 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id t8so10968116lfc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:17:38 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr684575lfp.134.1569266258665;
+ Mon, 23 Sep 2019 12:17:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923075830.a6sjwffnkljmyyqm@steredhat>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <d2418da0-056b-2e6f-ae40-acdfa842e341@schaufler-ca.com>
+In-Reply-To: <d2418da0-056b-2e6f-ae40-acdfa842e341@schaufler-ca.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 23 Sep 2019 12:17:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whNEGetrwyShSLP_5nCA2+YTR9kdNFw7aLua9jaR-YvJg@mail.gmail.com>
+Message-ID: <CAHk-=whNEGetrwyShSLP_5nCA2+YTR9kdNFw7aLua9jaR-YvJg@mail.gmail.com>
+Subject: Re: [GIT PULL] Smack patches for v5.4
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 09:58:30AM +0200, Stefano Garzarella wrote:
-> Hi Matias,
-> thanks for this patch!
-> 
-> Since this patch only concerns virtio_transport,
-> I'd use the 'vsock/virtio' prefix in the commit title:
-> "vsock/virtio: add support for MSG_PEEK"
-> 
-> Some comments below:
-> 
-> On Sun, Sep 22, 2019 at 05:48:27PM +0000, Matias Ezequiel Vara Larsen wrote:
-> > This patch adds support for MSG_PEEK. In such a case, packets are not
-> > removed from the rx_queue and credit updates are not sent.
-> > 
-> > Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
-> > ---
-> >  net/vmw_vsock/virtio_transport_common.c | 59 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 56 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> > index 94cc0fa..830e890 100644
-> > --- a/net/vmw_vsock/virtio_transport_common.c
-> > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > @@ -264,6 +264,59 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
-> >  }
-> >  
-> >  static ssize_t
-> > +virtio_transport_stream_do_peek(struct vsock_sock *vsk,
-> > +				struct msghdr *msg,
-> > +				size_t len)
-> > +{
-> > +	struct virtio_vsock_sock *vvs = vsk->trans;
-> > +	struct virtio_vsock_pkt *pkt;
-> > +	size_t bytes, off = 0, total = 0;
-> > +	int err = -EFAULT;
-> > +
-> > +	spin_lock_bh(&vvs->rx_lock);
-> > +
-> 
-> What about using list_for_each_entry() to cycle through the queued packets?
-> 
-> > +	if (list_empty(&vvs->rx_queue)) {
-> > +		spin_unlock_bh(&vvs->rx_lock);
-> > +		return 0;
-> > +	}
-> > +
-> > +	pkt = list_first_entry(&vvs->rx_queue,
-> > +			       struct virtio_vsock_pkt, list);
-> > +	do {
-> 
-> pkt->off contains the offset inside the packet where the unread data starts.
-> So here we should initialize 'off':
-> 
-> 		off = pkt->off;
-> 
-> Or just use pkt->off later (without increasing it as in the dequeue).
-> 
-> > +		bytes = len - total;
-> > +		if (bytes > pkt->len - off)
-> > +			bytes = pkt->len - off;
-> > +
-> > +		/* sk_lock is held by caller so no one else can dequeue.
-> > +		 * Unlock rx_lock since memcpy_to_msg() may sleep.
-> > +		 */
-> > +		spin_unlock_bh(&vvs->rx_lock);
-> > +
-> > +		err = memcpy_to_msg(msg, pkt->buf + off, bytes);
-> > +		if (err)
-> > +			goto out;
-> > +
-> > +		spin_lock_bh(&vvs->rx_lock);
-> > +
-> > +		total += bytes;
-> 
-> Using list_for_each_entry(), here we can just do:
-> (or better, at the beginning of the cycle)
-> 
-> 		if (total == len)
-> 			break;
-> 
-> removing the next part...
-> 
-> > +		off += bytes;
-> > +		if (off == pkt->len) {
-> > +			pkt = list_next_entry(pkt, list);
-> > +			off = 0;
-> > +		}
-> > +	} while ((total < len) && !list_is_first(&pkt->list, &vvs->rx_queue));
-> 
-> ...until here.
-> 
-> > +
-> > +	spin_unlock_bh(&vvs->rx_lock);
-> > +
-> > +	return total;
-> > +
-> > +out:
-> > +	if (total)
-> > +		err = total;
-> > +	return err;
-> > +}
-> > +
-> > +static ssize_t
-> >  virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> >  				   struct msghdr *msg,
-> >  				   size_t len)
-> > @@ -330,9 +383,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
-> >  				size_t len, int flags)
-> >  {
-> >  	if (flags & MSG_PEEK)
-> > -		return -EOPNOTSUPP;
-> > -
-> > -	return virtio_transport_stream_do_dequeue(vsk, msg, len);
-> > +		return virtio_transport_stream_do_peek(vsk, msg, len);
-> > +	else
-> > +		return virtio_transport_stream_do_dequeue(vsk, msg, len);
-> >  }
-> >  EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
-> >  
-> 
-> The rest looks good to me!
-> 
-> Thanks,
-> Stefano
-Thanks Stefano. Based on your comments, I will modify the patch and
-resubmit it.
+On Mon, Sep 23, 2019 at 10:24 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+> This is my first direct pull request. I think I have followed process
+> correctly, but if not I will attend to my error as required.
 
-Matias
+The contents look fine.
+
+However, it's from an open hosting site - github. Which is fine, I
+take pull requests from github all the time.  But I require that they
+be sent using a signed tag, so that I can verify that yes, it's really
+from you.
+
+And no, I don't do pgp email, even t hough I see that there's a
+signature on your email itself.
+
+git uses pgp too, but unlike pgp email signatures, the git support for
+pgp signing is useful and user-friendly and just _works_, rather than
+the complete and useless disaster that is pgp email [1].
+
+So please make it a signed tag with "git tag -s" and ask me to pull
+that tag instead.
+
+                        Linus
+
+[1] https://www.vice.com/en_us/article/vvbw9a/even-the-inventor-of-pgp-doesnt-use-pgp
