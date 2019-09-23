@@ -2,140 +2,220 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A34BC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C801CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D5020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3A120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pka68BAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfIWTIz (ORCPT
+        id S1733105AbfIWTKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:08:55 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6692 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfIWTIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:08:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 12:08:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="213426723"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Sep 2019 12:08:53 -0700
-Date:   Mon, 23 Sep 2019 12:08:53 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-mm@kvack.org
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Lease semantic proposal
-Message-ID: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+        Mon, 23 Sep 2019 15:10:45 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40425 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbfIWTKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:10:44 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x5so18516093qtr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nh5uQxofgjd/HxLCPXYGjgYm+Vw5vt2amQBb4m/iRaw=;
+        b=Pka68BAZvVh68+0J/sNuwZVMZOTXIHn2PTBmmhgSdNoubx8xw0lHmj0BjwW0aDJdKC
+         r+VVFjMFcZILPWNKTCjAYe5rlMj84sI4EV3UR45Nxp/UQ1CGJxPFgjLtOrppk0MG7bcD
+         KrIgb6eTrRJjzc/2Wjx6l/lVuqAYBczzQBb09/wMt0skHLF9pywsVyWssYntmtEorAlX
+         jD7SK/bfBHN3tgEM7jLPexDIfSIoeBVfqwVMlZz1Z05T3RGMGY4a0m7w3ViNLEwwqs00
+         3zorWdJsF6s0aEYwe1ItaN/w4+jUPnIdT94ZMe3f5D9/4SN9+GznVl8m3AkIg+25v55D
+         hQwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nh5uQxofgjd/HxLCPXYGjgYm+Vw5vt2amQBb4m/iRaw=;
+        b=VPp44/7l1r/FO2L4jNFDGQlRKc3BG+NK4MRTjcQIV7B2BSzhyfllIsqTVdHtG8F++Y
+         Sb6lxmdDzVWFHXyLPr2nctiO/9Zhq/P/gmmjg8N2I1+68OF6e569d9P/w6390J6XZbNo
+         xCeltsN991DcnPG37xFi8QxVSFVUE15rqt63ieHaUb8QYHBBYAsoQlyv0GzPHbUeo7dg
+         5XaGDAjS+c/UV+nO8UgfN5U9zxBDhhMEBUs6t/ZLn8xRRSSwzNQ9sXv6LqxUwPyva1VQ
+         JC13lDGFQkSH3t6Z0+WQeMiUeuCNX3YE6Hd1LDzKOfeRXtgFu+hz5VaH9vng/2j4KlvL
+         mJKA==
+X-Gm-Message-State: APjAAAXLPB6a6tZeJJWe+Ct6btCotmgxcJ3SN7PiuBGEZAn067TlXBuD
+        GMG1qV/d0RoUAxTLQP7qDH4=
+X-Google-Smtp-Source: APXvYqy/cWKN12crGTYgtE2FlSKNE5gqE2uo7G43mNK0TPuy9yOXwZc5Yal1ksCJCOIypiOCdc1cng==
+X-Received: by 2002:ac8:7644:: with SMTP id i4mr1754974qtr.62.1569265843026;
+        Mon, 23 Sep 2019 12:10:43 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (189-94-129-1.3g.claro.net.br. [189.94.129.1])
+        by smtp.gmail.com with ESMTPSA id v5sm7796794qtk.66.2019.09.23.12.10.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 12:10:41 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5392F41105; Mon, 23 Sep 2019 16:10:36 -0300 (-03)
+Date:   Mon, 23 Sep 2019 16:10:36 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 32/73] libperf: Move page_size into libperf
+Message-ID: <20190923191036.GB13508@kernel.org>
+References: <20190913132355.21634-1-jolsa@kernel.org>
+ <20190913132355.21634-33-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190913132355.21634-33-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, Sep 13, 2019 at 03:23:14PM +0200, Jiri Olsa escreveu:
+> We need page_size in libperf, so moving it in there.
+> Adding libperf_init as a global libperf init functon.
+> 
+> Link: http://lkml.kernel.org/n/tip-g6auuaej31nsusuevuhcgxli@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/lib/core.c                 | 7 +++++++
+>  tools/perf/lib/include/internal/lib.h | 2 ++
+>  tools/perf/lib/include/perf/core.h    | 1 +
+>  tools/perf/lib/lib.c                  | 2 ++
+>  tools/perf/lib/libperf.map            | 1 +
+>  tools/perf/perf.c                     | 4 ++--
+>  tools/perf/util/util.h                | 2 --
 
-Since the last RFC patch set[1] much of the discussion of supporting RDMA with
-FS DAX has been around the semantics of the lease mechanism.[2]  Within that
-thread it was suggested I try and write some documentation and/or tests for the
-new mechanism being proposed.  I have created a foundation to test lease
-functionality within xfstests.[3] This should be close to being accepted.
-Before writing additional lease tests, or changing lots of kernel code, this
-email presents documentation for the new proposed "layout lease" semantic.
+you forgot to remove it from tools/perf/util/util.c, I did it, and also
+added internal/lib.h to the places that use page_size, after this I'll
+remove that include from util/util.h, that header has to die :-)
 
-At Linux Plumbers[4] just over a week ago, I presented the current state of the
-patch set and the outstanding issues.  Based on the discussion there, well as
-follow up emails, I propose the following addition to the fcntl() man page.
+- Arnaldo
 
-Thank you,
-Ira
+>  7 files changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
+> index 29d5e3348718..6689d593c2d1 100644
+> --- a/tools/perf/lib/core.c
+> +++ b/tools/perf/lib/core.c
+> @@ -4,7 +4,9 @@
+>  
+>  #include <stdio.h>
+>  #include <stdarg.h>
+> +#include <unistd.h>
+>  #include <perf/core.h>
+> +#include <internal/lib.h>
+>  #include "internal.h"
+>  
+>  static int __base_pr(enum libperf_print_level level, const char *format,
+> @@ -32,3 +34,8 @@ void libperf_print(enum libperf_print_level level, const char *format, ...)
+>  	__libperf_pr(level, format, args);
+>  	va_end(args);
+>  }
+> +
+> +void libperf_init(void)
+> +{
+> +	page_size = sysconf(_SC_PAGE_SIZE);
+> +}
+> diff --git a/tools/perf/lib/include/internal/lib.h b/tools/perf/lib/include/internal/lib.h
+> index 0b56f1201dc9..9168b7d2a7e1 100644
+> --- a/tools/perf/lib/include/internal/lib.h
+> +++ b/tools/perf/lib/include/internal/lib.h
+> @@ -4,6 +4,8 @@
+>  
+>  #include <unistd.h>
+>  
+> +extern unsigned int page_size;
+> +
+>  ssize_t readn(int fd, void *buf, size_t n);
+>  ssize_t writen(int fd, const void *buf, size_t n);
+>  
+> diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
+> index c341a7b2c874..ba2f4e76a3e2 100644
+> --- a/tools/perf/lib/include/perf/core.h
+> +++ b/tools/perf/lib/include/perf/core.h
+> @@ -18,5 +18,6 @@ typedef int (*libperf_print_fn_t)(enum libperf_print_level level,
+>  				  const char *, va_list ap);
+>  
+>  LIBPERF_API void libperf_set_print(libperf_print_fn_t fn);
+> +LIBPERF_API void libperf_init(void);
+>  
+>  #endif /* __LIBPERF_CORE_H */
+> diff --git a/tools/perf/lib/lib.c b/tools/perf/lib/lib.c
+> index 2a81819c3b8c..18658931fc71 100644
+> --- a/tools/perf/lib/lib.c
+> +++ b/tools/perf/lib/lib.c
+> @@ -5,6 +5,8 @@
+>  #include <linux/kernel.h>
+>  #include <internal/lib.h>
+>  
+> +unsigned int page_size;
+> +
+>  static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
+>  {
+>  	void *buf_start = buf;
+> diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+> index dc4d66363bc4..3fbf050b5add 100644
+> --- a/tools/perf/lib/libperf.map
+> +++ b/tools/perf/lib/libperf.map
+> @@ -1,5 +1,6 @@
+>  LIBPERF_0.0.1 {
+>  	global:
+> +		libperf_init;
+>  		libperf_set_print;
+>  		perf_cpu_map__dummy_new;
+>  		perf_cpu_map__get;
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index 1193b923e801..ead18b712d6c 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -25,6 +25,7 @@
+>  #include "perf-sys.h"
+>  #include <api/fs/fs.h>
+>  #include <api/fs/tracing_path.h>
+> +#include <internal/lib.h>
+>  #include <errno.h>
+>  #include <pthread.h>
+>  #include <signal.h>
+> @@ -438,8 +439,7 @@ int main(int argc, const char **argv)
+>  	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
+>  	pager_init(PERF_PAGER_ENVIRONMENT);
+>  
+> -	/* The page_size is placed in util object. */
+> -	page_size = sysconf(_SC_PAGE_SIZE);
+> +	libperf_init();
+>  
+>  	cmd = extract_argv0_path(argv[0]);
+>  	if (!cmd)
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index 45a5c6f20197..d6ae394e67c4 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -33,8 +33,6 @@ int copyfile_offset(int ifd, loff_t off_in, int ofd, loff_t off_out, u64 size);
+>  
+>  size_t hex_width(u64 v);
+>  
+> -extern unsigned int page_size;
+> -
+>  int sysctl__max_stack(void);
+>  
+>  int fetch_kernel_version(unsigned int *puint,
+> -- 
+> 2.21.0
 
-[1] https://lkml.org/lkml/2019/8/9/1043
-[2] https://lkml.org/lkml/2019/8/9/1062
-[3] https://www.spinics.net/lists/fstests/msg12620.html
-[4] https://linuxplumbersconf.org/event/4/contributions/368/
+-- 
 
-
-<fcntl man page addition>
-Layout Leases
--------------
-
-Layout (F_LAYOUT) leases are special leases which can be used to control and/or
-be informed about the manipulation of the underlying layout of a file.
-
-A layout is defined as the logical file block -> physical file block mapping
-including the file size and sharing of physical blocks among files.  Note that
-the unwritten state of a block is not considered part of file layout.
-
-**Read layout lease F_RDLCK | F_LAYOUT**
-
-Read layout leases can be used to be informed of layout changes by the
-system or other users.  This lease is similar to the standard read (F_RDLCK)
-lease in that any attempt to change the _layout_ of the file will be reported to
-the process through the lease break process.  But this lease is different
-because the file can be opened for write and data can be read and/or written to
-the file as long as the underlying layout of the file does not change.
-Therefore, the lease is not broken if the file is simply open for write, but
-_may_ be broken if an operation such as, truncate(), fallocate() or write()
-results in changing the underlying layout.
-
-**Write layout lease (F_WRLCK | F_LAYOUT)**
-
-Write Layout leases can be used to break read layout leases to indicate that
-the process intends to change the underlying layout lease of the file.
-
-A process which has taken a write layout lease has exclusive ownership of the
-file layout and can modify that layout as long as the lease is held.
-Operations which change the layout are allowed by that process.  But operations
-from other file descriptors which attempt to change the layout will break the
-lease through the standard lease break process.  The F_LAYOUT flag is used to
-indicate a difference between a regular F_WRLCK and F_WRLCK with F_LAYOUT.  In
-the F_LAYOUT case opens for write do not break the lease.  But some operations,
-if they change the underlying layout, may.
-
-The distinction between read layout leases and write layout leases is that
-write layout leases can change the layout without breaking the lease within the
-owning process.  This is useful to guarantee a layout prior to specifying the
-unbreakable flag described below.
-
-
-**Unbreakable Layout Leases (F_UNBREAK)**
-
-In order to support pinning of file pages by direct user space users an
-unbreakable flag (F_UNBREAK) can be used to modify the read and write layout
-lease.  When specified, F_UNBREAK indicates that any user attempting to break
-the lease will fail with ETXTBUSY rather than follow the normal breaking
-procedure.
-
-Both read and write layout leases can have the unbreakable flag (F_UNBREAK)
-specified.  The difference between an unbreakable read layout lease and an
-unbreakable write layout lease are that an unbreakable read layout lease is
-_not_ exclusive.  This means that once a layout is established on a file,
-multiple unbreakable read layout leases can be taken by multiple processes and
-used to pin the underlying pages of that file.
-
-Care must therefore be taken to ensure that the layout of the file is as the
-user wants prior to using the unbreakable read layout lease.  A safe mechanism
-to do this would be to take a write layout lease and use fallocate() to set the
-layout of the file.  The layout lease can then be "downgraded" to unbreakable
-read layout as long as no other user broke the write layout lease.
-
-</fcntl man page addition>
+- Arnaldo
