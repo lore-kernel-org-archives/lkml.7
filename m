@@ -2,132 +2,125 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE4C47E48
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18064C4320D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32A221D7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569273793;
-	bh=pCKg+2PogolszkaY7ZsYq/p4t00jT/BUvnHEy609X5E=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ecuGKX1RonSWeo89451DIZ4E3skQXe2ASmgc7hPjb+7Ev05XgL0jmT2ZnjdBa7hqG
-	 n8MJtxJzkNzE1i99DCTagXmbq+MLUIK9ZRBDzgCyngy85E8GEXWX9tQuMtzi2OVXNg
-	 X1lcm30g6KHWn6urs7VdVXlUq/BvtbllSB/C82D0=
+	by mail.kernel.org (Postfix) with ESMTP id DFB29206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8Q/uBGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503012AbfIWVXN (ORCPT
+        id S2503125AbfIWVbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:23:13 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35066 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388117AbfIWVXM (ORCPT
+        Mon, 23 Sep 2019 17:31:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39029 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729120AbfIWVbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=0RChqD8gufqrC52I0W7my4ugNN03wWJCMZqZC40eNIs=; b=Va5BDDrVg2t+
-        U4Yav0A2EiOeMbHZkmUFajYv/LmKTBlI5tNReHgN3OA53uZPAveYKacTgPr/zkN3h5GSe5Lm9Ki5E
-        SmjnhDbDX+A1EY+kHVVymNGg80D1wD/ixNBQPVYbsfhqIxKTKS0wW0vUNhe+fygsptXmbb5ZxkMEq
-        eMdKg=;
-Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iCVnX-0005Wr-MK; Mon, 23 Sep 2019 21:23:07 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id CFB9ED02FE4; Mon, 23 Sep 2019 22:23:05 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Applied "regulator: fixed: Prevent NULL pointer dereference when !CONFIG_OF" to the regulator tree
-In-Reply-To: <20190922022928.28355-1-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190923212305.CFB9ED02FE4@fitzroy.sirena.org.uk>
-Date:   Mon, 23 Sep 2019 22:23:05 +0100 (BST)
+        Mon, 23 Sep 2019 17:31:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v4so5331494pff.6;
+        Mon, 23 Sep 2019 14:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M2IFVrWJfMOAbZ8zA9rzidNehYbIVV/clhh3kKcrw9E=;
+        b=o8Q/uBGSu8ZdsYS0hUd/MewIisiM0eWQnwEplzkf+gYm/+TEQ0x7wO5DVHWHHVe/1B
+         0R0x1l1ZgAZL2svOvsBblBhkx5ehvs33a2hc77H9E6JVDuHr4xO8nflmbNTSSO5jD9iQ
+         h4hdHieLDX+zxUZwtq2k28rij1Zk4LOQEoC4vll4zH/9+V+z8ZHdrlLNkJ9veJHtkxnt
+         PLv3/AUQxmm8hLJdIYeGw2crjNLORwJVUzqMuxBVVf9cgcI4a5WWmlBYmZKVDoesuY+l
+         kJhKM/vSQcJ9fjG9cZDQzi+wF15QqnJHsXhg3AnAD4+JcbXEzmxJwwEhbqD4zA/IVwoE
+         TxiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M2IFVrWJfMOAbZ8zA9rzidNehYbIVV/clhh3kKcrw9E=;
+        b=o9ZOte/izGDEaX426hAhp0oZlnRj9vetu0m2ce6mteC2OjvhqX/Oucp+S3JyKOtlQZ
+         d+uHIsZns5E8zMOIdtuzwbYLEJ0Lk4P/A4ZWLR9zR4t7kGDtn6MODbENmokM50kgtcpd
+         dcf2mjgtKznOzoaIJCmXCRL//aT0sI4qnL2Kt53foyyEsoghLtCKA942fp9V/j936DIN
+         32mjHvTe2xT1AsKhMuG6vdnKsHua70JCiHqjCHmsZgCSg3iCdoh9fMh0SoCd+INoMyMr
+         G9RPG6q7puGjSg9Iva/OdNXrZezaEIQr4LQw1Ioaq09q+pBzrHbewKm2RqXjI4iOhSl8
+         dlDA==
+X-Gm-Message-State: APjAAAWa6Pzdpd1qYL2W9Lm3tsF/otwWmuBrAGBTqRqbgUmxCssItAyu
+        rF65gMwOZWT+iTI/SowUTNLuUUoK
+X-Google-Smtp-Source: APXvYqz11dgh3msJRTJFiRiQ3k2P7vA2ePQWKiABBwCaAzm+nc2axjz7y3bjzbHGSmKtH1j4Z0C4gg==
+X-Received: by 2002:a17:90a:8d13:: with SMTP id c19mr1716231pjo.142.1569274267670;
+        Mon, 23 Sep 2019 14:31:07 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id z22sm12576337pgf.10.2019.09.23.14.31.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 14:31:06 -0700 (PDT)
+Subject: Re: [PATCH] kcm: use BPF_PROG_RUN
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tom Herbert <tom@herbertland.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190905211528.97828-1-samitolvanen@google.com>
+ <0f77cc31-4df5-a74f-5b64-a1e3fc439c6d@fb.com>
+ <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <048e82f4-5b31-f9f4-5bf7-82dfbf7ec8f3@gmail.com>
+Date:   Mon, 23 Sep 2019 14:31:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: fixed: Prevent NULL pointer dereference when !CONFIG_OF
 
-has been applied to the regulator tree at
+On 9/6/19 10:06 AM, Alexei Starovoitov wrote:
+> On Fri, Sep 6, 2019 at 3:03 AM Yonghong Song <yhs@fb.com> wrote:
+>>
+>>
+>>
+>> On 9/5/19 2:15 PM, Sami Tolvanen wrote:
+>>> Instead of invoking struct bpf_prog::bpf_func directly, use the
+>>> BPF_PROG_RUN macro.
+>>>
+>>> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>>
+>> Acked-by: Yonghong Song <yhs@fb.com>
+> 
+> Applied. Thanks
+> 
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+Then we probably need this as well, what do you think ?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1d6db22ff7d67a17c571543c69c63b1d261249b0 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 22 Sep 2019 10:29:28 +0800
-Subject: [PATCH] regulator: fixed: Prevent NULL pointer dereference when
- !CONFIG_OF
-
-Use of_device_get_match_data which has NULL test for match before
-dereference match->data. Add NULL test for drvtype so it still works
-for fixed_voltage_ops when !CONFIG_OF.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
-Link: https://lore.kernel.org/r/20190922022928.28355-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/fixed.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index d90a6fd8cbc7..f81533070058 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -144,8 +144,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct fixed_voltage_config *config;
- 	struct fixed_voltage_data *drvdata;
--	const struct fixed_dev_type *drvtype =
--		of_match_device(dev->driver->of_match_table, dev)->data;
-+	const struct fixed_dev_type *drvtype = of_device_get_match_data(dev);
- 	struct regulator_config cfg = { };
- 	enum gpiod_flags gflags;
- 	int ret;
-@@ -177,7 +176,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	drvdata->desc.type = REGULATOR_VOLTAGE;
- 	drvdata->desc.owner = THIS_MODULE;
+diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+index 8f12f5c6ab875ebaa6c59c6268c337919fb43bb9..6508e88efdaf57f206b84307f5ad5915a2ed21f7 100644
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -378,8 +378,13 @@ static int kcm_parse_func_strparser(struct strparser *strp, struct sk_buff *skb)
+ {
+        struct kcm_psock *psock = container_of(strp, struct kcm_psock, strp);
+        struct bpf_prog *prog = psock->bpf_prog;
++       int res;
  
--	if (drvtype->has_enable_clock) {
-+	if (drvtype && drvtype->has_enable_clock) {
- 		drvdata->desc.ops = &fixed_voltage_clkenabled_ops;
+-       return BPF_PROG_RUN(prog, skb);
++       preempt_disable();
++       res = BPF_PROG_RUN(prog, skb);
++       preempt_enable();
++
++       return res;
+ }
  
- 		drvdata->enable_clock = devm_clk_get(dev, NULL);
--- 
-2.20.1
-
+ static int kcm_read_sock_done(struct strparser *strp, int err)
