@@ -2,149 +2,68 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF42C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7B8C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309F8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oNVlammA"
+	by mail.kernel.org (Postfix) with ESMTP id 1BB2C205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbfIWLz6 (ORCPT
+        id S1730582AbfIWL7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:55:58 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41600 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbfIWLz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZizFBvtwt2vz2u9q4gsPXlMp4iNJyEM3en3pt0PZaTg=; b=oNVlammAA0mezRMg90hLWDCXg
-        Bw8JYsKy0YgSSLZEeZv8yq+CJlcasjWrKGNM5ouXxaIARaVg3ebsTk95TaUU5QrCokzzVWCMFlvRQ
-        Vtz59wyOigu+YgucMO/LekcFXLCLVjzXbh038ca24Gam9r88BcWMN+GOFMN8SjlbCwDoDzQZjpWew
-        yifS4BoJ7r83uDJAfDoS0qkTSYUhONJt+eTMsjfA377P3RSVzaKIOa9u2pcFDZNxV3I+9CdtEkKKj
-        ZjXT4y1j1/Skr1tGJEerjqvi3kr8TTp9GrG76NB5D8foHfAK1mtm1QegyYqmplkeesX7p4CGjh1b/
-        5UPj32ZjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCMwb-0002qz-9W; Mon, 23 Sep 2019 11:55:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD873305E42;
-        Mon, 23 Sep 2019 13:55:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 04C9820C3E176; Mon, 23 Sep 2019 13:55:51 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 13:55:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, jgross@suse.com
-Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
-Message-ID: <20190923115551.GZ2386@hirez.programming.kicks-ass.net>
-References: <20190919150314.054351477@linutronix.de>
- <20190919150809.446771597@linutronix.de>
- <20190923084718.GG2349@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1909231227050.2003@nanos.tec.linutronix.de>
- <20190923114920.GF2332@hirez.programming.kicks-ass.net>
+        Mon, 23 Sep 2019 07:59:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33436 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728928AbfIWL7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:59:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4759AEAE;
+        Mon, 23 Sep 2019 11:59:20 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id E5E90DA7DA; Mon, 23 Sep 2019 13:59:38 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 13:59:38 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the btrfs-kdave tree with Linus' tree
+Message-ID: <20190923115938.GR2850@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190919113106.GC3642@sirena.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923114920.GF2332@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190919113106.GC3642@sirena.co.uk>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 01:49:20PM +0200, Peter Zijlstra wrote:
-> While walking the kids to school I wondered WTH we need to call
-> TRACE_IRQS_OFF in the first place. If this is the return from exception
-> path, interrupts had better be disabled already (in exception enter).
+On Thu, Sep 19, 2019 at 12:31:06PM +0100, Mark Brown wrote:
+> Hi all,
 > 
-> For entry_64.S we have:
+> Today's linux-next merge of the btrfs-kdave tree got conflicts in:
 > 
->   - idtentry_part; which does TRACE_IRQS_OFF at the start and error_exit
->     at the end.
+>   fs/btrfs/block-group.c
+>   fs/btrfs/ctree.h
+>   fs/btrfs/extent-tree.c
+>   fs/btrfs/send.c
+>   fs/btrfs/space-info.c
+>   include/uapi/linux/btrfs_tree.h
 > 
->   - xen_do_hypervisor_callback, xen_failsafe_callback -- which are
->     confusing.
-> 
-> So in the normal case, it appears we can simply do:
-> 
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index b7c3ea4cb19d..e9cf59ac554e 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1368,8 +1368,6 @@ END(error_entry)
->  
->  ENTRY(error_exit)
->  	UNWIND_HINT_REGS
-> -	DISABLE_INTERRUPTS(CLBR_ANY)
-> -	TRACE_IRQS_OFF
->  	testb	$3, CS(%rsp)
->  	jz	retint_kernel
->  	jmp	retint_user
-> 
-> and all should be well. This leaves Xen...
-> 
-> For entry_32.S it looks like nothing uses 'resume_userspace' so that
-> ENTRY can go away. Which then leaves:
-> 
->  * ret_from_intr:
->   - common_spurious: TRACE_IRQS_OFF
->   - common_interrupt: TRACE_IRQS_OFF
->   - BUILD_INTERRUPT3: TRACE_IRQS_OFF
->   - xen_do_upcall: ...
-> 
->  * ret_from_exception:
->   - xen_failsafe_callback: ...
->   - common_exception_read_cr2: TRACE_IRQS_OFF
->   - common_exception: TRACE_IRQS_OFF
->   - int3: TRACE_IRQS_OFF
-> 
-> Which again suggests:
-> 
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index f83ca5aa8b77..7a19e7413a8e 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -825,9 +825,6 @@ END(ret_from_fork)
->  	cmpl	$USER_RPL, %eax
->  	jb	restore_all_kernel		# not returning to v8086 or userspace
->  
-> -ENTRY(resume_userspace)
-> -	DISABLE_INTERRUPTS(CLBR_ANY)
-> -	TRACE_IRQS_OFF
->  	movl	%esp, %eax
->  	call	prepare_exit_to_usermode
->  	jmp	restore_all
-> 
-> with the notable exception (oh teh pun!) being Xen... _again_.
-> 
-> With these patchlets on, we'd want prepare_exit_to_usermode() to
-> validate the IRQ state, but AFAICT it _should_ all just 'work' (famous
-> last words).
-> 
-> Cc Juergen because Xen
+> between a number of commits in Linus' tree and a number of commits in
+> the btrfs-kdave tree.  I don't feel comfortable that I can resolve these
+> safely and the btrfs-kdave tree hasn't changed since August with the
+> last non-merge commit in June so I've dropped the tree for today.
 
-Arrgh.. faults!! they do local_irq_enable() but never disable them
-again. Arguably those functions should be symmetric and restore IF when
-they muck with it instead of relying on the exit path fixing things up.
-
-
+Dropping the tree temporarily is ok. I'm going to refresh the source
+branch today so it should be in a good shape for next linux-next
+snapshot.
