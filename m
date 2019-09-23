@@ -2,111 +2,103 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24B1C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EC5C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7D520882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D41220835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyBmnvGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408338AbfIWN6p (ORCPT
+        id S2437640AbfIWN65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:58:45 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:42148 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408320AbfIWN6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:58:44 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 476D85FBA6;
-        Mon, 23 Sep 2019 15:58:43 +0200 (CEST)
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     u.kleine-koenig@pengutronix.de, gregkh@linuxfoundation.org,
-        yibin.gong@nxp.com, fugang.duan@nxp.com, l.stach@pengutronix.de,
-        jslaby@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH v3] serial: imx: adapt rx buffer and dma periods
-Date:   Mon, 23 Sep 2019 15:58:42 +0200
-Message-Id: <20190923135842.956-1-philipp.puschmann@emlix.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 23 Sep 2019 09:58:57 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:51757 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408340AbfIWN6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:58:53 -0400
+Received: by mail-wm1-f54.google.com with SMTP id 7so10118314wme.1;
+        Mon, 23 Sep 2019 06:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=xDojPBQ0esilIp1GUWD6dVVMPDHyVZuOXZ5O6hXNfas=;
+        b=PyBmnvGAVmeNZXVQCdhZuMm5xmUKjafJcs39w+VF3xZRW1ukATZ9MM17I1J5yZNxWd
+         xUXioii8j849Qsr7+EivroplglGGCZmkQFXoQ8fVDUs/smlVzNX0ym7X/kShnNnWHB8V
+         1Joo5oMJhn4DUS2E4CZgWJvij8n3nb5xNxJd96p0X6zQPPVfWEUFQDuNCLIXEAS2/a3a
+         F+NDc+WB4bAOsDhi6UWEGLNKXBHwi93vC+i2ha9Snfv/jB94tcyK3Lyr/suRBfoCIa2m
+         jVIGyxhMZqkJRUVn6UDhL+BT4Envnv0yumFDIlBfCM90X6Tt8lyH1tysSSG4FfA9c44E
+         f5Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=xDojPBQ0esilIp1GUWD6dVVMPDHyVZuOXZ5O6hXNfas=;
+        b=lK/LLzniFaJoqwMunA5SR4lITludUFMzTqdP8e6HGZaGOpAl+XP5rr8qgV9rM917ps
+         ymUmRSK5gfMPxKXSV/YjaKfZWgIpVhcOfW/gaMmkE1Kz19dcZdKZNoZwbWxaavM/VN0o
+         Mf9yT2+Iw4WX0v4MYzIBOHosrIYYMfLQ03ATFjQkSHN7VN7b9tXVciw2eDT11oPJBRmp
+         2zfmPmCvfrTFk2nOxzice0Q/3300HrwDNGRO5fPQnBqiXYWJY39JiFGzCElQMmRKKXTd
+         GnCe6jmJKWpu60JZ+I912q2W65vLNu66ohk1g9woUFiPuT2EQ5ygDnGPYcyzDkjW/VnB
+         1l+A==
+X-Gm-Message-State: APjAAAUfw6BJ0sMDu6fJErQt/Y43wpXRkzjaQFCSBpy6V7jITXCw+MNs
+        h2iQPgbfvD9ul3Q8tzo6xcE=
+X-Google-Smtp-Source: APXvYqwbM1mVAeEhkw7RAsOqpdjVQEUzhYsQX0hZyFely5cFNmwIhidNTc5umAi2fF9q96DYEPgpIg==
+X-Received: by 2002:a1c:1b0b:: with SMTP id b11mr638211wmb.82.1569247130847;
+        Mon, 23 Sep 2019 06:58:50 -0700 (PDT)
+Received: from localhost.localdomain ([94.204.252.234])
+        by smtp.gmail.com with ESMTPSA id h17sm25266184wme.6.2019.09.23.06.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 23 Sep 2019 06:58:50 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Oleg Ivanov <balbes-150@yandex.ru>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v4 1/3] dt-bindings: Add vendor prefix for Ugoos
+Date:   Mon, 23 Sep 2019 17:57:55 +0400
+Message-Id: <1569247077-5212-2-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1569247077-5212-1-git-send-email-christianshewitt@gmail.com>
+References: <1569247077-5212-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using only 4 DMA periods for UART RX is very few if we have a high
-frequency of small transfers - like in our case using Bluetooth with
-many small packets via UART - causing many dma transfers but in each
-only filling a fraction of a single buffer. Such a case may lead to
-the situation that DMA RX transfer is triggered but no free buffer is
-available. When this happens dma channel ist stopped - with the patch
-"dmaengine: imx-sdma: fix dma freezes" temporarily only - with the
-possible consequences that:
-with disabled hw flow control:
-  If enough data is incoming on UART port the RX FIFO runs over and
-  characters will be lost. What then happens depends on upper layer.
+Ugoos Industrial Co., Ltd. are a manufacturer of ARM based TV Boxes/Dongles,
+Digital Signage and Advertisement Solutions [0].
 
-with enabled hw flow control:
-  If enough data is incoming on UART port the RX FIFO reaches a level
-  where CTS is deasserted and remote device sending the data stops.
-  If it fails to stop timely the i.MX' RX FIFO may run over and data
-  get lost. Otherwise it's internal TX buffer may getting filled to
-  a point where it runs over and data is again lost. It depends on
-  the remote device how this case is handled and if it is recoverable.
+[0] (https://ugoos.com)
 
-Obviously we want to avoid having no free buffers available. So we
-decrease the size of the buffers and increase their number and the
-total buffer size.
-
-Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changelog v4:
- - fix total buffer size
-
-Changelog v3:
- - enhance description
-
-Changelog v2:
- - split this patch from series "Fix UART DMA freezes for iMX6"
- - add Reviewed-by tag
-
- drivers/tty/serial/imx.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 87c58f9f6390..51dc19833eab 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1034,8 +1034,6 @@ static void imx_uart_timeout(struct timer_list *t)
- 	}
- }
- 
--#define RX_BUF_SIZE	(PAGE_SIZE)
--
- /*
-  * There are two kinds of RX DMA interrupts(such as in the MX6Q):
-  *   [1] the RX DMA buffer is full.
-@@ -1118,7 +1116,8 @@ static void imx_uart_dma_rx_callback(void *data)
- }
- 
- /* RX DMA buffer periods */
--#define RX_DMA_PERIODS 4
-+#define RX_DMA_PERIODS	16
-+#define RX_BUF_SIZE	(RX_DMA_PERIODS * PAGE_SIZE / 4)
- 
- static int imx_uart_start_rx_dma(struct imx_port *sport)
- {
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6992bbb..d962be9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -965,6 +965,8 @@ patternProperties:
+     description: Ubiquiti Networks
+   "^udoo,.*":
+     description: Udoo
++  "^ugoos,.*":
++    description: Ugoos Industrial Co., Ltd.
+   "^uniwest,.*":
+     description: United Western Technologies Corp (UniWest)
+   "^upisemi,.*":
 -- 
-2.23.0
+2.7.4
 
