@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E834C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6FEC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779992168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595512168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263300;
-	bh=bweGBvr/zsul0PBw/CUXnoQwKxpUkbBX2bXnI2WiT6A=;
+	s=default; t=1569263306;
+	bh=FeWOT4luJLv1l2Z5n1kVStz2LPbC+pHVI9QRssCKhys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmKwKzugCtI7zxtfMB/yNCONYBAjCcDIIpUWlkyJwzgug3f7PvtSuHqgBvg+UbsCj
-	 Hg/XJRu1zU+LcEZrxoSH4+rYyQ8WGs87gWDqneNzenxE9sSq2qx+CwtxaWlvc/4gnU
-	 8YarNcnR+vMlvKerPYsO26pjEcDGqXm4mDPB02Wo=
+	b=sB7vuCPdAI8TVwoSlhYc7YP1yoteTSe8l1mDzdLs/9N1C/O59YmxFuZRhvCJoNNS5
+	 4P0BOiJ//pz220JRjXxI4EsdNmIP5iPIAdMrCIZMbjwlH6gljIxf4gCzWtgxjtUZvb
+	 8MnCTJRenifjnpu3zg76hgCx14L9zN70d5vUrka0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbfIWS2T (ORCPT
+        id S2502421AbfIWS2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:28:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:47184 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 14:28:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:47224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733039AbfIWS2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:28:15 -0400
+        id S1726279AbfIWS2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:28:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A30B528AC;
-        Mon, 23 Sep 2019 11:28:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 668392A68;
+        Mon, 23 Sep 2019 11:28:21 -0700 (PDT)
 Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F225A3F694;
-        Mon, 23 Sep 2019 11:28:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DD6E3F694;
+        Mon, 23 Sep 2019 11:28:18 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 29/35] irqchip/gic-v4.1: Add VSGI allocation/teardown
-Date:   Mon, 23 Sep 2019 19:26:00 +0100
-Message-Id: <20190923182606.32100-30-maz@kernel.org>
+Subject: [PATCH 31/35] irqchip/gic-v4.1: Eagerly vmap vPEs
+Date:   Mon, 23 Sep 2019 19:26:02 +0100
+Message-Id: <20190923182606.32100-32-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
 References: <20190923182606.32100-1-maz@kernel.org>
@@ -56,124 +56,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate per-VPE SGIs when initializing the GIC-specific part of the
-VPE data structure.
+Now that we have HW-accelerated SGIs being delivered to VPEs, it
+becomes required to map the VPEs on all ITSs instead of relying
+on the lazy approach that we would use when using the ITS-list
+mechanism.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
- include/linux/irqchip/arm-gic-v4.h |  2 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 39 +++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 60b51d6683aa..a29a063861bc 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -92,6 +92,47 @@ static bool has_v4_1(void)
- 	return !!sgi_domain_ops;
- }
- 
-+static int its_alloc_vcpu_sgis(struct its_vpe *vpe, int idx)
-+{
-+	char *name;
-+	int sgi_base;
-+
-+	if (!has_v4_1())
-+		return 0;
-+
-+	name = kasprintf(GFP_KERNEL, "GICv4-sgi-%d", task_pid_nr(current));
-+	if (!name)
-+		goto err;
-+
-+	vpe->fwnode = irq_domain_alloc_named_id_fwnode(name, idx);
-+	if (!vpe->fwnode)
-+		goto err;
-+
-+	kfree(name);
-+	name = NULL;
-+
-+	vpe->sgi_domain = irq_domain_create_linear(vpe->fwnode, 16,
-+						   sgi_domain_ops, vpe);
-+	if (!vpe->sgi_domain)
-+		goto err;
-+
-+	sgi_base = __irq_domain_alloc_irqs(vpe->sgi_domain, -1, 16,
-+					       NUMA_NO_NODE, vpe,
-+					       false, NULL);
-+	if (sgi_base <= 0)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	if (vpe->sgi_domain)
-+		irq_domain_remove(vpe->sgi_domain);
-+	if (vpe->fwnode)
-+		irq_domain_free_fwnode(vpe->fwnode);
-+	kfree(name);
-+	return -ENOMEM;
-+}
-+
- int its_alloc_vcpu_irqs(struct its_vm *vm)
- {
- 	int vpe_base_irq, i;
-@@ -118,8 +159,13 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	if (vpe_base_irq <= 0)
- 		goto err;
- 
--	for (i = 0; i < vm->nr_vpes; i++)
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		int ret;
- 		vm->vpes[i]->irq = vpe_base_irq + i;
-+		ret = its_alloc_vcpu_sgis(vm->vpes[i], i);
-+		if (ret)
-+			goto err;
-+	}
- 
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 4aae9582182b..a1e8c4c2598a 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1417,12 +1417,31 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
  	return 0;
- 
-@@ -132,8 +178,28 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	return -ENOMEM;
  }
  
-+static void its_free_sgi_irqs(struct its_vm *vm)
++/*
++ * Two favourable cases:
++ *
++ * (a) Either we have a GICv4.1, and all vPEs have to be mapped at all times
++ *     for vSGI delivery
++ *
++ * (b) Or the ITSs do not use a list map, meaning that VMOVP is cheap enough
++ *     and we're better off mapping all VPEs always
++ *
++ * If neither (a) nor (b) is true, then we map VLPIs on demand.
++ *
++ */
++static bool gic_requires_eager_mapping(void)
 +{
-+	int i;
++	if (!its_list_map || gic_rdists->has_rvpeid)
++		return true;
 +
-+	if (!has_v4_1())
-+		return;
-+
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		unsigned int irq = irq_find_mapping(vm->vpes[i]->sgi_domain, 0);
-+
-+		if (WARN_ON(!irq))
-+			continue;
-+
-+		irq_domain_free_irqs(irq, 16);
-+		irq_domain_remove(vm->vpes[i]->sgi_domain);
-+		irq_domain_free_fwnode(vm->vpes[i]->fwnode);
-+	}
++	return false;
 +}
 +
- void its_free_vcpu_irqs(struct its_vm *vm)
+ static void its_map_vm(struct its_node *its, struct its_vm *vm)
  {
-+	its_free_sgi_irqs(vm);
- 	irq_domain_free_irqs(vm->vpes[0]->irq, vm->nr_vpes);
- 	irq_domain_remove(vm->domain);
- 	irq_domain_free_fwnode(vm->fwnode);
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 084890a5c2bf..5578cbe7430b 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -47,6 +47,8 @@ struct its_vpe {
- 		};
- 		/* GICv4.1 implementations */
- 		struct {
-+			struct fwnode_handle	*fwnode;
-+			struct irq_domain	*sgi_domain;
- 			struct {
- 				u8	priority;
- 				bool	enabled;
+ 	unsigned long flags;
+ 
+-	/* Not using the ITS list? Everything is always mapped. */
+-	if (!its_list_map)
++	if (gic_requires_eager_mapping())
+ 		return;
+ 
+ 	raw_spin_lock_irqsave(&vmovp_lock, flags);
+@@ -1456,7 +1475,7 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
+ 	unsigned long flags;
+ 
+ 	/* Not using the ITS list? Everything is always mapped. */
+-	if (!its_list_map)
++	if (gic_requires_eager_mapping())
+ 		return;
+ 
+ 	raw_spin_lock_irqsave(&vmovp_lock, flags);
+@@ -3957,8 +3976,12 @@ static int its_vpe_irq_domain_activate(struct irq_domain *domain,
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+ 	struct its_node *its;
+ 
+-	/* If we use the list map, we issue VMAPP on demand... */
+-	if (its_list_map)
++	/*
++	 * If we use the list map, we issue VMAPP on demand... Unless
++	 * we're on a GICv4.1 and we eagerly map the VPE on all ITSs
++	 * so that VSGIs can work.
++	 */
++	if (!gic_requires_eager_mapping())
+ 		return 0;
+ 
+ 	/* Map the VPE to the first possible CPU */
+@@ -3984,10 +4007,10 @@ static void its_vpe_irq_domain_deactivate(struct irq_domain *domain,
+ 	struct its_node *its;
+ 
+ 	/*
+-	 * If we use the list map, we unmap the VPE once no VLPIs are
+-	 * associated with the VM.
++	 * If we use the list map on GICv4.0, we unmap the VPE once no
++	 * VLPIs are associated with the VM.
+ 	 */
+-	if (its_list_map)
++	if (!gic_requires_eager_mapping())
+ 		return;
+ 
+ 	list_for_each_entry(its, &its_nodes, entry) {
 -- 
 2.20.1
 
