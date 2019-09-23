@@ -2,54 +2,97 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF479C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC39C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7422087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2794720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfIWIxa (ORCPT
+        id S1731994AbfIWIyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:53:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38336 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731943AbfIWIx3 (ORCPT
+        Mon, 23 Sep 2019 04:54:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47195 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731971AbfIWIyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:53:29 -0400
-Received: from localhost (unknown [185.13.106.231])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9BE95154467CB;
-        Mon, 23 Sep 2019 01:53:27 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 10:53:23 +0200 (CEST)
-Message-Id: <20190923.105323.344196507088158149.davem@davemloft.net>
-To:     pc@cjr.nz
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        aaptel@suse.com
-Subject: Re: [PATCH v2 1/3] cifs: Add support for root file systems
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190919152116.27076-1-pc@cjr.nz>
-References: <20190716220452.3382-1-paulo@paulo.ac>
-        <20190919152116.27076-1-pc@cjr.nz>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 23 Sep 2019 01:53:29 -0700 (PDT)
+        Mon, 23 Sep 2019 04:54:18 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCK6p-0002FR-FW; Mon, 23 Sep 2019 10:54:15 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCK6o-0000rV-MN; Mon, 23 Sep 2019 10:54:14 +0200
+Date:   Mon, 23 Sep 2019 10:54:14 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
+Message-ID: <20190923085414.6d3gbby6gglpjsfe@pengutronix.de>
+References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+ <20190923081348.6843-4-linux@rasmusvillemoes.dk>
+ <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
+ <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 10:45:56AM +0200, Rasmus Villemoes wrote:
+> On 23/09/2019 10.27, Uwe Kleine-König wrote:
+> > On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
+> >>
+> >>  
+> >> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
+> >> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
+> >> +
+> >>  	writel(duty_cycles << 16,
+> >>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
+> >> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
+> >> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
+> > 
+> > When will this affect the output? Only on the next start of a period, or
+> > immediatly? Can it happen that this results in a mixed output (i.e. a
+> > period that has already the new duty cycle from the line above but not
+> > the new polarity (or period)?
+> 
+> The data sheet says "Also, when the user reprograms the channel in this
+> manner, the new register values will not take effect until the beginning
+> of a new output period. This eliminates the potential for output
+> glitches that could occur if the registers were updated while the
+> channel was enabled and in the middle of a cycle.". So I think this
+> should be ok. "this manner" refers to the registers being written in the
+> proper order (first ACTIVEn, then PERIODn).
 
-Please resubmit this series when the net-next tree opens back up, and also
-with an appropriate "[PATCH 0/N]" header posting explaining what the patch
-series is doing, how it is doing it, and why it is doing it that way.
+OK. IMHO this is worth a code comment.
 
-Thank you.
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
