@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF35C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75610C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D1A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBAF20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263264;
-	bh=cwQDyKb3VMvbDLWN7gApPn+tm++UAFlIEiifDux42J0=;
+	s=default; t=1569263268;
+	bh=wr6DhAaaMiCf/7XSEI9I1LdfKCKq/oXMO2jSu9bZIkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePQTmvSBFMzxohwH2PQICmyGFJN4YaUYeOeXJXSJD0oxve7cCHnZK4f8qAy+/2DiO
-	 QZk8LoUPMrEyWj/1FaQUdELvAldEEQRAzuKXD85tIPp0Pc1g0DYnvLm5/7llWu/OuG
-	 s1e+ue5YQrol4sAvreiLcgVEyCgPU/wa6jQOyjm0=
+	b=yAxU6/gija1TZLYANWxJrzKcjp2HhOgZxrLNsCm81CMsLR22rxWh/FdET2rRw+kAf
+	 aVHA7mHPls/izRMhhtgVa80yxS2cdquVFO1UDMHCZMFvVdsy3LpcdGQ4xVViDnG3tn
+	 jv3zJ1KKA8N0Lwffp5OfX2O1ubmJsF5trPenr7jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbfIWS1n (ORCPT
+        id S2502383AbfIWS1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:27:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:46988 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 14:27:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:47016 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfIWS1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:27:41 -0400
+        id S1727368AbfIWS1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:27:46 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71A331BB2;
-        Mon, 23 Sep 2019 11:27:40 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBE261C01;
+        Mon, 23 Sep 2019 11:27:44 -0700 (PDT)
 Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 518013F694;
-        Mon, 23 Sep 2019 11:27:34 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29A503F694;
+        Mon, 23 Sep 2019 11:27:40 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 19/35] irqchip/gic-v4.1: Suppress per-VLPI doorbell
-Date:   Mon, 23 Sep 2019 19:25:50 +0100
-Message-Id: <20190923182606.32100-20-maz@kernel.org>
+Subject: [PATCH 20/35] irqchip/gic-v4.1: Allow direct invalidation of VLPIs
+Date:   Mon, 23 Sep 2019 19:25:51 +0100
+Message-Id: <20190923182606.32100-21-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
 References: <20190923182606.32100-1-maz@kernel.org>
@@ -56,50 +56,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since GICv4.1 gives us a per-VPE doorbell, avoid programming anything
-else on VMOVI/VMAPI/VMAPTI and on any other action that would have
-otherwise resulted in a per-VLPI doorbell to be programmed.
+Just like for INVALL, GICv4.1 has grown a VPE-aware INVLPI register.
+Let's plumb it in and make use of the DirectLPI code in that case.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 19 +++++++++++++++++--
+ include/linux/irqchip/arm-gic-v3.h |  1 +
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index eda35e66237f..b791c9beddf2 100644
+index b791c9beddf2..34595a7fcccb 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -691,7 +691,7 @@ static struct its_vpe *its_build_vmapti_cmd(struct its_node *its,
+@@ -1200,13 +1200,27 @@ static void wait_for_syncr(void __iomem *rdbase)
+ 
+ static void direct_lpi_inv(struct irq_data *d)
  {
- 	u32 db;
- 
--	if (desc->its_vmapti_cmd.db_enabled)
-+	if (!is_v4_1(its) && desc->its_vmapti_cmd.db_enabled)
- 		db = desc->its_vmapti_cmd.vpe->vpe_db_lpi;
- 	else
- 		db = 1023;
-@@ -714,7 +714,7 @@ static struct its_vpe *its_build_vmovi_cmd(struct its_node *its,
- {
- 	u32 db;
- 
--	if (desc->its_vmovi_cmd.db_enabled)
-+	if (!is_v4_1(its) && desc->its_vmovi_cmd.db_enabled)
- 		db = desc->its_vmovi_cmd.vpe->vpe_db_lpi;
- 	else
- 		db = 1023;
-@@ -1227,6 +1227,13 @@ static void its_vlpi_set_doorbell(struct irq_data *d, bool enable)
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	u32 event = its_get_event_id(d);
- 
-+	/*
-+	 * GICv4.1 does away with the per-LPI nonsense, nothing to do
-+	 * here.
-+	 */
-+	if (is_v4_1(its_dev->its))
-+		return;
++	struct its_vlpi_map *map = get_vlpi_map(d);
+ 	struct its_collection *col;
+ 	void __iomem *rdbase;
++	u64 val;
 +
- 	if (its_dev->event_map.vlpi_maps[event].db_enabled == enable)
- 		return;
++	if (map) {
++		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
++
++		WARN_ON(!is_v4_1(its_dev->its));
++
++		val  = GICR_INVLPIR_V;
++		val |= FIELD_PREP(GICR_INVLPIR_VPEID, map->vpe->vpe_id);
++		val |= FIELD_PREP(GICR_INVLPIR_INTID, map->vintid);
++	} else {
++		val = d->hwirq;
++	}
+ 
+ 	/* Target the redistributor this LPI is currently routed to */
+ 	col = irq_to_col(d);
+ 	rdbase = per_cpu_ptr(gic_rdists->rdist, col->col_id)->rd_base;
+-	gic_write_lpir(d->hwirq, rdbase + GICR_INVLPIR);
++	gic_write_lpir(val, rdbase + GICR_INVLPIR);
+ 
+ 	wait_for_syncr(rdbase);
+ }
+@@ -1216,7 +1230,8 @@ static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 
+ 	lpi_write_config(d, clr, set);
+-	if (gic_rdists->has_direct_lpi && !irqd_is_forwarded_to_vcpu(d))
++	if (gic_rdists->has_direct_lpi &&
++	    (is_v4_1(its_dev->its) || !irqd_is_forwarded_to_vcpu(d)))
+ 		direct_lpi_inv(d);
+ 	else
+ 		its_send_inv(its_dev, its_get_event_id(d));
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index b69f60792554..5f3278cbf247 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -247,6 +247,7 @@
+ #define GICR_TYPER_COMMON_LPI_AFF	GENMASK_ULL(25, 24)
+ #define GICR_TYPER_AFFINITY		GENMASK_ULL(63, 32)
+ 
++#define GICR_INVLPIR_INTID		GENMASK_ULL(31, 0)
+ #define GICR_INVLPIR_VPEID		GENMASK_ULL(47, 32)
+ #define GICR_INVLPIR_V			GENMASK_ULL(63, 63)
  
 -- 
 2.20.1
