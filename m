@@ -2,123 +2,74 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB64C432C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0C72053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569273107;
-	bh=LFD/S5D3+cpTAiAAzhmLc3ZTdCFpdcNBR3MxpVfbHBc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=iNVvlM3qVdIOSwhsDesvf86TID/dnZ/4yVWz8AGIMloWunogHNfj7a08P59uDAp+U
-	 RFcsLjZBt1GmP6lrDYwYWD0X4g2BBteNspeJvqZ0pRKH1gSX41pQrcy4jkpMBLXwPW
-	 +zPVPtqU7oN8psD9ENUo/CaqfLenIECM7OJM/P3Y=
+	by mail.kernel.org (Postfix) with ESMTP id BA8D92053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vTU9DhhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502918AbfIWVLq (ORCPT
+        id S2502950AbfIWVNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:11:46 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:33825 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502746AbfIWVLq (ORCPT
+        Mon, 23 Sep 2019 17:13:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35321 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388807AbfIWVNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:11:46 -0400
-Received: by mail-io1-f42.google.com with SMTP id q1so37143798ion.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 14:11:46 -0700 (PDT)
+        Mon, 23 Sep 2019 17:13:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so9931222pfw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 14:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kb11ljOxE66EWQjXInWOAiNcDl56QbPFhGLa/O0xUL0=;
-        b=V4iOb96WFXPAV2pkWfb2ad3hkRizfthkWYXB2z62ulZC9rn03K1je1XGn4rCXzjkrI
-         u68PBFj9fgRKd0S9gKlX9Ja74N7eauxwdfdz4LQwHOobrBDrNn5kEhCTZx25nR1T8/Ok
-         n2YmHoPmM8QglavVMehT18Ke2dCIwlBOnmgMU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+nwuC/x0W/vRuXJZDpyCBfwIDzszuyoHEHIS0SrkfVY=;
+        b=vTU9DhhGN1pmi8Kl+I+Mh/RaRDp3FDHyObR1orwd/yRr5pHbrDYRnWF+6k99m9K5DN
+         jqeA32xdPT7QUn0BG69QJF0A5PPUgyY+8vcoVrwMk8wwc0uTnLvaUhmJ4YI1C8TxblKR
+         WRIl1aQbHqKXbjMEQR3aXBYcQT/Qx2gszYx0SWOr1NYRTL/Dndh+t1+iOBidsu5Kfd7b
+         zB6tzyYDoWoCpNTKCHaUMhAUJfT9JD4j5E21gUrLjQdpqaRpMoWY8TXgbYbZVZGp+mjz
+         gx8+Hxf32NvNWswYalQVuk05kjdApOKLG3cVaZRktRA6d5JLNcbTgbXyP3PrOX7EArDY
+         8kbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kb11ljOxE66EWQjXInWOAiNcDl56QbPFhGLa/O0xUL0=;
-        b=bzrOyKO+hpkLXGt256BUnChjVEGn/ESUptX8dR9PflnObSctVkDtpROYtU9Z5B+lb0
-         8k9RcXFFX+aCWeAXts2AYBiq53AQALHHInD+RR7jeKOnB/WK9unX+TQDR47Xu7p8hedE
-         cgLzl2iCLHtWcXfN+758piu+GEuBbSkopQTZEyjLgUY64IkNgkWYKES70jFg9RCv4fSI
-         JZRgnb0daNuFN6i3lZIkJoYk9NwETCIlf65Z8HMNf0VQc1ts6N6TU/X95o5gB4FDVhCX
-         2UWCLkQns3MvZYhCcDUrW02g1Q3IOGr+sXAj1M75mXZoEzAeLHNTQfaY9Ys8ED5DSFD1
-         gdjw==
-X-Gm-Message-State: APjAAAXDvyiz9+j/nP9iupX1x2kunYPxO9msv4GxaUGojsr4z1hcWwbf
-        Zv6mZCPLN956v4aObBfnxiUbZA==
-X-Google-Smtp-Source: APXvYqwH4eH6TW7369AQ09FANNvkI1T5MLNAJhY2uMu9+B+krdUXew+s9MOPek8Bj+Imm2cL0wiWWA==
-X-Received: by 2002:a5d:9814:: with SMTP id a20mr1632862iol.19.1569273105538;
-        Mon, 23 Sep 2019 14:11:45 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id a14sm13952481ioo.85.2019.09.23.14.11.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 14:11:44 -0700 (PDT)
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
- <20190922112555.GB122003@gmail.com> <20190922115247.GA2679387@kroah.com>
- <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
- <20190923194322.GA55255@gmail.com>
- <32d0e94d-bf9a-01e9-2548-1fc976c7f17b@infradead.org>
- <f4c21702-f7b5-e6f9-b31d-8fc9e4d1c67d@linuxfoundation.org>
- <20190923205325.GA121000@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <71d15ce8-5bb4-c4c7-42ab-8dc5ce45b73e@linuxfoundation.org>
-Date:   Mon, 23 Sep 2019 15:11:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+nwuC/x0W/vRuXJZDpyCBfwIDzszuyoHEHIS0SrkfVY=;
+        b=A/iK+/5bIXRLJ5iWRE7anUEUDV//77HxDOnjqPvKeum+t/R/bZQNGkeoF21TpP642K
+         oMn0LLzSWOB+BSjyO1uPOLWYQx1e1cA/bF2QW3dtr+uPoeoBFSCkH4f69DczaQiHVmWe
+         SWiOQDED4RaCnvfweKy6Mup8xxuinrmsD7noIPn8vdunF+nBGMX0DYBmov1Bd7wCJOaR
+         N/H84zgGNSOiMIGYFP0BAXsSpTMDaXiqIEEkDazWm0P3zH/x7wJo8AdvFEUzvCqd0mWc
+         c/yDxrTOxoHhA2QJS9ihaEGQTP3RxX6hw5hnyKPVmL0rDKls3yXwjYcPceGlW98fq/xY
+         Gc7w==
+X-Gm-Message-State: APjAAAW+wJ8a4PZ3iZB+92lHtMFT0XkMlpOFClvII9qNO6ri5eYBAhdR
+        UUQchAbtKEQ9kHNdZQKXuiGkJNqSxM0ZgzY3N9SjPg==
+X-Google-Smtp-Source: APXvYqzH64iS8Rjft0Y/aSmpWwtbZvB9ljb9ONrXBoo6fxAAcAV2MjFL0L2lopYflnbTRqXKiO3wk0XCq7rvAM0l5uc=
+X-Received: by 2002:a65:404b:: with SMTP id h11mr1878320pgp.237.1569273228652;
+ Mon, 23 Sep 2019 14:13:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190923205325.GA121000@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
+In-Reply-To: <20190904211456.31204-1-xiyou.wangcong@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 23 Sep 2019 14:13:37 -0700
+Message-ID: <CAM_iQpUiOi8JDBqAtMHii5UHK3D6WQkk_G5DriJ9Y0yTYbWf3Q@mail.gmail.com>
+Subject: Re: [PATCH v3] tracing: Introduce trace event injection
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 2:53 PM, Ingo Molnar wrote:
-> 
-> * Shuah Khan <skhan@linuxfoundation.org> wrote:
-> 
->> Right. What you suggesting is very similar to and more complete than
->> what I have been thinking about and proposed at the KS kselftest track.
->>
->> i.e move tools/testing/selftests to kselftest at the root level. I like
->> your idea of moving tools/testing up to root and keep selftests under
->> it.
->>
->> If we are good with this kind of change, I would like to get this done
->> sooner than later. There is some back-porting churn to worry about.
-> 
-> I think the movement I suggested would be sufficient:
-> 
->    tools/testing/selftests/ =>  tools/selftests/
-> 
-> I.e. let's not clutter up the top level directory.
-> 
+Hi, Steven
 
-Yeah good point.
+Any reviews for V3? I've addressed your concern about Kconfig.
 
--- Shuah
-
+Thanks.
