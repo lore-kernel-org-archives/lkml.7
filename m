@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502AC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C61C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A7420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA5F20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439627AbfIWMwd (ORCPT
+        id S2439635AbfIWMwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:52:33 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:37312 "EHLO
+        Mon, 23 Sep 2019 08:52:37 -0400
+Received: from regular1.263xmail.com ([211.150.70.203]:59210 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437050AbfIWMwd (ORCPT
+        with ESMTP id S2439605AbfIWMwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:52:33 -0400
+        Mon, 23 Sep 2019 08:52:36 -0400
 Received: from hjc?rock-chips.com (unknown [192.168.167.128])
-        by regular1.263xmail.com (Postfix) with ESMTP id 4931FB7E;
-        Mon, 23 Sep 2019 20:52:29 +0800 (CST)
+        by regular1.263xmail.com (Postfix) with ESMTP id 907B23E4;
+        Mon, 23 Sep 2019 20:52:27 +0800 (CST)
 X-263anti-spam: KSV:0;BIG:0;
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
@@ -33,9 +33,9 @@ X-SKE-CHECKED: 1
 X-ANTISPAM-LEVEL: 2
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P15436T140160991741696S1569243121384240_;
-        Mon, 23 Sep 2019 20:52:28 +0800 (CST)
+        Mon, 23 Sep 2019 20:52:26 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0879891f7949fe71dcd17fbe9529da66>
+X-UNIQUE-TAG: <e6bfbf9941a2acc204e22cd8bc1ef476>
 X-RL-SENDER: hjc@rock-chips.com
 X-SENDER: hjc@rock-chips.com
 X-LOGIN-NAME: hjc@rock-chips.com
@@ -45,19 +45,26 @@ X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 From:   Sandy Huang <hjc@rock-chips.com>
 To:     dri-devel@lists.freedesktop.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     hjc@rock-chips.com,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 25/36] drm/imx: use bpp instead of cpp for drm_format_info
-Date:   Mon, 23 Sep 2019 20:51:48 +0800
-Message-Id: <1569243119-183293-5-git-send-email-hjc@rock-chips.com>
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 24/36] drm/hisilicon: use bpp instead of cpp for drm_format_info
+Date:   Mon, 23 Sep 2019 20:51:47 +0800
+Message-Id: <1569243119-183293-4-git-send-email-hjc@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
 References: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
@@ -71,49 +78,36 @@ So we use bpp[BitPerPlane] to instead cpp.
 
 Signed-off-by: Sandy Huang <hjc@rock-chips.com>
 ---
- drivers/gpu/drm/imx/ipuv3-plane.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
-index 28826c0..f7c7036 100644
---- a/drivers/gpu/drm/imx/ipuv3-plane.c
-+++ b/drivers/gpu/drm/imx/ipuv3-plane.c
-@@ -101,7 +101,7 @@ drm_plane_state_to_eba(struct drm_plane_state *state, int plane)
- 	BUG_ON(!cma_obj);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+index cc4c417..6bfb327 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+@@ -122,11 +122,11 @@ static void hibmc_plane_atomic_update(struct drm_plane *plane,
  
- 	return cma_obj->paddr + fb->offsets[plane] + fb->pitches[plane] * y +
--	       fb->format->cpp[plane] * x;
-+	       fb->format->bpp[plane] / 8 * x;
+ 	writel(gpu_addr, priv->mmio + HIBMC_CRT_FB_ADDRESS);
+ 
+-	reg = state->fb->width * (state->fb->format->cpp[0]);
++	reg = state->fb->width * (state->fb->format->bpp[0] / 8);
+ 	/* now line_pad is 16 */
+ 	reg = PADDING(16, reg);
+ 
+-	line_l = state->fb->width * state->fb->format->cpp[0];
++	line_l = state->fb->width * state->fb->format->bpp[0] / 8;
+ 	line_l = PADDING(16, line_l);
+ 	writel(HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_WIDTH, reg) |
+ 	       HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_OFFS, line_l),
+@@ -136,7 +136,7 @@ static void hibmc_plane_atomic_update(struct drm_plane *plane,
+ 	reg = readl(priv->mmio + HIBMC_CRT_DISP_CTL);
+ 	reg &= ~HIBMC_CRT_DISP_CTL_FORMAT_MASK;
+ 	reg |= HIBMC_FIELD(HIBMC_CRT_DISP_CTL_FORMAT,
+-			   state->fb->format->cpp[0] * 8 / 16);
++			   state->fb->format->bpp[0] / 16);
+ 	writel(reg, priv->mmio + HIBMC_CRT_DISP_CTL);
  }
  
- static inline unsigned long
-@@ -120,7 +120,7 @@ drm_plane_state_to_ubo(struct drm_plane_state *state)
- 	y /= fb->format->vsub;
- 
- 	return cma_obj->paddr + fb->offsets[1] + fb->pitches[1] * y +
--	       fb->format->cpp[1] * x - eba;
-+	       fb->format->bpp[1] / 8 * x - eba;
- }
- 
- static inline unsigned long
-@@ -139,7 +139,7 @@ drm_plane_state_to_vbo(struct drm_plane_state *state)
- 	y /= fb->format->vsub;
- 
- 	return cma_obj->paddr + fb->offsets[2] + fb->pitches[2] * y +
--	       fb->format->cpp[2] * x - eba;
-+	       fb->format->bpp[2] / 8 * x - eba;
- }
- 
- void ipu_plane_put_resources(struct ipu_plane *ipu_plane)
-@@ -628,7 +628,7 @@ static void ipu_plane_atomic_update(struct drm_plane *plane,
- 	width = drm_rect_width(&state->src) >> 16;
- 	height = drm_rect_height(&state->src) >> 16;
- 	info = drm_format_info(fb->format->format);
--	ipu_calculate_bursts(width, info->cpp[0], fb->pitches[0],
-+	ipu_calculate_bursts(width, info->bpp[0] / 8, fb->pitches[0],
- 			     &burstsize, &num_bursts);
- 
- 	ipu_cpmem_zero(ipu_plane->ipu_ch);
 -- 
 2.7.4
 
