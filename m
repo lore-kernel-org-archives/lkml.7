@@ -2,272 +2,102 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC36EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF37C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AD0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2587206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404375AbfIWCco (ORCPT
+        id S2404480AbfIWCd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 22:32:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37698 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404135AbfIWCcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 22:32:43 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5808E83F42;
-        Mon, 23 Sep 2019 02:32:42 +0000 (UTC)
-Received: from [10.72.12.112] (ovpn-12-112.pek2.redhat.com [10.72.12.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0187860BE1;
-        Mon, 23 Sep 2019 02:32:32 +0000 (UTC)
-Subject: Re: [PATCH net-next] tuntap: Fallback to automq on TUNSETSTEERINGEBPF
- prog negative return
-To:     Matt Cover <werekraken@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com,
-        Eric Dumazet <edumazet@google.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Matthew Cover <matthew.cover@stackpath.com>,
-        mail@timurcelik.de, pabeni@redhat.com,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        wangli39@baidu.com, lifei.shirley@bytedance.com,
-        tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20190920185843.4096-1-matthew.cover@stackpath.com>
- <20190922080326-mutt-send-email-mst@kernel.org>
- <CAGyo_hqGbFdt1PoDrmo=S5iTO8TwbrbtOJtbvGT1WrFFMLwk-Q@mail.gmail.com>
- <0f4541d9-a405-6185-7e54-112dc9188146@redhat.com>
- <CAGyo_hp-PJUg7GWFK996vqRxn=cCEdE=hcWdYhyf4K-nSU9qYQ@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <df4ee92f-89e4-70a7-2de8-49fa4acfa08e@redhat.com>
-Date:   Mon, 23 Sep 2019 10:32:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 22 Sep 2019 22:33:57 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:46756 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404135AbfIWCd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 22:33:57 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8N2WsLZ016325, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8N2WsLZ016325
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 23 Sep 2019 10:32:54 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 23 Sep
+ 2019 10:32:53 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        "Thierry Reding" <treding@nvidia.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        "Rob Herring" <robh@kernel.org>,
+        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Subject: RE: [PATCH] ARM: Add support for Realtek SOC
+Thread-Topic: [PATCH] ARM: Add support for Realtek SOC
+Thread-Index: AQHVY67V+8blpY45FUyr2dN3mgK/RqccOwQAgAf67ACAAW8fgIAABQEAgBI1EbA=
+Date:   Mon, 23 Sep 2019 02:32:52 +0000
+Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8E7CEE@RTITMBSVM04.realtek.com.tw>
+References: <20190905054647.1235-1-james.tai@realtek.com>
+ <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
+ <43B123F21A8CFE44A9641C099E4196FFCF8DA1D0@RTITMBSVM04.realtek.com.tw>
+ <CAK8P3a39VrC1Xn+HZc5gvh1-nUYKywDGjTfO9WPCqim89WtGAg@mail.gmail.com>
+ <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
+In-Reply-To: <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAGyo_hp-PJUg7GWFK996vqRxn=cCEdE=hcWdYhyf4K-nSU9qYQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 23 Sep 2019 02:32:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/9/23 上午9:20, Matt Cover wrote:
-> On Sun, Sep 22, 2019 at 5:46 PM Jason Wang <jasowang@redhat.com> wrote:
->>
->> On 2019/9/23 上午1:43, Matt Cover wrote:
->>> On Sun, Sep 22, 2019 at 5:37 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->>>> On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
->>>>> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a signal
->>>>> to fallback to tun_automq_select_queue() for tx queue selection.
->>>>>
->>>>> Compilation of this exact patch was tested.
->>>>>
->>>>> For functional testing 3 additional printk()s were added.
->>>>>
->>>>> Functional testing results (on 2 txq tap device):
->>>>>
->>>>>     [Fri Sep 20 18:33:27 2019] ========== tun no prog ==========
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
->>>>>     [Fri Sep 20 18:33:27 2019] ========== tun prog -1 ==========
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '-1'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '-1'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue() ran
->>>>>     [Fri Sep 20 18:33:27 2019] ========== tun prog 0 ==========
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '0'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
->>>>>     [Fri Sep 20 18:33:27 2019] ========== tun prog 1 ==========
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '1'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '1'
->>>>>     [Fri Sep 20 18:33:27 2019] ========== tun prog 2 ==========
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb() returned '2'
->>>>>     [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue() returned '0'
->>>>>
->>>>> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
->>>> Could you add a bit more motivation data here?
->>> Thank you for these questions Michael.
->>>
->>> I'll plan on adding the below information to the
->>> commit message and submitting a v2 of this patch
->>> when net-next reopens. In the meantime, it would
->>> be very helpful to know if these answers address
->>> some of your concerns.
->>>
->>>> 1. why is this a good idea
->>> This change allows TUNSETSTEERINGEBPF progs to
->>> do any of the following.
->>>    1. implement queue selection for a subset of
->>>       traffic (e.g. special queue selection logic
->>>       for ipv4, but return negative and use the
->>>       default automq logic for ipv6)
->>
->> Well, using ebpf means it need to take care of all the cases. E.g you
->> can easily implement the fallback through eBPF as well.
->>
-> I really think there is value in being
-> able to implement a scoped special
-> case while leaving the rest of the
-> packets in the kernel's hands.
-
-
-This is only work when some fucntion could not be done by eBPF itself 
-and then we can provide the function through eBPF helpers. But this is 
-not the case here.
-
-
->
-> Having to reimplement automq makes
-> this hookpoint less accessible to
-> beginners and experienced alike.
-
-
-Note that automq itself is kind of complicated, it's best effort that is 
-hard to be documented accurately. It has several limitations (e.g flow 
-caches etc.) that may not work well in some conditions.
-
-It's not hard to implement a user programmable steering policy through 
-maps which could have much deterministic behavior than automq. The goal 
-of steering ebpf is to get rid of automq completely not partially rely 
-on it.
-
-And I don't see how relying on automq can simplify anything.
-
-Thanks
-
-
->
->>>    2. determine there isn't sufficient information
->>>       to do proper queue selection; return
->>>       negative and use the default automq logic
->>>       for the unknown
->>
->> Same as above.
->>
->>
->>>    3. implement a noop prog (e.g. do
->>>       bpf_trace_printk() then return negative and
->>>       use the default automq logic for everything)
->>
->> ditto.
->>
->>
->>>> 2. how do we know existing userspace does not rely on existing behaviour
->>> Prior to this change a negative return from a
->>> TUNSETSTEERINGEBPF prog would have been cast
->>> into a u16 and traversed netdev_cap_txqueue().
->>>
->>> In most cases netdev_cap_txqueue() would have
->>> found this value to exceed real_num_tx_queues
->>> and queue_index would be updated to 0.
->>>
->>> It is possible that a TUNSETSTEERINGEBPF prog
->>> return a negative value which when cast into a
->>> u16 results in a positive queue_index less than
->>> real_num_tx_queues. For example, on x86_64, a
->>> return value of -65535 results in a queue_index
->>> of 1; which is a valid queue for any multiqueue
->>> device.
->>>
->>> It seems unlikely, however as stated above is
->>> unfortunately possible, that existing
->>> TUNSETSTEERINGEBPF programs would choose to
->>> return a negative value rather than return the
->>> positive value which holds the same meaning.
->>>
->>> It seems more likely that future
->>> TUNSETSTEERINGEBPF programs would leverage a
->>> negative return and potentially be loaded into
->>> a kernel with the old behavior.
->>
->> Yes, eBPF can return probably wrong value, but what kernel did is just
->> to make sure it doesn't harm anything.
->>
->> I would rather just drop the packet in this case.
->>
-> In addition to TUN_SSE_ABORT, we can
-> add TUN_SSE_DROP. That could be made the
-> default for any undefined negative
-> return as well.
->
->> Thanks
->>
->>
->>>> 3. why doesn't userspace need a way to figure out whether it runs on a kernel with and
->>>>      without this patch
->>> There may be some value in exposing this fact
->>> to the ebpf prog loader. What is the standard
->>> practice here, a define?
->>>
->>>> thanks,
->>>> MST
->>>>
->>>>> ---
->>>>>    drivers/net/tun.c | 20 +++++++++++---------
->>>>>    1 file changed, 11 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
->>>>> index aab0be4..173d159 100644
->>>>> --- a/drivers/net/tun.c
->>>>> +++ b/drivers/net/tun.c
->>>>> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct tun_struct *tun, struct sk_buff *skb)
->>>>>         return txq;
->>>>>    }
->>>>>
->>>>> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
->>>>> +static int tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
->>>>>    {
->>>>>         struct tun_prog *prog;
->>>>>         u32 numqueues;
->>>>> -     u16 ret = 0;
->>>>> +     int ret = -1;
->>>>>
->>>>>         numqueues = READ_ONCE(tun->numqueues);
->>>>>         if (!numqueues)
->>>>>                 return 0;
->>>>>
->>>>> +     rcu_read_lock();
->>>>>         prog = rcu_dereference(tun->steering_prog);
->>>>>         if (prog)
->>>>>                 ret = bpf_prog_run_clear_cb(prog->prog, skb);
->>>>> +     rcu_read_unlock();
->>>>>
->>>>> -     return ret % numqueues;
->>>>> +     if (ret >= 0)
->>>>> +             ret %= numqueues;
->>>>> +
->>>>> +     return ret;
->>>>>    }
->>>>>
->>>>>    static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
->>>>>                             struct net_device *sb_dev)
->>>>>    {
->>>>>         struct tun_struct *tun = netdev_priv(dev);
->>>>> -     u16 ret;
->>>>> +     int ret;
->>>>>
->>>>> -     rcu_read_lock();
->>>>> -     if (rcu_dereference(tun->steering_prog))
->>>>> -             ret = tun_ebpf_select_queue(tun, skb);
->>>>> -     else
->>>>> +     ret = tun_ebpf_select_queue(tun, skb);
->>>>> +     if (ret < 0)
->>>>>                 ret = tun_automq_select_queue(tun, skb);
->>>>> -     rcu_read_unlock();
->>>>>
->>>>>         return ret;
->>>>>    }
->>>>> --
->>>>> 1.8.3.1
+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IEFkZCBzdXBwb3J0IGZvciBSZWFsdGVrIFNPQw0K
+PiANCj4gT24gV2VkLCBTZXAgMTEsIDIwMTkgYXQgNToxNyBQTSBBcm5kIEJlcmdtYW5uIDxhcm5k
+QGFybmRiLmRlPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgU2VwIDExLCAyMDE5IGF0IDk6NDYg
+QU0gSmFtZXMgVGFpW+aItOW/l+WzsF0NCj4gPGphbWVzLnRhaUByZWFsdGVrLmNvbT4gd3JvdGU6
+DQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogQWRkIHN1cHBvcnQgZm9yIFJlYWx0
+ZWsgU09DDQo+ID4NCj4gPiA+ID4gPiBAQCAtMTQ4LDYgKzE0OCw3IEBAIGVuZGlmDQo+ID4gPiA+
+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004WDYwKSA6PSAweDAwMjA4MDAwDQo+ID4gPiA+
+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004OTYwKSA6PSAweDAwMjA4MDAwDQo+ID4gPiA+
+ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NRVNPTikgOj0gMHgwMDIwODAwMA0KPiA+ID4gPiA+
+ICt0ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfUkVBTFRFSykgOj0gMHgwMDIwODAwMA0KPiA+ID4gPiA+
+ICB0ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfQVhYSUEpIDo9IDB4MDAzMDgwMDANCj4gPiA+ID4NCj4g
+PiA+ID4gQ2FuIHlvdSBleHBsYWluIHdoeSB0aGlzIGlzIG5lZWRlZCBmb3IgeW91ciBwbGF0Zm9y
+bT8NCj4gPiA+ID4NCj4gPiA+IFdlIG5lZWQgdG8gcmVzZXJ2ZSBtZW1vcnkgKDB4MDAwMDAwMDAg
+fiAweDAwMUIwMDAwKSBmb3Igcm9tIGFuZCBib290DQo+IGNvZGUuDQo+ID4NCj4gPiBPay4NCj4g
+DQo+IA0KPiBJIGRvIG5vdCBsaWtlIHRoaXMgbXVjaC4NCj4gDQo+IFRoaXMgcGxhdGZvcm0gaXMg
+QVJDSF9NVUxUSV9WNy4NCj4gDQo+IEFSTV9QQVRDSF9QSFlTX1ZJUlQgYWxsb3dzIHlvdSB0byBw
+bGFjZSB0aGUga2VybmVsIGltYWdlIGFueXdoZXJlIGluDQo+IG1lbW9yeSBhcyBsb25nIGFzIHRo
+ZSBiYXNlIGlzIGFsaWduZWQgYXQgMTZNQi4NCj4gDQo+IFRoZSBtaW5pbXVtICd0ZXh0b2ZzLXkg
+Oj0gMHgwMDA4MDAwJyArIGV4dHJhIDE2TUIgb2Zmc2V0IHdpbGwgY3JlYXRlIGEgc3BhY2UNCj4g
+KDB4MDAwMDAwMDAgfiAweDAxMDA4MDAwKS4NCj4gDQo+IFRoaXMgaXMgbW9yZSB0aGFuIG5lZWRl
+ZCwgYnV0IGl0IGlzIG5vdCBhIGJpZyBkZWFsIHRvIHdhc3RlIHNvbWUgbWVnYWJ5dGVzIG9mDQo+
+IG1lbW9yeS4NCj4gDQoNCk9LLiBJIHVuZGVyc3RhbmQuDQoNCj4gLS0NCj4gQmVzdCBSZWdhcmRz
+DQo+IE1hc2FoaXJvIFlhbWFkYQ0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZp
+cm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
