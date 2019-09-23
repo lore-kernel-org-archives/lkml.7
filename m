@@ -2,96 +2,163 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D03C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BAEC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9923F20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CB720867
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jHShKYYf"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zAsyPvNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393887AbfIWLbr (ORCPT
+        id S1730235AbfIWLeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:31:47 -0400
-Received: from mail-vs1-f52.google.com ([209.85.217.52]:38838 "EHLO
-        mail-vs1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389652AbfIWLbr (ORCPT
+        Mon, 23 Sep 2019 07:34:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33351 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfIWLeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:31:47 -0400
-Received: by mail-vs1-f52.google.com with SMTP id b123so9167059vsb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:31:47 -0700 (PDT)
+        Mon, 23 Sep 2019 07:34:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a22so13361957ljd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BdkRnPxxkrHCArqVLcv4NrTAprv0oT6sz0IuGcvvVWE=;
-        b=jHShKYYf94iD2ATPmGI2XwDkf0OHLQT3BApISGPlbJKzIY/Q2WZFIfr/SrU/pSqLy4
-         paP0exW8nos30hYID3RxxM07msiA2p4tGi1oGCgGaTRJD+1GsAlPbtQs1/I3wrRE/ggm
-         6DW2dpV9BTs8xzduRSMoGvUdmXE6fMYXj/Rj27mSMZCDoJNGxhvUa1N4s9dFPImX0oCM
-         c9LgFKMOlUa+06PbMPbaaZrmsmxpN+QK76856pLUs+30YH/dDa71oDehFcJntogH3mwm
-         caBSsrQ+DLoxSAm0j05GPi+6pLZknm+mIXXZRQPgx8N9HVfIyEbPZ9UeQfSzCFs4l606
-         i/Lw==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1iHVMQKqhTvi2xyeEpHSWZnbXdJb6BZcBgLx05z/RJY=;
+        b=zAsyPvNJsGYcnnQeTbbprStzO4yMGANU4Wwf8P25L0D1n7azLLG750ich1xVRaWDAW
+         IyAmTFGaVwCJP9xiUik/8q1b66zr5cFf/PG4QRArX19JS2/PwOhFis27q9CH5IQFsysc
+         IgjgN8DM+EhVr1ffjmOsBsngMuGC94o0StTmi8fH6jmvYVS/LlBjgjM+UkpoZerHGp6z
+         LXaU9ZShi7/y/Ab2WMrtyF6IRiCp2pmUvmooh3KCl4I4dI7zDmL/n2AFYqE3OsIifJyt
+         6xY4M3QgfFH8s4DCfBRwSCg7ZbiUvuwl9kfgIS3JzDNAIos56QJeqRygXAFE+sMLd3YD
+         aIHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BdkRnPxxkrHCArqVLcv4NrTAprv0oT6sz0IuGcvvVWE=;
-        b=gcWbe5FsNCicjt0fYeG+LxgnHqQU3gvG3THQ2PaumtnDhmuFGUSBdZS5zmGT+SH38B
-         UkgBU5sH/0PyVBOaAxp2yyHf6FqSp5epKIDDtnVFMcfVAXrBktpa4dDfA/g08vJAU+n3
-         y79w2lW5ASjhR0oVkVLGfrBSEe2ocX5owoSva4k/EMVLiHkcbzxY3rEOqZQn19yzOoVg
-         NPRNZPtWG49d1acs9hdRMhvvuJNtpmlvyswpSII7ImWHRcCIgMbwqnX3r1FejGCd/VST
-         0YOjiwgN3JvMN2ryYIFMkEbiN0i9zL3xv8QjYCT9qZHeq3Fs48lfGarDUvtfcrMiIqMT
-         fKhw==
-X-Gm-Message-State: APjAAAUtnf+nkcX3wHYCuVEtyCmUAde1zPS9rZyOj65Ei+P4D3ybMRJ3
-        cgghxFjccIHHICUiQGrheI/CGWz0gPqCUed6wUMigw==
-X-Google-Smtp-Source: APXvYqy8BKdp4ghbBvtWW9phg6fsERCN3I2yGXJ7bam9mOb5SLVGmAxWSC7FMsadphb/GL8lp0NrqknQC51A6f45XLU=
-X-Received: by 2002:a67:f0cd:: with SMTP id j13mr9479486vsl.183.1569238306236;
- Mon, 23 Sep 2019 04:31:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1iHVMQKqhTvi2xyeEpHSWZnbXdJb6BZcBgLx05z/RJY=;
+        b=ZVttwri01LRprT+vuJI+AxrW3ULvgqO0L37aSlwOEVhi47tT6LJdaXH3J75UlB0+Um
+         QJWgYdqomt4pBdr2DYv/xmnn8OUxo+s07Le+gfAP1AMoWtSmBYxmPTYjgLW4rW+aNi/r
+         Gq8ilunO48FUrnmh6wtvlfbga8xvSK1KD3PMoPUtUgLFsNfmBLoUGZAD+VT6RoHGYnbQ
+         1vtoeRIbqJwOlXgEtqCpgU2AQp/VhxtJTHZPxb+tooh0ifVSrUNEcLIrmdKYWyyMbSBg
+         LMrTjmPfmgxZrhz64mgdz3HjJZYN1l8cvezU8DNhjXco6Evs6vjKIePCVe31e3zyuXPV
+         mysw==
+X-Gm-Message-State: APjAAAWoAUYFbu+MlV7+wXJT7rySYJ1OXNuRTvsmBZCFh2tigEG4w3Zz
+        Mz6/MIETRUTUKwnr0QvvKBFr8A==
+X-Google-Smtp-Source: APXvYqyLM/Stp8gNwOtRCJqDNGvGHQVfcCbloLsy0YfOl+HNNgEkESrWd92Ftx28l5PJGALh+qbOug==
+X-Received: by 2002:a2e:8789:: with SMTP id n9mr17263051lji.52.1569238444804;
+        Mon, 23 Sep 2019 04:34:04 -0700 (PDT)
+Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
+        by smtp.gmail.com with ESMTPSA id 126sm2326083lfh.45.2019.09.23.04.34.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 04:34:04 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 13:34:03 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH] media: platform: Use devm_platform_ioremap_resource() in
+ two functions
+Message-ID: <20190923113403.GA14837@bigcity.dyn.berto.se>
+References: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
 MIME-Version: 1.0
-References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
-In-Reply-To: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 23 Sep 2019 04:31:09 -0700
-Message-ID: <CAKOZuetMK0eRxBrR8wXo_qCaQ7OGKQHqAy15cX437+Q+cvbbvA@mail.gmail.com>
-Subject: Re: For review: pidfd_send_signal(2) manual page
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 2:12 AM Michael Kerrisk (man-pages)
-<mtk.manpages@gmail.com> wrote:
->        The  pidfd_send_signal()  system call allows the avoidance of race
->        conditions that occur when using traditional interfaces  (such  as
->        kill(2)) to signal a process.  The problem is that the traditional
->        interfaces specify the target process via a process ID (PID), with
->        the  result  that the sender may accidentally send a signal to the
->        wrong process if the originally intended target process has termi=
-=E2=80=90
->        nated  and its PID has been recycled for another process.  By con=
-=E2=80=90
->        trast, a PID file descriptor is a stable reference to  a  specific
->        process;  if  that  process  terminates,  then the file descriptor
->        ceases to be  valid
+Hi Markus,
 
-The file *descriptor* remains valid even after the process to which it
-refers exits. You can close(2) the file descriptor without getting
-EBADF. I'd say, instead, that "a PID file descriptor is a stable
-reference to a specific process; process-related operations on a PID
-file descriptor fail after that process exits".
+Thanks for your patch.
+
+On 2019-09-18 11:30:30 +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 18 Sep 2019 11:20:48 +0200
+> 
+> Simplify these function implementations by using a known wrapper function.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c | 8 +-------
+>  drivers/media/platform/rcar-vin/rcar-core.c            | 7 +------
+
+For rcar-vin:
+
+Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+
+>  2 files changed, 2 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> index 00d090df11bb..944771ee5f5c 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> @@ -253,13 +253,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+>  	}
+> 
+>  	for (i = 0; i < NUM_MAX_VDEC_REG_BASE; i++) {
+> -		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> -		if (res == NULL) {
+> -			dev_err(&pdev->dev, "get memory resource failed.");
+> -			ret = -ENXIO;
+> -			goto err_res;
+> -		}
+> -		dev->reg_base[i] = devm_ioremap_resource(&pdev->dev, res);
+> +		dev->reg_base[i] = devm_platform_ioremap_resource(pdev, i);
+>  		if (IS_ERR((__force void *)dev->reg_base[i])) {
+>  			ret = PTR_ERR((__force void *)dev->reg_base[i]);
+>  			goto err_res;
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index 6993484ff0f3..334c62805959 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -1282,7 +1282,6 @@ static int rcar_vin_probe(struct platform_device *pdev)
+>  {
+>  	const struct soc_device_attribute *attr;
+>  	struct rvin_dev *vin;
+> -	struct resource *mem;
+>  	int irq, ret;
+> 
+>  	vin = devm_kzalloc(&pdev->dev, sizeof(*vin), GFP_KERNEL);
+> @@ -1301,11 +1300,7 @@ static int rcar_vin_probe(struct platform_device *pdev)
+>  	if (attr)
+>  		vin->info = attr->data;
+> 
+> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (mem == NULL)
+> -		return -EINVAL;
+> -
+> -	vin->base = devm_ioremap_resource(vin->dev, mem);
+> +	vin->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(vin->base))
+>  		return PTR_ERR(vin->base);
+> 
+> --
+> 2.23.0
+> 
+
+-- 
+Regards,
+Niklas Söderlund
