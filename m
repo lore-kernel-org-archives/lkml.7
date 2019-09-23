@@ -2,121 +2,277 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D31DC64998
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9318CC6499E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC3C20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJv03hsq"
+	by mail.kernel.org (Postfix) with ESMTP id 5C090214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569271129;
+	bh=gNrXvUAU8wOQh+iz7AfVncMXjSwAzg06fGaV6JWq7VM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AT4aYQ46CUnf1+GiqEz8LTnOgWmnkZe4A0/iYAd5+mOF+PTC2bZ+R0HfGHuKgw/ny
+	 +UOhS0WknRp1aAJSmuXVQlFKqsvzPKLgYcfKwoH23BEdjqtjPZpxPfbekh7szcs4xA
+	 QrVpglUYFEg6d8TlHZcALVvdmLvM6zivNR7wcb9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388385AbfIWUin (ORCPT
+        id S2388503AbfIWUis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:38:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46264 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbfIWUin (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:38:43 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f21so13335147otl.13;
-        Mon, 23 Sep 2019 13:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sweUxZxJQosgkHBCYd8BKEHHN75LnY+P6m8uRQ6mgPE=;
-        b=LJv03hsqxE7HeQxEDwFpfAn/DjAJR3E9WORr/bIi5FIQGwRrHSRpvlNmA1OyrIT0/5
-         m7p7Rj+VSyMoqAmoXxt6PZtc4ffTgJDZUyw5z+i401rzSy9ZWvQ/FsQnaH5IzUSFZhH9
-         p/qEosXDAiQWmcyJFhNAZ+Cyd+VY+A8DsLr4bv6BoNv27QdFlV/DK+xqjwvvzrVEjrhc
-         e32nisHV2HUkkZ90zh40XBB96WGpkKtuvPPPM8TcZllI9BuhgS40JE0jD+BPxDXQGOjd
-         audrENWHDcGzQei1boeFz6THkaawWLHeQp79muBhkMlYe9eahigwz9diIcH3n8hHFCSb
-         MU6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sweUxZxJQosgkHBCYd8BKEHHN75LnY+P6m8uRQ6mgPE=;
-        b=Zr9kr8z+AWTewoZ5kEJ8sEFpIyVcMS05qnDxXwobDwfiLdKS+TH15oE30GW8ALafCe
-         5IrEwmEPEWTv9N7dflJEjhfDEoiC/RAHNnmxVjrG5shJ3/9a4HJ5dRg7+kq99TLg/NPP
-         un5C1sDDUJEUyT9spKQkG1c3uFOlmQ10XU4quUrrGgHGYnZrFvv0FCA8vq6fLS0ErIDl
-         N7XPDblBL9PyF2CJ71bgQXFbSSz5XXxBUi5hEyRCtlA5+59IifnfWfiaBlh8Rt6vSg4U
-         M86uiNSnyoJyVwdiTVJtXaUmv79XxHC6zNEiLyJkvvcxKTpqBnK7kqOc2ChSJN3tMkt6
-         CA8Q==
-X-Gm-Message-State: APjAAAWbve0tXnIWfqy/YtbpiJO01YVNagvEyALBEtrSCHxa2bSy3Br/
-        WGZHfdacnES90mZ+8r/7bbaaLEnh
-X-Google-Smtp-Source: APXvYqxVGuW3Yqgnxvh8w8QHADv1Q7TKMCTm0SavQ/Xl+LXxhXcGKhfZQ7iNGJHU34SMXI9bp2Lhtg==
-X-Received: by 2002:a9d:744d:: with SMTP id p13mr143941otk.76.1569271122026;
-        Mon, 23 Sep 2019 13:38:42 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id d9sm3881232ote.11.2019.09.23.13.38.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 13:38:40 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8188eu: remove dead code in do-while
- conditional step
-To:     Connor Kuehl <connor.kuehl@canonical.com>,
-        gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190923194806.25347-1-connor.kuehl@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <c2ce3fb0-6407-982a-a3f2-172cef17f2a6@lwfinger.net>
-Date:   Mon, 23 Sep 2019 15:38:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 23 Sep 2019 16:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387586AbfIWUis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 16:38:48 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3500020B7C;
+        Mon, 23 Sep 2019 20:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569271127;
+        bh=gNrXvUAU8wOQh+iz7AfVncMXjSwAzg06fGaV6JWq7VM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Zhmep+7Yb+218KwH3rXqqFXlWqTUT+B+anFjP7DzudTHptIUjrsAhFxa2zsVTSJ1p
+         7FSXtVzzeonhZORvXyVB/BQzuNpVpvxJpvRb40C4i3gDsU5sg8IMC6ELwXmaUIXQ/T
+         A6DX/9i1XQuCcydOn+6Ax6wgn94ATIiAwIPhT3Ic=
+Received: by mail-qk1-f169.google.com with SMTP id y189so16935585qkc.3;
+        Mon, 23 Sep 2019 13:38:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAXmTOnrvgXG3anSag8jToy+W93QqGMEDDzZ2FzR03yt9Z7gB8VD
+        whbrHBqogkKd4e1qGm4F9GU6m0C6+XFtPjSdQw==
+X-Google-Smtp-Source: APXvYqz4x174VUoDQ+sHaLwwQwYrYkn6emdZqVdsDwxBV8jupD/JDZttNZMfO0zz0c9aUqqQPkIDUNmyo/zXIew/gks=
+X-Received: by 2002:a37:682:: with SMTP id 124mr1915258qkg.393.1569271126374;
+ Mon, 23 Sep 2019 13:38:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190923194806.25347-1-connor.kuehl@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190923175211.2060-1-brgl@bgdev.pl>
+In-Reply-To: <20190923175211.2060-1-brgl@bgdev.pl>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 23 Sep 2019 15:38:35 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
+Message-ID: <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 2:48 PM, Connor Kuehl wrote:
-> The local variable 'bcmd_down' is always set to true almost immediately
-> before the do-while's condition is checked. As a result, !bcmd_down
-> evaluates to false which short circuits the logical AND operator meaning
-> that the second operand is never reached and is therefore dead code.
-> 
-> Addresses-Coverity: ("Logically dead code")
-> 
-> Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
+On Mon, Sep 23, 2019 at 12:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Convert the binding document for at24 EEPROMs from txt to yaml. The
+> compatible property uses a regex pattern to address all the possible
+> combinations of "vendor,model" strings.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->   drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> index 47352f210c0b..a4b317937b23 100644
-> --- a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> +++ b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> @@ -48,7 +48,6 @@ static u8 _is_fw_read_cmd_down(struct adapter *adapt, u8 msgbox_num)
->   static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
->   {
->   	u8 bcmd_down = false;
-> -	s32 retry_cnts = 100;
->   	u8 h2c_box_num;
->   	u32 msgbox_addr;
->   	u32 msgbox_ex_addr;
-> @@ -103,7 +102,7 @@ static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *p
->   		adapt->HalData->LastHMEBoxNum =
->   			(h2c_box_num+1) % RTL88E_MAX_H2C_BOX_NUMS;
->   
-> -	} while ((!bcmd_down) && (retry_cnts--));
-> +	} while (!bcmd_down);
->   
->   	ret = _SUCCESS;
+>  .../devicetree/bindings/eeprom/at24.txt       |  90 +--------------
+>  .../devicetree/bindings/eeprom/at24.yaml      | 107 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 109 insertions(+), 90 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
 
-This patch is correct; however, the do..while loop will always be executed once, 
-thus you could remove the loop and the loop variable bcmd_down.
+[...]
 
-@greg: If you would prefer a two-step process, then this one is OK.
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> new file mode 100644
+> index 000000000000..28c8b068c8a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> @@ -0,0 +1,107 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2019 BayLibre SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: I2C EEPROMs compatible with Atmel's AT24
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +properties:
+> +  compatible:
 
-Larry
+Did you run this thru 'make dt_bindings_check' and is dt-schema up to
+date? I don't think it will pass and if it does I want to fix that.
 
+> +    additionalItems: true
+
+We pretty much never allow this.
+
+> +    maxItems: 2
+
+This applies to arrays...
+
+> +    pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
+
+And this to strings which is non-sense. What you want is something like this:
+
+minItems: 1
+maxItems: 2
+items:
+  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
+  - pattern: "^atmel,24(c|cs|mac)[0-9]+$"
+
+This would allow 'atmel' twice, but entries have to be unique already.
+It doesn't enforce the part numbers matching though. For that, you'd
+need either a bunch of these under a oneOf instead:
+
+items:
+  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c00$"
+  - const: atmel,24c00
+
+Or just add this to the above with an 'allOf':
+
+items:
+  pattern: "(c00|c01|mac402|...)$"
+
+Note the lack of '-' under items. That means the schema applies to all entries.
+
+> +    oneOf:
+> +      - const: nxp,se97b
+> +      - const: renesas,r1ex24002
+> +      - const: renesas,r1ex24016
+> +      - const: renesas,r1ex24128
+> +      - const: rohm,br24t01
+
+For this part, you probably want:
+
+oneOf:
+  - items:
+      - const: nxp,se97b
+      - const: atmel,24c02
+  - items:
+      ...
+
+And for the spd cases...
+
+> +    contains:
+> +      enum:
+
+allOf:
+  - oneOf:
+      # all the above stuff
+  - contains:
+      enum:
+
+> +        - atmel,24c00
+> +        - atmel,24c01
+> +        - atmel,24cs01
+> +        - atmel,24c02
+> +        - atmel,24cs02
+> +        - atmel,24mac402
+> +        - atmel,24mac602
+> +        - atmel,spd
+> +        - atmel,24c04
+> +        - atmel,24cs04
+> +        - atmel,24c08
+> +        - atmel,24cs08
+> +        - atmel,24c16
+> +        - atmel,24cs16
+> +        - atmel,24c32
+> +        - atmel,24cs32
+> +        - atmel,24c64
+> +        - atmel,24cs64
+> +        - atmel,24c128
+> +        - atmel,24c256
+> +        - atmel,24c512
+> +        - atmel,24c1024
+> +        - atmel,24c2048
+> +
+> +  reg:
+> +    description:
+> +      The I2C slave address of the EEPROM.
+> +    maxItems: 1
+> +
+> +  pagesize:
+> +    description:
+> +      The length of the pagesize for writing. Please consult the
+> +      manual of your device, that value varies a lot. A wrong value
+> +      may result in data loss! If not specified, a safety value of
+> +      '1' is used which will be very slow.
+> +    type: integer
+
+Other than boolean, you need to reference a type in types.yaml.
+
+Does it really vary too much to list out possible values?
+
+> +
+> +  read-only:
+> +    description:
+> +      This parameterless property disables writes to the eeprom.
+> +    type: boolean
+> +
+> +  size:
+> +    description:
+> +      Total eeprom size in bytes.
+> +    type: integer
+> +
+> +  no-read-rollover:
+> +    description:
+> +      This parameterless property indicates that the multi-address
+> +      eeprom does not automatically roll over reads to the next slave
+> +      address. Please consult the manual of your device.
+> +    type: boolean
+> +
+> +  wp-gpios:
+> +    description:
+> +      GPIO to which the write-protect pin of the chip is connected.
+> +    maxItems: 1
+> +
+> +  address-width:
+> +    description:
+> +      Number of address bits (one of 8, 16).
+
+Sounds like a constraint...
+
+> +    type: integer
+> +
+> +  num-addresses:
+> +    description:
+> +      Total number of i2c slave addresses this device takes.
+
+2^32 addresses okay?
+
+> +    type: integer
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    eeprom@52 {
+> +        compatible = "microchip,24c32", "atmel,24c32";
+> +        reg = <0x52>;
+> +        pagesize = <32>;
+> +        wp-gpios = <&gpio1 3 0>;
+> +        num-addresses = <8>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a400af0501c9..3c7ced686966 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2698,7 +2698,7 @@ M:        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>  L:     linux-i2c@vger.kernel.org
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/eeprom/at24.txt
+> +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
+>  F:     drivers/misc/eeprom/at24.c
+>
+>  ATA OVER ETHERNET (AOE) DRIVER
+> --
+> 2.23.0
+>
