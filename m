@@ -2,149 +2,89 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28492C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E15FC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F353A2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uR4Tos2p"
+	by mail.kernel.org (Postfix) with ESMTP id 648F020640
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437868AbfIWR15 (ORCPT
+        id S2440175AbfIWRbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:27:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38473 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389338AbfIWR15 (ORCPT
+        Mon, 23 Sep 2019 13:31:13 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:40234 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437821AbfIWRbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:27:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id b20so9156916ljj.5;
-        Mon, 23 Sep 2019 10:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ynd2Huq/W1JVW4gwoa1s+Sns1ACUyaWf0IT0B4FOulY=;
-        b=uR4Tos2pgCCsXD8pWPJOv3IBomp+UsSW614q3eidHlx92imCTEi85ptduWUDMapBjc
-         a2kKOefmKPtJYpFtkrpCf+FXC0vt4qjM+GSR00hqupIN/ijRF9VhmTOGazn8K2QH5dp4
-         sqB3o2JWA1qWOl1NHgmgpHRd1OhesrCLgXBxastTwNQ+LD90n/4fv25aziWAQnlFobGU
-         8erPNpVaq7r1zraLzgVqZ4JnJpvgdkofQ6xc6UkhM4UhSOCKtvpGkllc3NmHviWMM3u1
-         aM1Bj/qqfxGVCwn0mf1awhWr0l3xjI2xp3g0N1a187VGjv/VK1G6H7sJzyPFv8PO45RQ
-         aNxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ynd2Huq/W1JVW4gwoa1s+Sns1ACUyaWf0IT0B4FOulY=;
-        b=uRaYwmVkkbL5GuDDPk9T3/l1ZYgAz31RlSlc6kBAP/8PkIQB8fwshi/qLLU/yrHiKR
-         I2J1anatRIAsuZScw96mp7IOzmquOfGDn+s/q9xeJcBEHkVMUV8uKPB2Nsa73FzPwW8N
-         0dEglh+3gu3FighmFvV+OknJEE4x7rsLG2aepPSRYn30sqWOI+fGS2qfKxr5s+Y7TogN
-         J1KDn9xQkBClexHXbzrO7/QQCA9K7YptpZIjk83jPHxCAghMA2I0qtxraY3lJsMgGBQL
-         BYmzdB/ZfQc3J4z6tngdXXpc3ABAaqd5W5IU7B26unkmxFa8qkO3fYtWIfsMXjImCIN3
-         Tk8A==
-X-Gm-Message-State: APjAAAXNAlXslDtKzG3BzAZ6+2UAU/zqGPlrgLsyDGoERYVKK+4slwxj
-        je3E9frhzia7zdTwPkmGlpIgHYn3
-X-Google-Smtp-Source: APXvYqxTC9/fZLOhVSWwi3ml6goC4lcaHDI+ml5SYAhK5B9bK/99xXzQwN3pd1bpWnMfcc6dL2sBfw==
-X-Received: by 2002:a2e:b4c4:: with SMTP id r4mr302405ljm.69.1569259672854;
-        Mon, 23 Sep 2019 10:27:52 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-32-67.pppoe.spdop.ru. [94.29.32.67])
-        by smtp.googlemail.com with ESMTPSA id r5sm2338437lfc.85.2019.09.23.10.27.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 10:27:52 -0700 (PDT)
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
-        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
- <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <16bfccc5-36d5-3050-fd8d-5bce59e2d7b3@gmail.com>
-Date:   Mon, 23 Sep 2019 20:27:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 13:31:13 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 3E7FF20042;
+        Mon, 23 Sep 2019 19:31:08 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 19:31:06 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Sandy Huang <hjc@rock-chips.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/36] drm/atmel-hlcdc: use bpp instead of cpp for
+ drm_format_info
+Message-ID: <20190923173106.GA13649@ravnborg.org>
+References: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
+ <1569243119-183293-2-git-send-email-hjc@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569243119-183293-2-git-send-email-hjc@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=s8YR1HE3AAAA:8
+        a=GZYic5qFh62CaahH_tAA:9 a=CjuIK1q_8ugA:10 a=jGH_LyMDp9YhSvY-UuyI:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.09.2019 16:56, Viresh Kumar пишет:
-> On 22-09-19, 23:12, Dmitry Osipenko wrote:
->> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
->>
->>
->> [   87.952369] ==================================================================
->> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
->> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
->>
->> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
->> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
->> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
->> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
->> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
->> (print_address_description.constprop.0+0x3d/0x340)
->> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
->> (__kasan_report+0xe3/0x12c)
->> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
->> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
->> (blocking_notifier_chain_register+0x29/0x3c)
->> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
->> (dev_pm_qos_add_notifier+0x79/0xf8)
->> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+Hi Sandy.
+
+Thanks for taking care of this, but...
+
+On Mon, Sep 23, 2019 at 08:51:45PM +0800, Sandy Huang wrote:
+> cpp[BytePerPlane] can't describe the 10bit data format correctly,
+> So we use bpp[BitPerPlane] to instead cpp.
 > 
-> Hi Dmitry,
+> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> ---
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Unfortunately I am traveling right now and can't test this stuff, though I may
-> have found the root cause here. Can you please test the below diff for me ?
-> 
-> diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
-> index 6c90fd7e2ff8..9ac244ee05fe 100644
-> --- a/drivers/base/power/qos.c
-> +++ b/drivers/base/power/qos.c
-> @@ -328,6 +328,8 @@ void dev_pm_qos_constraints_destroy(struct device *dev)
->         spin_unlock_irq(&dev->power.lock);
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> index 89f5a75..ab7d423 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> @@ -644,7 +644,7 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
+>  		int xdiv = i ? fb->format->hsub : 1;
+>  		int ydiv = i ? fb->format->vsub : 1;
 >  
->         kfree(qos->resume_latency.notifiers);
-> +       kfree(qos->min_frequency.notifiers);
-> +       kfree(qos->max_frequency.notifiers);
->         kfree(qos);
->  
->   out:
-> 
+> -		state->bpp[i] = fb->format->cpp[i];
+> +		state->bpp[i] = fb->format->bpp[i] / 8;
+>  		if (!state->bpp[i])
+>  			return -EINVAL;
 
-Doesn't help. The use-after-free bugs are usually caused by a missing
-NULL assignment after kfree(), like in this snippet:
+Awaiting conclusion on Daniels comment on PATCH 1 and has dropped this
+patch for now.
+And please address the concerns Rob has about bisectability in your
+cover letter for v2.
 
-	..
-	if (!a)
-		a = kmalloc();
-	..
-	kfree(a);
-	// a = NULL    <-- missing!
-	..
-
-I briefly looked through the code and don't see anything obviously
-wrong. The bug isn't critical since unlikely that somebody reloads
-cpufreq module for a non-development purposes, so it's not a big deal
-and can wait. Please take your time.
-
-I also want to point out that kernel crashes after second module reload,
-hence the KASAN report should be valid.
+	Sam
