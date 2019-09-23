@@ -2,199 +2,224 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E535CC00043
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503B6C00043
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB7E21A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155C420665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="FtHAMnug"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnSvtobc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502938AbfIWVCo (ORCPT
+        id S2502947AbfIWVDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:02:44 -0400
-Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:19014
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2502584AbfIWVCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:02:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bx3BWJaVzuclcnSCCTZ3+q9kSC6XqcHz9tDIbHMdjWMdejkCN/Q6ad7q8EqXXXSqIMKvV7e09AQ3Y0V/AzDvL0I8j1SsREJXEc+TR9neWP60/pEg6MdLBGq39LbVN5tV3nr4svlt/IoO8yBlLlqVJW4VnW6jQB00qvqLlwAaHtu+MafUgGVm9UUeJqsPD0tfOXpK3vQ0+UXDdz3x1NhlI3kspxpAlRRQDU2mZj0wkYaJf8nUI8NR+DDBqi1fy25M/C6oxQmUNjzSE9jPKjEjK8MommiRsdfqRc8JJf4NOrDGiPn/tvYqmzE0lynz5QEM09tARHeuS1XLNGrX4b+2AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JUgww1O+SotrZSvEPpBNEqpue37Qo5fZklgsQJmJva4=;
- b=efmaCXrY5cFWnolQdk9qVUgIMfj5srbRT7La8Vmz3G9BxJHenIydTK2cfuUQvfUiIyQ2BIuQCG6SDh1Fq2XUomXyZkorgkItNlSAkOM8XVqa4rQiJyRqlDS84ylium+Dx7v9V9pLCB+CIJRRDmH6v9qJAqQl+ZNReAeU4aXLpovKLmO+c0zmw4XzdG74VMH0LDBMapdib9YE7B2oLyFbN1tnusiEP9lxk57g5VvlAWddXRvBeenXZn7C3nKXbKapzR5NyHvouD/hX8uzawPkAtukTLyQMXvw7sLWXA1kXoIm5wxT5XEiXsidGF+ymgnHwlWMo6UkEYa+vQXcZ1Fiqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JUgww1O+SotrZSvEPpBNEqpue37Qo5fZklgsQJmJva4=;
- b=FtHAMnug5/xWIjub1VPMDx8+7WHJtaXHZ+Yuh8Kl8XoaB1+QbPN/bBEPJ+P/Rg+L6Dsn3WX7/CdbK6YpQnYHjF+PNZF3+72mWh8fjoaQjg8DVag+rP/Ai8bsZcxACw8tQ3dPle8+PAjInFDFivz32BNCFeyVaRexwely1r1/i5k=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4913.eurprd05.prod.outlook.com (20.177.41.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.22; Mon, 23 Sep 2019 21:02:39 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 21:02:39 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>
-Subject: RE: [PATCH 1/6] mdev: class id support
-Thread-Topic: [PATCH 1/6] mdev: class id support
-Thread-Index: AQHVcg9tP+s325DFukm8x3s6EiJzu6c5v99w
-Date:   Mon, 23 Sep 2019 21:02:38 +0000
-Message-ID: <AM0PR05MB486657BB8E48F744D219CF9BD1850@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190923130331.29324-1-jasowang@redhat.com>
- <20190923130331.29324-2-jasowang@redhat.com>
-In-Reply-To: <20190923130331.29324-2-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 75c0b691-181e-4156-7702-08d740695e12
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4913;
-x-ms-traffictypediagnostic: AM0PR05MB4913:|AM0PR05MB4913:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB49134659721B286F51A1A69ED1850@AM0PR05MB4913.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(346002)(366004)(396003)(136003)(376002)(199004)(189003)(13464003)(7406005)(256004)(478600001)(26005)(55016002)(6436002)(486006)(229853002)(102836004)(71200400001)(53546011)(25786009)(76176011)(71190400001)(6506007)(54906003)(316002)(7696005)(446003)(110136005)(186003)(52536014)(9686003)(966005)(5660300002)(11346002)(6306002)(64756008)(7736002)(3846002)(6116002)(66476007)(66066001)(66446008)(476003)(2501003)(74316002)(2906002)(4326008)(81166006)(81156014)(8676002)(8936002)(66946007)(66556008)(305945005)(86362001)(76116006)(6246003)(14454004)(7416002)(99286004)(2201001)(33656002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4913;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4fhTK+flDcZ2Jj7ds0yII8EAdhFtYJtyJGhrvd6cCn9iVvOydVcSmirbFmKp/sOCHTzXoli8YLtXp1aQwAcmCFEASxkM3Huj2Cf1MZO/AqD9aKLYcYqK3dFg8pHgEhvgaRiqRiOsVDlLchs1i8zZhZNP2vZmDokNApGRfO2ZeZKoRw3HVc/ip04UgYlqJIK7Xtki+zmsDCbVA52t2RGhFPX2bYm7TldrGGYKqgmbOHcVi8Wz/GySOlQO3JxAuZdDKaP+kcNcePV/XriBYqNYSt7yiz5Y/UB/YLjdH2lnVmP8IvAQQGFR69+u6bnl8JwprD44YX0N+O2dzgHADhTdlrmm/RP9Ls+de+WRvn1m514fXaT1j28eWlw8QgIImcDoH3udKpQTAja0FnIb38ajYVOrjMmESM2nUhQ1CnLeLeY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Sep 2019 17:03:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37869 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387617AbfIWVDq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:03:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i1so15508198wro.4;
+        Mon, 23 Sep 2019 14:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fVe2WkRSC+/JEESDxzcblBv1KaMd9haF8Fwrq2sZu/o=;
+        b=GnSvtobcMbJX4lBtD8JZWrUcA7WBIfrM5jqg5R4a4k72bLwWPPe4TRdUrU1zAFNJ9H
+         HTFJEndLAL+QH3yne2LlAP7L4ATR3vrvkWvI/5A2pKqbs0u9ZuZFSmRfYt9uRoVOkR0/
+         ZLmEOCRq0ZDysZCi2+4cdg0IYBDzkL2kKpYaR2O7xaVSa77xfk3ka0EAzTQpHHxW1Bsf
+         7V+UtSKRT+U6tsMDAoudHFp/lO/51TSrcrGl9rls8bYB+6tgYc/lDYu9vr9dgSsuEjMr
+         BE0KbdhxapmcAGbikwNL8Jm2tTSVrea+CuITaNysGDAkshtL1Hi3z4SeSwbXunXUXVw3
+         brUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fVe2WkRSC+/JEESDxzcblBv1KaMd9haF8Fwrq2sZu/o=;
+        b=Yrhq0utb4dcvMYz8I+5hkm4Ei8zcDc6cXOueEDFgo93pprK0HJ9uqij7IwTnn3+TkE
+         siIyzhyl2P948RBMFpOBS87Gzmqi1Y8xsVryE1Ltwinh21IC95qx7J53h+DoPax2RqXY
+         pvtNa0H50b3RdeGSyYU1I2Fjz4fJNpHDV8Ccuk1nPq3s3y6eSzeQWe6D2b4d69M2/oa4
+         coKzmad0Wh4JPdQoJetQfPyQFPoNdmX+K/qPOtoK3jDQUimDZfXClm7ZToHbxuDDdEyq
+         Zij2o3JbhWNd6rzTTXITjvso1bkt5Yj/sB/+xCx+KMxoXi0/MJe6jseaCCM9TC3k8Bdj
+         x09w==
+X-Gm-Message-State: APjAAAXT3KcECrKXH7dXvrG3yrHhA0CxQthTO/hTY+DsqlWvz9T+OZPE
+        p2gikMcCezGOcy7rzaEiohM=
+X-Google-Smtp-Source: APXvYqzJD3D5MvfXMaFrP+5zOCfamlXds4X7mCYDilCd5gtE7S9tRSaEm4azH/oa8Ydd2R0hlZ+H7w==
+X-Received: by 2002:a05:6000:108e:: with SMTP id y14mr917888wrw.344.1569272623547;
+        Mon, 23 Sep 2019 14:03:43 -0700 (PDT)
+Received: from [192.168.1.19] (bdr247.neoplus.adsl.tpnet.pl. [83.28.3.247])
+        by smtp.gmail.com with ESMTPSA id y186sm26130778wmb.41.2019.09.23.14.03.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 14:03:42 -0700 (PDT)
+Subject: Re: [PATCH v4 1/3] led: make led_set_brightness_sync() use
+ led_set_brightness_nosleep()
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
+        daniel.thompson@linaro.org
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmurphy@ti.com, tomi.valkeinen@ti.com
+References: <20190920122525.15712-1-jjhiblot@ti.com>
+ <20190920122525.15712-2-jjhiblot@ti.com>
+ <c8519e2f-9d46-e164-04d0-42cc5834042a@gmail.com>
+ <2172e1c7-931e-d510-648b-80ef9c606ab6@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2de8d45c-dc0f-90d2-ed8d-96494a6386c1@gmail.com>
+Date:   Mon, 23 Sep 2019 23:03:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75c0b691-181e-4156-7702-08d740695e12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 21:02:38.8737
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vZYdqqU8fCZF62yOFudeIR+5hhqf4+mL9KDaGh3yNO7TGXerVBrjm1J+hztV9sOHKPVNGFUcTb0A6s0YkZSdFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4913
+In-Reply-To: <2172e1c7-931e-d510-648b-80ef9c606ab6@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+Hi Jean,
 
+On 9/23/19 11:14 AM, Jean-Jacques Hiblot wrote:
+> Hi Jacek,
+> 
+> On 20/09/2019 23:10, Jacek Anaszewski wrote:
+>> Hi Jean,
+>>
+>> On 9/20/19 2:25 PM, Jean-Jacques Hiblot wrote:
+>>> Making led_set_brightness_sync() use led_set_brightness_nosleep() has 2
+>>> advantages:
+>>> - works for LED controllers that do not provide
+>>> brightness_set_blocking()
+>>> - When the blocking callback is used, it uses the workqueue to update
+>>> the
+>>>    LED state, removing the need for mutual exclusion between
+>>>    led_set_brightness_sync() and set_brightness_delayed().
+>> And third:
+>>
+>> - it compromises the "sync" part of the function name :-)
+> 
+> Making it sync is the role of the flush_work() function. It waits until
+> the deferred work has been done.
 
-> -----Original Message-----
-> From: Jason Wang <jasowang@redhat.com>
-> Sent: Monday, September 23, 2019 8:03 AM
-> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
-> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
-> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
-> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
-> tiwei.bie@intel.com
-> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
-> cohuck@redhat.com; maxime.coquelin@redhat.com;
-> cunming.liang@intel.com; zhihong.wang@intel.com;
-> rob.miller@broadcom.com; xiao.w.wang@intel.com;
-> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
-> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
-> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
-> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
-> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
-> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
-> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
-> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
-> <parav@mellanox.com>; Jason Wang <jasowang@redhat.com>
-> Subject: [PATCH 1/6] mdev: class id support
->=20
-> Mdev bus only supports vfio driver right now, so it doesn't implement mat=
-ch
-> method. But in the future, we may add drivers other than vfio, one exampl=
-e is
-> virtio-mdev[1] driver. This means we need to add device class id support =
-in bus
-> match method to pair the mdev device and mdev driver correctly.
->=20
-> So this patch adds id_table to mdev_driver and class_id for mdev parent w=
-ith
-> the match method for mdev bus.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  Documentation/driver-api/vfio-mediated-device.rst |  7 +++++--
->  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  2 +-
->  drivers/s390/cio/vfio_ccw_ops.c                   |  2 +-
->  drivers/s390/crypto/vfio_ap_ops.c                 |  3 ++-
->  drivers/vfio/mdev/mdev_core.c                     | 14 ++++++++++++--
->  drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
->  drivers/vfio/mdev/mdev_private.h                  |  1 +
->  drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
->  include/linux/mdev.h                              |  7 ++++++-
->  include/linux/mod_devicetable.h                   |  8 ++++++++
->  samples/vfio-mdev/mbochs.c                        |  2 +-
->  samples/vfio-mdev/mdpy.c                          |  2 +-
->  samples/vfio-mdev/mtty.c                          |  2 +-
->  13 files changed, 59 insertions(+), 11 deletions(-)
->=20
-You additionally need modpost support for id table integration to modifo, m=
-odprobe and other tools.
-A small patch similar to this one [1] is needed.
-Please include in the series.
+The thing is not in the blocking character of the function, but rather
+in the fastest possible way of setting torch brightness.
+led_set_brightness_nosleep() will defer brightness_set_blocking op
+to the workqueue so this condition will not be met then.
 
-[1] https://lore.kernel.org/patchwork/patch/1046991/
+This function was added specifically for LED class flash v4l2 wrapper:
+drivers/media/v4l2-core/v4l2-flash-led-class.c.
 
+It may need an addition of support for brightness_set only drivers,
+but we haven't had a use case so far, since all client flash LED
+controllers are driven via blocking buses (there are not many of them).
 
+Also, when LED flash class (and thus LED class also as a parent)
+is hijacked by v4l2-flash-led wrapper, its sysfs is disabled,
+so it is not possible to set e.g. timer trigger which could
+interfere with the led_set_brightness_sync() (and it also returns
+-EBUSY when blinking is enabled).
+
+>> This function has been introduced specifically to be blocking
+>> and have the immediate effect. Its sole client is
+>> drivers/media/v4l2-core/v4l2-flash-led-class.c.
+>>
+>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>>> ---
+>>>   drivers/leds/led-core.c | 12 +++++++-----
+>>>   1 file changed, 7 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>>> index f1f718dbe0f8..50e28a8f9357 100644
+>>> --- a/drivers/leds/led-core.c
+>>> +++ b/drivers/leds/led-core.c
+>>> @@ -294,15 +294,17 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
+>>>   int led_set_brightness_sync(struct led_classdev *led_cdev,
+>>>                   enum led_brightness value)
+>>>   {
+>>> +    int ret;
+>>> +
+>>>       if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
+>>>           return -EBUSY;
+>>>   -    led_cdev->brightness = min(value, led_cdev->max_brightness);
+>>> -
+>>> -    if (led_cdev->flags & LED_SUSPENDED)
+>>> -        return 0;
+>>> +    ret = led_set_brightness_nosleep(led_cdev, value);
+>>> +    if (!ret)
+>>> +        return ret;
+>>>   -    return __led_set_brightness_blocking(led_cdev,
+>>> led_cdev->brightness);
+>>> +    flush_work(&led_cdev->set_brightness_work);
+>>> +    return 0;
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(led_set_brightness_sync);
+>>>  
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
