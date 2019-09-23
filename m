@@ -2,132 +2,131 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1505DC4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B25C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C4820882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932FB2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k42kXdpE"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="V/9z/I/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393318AbfIWGvT (ORCPT
+        id S2393380AbfIWGyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 02:51:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:47031 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393269AbfIWGvT (ORCPT
+        Mon, 23 Sep 2019 02:54:23 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:24477 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388937AbfIWGyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:51:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id c6so17612472ioo.13;
-        Sun, 22 Sep 2019 23:51:18 -0700 (PDT)
+        Mon, 23 Sep 2019 02:54:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=evwzKkn5TJ8V/5p8U1GA5lnr2fQciYS7Ye2nzlu/Ar0=;
-        b=k42kXdpEzpJIgiprOwLFh1cwZ7Yys+0E1k4wofFz3IuJs4wWXaFe4JeJh15Ha/ekpH
-         WI/bj3taqJE1PD5I+geYoVLCxlLk0XuLG3m0y2kX/2PZhuGWV+4QvOT9zMMdTmCrQMMt
-         0pALJMqQn0OBD8xISo/RWq6z6LfVxJTncDdVWUN/U8FT/m4oLnmrtEK26QRpNFt/tMiF
-         7Xv4V2MntqeOtGO3BXBGCqqvG1CqwddbzwbOn4TTVK/IWcQbqqrNsOwKxBo4NzysbZrL
-         n9Lmr8aEt6jtGqL81UaeoUaelEXCXIKC8HkO1QnP6wt7RaC5MRkiyilWwufMzBj95MiH
-         qYdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=evwzKkn5TJ8V/5p8U1GA5lnr2fQciYS7Ye2nzlu/Ar0=;
-        b=jFHsdBDSdCMwh6FB3xexl1hFWaDGfLRULnIdEF5OObd3fT5rbxMZ3j9DooKE320gyH
-         qcj0dOM/IMM53wSy/pHil1PXfEbu73njTtQRiTZzakYfgq/HNICVeuQ5l5oBWXlc+ZXb
-         nMz0z/b/zeyXR4BupYR5gZLLNOYsZ/HPTmUWzEbDB9KBFd99lpJl9SefZnPv9aKwWdD2
-         JWa9zgPUkArcS3TJDVcFSQ7Dvi3SHDGcxJcRnDF1408ZOM+6yQzgsQkopBb0+PDqICS1
-         d1zWXRM2Hn9IaHQ6fIEcFQ+NQBfJAcJ+yrryarnLctqzWH3Rw4i9HdSuZyOtOATIjnWb
-         vevg==
-X-Gm-Message-State: APjAAAUrQln765J01aJtRGOjxUk2/5KbUvsQ/iSSJTR+jkeoL38JTfmk
-        OCnYwNwCHW5YlmV2FLgGihusWgDAM3YdBrgdYiA=
-X-Google-Smtp-Source: APXvYqwHJLJqkepkero16CeFnVT2p/BRJnGlNyIoVpnrwyU/cIXQnIS9UN2pJqBGUqfPEiA0WorKHiMZRRy9rEkEMlE=
-X-Received: by 2002:a5d:8b07:: with SMTP id k7mr27637147ion.20.1569221478478;
- Sun, 22 Sep 2019 23:51:18 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569221661; x=1600757661;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=0LuES5jNYjOJrVNcd7E+YqVsn5M9qjRy0UqX6zqVjPQ=;
+  b=V/9z/I/cSgh/62qUMNbPQCjnEiA+S777eXFJHh1cQU7ynE9KxVgOWYLv
+   ZT97z6Bn+OsKn/96AIug55Fdvpx0l6W+gDFTdV+IHLCuqXMjD/Z7ciHmB
+   nAOrGbZbJc8LG6TdL/WZI7IJ4+GzHuHGBKQ55RLgtre4ZGQOV2uIiIen+
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.64,539,1559520000"; 
+   d="scan'208";a="752438067"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Sep 2019 06:54:21 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id D5DF9A0745;
+        Mon, 23 Sep 2019 06:54:16 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Sep 2019 06:54:15 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.217) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Sep 2019 06:53:58 +0000
+Subject: Re: [PATCH v7 11/21] RISC-V: KVM: Handle WFI exits for VCPU
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190904161245.111924-1-anup.patel@wdc.com>
+ <20190904161245.111924-13-anup.patel@wdc.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <3c149ec4-38df-9073-2880-b28148d3c059@amazon.com>
+Date:   Mon, 23 Sep 2019 08:53:49 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190907090534.GB1712@pc-sasha.localdomain> <20190920194450.GA3970@pc-sasha.localdomain>
- <CAKMK7uECOW2YigBe7aeCDPYXoXJ8TVh65xvKBjJXXRt5Y7HngA@mail.gmail.com> <20190923063803.c7zpqwcqq5f2acq5@sirius.home.kraxel.org>
-In-Reply-To: <20190923063803.c7zpqwcqq5f2acq5@sirius.home.kraxel.org>
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Mon, 23 Sep 2019 09:50:41 +0300
-Message-ID: <CAJ1xhMV2ikra9udRhhLLntLxZKO23jLkU=9AeP=denALhw8r_w@mail.gmail.com>
-Subject: Re: Kernel panic during drm/nouveau init 5.3.0-rc7-next-20190903
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-next <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190904161245.111924-13-anup.patel@wdc.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.217]
+X-ClientProxiedBy: EX13D28UWC002.ant.amazon.com (10.43.162.145) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 9:38 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> > > 'Git bisect' has identified the following commits as being 'bad'.
-> > >
-> > > b96f3e7c8069b749a40ca3a33c97835d57dd45d2 is the first bad commit
-> > > commit b96f3e7c8069b749a40ca3a33c97835d57dd45d2
-> > > Author: Gerd Hoffmann <kraxel@redhat.com>
-> > > Date:   Mon Aug 5 16:01:10 2019 +0200
-> > >
-> > >     drm/ttm: use gem vma_node
-> > >
-> > >     Drop vma_node from ttm_buffer_object, use the gem struct
-> > >     (base.vma_node) instead.
-> > >
-> > >     Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > >     Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > >     Link: http://patchwork.freedesktop.org/patch/msgid/20190805140119=
-.7337-9-kraxel@redhat.com
->
-> > > Today, I upgraded the kernel to 5.3.0-next-20190919, which booted fin=
-e
-> > > with no Xorg regressions to report.
-> > >
-> > > Just wondering if the earlier kernels would not boot for me because o=
-f
-> > > the changes introduced by the 'bad' commits being perhaps incomplete?
->
-> Yes, we had a regression in nouveau, fixed by this patch (in drm-misc-nex=
-t):
->
-> commit 019cbd4a4feb3aa3a917d78e7110e3011bbff6d5
-> Author: Thierry Reding <treding@nvidia.com>
-> Date:   Wed Aug 14 11:00:48 2019 +0200
->
->     drm/nouveau: Initialize GEM object before TTM object
->
->     TTM assumes that drivers initialize the embedded GEM object before
->     calling the ttm_bo_init() function. This is not currently the case
->     in the Nouveau driver. Fix this by splitting up nouveau_bo_new()
->     into nouveau_bo_alloc() and nouveau_bo_init() so that the GEM can
->     be initialized before TTM BO initialization when necessary.
->
->     Fixes: b96f3e7c8069 ("drm/ttm: use gem vma_node")
->     Acked-by: Gerd Hoffmann <kraxel@redhat.com>
->     Acked-by: Ben Skeggs <bskeggs@redhat.com>
->     Signed-off-by: Thierry Reding <treding@nvidia.com>
->     Link: https://patchwork.freedesktop.org/patch/msgid/20190814093524.GA=
-31345@ulmo
->
-> HTH,
->   Gerd
->
+CgpPbiAwNC4wOS4xOSAxODoxNSwgQW51cCBQYXRlbCB3cm90ZToKPiBXZSBnZXQgaWxsZWdhbCBp
+bnN0cnVjdGlvbiB0cmFwIHdoZW5ldmVyIEd1ZXN0L1ZNIGV4ZWN1dGVzIFdGSQo+IGluc3RydWN0
+aW9uLgo+IAo+IFRoaXMgcGF0Y2ggaGFuZGxlcyBXRkkgdHJhcCBieSBibG9ja2luZyB0aGUgdHJh
+cHBlZCBWQ1BVIHVzaW5nCj4ga3ZtX3ZjcHVfYmxvY2soKSBBUEkuIFRoZSBibG9ja2VkIFZDUFUg
+d2lsbCBiZSBhdXRvbWF0aWNhbGx5Cj4gcmVzdW1lZCB3aGVuZXZlciBhIFZDUFUgaW50ZXJydXB0
+IGlzIGluamVjdGVkIGZyb20gdXNlci1zcGFjZQo+IG9yIGZyb20gaW4ta2VybmVsIElSUUNISVAg
+ZW11bGF0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFudXAgUGF0ZWwgPGFudXAucGF0ZWxAd2Rj
+LmNvbT4KPiBBY2tlZC1ieTogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4KPiBS
+ZXZpZXdlZC1ieTogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4KPiAtLS0KPiAg
+IGFyY2gvcmlzY3Yva3ZtL3ZjcHVfZXhpdC5jIHwgNzIgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspCj4gCj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3Yva3ZtL3ZjcHVfZXhpdC5jIGIvYXJjaC9yaXNjdi9rdm0v
+dmNwdV9leGl0LmMKPiBpbmRleCBkNzVhNmMzNWI2YzcuLjM5NDY5ZjY3YjI0MSAxMDA2NDQKPiAt
+LS0gYS9hcmNoL3Jpc2N2L2t2bS92Y3B1X2V4aXQuYwo+ICsrKyBiL2FyY2gvcmlzY3Yva3ZtL3Zj
+cHVfZXhpdC5jCj4gQEAgLTEyLDYgKzEyLDEzIEBACj4gICAjaW5jbHVkZSA8bGludXgva3ZtX2hv
+c3QuaD4KPiAgICNpbmNsdWRlIDxhc20vY3NyLmg+Cj4gICAKPiArI2RlZmluZSBJTlNOX09QQ09E
+RV9NQVNLCTB4MDA3Ywo+ICsjZGVmaW5lIElOU05fT1BDT0RFX1NISUZUCTIKPiArI2RlZmluZSBJ
+TlNOX09QQ09ERV9TWVNURU0JMjgKPiArCj4gKyNkZWZpbmUgSU5TTl9NQVNLX1dGSQkJMHhmZmZm
+ZmYwMAo+ICsjZGVmaW5lIElOU05fTUFUQ0hfV0ZJCQkweDEwNTAwMDAwCj4gKwo+ICAgI2RlZmlu
+ZSBJTlNOX01BVENIX0xCCQkweDMKPiAgICNkZWZpbmUgSU5TTl9NQVNLX0xCCQkweDcwN2YKPiAg
+ICNkZWZpbmUgSU5TTl9NQVRDSF9MSAkJMHgxMDAzCj4gQEAgLTExMiw2ICsxMTksNjcgQEAKPiAg
+IAkJCQkgKHMzMikoKChpbnNuKSA+PiA3KSAmIDB4MWYpKQo+ICAgI2RlZmluZSBNQVNLX0ZVTkNU
+MwkJMHg3MDAwCj4gICAKPiArc3RhdGljIGludCB0cnVseV9pbGxlZ2FsX2luc24oc3RydWN0IGt2
+bV92Y3B1ICp2Y3B1LAo+ICsJCQkgICAgICBzdHJ1Y3Qga3ZtX3J1biAqcnVuLAo+ICsJCQkgICAg
+ICB1bG9uZyBpbnNuKQo+ICt7Cj4gKwkvKiBSZWRpcmVjdCB0cmFwIHRvIEd1ZXN0IFZDUFUgKi8K
+PiArCWt2bV9yaXNjdl92Y3B1X3RyYXBfcmVkaXJlY3QodmNwdSwgRVhDX0lOU1RfSUxMRUdBTCwg
+aW5zbik7Cj4gKwo+ICsJcmV0dXJuIDE7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgc3lzdGVtX29w
+Y29kZV9pbnNuKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwKPiArCQkJICAgICAgc3RydWN0IGt2bV9y
+dW4gKnJ1biwKPiArCQkJICAgICAgdWxvbmcgaW5zbikKPiArewo+ICsJaWYgKChpbnNuICYgSU5T
+Tl9NQVNLX1dGSSkgPT0gSU5TTl9NQVRDSF9XRkkpIHsKPiArCQl2Y3B1LT5zdGF0LndmaV9leGl0
+X3N0YXQrKzsKPiArCQlpZiAoIWt2bV9hcmNoX3ZjcHVfcnVubmFibGUodmNwdSkpIHsKPiArCQkJ
+c3JjdV9yZWFkX3VubG9jaygmdmNwdS0+a3ZtLT5zcmN1LCB2Y3B1LT5hcmNoLnNyY3VfaWR4KTsK
+PiArCQkJa3ZtX3ZjcHVfYmxvY2sodmNwdSk7Cj4gKwkJCXZjcHUtPmFyY2guc3JjdV9pZHggPSBz
+cmN1X3JlYWRfbG9jaygmdmNwdS0+a3ZtLT5zcmN1KTsKPiArCQkJa3ZtX2NsZWFyX3JlcXVlc3Qo
+S1ZNX1JFUV9VTkhBTFQsIHZjcHUpOwo+ICsJCX0KPiArCQl2Y3B1LT5hcmNoLmd1ZXN0X2NvbnRl
+eHQuc2VwYyArPSBJTlNOX0xFTihpbnNuKTsKPiArCQlyZXR1cm4gMTsKPiArCX0KPiArCj4gKwly
+ZXR1cm4gdHJ1bHlfaWxsZWdhbF9pbnNuKHZjcHUsIHJ1biwgaW5zbik7Cj4gK30KPiArCj4gK3N0
+YXRpYyBpbnQgaWxsZWdhbF9pbnN0X2ZhdWx0KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgc3RydWN0
+IGt2bV9ydW4gKnJ1biwKPiArCQkJICAgICAgdW5zaWduZWQgbG9uZyBpbnNuKQo+ICt7Cj4gKwl1
+bnNpZ25lZCBsb25nIHV0X3NjYXVzZSA9IDA7Cj4gKwlzdHJ1Y3Qga3ZtX2NwdV9jb250ZXh0ICpj
+dDsKPiArCj4gKwlpZiAodW5saWtlbHkoKGluc24gJiAzKSAhPSAzKSkgewoKV2hhdCBkbyB0aGUg
+bG93IDIgYml0cyBtZWFuIGhlcmU/IE1heWJlIHlvdSBjYW4gdXNlIGEgZGVmaW5lIGluc3RlYWQ/
+CgoKQWxleAoKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNl
+bnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxh
+ZWdlciwgUmFsZiBIZXJicmljaApFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVu
+YnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4
+NzkKCgo=
 
-Terrific.
-Thanks for the info.
