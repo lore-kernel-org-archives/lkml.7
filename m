@@ -2,125 +2,620 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F84C4740C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C182CC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7D621907
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC92208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="aHR6Zeby"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pa+efg64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393628AbfIWJEp (ORCPT
+        id S2438480AbfIWJEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:04:45 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39518 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393166AbfIWJEm (ORCPT
+        Mon, 23 Sep 2019 05:04:52 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:56040 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438470AbfIWJDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:04:42 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 72so9485841lfh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:04:41 -0700 (PDT)
+        Mon, 23 Sep 2019 05:03:07 -0400
+Received: by mail-pg1-f202.google.com with SMTP id k18so8883288pgh.22
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0JN1h+SdmbTH3kP7+d/LSAM256ls91/0oIY0PsAnI9c=;
-        b=aHR6ZebyZ8DZpvzN5FPwizkSeWcTkugKWZ3zU5/wa6l5Q54ddMLdKKjzClEkVBcAIr
-         R9Q0bAQBeD134Z05K7waWJ3GB31hRmYeoFBRNl9zeHVJguBN1TqCMfcnOhtE6FKLfkxC
-         CB14f/dGMHvj7B3B1ElGiiHTXvRW9zUSm2oWo=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=3L1JoIUH3Yp+Gfseapn5B656SrJdhjuXnbbrrnMLohA=;
+        b=pa+efg64unSmP0M+ArYHp+EWdjdR+DFb8kr5KsrnWdutScIqx/woEJn6/Vni4Zs0db
+         s6zUa0IywpjsuC3fup3hP6J92LSatiOd4K/wnrDFkWCst7Xtt7MbPYzgBTXgUJlXywYU
+         jBA8ZU9Y1BhzTmXeax8hn8jzA08Q+omVIxqjfBj1JVUBeiq7Urp6hLANSqgODreRF9I0
+         5otr8+V6pl7002ZCOYt8i1Gj+gozUnijuuleQEYmQhKDUluUZn7/6vr7BaHVkHRC4zI6
+         D7Vg1zgkLAwqkoKFKNClfkXWwlzn7lBE4Gura9vOLbglNH4BM3j0c0EGBdFLSYBk62Hl
+         29LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0JN1h+SdmbTH3kP7+d/LSAM256ls91/0oIY0PsAnI9c=;
-        b=NGnGZrpiHCQkKq/9WOoGz4Je7WVFevIZv//RZccnFgaCOR2oEPffjqf3Mc85JQ/bEF
-         /Rk63P6bHdPIG6To7uQax48AZV6i2U0tM0OWl4zf9ZaDJojxIn2hljNcNZOa0kwQ0N04
-         2xUIzZ4i7+JffcvkVI0YHclkazDBCFlut8WD6QT4Pze20VlQ1e3cpVY9ybvZ9BI/ebtp
-         CZyr89iBfclGZTded8WX35QSRqEr7rGaoWzDOLS8Bhz2jG1SPO4qmjR9k0/3c17hjt3/
-         /vIdk4P3tfFVsmrrkszuX47Hm1ROo1tktcBFgXCGAXWnqqafHjFvOOz75OaWADarRn70
-         HWBw==
-X-Gm-Message-State: APjAAAURyTbkbe9zIljcgTM6riE6Ev23mrox+2HWCa2KLHmRnFvLBVH9
-        MvD8BauHh/wWEYe05Q3+fJ+N0A==
-X-Google-Smtp-Source: APXvYqxE0UImPNGet4+HJgvkP3IVnXfnoznq6mWvl/4K5U7NnkgngpqSc4uPgwZPAR8lLmN00SF+gg==
-X-Received: by 2002:ac2:5091:: with SMTP id f17mr16518413lfm.107.1569229480930;
-        Mon, 23 Sep 2019 02:04:40 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id g26sm2174673lje.80.2019.09.23.02.04.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 02:04:40 -0700 (PDT)
-Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-2-linux@rasmusvillemoes.dk>
- <20190923082459.huqpbz5eseonkscv@pengutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
-Date:   Mon, 23 Sep 2019 11:04:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190923082459.huqpbz5eseonkscv@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=3L1JoIUH3Yp+Gfseapn5B656SrJdhjuXnbbrrnMLohA=;
+        b=LkEhxgSELvnKD4F/IuZj5YH6gNg6Fqh5kDcMbuYdRslcDXIzUicSsn7j7XB55pXNxN
+         ipUBwBdgPyLoTM6+ItZZDtlpSQeG8fqlvnFg63977VYEsNCz/lyifpj3VD69phQDNZ17
+         G6HQkQJxs4T+Ps2QSmyCFO6LJjzOBvn4LCFyqgba3zHys1uHHzocfxnGb/wfFbcdSCU8
+         hxEGzfx+6NaPzHKSy4tNADWUNAxDUzV2w/H6c5ZetRruV6nH3NSYrEKh6Yt/r2Bfz0Zu
+         jCcjN3fC17kccyZ5wUYJZLFHcUnmqMeAQ2Brs9ECjHtBBdhtXVEiNvwp1OLI8IsH8CoO
+         LNqQ==
+X-Gm-Message-State: APjAAAWYkvGLAj4FTSwW76MtEcBCtfQNE1nd1uGOLNlKScP6u2jVVPH0
+        +cQAmwvnJc9hIpd+tW/tRroxEjbR78Tz/BqQaDOuew==
+X-Google-Smtp-Source: APXvYqzI1Ei9lWiDKjasnk6QQyZCEgmb2MSvsrW72cSeiYUDdwrTU/ZaQDw28wRhIqlpMx0lzPfyW+ZiriIyeYKzb4ZgaQ==
+X-Received: by 2002:a63:6c8a:: with SMTP id h132mr7264465pgc.256.1569229385912;
+ Mon, 23 Sep 2019 02:03:05 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 02:02:34 -0700
+In-Reply-To: <20190923090249.127984-1-brendanhiggins@google.com>
+Message-Id: <20190923090249.127984-5-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
+Subject: [PATCH v18 04/19] kunit: test: add assertion printing library
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, torvalds@linux-foundation.org,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 10.24, Uwe Kleine-König wrote:
-> Hello Rasmus,
-> 
-> On Mon, Sep 23, 2019 at 10:13:45AM +0200, Rasmus Villemoes wrote:
->> In preparation for supporting setting the polarity, switch the driver
->> to support the ->apply method.
->>
-> 
-> Maybe it would be easier to review when converting from .config +
-> .enable + .disable to .apply in a single step. (Note this "maybe" is
-> honest, I'm not entirely sure.)
+Add `struct kunit_assert` and friends which provide a structured way to
+capture data from an expectation or an assertion (introduced later in
+the series) so that it may be printed out in the event of a failure.
 
-I tried to make .apply do exactly what the old sequence of calls from
-the core to the individual methods would do, and for that it seemed a
-little easier to keep the old methods around - but yes, I do need to be
-more careful than that to provide the atomicity guarantee that the
-legacy methods did not. It's also much easier to squash than to split,
-so for now I'll leave them separate - if somebody prefers them squashed,
-I'll do that.
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+---
+ include/kunit/assert.h | 356 +++++++++++++++++++++++++++++++++++++++++
+ lib/kunit/Makefile     |   3 +-
+ lib/kunit/assert.c     | 141 ++++++++++++++++
+ 3 files changed, 499 insertions(+), 1 deletion(-)
+ create mode 100644 include/kunit/assert.h
+ create mode 100644 lib/kunit/assert.c
 
-> There is a bug: If the PWM is running at (say) period=100ms, duty=0ms
-> and we call
-> pwm_apply_state(pwm, { .enabled = false, duty=100000, period=1000000 });
-> the output might get high which it should not.
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+new file mode 100644
+index 000000000000..db6a0fca09b4
+--- /dev/null
++++ b/include/kunit/assert.h
+@@ -0,0 +1,356 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Assertion and expectation serialization API.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#ifndef _KUNIT_ASSERT_H
++#define _KUNIT_ASSERT_H
++
++#include <kunit/string-stream.h>
++#include <linux/err.h>
++
++struct kunit;
++
++/**
++ * enum kunit_assert_type - Type of expectation/assertion.
++ * @KUNIT_ASSERTION: Used to denote that a kunit_assert represents an assertion.
++ * @KUNIT_EXPECTATION: Denotes that a kunit_assert represents an expectation.
++ *
++ * Used in conjunction with a &struct kunit_assert to denote whether it
++ * represents an expectation or an assertion.
++ */
++enum kunit_assert_type {
++	KUNIT_ASSERTION,
++	KUNIT_EXPECTATION,
++};
++
++/**
++ * struct kunit_assert - Data for printing a failed assertion or expectation.
++ * @test: the test case this expectation/assertion is associated with.
++ * @type: the type (either an expectation or an assertion) of this kunit_assert.
++ * @line: the source code line number that the expectation/assertion is at.
++ * @file: the file path of the source file that the expectation/assertion is in.
++ * @message: an optional message to provide additional context.
++ * @format: a function which formats the data in this kunit_assert to a string.
++ *
++ * Represents a failed expectation/assertion. Contains all the data necessary to
++ * format a string to a user reporting the failure.
++ */
++struct kunit_assert {
++	struct kunit *test;
++	enum kunit_assert_type type;
++	int line;
++	const char *file;
++	struct va_format message;
++	void (*format)(const struct kunit_assert *assert,
++		       struct string_stream *stream);
++};
++
++/**
++ * KUNIT_INIT_VA_FMT_NULL - Default initializer for struct va_format.
++ *
++ * Used inside a struct initialization block to initialize struct va_format to
++ * default values where fmt and va are null.
++ */
++#define KUNIT_INIT_VA_FMT_NULL { .fmt = NULL, .va = NULL }
++
++/**
++ * KUNIT_INIT_ASSERT_STRUCT() - Initializer for a &struct kunit_assert.
++ * @kunit: The test case that this expectation/assertion is associated with.
++ * @assert_type: The type (assertion or expectation) of this kunit_assert.
++ * @fmt: The formatting function which builds a string out of this kunit_assert.
++ *
++ * The base initializer for a &struct kunit_assert.
++ */
++#define KUNIT_INIT_ASSERT_STRUCT(kunit, assert_type, fmt) {		       \
++	.test = kunit,							       \
++	.type = assert_type,						       \
++	.file = __FILE__,						       \
++	.line = __LINE__,						       \
++	.message = KUNIT_INIT_VA_FMT_NULL,				       \
++	.format = fmt							       \
++}
++
++void kunit_base_assert_format(const struct kunit_assert *assert,
++			      struct string_stream *stream);
++
++void kunit_assert_print_msg(const struct kunit_assert *assert,
++			    struct string_stream *stream);
++
++/**
++ * struct kunit_fail_assert - Represents a plain fail expectation/assertion.
++ * @assert: The parent of this type.
++ *
++ * Represents a simple KUNIT_FAIL/KUNIT_ASSERT_FAILURE that always fails.
++ */
++struct kunit_fail_assert {
++	struct kunit_assert assert;
++};
++
++void kunit_fail_assert_format(const struct kunit_assert *assert,
++			      struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_FAIL_ASSERT_STRUCT() - Initializer for &struct kunit_fail_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ *
++ * Initializes a &struct kunit_fail_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {			       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_fail_assert_format)	       \
++}
++
++/**
++ * struct kunit_unary_assert - Represents a KUNIT_{EXPECT|ASSERT}_{TRUE|FALSE}
++ * @assert: The parent of this type.
++ * @condition: A string representation of a conditional expression.
++ * @expected_true: True if of type KUNIT_{EXPECT|ASSERT}_TRUE, false otherwise.
++ *
++ * Represents a simple expectation or assertion that simply asserts something is
++ * true or false. In other words, represents the expectations:
++ * KUNIT_{EXPECT|ASSERT}_{TRUE|FALSE}
++ */
++struct kunit_unary_assert {
++	struct kunit_assert assert;
++	const char *condition;
++	bool expected_true;
++};
++
++void kunit_unary_assert_format(const struct kunit_assert *assert,
++			       struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_UNARY_ASSERT_STRUCT() - Initializes &struct kunit_unary_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ * @cond: A string representation of the expression asserted true or false.
++ * @expect_true: True if of type KUNIT_{EXPECT|ASSERT}_TRUE, false otherwise.
++ *
++ * Initializes a &struct kunit_unary_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_UNARY_ASSERT_STRUCT(test, type, cond, expect_true) {	       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_unary_assert_format),	       \
++	.condition = cond,						       \
++	.expected_true = expect_true					       \
++}
++
++/**
++ * struct kunit_ptr_not_err_assert - An expectation/assertion that a pointer is
++ *	not NULL and not a -errno.
++ * @assert: The parent of this type.
++ * @text: A string representation of the expression passed to the expectation.
++ * @value: The actual evaluated pointer value of the expression.
++ *
++ * Represents an expectation/assertion that a pointer is not null and is does
++ * not contain a -errno. (See IS_ERR_OR_NULL().)
++ */
++struct kunit_ptr_not_err_assert {
++	struct kunit_assert assert;
++	const char *text;
++	const void *value;
++};
++
++void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
++				     struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_PTR_NOT_ERR_ASSERT_STRUCT() - Initializes a
++ *	&struct kunit_ptr_not_err_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ * @txt: A string representation of the expression passed to the expectation.
++ * @val: The actual evaluated pointer value of the expression.
++ *
++ * Initializes a &struct kunit_ptr_not_err_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_PTR_NOT_ERR_STRUCT(test, type, txt, val) {		       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_ptr_not_err_assert_format),   \
++	.text = txt,							       \
++	.value = val							       \
++}
++
++/**
++ * struct kunit_binary_assert - An expectation/assertion that compares two
++ *	non-pointer values (for example, KUNIT_EXPECT_EQ(test, 1 + 1, 2)).
++ * @assert: The parent of this type.
++ * @operation: A string representation of the comparison operator (e.g. "==").
++ * @left_text: A string representation of the expression in the left slot.
++ * @left_value: The actual evaluated value of the expression in the left slot.
++ * @right_text: A string representation of the expression in the right slot.
++ * @right_value: The actual evaluated value of the expression in the right slot.
++ *
++ * Represents an expectation/assertion that compares two non-pointer values. For
++ * example, to expect that 1 + 1 == 2, you can use the expectation
++ * KUNIT_EXPECT_EQ(test, 1 + 1, 2);
++ */
++struct kunit_binary_assert {
++	struct kunit_assert assert;
++	const char *operation;
++	const char *left_text;
++	long long left_value;
++	const char *right_text;
++	long long right_value;
++};
++
++void kunit_binary_assert_format(const struct kunit_assert *assert,
++				struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_BINARY_ASSERT_STRUCT() - Initializes a
++ *	&struct kunit_binary_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ * @op_str: A string representation of the comparison operator (e.g. "==").
++ * @left_str: A string representation of the expression in the left slot.
++ * @left_val: The actual evaluated value of the expression in the left slot.
++ * @right_str: A string representation of the expression in the right slot.
++ * @right_val: The actual evaluated value of the expression in the right slot.
++ *
++ * Initializes a &struct kunit_binary_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_BINARY_ASSERT_STRUCT(test,				       \
++					type,				       \
++					op_str,				       \
++					left_str,			       \
++					left_val,			       \
++					right_str,			       \
++					right_val) {			       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_binary_assert_format),	       \
++	.operation = op_str,						       \
++	.left_text = left_str,						       \
++	.left_value = left_val,						       \
++	.right_text = right_str,					       \
++	.right_value = right_val					       \
++}
++
++/**
++ * struct kunit_binary_ptr_assert - An expectation/assertion that compares two
++ *	pointer values (for example, KUNIT_EXPECT_PTR_EQ(test, foo, bar)).
++ * @assert: The parent of this type.
++ * @operation: A string representation of the comparison operator (e.g. "==").
++ * @left_text: A string representation of the expression in the left slot.
++ * @left_value: The actual evaluated value of the expression in the left slot.
++ * @right_text: A string representation of the expression in the right slot.
++ * @right_value: The actual evaluated value of the expression in the right slot.
++ *
++ * Represents an expectation/assertion that compares two pointer values. For
++ * example, to expect that foo and bar point to the same thing, you can use the
++ * expectation KUNIT_EXPECT_PTR_EQ(test, foo, bar);
++ */
++struct kunit_binary_ptr_assert {
++	struct kunit_assert assert;
++	const char *operation;
++	const char *left_text;
++	const void *left_value;
++	const char *right_text;
++	const void *right_value;
++};
++
++void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
++				    struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT() - Initializes a
++ *	&struct kunit_binary_ptr_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ * @op_str: A string representation of the comparison operator (e.g. "==").
++ * @left_str: A string representation of the expression in the left slot.
++ * @left_val: The actual evaluated value of the expression in the left slot.
++ * @right_str: A string representation of the expression in the right slot.
++ * @right_val: The actual evaluated value of the expression in the right slot.
++ *
++ * Initializes a &struct kunit_binary_ptr_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT(test,			       \
++					    type,			       \
++					    op_str,			       \
++					    left_str,			       \
++					    left_val,			       \
++					    right_str,			       \
++					    right_val) {		       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_binary_ptr_assert_format),    \
++	.operation = op_str,						       \
++	.left_text = left_str,						       \
++	.left_value = left_val,						       \
++	.right_text = right_str,					       \
++	.right_value = right_val					       \
++}
++
++/**
++ * struct kunit_binary_str_assert - An expectation/assertion that compares two
++ *	string values (for example, KUNIT_EXPECT_STREQ(test, foo, "bar")).
++ * @assert: The parent of this type.
++ * @operation: A string representation of the comparison operator (e.g. "==").
++ * @left_text: A string representation of the expression in the left slot.
++ * @left_value: The actual evaluated value of the expression in the left slot.
++ * @right_text: A string representation of the expression in the right slot.
++ * @right_value: The actual evaluated value of the expression in the right slot.
++ *
++ * Represents an expectation/assertion that compares two string values. For
++ * example, to expect that the string in foo is equal to "bar", you can use the
++ * expectation KUNIT_EXPECT_STREQ(test, foo, "bar");
++ */
++struct kunit_binary_str_assert {
++	struct kunit_assert assert;
++	const char *operation;
++	const char *left_text;
++	const char *left_value;
++	const char *right_text;
++	const char *right_value;
++};
++
++void kunit_binary_str_assert_format(const struct kunit_assert *assert,
++				    struct string_stream *stream);
++
++/**
++ * KUNIT_INIT_BINARY_STR_ASSERT_STRUCT() - Initializes a
++ *	&struct kunit_binary_str_assert.
++ * @test: The test case that this expectation/assertion is associated with.
++ * @type: The type (assertion or expectation) of this kunit_assert.
++ * @op_str: A string representation of the comparison operator (e.g. "==").
++ * @left_str: A string representation of the expression in the left slot.
++ * @left_val: The actual evaluated value of the expression in the left slot.
++ * @right_str: A string representation of the expression in the right slot.
++ * @right_val: The actual evaluated value of the expression in the right slot.
++ *
++ * Initializes a &struct kunit_binary_str_assert. Intended to be used in
++ * KUNIT_EXPECT_* and KUNIT_ASSERT_* macros.
++ */
++#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,			       \
++					    type,			       \
++					    op_str,			       \
++					    left_str,			       \
++					    left_val,			       \
++					    right_str,			       \
++					    right_val) {		       \
++	.assert = KUNIT_INIT_ASSERT_STRUCT(test,			       \
++					   type,			       \
++					   kunit_binary_str_assert_format),    \
++	.operation = op_str,						       \
++	.left_text = left_str,						       \
++	.left_value = left_val,						       \
++	.right_text = right_str,					       \
++	.right_value = right_val					       \
++}
++
++#endif /*  _KUNIT_ASSERT_H */
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 275b565a0e81..6dcbe309036b 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_KUNIT) +=			test.o \
+-					string-stream.o
++					string-stream.o \
++					assert.o
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+new file mode 100644
+index 000000000000..86013d4cf891
+--- /dev/null
++++ b/lib/kunit/assert.c
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Assertion and expectation serialization API.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++#include <kunit/assert.h>
++
++void kunit_base_assert_format(const struct kunit_assert *assert,
++			      struct string_stream *stream)
++{
++	const char *expect_or_assert = NULL;
++
++	switch (assert->type) {
++	case KUNIT_EXPECTATION:
++		expect_or_assert = "EXPECTATION";
++		break;
++	case KUNIT_ASSERTION:
++		expect_or_assert = "ASSERTION";
++		break;
++	}
++
++	string_stream_add(stream, "%s FAILED at %s:%d\n",
++			 expect_or_assert, assert->file, assert->line);
++}
++
++void kunit_assert_print_msg(const struct kunit_assert *assert,
++			    struct string_stream *stream)
++{
++	if (assert->message.fmt)
++		string_stream_add(stream, "\n%pV", &assert->message);
++}
++
++void kunit_fail_assert_format(const struct kunit_assert *assert,
++			      struct string_stream *stream)
++{
++	kunit_base_assert_format(assert, stream);
++	string_stream_add(stream, "%pV", &assert->message);
++}
++
++void kunit_unary_assert_format(const struct kunit_assert *assert,
++			       struct string_stream *stream)
++{
++	struct kunit_unary_assert *unary_assert = container_of(
++			assert, struct kunit_unary_assert, assert);
++
++	kunit_base_assert_format(assert, stream);
++	if (unary_assert->expected_true)
++		string_stream_add(stream,
++				 "\tExpected %s to be true, but is false\n",
++				 unary_assert->condition);
++	else
++		string_stream_add(stream,
++				 "\tExpected %s to be false, but is true\n",
++				 unary_assert->condition);
++	kunit_assert_print_msg(assert, stream);
++}
++
++void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
++				     struct string_stream *stream)
++{
++	struct kunit_ptr_not_err_assert *ptr_assert = container_of(
++			assert, struct kunit_ptr_not_err_assert, assert);
++
++	kunit_base_assert_format(assert, stream);
++	if (!ptr_assert->value) {
++		string_stream_add(stream,
++				 "\tExpected %s is not null, but is\n",
++				 ptr_assert->text);
++	} else if (IS_ERR(ptr_assert->value)) {
++		string_stream_add(stream,
++				 "\tExpected %s is not error, but is: %ld\n",
++				 ptr_assert->text,
++				 PTR_ERR(ptr_assert->value));
++	}
++	kunit_assert_print_msg(assert, stream);
++}
++
++void kunit_binary_assert_format(const struct kunit_assert *assert,
++				struct string_stream *stream)
++{
++	struct kunit_binary_assert *binary_assert = container_of(
++			assert, struct kunit_binary_assert, assert);
++
++	kunit_base_assert_format(assert, stream);
++	string_stream_add(stream,
++			 "\tExpected %s %s %s, but\n",
++			 binary_assert->left_text,
++			 binary_assert->operation,
++			 binary_assert->right_text);
++	string_stream_add(stream, "\t\t%s == %lld\n",
++			 binary_assert->left_text,
++			 binary_assert->left_value);
++	string_stream_add(stream, "\t\t%s == %lld",
++			 binary_assert->right_text,
++			 binary_assert->right_value);
++	kunit_assert_print_msg(assert, stream);
++}
++
++void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
++				    struct string_stream *stream)
++{
++	struct kunit_binary_ptr_assert *binary_assert = container_of(
++			assert, struct kunit_binary_ptr_assert, assert);
++
++	kunit_base_assert_format(assert, stream);
++	string_stream_add(stream,
++			 "\tExpected %s %s %s, but\n",
++			 binary_assert->left_text,
++			 binary_assert->operation,
++			 binary_assert->right_text);
++	string_stream_add(stream, "\t\t%s == %pK\n",
++			 binary_assert->left_text,
++			 binary_assert->left_value);
++	string_stream_add(stream, "\t\t%s == %pK",
++			 binary_assert->right_text,
++			 binary_assert->right_value);
++	kunit_assert_print_msg(assert, stream);
++}
++
++void kunit_binary_str_assert_format(const struct kunit_assert *assert,
++				    struct string_stream *stream)
++{
++	struct kunit_binary_str_assert *binary_assert = container_of(
++			assert, struct kunit_binary_str_assert, assert);
++
++	kunit_base_assert_format(assert, stream);
++	string_stream_add(stream,
++			 "\tExpected %s %s %s, but\n",
++			 binary_assert->left_text,
++			 binary_assert->operation,
++			 binary_assert->right_text);
++	string_stream_add(stream, "\t\t%s == %s\n",
++			 binary_assert->left_text,
++			 binary_assert->left_value);
++	string_stream_add(stream, "\t\t%s == %s",
++			 binary_assert->right_text,
++			 binary_assert->right_value);
++	kunit_assert_print_msg(assert, stream);
++}
+-- 
+2.23.0.351.gc4317032e6-goog
 
-Ah, yes. So I suppose that if we're changing from enabled to disabled,
-we should simply disable it in the CTRL register before changing the
-duty/period.
-
-> Also there is a bug already in .config: You are not supposed to call
-> clk_get_rate if the clk might be off.
-
-Interesting, I didn't know that. So the prepare_enable logic needs to be
-moved before we start computing the period/duty cycles. Do you know why
-it has apparently worked so far? I would have thought such a rule would
-be enforced by the clock framework, or at least produced a warning.
-
-Thanks for the fast review. I'll wait a day or two to see if there are
-other comments before sending out a v2.
-
-Rasmus
