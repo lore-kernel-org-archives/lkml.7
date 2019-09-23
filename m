@@ -2,99 +2,100 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8E8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65AEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA6C20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:45:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yv9NQOxa"
+	by mail.kernel.org (Postfix) with ESMTP id 7D7C720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502344AbfIWTpi (ORCPT
+        id S1728760AbfIWTsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:45:38 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37471 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfIWTpi (ORCPT
+        Mon, 23 Sep 2019 15:48:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52365 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbfIWTsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:45:38 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l21so14956125lje.4;
-        Mon, 23 Sep 2019 12:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=gwDAel33WMQqtovNB1KbiGxft8Ut6izN7ToSNAkleME=;
-        b=Yv9NQOxaxsUpVkjVju0Ku2Piny6tZMnztrF0hoU78XQcFyipSlHK8OH+0XJdhcAXXu
-         DfMhxaRn6eLyjdFsoSziIun7hNzxTHR3/mHoixq/4VpavE5b2zTfoFNU1tnIKJgAwYh3
-         xEGJsPqt+axA3Sh4bjN4hdpum0ewZvMQG1QsnfgVBUh0p/yROmS5Ns1eXU7w2LjZK3S/
-         jHI2od9mVIZ9YrFnTfFJ3vl4tu1IORYOIxG/KMuoOIf2CeRwXGr5hLRFdIen/Ym6+QHf
-         rkcZJ4Z4FK/dLijXrNTqxF+mb+WS5El4TTVogxz2GE8/byULkaXc6FP7msE+3IwcwAiA
-         hR9w==
+        Mon, 23 Sep 2019 15:48:42 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <connor.kuehl@canonical.com>)
+        id 1iCUK8-0000jE-HO
+        for linux-kernel@vger.kernel.org; Mon, 23 Sep 2019 19:48:40 +0000
+Received: by mail-pg1-f199.google.com with SMTP id r12so9916063pgm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:48:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=gwDAel33WMQqtovNB1KbiGxft8Ut6izN7ToSNAkleME=;
-        b=RVAT7lfQSVpNrvYBl0/zbWcjB+NmZR4GZGTFUV+ifWfunCFF/ii8DYwDY3/K3QVwym
-         YW1jkaQon/uT9KlZ/mx/aSNvQ0X6xJF77pAVS19wTMbTsVNzB1Ayai06VXhcwhhxZTbL
-         i9D4VlFfEr9xBFpZ2xFYVYgRpUbcms/w8OleiYGdFWSzuUP/Ta8JRPvy+EIC1gabAtg/
-         TtgTYxLHqTmft7Un4DuAoEr03fi7hx36w19S3NofFI2rDwHvmNfFjuyGWjLzT8Z5oTy7
-         +ljQuJhIRNXv1KQGBF9f5G8g4HhpOP9SLAN3Vp67DbJl1jeRCm6RIvjRmqSfFOBdkZ8e
-         sxIQ==
-X-Gm-Message-State: APjAAAXPhf2zJc3khXRPWyOmMvWLmdQ+4v6GpT40laJAzS0Kn3D9mD65
-        NcJA0UNcydEUoLkd7Lcn+NN4bFuW2CK8w8GURh85VgBCfg==
-X-Google-Smtp-Source: APXvYqyBNqDyQfdRnIKbGnBdPmHVX8SqkL5m0iS64hTwCXwrlnJPlNCSfEkI2e3BSMtAGtK3Y3JP69fPk69uPR+MvwY=
-X-Received: by 2002:a05:651c:20a:: with SMTP id y10mr586999ljn.163.1569267935769;
- Mon, 23 Sep 2019 12:45:35 -0700 (PDT)
-MIME-Version: 1.0
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Mon, 23 Sep 2019 21:45:05 +0200
-Message-ID: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
-Subject: acer_wmi: Unknown function(s) on Acer Nitro 5 (AN515-43-R8BF)
-To:     platform-driver-x86@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        "Lee, Chun-Yi" <jlee@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1S3tbuayATJvDzZnpsz9pe1S0VUYhd/3QByEuRe2Xx4=;
+        b=boodLpNgXu2AsjVJBS9UE4smdX4oZlo4x/AB3EbNjFdXj//Ud7IseyI1tKNUU/Efu8
+         PDRyj225Cz1mRhx9ffnLpdY4gBSQ7KHXWgh+7dPxEgZsMXgnRuQIcpIh2gec/46XTMXf
+         k/23Jc0RWfMJOE3+9EeZKKhCXKwbfDpOVuIZtHa0Wb3GqvcGDM+WUn6jfDwr7XtqqssQ
+         l5gXbrqfWs2tCWelszESK6/1W/EPTVvhF7Xg8alS9SCAzPrfNiCGk7zZiYg4IJ+ney2q
+         qeBhcLPDU6GN0mvGHjHsGK7AuaB2wVxswEEvgBRg0utXyuely4x4whew/fS8mL35ckPc
+         SCng==
+X-Gm-Message-State: APjAAAV87Zb7IcmoC1hfkGzFtkTP+7tGqdc0icliXAerOIeWE491M5fV
+        W06aGVTM4CkwuhobVFU7am29INASsmKYAqIGKUZTPORwoFDbgTBTWRS5OShZXcz7BKHs/buKWGD
+        E1r9MriQ+TMyG9mUKq00zcZSLbltjtbvgsG9tfmujvg==
+X-Received: by 2002:a62:3586:: with SMTP id c128mr1393910pfa.105.1569268119372;
+        Mon, 23 Sep 2019 12:48:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxIyO7oQ4DlmMEmBB+e51zn7In6laZj0i5/rIJzv56lsoRzXrY1pqufNNLtuyies+wIQgTOKw==
+X-Received: by 2002:a62:3586:: with SMTP id c128mr1393900pfa.105.1569268119227;
+        Mon, 23 Sep 2019 12:48:39 -0700 (PDT)
+Received: from localhost.localdomain (c-71-63-131-226.hsd1.or.comcast.net. [71.63.131.226])
+        by smtp.gmail.com with ESMTPSA id g12sm16477924pfb.97.2019.09.23.12.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 12:48:38 -0700 (PDT)
+From:   Connor Kuehl <connor.kuehl@canonical.com>
+To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        straube.linux@gmail.com, devel@driverdev.osuosl.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] staging: rtl8188eu: remove dead code in do-while conditional step
+Date:   Mon, 23 Sep 2019 12:48:06 -0700
+Message-Id: <20190923194806.25347-1-connor.kuehl@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+The local variable 'bcmd_down' is always set to true almost immediately
+before the do-while's condition is checked. As a result, !bcmd_down
+evaluates to false which short circuits the logical AND operator meaning
+that the second operand is never reached and is therefore dead code.
 
-I noticed some warning in dmesg on this Laptop.
+Addresses-Coverity: ("Logically dead code")
 
-Fn+right, Fn+left is BrightnessDown/Up and produce the following warning:
+Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
+---
+ drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-acer_wmi: Unknown function number - 4 - 0
+diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
+index 47352f210c0b..a4b317937b23 100644
+--- a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
++++ b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
+@@ -48,7 +48,6 @@ static u8 _is_fw_read_cmd_down(struct adapter *adapt, u8 msgbox_num)
+ static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
+ {
+ 	u8 bcmd_down = false;
+-	s32 retry_cnts = 100;
+ 	u8 h2c_box_num;
+ 	u32 msgbox_addr;
+ 	u32 msgbox_ex_addr;
+@@ -103,7 +102,7 @@ static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *p
+ 		adapt->HalData->LastHMEBoxNum =
+ 			(h2c_box_num+1) % RTL88E_MAX_H2C_BOX_NUMS;
+ 
+-	} while ((!bcmd_down) && (retry_cnts--));
++	} while (!bcmd_down);
+ 
+ 	ret = _SUCCESS;
+ 
+-- 
+2.17.1
 
-The brightness has some other issue on this Laptop but not sure
-who to blame on this. Probably amdgpu.?
-
-/sys/class/backlight/amdgpu_bl1/brightness <-> actual_brightness
-seems to mismatch.  EG: when brightness is 0 actual_brightness is still 5140.
-
-Unplugging the AC gives the following warning:
-
-acer_wmi: Unknown function number - 8 - 0
-
-When plugging the AC back I see;
-
-acer_wmi: Unknown function number - 8 - 1.
-
-I uploaded a dump of the acpi tables and dmidecode of the box.
-
-https://www.frugalware.org/~crazy/nitro5/ACPI
-https://www.frugalware.org/~crazy/nitro5/DMI
-
-Please let me know if you need any other informations.
-
-Best Regards,
-
-Gabriel C
