@@ -2,137 +2,168 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2313BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0168BC4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF54B21670
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DD521971
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="oM22KBNH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A535mhzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfIWJHg (ORCPT
+        id S1731867AbfIWJHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:07:36 -0400
-Received: from mail-eopbgr00131.outbound.protection.outlook.com ([40.107.0.131]:1352
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726020AbfIWJHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:07:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ue7R7a4HZaau7RElEm0W36wIc9B07O/hVvqHpbJ1tOq7e92LrR85iQdSBoDZ3awcE0FmhFZgu03XzZwoILl6MksJlTvGlQx+uQ1ii+xgabnx0PzJz4wAobjrIXUERQYNt0zC8+F7ExDN09X89hliqpG64PdUA0tJ2xax3z0J8cEiohgwyZ9gtsrsYdYiMz7E6C6miaTeBrkJnBM6d+sWC0C9sKPXzkpuFzlczi04RFqXIyK69ynS2s827pSHTwKsJV0E+qnwCkNVz58eSgKSyDLnd3MvAn8L9mtD8dGR4GOOcfSOt2Yfy0mbaR00mxI3g5KuqMmJ52+nOkgx0IzWkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kvquhNSsVtQb+bdWIl5cbds+dAgrB0L/xnIFrbx7OaM=;
- b=NBTugUFqeYNTrmLKpiwA9LZBP4ZGrP4F5C2fH05OIYyFRYFcVRpnrdj9oJNYfmJbXsp29/b241iNi74qOPWTR55wU0F7fWenKPG0/ZuUKGHFIZ/JZ81l7CyKdMUKIbV74EQIe7kn5kElEkkM7UBYkZQoUD+N7fksytc3bo9u2z9ewrlJ/0fEJB7ZhbfUzvTguBbzHG0hj0B4rKaSyX8T0Zj0XIt0sLPlKksnjydum6RFlHcUxqsOX/uskaEWNYuVi3uIyewWanU9jqUWcgJpf01PShNI7CstgiZMZ3caLJcYuv6g60qsJTv+efJyZONSbaQeCPRxHUlMI24j65fn0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kvquhNSsVtQb+bdWIl5cbds+dAgrB0L/xnIFrbx7OaM=;
- b=oM22KBNHUgAz/m9JRugOr8SJUorn+wbm8k8CPwc3CnTIwjfKAw5xxEzTMwo/n1g32Vop9iB9tdgM3+/IwZ/g/XOdaXYupKHjrK0EkLZU8Hx3PXqsplOkTX9lqZtydGyn0ZHNFn0IGLgUXSz4JFhkYpgvgWiRvs6VVIuu1sWLuYU=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3998.eurprd05.prod.outlook.com (52.134.18.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Mon, 23 Sep 2019 09:07:31 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::1179:c881:a516:644d]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::1179:c881:a516:644d%3]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
- 09:07:31 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "marcel@ziswiler.com" <marcel@ziswiler.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "info@logictechno.com" <info@logictechno.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "icenowy@aosc.io" <icenowy@aosc.io>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "j.bauer@endrich.com" <j.bauer@endrich.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: add vendor prefix for logic
- technologies limited
-Thread-Topic: [PATCH v1 1/2] dt-bindings: add vendor prefix for logic
- technologies limited
-Thread-Index: AQHVb4i4IUSP2AwIZ0a1numwyARFt6c4/ZYA
-Date:   Mon, 23 Sep 2019 09:07:31 +0000
-Message-ID: <c01adde46cbae1d1fd96142699964be4cc50b1fb.camel@toradex.com>
-References: <20190920075411.15735-1-marcel@ziswiler.com>
-In-Reply-To: <20190920075411.15735-1-marcel@ziswiler.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 623a0d77-bed4-45d3-6ddf-08d740057763
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3998;
-x-ms-traffictypediagnostic: VI1PR0502MB3998:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0502MB3998A148721ED8CB3A04AE9AF4850@VI1PR0502MB3998.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 0169092318
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(396003)(366004)(39840400004)(136003)(346002)(376002)(199004)(189003)(966005)(478600001)(2906002)(86362001)(2501003)(14454004)(25786009)(305945005)(2616005)(476003)(64756008)(66556008)(66476007)(66946007)(6506007)(102836004)(99286004)(7736002)(36756003)(11346002)(486006)(186003)(26005)(76176011)(7416002)(6116002)(3846002)(76116006)(91956017)(66446008)(66066001)(6512007)(6486002)(446003)(44832011)(118296001)(6246003)(6436002)(4326008)(6306002)(54906003)(71200400001)(71190400001)(110136005)(316002)(8676002)(5660300002)(229853002)(8936002)(256004)(81156014)(81166006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3998;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gPFlSnaogp6aXGBQO3RrjoCJpRHa6scdpe3vSTu/LsDJXvk53snJ2OEIfipfQUFd6Uj3Xph3fG3UydjSaQLjySpjKWelSoL1JvWMwF1lY/9Aw3hZgdZ2MzgszoQSBdpFVLCvW1YNdZAPn8l+bfF3o7B19a+KukhTyLf9QIrlC5zhADcSFQmIxQVN+x2umymMyEBPuKhQZqhZVB1u8BF5sB+sZIp+mJpPhyrICXd8l27/SzNe5zwaE5ubiSAiUlKtNpUme3J+R+jUAWh4qq0TrwIfWzy3Loz3NvcZCxWeYDZPRem1zs9nbI+51uo35ivTITgsycoxWpmoeeAsZTqNGb3r8UzP4mDpkMjhTC4fO6yO4jDVksn7KO9LRP7s0zbye6Jn30MCyFHzzbuQtK9lbPv3U4GFXfOkVuPr4qN4dRw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DD1B69EE8639114A9D5A17707CD8BDA9@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 23 Sep 2019 05:07:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34837 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727392AbfIWJHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:07:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569229661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T8T8RjJYcGGqEc0WFaCwZbXoPKLFlizfkrKrigbsteU=;
+        b=A535mhzS3PlFDWKRvfzViQAeeoRcUXJ7n9ERbVNRp/m9N7IvJDcZwVLcMwS1RDuE6YIs9P
+        NiHZ6raC5AmQcTY8b+MBDpP2sJiTOvsd2JcPo9bSlO4kiH1LvZ8dkCMVKFUyIB67kIarCd
+        4qzghlZ6/ROt3jCY1xkgW+2RKhwa+bQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-vslaCADiPbCjmOoldbpv0w-1; Mon, 23 Sep 2019 05:07:40 -0400
+Received: by mail-ed1-f72.google.com with SMTP id k5so5632573edx.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:07:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z5+JUdEcNbNbYnUHKbmarfCuTHHHOe0SmXNsWUScQrU=;
+        b=lafCcVnApHCQLDiQ8QDR7YrMZ9Zgbpe8W5qZAJjo1jA/ORTyaOFioQwd7HxLNeG+xw
+         VOT6x+D4nmBw0DF4iNRJEpv9oS30BnYm2ay/qllD3c083ou1eJq+78pe3aafgs9GebSo
+         o4f0a0T43p9jx7ucFrq5u2JaPZhBc2nCWYYvHrklv+iXkhGRf9Zr5niStjPItd+erzO4
+         zQQHEH9VUQjf3cEB/AwhQZMThOd6yFIpZ8yhCS/gSggGuxN2BJePXCiUfKylz9x0wM/2
+         Exwy0tQUfA119aLhhEUFFLD/JqPu0OgQHy5YB/wb+uO6tchZv3yV66mvMH3DtumDQuIq
+         NaKw==
+X-Gm-Message-State: APjAAAV36mbr2xoCqM79MkX51avq65C1TxYZj20HLPkBL5I4Vp55vNeL
+        plYIGP92SgJB2sLK26Dhnkf7CDPzR7wrvUCKzjNcFFE+gDi1F8xqnI9EPtXW0XJ0pjcUcBhYUei
+        Hi4BUmFDu8fE8JLsnjYVWhati
+X-Received: by 2002:a50:fc0c:: with SMTP id i12mr34693069edr.82.1569229659513;
+        Mon, 23 Sep 2019 02:07:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyCzq+l6MJPGlCUee90zOAQDFcFCUx0OtBxlJM4Nzjg7r/Nu6TdCyo4uiEsmUp7Cb5ztI+lUw==
+X-Received: by 2002:a50:fc0c:: with SMTP id i12mr34693051edr.82.1569229659394;
+        Mon, 23 Sep 2019 02:07:39 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id s16sm2244451edd.39.2019.09.23.02.07.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 02:07:38 -0700 (PDT)
+Subject: Re: [PATCH] ata: libahci_platform: Use common error handling code in
+ ahci_platform_get_resources()
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-ide@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <6ca97aeb-0892-ed0e-a149-b25848adf324@web.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7463a1d5-e76f-99a6-5a1e-f9477da3c1da@redhat.com>
+Date:   Mon, 23 Sep 2019 11:07:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 623a0d77-bed4-45d3-6ddf-08d740057763
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 09:07:31.6304
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zQcetqy9A8CW5zDJoD3ovptEgL0XW+2IjYp7o9nhb0jzxuhg28i1dcLIir+gzhQ9zOWyTNNsH6IQ4haL+YOL+qAxWXdcpMEaQcG9qCrzhz4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3998
+In-Reply-To: <6ca97aeb-0892-ed0e-a149-b25848adf324@web.de>
+Content-Language: en-US
+X-MC-Unique: vslaCADiPbCjmOoldbpv0w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA5LTIwIGF0IDA5OjU0ICswMjAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6
-DQo+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0K
-PiANCj4gQWRkIHZlbmRvciBwcmVmaXggZm9yIExvZ2ljIFRlY2hub2xvZ2llcyBMaW1pdGVkIFsx
-XSB3aGljaCBpcyBhDQo+IENoaW5lc2UNCj4gZGlzcGxheSBtYW51ZmFjdHVyZXIgZS5nLiBkaXN0
-cmlidXRlZCBieSBHZXJtYW4gRW5kcmljaCBCYXVlbGVtZW50ZQ0KPiBWZXJ0cmllYnMgR21iSCBb
-Ml0uDQo+IA0KPiBbMV0gaHR0cHM6Ly9sb2dpY3RlY2huby5jb20vY29udGFjdC11cy8NCj4gWzJd
-IA0KPiBodHRwczovL3d3dy5lbmRyaWNoLmNvbS9pc2k1MF9pc2kzMF90ZnQtZGlzcGxheXMvbHQx
-NzA0MTAtMXdoY19pc2kzMA0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWFyY2VsIFppc3dpbGVyIDxt
-YXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQoNClJldmlld2VkLWJ5OiBQaGlsaXBwZSBTY2hl
-bmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQoNCj4gDQo+IC0tLQ0KPiANCj4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFtbCB8
-IDIgKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnlh
-bWwNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVz
-LnlhbWwNCj4gaW5kZXggOTY3ZTc4YzVlYzBhLi4xNDQxMTQ2ZjM5NGYgMTAwNjQ0DQo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFtbA0K
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVz
-LnlhbWwNCj4gQEAgLTU0MSw2ICs1NDEsOCBAQCBwYXR0ZXJuUHJvcGVydGllczoNCj4gICAgICBk
-ZXNjcmlwdGlvbjogTGluZWFyIFRlY2hub2xvZ3kgQ29ycG9yYXRpb24NCj4gICAgIl5sb2dpY3Bk
-LC4qIjoNCj4gICAgICBkZXNjcmlwdGlvbjogTG9naWMgUEQsIEluYy4NCj4gKyAgIl5sb2dpY3Rl
-Y2hubywuKiI6DQo+ICsgICAgZGVzY3JpcHRpb246IExvZ2ljIFRlY2hub2xvZ2llcyBMaW1pdGVk
-DQo+ICAgICJebG9uZ2NoZWVyLC4qIjoNCj4gICAgICBkZXNjcmlwdGlvbjogTG9uZ2NoZWVyIFRl
-Y2hub2xvZ3kgKFNoYW5naGFpKSBDby4sIEx0ZC4NCj4gICAgIl5sc2ksLioiOg0K
+Hi,
+
+On 22-09-2019 15:55, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 22 Sep 2019 15:42:46 +0200
+>=20
+> Convert the call of the function =E2=80=9Cof_node_put=E2=80=9D to another=
+ jump target
+> so that it can be better reused at three places in this function.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/ata/libahci_platform.c | 17 +++++++----------
+>   1 file changed, 7 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platfor=
+m.c
+> index e742780950de..7b2e364f3bd5 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -497,8 +497,7 @@ struct ahci_host_priv *ahci_platform_get_resources(st=
+ruct platform_device *pdev,
+>=20
+>   =09=09=09if (of_property_read_u32(child, "reg", &port)) {
+>   =09=09=09=09rc =3D -EINVAL;
+> -=09=09=09=09of_node_put(child);
+> -=09=09=09=09goto err_out;
+> +=09=09=09=09goto err_put_node;
+>   =09=09=09}
+>=20
+>   =09=09=09if (port >=3D hpriv->nports) {
+> @@ -515,18 +514,14 @@ struct ahci_host_priv *ahci_platform_get_resources(=
+struct platform_device *pdev,
+>   =09=09=09if (port_dev) {
+>   =09=09=09=09rc =3D ahci_platform_get_regulator(hpriv, port,
+>   =09=09=09=09=09=09=09=09&port_dev->dev);
+> -=09=09=09=09if (rc =3D=3D -EPROBE_DEFER) {
+> -=09=09=09=09=09of_node_put(child);
+> -=09=09=09=09=09goto err_out;
+> -=09=09=09=09}
+> +=09=09=09=09if (rc =3D=3D -EPROBE_DEFER)
+> +=09=09=09=09=09goto err_put_node;
+>   =09=09=09}
+>   #endif
+>=20
+>   =09=09=09rc =3D ahci_platform_get_phy(hpriv, port, dev, child);
+> -=09=09=09if (rc) {
+> -=09=09=09=09of_node_put(child);
+> -=09=09=09=09goto err_out;
+> -=09=09=09}
+> +=09=09=09if (rc)
+> +=09=09=09=09goto err_put_node;
+>=20
+>   =09=09=09enabled_ports++;
+>   =09=09}
+> @@ -558,6 +553,8 @@ struct ahci_host_priv *ahci_platform_get_resources(st=
+ruct platform_device *pdev,
+>   =09devres_remove_group(dev, NULL);
+>   =09return hpriv;
+>=20
+> +err_put_node:
+> +=09of_node_put(child);
+>   err_out:
+>   =09devres_release_group(dev, NULL);
+>   =09return ERR_PTR(rc);
+> --
+> 2.23.0
+>=20
+
