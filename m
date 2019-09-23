@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B953C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ECDC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D021A217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3DF2168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569255285;
-	bh=XzOwzt4EaDZ9rGaWKVtEVQXODQx4kDEr42DdUyLF9nw=;
+	s=default; t=1569255290;
+	bh=LTvLyPkZ7lh2IDczYfBNwnxnXfly/CnHg9F9GnaeWnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fal4x+KRiwo/h/g/Twsy7Y9IoN49oogVDQT8guIdcXz0C2bprYriSJe1zUXgpZdt1
-	 O3iX8NU8xflB+hTHs1yaKCFVjEDH28WO8Px6xCtf0neB2S9ZVAAs7kA65vEUViukUm
-	 3jnjTCco9BbC8qlMtkzgyuSwofmhP31IoUvoGq6I=
+	b=wmz3QWQQ3rStOimui+DPNsloxtqKRxe3O/p6QJdL0OHoz39FddL+t6cThtMNLcWlj
+	 4ZRv9rXBA22crgBH+0sVIV7IEouesUtVQvJm0o79cjjsD2BmZhoBDnqoOXxhD5ayKq
+	 DqkHzaEXxtXFfVvd0Uu1vbPWI4J7gxADoQfbLI7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395071AbfIWQOo (ORCPT
+        id S2395348AbfIWQOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58872 "EHLO mail.kernel.org"
+        Mon, 23 Sep 2019 12:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394695AbfIWQOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:14:41 -0400
+        id S2395003AbfIWQOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:14:44 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343352168B;
-        Mon, 23 Sep 2019 16:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F375A20B7C;
+        Mon, 23 Sep 2019 16:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569255280;
-        bh=XzOwzt4EaDZ9rGaWKVtEVQXODQx4kDEr42DdUyLF9nw=;
+        s=default; t=1569255284;
+        bh=LTvLyPkZ7lh2IDczYfBNwnxnXfly/CnHg9F9GnaeWnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xfG2fVlepDQbEBbjD4wbtwex8SGgtPbxKDn/6J7/FG+egAXLJumQN9lB4o5yNHixn
-         ibB991ZBSGbVoSF/60Yx44nnWdBbaWiq8jSi6LL3mCfCzG/IdeF0kOCRDjEaF4ycez
-         K0bIfhq51GoWmKBGdO6Mf2T3qSdIt50G7g9josg8=
+        b=qRKJm6V/awTf/tmnqOaszbM5rG1JhwHYeZnXY9EUidxEzzOuR2hZKAkjuqK99cuPk
+         SeD7gSGrj+ODNf6ZAeJp2f3o+bAvP1Q7vt0HIrTfCfFkgmuKrNOekYZDWhofu2hqho
+         E3f2b4cKCNv77kPCxe7DcS/Q6RbjLeKjO8e+FyZ8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -52,9 +52,9 @@ To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
 Cc:     Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [RFT v4 4/8] ARM: dts: exynos: Remove MCT subnode for interrupt map on Exynos4210
-Date:   Mon, 23 Sep 2019 18:14:07 +0200
-Message-Id: <20190923161411.9236-4-krzk@kernel.org>
+Subject: [RFT v4 5/8] ARM: dts: exynos: Remove MCT subnode for interrupt map on Exynos4412
+Date:   Mon, 23 Sep 2019 18:14:08 +0200
+Message-Id: <20190923161411.9236-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190923161411.9236-1-krzk@kernel.org>
 References: <20190923161411.9236-1-krzk@kernel.org>
@@ -68,28 +68,28 @@ GIC and combiner.  This was modeled with a interrupt-map within a
 subnode but can be expressed in an easier and more common way, directly
 in the node itself.
 
+Tested on Odroid U3 (Exynos4412).
+
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 ---
 
-Not tested.
-
 Changes since v3:
 1. Use interrupts-extended instead of interrupts-map.
 ---
- arch/arm/boot/dts/exynos4210.dtsi | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ arch/arm/boot/dts/exynos4412.dtsi | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 6d3f19562aab..5fa33d43821e 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -109,23 +109,14 @@
- 		mct: timer@10050000 {
- 			compatible = "samsung,exynos4210-mct";
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 8b6d5875c75d..9b5fb4e54d7c 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -246,22 +246,13 @@
+ 		timer@10050000 {
+ 			compatible = "samsung,exynos4412-mct";
  			reg = <0x10050000 0x800>;
 -			interrupt-parent = <&mct_map>;
--			interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+-			interrupts = <0>, <1>, <2>, <3>, <4>;
  			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
  			clock-names = "fin_pll", "mct";
 -
@@ -99,18 +99,16 @@ index 6d3f19562aab..5fa33d43821e 100644
 -				#size-cells = <0>;
 -				interrupt-map =
 -					<0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
--					<1 &gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
+-					<1 &combiner 12 5>,
 -					<2 &combiner 12 6>,
 -					<3 &combiner 12 7>,
--					<4 &gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
--					<5 &gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
+-					<4 &gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
 -			};
 +			interrupts-extended = <&gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
++					      <&combiner 12 5>,
 +					      <&combiner 12 6>,
 +					      <&combiner 12 7>,
-+					      <&gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
++					      <&gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
  		};
  
  		watchdog: watchdog@10060000 {
