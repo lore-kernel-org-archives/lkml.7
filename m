@@ -2,141 +2,290 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715A4C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A515C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512A121841
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259DF20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kPFr+FOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfIWPWM (ORCPT
+        id S1727420AbfIWPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:22:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52530 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfIWPWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:22:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 08:22:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,540,1559545200"; 
-   d="scan'208";a="203143434"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga001.fm.intel.com with SMTP; 23 Sep 2019 08:22:07 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 23 Sep 2019 18:22:06 +0300
-Date:   Mon, 23 Sep 2019 18:22:06 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Tony Camuso <tcamuso@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        airlied@linux.ie, dkwon@redhat.com,
-        Joe Donahue <jdonohue@redhat.com>,
-        John Feeney <jfeeney@redhat.com>
-Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
-Message-ID: <20190923152206.GN1208@intel.com>
-References: <20190523110905.22445-1-tcamuso@redhat.com>
- <87v9y0mept.fsf@intel.com>
- <5111581c-9d73-530d-d3ff-4f6950bf3f8c@redhat.com>
- <20190710135617.GE5942@intel.com>
- <374b7e4e-40a2-f3c0-ae14-c533bd42243f@redhat.com>
- <20190712170657.GL5942@intel.com>
- <841db615-a353-2174-6fd6-a3302f352b08@redhat.com>
+        Mon, 23 Sep 2019 11:24:24 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59626 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfIWPYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:24:24 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NFOIvP093861;
+        Mon, 23 Sep 2019 10:24:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569252258;
+        bh=tLkDVFQOcgXKvvnUWQcn8FwnumQeqXVs0+qEVTBQ6DM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kPFr+FOaCTCRJKkfoQBxgbqPe1uBT6Yt/jlsqq/8n4BKEA383j0Dl7VrtWz0eq5b3
+         QjE0Ot7CjNl+AVunK/MXapVNBqR8Iyb092XC+4OXnqpj/9j6mip6WCr4Y/VRMjYXtQ
+         gMdOam5EIUCaa1CD1/9lyRTgqxVZHSFXIRK6Va/0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8NFOIWf043563
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Sep 2019 10:24:18 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
+ Sep 2019 10:24:17 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 23 Sep 2019 10:24:17 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NFOH6x070861;
+        Mon, 23 Sep 2019 10:24:17 -0500
+Subject: Re: [PATCH v8 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190920174139.30079-1-dmurphy@ti.com>
+ <20190920174139.30079-8-dmurphy@ti.com>
+ <73a95bac-7433-5b06-5701-c742307aa004@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ba92d95a-9f2c-6b37-74d3-4e3a87ad28bf@ti.com>
+Date:   Mon, 23 Sep 2019 10:28:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <73a95bac-7433-5b06-5701-c742307aa004@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <841db615-a353-2174-6fd6-a3302f352b08@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:03:35AM -0400, Tony Camuso wrote:
-> On 7/12/19 1:06 PM, Ville Syrj�l� wrote:
-> > On Fri, Jul 12, 2019 at 12:07:46PM -0400, Tony Camuso wrote:
-> >> On 7/10/19 9:56 AM, Ville Syrj�l� wrote:
-> >>> On Wed, Jul 10, 2019 at 09:47:11AM -0400, Tony Camuso wrote:
-> >>>> On 5/24/19 4:36 AM, Jani Nikula wrote:
-> >>>>> On Thu, 23 May 2019, tcamuso <tcamuso@redhat.com> wrote:
-> >>>>>>    From Daniel Kwon <dkwon@redhat.com>
-> >>>>>>
-> >>>>>> The system was crashed due to invalid memory access while trying to access
-> >>>>>> auxiliary device.
-> >>>>>>
-> >>>>>> crash> bt
-> >>>>>> PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
-> >>>>>>     #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
-> >>>>>>     #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
-> >>>>>>     #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
-> >>>>>>     #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
-> >>>>>>     #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
-> >>>>>>     #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
-> >>>>>>     #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
-> >>>>>>     #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
-> >>>>>>     #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
-> >>>>>>     #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
-> >>>>>>        [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
-> >>>>>>        RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
-> >>>>>>        RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
-> >>>>>>        RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
-> >>>>>>        RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
-> >>>>>>        R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
-> >>>>>>        R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
-> >>>>>>        ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> >>>>>>        RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
-> >>>>>>        RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
-> >>>>>>        RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
-> >>>>>>        RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
-> >>>>>>        R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
-> >>>>>>        R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
-> >>>>>>        ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
-> >>>>>>
-> >>>>>> ----------------------------------------------------------------------------
-> >>>>>>
-> >>>>>> It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
-> >>>>>> NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
-> >>>>>> check on this, but had failed to do it.
-> >>>>>
-> >>>>> I think the better question is, *why* does the idr_find() return NULL? I
-> >>>>> don't think it should, under any circumstances. I fear adding the check
-> >>>>> here papers over some other problem, taking us further away from the
-> >>>>> root cause.
-> >>>>>
-> >>>>> Also, can you reproduce this on a recent upstream kernel? The aux device
-> >>>>> nodes were introduced in kernel v4.6. Whatever you reproduced on v3.10
-> >>>>> is pretty much irrelevant for upstream.
-> >>>>>
-> >>>>>
-> >>>>> BR,
-> >>>>> Jani.
-> >>>>
-> >>>> I have not been able to reproduce this problem.
-> >>>
-> >>> mknod /dev/foo c <drm_dp_aux major> 255
-> >>> cat /dev/foo
-> >>>
-> >>> should do it.
-> >>
-> >> How do I determine <drm_dp_aux major>?
-> > 
-> > ls,file,stat. Take your pick.
-> > 
-> 
-> Problem here is I can't ls,file,stat /dev/foo until after it's created,
-> but I need to know the drm_dp_aux major number befroe I can use mknod.
-> 
-> What am I missing here?
+Jacek
 
-udev/whatever should create a bunch of these for you so you can check
-from them. If not, then dig around in /sys/class/drm_dp_aux_dev.
+On 9/21/19 10:13 AM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 9/20/19 7:41 PM, Dan Murphy wrote:
+>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+>> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+>> can control RGB LEDs individually or as part of a control bank group.
+>> These devices have the ability to adjust the mixing control for the RGB
+>> LEDs to obtain different colors independent of the overall brightness of
+>> the LED grouping.
+>>
+>> Datasheet:
+>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
+>>   1 file changed, 148 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>> new file mode 100644
+>> index 000000000000..9d05f43042e0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>> @@ -0,0 +1,148 @@
+>> +* Texas Instruments - LP5009/12/18/24/30/36 RGB LED driver
+>> +
+>> +The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
+>> +a LED group or control them individually.
+>> +
+>> +The difference in these RGB LED drivers is the number of supported RGB modules.
+>> +
+>> +Required parent properties:
+>> +	- compatible:
+>> +		"ti,lp5009"
+>> +		"ti,lp5012"
+>> +		"ti,lp5018"
+>> +		"ti,lp5024"
+>> +		"ti,lp5030"
+>> +		"ti,lp5036"
+>> +	- reg :  I2C slave address
+>> +		lp5009/12 - 0x28
+>> +		lp5018/24 - 0x28
+>> +		lp5030/36 - 0x30
+>> +	- #address-cells : 1
+>> +	- #size-cells : 0
+>> +
+>> +Optional parent properties:
+>> +	- enable-gpios : gpio pin to enable/disable the device.
+>> +	- vled-supply : LED supply
+>> +
+>> +Required child properties:
+>> +	- #address-cells : 1
+>> +	- #size-cells : 0
+>> +	- reg : This is the LED module number.
+>> +	- color : see Documentation/devicetree/bindings/leds/common.txt
+>> +	- function : see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +Required child properties only is LED modules will be banked:
+>> +	- ti,led-bank : This property denotes the LED module numbers that will
+>> +			be controlled as a single RGB cluster.  Each LED module
+>> +			number will be controlled by a single LED class instance.
+>> +			There can only be one instance of the ti,led-bank
+>> +			property for each device node.
+>> +
+>> +Required grandchildren properties:
+>> +	- reg : A single entry denoting the LED module that controls
+>> +		the RGB cluster.
+>> +	- color : see Documentation/devicetree/bindings/leds/leds-multicolor.txt
+>> +	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +The LED outputs associated with the LED modules are defined in Table 1 of the
+>> +corresponding data sheets.
+> We must enclose this information here.
 
--- 
-Ville Syrj�l�
-Intel
+That will make this doc pretty messy especially with the LP5036 entries.
+
+I would have to do ascii art to make it understandable and basically 
+there is not a delta in the lesser devices in the outputs
+
+I don't see value in reproducing this data sheet contents in the 
+dt-bindings.
+
+For example (LP5012) and then for the LP5036 multiply this by 3
+
+Table 1.
+
+Bank Number and LED Number Assignment
+OUT NUMBER BANK NUMBER  RGB LED MODULE NUMBER
+OUT0                    Bank A
+OUT1                    Bank B                        LED0
+OUT2                    Bank C
+
+OUT3                    Bank A
+OUT4                    Bank B                        LED1
+OUT5                    Bank C
+
+OUT6                    Bank A
+OUT7                    Bank B                        LED2
+OUT8                    Bank C
+
+OUT9 (LP5012 only) Bank A
+OUT10 (LP5012 only) Bank B                  LED3
+OUT11 (LP5012 only) Bank C
+
+
+>
+>> +
+>> +LP5009 - 2 Total RGB cluster LED outputs 0-1
+
+This should be 3 total not 2
+
+Dan
+
+>> +LP5012 - 4 Total RGB cluster LED outputs 0-3
+>> +LP5018 - 6 Total RGB cluster LED outputs 0-5
+>> +LP5024 - 8 Total RGB cluster LED outputs 0-7
+>> +LP5030 - 10 Total RGB cluster LED outputs 0-9
+>> +LP5036 - 12 Total RGB cluster LED outputs 0-11
+>> +
+>> +Optional child properties:
+>> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+>> +	- linux,default-trigger :
+>> +	   see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>> +Examples:
+>> +led-controller@29 {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	compatible = "ti,lp5024";
+>> +	reg = <0x29>;
+>> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>> +	vled-supply = <&vmmcsd_fixed>;
+>> +
+>> +	multi-led@1 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		reg = <1>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_STATUS;
+>> +
+>> +		led@3 {
+>> +			reg = <3>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +		};
+>> +
+>> +		led@4 {
+>> +			reg = <4>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +		};
+>> +
+>> +		led@5 {
+>> +			reg = <5>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +		};
+>> +	};
+>> +
+>> +	multi-led@2 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		reg = <2>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_STANDBY;
+>> +		ti,led-bank = <2 3 5>;
+>> +
+>> +		led@6 {
+>> +			reg = <0x6>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +			led-sources = <6 9 15>;
+>> +		};
+>> +
+>> +		led@7 {
+>> +			reg = <0x7>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			led-sources = <7 10 16>;
+>> +		};
+>> +
+>> +		led@8 {
+>> +			reg = <0x8>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +			led-sources = <8 11 17>;
+>> +		};
+>> +	};
+>> +
+>> +	multi-led@4 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		reg = <4>;
+>> +		color = <LED_COLOR_ID_MULTI>;
+>> +		function = LED_FUNCTION_ACTIVITY;
+>> +
+>> +		led@12 {
+>> +			reg = <12>;
+>> +			color = <LED_COLOR_ID_RED>;
+>> +		};
+>> +
+>> +		led@13 {
+>> +			reg = <13>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +		};
+>> +
+>> +		led@14 {
+>> +			reg = <14>;
+>> +			color = <LED_COLOR_ID_BLUE>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +For more product information please see the link below:
+>> +http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> +http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
