@@ -2,139 +2,219 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD56C47E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F4FC432C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EFD21850
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD81B20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:27:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i/ZJrc4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502983AbfIWVTs (ORCPT
+        id S2503061AbfIWV1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:19:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48485 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387449AbfIWVTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:19:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 14:19:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="339861469"
-Received: from ray.jf.intel.com (HELO [10.24.9.85]) ([10.24.9.85])
-  by orsmga004.jf.intel.com with ESMTP; 23 Sep 2019 14:19:46 -0700
-Subject: Re: [PATCH v2 1/2] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-To:     Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-References: <cover.1569004922.git.steve.wahl@hpe.com>
- <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <63a38733-974f-9032-1980-9a8289d72d21@intel.com>
-Date:   Mon, 23 Sep 2019 14:19:46 -0700
+        Mon, 23 Sep 2019 17:27:22 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54304 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732345AbfIWV1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:27:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NLOf4V038659;
+        Mon, 23 Sep 2019 21:27:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=83jxGKqAi9Yk4jDwgF6P4FCc3JGos7ZpoO61f8oV08k=;
+ b=i/ZJrc4YyWymOVjBHKVonztA+Qn77uS5ZklHaHlsaJsDt4VrFR+7NCP8O2CF6u6IEzgZ
+ ZomLUvzCbGU1lW48gWBtWwCc4AG+dnAaJe/gig5jRK87MGEhjBzF37bhxP+evJsdKisE
+ tw6B2gGmj4ysAZFWpv3HwTCj4E9f45364AhgeLp3xjL0S/qTWk5m6ww94oFpRe4Hhel/
+ o7VWbvx51qC785DDxQd+69Dz2hqEiTBz/LZKB8cDdwBuPfeMTwyOxMkbIv0jGCurpC7J
+ ouHOTbOg3qncq/ZiEIUIQxfaqZGsqSQa2YNYPjS6lo9RFHKuOzGBK+ylBD42w824LS2y sQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v5btpsqs8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 21:27:11 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NLO96L003669;
+        Mon, 23 Sep 2019 21:27:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2v6yvq6keq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 21:27:10 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8NLR8Rf002944;
+        Mon, 23 Sep 2019 21:27:08 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Sep 2019 14:27:08 -0700
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+To:     Mina Almasry <almasrymina@google.com>,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
+ <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
+Date:   Mon, 23 Sep 2019 14:27:06 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
+In-Reply-To: <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909230179
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909230179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 11:15 AM, Steve Wahl wrote:
->  	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
-> -	for (i = 0; i < PTRS_PER_PMD; i++) {
-> +	for (i = 0; i < pmd_index((unsigned long)_text); i++)
-> +		pmd[i] &= ~_PAGE_PRESENT;
-> +
-> +	for (; i <= pmd_index((unsigned long)_end); i++)
->  		if (pmd[i] & _PAGE_PRESENT)
->  			pmd[i] += load_delta;
-> -	}
-> +
-> +	for (; i < PTRS_PER_PMD; i++)
-> +		pmd[i] &= ~_PAGE_PRESENT;
+On 9/23/19 12:18 PM, Mina Almasry wrote:
+> On Mon, Sep 23, 2019 at 10:47 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>
+>> On 9/19/19 3:24 PM, Mina Almasry wrote:
+>>> Patch series implements hugetlb_cgroup reservation usage and limits, which
+>>> track hugetlb reservations rather than hugetlb memory faulted in. Details of
+>>> the approach is 1/7.
+>>
+>> Thanks for your continued efforts Mina.
+>>
+> 
+> And thanks for your reviews so far.
+> 
+>> One thing that has bothered me with this approach from the beginning is that
+>> hugetlb reservations are related to, but somewhat distinct from hugetlb
+>> allocations.  The original (existing) huegtlb cgroup implementation does not
+>> take reservations into account.  This is an issue you are trying to address
+>> by adding a cgroup support for hugetlb reservations.  However, this new
+>> reservation cgroup ignores hugetlb allocations at fault time.
+>>
+>> I 'think' the whole purpose of any hugetlb cgroup is to manage the allocation
+>> of hugetlb pages.  Both the existing cgroup code and the reservation approach
+>> have what I think are some serious flaws.  Consider a system with 100 hugetlb
+>> pages available.  A sysadmin, has two groups A and B and wants to limit hugetlb
+>> usage to 50 pages each.
+>>
+>> With the existing implementation, a task in group A could create a mmap of
+>> 100 pages in size and reserve all 100 pages.  Since the pages are 'reserved',
+>> nobody in group B can allocate ANY huge pages.  This is true even though
+>> no pages have been allocated in A (or B).
+>>
+>> With the reservation implementation, a task in group A could use MAP_NORESERVE
+>> and allocate all 100 pages without taking any reservations.
+>>
+>> As mentioned in your documentation, it would be possible to use both the
+>> existing (allocation) and new reservation cgroups together.  Perhaps if both
+>> are setup for the 50/50 split things would work a little better.
+>>
+>> However, instead of creating a new reservation crgoup how about adding
+>> reservation support to the existing allocation cgroup support.  One could
+>> even argue that a reservation is an allocation as it sets aside huge pages
+>> that can only be used for a specific purpose.  Here is something that
+>> may work.
+>>
+>> Starting with the existing allocation cgroup.
+>> - When hugetlb pages are reserved, the cgroup of the task making the
+>>   reservations is charged.  Tracking for the charged cgroup is done in the
+>>   reservation map in the same way proposed by this patch set.
+>> - At page fault time,
+>>   - If a reservation already exists for that specific area do not charge the
+>>     faulting task.  No tracking in page, just the reservation map.
+>>   - If no reservation exists, charge the group of the faulting task.  Tracking
+>>     of this information is in the page itself as implemented today.
+>> - When the hugetlb object is removed, compare the reservation map with any
+>>   allocated pages.  If cgroup tracking information exists in page, uncharge
+>>   that group.  Otherwise, unharge the group (if any) in the reservation map.
+>>
+>> One of the advantages of a separate reservation cgroup is that the existing
+>> code is unmodified.  Combining the two provides a more complete/accurate
+>> solution IMO.  But, it has the potential to break existing users.
+>>
+>> I really would like to get feedback from anyone that knows how the existing
+>> hugetlb cgroup controller may be used today.  Comments from Aneesh would
+>> be very welcome to know if reservations were considered in development of the
+>> existing code.
+>> --
+> 
+> FWIW, I'm aware of the interaction with NORESERVE and my thoughts are:
+> 
+> AFAICT, the 2 counter approach we have here is strictly superior to
+> the 1 upgraded counter approach. Consider these points:
+> 
+> - From what I can tell so far, everything you can do with the 1
+> counter approach, you can do with the two counter approach by setting
+> both limit_in_bytes and reservation_limit_in_bytes to the limit value.
+> That will limit both reservations and at fault allocations.
+> 
+> - The 2 counter approach preserves existing usage of hugetlb cgroups,
+> so no need to muck around with reverting the feature some time from
+> now because of broken users. No existing users of hugetlb cgroups need
+> to worry about the effect of this on their usage.
+> 
+> - Users that use hugetlb memory strictly through reservations can use
+> only reservation_limit_in_bytes and enjoy cgroup limits that never
+> SIGBUS the application. This is our usage for example.
+> 
+> - The 2 counter approach provides more info to the sysadmin. The
+> sysadmin knows exactly how much reserved bytes there are via
+> reservation_usage_in_bytes, and how much actually in use bytes there
+> are via usage_in_bytes. They can even detect NORESERVE usage if
+> usage_in_bytes > reservation_usage_in_bytes. failcnt shows failed
+> reservations *and* failed allocations at fault, etc. All around better
+> debuggability when things go wrong. I think this is particularly
+> troubling for the 1 upgraded counter approach. That counter's
+> usage_in_bytes doesn't tell you if the usage came from reservations or
+> allocations at fault time.
+> 
+> - Honestly, I think the 2 counter approach is easier to document and
+> understand by the userspace? 1 counter that vaguely tracks both the
+> reservations and usage and decides whether or not to charge at fault
+> time seems hard to understand what really happened after something
+> goes wrong. 1 counter that tracks reservations and 1 counter that
+> tracks actual usage seem much simpler to digest, and provide better
+> visibility to what the cgroup is doing as I mentioned above.
+> 
+> I think it may be better if I keep the 2 counter approach but
+> thoroughly document the interaction between the existing counters and
+> NORESERVE. What do you think?
 
-This is looking a bunch better.  The broken-up loop could probably use
-some comments, or you could combine it back to a single loop like this:
+I personally prefer the one counter approach only for the reason that it
+exposes less information about hugetlb reservations.  I was not around
+for the introduction of hugetlb reservations, but I have fixed several
+issues having to do with reservations.  IMO, reservations should be hidden
+from users as much as possible.  Others may disagree.
 
-	int text_start_pmd_index = pmd_index((unsigned long)_text);
-	int text_end_pmd_index   = pmd_index((unsigned long)_end);
+I really hope that Aneesh will comment.  He added the existing hugetlb
+cgroup code.  I was not involved in that effort, but it looks like there
+might have been some thought given to reservations in early versions of
+that code.  It would be interesting to get his perspective.
 
-	for (i = 0; i < PTRS_PER_PMD; i++) {
-		if ((i < text_start_pmd_index) ||
-		    (i > text_end_pmd_index)) {
-			/* Unmap entries not mapping the kernel image */
-			pmd[i] &= ~_PAGE_PRESENT;
-		} else if (pmd[i] & _PAGE_PRESENT)
- 			pmd[i] += load_delta;
-		}
-	}
-
-Although I'd prefer it get commented or rewritten, it's passable like
-this, so:
-
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Changes included in patch 4 (disable region_add file_region coalescing)
+would be needed in a one counter approach as well, so I do plan to
+review those changes.
+-- 
+Mike Kravetz
