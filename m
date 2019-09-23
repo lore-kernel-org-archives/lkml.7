@@ -2,131 +2,68 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494E9C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F296C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254C720B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2621F20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569266726;
+	bh=8kVqj0yV/bUrdIKQVgvHg5HTG4vwQQp5wuYrXq2mLlg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=stlHCg88pvC1dLLRcY9F8DkhvUqv1Hrw1HzN67sYdhzlFxZhUxl1hfwSTZeiIK/vG
+	 WF9v9gS/pYkeM52X/Zf+fgg1qrSGvkyvKZORggslkbF+iKIC4cBw1JqsU3X/iVZqFw
+	 4iCNlhc3pKXcwM2ACg2gvP3svlTJ1D9WsRY/NYis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440443AbfIWTYB (ORCPT
+        id S2440468AbfIWTZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:24:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54494 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2440392AbfIWTYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:24:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2F23CAD72;
-        Mon, 23 Sep 2019 19:23:59 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Sep 2019 21:23:57 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Wong <normalperson@yhbt.net>
-Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
- CONFIG_DEBUG_LOCK_ALLOC
-In-Reply-To: <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
-References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
- <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
-Message-ID: <1b26e25fcc0e6c54cbdb9e66dade17db@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+        Mon, 23 Sep 2019 15:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727206AbfIWTZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:25:24 -0400
+Subject: Re: [GIT PULL] HID for 5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569266724;
+        bh=8kVqj0yV/bUrdIKQVgvHg5HTG4vwQQp5wuYrXq2mLlg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=NNqNyXTV5mf7e6iIr4eqvJiqZHpKBueWj60hvxuM6PAIF8OrBDk4jx5bIMV6f2YU4
+         zj/RE5jRSygLMbnMP+/zfD2G/OS2XZxm4KkVLtcjXNwbj00ccjJxjBTPxFMuEdaquM
+         geUndVzqQwUyoYG4Zjs3AL0JuoYdOHQiOR5e4M4w=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <nycvar.YFH.7.76.1909222244300.1459@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1909222244300.1459@cbobk.fhfr.pm>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1909222244300.1459@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+X-PR-Tracked-Commit-Id: 8ca06d6f2d7ba0c7f2a988bb8f686eca45471420
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1ad0bc78948652edc3067b6b49ba31b1598faa4a
+Message-Id: <156926672436.9893.391806922270253802.pr-tracker-bot@kernel.org>
+Date:   Mon, 23 Sep 2019 19:25:24 +0000
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-23 17:43, Jason Baron wrote:
-> On 9/4/19 4:22 PM, Jason Baron wrote:
->> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
->> ep_call_nested() in order to pass the correct subclass argument to
->> spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
->> checks for epoll depth and loops that are already verified when doing
->> EPOLL_CTL_ADD. This mirrors a conversion that was done for
->> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
->> ep_call_nested() from ep_eventpoll_poll()")
->> 
->> Signed-off-by: Jason Baron <jbaron@akamai.com>
->> Cc: Davidlohr Bueso <dave@stgolabs.net>
->> Cc: Roman Penyaev <rpenyaev@suse.de>
->> Cc: Al Viro <viro@zeniv.linux.org.uk>
->> Cc: Eric Wong <normalperson@yhbt.net>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  fs/eventpoll.c | 36 +++++++++++++-----------------------
->>  1 file changed, 13 insertions(+), 23 deletions(-)
->> 
->> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
->> index d7f1f50..a9b2737 100644
->> --- a/fs/eventpoll.c
->> +++ b/fs/eventpoll.c
->> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls 
->> *ncalls,
->>   */
->>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
->> 
->> -static struct nested_calls poll_safewake_ncalls;
->> -
->> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int 
->> call_nests)
->> -{
->> -	unsigned long flags;
->> -	wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
->> -
->> -	spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
->> -	wake_up_locked_poll(wqueue, EPOLLIN);
->> -	spin_unlock_irqrestore(&wqueue->lock, flags);
->> -
->> -	return 0;
->> -}
->> +static DEFINE_PER_CPU(int, wakeup_nest);
->> 
->>  static void ep_poll_safewake(wait_queue_head_t *wq)
->>  {
->> -	int this_cpu = get_cpu();
->> -
->> -	ep_call_nested(&poll_safewake_ncalls,
->> -		       ep_poll_wakeup_proc, NULL, wq, (void *) (long) this_cpu);
->> +	unsigned long flags;
->> +	int subclass;
->> 
->> -	put_cpu();
->> +	local_irq_save(flags);
->> +	preempt_disable();
->> +	subclass = __this_cpu_read(wakeup_nest);
->> +	spin_lock_nested(&wq->lock, subclass + 1);
->> +	__this_cpu_inc(wakeup_nest);
->> +	wake_up_locked_poll(wq, POLLIN);
->> +	__this_cpu_dec(wakeup_nest);
->> +	spin_unlock(&wq->lock);
->> +	local_irq_restore(flags);
->> +	preempt_enable();
->>  }
+The pull request you sent on Sun, 22 Sep 2019 22:49:57 +0200 (CEST):
 
-What if reduce number of lines with something as the following:
+> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
 
-    int this_cpu = get_cpu();
-    subclass = __this_cpu_inc_return(wakeup_nest);
-    spin_lock_irqsave_nested(&wq->lock, flags, subclass);
-    wake_up_locked_poll(wq, POLLIN);
-    spin_unlock_irqrestore(&wq->lock, flags);
-    __this_cpu_dec(wakeup_nest);
-    put_cpu();
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1ad0bc78948652edc3067b6b49ba31b1598faa4a
 
-Other than that looks good to me.
+Thank you!
 
-Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
-
---
-Roman
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
