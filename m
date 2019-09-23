@@ -2,122 +2,127 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7AAC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4A2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9A020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569267810;
-	bh=4XgcKu0Zi4YtIkORdWKTezTFXUwQOp+yMfXv1oIxhAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NcnAxKzjs2thS1ytBbdr+MPwK2eqWuXtylE7gH3q6anHTq0xcy2nZHyElhwWvugSo
-	 GllHAaHI4OPVSCxdQyu3QUpp9immF0sreZiqN+BjyoY6R1kD4IU9IAWICebFK7XJrw
-	 e1A06o31zQVtHVQ3J/Cy5JvEb5SaKGwdmi7Q5mCc=
+	by mail.kernel.org (Postfix) with ESMTP id BB43420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g1nbejpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502255AbfIWTn3 (ORCPT
+        id S2502299AbfIWTpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:43:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39486 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfIWTn3 (ORCPT
+        Mon, 23 Sep 2019 15:45:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48272 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbfIWTpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:43:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r3so15314155wrj.6;
-        Mon, 23 Sep 2019 12:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ltPYUxFooOhed88EBLtldCYWPv0nxqna9LT7y/vhHOU=;
-        b=mujarN8aF/SeAzAKIU/93Xr8lcOtSx/iIkwtF4zYsMPUndWPBgxpvCTBMz66n7vM0u
-         /jXMNl/fP2LSbS8hjRLooB5a8EOw09SjRkLMTTqmoWt292wegxX7f1XOB2aDnUWuZcL8
-         6g76kKEkacecmPbDMkC/CisE2RHXnN8PA0ZUpE925MWPh469TVO2rDtYy83jJ/XyQZR3
-         TDTt8OYj7oicDYxmp1Us9hMfLHiT2gT/v6xeJDOY4PkBOlaoz+NGj8K3PEKG6bPpq8DJ
-         UWb1luBSinwwxRQSw14nvdQHzc9RC6+T9A10mGs9b8MKmeJTBVpiw+aKMIeAhojEMkHn
-         B+4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ltPYUxFooOhed88EBLtldCYWPv0nxqna9LT7y/vhHOU=;
-        b=ZKV793Rt5Q4GGkSzSEd56B8q7JSXRXTN9QBFhctIawCy4NBZ7+GE412/FIR0VjLn8p
-         yAmkeJlarJ69bMgkVK/g0BUD/93UYoBrKb6Arv5dg7Uz9og6NLoXZjdTaIOH2wYS8GGl
-         15q9RncTL4/gsk156M8n0BmVFIBsNL5UtGE7JHRhvKOsNeFN/xEAhkhiUFNA8JsYzmKF
-         9FCuN7T+gu0kMhI1bsFAbhvgbTt8kV0dFiDIejlFLtsifLsYk/edwR58nQvf3EEd+OIw
-         JHdD6iGLN5nQ6BdUkeHQnS4Sxps19+FYzdYm8HTcYoQ9TFBOzHiyhuobTe39lcCt0Xfq
-         qXcg==
-X-Gm-Message-State: APjAAAXvppjghuam5UsxkPL91f6AwtUzgGjn4k0Cs/1i1KOhg8w/w1HR
-        J1ilBkXTjjecK4QhmUmHvp0=
-X-Google-Smtp-Source: APXvYqyn4x52E3p+WymflXE2LT2U4YUXdHiN4rlb8xOXSC69QvGXwDbVsCbw7cgDvEdlzFWvY3c9MQ==
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr797873wrj.30.1569267805107;
-        Mon, 23 Sep 2019 12:43:25 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id m16sm11232098wml.11.2019.09.23.12.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 12:43:24 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 21:43:22 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-Message-ID: <20190923194322.GA55255@gmail.com>
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
- <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
- <20190922112555.GB122003@gmail.com>
- <20190922115247.GA2679387@kroah.com>
- <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
+        Mon, 23 Sep 2019 15:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T1wJieVaGSw4lrkxEJrL75LlxCo53ZqCpjN+xiCeBz8=; b=g1nbejpoexev69wtsvisH4Osm
+        brLtMi6HvXX6Ax3zVt39fQ8/JNWMV0C7C07CJ/YZMiFFEQhbf7ibX5hLf2mVvTj9LF95yLY6rMPsa
+        dx6SrWL9uAUf/SRVJ4q/ULpWzw/RdMAYnp7HLSTEVi4IHWSZxWg7LG3uQGEbP4jjupy/OR6PUNZfQ
+        Pq43gOnI9oaW0CrDNUehEaVArnHBvia3krsGo4CY+xUbh7RrZctDY6trAQir3aY5Ke/RZ2jls2VDa
+        beG65sms9r5lgsNG3CNlluxt4/HufjcAz+ixMe5hvE8ZRs+TSX/4pgBSulMFzG50MvQKP70eDATuG
+        9fTP0e5Yg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCUGj-00046c-3r; Mon, 23 Sep 2019 19:45:09 +0000
+Date:   Mon, 23 Sep 2019 12:45:09 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Lin Feng <linf@wangsu.com>, Michal Hocko <mhocko@kernel.org>,
+        corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        keescook@chromium.org, mchehab+samsung@kernel.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, Omar Sandoval <osandov@fb.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: Is congestion broken?
+Message-ID: <20190923194509.GC1855@bombadil.infradead.org>
+References: <20190917115824.16990-1-linf@wangsu.com>
+ <20190917120646.GT29434@bombadil.infradead.org>
+ <20190918123342.GF12770@dhcp22.suse.cz>
+ <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
+ <20190919034949.GF9880@bombadil.infradead.org>
+ <20190923111900.GH15392@bombadil.infradead.org>
+ <45d8b7a6-8548-65f5-cccf-9f451d4ae3d4@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <45d8b7a6-8548-65f5-cccf-9f451d4ae3d4@kernel.dk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Shuah Khan <skhan@linuxfoundation.org> wrote:
-
-> I am exploring the possibility to move selftests to a better location 
-> or add a git alias so it can be found easily. With the addition of 
-> KUnit and future work that is planned to connect kselftest and KUnit, 
-> it would make sense have selftests to be in a location that is better 
-> suited than where it currently resides.
+On Mon, Sep 23, 2019 at 01:38:23PM -0600, Jens Axboe wrote:
+> On 9/23/19 5:19 AM, Matthew Wilcox wrote:
+> > 
+> > Ping Jens?
+> > 
+> > On Wed, Sep 18, 2019 at 08:49:49PM -0700, Matthew Wilcox wrote:
+> >> On Thu, Sep 19, 2019 at 10:33:10AM +0800, Lin Feng wrote:
+> >>> On 9/18/19 20:33, Michal Hocko wrote:
+> >>>> I absolutely agree here. From you changelog it is also not clear what is
+> >>>> the underlying problem. Both congestion_wait and wait_iff_congested
+> >>>> should wake up early if the congestion is handled. Is this not the case?
+> >>>
+> >>> For now I don't know why, codes seem should work as you said, maybe I need to
+> >>> trace more of the internals.
+> >>> But weird thing is that once I set the people-disliked-tunable iowait
+> >>> drop down instantly, this is contradictory to the code design.
+> >>
+> >> Yes, this is quite strange.  If setting a smaller timeout makes a
+> >> difference, that indicates we're not waking up soon enough.  I see
+> >> two possibilities; one is that a wakeup is missing somewhere -- ie the
+> >> conditions under which we call clear_wb_congested() are wrong.  Or we
+> >> need to wake up sooner.
+> >>
+> >> Umm.  We have clear_wb_congested() called from exactly one spot --
+> >> clear_bdi_congested().  That is only called from:
+> >>
+> >> drivers/block/pktcdvd.c
+> >> fs/ceph/addr.c
+> >> fs/fuse/control.c
+> >> fs/fuse/dev.c
+> >> fs/nfs/write.c
+> >>
+> >> Jens, is something supposed to be calling clear_bdi_congested() in the
+> >> block layer?  blk_clear_congested() used to exist until October 29th
+> >> last year.  Or is something else supposed to be waking up tasks that
+> >> are sleeping on congestion?
 > 
-> I have been getting feedback from some developers that they would like 
-> to see selftests more visible and easier to find.
-> 
-> There are some dependencies (unintended, shouldn't exist) between some 
-> tests and content under tools that might pose some logistical problems, 
-> in addition to the churn of backporting.
-> 
-> I haven't explored "git alias" yet though. Since this topic of moving 
-> came up, I would liek to get feedback on selftests location in general 
-> and where would be a good place for it.
+> Congestion isn't there anymore. It was always broken as a concept imho,
+> since it was inherently racy. We used the old batching mechanism in the
+> legacy stack to signal it, and it only worked for some devices.
 
-I'm not sure about the Git alias thing - but I do agree that 
-tools/testing/selftests is a pretty obscure location given the importance 
-of kernel unit tests - and I think it could be moved one level higher, to 
-tools/selftests? The "selftest" name already implies the "test" aspect 
-after all.
+Umm.  OK.  Well, something that used to work is now broken.  So how
+should we fix it?  Take a look at shrink_node() in mm/vmscan.c.  If we've
+submitted a lot of writes to a device, and overloaded it, we want to
+sleep until it's able to take more writes:
 
-Thanks,
+                /*
+                 * Stall direct reclaim for IO completions if underlying BDIs
+                 * and node is congested. Allow kswapd to continue until it
+                 * starts encountering unqueued dirty pages or cycling through
+                 * the LRU too quickly.
+                 */
+                if (!sc->hibernation_mode && !current_is_kswapd() &&
+                   current_may_throttle() && pgdat_memcg_congested(pgdat, root))
+                        wait_iff_congested(BLK_RW_ASYNC, HZ/10);
 
-	Ingo
+With a standard block device, that now sleeps until the timeout (100ms)
+expires, which is far too long for a modern SSD but is probably tuned
+just right for some legacy piece of spinning rust (or indeed a modern
+USB stick).  How would the block layer like to indicate to the mm layer
+"I am too busy, please let the device work for a bit"?
