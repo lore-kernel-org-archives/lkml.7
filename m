@@ -2,114 +2,109 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A3C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD123C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649FE20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:13:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Hgbv4v36"
+	by mail.kernel.org (Postfix) with ESMTP id 9A20220673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569248009;
+	bh=kpxPgEg0SUFhUmPgDRXXbOqqrktiGx5C5nmICpq9Cr8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cay0UkfHd6bIjB77bT9zW087LH0Vw1B0nQI1rBkj7fbQbTLGQaVHEuwgRfBdvHX5T
+	 nCSQAfxuUtUiwcWZm1YjbPL9/zltdaMWXxI57/Rej91y0T5O+XYRL846jtGay194iJ
+	 IZGCLdqWQTNjnmGfLs1w9+6vK1kQD7IBlmvNEDkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407451AbfIWONV (ORCPT
+        id S2437658AbfIWON3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:13:21 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50728 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404847AbfIWONU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:13:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NEDFYh074217;
-        Mon, 23 Sep 2019 09:13:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569247996;
-        bh=pylUPeCNtRYYZvjwR77bzHfG+zVG/7+gE+JoZOyPgmM=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=Hgbv4v36BP4W3UhGYlKUnVLDXwiAqEaYuizHFb2RbcmN8fb5t0hew/PgBEN4dpVUf
-         MmFqV3ki2K+x/aZjJhgJbxCkb6xKig6A28L9495kXCOl2tjNMr33HK15/FLr+0y8rv
-         NapSH1ZHlwYb73LCStx0KzPlbAjatWoQK6Hc4jCc=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8NEDF6T082043
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Sep 2019 09:13:15 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
- Sep 2019 09:13:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 23 Sep 2019 09:13:09 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NEDF8s092017;
-        Mon, 23 Sep 2019 09:13:15 -0500
-Subject: Re: [PATCH v3 3/5] leds: lm3692x: Handle failure to probe the
- regulator
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <cover.1569100154.git.agx@sigxcpu.org>
- <32fd08565f8dff39ce9a13f7b0a2546d22913b3a.1569100154.git.agx@sigxcpu.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c1073a35-adaa-1a9b-e1d6-1b36ee7ac1a5@ti.com>
-Date:   Mon, 23 Sep 2019 09:17:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 10:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404847AbfIWON2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:13:28 -0400
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306DF20578;
+        Mon, 23 Sep 2019 14:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569248007;
+        bh=kpxPgEg0SUFhUmPgDRXXbOqqrktiGx5C5nmICpq9Cr8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=al7D2uFJV6kDW0PM4RbmZTqNkcDYM0cSmAcZ8m5KeEk/bdzTjwbT7IQnEGVAEjukN
+         20bxM3VZFkA6JDjphzRiQfERq2Y2pVMdCZ0jNuXE4Ef9IgsDj9dVgFucgMI2MCpGBb
+         +cJ+G+3qOLttOylNC03wUoi6FMf4tR5o2YEegfus=
+Date:   Mon, 23 Sep 2019 16:13:25 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 6/6] posix-cpu-timers: Make PID=0 and PID=self handling
+ consistent
+Message-ID: <20190923141324.GB10778@lenoir>
+References: <20190905120339.561100423@linutronix.de>
+ <20190905120540.162032542@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <32fd08565f8dff39ce9a13f7b0a2546d22913b3a.1569100154.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905120540.162032542@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guido
-
-Thanks for the update
-
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
-
-On 9/21/19 4:12 PM, Guido Günther wrote:
-> Instead use devm_regulator_get_optional since the regulator
-> is optional and check for errors.
->
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+On Thu, Sep 05, 2019 at 02:03:45PM +0200, Thomas Gleixner wrote:
+> If the PID encoded into the clock id is 0 then the target is either the
+> calling thread itself or the process to which it belongs.
+> 
+> If the current thread encodes its own PID on a process wide clock then
+> there is no reason not to treat it in the same way as the PID=0 case.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->   drivers/leds/leds-lm3692x.c | 13 +++++++++++--
->   1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> index ad76e34455ff..54e9bd2d288b 100644
-> --- a/drivers/leds/leds-lm3692x.c
-> +++ b/drivers/leds/leds-lm3692x.c
-> @@ -337,9 +337,18 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->   		return ret;
->   	}
->   
-> -	led->regulator = devm_regulator_get(&led->client->dev, "vled");
-> -	if (IS_ERR(led->regulator))
-> +	led->regulator = devm_regulator_get_optional(&led->client->dev, "vled");
-> +	if (IS_ERR(led->regulator)) {
-> +		ret = PTR_ERR(led->regulator);
-> +		if (ret != -ENODEV) {
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(&led->client->dev,
-> +					"Failed to get vled regulator: %d\n",
-> +					ret);
-> +			return ret;
-> +		}
->   		led->regulator = NULL;
-> +	}
->   
->   	child = device_get_next_child_node(&led->client->dev, child);
->   	if (!child) {
+>  kernel/time/posix-cpu-timers.c |    9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -90,7 +90,14 @@ static struct task_struct *lookup_task(c
+>  
+>  	} else {
+>  		/*
+> -		 * For processes require that p is group leader.
+> +		 * Timer is going to be attached to a process. If p is
+> +		 * current then treat it like the PID=0 case above.
+> +		 */
+> +		if (p == current)
+> +			return current->group_leader;
+> +
+> +		/*
+> +		 * For foreign processes require that p is group leader.
+>  		 */
+>  		if (!has_group_leader_pid(p))
+>  			return NULL;
+
+So, right after you should have that:
+
+                if (same_thread_group(p, current))
+                        return p;
+
+Which I suggested to convert as:
+
+                if (p == current)
+                        return p;
+
+Either way, you can now remove those lines.
+
+And then:
+
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
