@@ -2,52 +2,52 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6B4C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A418C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34A020835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A31420835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394402AbfIWMfL (ORCPT
+        id S2394551AbfIWMfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:35:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36804 "EHLO
+        Mon, 23 Sep 2019 08:35:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29594 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393992AbfIWMfK (ORCPT
+        by vger.kernel.org with ESMTP id S2394414AbfIWMfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:35:10 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NCRP0b147402
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:35:09 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v6wmv1bwu-1
+        Mon, 23 Sep 2019 08:35:17 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NCRPwP103522
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:35:15 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v6v2sw5h8-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:35:08 -0400
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:35:13 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 23 Sep 2019 13:35:07 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Mon, 23 Sep 2019 13:35:05 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 23 Sep 2019 13:35:04 +0100
+        Mon, 23 Sep 2019 13:35:01 +0100
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NCZ2GZ52625646
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NCYxoB39387640
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 12:35:02 GMT
+        Mon, 23 Sep 2019 12:34:59 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9279511C04C;
-        Mon, 23 Sep 2019 12:35:02 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C919411C04C;
+        Mon, 23 Sep 2019 12:34:59 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CE4A11C054;
-        Mon, 23 Sep 2019 12:35:02 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6988F11C052;
+        Mon, 23 Sep 2019 12:34:59 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 12:35:02 +0000 (GMT)
+        Mon, 23 Sep 2019 12:34:59 +0000 (GMT)
 From:   Halil Pasic <pasic@linux.ibm.com>
 To:     Christoph Hellwig <hch@lst.de>,
         Gerald Schaefer <gerald.schaefer@de.ibm.com>
@@ -60,103 +60,72 @@ Cc:     Halil Pasic <pasic@linux.ibm.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch customizable
-Date:   Mon, 23 Sep 2019 14:34:16 +0200
+Subject: [RFC PATCH 0/3] fix dma_mask for CCW devices 
+Date:   Mon, 23 Sep 2019 14:34:15 +0200
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190923123418.22695-1-pasic@linux.ibm.com>
-References: <20190923123418.22695-1-pasic@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19092312-4275-0000-0000-0000036A0B33
+x-cbid: 19092312-0028-0000-0000-000003A17E63
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092312-4276-0000-0000-0000387C7F65
-Message-Id: <20190923123418.22695-2-pasic@linux.ibm.com>
+x-cbparentid: 19092312-0029-0000-0000-000024638F43
+Message-Id: <20190923123418.22695-1-pasic@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=698 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1908290000 definitions=main-1909230124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
-common code") tweaking the client code supplied GFP_* flags used to be
-an issue handled in the architecture specific code. The commit message
-suggests, that fixing the client code would actually be a better way
-of dealing with this.
+Commit 37db8985b211 ("s390/cio: add basic protected virtualization
+support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
+Protected Virtualization (PV) guests. The problem is that the dma_mask
+of the CCW device, which is used by virtio core, gets changed from 64 to
+31 bit. This is done because some of the DMA allocations do require 31
+bit addressable memory, but it has unfavorable side effects. 
 
-On s390 common I/O devices are generally capable of using the full 64
-bit address space for DMA I/O, but some chunks of the DMA memory need to
-be 31 bit addressable (in physical address space) because the
-instructions involved mandate it. Before switching to DMA API this used
-to be a non-issue, we used to allocate those chunks from ZONE_DMA.
-Currently our only option with the DMA API is to restrict the devices to
-(via dma_mask and dma_mask_coherent) to 31 bit, which is sub-optimal.
+For PV the only drawback is that some of the virtio structures must end
+up in ZONE_DMA (with PV we have the bounce the buffers mapped via DMA
+API anyway).
 
-Thus s390 we would benefit form having control over what flags are
-dropped.
+But for non PV guests we have a problem: because of the 31 bit mask
+guests bigger than 2G are likely to try bouncing buffers. The swiotlb
+however is only initialized for PV guests (because we don't want to
+bounce anything for non PV guests). The first map of a buffer with
+an address beyond 0x7fffffff kills the guest.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
----
- include/linux/dma-mapping.h | 10 ++++++++++
- kernel/dma/Kconfig          |  6 ++++++
- kernel/dma/mapping.c        |  4 +---
- 3 files changed, 17 insertions(+), 3 deletions(-)
+This series sets out to fix this problem by first making the GPF_DMA
+flag count for DMA API allocations -- on s390 at least.  Then we set
+dma_mask to 64 bit and do the allocations for the memory that needs to
+be 31 bit addressable with the GPF_DMA flag.
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 4a1c4fca475a..5024bc863fa7 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -817,4 +817,14 @@ static inline int dma_mmap_wc(struct device *dev,
- #define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
- #endif
- 
-+#ifdef CONFIG_ARCH_HAS_DMA_OVERRIDE_GFP_FLAGS
-+extern gfp_t dma_override_gfp_flags(struct device *dev, gfp_t flags);
-+#else
-+static inline gfp_t dma_override_gfp_flags(struct device *dev, gfp_t flags)
-+{
-+	/* let the implementation decide on the zone to allocate from: */
-+	return flags & ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
-+}
-+#endif
-+
- #endif
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index 73c5c2b8e824..4756c75047e3 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -54,6 +54,12 @@ config ARCH_HAS_DMA_PREP_COHERENT
- config ARCH_HAS_DMA_COHERENT_TO_PFN
- 	bool
- 
-+config ARCH_HAS_DMA_MMAP_PGPROT
-+	bool
-+
-+config ARCH_HAS_DMA_OVERRIDE_GFP_FLAGS
-+	bool
-+
- config ARCH_HAS_FORCE_DMA_UNENCRYPTED
- 	bool
- 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index d9334f31a5af..535b809548e2 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -303,9 +303,7 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr))
- 		return cpu_addr;
- 
--	/* let the implementation decide on the zone to allocate from: */
--	flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
--
-+	flag = dma_override_gfp_flags(dev, flag);
- 	if (dma_is_direct(ops))
- 		cpu_addr = dma_direct_alloc(dev, size, dma_handle, flag, attrs);
- 	else if (ops->alloc)
+For CCW devices we could probably just not clear any GFP flags at
+all but, I decided to be conservative and change only what really needs
+to be changed.
+
+I'm not perfectly satisfied with this solution, but I believe it is good
+enough, and I can't think of anything better at the moment. Ideas
+welcome.
+
+Halil Pasic (3):
+  dma-mapping: make overriding GFP_* flags arch customizable
+  s390/virtio: fix virtio-ccw DMA without PV
+  dma-mapping: warn on harmful GFP_* flags
+
+ arch/s390/Kconfig             |  1 +
+ arch/s390/include/asm/cio.h   |  5 +++--
+ arch/s390/mm/init.c           | 20 ++++++++++++++++++++
+ drivers/s390/cio/css.c        | 16 +++++++++-------
+ drivers/s390/cio/device.c     |  5 +++--
+ drivers/s390/cio/device_ops.c |  3 ++-
+ include/linux/dma-mapping.h   | 13 +++++++++++++
+ kernel/dma/Kconfig            |  6 ++++++
+ kernel/dma/mapping.c          |  4 +---
+ 9 files changed, 58 insertions(+), 15 deletions(-)
+
 -- 
 2.17.1
 
