@@ -2,95 +2,147 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1F8C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A859CC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3226720882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE1A20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569257571;
+	bh=0rX2u3ss+9k8U1HmW2xq32m/iZ74rLK2iPek/VwpF2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g08KIoeb4PBpDuWh8IckBfdnbAwWdI7pznWJfhYSn54yLQt70dF/X74EwqEbdV5v/
+	 cSPgEfW1Cws+LJtTJcTEwISpotItDlfjb0+kJxhnvZ5rUCzQvJYU9D+l9zTRmR/idh
+	 aRzu1yKoUr0KnfdTS1ihAa6KDDMmiZOYRtdPG35M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501997AbfIWQvs (ORCPT
+        id S2502045AbfIWQwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:51:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52170 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390796AbfIWQvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:51:48 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB92D5859E
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:51:47 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id h6so5087484wrh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:51:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3RbYm8r31nf5/CgoKO2hq1IVIw3F2t6/IIFZwh76KkU=;
-        b=rj+9yS0920taGBgKX5Km/v4bIDdCfOvzKMTWE3c9LfgMZ3VJB7KdZh41UhgfXOZ10C
-         1wBhh9HNQrRHDInQd03S/E0LgBWGbaQvvJvo+eZV32a0YdyTkEnY+tfvtXnRKz9AhtBt
-         h9OnuE8NBDBVFmO+KXMEp9o2jmy5yYgfbF9YfyZIZ1KBdkoIYxql0egnJiHhSEUILyDg
-         IjJGkz+dsfwfE7i0Jv5Zsswf4uYz5Mt2tZolh2P0qjd6157/rwuqDoaXl5cGXrIJLa/6
-         3CRVriFXpqdm2RTmWzI34Fin8wIUrDnfQ6NkVHozMtp8Utevp+U3haDSX0RxBnM46asg
-         BqTQ==
-X-Gm-Message-State: APjAAAWeYEvXWRemEop+m7iyFDGXRmU7FW1FycJ2Tp5SAAzrD3j3Wczq
-        UOuA+UCr8jQBw88WAxLv2wS2/vV5GJ5R2azDs3xsjm5fwX8AqiMc+oivuriUePrOYngm6TRylhp
-        0cD9Evtwg+uRnyk8YkvjNO6gD
-X-Received: by 2002:a5d:430f:: with SMTP id h15mr289722wrq.177.1569257506294;
-        Mon, 23 Sep 2019 09:51:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyajlkv9A6Ku4HYClKecGn3/36UfGhv+IfcMvF2aTqfZ8o+21QEdB5W3/2BDE+bNBaUn3Nghg==
-X-Received: by 2002:a5d:430f:: with SMTP id h15mr289702wrq.177.1569257506049;
-        Mon, 23 Sep 2019 09:51:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id n2sm10154924wmc.1.2019.09.23.09.51.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 09:51:45 -0700 (PDT)
-Subject: Re: [PATCH 02/17] KVM: monolithic: x86: convert the kvm_x86_ops
- methods to external functions
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-3-aarcange@redhat.com>
- <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
- <20190923161352.GC18195@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <0ffed044-c5e1-4cc9-365a-ae51c4d2b2cb@redhat.com>
-Date:   Mon, 23 Sep 2019 18:51:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 12:52:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35884 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387683AbfIWQwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:52:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 05249B618;
+        Mon, 23 Sep 2019 16:52:44 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 18:52:35 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190923165235.GD17206@dhcp22.suse.cz>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190923161352.GC18195@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/19 18:13, Sean Christopherson wrote:
-> Alternatively, what if we use macros in the call sites, e.g. keep/require
-> vmx_ and svm_ prefixes for all functions, renaming VMX and SVM code as
-> needed?  E.g.:
+On Mon 23-09-19 17:48:52, Peter Zijlstra wrote:
+> On Mon, Sep 23, 2019 at 05:28:56PM +0200, Michal Hocko wrote:
+> > On Mon 23-09-19 17:15:19, Peter Zijlstra wrote:
 > 
+> > > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > > > index 4123100e..9859acb 100644
+> > > > --- a/arch/x86/mm/numa.c
+> > > > +++ b/arch/x86/mm/numa.c
+> > > > @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+> > > >   */
+> > > >  const struct cpumask *cpumask_of_node(int node)
+> > > >  {
+> > > > +	if (node == NUMA_NO_NODE)
+> > > > +		return cpu_online_mask;
+> > > 
+> > > This mandates the caller holds cpus_read_lock() or something, I'm pretty
+> > > sure that if I put:
+> > > 
+> > > 	lockdep_assert_cpus_held();
+> > 
+> > Is this documented somewhere?
 > 
->   #define X86_OP(name) kvm_x86_vendor##_##name
-> 
->   int kvm_arch_init(void *opaque)
->   {
-> 	if (X86_OP(supported_by_cpu())) {
+> No idea... common sense :-)
 
-Please no, the extra parentheses would be a mess to review.
+I thought that and cpuhotplug were forbiden to be used in the same
+sentence :p
 
-Paolo
+> > Also how does that differ from a normal
+> > case when a proper node is used? The cpumask will always be dynamic in
+> > the cpu hotplug presence, right?
+> 
+> As per normal yes, and I'm fairly sure there's a ton of bugs. Any
+> 'online' state is subject to change except when you're holding
+> sufficient locks to stop it.
+> 
+> Disabling preemption also stabilizes it, because cpu unplug relies on
+> stop-machine.
+
+OK, I guess it is fair to document that callers should be careful when
+using this if they absolutely need any stability. But I strongly suspect
+they simply do not care all that much. They mostly do care to have
+something that gives them an idea which CPUs are close to the device and
+that can tolerate some race.
+
+In other words this is more of an optimization than a correctness issue.
+ 
+> > > here, it comes apart real quick. Without holding the cpu hotplug lock,
+> > > the online mask is gibberish.
+> > 
+> > Can the returned cpu mask go away?
+> 
+> No, the cpu_online_mask itself has static storage, the contents OTOH can
+> change at will. Very little practical difference :-)
+ 
+OK, thanks for the confirmation. I was worried that I've overlooked
+something.
+
+To the NUMA_NO_NODE itself. Your earlier email noted:
+: > +
+: >  	if ((unsigned)node >= nr_node_ids) {
+: >  		printk(KERN_WARNING
+: >  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+: 
+: I still think this makes absolutely no sense what so ever.
+
+Did you mean the NUMA_NO_NODE handling or the specific node >= nr_node_ids
+check?
+
+Because as to NUMA_NO_NODE I believe this makes sense because this is
+the only way that a device is not bound to any numa node. I even the
+ACPI standard is considering this optional. Yunsheng Lin has referred to
+the specific part of the standard in one of the earlier discussions.
+Trying to guess the node affinity is worse than providing all CPUs IMHO.
+-- 
+Michal Hocko
+SUSE Labs
