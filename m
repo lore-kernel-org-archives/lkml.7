@@ -2,115 +2,344 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66094C4740A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FC5214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29846206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 03:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ThCt24HN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406205AbfIWDha (ORCPT
+        id S2406316AbfIWDjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 23:37:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6060 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404054AbfIWDh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 23:37:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 20:37:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,538,1559545200"; 
-   d="scan'208";a="188937516"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Sep 2019 20:37:27 -0700
-Received: from [10.226.38.65] (unknown [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id 290A9580379;
-        Sun, 22 Sep 2019 20:37:22 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
- <20190913081807.GB27291@lahna.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <639ea457-5c40-92ac-9696-14d615b3f43c@linux.intel.com>
-Date:   Mon, 23 Sep 2019 11:37:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 22 Sep 2019 23:39:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35407 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404753AbfIWDjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 23:39:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so12209020wrt.2
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 20:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aW5JAQkQgpvqTjYjNxgV8q6UjWSZi6NlskA09iDonQI=;
+        b=ThCt24HNfG5UA4GZNfmLY2rU4yX1Uu8S5olqh71hBvnVMmYi4He3jQPWcvcHcgunvY
+         ePdoJ1Jd3k6WpFIwnL+6w590IMFQcsO65bY2obQZ9U5W7FvdKVM2oFBlsmPKyjarFp9O
+         BymdKJId+cdGvIlMabnANJjHMKPv3HE8t+xFFfztPQXJUMRTRoIu2aiayGgOHp8Mkkcj
+         juZ54TxLZhUtxXUMAQVUwwJjkewLON9rTptWzP//4Pf8/d15/40jOkOQ3vzB783VFVQD
+         22Je84qniXInOMqQoyBzh5EYsy+EoKjBhYxOyHLT8sx71mykqdC7zF29NoHeCfu7dsnc
+         D3Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aW5JAQkQgpvqTjYjNxgV8q6UjWSZi6NlskA09iDonQI=;
+        b=r4iT59ZY2GJqh3X4ODI1sAa/HENnt/3EdIZ4ercrzdK0QXrR/fQBfcxGWXF8KhMJ08
+         1jS9fnARUs10xQzbEn8O8E8A2IodzMqkm5C3G8Fpz+c8Leip9xuziHE9BKvrMBy086XS
+         rSmqu5FKFHj70x5lgQW6YTXOVIOURt2wjDoH6A0FI6cz1ImDrB0TG1/qeL6DbJ6g7eQZ
+         WP7/RhMMxvwhAZh0cGQOKu6JEkgUEowe3OpABLQPSLav+VLTNPMwp3m6x8Mjic03pMWe
+         LAHnss0uWO39p6iXihlMrj+EDfs1eQjrO0eUDa3gykLeFW54GwQgCvZXTzDt5FbA8wNp
+         /Hdg==
+X-Gm-Message-State: APjAAAWoCJg5r5HF+28iEWj+0R4eOeuT/XkpBXxXqVhCD5XxyziknvvX
+        vjKzz6DvLqkyphlvmd8L6edWuUX29C5WsaoaKlhh9w==
+X-Google-Smtp-Source: APXvYqze7ymtwFE7RXpx3rSb3D6YCBPqL4OJZrzyaon1IurzPabwrovG7laL5kGgnAiE4PvAgT4b6LHpYqC1DXUVtRE=
+X-Received: by 2002:a05:6000:2:: with SMTP id h2mr19124674wrx.309.1569209987215;
+ Sun, 22 Sep 2019 20:39:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190913081807.GB27291@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-4-anup.patel@wdc.com>
+ <alpine.DEB.2.21.9999.1909210245000.2030@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1909210245000.2030@viisi.sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 23 Sep 2019 09:09:35 +0530
+Message-ID: <CAAhSdy1GAncwc1zd2jtacWD4wN=hWPBXruKoh4F-pw88HuWPpw@mail.gmail.com>
+Subject: Re: [PATCH v7 02/21] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 21, 2019 at 3:31 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> Hi Anup,
+>
+> Thanks for changing this to use a bitmap.  A few comments below -
+>
+> On Wed, 4 Sep 2019, Anup Patel wrote:
+>
+> > This patch adds riscv_isa bitmap which represents Host ISA features
+> > common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> > because elf_hwcap will only have ISA features relevant for user-space
+> > apps whereas riscv_isa will have ISA features relevant to both kernel
+> > and user-space apps.
+> >
+> > One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> > we will use it to do following operations:
+> >
+> > 1. Check whether hypervisor extension is available
+> > 2. Find ISA features that need to be virtualized (e.g. floating
+> >    point support, vector extension, etc.)
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Reviewed-by: Alexander Graf <graf@amazon.com>
+> > ---
+> >  arch/riscv/include/asm/hwcap.h | 26 +++++++++++
+> >  arch/riscv/kernel/cpufeature.c | 79 ++++++++++++++++++++++++++++++++--
+> >  2 files changed, 102 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> > index 7ecb7c6a57b1..9b657375aa51 100644
+> > --- a/arch/riscv/include/asm/hwcap.h
+> > +++ b/arch/riscv/include/asm/hwcap.h
+> > @@ -8,6 +8,7 @@
+> >  #ifndef __ASM_HWCAP_H
+> >  #define __ASM_HWCAP_H
+> >
+> > +#include <linux/bits.h>
+> >  #include <uapi/asm/hwcap.h>
+> >
+> >  #ifndef __ASSEMBLY__
+> > @@ -22,5 +23,30 @@ enum {
+> >  };
+> >
+> >  extern unsigned long elf_hwcap;
+> > +
+> > +#define RISCV_ISA_EXT_a              ('a' - 'a')
+> > +#define RISCV_ISA_EXT_c              ('c' - 'a')
+> > +#define RISCV_ISA_EXT_d              ('d' - 'a')
+> > +#define RISCV_ISA_EXT_f              ('f' - 'a')
+> > +#define RISCV_ISA_EXT_h              ('h' - 'a')
+> > +#define RISCV_ISA_EXT_i              ('i' - 'a')
+> > +#define RISCV_ISA_EXT_m              ('m' - 'a')
+> > +#define RISCV_ISA_EXT_s              ('s' - 'a')
+> > +#define RISCV_ISA_EXT_u              ('u' - 'a')
+> > +#define RISCV_ISA_EXT_zicsr  (('z' - 'a') + 1)
+> > +#define RISCV_ISA_EXT_zifencei       (('z' - 'a') + 2)
+> > +#define RISCV_ISA_EXT_zam    (('z' - 'a') + 3)
+> > +#define RISCV_ISA_EXT_ztso   (('z' - 'a') + 4)
+>
+> If we add the Z extensions here, it's probably best if we drop Zam from
+> this list.  The rationale is, as maintainers, we're planning to hold off
+> on merging any support for extensions or modules that aren't in the
+> "frozen" or "ratified" states, and according to the RISC-V specs, Zicsr,
+> Zifencei, and Ztso are all either frozen or ratified.  However, see
+> below -
 
-Hi Mika,
+No problem, I will remove Zam define.
 
-On 13/9/2019 4:18 PM, Mika Westerberg wrote:
-> On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
->> Hi Rahul,
->>
->> thanks for your patches!
->>
->> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
->> <rahul.tanwar@linux.intel.com> wrote:
->>
->>> This series is to add pinctrl & GPIO controller driver for a new SoC.
->>> Patch 1 adds pinmux & GPIO controller driver.
->>> Patch 2 adds the dt bindings document & include file.
->>>
->>> Patches are against Linux 5.3-rc5 at below Git tree:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
->> OK nice, I think you need to include Mika Westerberg on this review
->> as well, because I think he likes to stay on top of all things intel
->> in pin control. (Also included two other Intel folks in Finland who usually
->> take an interest in these things.)
-> Thanks Linus for looping me in.
->
-> Even if this is not directly based on the stuff we have under
-> drivers/pinctrl/intel/*, I have a couple of comments. I don't have this
-> patch series in my inbox so I'm commenting here.
->
-> Since the driver name is equilibrium I suggest you to name
-> intel_pinctrl_driver and the like (probe, remove) to follow that
-> convention to avoid confusing this with the Intel pinctrl drivers under
-> drivers/pinctrl/intel/*.
->
-> Maybe use eqbr prefix so then intel_pinctrl_driver becomes
-> eqbr_pinctrl_driver and so on. Also all the structures like
-> intel_pinctrl_drv_data should be changed accordingly.
->
-> Ditto for:
->
-> MODULE_DESCRIPTION("Intel Pinctrl Driver for LGM SoC");
->
-> I think better would be:
->
-> MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
->
-> Anyway you get the idea :)
+Please add documentation under Documentation/riscv regarding the
+policy of not merging support for RISC-V extensions which aren't in
+"frozen" or "ratified" state.
 
-Yes, i understand your point. Will update in v2. Thanks.
+>
+> > +
+> > +#define RISCV_ISA_EXT_MAX    256
+> > +
+> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> > +
+> > +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> > +
+> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> > +#define riscv_isa_extension_available(isa_bitmap, ext)       \
+> > +     __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> > +
+> >  #endif
+> >  #endif
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> > index b1ade9a49347..4ce71ce5e290 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -6,21 +6,64 @@
+> >   * Copyright (C) 2017 SiFive
+> >   */
+> >
+> > +#include <linux/bitmap.h>
+> >  #include <linux/of.h>
+> >  #include <asm/processor.h>
+> >  #include <asm/hwcap.h>
+> >  #include <asm/smp.h>
+> >
+> >  unsigned long elf_hwcap __read_mostly;
+> > +
+> > +/* Host ISA bitmap */
+> > +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> > +
+> >  #ifdef CONFIG_FPU
+> >  bool has_fpu __read_mostly;
+> >  #endif
+> >
+> > +/**
+> > + * riscv_isa_extension_base - Get base extension word
+> > + *
+> > + * @isa_bitmap ISA bitmap to use
+> > + * @returns base extension word as unsigned long value
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+>
+> Am happy to see comments that can be automatically parsed, but could you
+> reformat them into kernel-doc format?
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/doc-guide/kernel-doc.rst
+
+Sure, I will update comments as-per kernel-doc.rst.
+
+>
+> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> > +{
+> > +     if (!isa_bitmap)
+> > +             return riscv_isa[0];
+> > +     return isa_bitmap[0];
+> > +}
+> > +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> > +
+> > +/**
+> > + * __riscv_isa_extension_available - Check whether given extension
+> > + * is available or not
+> > + *
+> > + * @isa_bitmap ISA bitmap to use
+> > + * @bit bit position of the desired extension
+> > + * @returns true or false
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+>
+> Same comment as above.
+
+Okay, I will update.
+
+>
+> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> > +{
+> > +     const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> > +
+> > +     if (bit >= RISCV_ISA_EXT_MAX)
+> > +             return false;
+> > +
+> > +     return test_bit(bit, bmap) ? true : false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> > +
+> >  void riscv_fill_hwcap(void)
+> >  {
+> >       struct device_node *node;
+> >       const char *isa;
+> > -     size_t i;
+> > +     char print_str[BITS_PER_LONG+1];
+> > +     size_t i, j, isa_len;
+> >       static unsigned long isa2hwcap[256] = {0};
+> >
+> >       isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> > @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+> >
+> >       elf_hwcap = 0;
+> >
+> > +     bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> > +
+> >       for_each_of_cpu_node(node) {
+> >               unsigned long this_hwcap = 0;
+> > +             unsigned long this_isa = 0;
+> >
+> >               if (riscv_of_processor_hartid(node) < 0)
+> >                       continue;
+> > @@ -43,8 +89,20 @@ void riscv_fill_hwcap(void)
+> >                       continue;
+> >               }
+> >
+> > -             for (i = 0; i < strlen(isa); ++i)
+> > +             i = 0;
+> > +             isa_len = strlen(isa);
+> > +#if defined(CONFIG_32BIT)
+> > +             if (!strncmp(isa, "rv32", 4))
+> > +                     i += 4;
+> > +#elif defined(CONFIG_64BIT)
+> > +             if (!strncmp(isa, "rv64", 4))
+> > +                     i += 4;
+> > +#endif
+> > +             for (; i < isa_len; ++i) {
+> >                       this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> > +                     if ('a' <= isa[i] && isa[i] <= 'z')
+> > +                             this_isa |= (1UL << (isa[i] - 'a'));
+>
+> Continuing from the earlier comment, this code won't properly handle the X
+> and Z prefix extensions.  So maybe for the time being, we should just drop
+> the lines mentioned earlier that imply that we can parse Z-prefix
+> extensions, and change this line so it ignores X and Z letters?
+>
+> Then a subsequent patch can add support for more complicated extension
+> string parsing.
+
+Okay, we sill not parse 'x' and 'z' bits (which can be added later for
+X and Z prefix extensions).
+
+>
+>
+> > +             }
+> >
+> >               /*
+> >                * All "okay" hart should have same isa. Set HWCAP based on
+> > @@ -55,6 +113,11 @@ void riscv_fill_hwcap(void)
+> >                       elf_hwcap &= this_hwcap;
+> >               else
+> >                       elf_hwcap = this_hwcap;
+> > +
+> > +             if (riscv_isa[0])
+> > +                     riscv_isa[0] &= this_isa;
+> > +             else
+> > +                     riscv_isa[0] = this_isa;
+> >       }
+> >
+> >       /* We don't support systems with F but without D, so mask those out
+> > @@ -64,7 +127,17 @@ void riscv_fill_hwcap(void)
+> >               elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+> >       }
+> >
+> > -     pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (riscv_isa[0] & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ISA extensions %s\n", print_str);
+> > +
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (elf_hwcap & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ELF capabilities %s\n", print_str);
+> >
+> >  #ifdef CONFIG_FPU
+> >       if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> > --
+> > 2.17.1
+> >
+> >
+>
+>
+> - Paul
 
 Regards,
-Rahul
+Anup
