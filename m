@@ -2,100 +2,97 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65AEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40597C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7C720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCD920665
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfIWTsm (ORCPT
+        id S2502363AbfIWTtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:48:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52365 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbfIWTsm (ORCPT
+        Mon, 23 Sep 2019 15:49:04 -0400
+Received: from scorn.kernelslacker.org ([45.56.101.199]:49876 "EHLO
+        scorn.kernelslacker.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfIWTtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:48:42 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <connor.kuehl@canonical.com>)
-        id 1iCUK8-0000jE-HO
-        for linux-kernel@vger.kernel.org; Mon, 23 Sep 2019 19:48:40 +0000
-Received: by mail-pg1-f199.google.com with SMTP id r12so9916063pgm.16
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:48:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1S3tbuayATJvDzZnpsz9pe1S0VUYhd/3QByEuRe2Xx4=;
-        b=boodLpNgXu2AsjVJBS9UE4smdX4oZlo4x/AB3EbNjFdXj//Ud7IseyI1tKNUU/Efu8
-         PDRyj225Cz1mRhx9ffnLpdY4gBSQ7KHXWgh+7dPxEgZsMXgnRuQIcpIh2gec/46XTMXf
-         k/23Jc0RWfMJOE3+9EeZKKhCXKwbfDpOVuIZtHa0Wb3GqvcGDM+WUn6jfDwr7XtqqssQ
-         l5gXbrqfWs2tCWelszESK6/1W/EPTVvhF7Xg8alS9SCAzPrfNiCGk7zZiYg4IJ+ney2q
-         qeBhcLPDU6GN0mvGHjHsGK7AuaB2wVxswEEvgBRg0utXyuely4x4whew/fS8mL35ckPc
-         SCng==
-X-Gm-Message-State: APjAAAV87Zb7IcmoC1hfkGzFtkTP+7tGqdc0icliXAerOIeWE491M5fV
-        W06aGVTM4CkwuhobVFU7am29INASsmKYAqIGKUZTPORwoFDbgTBTWRS5OShZXcz7BKHs/buKWGD
-        E1r9MriQ+TMyG9mUKq00zcZSLbltjtbvgsG9tfmujvg==
-X-Received: by 2002:a62:3586:: with SMTP id c128mr1393910pfa.105.1569268119372;
-        Mon, 23 Sep 2019 12:48:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxIyO7oQ4DlmMEmBB+e51zn7In6laZj0i5/rIJzv56lsoRzXrY1pqufNNLtuyies+wIQgTOKw==
-X-Received: by 2002:a62:3586:: with SMTP id c128mr1393900pfa.105.1569268119227;
-        Mon, 23 Sep 2019 12:48:39 -0700 (PDT)
-Received: from localhost.localdomain (c-71-63-131-226.hsd1.or.comcast.net. [71.63.131.226])
-        by smtp.gmail.com with ESMTPSA id g12sm16477924pfb.97.2019.09.23.12.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 12:48:38 -0700 (PDT)
-From:   Connor Kuehl <connor.kuehl@canonical.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        straube.linux@gmail.com, devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: remove dead code in do-while conditional step
-Date:   Mon, 23 Sep 2019 12:48:06 -0700
-Message-Id: <20190923194806.25347-1-connor.kuehl@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Sep 2019 15:49:03 -0400
+Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
+        by scorn.kernelslacker.org with esmtp (Exim 4.92)
+        (envelope-from <davej@codemonkey.org.uk>)
+        id 1iCUKU-0003vq-1Z; Mon, 23 Sep 2019 15:49:02 -0400
+Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
+        id 9B7E3560162; Mon, 23 Sep 2019 15:49:01 -0400 (EDT)
+Date:   Mon, 23 Sep 2019 15:49:01 -0400
+From:   Dave Jones <davej@codemonkey.org.uk>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
+Subject: Re: ntp audit spew.
+Message-ID: <20190923194901.GA2787@codemonkey.org.uk>
+Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
+        Paul Moore <paul@paul-moore.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com
+References: <20190923155041.GA14807@codemonkey.org.uk>
+ <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+ <20190923165806.GA21466@codemonkey.org.uk>
+ <CAHC9VhTh+cD5pkb8JAHnG1wa9-UgivSb7+-yjjYaD+6vhyYKjA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTh+cD5pkb8JAHnG1wa9-UgivSb7+-yjjYaD+6vhyYKjA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local variable 'bcmd_down' is always set to true almost immediately
-before the do-while's condition is checked. As a result, !bcmd_down
-evaluates to false which short circuits the logical AND operator meaning
-that the second operand is never reached and is therefore dead code.
+On Mon, Sep 23, 2019 at 02:57:08PM -0400, Paul Moore wrote:
+ > On Mon, Sep 23, 2019 at 12:58 PM Dave Jones <davej@codemonkey.org.uk> wrote:
+ > > On Mon, Sep 23, 2019 at 12:14:14PM -0400, Paul Moore wrote:
+ > >  > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
+ > >  > >
+ > >  > > I have some hosts that are constantly spewing audit messages like so:
+ > >  > >
+ > >  > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
+ > >  > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
+ > >  > > [48850.604005] audit: type=1333 audit(1569252241.675:222): op=offset old=1850302393317 new=3190241577926
+ > >  > > [48850.604008] audit: type=1333 audit(1569252241.675:223): op=freq old=-2436281764244 new=-2413071187316
+ > >  > > [49926.567270] audit: type=1333 audit(1569253317.638:224): op=offset old=2453141035832 new=2372389610455
+ > >  > > [49926.567273] audit: type=1333 audit(1569253317.638:225): op=freq old=-2413071187316 new=-2403561671476
+ > >  > >
+ > >  > > This gets emitted every time ntp makes an adjustment, which is apparently very frequent on some hosts.
+ > >  > >
+ > >  > >
+ > >  > > Audit isn't even enabled on these machines.
+ > >  > >
+ > >  > > # auditctl -l
+ > >  > > No rules
+ > >  >
+ > >  > What happens when you run 'auditctl -a never,task'?  That *should*
+ > >  > silence those messages as the audit_ntp_log() function has the
+ > >  > requisite audit_dummy_context() check.
+ > >
+ > > They still get emitted.
+ > >
+ > >  > FWIW, this is the distro
+ > >  > default for many (most? all?) distros; for example, check
+ > >  > /etc/audit/audit.rules on a stock Fedora system.
+ > >
+ > > As these machines aren't using audit, they aren't running auditd either.
+ > > Essentially: nothing enables audit, but the kernel side continues to log
+ > > ntp regardless (no other audit messages seem to do this).
+ > 
+ > What does your kernel command line look like?  Do you have "audit=1"
+ > somewhere in there?
 
-Addresses-Coverity: ("Logically dead code")
+nope.
 
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
----
- drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ro root=LABEL=/ biosdevname=0 net.ifnames=0 fsck.repair=yes systemd.gpt_auto=0 pcie_pme=nomsi ipv6.autoconf=0 erst_disable crashkernel=128M console=tty0 console=ttyS1,57600 intel_iommu=tboot_noforce
 
-diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-index 47352f210c0b..a4b317937b23 100644
---- a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-+++ b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-@@ -48,7 +48,6 @@ static u8 _is_fw_read_cmd_down(struct adapter *adapt, u8 msgbox_num)
- static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
- {
- 	u8 bcmd_down = false;
--	s32 retry_cnts = 100;
- 	u8 h2c_box_num;
- 	u32 msgbox_addr;
- 	u32 msgbox_ex_addr;
-@@ -103,7 +102,7 @@ static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *p
- 		adapt->HalData->LastHMEBoxNum =
- 			(h2c_box_num+1) % RTL88E_MAX_H2C_BOX_NUMS;
- 
--	} while ((!bcmd_down) && (retry_cnts--));
-+	} while (!bcmd_down);
- 
- 	ret = _SUCCESS;
- 
--- 
-2.17.1
+	Dave
 
