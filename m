@@ -2,125 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFE5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FB42168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OywFVHdH"
+	by mail.kernel.org (Postfix) with ESMTP id A35A620644
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569266920;
+	bh=CHTUM5qN0A/+/Vv+y3/qzY0L6jibsQ4Sqi6RrHUuzNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f8ZuEcnqXicniPlJoBezVN/We4lZcZw4VdAtrx4t25P4pxe2i8BQQKf04gsMFJSkW
+	 qzb2PD5WVBxveK3e+0zA0Z5T5qLDJssMEo+roPaBOiZmkUosfbXKd4xKw49eUS+eG/
+	 nMDRzyCWbLT9s1RzuBB6+NfXDftyOwl7AUyqZBqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502244AbfIWT1q (ORCPT
+        id S1728349AbfIWT2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:27:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46594 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfIWT1p (ORCPT
+        Mon, 23 Sep 2019 15:28:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42902 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfIWT2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WVIoWsK1jLddXUNnNoYLXIn98UncMl2WWv8vMlp/XIk=; b=OywFVHdH1BOWczhEITQgThKZe9
-        9zDCC7HcqNpHuoK6lYmTjN3eGfXsZTTslsujszPktBq/thH2ie9UKgYC4ViVRYhO+GDpxr9PWwSJu
-        kq6nQasdPh5kZRa1G3feP8NgWjooaKidJ4ADPRnIbVq7+8srsVyt7HhPrEfp9/6lDGF/dzKTn7HPx
-        caVqvuYddK4QkPuPkWcmR1nmMkcYbBjH0C5oxhFbEKZDWH6+0BYrkkEppVIl7ApewJsjnSEu1zc7K
-        QAH3N8VDLEv7F0aAgFKDdoys9QrO/4mDzyufT4HIX+sZtN+WD5wcoIC0bkQkD90grtxZxmgkutfpf
-        erJdb5iA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCTzs-0006Vf-BA; Mon, 23 Sep 2019 19:27:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CEFA7305E42;
-        Mon, 23 Sep 2019 21:26:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1685820C3E177; Mon, 23 Sep 2019 21:27:42 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 21:27:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] sched/wait: Add wait_threshold
-Message-ID: <20190923192742.GH2369@hirez.programming.kicks-ass.net>
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
- <20190923071932.GD2349@hirez.programming.kicks-ass.net>
- <3e359937-5b19-8a4c-4243-ba2edff68504@gmail.com>
+        Mon, 23 Sep 2019 15:28:39 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y23so14870118lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GHCBm/1jGmQwHbU3E0NMphnn1MxQoT3D3BrUANEfkOQ=;
+        b=YmtIQM7n5dLYeJlfCVJ+MLwa5thzJ1ho3tngibt6UbSJkJPTQph1Vu2oFAv8ZLBEaN
+         HEgNm5xkLBRGq23jgSJXV6Q9UkhNxsip0g20ZmKDNUdmDZhw8MtidquZ9VF6aL9TIqiP
+         i8RkBSi926RqOawjghgbl4ZvL+ejQt7wCqw+0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GHCBm/1jGmQwHbU3E0NMphnn1MxQoT3D3BrUANEfkOQ=;
+        b=Q8RxURZDnyl/Uimhx7TpG/xU+IkZ6IXK5e4yztFNzgjdiVy+VofKJFpKTM5zEq4EUC
+         pW80wkpRG1LZDYEv4DDhU44E2rqm34D7+SrjL+TfR5mr8JHfztJv4atGVpAUgayyTxW/
+         N817SFQHrzUbJ1osPW+mrCzWwc/04VmL3r7P8+pOH1YDYVGZcoWHt+0tGbEzWkJTCN57
+         p7SNalh8FCPCCbXurxFtIXDj4QJ2LkNXfDJ5/nJ/bBrg1yigwrzP2PCgrkpfM4aFN5xc
+         gvB+Q3tmkWW+o/rGGJmwqoBfoNmcrVC5gcw/a6OEFt0XgzXaETjQ7SOWAD4Fo3cxTRl1
+         blJQ==
+X-Gm-Message-State: APjAAAWqLd7NTMw03NQ0wTZe3RNUKWAVO86g5js2znJNutCVMUG5mNg3
+        H4WnSZZgOzxmHt5n3+exw0d/3dXTC1E=
+X-Google-Smtp-Source: APXvYqxxqmvdV5sExqWqNGZt8N7t13et8wWeek7S5mfQXVQLlxAdl6Mpw8OCqkwwh93IjSVo9hPcgA==
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr590906ljk.152.1569266916410;
+        Mon, 23 Sep 2019 12:28:36 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id x76sm2801679ljb.81.2019.09.23.12.28.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 12:28:35 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id b20so9511514ljj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:28:35 -0700 (PDT)
+X-Received: by 2002:a2e:1208:: with SMTP id t8mr584695lje.84.1569266914859;
+ Mon, 23 Sep 2019 12:28:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3e359937-5b19-8a4c-4243-ba2edff68504@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
+ <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
+In-Reply-To: <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 23 Sep 2019 12:28:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh_CHD9fQOyF6D2q3hVdAhFOmR8vNzcq5ZPcxKW3Nc+2Q@mail.gmail.com>
+Message-ID: <CAHk-=wh_CHD9fQOyF6D2q3hVdAhFOmR8vNzcq5ZPcxKW3Nc+2Q@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.4
+To:     Micah Morton <mortonm@chromium.org>, Jann Horn <jannh@google.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 12:01 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Anyway, this bug would likely had been avoided if rcu_swap_protected()
+> just returned the old pointer instead of changing the argument.
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+Also, I have to say that the fact that I got the fundamentally buggy
+commit  in a pull request during the 5.3 merge window, and merged it
+on July 16, but then get the pull request for the fix two months
+later, after 5.3 has been released, makes me very unhappy with the
+state of safesetid.
 
-On Mon, Sep 23, 2019 at 07:37:46PM +0300, Pavel Begunkov wrote:
-> Just in case duplicating a mail from the cover-letter thread:
+The pull request itself was clearly never tested. That's a big problem.
 
-Just because every patch should have a self contained and coherent
-Changelog.
+And *nobody* used it at all or tested it at all during the whole
+release process. That's another big problem.
 
-> It could be done with @cond indeed, that's how it works for now.
-> However, this addresses performance issues only.
->=20
-> The problem with wait_event_*() is that, if we have a counter and are
-> trying to wake up tasks after each increment, it would schedule each
-> waiting task O(threshold) times just for it to spuriously check @cond
-> and go back to sleep. All that overhead (memory barriers, registers
-> save/load, accounting, etc) turned out to be enough for some workloads
-> to slow down the system.
->=20
-> With this specialisation it still traverses a wait list and makes
-> indirect calls to the checker callback, but the list supposedly is
-> fairly  small, so performance there shouldn't be a problem, at least for
-> now.
->=20
-> Regarding semantics; It should wake a task when a value passed to
-> wake_up_threshold() is greater or equal then a task's threshold, that is
-> specified individually for each task in wait_threshold_*().
->=20
-> In pseudo code:
-> ```
-> def wake_up_threshold(n, wait_queue):
-> 	for waiter in wait_queue:
-> 		waiter.wake_up_if(n >=3D waiter.threshold);
-> ```
->=20
-> Any thoughts how to do it better? Ideas are very welcome.
->=20
-> BTW, this monster is mostly a copy-paste from wait_event_*(),
-> wait_bit_*(). We could try to extract some common parts from these
-> three, but that's another topic.
+Should we just remove safesetid again? It's not really maintained, and
+it's apparently not used.  It was merged in March (with the first
+commit in January), and here we are at end of September and this
+happens.
 
-I don't think that is another topic at all. It is a quality of
-implementation issue. We already have too many copies of all that (3).
+So yes, syntactically I'll blame the bad RCU interfaces for why the
+bug happened.
 
-So basically you want to fudge the wake function to do the/a @cond test,
-not unlike what wait_bit already does, but differenly.
+But the fact that the code didn't _work_ and was never tested by
+anybody for two months, that's not the fault of the RCU code.
 
-I'm really rather annoyed with C for not having proper lambda functions;
-that would make all this so much easier. Anyway, let me have a poke at
-this in the morning, it's late already.
-
-Also, is anything actually using wait_queue_entry::private ? I'm
-not finding any in a hurry.
-
-
+                  Linus
