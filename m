@@ -2,159 +2,136 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CFAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCA0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A1F20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3059F20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CMs8p7+r"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="i37B/Zfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407111AbfIWJ0M (ORCPT
+        id S2405587AbfIWJ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:26:12 -0400
-Received: from mout.web.de ([212.227.15.4]:36187 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407083AbfIWJ0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:26:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569230748;
-        bh=rCL1Ykh2uq6C2QvDE/ZLl3K6kFcx8ecC7evEF/aNcuc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=CMs8p7+rdu32R1vARqOF62yFX1skqFTi+xt9E7MY0AbLfZxgic1vV3GhVBqY5cvls
-         laCVNDVC/jkW744/+zMaBHPjLhhnmFs3yeWY4+O5NFxG/hU/FS3tnRmF453mQlK5ym
-         Byygp764T7QIKdtmn3lwE3UXgGIwgtrPpYXSnSZs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.187.72]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MNP6P-1iEoVB1Q2z-0070X8; Mon, 23
- Sep 2019 11:25:48 +0200
-Subject: Re: EDAC: Armada XP: Use devm_platform_ioremap_resource() in two
- functions
-To:     Robert Richter <rrichter@marvell.com>, linux-edac@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        =?UTF-8?Q?Jan_L=c3=bcbbe?= <jlu@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <3cf2076e-6394-4997-613d-cbf5b6dbee1e@web.de>
- <20190923081117.4p4mwqz35fzavkeg@rric.localdomain>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <65836b6f-9133-4a14-466d-865830f5bfc0@web.de>
-Date:   Mon, 23 Sep 2019 11:25:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 23 Sep 2019 05:29:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51910 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387962AbfIWJ3F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:29:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so9033631wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=GEpINich1yHe3dgZoPsu7jVZJFRHWW9gHMhxo+QabyU=;
+        b=i37B/ZflJfkoKuajMXjNBpIfwnDxpv2aCG8IlKdAD2ERPODOixf2OFXEjZMczk7Rbg
+         uQLUHo8E1xjO/JL9H0/3eszTjCSzplCQRPgPQnJFhFCFiLcxFh48ai1/KWwFfNWe0vZB
+         2nrg6RtcVBh9xq04+xtpyxGbxKhLWFyJ4PXvghuAvXqJK4fpELjI22nwS8Br6ZJFSEqI
+         0Ob7+mzq5cLJcSN5kyfDi7lNDh8b0gVoLhy9eaKKdUmbIvj+hR6PfTnwpEU9Y7Jf++bk
+         5cVo/4ER7i0Dsz5syGQl5IQvxwpNc1yKuo5BPmbMtu+q2DyJIZpwObIkNpcSG+Gsvx+B
+         0qRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=GEpINich1yHe3dgZoPsu7jVZJFRHWW9gHMhxo+QabyU=;
+        b=oFSts9CGDdewfmsbwyMV0Tpt2OjQJICUEVr685BBT38CDF9lYChlgbWnkpZPD5gZEh
+         KnPg8lUBI+DWVcgBEmjoa3iTgX41PECgqePrXfOAWJpya94GmeYMJ+ICeXem8MQx5bG4
+         +n9Wf0vSDQQSh29/w5pkgbcyXkXxN3Swp+1h0iqttYDcpw/8cSjoulnsyQ2wmWCGmHix
+         o4MU0TsgtmdK5QFqqFnpplOcVzlY8RgKkXA5QqH/y1CaZUq5HMvOQ1AmZvfyGVebnqVS
+         q6O3oMJLZMMqHYIWNsULsClNmqs6Scs5wLy2fWxrHXojHWu+OvMQhvi3FClTW1WVp1uF
+         asWw==
+X-Gm-Message-State: APjAAAXgdtnnBClOyagW4oIN8fM3jAaGhhRr8gVcalS9kTRvP67Mduci
+        lE1m5uayCVTL/vIcP7IcPIpiVA==
+X-Google-Smtp-Source: APXvYqzJCTFPvn4OkSp1B7p5RsJXP7ouCiApbSz9+KpAzUBc/BCRGheeUmLPmjYjv5eRZC9qVVnXRA==
+X-Received: by 2002:a1c:4384:: with SMTP id q126mr14214521wma.153.1569230943323;
+        Mon, 23 Sep 2019 02:29:03 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id b194sm18418427wmg.46.2019.09.23.02.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 02:29:02 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        narmstrong@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
+In-Reply-To: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
+References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
+Date:   Mon, 23 Sep 2019 11:29:01 +0200
+Message-ID: <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923081117.4p4mwqz35fzavkeg@rric.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KI+jcdgb51EpvZ4VWhhTQ1f5IQ01NfiKxB05P3kTDUJd4HE8RNC
- IkhwXxnoqHGRCVcOwXa7yr/uUUhCv6pVOYXRhCfVjyP1p3IRrdfIv3hQ4YI1+/h42+LiMNa
- taNF3IIyRrgLrG4SD0yxfenVpD5F8qXuVi7ottPaKdSGG6jgBPrZbIq1RxBrY6n9ferxww7
- 2rHO8bfy4qyxKA34vkpKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ewdcdC3kerI=:V7ksKCLbuT0e1gPmtddnqV
- xF7o64ZS5MK3tUdqrz4WDWLH6lbvbuztdmYx/V51+ruW4AUZ0PMjI82AIOl1YOial/+fDuEKJ
- ccHlm90JNPgfNdBWwmQ2AHYmo6VNE1aUO3hjLwKXkLJmh3ZNyWZ4s2L8OWysfFbH0sDO5P1Og
- IXKK5OR6sjufZwJdiqWq2Fuf4KXIc8ws9RHJMJpQSFesAnTILnrXbitfauSfrT5uuCryq0BEI
- o9JcpS4yHFjz32G/sMVH3m/WxRAbv14Yqpqitkx5fUzQQ/hQMfuhVVS8vDaSTi+WF+ZspJtmf
- Ju399fgDgPGjXYafC3lMvq83Fjiil3nQIA2YrubvaikNWq+dtr4kL2zMFh7u4uCUDw5SItY/i
- JVRSuoqtdxEabxtfrzSvMfqQ1nMVx8dZl/78ckdNGVRql9qyn7LVgDTRROFk9KcI+XQx9Rn4P
- 4Y1NPKKe+h3BTDWr4sF3k0MsqkanbsvlwWdqBn2n3Gv+9eojRbtOPwVRSDk28XG0YYsob7IjQ
- czm323pq/XZ+1d9xVumJh9/OAIqKjZWxYbgZ1za00x45TO/omJnbvIiS16Y6cRlACrTyRUK4q
- fyfaIwVNbkxNjQ0dnL2LIEG5GTWYKp5nUwPOJ0+zRLC6cpcpEiHrlEcp8fquEI9HsdscteReP
- N8+pCftBUH+KpLDqy043gPBvablS46XePUrFws0qbTEm/uELCQvK8G4fr5N+q3aKGOh18/ixg
- 52UFSw2X3EGPEZZYI55IeWobKoGuIOqpmFIZZtOvXw7mP46xP/YgwJVCTgLYuRBLqy2Vo590p
- l6MA+k+62ZkNizMq9ObxjBRLU0ZmzIzUwdaHw20/yi3fHanJugZREpHelJdKWkWdRVD+qnhZn
- hj+YUufY6uaUHV4W7z27jXm+5GLSvvgRKMrIojrFUxr5XaPdBMo8DXOoHgCVOtYzKnRciHNWo
- IftW6Lbr+fQgATP9lCevrPd9eMfHD6DqPY7Ob8SFmGVyZ/FdZcaM3ef63Y29J4oApSzjxXGUT
- w/E3PHGeuHlRlDq1PNYfzFz5E2yC3fnsAEZx4QFNac7R4W4Mwd6QuWGUmK3NomzRp89tpG2vQ
- DdJPOsjsRmrXgiMO6+1RJTpgBrkpkCEBd3urKB7Xc5V+9qdqVju/eCHvvHKK0XA7HjJ/mDp4l
- kWbjJhX+fu2JLS4zvFLhBvi3nMdImz3yudSS+QPxwQwV/SvyxGEYDZWF5PZWfu0pmYL9k4o4B
- WaRvrpB6efsf5cwdlQOgdt/3YsZxuGYdTfE9h90mJzsTJtFria7Ots4MZjQ8=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Which semantic patch did you use here?
+On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-I suggest to take another look at details around background information
-on a subject like =E2=80=9CCoccinelle: api: add devm_platform_ioremap_reso=
-urce script=E2=80=9D.
-https://lore.kernel.org/r/2cacd712-a8b8-6471-a9b4-23ba54434c02@web.de/
-https://systeme.lip6.fr/pipermail/cocci/2019-September/006303.html
-https://lkml.org/lkml/2019/9/19/81
+> So far the HHI clock controller has been providing the XTAL clock on
+> Amlogic Meson8/Meson8b/Meson8m2 SoCs.
+> This is not correct because the XTAL is actually a crystal on the
+> boards and the SoC has a dedicated input for it.
+>
+> This updates the dt-bindings of the HHI clock controller and defines
+> a fixed-clock in meson.dtsi (along with switching everything over to
+> use this clock).
+> The clock driver needs three updates to use this:
+> - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
+>   the explicit reference to CLKID_XTAL while at the same time making
+>   the code much easier (thanks to Neil for providing this new method
+>   as part of the G12A CPU clock bringup!)
+> - patch #3 ensures that the clock driver doesn't rely on it's internal
+>   XTAL clock while not losing support for older .dtbs that don't have
+>   the XTAL clock input yet
+> - with patch #4 the clock controller's own XTAL clock is not registered
+>   anymore when a clock input is provided via OF
+>
+> This series is a functional no-op. It's main goal is to better represent
+> how the actual hardware looks like.
 
+I'm a bit unsure about this series.
 
-> There are probably more drivers to fix than the above and the one you fi=
-xed:
+On one hand, I totally agree with you ... having the xtal in DT is the
+right way to do it ... when done from the start
 
-Yes, of course.
+On the other hand, things have been this way for years, they are working
+and going for xtal in DT does not solve any pending issue. Doing this
+means adding complexity in the driver to support both methods. It is
+also quite a significant change in DT :/
 
-I concentrated my update suggestions on a specific source code
-transformation variant recently.
+I'll defer this one to Kevin
 
-
-> So while at it, how about fixing the .cocci patch in scripts/ and run
-> it for drivers/edac?
-
-Some developers are trying to improve affected software components further=
-.
-Did you eventually receive similar patches already by other contributors?
-
-
-> There should be one patch only for all edac drivers.
-
-Is there consensus for this kind of change expectation?
-
-Regards,
-Markus
+>
+>
+> Martin Blumenstingl (5):
+>   dt-bindings: clock: meson8b: add the clock inputs
+>   clk: meson: meson8b: use clk_hw_set_parent in the CPU clock notifier
+>   clk: meson: meson8b: change references to the XTAL clock to use the
+>     name
+>   clk: meson: meson8b: don't register the XTAL clock when provided via
+>     OF
+>   ARM: dts: meson: provide the XTAL clock using a fixed-clock
+>
+>  .../bindings/clock/amlogic,meson8b-clkc.txt   |   5 +
+>  arch/arm/boot/dts/meson.dtsi                  |   7 ++
+>  arch/arm/boot/dts/meson6.dtsi                 |   7 --
+>  arch/arm/boot/dts/meson8.dtsi                 |  15 +--
+>  arch/arm/boot/dts/meson8b-ec100.dts           |   2 +-
+>  arch/arm/boot/dts/meson8b-mxq.dts             |   2 +-
+>  arch/arm/boot/dts/meson8b-odroidc1.dts        |   2 +-
+>  arch/arm/boot/dts/meson8b.dtsi                |  15 +--
+>  drivers/clk/meson/meson8b.c                   | 106 +++++++++---------
+>  9 files changed, 87 insertions(+), 74 deletions(-)
+>
+> -- 
+> 2.23.0
