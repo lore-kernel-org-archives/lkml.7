@@ -2,150 +2,161 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F9C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2994FC4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4152089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0055C205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387484AbfIWPtM (ORCPT
+        id S1732771AbfIWPtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:49:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49420 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfIWPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:49:12 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 934C580F7C
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:49:11 +0000 (UTC)
-Received: by mail-qt1-f199.google.com with SMTP id y10so17839818qti.1
+        Mon, 23 Sep 2019 11:49:15 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42499 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfIWPtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:49:14 -0400
+Received: by mail-io1-f72.google.com with SMTP id w1so1139753ioj.9
         for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:49:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DtFe2+5JtbV/OwUJETgyRdR0XjjvYqOvroBO1aiGGnE=;
-        b=Wvr0puzAl3GpiE6lbkIAdJo4hikHbGQY4AXH+nK3KY0/ol9NJLScQcxRREPPeaQbgd
-         dvygB1Tm/haNtn9FF544LtpWQF/geRHO3iYM5Bv3snMRdPurT+FbQYjJm3/EAJXuFgt8
-         TX1M5nRRWezcMzyukQwZXGsoE7yszb7qYnLYMvEFZQy2D/wXdbiC2OEUhwmn/DhXdsBe
-         S7Ak2BPa2V9dk1JUKCw+dGQL+ASuauICG4sKFnrfGwqUR9zIZZlqfafZ5s4YWwt9+ksf
-         zg6s8NOSiciXgQJJHexRkIiZGw5+SNn500Vu8QN64wRWey5R8CwNbP0boLZ895VA67MK
-         g9qw==
-X-Gm-Message-State: APjAAAVzgS5YxindT3vNmeMRHdgAFl3GTnjVv3UIgbucc9GmwyFXJbxm
-        5/3HElAlwhkUv2NVqssE56C2aVySl4KSyI/k9O7JSuIGU4Zex4qaQbJSbhctmn1z5trDcVjj6vM
-        DD+bXZP/Dp95oO/TS5S12iFUD
-X-Received: by 2002:a37:f61e:: with SMTP id y30mr500110qkj.208.1569253750897;
-        Mon, 23 Sep 2019 08:49:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzol6drxsIFmKvmhlgbnLArJa9kxX+uy/D+M1Of/zo/DzG9baRX9vu805PC9WY2snt/4bzaNA==
-X-Received: by 2002:a37:f61e:: with SMTP id y30mr500077qkj.208.1569253750741;
-        Mon, 23 Sep 2019 08:49:10 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id v5sm7307386qtk.66.2019.09.23.08.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 08:49:09 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 11:49:01 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
-Message-ID: <20190923114840-mutt-send-email-mst@kernel.org>
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
- <20190918175249.23474.51171.stgit@localhost.localdomain>
- <20190923041330-mutt-send-email-mst@kernel.org>
- <CAKgT0UfFBO9h3heGSo+AaZgUNpy5uuOm3yh62bYwYJ5dq+t1gQ@mail.gmail.com>
- <20190923105746-mutt-send-email-mst@kernel.org>
- <CAKgT0Ufp0bdz3YkbAoKWd5DALFjAkHaSUn_UywW1+3hk4tjPSQ@mail.gmail.com>
- <20190923113722-mutt-send-email-mst@kernel.org>
- <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=aTe9vFgxnQSUbqzD1uvP+ahz/Hl3A6XwhKJCZ9nDuOs=;
+        b=BHrLhwuTZmR6mZKAGY5WzZj6QwB39SbIiYy0i+bob6qMt15rQlC5hwIMK1fXu96cKq
+         hDiOFaCjdzLD7FN7u0DYs8cxm/8Lx6MrMB+ZbgdTTrcxFyPgWGa1JTUpcJAtUIpHHdch
+         2KApt8g1YI850r51cuzyAsluYL1J+AXdK7wo2xBC4fnYWQbbEQ4NB4QYVl3UASomkGfb
+         a79Yfl+mLlB05yAGMmy8BC0U0OBn1PyyqYn77JkzFu0L8Ogz0v888dIWJasfkYD8uKim
+         +G5OP7Hz5n4/boMsRRCR+azAZj9lCLzMYuWxYOU4IeiZepeyr+zWDpxudNPgxCqxVupW
+         X3bg==
+X-Gm-Message-State: APjAAAUyjA3yHwCcvVREbrbr2KueDIroj/12NkdK8OEusso1K/4CdsNo
+        NkmY29TVH4Df8sqBmsDt+PlI9+zBz8NAyHIg8HvggS48EYaZ
+X-Google-Smtp-Source: APXvYqxPjdQBB4Fscqb4QFuBDGFKVQVQx/4U6ZEhKpwVw/nNziP7PXssR1WqgphK6lL3xLS8f87kiSF4AJU/MRIDv/RT2Bht86lN
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
+X-Received: by 2002:a5d:814f:: with SMTP id f15mr16445345ioo.134.1569253751401;
+ Mon, 23 Sep 2019 08:49:11 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 08:49:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006a3a2f05933a5c53@google.com>
+Subject: general protection fault in xsk_map_update_elem
+From:   syzbot <syzbot+491c1b7565ba9069ecae@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bjorn.topel@intel.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        jonathan.lemon@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 05:45:29PM +0200, David Hildenbrand wrote:
-> On 23.09.19 17:37, Michael S. Tsirkin wrote:
-> > On Mon, Sep 23, 2019 at 08:28:00AM -0700, Alexander Duyck wrote:
-> >> On Mon, Sep 23, 2019 at 8:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >>>
-> >>> On Mon, Sep 23, 2019 at 07:50:15AM -0700, Alexander Duyck wrote:
-> >>>>>> +static inline void
-> >>>>>> +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
-> >>>>>> +{
-> >>>>>> +     int index;
-> >>>>>> +
-> >>>>>> +     if (order < PAGE_REPORTING_MIN_ORDER)
-> >>>>>> +             return;
-> >>>>>> +     if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> >>>>>> +             return;
-> >>>>>> +
-> >>>>>> +     index = get_reporting_index(order, mt);
-> >>>>>> +     reported_boundary[index] = &zone->free_area[order].free_list[mt];
-> >>>>>> +}
-> >>>>>
-> >>>>> So this seems to be costly.
-> >>>>> I'm guessing it's the access to flags:
-> >>>>>
-> >>>>>
-> >>>>>         /* zone flags, see below */
-> >>>>>         unsigned long           flags;
-> >>>>>
-> >>>>>         /* Primarily protects free_area */
-> >>>>>         spinlock_t              lock;
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> which is in the same cache line as the lock.
-> >>>>
-> >>>> I'm not sure what you mean by this being costly?
-> >>>
-> >>> I've just been wondering why does will it scale report a 1.5% regression
-> >>> with this patch.
-> >>
-> >> Are you talking about data you have collected from a test you have
-> >> run, or the data I have run?
-> > 
-> > About the kernel test robot auto report that was sent recently.
-> 
-> https://lkml.org/lkml/2019/9/21/112
-> 
-> And if I'm correct, that regression is observable in case reporting is
-> not enabled. (so with this patch applied only, e.g., on a bare-metal system)
-
-Exactly. That's what makes it interesting.
-
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgYjQxZGFlMDYgTWVyZ2UgdGFnICd4ZnMtNS40LW1lcmdlLTcnIG9mIGdpdDovL2dp
+dC5rZXJuZWwuby4uDQpnaXQgdHJlZTogICAgICAgbmV0LW5leHQNCmNvbnNvbGUgb3V0cHV0OiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xMzBiMjVhZDYwMDAwMA0K
+a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
+PWRmY2Y1OTJkYjIyYjkxMzINCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
+cG90LmNvbS9idWc/ZXh0aWQ9NDkxYzFiNzU2NWJhOTA2OWVjYWUNCmNvbXBpbGVyOiAgICAgICBn
+Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCnN5eiByZXBybzogICAgICBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJvLnN5ej94PTE1NWEwYzI5NjAwMDAw
+DQpDIHJlcHJvZHVjZXI6ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5j
+P3g9MTcyYmY2ZDk2MDAwMDANCg0KVGhlIGJ1ZyB3YXMgYmlzZWN0ZWQgdG86DQoNCmNvbW1pdCAw
+NDAyYWNkNjgzYzY3ODg3NGRmNmJkYmMyMzUzMGNhMDdlYTE5MzUzDQpBdXRob3I6IEJqw7ZybiBU
+w7ZwZWwgPGJqb3JuLnRvcGVsQGludGVsLmNvbT4NCkRhdGU6ICAgVGh1IEF1ZyAxNSAwOTozMDox
+MyAyMDE5ICswMDAwDQoNCiAgICAgeHNrOiByZW1vdmUgQUZfWERQIHNvY2tldCBmcm9tIG1hcCB3
+aGVuIHRoZSBzb2NrZXQgaXMgcmVsZWFzZWQNCg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6
+a2FsbGVyLmFwcHNwb3QuY29tL3gvYmlzZWN0LnR4dD94PTEwZDRhODIzNjAwMDAwDQpmaW5hbCBj
+cmFzaDogICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTJk
+NGE4MjM2MDAwMDANCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNv
+bS94L2xvZy50eHQ/eD0xNGQ0YTgyMzYwMDAwMA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhl
+IGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0
+ZWQtYnk6IHN5emJvdCs0OTFjMWI3NTY1YmE5MDY5ZWNhZUBzeXprYWxsZXIuYXBwc3BvdG1haWwu
+Y29tDQpGaXhlczogMDQwMmFjZDY4M2M2ICgieHNrOiByZW1vdmUgQUZfWERQIHNvY2tldCBmcm9t
+IG1hcCB3aGVuIHRoZSBzb2NrZXQgaXMgIA0KcmVsZWFzZWQiKQ0KDQpSRFg6IDAwMDAwMDAwMDAw
+MDAwMjAgUlNJOiAwMDAwMDAwMDIwMDAwMTAwIFJESTogMDAwMDAwMDAwMDAwMDAwMg0KUkJQOiAw
+MDAwMDAwMDAwMDAwMDA1IFIwODogMDAwMDAwMDAwMDAwMDAwMSBSMDk6IDAwMDA3ZmZlZjQ1MDAw
+MzMNClIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAw
+MDAwMDAwNDAxZmYwDQpSMTM6IDAwMDAwMDAwMDA0MDIwODAgUjE0OiAwMDAwMDAwMDAwMDAwMDAw
+IFIxNTogMDAwMDAwMDAwMDAwMDAwMA0Ka2FzYW46IENPTkZJR19LQVNBTl9JTkxJTkUgZW5hYmxl
+ZA0Ka2FzYW46IEdQRiBjb3VsZCBiZSBjYXVzZWQgYnkgTlVMTC1wdHIgZGVyZWYgb3IgdXNlciBt
+ZW1vcnkgYWNjZXNzDQpnZW5lcmFsIHByb3RlY3Rpb24gZmF1bHQ6IDAwMDAgWyMxXSBQUkVFTVBU
+IFNNUCBLQVNBTg0KQ1BVOiAxIFBJRDogODg3OCBDb21tOiBzeXotZXhlY3V0b3I4MzUgTm90IHRh
+aW50ZWQgNS4zLjArICMwDQpIYXJkd2FyZSBuYW1lOiBHb29nbGUgR29vZ2xlIENvbXB1dGUgRW5n
+aW5lL0dvb2dsZSBDb21wdXRlIEVuZ2luZSwgQklPUyAgDQpHb29nbGUgMDEvMDEvMjAxMQ0KUklQ
+OiAwMDEwOl9fbGlzdF9hZGQgaW5jbHVkZS9saW51eC9saXN0Lmg6NjQgW2lubGluZV0NClJJUDog
+MDAxMDpsaXN0X2FkZF90YWlsIGluY2x1ZGUvbGludXgvbGlzdC5oOjkzIFtpbmxpbmVdDQpSSVA6
+IDAwMTA6eHNrX21hcF9zb2NrX2FkZCBrZXJuZWwvYnBmL3hza21hcC5jOjYyIFtpbmxpbmVdDQpS
+SVA6IDAwMTA6eHNrX21hcF91cGRhdGVfZWxlbSsweDc5Yy8weGFjMCBrZXJuZWwvYnBmL3hza21h
+cC5jOjI2NQ0KQ29kZTogMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgODAgM2MgMDIgMDAgMGYgODUg
+ZWYgMDIgMDAgMDAgNGMgODkgZTIgNGQgODkgIA0KYTcgZDggMDUgMDAgMDAgNDggYjggMDAgMDAg
+MDAgMDAgMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAwZiAgDQo4NSBjMCAw
+MiAwMCAwMCA0OSA4ZCA3YyAyNCAwOCA0OSA4ZCA4NyBkMCAwNSAwMCAwMA0KUlNQOiAwMDE4OmZm
+ZmY4ODgwOWE1MTdiYjggRUZMQUdTOiAwMDAxMDI0Ng0KUkFYOiBkZmZmZmMwMDAwMDAwMDAwIFJC
+WDogZmZmZjg4ODA5Y2NjNDlkMCBSQ1g6IGZmZmZmZmZmODE4NjgwNzANClJEWDogMDAwMDAwMDAw
+MDAwMDAwMCBSU0k6IGZmZmZmZmZmODE4NjgwODUgUkRJOiAwMDAwMDAwMDAwMDAwMDAxDQpSQlA6
+IGZmZmY4ODgwOWE1MTdjNzggUjA4OiBmZmZmODg4MGExMGQyMDAwIFIwOTogZmZmZmVkMTAxMzRh
+MmY2NQ0KUjEwOiBmZmZmZWQxMDEzNGEyZjY0IFIxMTogMDAwMDAwMDAwMDAwMDAwMyBSMTI6IDAw
+MDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA5Y2NjNDllMCBSMTQ6IGZmZmY4ODgwODlkYjU1
+ODAgUjE1OiBmZmZmODg4MDljY2M0NDAwDQpGUzogIDAwMDA1NTU1NTVkZjI4ODAoMDAwMCkgR1M6
+ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpDUzogIDAwMTAg
+RFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6IDAwMDAwMDAwMjAw
+MDAwNDAgQ1IzOiAwMDAwMDAwMDk4NWU1MDAwIENSNDogMDAwMDAwMDAwMDE0MDZlMA0KRFIwOiAw
+MDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAwMDAwMDAwMDAwMDAw
+MDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAw
+MDAwMDAwMDAwNDAwDQpDYWxsIFRyYWNlOg0KICBtYXBfdXBkYXRlX2VsZW0rMHhjODIvMHgxMGIw
+IGtlcm5lbC9icGYvc3lzY2FsbC5jOjk2Ng0KICBfX2RvX3N5c19icGYrMHg4YjUvMHgzMzUwIGtl
+cm5lbC9icGYvc3lzY2FsbC5jOjI4NTQNCiAgX19zZV9zeXNfYnBmIGtlcm5lbC9icGYvc3lzY2Fs
+bC5jOjI4MjUgW2lubGluZV0NCiAgX194NjRfc3lzX2JwZisweDczLzB4YjAga2VybmVsL2JwZi9z
+eXNjYWxsLmM6MjgyNQ0KICBkb19zeXNjYWxsXzY0KzB4ZmEvMHg3NjAgYXJjaC94ODYvZW50cnkv
+Y29tbW9uLmM6MjkwDQogIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ5LzB4YmUN
+ClJJUDogMDAzMzoweDQ0MDcwOQ0KQ29kZTogMTggODkgZDAgYzMgNjYgMmUgMGYgMWYgODQgMDAg
+MDAgMDAgMDAgMDAgMGYgMWYgMDAgNDggODkgZjggNDggODkgZjcgIA0KNDggODkgZDYgNDggODkg
+Y2EgNGQgODkgYzIgNGQgODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBm
+ZiAgDQpmZiAwZiA4MyA1YiAxNCBmYyBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMA0K
+UlNQOiAwMDJiOjAwMDA3ZmZlZjQ1MDM0NzggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAw
+MDAwMDAwMDAwMDE0MQ0KUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAwMDdmZmVmNDUwMzQ4
+MCBSQ1g6IDAwMDAwMDAwMDA0NDA3MDkNClJEWDogMDAwMDAwMDAwMDAwMDAyMCBSU0k6IDAwMDAw
+MDAwMjAwMDAxMDAgUkRJOiAwMDAwMDAwMDAwMDAwMDAyDQpSQlA6IDAwMDAwMDAwMDAwMDAwMDUg
+UjA4OiAwMDAwMDAwMDAwMDAwMDAxIFIwOTogMDAwMDdmZmVmNDUwMDAzMw0KUjEwOiAwMDAwMDAw
+MDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDA0MDFmZjANClIx
+MzogMDAwMDAwMDAwMDQwMjA4MCBSMTQ6IDAwMDAwMDAwMDAwMDAwMDAgUjE1OiAwMDAwMDAwMDAw
+MDAwMDAwDQpNb2R1bGVzIGxpbmtlZCBpbjoNCi0tLVsgZW5kIHRyYWNlIGE5NWI5YjkyNmY4NTYw
+NzcgXS0tLQ0KUklQOiAwMDEwOl9fbGlzdF9hZGQgaW5jbHVkZS9saW51eC9saXN0Lmg6NjQgW2lu
+bGluZV0NClJJUDogMDAxMDpsaXN0X2FkZF90YWlsIGluY2x1ZGUvbGludXgvbGlzdC5oOjkzIFtp
+bmxpbmVdDQpSSVA6IDAwMTA6eHNrX21hcF9zb2NrX2FkZCBrZXJuZWwvYnBmL3hza21hcC5jOjYy
+IFtpbmxpbmVdDQpSSVA6IDAwMTA6eHNrX21hcF91cGRhdGVfZWxlbSsweDc5Yy8weGFjMCBrZXJu
+ZWwvYnBmL3hza21hcC5jOjI2NQ0KQ29kZTogMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgODAgM2Mg
+MDIgMDAgMGYgODUgZWYgMDIgMDAgMDAgNGMgODkgZTIgNGQgODkgIA0KYTcgZDggMDUgMDAgMDAg
+NDggYjggMDAgMDAgMDAgMDAgMDAgZmMgZmYgZGYgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAw
+ZiAgDQo4NSBjMCAwMiAwMCAwMCA0OSA4ZCA3YyAyNCAwOCA0OSA4ZCA4NyBkMCAwNSAwMCAwMA0K
+UlNQOiAwMDE4OmZmZmY4ODgwOWE1MTdiYjggRUZMQUdTOiAwMDAxMDI0Ng0KUkFYOiBkZmZmZmMw
+MDAwMDAwMDAwIFJCWDogZmZmZjg4ODA5Y2NjNDlkMCBSQ1g6IGZmZmZmZmZmODE4NjgwNzANClJE
+WDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZmZmZmODE4NjgwODUgUkRJOiAwMDAwMDAwMDAw
+MDAwMDAxDQpSQlA6IGZmZmY4ODgwOWE1MTdjNzggUjA4OiBmZmZmODg4MGExMGQyMDAwIFIwOTog
+ZmZmZmVkMTAxMzRhMmY2NQ0KUjEwOiBmZmZmZWQxMDEzNGEyZjY0IFIxMTogMDAwMDAwMDAwMDAw
+MDAwMyBSMTI6IDAwMDAwMDAwMDAwMDAwMDANClIxMzogZmZmZjg4ODA5Y2NjNDllMCBSMTQ6IGZm
+ZmY4ODgwODlkYjU1ODAgUjE1OiBmZmZmODg4MDljY2M0NDAwDQpGUzogIDAwMDA1NTU1NTVkZjI4
+ODAoMDAwMCkgR1M6ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAw
+DQpDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6
+IDAwMDAwMDAwMjAwMDAwNDAgQ1IzOiAwMDAwMDAwMDk4NWU1MDAwIENSNDogMDAwMDAwMDAwMDE0
+MDZlMA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAw
+MDAwMDAwMDAwMDAwMDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBm
+ZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQg
+YnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90cHNt
+RUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVycyBj
+YW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90IHdp
+bGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmdsL3Rw
+c21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCkZvciBpbmZv
+cm1hdGlvbiBhYm91dCBiaXNlY3Rpb24gcHJvY2VzcyBzZWU6IGh0dHBzOi8vZ29vLmdsL3Rwc21F
+SiNiaXNlY3Rpb24NCnN5emJvdCBjYW4gdGVzdCBwYXRjaGVzIGZvciB0aGlzIGJ1ZywgZm9yIGRl
+dGFpbHMgc2VlOg0KaHR0cHM6Ly9nb28uZ2wvdHBzbUVKI3Rlc3RpbmctcGF0Y2hlcw0K
