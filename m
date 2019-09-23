@@ -2,81 +2,145 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D46C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D874C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACA7207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D80820673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfIWPGG (ORCPT
+        id S1726444AbfIWPGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:06:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41730 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726135AbfIWPGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:06:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95048ACD7;
-        Mon, 23 Sep 2019 15:06:02 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 17:06:01 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ipv6: Properly check reference count flag before taking
- reference
-Message-ID: <20190923150600.GA27191@dell5510>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20190923144612.29668-1-Jason@zx2c4.com>
+        Mon, 23 Sep 2019 11:06:38 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:42384 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbfIWPGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:06:38 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 9141A5FD5D;
+        Mon, 23 Sep 2019 17:06:34 +0200 (CEST)
+Subject: Re: [PATCH v5 0/3] Fix UART DMA freezes for i.MX SOCs
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        fugang.duan@nxp.com, jlu@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>, vkoul@kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        Robin Gong <yibin.gong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+References: <20190923135808.815-1-philipp.puschmann@emlix.com>
+ <CAHCN7xJL_x1ryOoNW+R2hOZ9dMFem9wni8Uo8QOA3wxpzKLbqQ@mail.gmail.com>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <2443c553-c593-2f23-4cca-c2f03676adc9@emlix.com>
+Date:   Mon, 23 Sep 2019 17:06:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923144612.29668-1-Jason@zx2c4.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAHCN7xJL_x1ryOoNW+R2hOZ9dMFem9wni8Uo8QOA3wxpzKLbqQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Adam,
 
-> People are reporting that WireGuard experiences erratic crashes on 5.3,
-> and bisected it down to 7d30a7f6424e. Casually flipping through that
-> commit I noticed that a flag is checked using `|` instead of `&`, which in
-> this current case, means that a reference is never incremented, which
-> would result in the use-after-free users are seeing. This commit changes
-> the `|` to the proper `&` test.
+Am 23.09.19 um 16:55 schrieb Adam Ford:
+> On Mon, Sep 23, 2019 at 8:58 AM Philipp Puschmann
+> <philipp.puschmann@emlix.com> wrote:
+>>
+>> For some years and since many kernel versions there are reports that
+>> RX UART DMA channel stops working at one point. So far the usual
+>> workaround was to disable RX DMA. This patches fix the underlying
+>> problem.
+>>
+>> When a running sdma script does not find any usable destination buffer
+>> to put its data into it just leads to stopping the channel being
+>> scheduled again. As solution we manually retrigger the sdma script for
+>> this channel and by this dissolve the freeze.
+>>
+>> While this seems to work fine so far, it may come to buffer overruns
+>> when the channel - even temporary - is stopped. This case has to be
+>> addressed by device drivers by increasing the number of DMA periods.
+>>
+>> This patch series was tested with the current kernel and backported to
+>> kernel 4.15 with a special use case using a WL1837MOD via UART and
+>> provoking the hanging of UART RX DMA within seconds after starting a
+>> test application. It resulted in well known
+>>   "Bluetooth: hci0: command 0x0408 tx timeout"
+>> errors and complete stop of UART data reception. Our Bluetooth traffic
+>> consists of many independent small packets, mostly only a few bytes,
+>> causing high usage of periods.
+>>
+> 
+> Using the 4.19.y branch, this seems to working just fine for me with an i.MX6Q
+> with WL1837MOD Bluetooth connected to UART2.  I am still seeing some
+> timeouts with 5.3, but I'm going to continue to run some tests.
 
-> Cc: stable@vger.kernel.org
-> Fixes: 7d30a7f6424e ("Merge branch 'ipv6-avoid-taking-refcnt-on-dst-during-route-lookup'")
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Thanks for testing.
+With my local setup i still have very few tx timeouts too. But i think they have a different
+cause and especially different consequences. When the problem addressed by this series
+appear you get a whole bunch of tx timeouts (and maybe errors from Bluetooth
+layer) and monitoring received Bluetooth packets with hciconfig shows a
+complete freeze of rx counter. Only resetting the hci_uart driver and the wl1837mon then helps.
+With these patches applied the rx data shold still coming in even if a single or
+multiple tx timeout error happen. I'm not sure where the error comes from and what the
+consequences for the Bluetooth layer are.
 
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-NOTE: this change was added in d64a1f574a29 ("ipv6: honor RT6_LOOKUP_F_DST_NOREF in rule lookup logic")
-
-Kind regards,
-Petr
-
-> ---
->  net/ipv6/ip6_fib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-> diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
-> index 87f47bc55c5e..6e2af411cd9c 100644
-> --- a/net/ipv6/ip6_fib.c
-> +++ b/net/ipv6/ip6_fib.c
-> @@ -318,7 +318,7 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
->  	if (rt->dst.error == -EAGAIN) {
->  		ip6_rt_put_flags(rt, flags);
->  		rt = net->ipv6.ip6_null_entry;
-> -		if (!(flags | RT6_LOOKUP_F_DST_NOREF))
-> +		if (!(flags & RT6_LOOKUP_F_DST_NOREF))
->  			dst_hold(&rt->dst);
->  	}
+Regards,
+Philipp
+> 
+> Tested-by: Adam Ford <aford173@gmail.com> #imx6q w/ 4.19 Kernel
+> 
+>> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+>> Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
+>>
+>> ---
+>>
+>> Changelog v5:
+>>  - join with patch version from Jan Luebbe
+>>  - adapt comments and patch descriptions
+>>  - add Reviewed-by
+>>
+>> Changelog v4:
+>>  - fixed the fixes tags
+>>
+>> Changelog v3:
+>>  - fixes typo in dma_wmb
+>>  - add fixes tags
+>>
+>> Changelog v2:
+>>  - adapt title (this patches are not only for i.MX6)
+>>  - improve some comments and patch descriptions
+>>  - add a dma_wb() around BD_DONE flag
+>>  - add Reviewed-by tags
+>>  - split off  "serial: imx: adapt rx buffer and dma periods"
+>>
+>> Philipp Puschmann (3):
+>>   dmaengine: imx-sdma: fix buffer ownership
+>>   dmaengine: imx-sdma: fix dma freezes
+>>   dmaengine: imx-sdma: drop redundant variable
+>>
+>>  drivers/dma/imx-sdma.c | 37 +++++++++++++++++++++++++++----------
+>>  1 file changed, 27 insertions(+), 10 deletions(-)
+>>
+>> --
+>> 2.23.0
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
