@@ -4,116 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DB9C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EDFC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211C72168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6A72089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569256937;
-	bh=j5r+6XuhjKJ1Z8KYz75Xk8jUl3r/TVx0tgV4XM0YVoc=;
+	s=default; t=1569257158;
+	bh=3UTYXbA1y2iJiQv9ednGvEQW3ctThZH1qSxfiADkjlY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZDGrsvalKrplxECNQqQcGzaZ7UmM6FzkUKfCz5WUyivIjCqqzCW5W6MkaFAxWHxs+
-	 Eb+ouIrmoMXMrieDbBs4nv9PM9qs9mXW5T3zQ/WGwtGgeqUFyK+ePyS2PdQqkYl2St
-	 LMuWUTVX4jFupi/iQiqr8DTnJPvon8Gpay/PEajk=
+	b=RqGI00A+EAUFSdMNZSWdFGed6qHcGiK/gDdD7+V8h0EUYcK5algow6C/shEqP73Od
+	 s0TzXWEvIvoWEdYMC7KTwwFohwYo+HMajrl5rxf7O6+AdrV1iLNcdcytbFz1RGAEDA
+	 9yMpO+XbyW9Nxx1GXliuW50kaITEEk+rgUMbCjKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390506AbfIWQmQ (ORCPT
+        id S2394285AbfIWQp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387922AbfIWQmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:42:16 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205BE2089F;
-        Mon, 23 Sep 2019 16:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569256935;
-        bh=j5r+6XuhjKJ1Z8KYz75Xk8jUl3r/TVx0tgV4XM0YVoc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BM8BOxMf68g4/WepglhG7a6pSQuN8RN85YMHAzOefxueUHAVZ/fiH6QQprzfTnkz2
-         LGy7vYg8B5O26OnxkQlQzeXwD2PDZHOHdyeyVl51XR9UTMfxwljrdjT8FBMEK9eSoZ
-         N0jb+C4Bs0L6Q1vlVvZ2qByx/J7SR1qer2bfz4No=
-Date:   Mon, 23 Sep 2019 12:42:14 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.2 072/185] ALSA: hda: Add codec on bus address
- table lately
-Message-ID: <20190923164213.GG8171@sasha-vm>
-References: <20190922184924.32534-1-sashal@kernel.org>
- <20190922184924.32534-72-sashal@kernel.org>
- <s5h8sqgm9qz.wl-tiwai@suse.de>
- <20190923133025.GE8171@sasha-vm>
- <s5hpnjrku5e.wl-tiwai@suse.de>
+        Mon, 23 Sep 2019 12:45:57 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52226 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389238AbfIWQp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:45:56 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x2so10783262wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:45:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YZottsNo9dP9sxiK9k2Pisr2Qm5tcc6fwuMDqhOgSTY=;
+        b=tMZN3qs6hI36MtxXansvCz/9HtOMK80Big7wr6EXaKZRHQWG4QknhAt351wakmR4tJ
+         GPUZbkFxRevtVBanOftItQA+LFY+HuZgYXo97VDX4dvGIeQAjBQ9Vl1iuZJ+JdFhmcy1
+         Lurinn0tilmvc+f5Z6JT8scmuRu59DiqjKCYSwAONmbExQassv0X2PLaRpzvWclmuxlw
+         3XIx+/n8nh4SPYVYPXPRDd5HL2CbgWu8DPpXc3ZW7oZcU4kRJIYXKyP0ZgCdl53uul1e
+         EHUZc4jOqRmX5y+CEvh9zJfKlxEjE96AT/zQhOXSPTzOFlFQ2T3oRFd2u3UpiEpOOd4d
+         1fKg==
+X-Gm-Message-State: APjAAAXZ8oqs1Ta/CoIL7EYBmOu4IsmMG67hd6izpmcTVsbNgYWHs9Dh
+        +UcLgXqpmhDwxmLwtk4CQFc=
+X-Google-Smtp-Source: APXvYqz5f2hHpzllsCbosbkpt9BL/y+iKOdw90u+mTixiKOOTkgT7ZkZkVdfwtOVDS2lG85rkzerTw==
+X-Received: by 2002:a05:600c:22d9:: with SMTP id 25mr386973wmg.133.1569257154376;
+        Mon, 23 Sep 2019 09:45:54 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id g185sm22261538wme.10.2019.09.23.09.45.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Sep 2019 09:45:53 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 18:45:50 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] drm/panfrost: Reduce the amount of logs on
+ deferred probe
+Message-ID: <20190923164550.GA17765@kozik-lap>
+References: <20190909155146.14065-1-krzk@kernel.org>
+ <1858ea3d-8f33-66f4-0e71-31bf68443b24@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <s5hpnjrku5e.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1858ea3d-8f33-66f4-0e71-31bf68443b24@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 03:40:45PM +0200, Takashi Iwai wrote:
->On Mon, 23 Sep 2019 15:30:25 +0200,
->Sasha Levin wrote:
->>
->> On Sun, Sep 22, 2019 at 09:06:12PM +0200, Takashi Iwai wrote:
->> >On Sun, 22 Sep 2019 20:47:30 +0200,
->> >Sasha Levin wrote:
->> >>
->> >> From: Takashi Iwai <tiwai@suse.de>
->> >>
->> >> [ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
->> >>
->> >> The call of snd_hdac_bus_add_device() is needed only for registering
->> >> the codec onto the bus caddr_tbl[] that is referred essentially only
->> >> in the unsol event handler.  That is, the reason of this call and the
->> >> release by the counter-part function snd_hdac_bus_remove_device() is
->> >> just to assure that the unsol event gets notified to the codec.
->> >>
->> >> But the current implementation of the unsol notification wouldn't work
->> >> properly when the codec is still in a premature init state.  So this
->> >> patch tries to work around it by delaying the caddr_tbl[] registration
->> >> at the point of snd_hdac_device_register().
->> >>
->> >> Also, the order of snd_hdac_bus_remove_device() and device_del() calls
->> >> are shuffled to make sure that the unsol event is masked before
->> >> deleting the device.
->> >>
->> >> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
->> >> Signed-off-by: Takashi Iwai <tiwai@suse.de>
->> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> >
->> >The upstream commit was reverted later by 246bb4aaa4f4, which has even
->> >Fixes tag pointing this.  So please drop this.
->>
->> I'll drop it, thank you.
->>
->> >BTW, this is the second time AUTOSEL overlooked the existing revert.
->> >I'm afraid something is missing in the check.
->>
->> Usually it's the case that I check for fixes/reverts once I compile the
->> series, and again right before I queue it up to a stable tree. In
->> between fixes and reverts tend to sneak in just like in this case.
->>
->> In general, I also check the -rcs for fixes and reverts during their
->> review window, so while sometimes we send out mails with patches that
->> have a fix or revert upstream, they rarely make it into a released
->> stable kernel.
->
->IMO, it'd be great if you have some check before sending for reviews.
->The Fixes tag chain can be parsed relatively easily, after all.
+On Thu, Sep 12, 2019 at 10:36:25AM +0100, Steven Price wrote:
+> On 09/09/2019 16:51, Krzysztof Kozlowski wrote:
+> > There is no point to print deferred probe (and its failures to get
+> > resources) as an error.
+> > 
+> > In case of multiple probe tries this would pollute the dmesg.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Looks like a good idea, however from what I can tell you haven't
+> completely silenced the 'error' as the return from
+> panfrost_regulator_init() will be -EPROBE_DEFER causing another
+> dev_err() output:
+> 
+>         err = panfrost_regulator_init(pfdev);
+>         if (err) {
+>                 dev_err(pfdev->dev, "regulator init failed %d\n", err);
+>                 goto err_out0;
+>         }
+> 
+> Can you fix that up as well? Or indeed drop it altogether since
+> panfrost_regulator_init() already outputs an appropriate message.
 
-True. I'll update my scripts to do that.
+I'll drop this error message then. Thanks for feedback!
 
---
-Thanks,
-Sasha
+Best regards,
+Krzysztof
+
