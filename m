@@ -2,175 +2,135 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EB0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15BCC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1BA207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81B620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z2/E6kP4"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="abcoxhvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437487AbfIWOTE (ORCPT
+        id S2407481AbfIWOUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:19:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55670 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfIWOTE (ORCPT
+        Mon, 23 Sep 2019 10:20:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36434 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407008AbfIWOUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:19:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NEJ02l078946;
-        Mon, 23 Sep 2019 09:19:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569248340;
-        bh=4HrGNJ0G06qOuyWPwNF7oHzx92HidaHXsQc7BzZ0wDk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Z2/E6kP4ZsKa6S7QBBca3S/itsvmN84EWQlap4RwVKw+aF9AUu2LBN2JC4wqZMABC
-         rCMu6ghdfqgelxlZlIaHfqzLVzC3xawAzjLlF7l1A3Fc743++uorZeaS9BLCb2WFPH
-         57nKsNrzCQCSKhpa7bA7u8Ko4/jhj4QQhsnCqdYo=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8NEJ08p040870
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Sep 2019 09:19:00 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
- Sep 2019 09:19:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 23 Sep 2019 09:18:54 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NEJ09j015620;
-        Mon, 23 Sep 2019 09:19:00 -0500
-Subject: Re: [PATCH v8 1/9] leds: multicolor: Add sysfs interface definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-2-dmurphy@ti.com>
- <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e8b19608-91be-ac9f-9aa2-2027993df3d7@ti.com>
-Date:   Mon, 23 Sep 2019 09:23:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 10:20:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so13925167ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
+        b=abcoxhvNE4QzsWdjpcm4fIk+YAxDnJvfoFRGb46mpPwEFg0aOpeJ0eaheg3tZgT4ZG
+         ojpl8m/oDAh+qYbzYsIcSeNXc5m5DY3mfdWvxLXTBeWP7wfLsaIXItCLI6UZUPW+vtJ1
+         VGOT858b8NEkfBIvrgsoW5+e3A7n18FZCZM84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cn9/9Me6Kmp4Xn9AfJMQMku3qxEXOlFZIGtDmEDrJpc=;
+        b=LAtc8ShgXk2+0UKtsHYeivajA3MhggtFWOJi6VA/piH+qHMeBPhcfjn+W/nDoll6WD
+         AMZDUx4moceBEnSsLG3oofO4KU979FnzuXFGSUeHnmfHM81ApXPz6Ddx43KO7Vcm1ygu
+         daHdw9601BUvAfUeIca34Ogt+JbkV8Id/9l8U95nPB8a7VNomKa7V2sF07NoN43vwBpz
+         qZKF3lqUjN73CWOnpCmfmht+mpnS5yflrwNAzirt0YbgoHNQrjO8bmzYpmcU/xc+UkhE
+         DKW6vs0w5IMHaRmw8tDAAkMcbor3jrlVxewfjlaRIGX0QOO6XDRih5/gLCXchiQoCJNd
+         tVjg==
+X-Gm-Message-State: APjAAAUprvBtbLKeNA4YCS84MeOXMA05jQm7BnRMVAI2Ph9ZbSYhr8tm
+        bJhdKyC+MwpIcjG3xqjbk29UuyCZ+X7So4nV
+X-Google-Smtp-Source: APXvYqy+Ki9LgN+TwomD1Y4hGoRYgJaAEevteVNzRvde3/6GQAoELKo5qYA33O6wCDX/Pq8W4P59VQ==
+X-Received: by 2002:a2e:3902:: with SMTP id g2mr17815555lja.196.1569248411411;
+        Mon, 23 Sep 2019 07:20:11 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id b21sm2230125lff.96.2019.09.23.07.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 07:20:10 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: devicetree.c: remove orphan pinctrl_dt_has_hogs()
+Date:   Mon, 23 Sep 2019 16:20:05 +0200
+Message-Id: <20190923142005.5632-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <ea294ad4-d340-3677-eab0-6138968cfe0e@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+The helper pinctrl_dt_has_hogs() was introduced in
+99e4f67508e1 (pinctrl: core: Use delayed work for hogs), but the sole
+use then got removed shortly after in 950b0d91dc10 (pinctrl: core: Fix
+regression caused by delayed work for hogs).
 
-Thanks for the review
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/pinctrl/devicetree.c | 15 ---------------
+ drivers/pinctrl/devicetree.h |  7 -------
+ 2 files changed, 22 deletions(-)
 
-On 9/21/19 5:55 AM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/20/19 7:41 PM, Dan Murphy wrote:
->> Add a documentation of LED Multicolor LED class specific
->> sysfs attributes.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../ABI/testing/sysfs-class-led-multicolor    | 43 +++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> new file mode 100644
->> index 000000000000..39fc73becfec
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> @@ -0,0 +1,43 @@
->> +What:		/sys/class/leds/<led>/brightness
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		Writing to this file will update all LEDs within the group to a
->> +		calculated percentage of what each color LED intensity is set
->> +		to. The percentage is calculated via the equation below:
->> +
->> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
-> How about:
->
-> led_brightness = brightness * <color>_intensity/<color>_max_intensity
-
-Ack
-
-
->> +
->> +		For additional details please refer to
->> +		Documentation/leds/leds-class-multicolor.rst.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/max_brightness.
->> +
->> +What:		/sys/class/leds/<led>/colors/<led_color>_intensity
-> s/led_color/color/
-
-Ack
-
-
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		The led_color directory is dynamically created based on the
->> +		colors defined by the registrar of the class.
->> +		The value for the led_color is defined in the
->> +		include/dt-bindings/leds/common.h. There is one directory per
->> +		color presented.  The intensity file is created under each
->> +		led_color directory and controls the individual LED color
->> +		setting.
-> We no longer have led_color directories so this description needs
-> to be adjusted.
->
-> And I'd not mention where the colors are defined. This is documentation
-> for the user, who does not need to know about implementation details.
-
-I thought I updated this but I will re-write this
-
-Ack
-
-
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/colors/<led_color>_max_intensity.
->> +
->> +What:		/sys/class/leds/<led>/colors/<led_color>_max_intensity
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read only
->> +		Maximum intensity level for the LED color, default is
->> +		255 (LED_FULL).
-> Mentioning the default value here is pointless IMO. Userspace cannot
-> change it anyway.
->
-Ack
-
-
->> +
->> +		If the LED does not support different intensity levels, this
->> +		should be 1.
->>
-> This is less relevant for MC class, and also it is rather obvious.
-> I'd skip this sentence.
->
-Ack
-
-
-Dan
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 5d6d8b1e9062..6716a406d128 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -166,21 +166,6 @@ static int dt_remember_dummy_state(struct pinctrl *p, const char *statename)
+ 	return dt_remember_or_free_map(p, statename, NULL, map, 1);
+ }
+ 
+-bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
+-{
+-	struct device_node *np;
+-	struct property *prop;
+-	int size;
+-
+-	np = pctldev->dev->of_node;
+-	if (!np)
+-		return false;
+-
+-	prop = of_find_property(np, "pinctrl-0", &size);
+-
+-	return prop ? true : false;
+-}
+-
+ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+ {
+ 	struct device_node *np = p->dev->of_node;
+diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
+index 00e645d7fac7..efa80779de4f 100644
+--- a/drivers/pinctrl/devicetree.h
++++ b/drivers/pinctrl/devicetree.h
+@@ -9,8 +9,6 @@ struct of_phandle_args;
+ 
+ #ifdef CONFIG_OF
+ 
+-bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev);
+-
+ void pinctrl_dt_free_maps(struct pinctrl *p);
+ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev);
+ 
+@@ -23,11 +21,6 @@ int pinctrl_parse_index_with_args(const struct device_node *np,
+ 
+ #else
+ 
+-static inline bool pinctrl_dt_has_hogs(struct pinctrl_dev *pctldev)
+-{
+-	return false;
+-}
+-
+ static inline int pinctrl_dt_to_map(struct pinctrl *p,
+ 				    struct pinctrl_dev *pctldev)
+ {
+-- 
+2.20.1
 
