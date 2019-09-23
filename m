@@ -2,115 +2,80 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B322C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7F1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03832087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K1+zCvsa"
+	by mail.kernel.org (Postfix) with ESMTP id 51A0A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfIWIr0 (ORCPT
+        id S1731670AbfIWIsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:47:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58446 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731460AbfIWIrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:47:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/43GF0QWgIU5tkmUtQcTjX9yL5SM1r1TS8Ahy7IgToA=; b=K1+zCvsaewII+mHTy3eoOME7L
-        8jpgtr+xqiZNxhbLy48TCKcvo0sb5elmojLefPfZOSyoeetH4ZeIRnseyYu/uJxClwyioMtmgZ6+i
-        x3MGNbjz5+DxGOpFMFc+8PGbORulTuI8DGmtoKngWbDpphyXH3sbw7cOz7YbhskSi6WlAevBmuRzF
-        AlXWHcG9wL45968qfB2n0WLK7gVFWkAQJHqi1wgUvxA9iBn63t/6IVyE18WReWeLgDZnjVWMQq9J+
-        uFzIRF52TzH5ONzcbofMAcJ5VdGFE9GoYysFA9GlDN3QkT32YER24V80ZiAvgUIdcffUmhZiVIFo7
-        SpqZplQcg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCK09-0004sR-48; Mon, 23 Sep 2019 08:47:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8222303DFD;
-        Mon, 23 Sep 2019 10:46:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C79032B1204C7; Mon, 23 Sep 2019 10:47:18 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 10:47:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
-Message-ID: <20190923084718.GG2349@hirez.programming.kicks-ass.net>
-References: <20190919150314.054351477@linutronix.de>
- <20190919150809.446771597@linutronix.de>
+        Mon, 23 Sep 2019 04:48:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41792 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725816AbfIWIsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:48:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1D2A4AAB2;
+        Mon, 23 Sep 2019 08:48:06 +0000 (UTC)
+Subject: Re: [PATCH STABLE 4.9] x86, mm, gup: prevent get_page() race with
+ munmap in paravirt guest
+To:     Ben Hutchings <ben@decadent.org.uk>, stable@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        Jann Horn <jannh@google.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        xen-devel@lists.xenproject.org, Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+References: <20190802160614.8089-1-vbabka@suse.cz>
+ <d3bb280b405d6acf0bc4176d63639201ff62853f.camel@decadent.org.uk>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <78bbba27-81ed-40db-eb6e-5add997b2027@suse.cz>
+Date:   Mon, 23 Sep 2019 10:48:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919150809.446771597@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d3bb280b405d6acf0bc4176d63639201ff62853f.camel@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 05:03:24PM +0200, Thomas Gleixner wrote:
-> To prepare for converting the exit to usermode code to the generic version,
-> move the irqflags tracing into C code.
+On 9/19/19 8:26 PM, Ben Hutchings wrote:
+> On Mon, 2019-08-19 at 18:58 +0100, Vlastimil Babka wrote:
+> [...]
+>> Hi, I'm sending this stable-only patch for consideration because it's probably
+>> unrealistic to backport the 4.13 switch to generic GUP. I can look at 4.4 and
+>> 3.16 if accepted. The RCU page table freeing could be also considered.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/entry/common.c          |   10 ++++++++++
->  arch/x86/entry/entry_32.S        |   11 +----------
->  arch/x86/entry/entry_64.S        |   10 ++--------
->  arch/x86/entry/entry_64_compat.S |   21 ---------------------
->  4 files changed, 13 insertions(+), 39 deletions(-)
+> I would be interested in backports for 3.16 and 4.4.
 > 
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -102,6 +102,8 @@ static void exit_to_usermode_loop(struct
->  	struct thread_info *ti = current_thread_info();
->  	u32 cached_flags;
->  
-> +	trace_hardirqs_off();
+>> Note the patch also includes page refcount protection. I found out that
+>> 8fde12ca79af ("mm: prevent get_user_pages() from overflowing page refcount")
+>> backport to 4.9 missed the arch-specific gup implementations:
+>> https://lore.kernel.org/lkml/6650323f-dbc9-f069-000b-f6b0f941a065@suse.cz/
+> [...]
+> 
+> I suppose that still needs to be addressed for 4.9, right?
 
-Bah.. so this gets called from:
+Yeah, I'll take a look, thanks for reminding.
 
- - C code, with IRQs disabled
- - entry_64.S:error_exit
- - entry_32.S:resume_userspace
+> Ben.
+> 
 
-The first obviously doesn't need this annotation, but this patch doesn't
-remove the TRACE_IRQS_OFF from entry_64.S and only the 32bit case is
-changed.
-
-Is that entry_64.S case an oversight, or do we need an extensive comment
-on this one?
-
->  	addr_limit_user_check();
->  
->  	lockdep_assert_irqs_disabled();
-> @@ -137,6 +139,8 @@ static void exit_to_usermode_loop(struct
->  	user_enter_irqoff();
->  
->  	mds_user_clear_cpu_buffers();
-> +
-
-	/* Return to userspace (IRET) will re-enable interrupts */
-> +	trace_hardirqs_on();
->  }
