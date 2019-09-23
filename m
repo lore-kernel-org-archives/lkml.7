@@ -2,133 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8458DC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B43C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6470420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ECE20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:33:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iXobH4vL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437293AbfIWNd3 (ORCPT
+        id S2437487AbfIWNd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:33:29 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45475 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437178AbfIWNd3 (ORCPT
+        Mon, 23 Sep 2019 09:33:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437100AbfIWNd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:33:29 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id AC52C1C000F;
-        Mon, 23 Sep 2019 13:33:25 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 15:33:25 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 3/3] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Message-ID: <20190923133325.GA57525@aptenodytes>
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
- <20190910152855.111588-3-paul.kocialkowski@bootlin.com>
- <CACRpkdY40PZc9R-yFwooR4-WMgn3LH7K+yTx00ZNxyq6OOnw6A@mail.gmail.com>
+        Mon, 23 Sep 2019 09:33:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4oYYvhMZLswDD/qjuPlU5roe59xl0+W+kHzpJNuHTkk=; b=iXobH4vLyUWuAatRn/YNyFm19
+        67BChJmm/usupfpf5trKfdtTguX18shVRtaIa+IWb8JHFn8kYVpArMI9JI2gsBLooElnoYb8QsjDv
+        /SOLDcq/e1CR2vJoDEiyOkAfmRULtqvsRN8nq1fHSDNkMvoowJpVt4rwMIgmAc9q9SQqAP/IWRaFd
+        glori5/UnJ96kIUmcf943s1uwe+F8pO4OWZ1ip4FoOA0Hpnkl7H0jxI+vZrmZrSGsjuVCc6jPcvZH
+        ydG/ABzBv6/ax5R3ZrJ46l5lMBiojuJ7bOJp7HKyWS3bLljJpydZY9f9F0dRZxOfPTMFRW98NyIqe
+        KWihAqQ3w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCOTS-0005b5-Iy; Mon, 23 Sep 2019 13:33:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E33F3303DFD;
+        Mon, 23 Sep 2019 15:33:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1843020D80D42; Mon, 23 Sep 2019 15:33:52 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 15:33:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Sep 18 (objtool)
+Message-ID: <20190923133352.GI2332@hirez.programming.kicks-ass.net>
+References: <20190918221053.GV2596@sirena.co.uk>
+ <be0fb087-5fb4-a790-90dd-cc2af62419e7@infradead.org>
+ <20190923092024.GI2349@hirez.programming.kicks-ass.net>
+ <20190923124901.3ayejcis5ijrsvbx@treble>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY40PZc9R-yFwooR4-WMgn3LH7K+yTx00ZNxyq6OOnw6A@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20190923124901.3ayejcis5ijrsvbx@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 07:49:01AM -0500, Josh Poimboeuf wrote:
+> On Mon, Sep 23, 2019 at 11:20:24AM +0200, Peter Zijlstra wrote:
+> > On Wed, Sep 18, 2019 at 09:04:21PM -0700, Randy Dunlap wrote:
+> > > On 9/18/19 3:10 PM, Mark Brown wrote:
+> > > > Hi all,
+> > > > 
+> > > > Changes since 20190917:
+> > > > 
+> > > 
+> > > on x86_64:
+> > > 
+> > > drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to gen8_canonical_addr() with UACCESS enabled
+> > 
+> > I'm thinking that comes from:
+> > 
+> > 				offset = gen8_canonical_addr(offset & ~UPDATE);
+> > 				if (unlikely(__put_user(offset, &urelocs[r-stack].presumed_offset))) {
+> > 
+> > however, per commit 6ae865615fc4 (and 2a418cf3f5f1) the compiler really
+> > should not be sticking gen8_canonical_addr() after __uaccess_begin().
+> > 
+> > /me puzzled...
+> 
+> I think you're looking at the wrong code.  It has user_access_begin/end
+> around it:
+> 
+> 		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
+> 			goto end;
+> 
+> 		for (i = 0; i < args->buffer_count; i++) {
+> 			if (!(exec2_list[i].offset & UPDATE))
+> 				continue;
+> 
+> 			exec2_list[i].offset =
+> 				gen8_canonical_addr(exec2_list[i].offset & PIN_OFFSET_MASK);
+> 			unsafe_put_user(exec2_list[i].offset,
+> 					&user_exec_list[i].offset,
+> 					end_user);
+> 		}
+> end_user:
+> 		user_access_end();
+> 
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu 12 Sep 19, 10:17, Linus Walleij wrote:
-> On Tue, Sep 10, 2019 at 4:29 PM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
->=20
-> > The LogiCVC display hardware block comes with GPIO capabilities
-> > that must be exposed separately from the main driver (as GPIOs) for
-> > use with regulators and panels. A syscon is used to share the same
-> > regmap across the two drivers.
-> >
-> > Since the GPIO capabilities are pretty simple, add them to the syscon
-> > GPIO driver.
-> >
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->=20
-> I'm fine with this for now, but the gpio-syscon driver is now growing
-> big and when you use it you are getting support for a whole bunch
-> of systems you're not running on included in your binary.
->=20
-> We need to think about possibly creating drivers/gpio/syscon
-> and split subdrivers into separate files and config options
-> so that people can slim down to what they actually need.
-
-Thanks for the review!
-
-I understand your concern about more devices getting pulled-in and built
-unconditionally. Though I do like the idea of having a single driver for on=
-ly
-exposing the GPIO part of bigger components instead of specific drivers with
-< 100 lines of useful code.
-
-Maybe a first step would be to introduce Kconfig options for each device and
-ifdef around in the code, as to solve the "built unconditionally" aspect?
-
-Either way, I'll send v2 still adding my driver to gpio-syscon but feel fre=
-e to
-have me in the loop when that driver needs to be changed.
-
-> > +       *bit =3D 1 << offset;
->=20
-> Please do this:
->=20
-> #include <linux/bits.h>
->=20
-> *bit =3D BIT(offset);
-
-Sure thing and sorry I missed that, thanks!
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2IyaUACgkQ3cLmz3+f
-v9F0nQgAjJ5BXBlS8EuvhntG+VA0UwBa5KB56iTBqjHtJqvSOjtuz/EgGyaGm/fB
-pETn2ZUp76AQXEDI7VOdNX5uHmaNepAX0kwtVuwx6vE2hvLoz3WiPq9bgCSIs/iY
-fAvRY4tl6ECT2SHJP/jeL1K0C7PKzN+6YIQOsIbz8i5KKSjNJyFAkzZjJ671TA1u
-4Nfe6fNGxxU+eUJpCijcLa+t9mNaoS0hY8v5/adLNJxD72RBIbYQAku6Y8o3o7HX
-y0fBWFrBnvVJzd24Y3COxoojpc3hjpRJgu0mYgcL2KU05uSt9r7phLIBW+ARJaua
-qSpN0ZfQjVfWFhW8qbi6xc29nKA94w==
-=Bf8P
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
+Oh, Duh... Yeah, so the alternative to your solution is to do 2 loops.
+Not sure which would be better.
