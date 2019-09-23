@@ -2,79 +2,170 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE80DC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E86CC4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB9C20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB1E20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407675AbfIWRmt (ORCPT
+        id S2439988AbfIWRrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:42:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44512 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407617AbfIWRmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:42:49 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CADE010CC1F4;
-        Mon, 23 Sep 2019 17:42:48 +0000 (UTC)
-Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 868F360BFB;
-        Mon, 23 Sep 2019 17:42:45 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 13:42:44 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-Message-ID: <20190923174244.GA19996@redhat.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-16-aarcange@redhat.com>
- <87o8zb8ik1.fsf@vitty.brq.redhat.com>
- <20190923163746.GE18195@linux.intel.com>
- <24dc5c23-eed8-22db-fd15-5a165a67e747@redhat.com>
+        Mon, 23 Sep 2019 13:47:03 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35881 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389763AbfIWRrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 13:47:03 -0400
+Received: from localhost ([46.183.103.8]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MTikV-1ibaZH1myj-00U6mY; Mon, 23 Sep 2019 19:46:38 +0200
+Date:   Mon, 23 Sep 2019 19:46:34 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Message-ID: <20190923174605.mhrbmdic3ynaw22o@arbad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <24dc5c23-eed8-22db-fd15-5a165a67e747@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Mon, 23 Sep 2019 17:42:49 +0000 (UTC)
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:Fan6vgtAYstQ9EsYsO6l1PGcJWJzGhm7B7DfBKFUat6EzC703YH
+ 8oI9GI5mpy2w07uxgH3pzFOyGA+jyhV+HoSw7qPEGW7lOWrhvP/UtP+qNJ2cHCueZTUGjSe
+ uJDuDulVUzUZgi7U+vahnHcKfRFtfGHdvTm4aklSLU4vNVnUrZMFN71YGTGQYFyArKhFvHf
+ QLc6PSodvrixVGZYXXVaQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M0QNqFl7cB0=:DTk2VE7Np88/QhC2VQhDWa
+ TThd5wzZs/k5hNPjw13wqTzy+v+OGSPwKQlGC6El92OBefoH1p7gf3Hs2a7J/+PlwMm0J2IgU
+ DGSrsg5wBOCHeehn6P/dmrmtef6lwJwXrfJ8P0NGI1WncUOOt3zCT6v3knu78XC9CcP6IzZp8
+ BBtdUYdZJwvicScAGtN3/y3iYSvK97SPaMFIKqr4fefdJJNILpiqQqmoTH00xWrGe2bx+IUFa
+ 4+QBWD/3TJr2mHsuTwvWgo+TbFrEeuOfGTqE1fD0EfWI8twqd6af7ehh/jQTnGt976eAErXOB
+ qxyM/i57Zi+uHavej0IB55r1dYcqgfAMiIWv9CISxmQO9HAEjPKv7iIEI0bAhpsJTd6Ss3IpY
+ G4b7pOCQIdYUmmnQRP30VRkIpBmt4Q2A9KM6QMj2T5H5EZpAwbcGEXXFmpIISethKeFepW1vy
+ MJNCFDBeaGdSwbNH0LFpQ30nCYnICHjTHsvW4vRK93YPfhAjqMRRnx7XPrZYQNmQgb+7+zueq
+ nZ9Y3+yrJpb5WRjoiBWBwfUYr9sgAwErZi39p0zwgKOxqhFMxalxlxfyvx5hc9Uh7XYFiznGh
+ ELRdmPttS1Ev9iTCFiBoFfXauxsyBphbFLTDmFtcL7iRHTHRXzghTLsKQqJfBnvImIUQIjI6c
+ 0sUO7ELi2VnHPY6FCWW9OYlYyiLLRm+/AJYdXTspWbHWXI1Wxmhakr+UThHmo5XBvEE8fECCu
+ JjvYIf5PCPf8uUaRDVb3EoRbncW+mlD15qxFTy7eVzjcNaNGnbcS1E30ygmx9tdINg7yo1y78
+ zosmwyF3qN2g3vhx5hbQDeI0IQ5shdPqUp1w19hMCzq3onGFeJ/xSxlkzpJOFi4kc9fZHYldg
+ FEpI4H+njx+KH9jLzpGBCsDXP++0IDgpR1zNXc4Zw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 06:53:10PM +0200, Paolo Bonzini wrote:
-> On 23/09/19 18:37, Sean Christopherson wrote:
-> >> Would it be too much if we get rid of
-> >> kvm_vmx_exit_handlers completely replacing this code with one switch()?
-> > Hmm, that'd require redirects for nVMX functions since they are set at
-> > runtime.  That isn't necessarily a bad thing.  The approach could also be
-> > used if Paolo's idea of making kvm_vmx_max_exit_handlers const allows the
-> > compiler to avoid retpoline.
-> 
-> But aren't switch statements also retpolin-ized if they use a jump table?
+transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+from text documentation format into yaml.
 
-See commit a9d57ef15cbe327fe54416dd194ee0ea66ae53a4.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+ .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
 
-We disabled that feature or the kernel would potentially suffer the
-downsides of the exit handlers through pointer to functions for every
-switch statement in the kernel.
-
-In turn you can't make it run any faster by converting my "if" to a
-"switch" at least the "if" can deterministic control the order of what
-is more likely that we should also re-review, but the order of secondary
-effect, the important thing is to reduce the retpolines to zero during
-normal hrtimer guest runtime.
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+deleted file mode 100644
+index dd1058fbe9c3..000000000000
+--- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+-  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+-  for ranging
+-
+-Required properties:
+- - compatible:		"maxbotix,mb1202",
+-			"maxbotix,mb1212",
+-			"maxbotix,mb1222",
+-			"maxbotix,mb1232",
+-			"maxbotix,mb1242",
+-			"maxbotix,mb7040" or
+-			"maxbotix,mb7137"
+-
+- - reg:			i2c address of the device, see also i2c/i2c.txt
+-
+-Optional properties:
+- - interrupts:		Interrupt used to announce the preceding reading
+-			request has finished and that data is available.
+-			If no interrupt is specified the device driver
+-			falls back to wait a fixed amount of time until
+-			data can be retrieved.
+-
+-Example:
+-proximity@70 {
+-	compatible = "maxbotix,mb1232";
+-	reg = <0x70>;
+-	interrupt-parent = <&gpio2>;
+-	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+new file mode 100644
+index 000000000000..8301a1ad2a47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
++  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
++  for ranging
++
++  Specifications about the devices can be found at:
++  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
++
++properties:
++  compatible:
++    enum:
++      - maxbotix,mb1202
++      - maxbotix,mb1212
++      - maxbotix,mb1222
++      - maxbotix,mb1232
++      - maxbotix,mb1242
++      - maxbotix,mb7040
++      - maxbotix,mb7137
++
++  reg:
++    description:
++      i2c address of the device, see also i2c/i2c.txt
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt used to announce the preceding reading request has finished
++      and that data is available.  If no interrupt is specified the device
++      driver falls back to wait a fixed amount of time until data can be
++      retrieved.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    proximity@70 {
++      compatible = "maxbotix,mb1232";
++      reg = <0x70>;
++      interrupt-parent = <&gpio2>;
++      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++    };
+-- 
+2.11.0
