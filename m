@@ -2,125 +2,106 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85930C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4B3C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5259120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACA120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYb0F+L8"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BzbdOk5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437803AbfIWOzA (ORCPT
+        id S2440150AbfIWOze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:55:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40880 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfIWOzA (ORCPT
+        Mon, 23 Sep 2019 10:55:34 -0400
+Received: from mail.efficios.com ([167.114.142.138]:59826 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfIWOze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:55:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v38so13133735edm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 07:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SlUYkwpj6yu5lfNnzsV0ggIvbULgs9iiQHnWd1Afxa0=;
-        b=HYb0F+L8Uu70AC2b7u/vm9E/UTCUBNxWVvqGtZojbim+5mMU74lFioo671pSDz9P2L
-         W+nJL0RP82Xr2FDuvZimleCdEWnExfBYatWkPRtrlhOCSTl8VeZkgOlu/qwF7YoROd5D
-         P9uqdhVdBlNRlUmMX0mjCx2pQyHbkZgdqDq7bj/9V4K8TxOUB6ReswkEPWhSZ6lhY7pp
-         8NRA9YLsV0jEazqSmB89y3bzvAFp+0X8fxwsWucNCxNcSFOitHYQKRW9yl8BiWVv79QH
-         EM9Tw4iWZoWXUqI5Q2GpWkV2CYg0GtBk1eha7V2ZCTavuhulrKLfSpTn4HX941Scutf2
-         ZyHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SlUYkwpj6yu5lfNnzsV0ggIvbULgs9iiQHnWd1Afxa0=;
-        b=GphANIpjDahxXEpoJO3CD0B1OhFoMm/2zRJtgGWCeR3Q+Y4nzCzrpP4RrKkH4OCrp6
-         LKcUUPpY/Ex7bylkUGH6XEvRaqjSZ+2BHGX+dAupCCIau3nqZ+Mz8rYMHJWry6r1cgpV
-         wV1EQ2Qk8KAIEHMxwrKlXmUKvK78mPIVaq/Ls+b4PkRtDdpriTndxNZWvD0tAeKkVq8C
-         x+eHIhP9jrQpmVskqGYdum9ABReWWhmUW4iEY1svOR7E8lEAcbY70sU/F45ewHwhvHzZ
-         27+yJXxw2+WNwIXWa+XBe9Ao1RDAG7ov+m7bTMsE+2kAe4MjpvSQAWW7TvYrUW3UkvWZ
-         4FaQ==
-X-Gm-Message-State: APjAAAU8GqxNz5h5fhLchnaZFCYHB4k8XXV2sw41I7LoAvluNmfGJQ7B
-        B/AmPYtpVrkCwRIWBvlHtRE=
-X-Google-Smtp-Source: APXvYqxdsHr1OP7HdBc78VihnThRuQ0b2LN5hfAfeWkJmkwSi8pr/cq+zIEZpMtI27Sa3oIeCrc5cg==
-X-Received: by 2002:a17:906:5c16:: with SMTP id e22mr256576ejq.105.1569250498627;
-        Mon, 23 Sep 2019 07:54:58 -0700 (PDT)
-Received: from linux.fritz.box (200116b864096d0082c6903ef0ca246b.dip.versatel-1u1.de. [2001:16b8:6409:6d00:82c6:903e:f0ca:246b])
-        by smtp.googlemail.com with ESMTPSA id n6sm2418866edr.27.2019.09.23.07.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 07:54:58 -0700 (PDT)
-From:   "Christopher N. Hesse" <raymanfx@gmail.com>
-Cc:     penguin-kernel@I-love.SAKURA.ne.jp,
-        "Christopher N. Hesse" <raymanfx@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: android: ashmem: Fix zero area size return code
-Date:   Mon, 23 Sep 2019 16:54:51 +0200
-Message-Id: <20190923145451.13341-1-raymanfx@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 23 Sep 2019 10:55:34 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id D71D224C023;
+        Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id qgDHClAprNC9; Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 7C33C24C020;
+        Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7C33C24C020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1569250532;
+        bh=3pilhXfhstK3I0y0oTTPZ24Mv3cAWOmhYyowV2AGW80=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=BzbdOk5YimKiaL6tFJA3tQqN8Z+dDx719ZQ6Hmla9F8SqDzbR96hSQ2gs5BozAmXV
+         TNrZ5nIkKbeFUH3MrbZkVe+tnriML7WeAWvdfqsawlw4lUhHrXqFijb8p3sJofNtuC
+         KX+M2TDbjPz3n4PK4mhREUMVoAITu4pgluQQUlyHAmFL+CI5ZOsldJDuuGHDZIQzze
+         yBddZx8H0a5vo1N1lhhu0dNMgp/XYW7YzDn7qWO1wO3V359h0xtQMm0MzlLqPREeVm
+         qXJGZkRf2y3eG7j8skIlZV59LZHVnly3meROUpJD0xqYNFxzj7QDwerR6HkaUybbrr
+         +qXqKCTW8eTrg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id A5b1ERhSmWWP; Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 65BB724C014;
+        Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+Date:   Mon, 23 Sep 2019 10:55:32 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <485879119.4072.1569250532294.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190923090636.GH2349@hirez.programming.kicks-ass.net>
+References: <20190919173705.2181-1-mathieu.desnoyers@efficios.com> <20190923090636.GH2349@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH for 5.4 0/7] Membarrier fixes and cleanups
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: Membarrier fixes and cleanups
+Thread-Index: LbUKojQuby/Rl4A+CY7x4S3KDIsbJQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous inline comment stated that a size of zero would make the
-ashmem_read_iter function return EOF, but it returned 0 instead.
+----- On Sep 23, 2019, at 5:06 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-Looking at other functions, such as ashmem_llseek or ashmem_mmap, it
-appears the convention is to return -EINVAL if the region size is unset or
-zero.
+> On Thu, Sep 19, 2019 at 01:36:58PM -0400, Mathieu Desnoyers wrote:
+>> Hi,
+>> 
+>> Those series of fixes and cleanups are initially motivated by the report
+>> of race in membarrier, which can load p->mm->membarrier_state after mm
+>> has been freed (use-after-free).
+>> 
+> 
+> The lot looks good to me; what do you want done with them (them being
+> RFC and all) ?
 
-To be consistent with the checks, I changed the one occurrence that used
-the ! operator to compare the size to check against equal-to-zero instead.
+I can either re-send them without the RFC tag, or you can pick them directly
+through the scheduler tree.
 
-Signed-off-by: Christopher N. Hesse <raymanfx@gmail.com>
----
- drivers/staging/android/ashmem.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+As you prefer,
 
-diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-index 74d497d39c5a..6af8130db0d7 100644
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -291,9 +291,11 @@ static ssize_t ashmem_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- 
- 	mutex_lock(&ashmem_mutex);
- 
--	/* If size is not set, or set to 0, always return EOF. */
--	if (asma->size == 0)
-+	/* If size is not set, or set to 0, always return EINVAL. */
-+	if (asma->size == 0) {
-+		ret = -EINVAL;
- 		goto out_unlock;
-+	}
- 
- 	if (!asma->file) {
- 		ret = -EBADF;
-@@ -359,7 +361,7 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- 	mutex_lock(&ashmem_mutex);
- 
- 	/* user needs to SET_SIZE before mapping */
--	if (!asma->size) {
-+	if (asma->size == 0) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+Thanks!
+
+Mathieu
+
+
 -- 
-2.23.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
