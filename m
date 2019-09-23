@@ -2,189 +2,122 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFEEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD60C4740C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2552020820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B0C20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wrdIO1Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407145AbfIWJbh (ORCPT
+        id S2407175AbfIWJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 05:31:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:11759 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405478AbfIWJbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:31:37 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F3D2CA26685;
-        Mon, 23 Sep 2019 09:31:35 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BAFD31001B11;
-        Mon, 23 Sep 2019 09:31:31 +0000 (UTC)
-Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        linux-hyperv@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20190909114830.662-1-david@redhat.com>
- <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
- <20190923085807.GD6016@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
-Date:   Mon, 23 Sep 2019 11:31:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 05:31:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50696 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405478AbfIWJbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 05:31:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so9056635wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 02:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=x3JttSp0N6ofBW5LzQ0aulDXvYerTBb+rX2QpQHK3GA=;
+        b=wrdIO1PoBF2ps/wgVPQ7uZgIs5Zg0O6ec2Mr5yDnG+hTFoHtn0Gydw0y2TxLNoO7RS
+         uzvON/ffkt8vQQwgbhQdf3Dm1NkL2eTxSaLF3pVN9rRInxT2rs8wVgjagDecCPN3VvRv
+         IUuyLvPkD1/PlRKdlyhxvW335/fBDsuKetZwZszZNU8n3cBX4CkiA/4RzSb/AsJnPJAZ
+         rxQ8xZt3QRrn63KbNcrr2D9xv5NvUpA878d8d37TxTIwnW9UOhO5a92vPuLtccS/mDxw
+         3sgvVDUOXZTePA1JrDwk3o6qSml1QB5fvshCdgkifFi0U2UzrXbkKAI6UDibIxNwIiQX
+         sq6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=x3JttSp0N6ofBW5LzQ0aulDXvYerTBb+rX2QpQHK3GA=;
+        b=beYhBOfrV2ITgwYTh/+GHeXeEilQ6V2IY1sByUUDR+PWT1qGJRiI9xG3/Z6dLaudnt
+         9K7/yHNdUfVZvbGeXfcAEArmL4I8MtWDs9VzBnwncCopkgq3f0Hc638rk53TmmKQeq55
+         CV34jUHkV6PbZWLCwSFyO44ooBQQS/9ls6lOvur6H5QKBmaOH2J1IcuFY08Qyjk+f8VK
+         fxOCo17JZKDTOVnyXHL0NMi0AXCUccUKBlsYm23NzjjwUeqj++spKfo5gWV0uYdkyQam
+         8lKaBIHMYTK7XSb51sCcS5rHuOWmzsM5IRZ0tTAFT4igz2A0GbqiEqNPwn6VK5b+mTc8
+         0kOQ==
+X-Gm-Message-State: APjAAAWtdk6yQ966MshAJUW080S/KlkxO2YwIA1kIMorV/2mREsjXV8R
+        4QeL4Rl0lY2lXEYUaQt9MQsa8Q==
+X-Google-Smtp-Source: APXvYqyjmPFntItpiTfyGO7Ke1GU6GekG2Zcx3JJvC7jGTA2yTviIKEUlhQB4iQRI8K745mhVLBAxw==
+X-Received: by 2002:a7b:c758:: with SMTP id w24mr11891113wmk.148.1569231102351;
+        Mon, 23 Sep 2019 02:31:42 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v4sm15675554wrg.56.2019.09.23.02.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 02:31:41 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        narmstrong@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 4/5] clk: meson: meson8b: don't register the XTAL clock when provided via OF
+In-Reply-To: <20190921151223.768842-5-martin.blumenstingl@googlemail.com>
+References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com> <20190921151223.768842-5-martin.blumenstingl@googlemail.com>
+Date:   Mon, 23 Sep 2019 11:31:40 +0200
+Message-ID: <1jwodzs6ir.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923085807.GD6016@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Mon, 23 Sep 2019 09:31:36 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.09.19 10:58, Michal Hocko wrote:
-> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
->> On 09.09.19 13:48, David Hildenbrand wrote:
->>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
->>>
->>> Let's replace the __online_page...() functions by generic_online_page().
->>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
->>> can simpy re-use the generic function.
->>>
->>> Only compile-tested.
->>>
->>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
->>>
->>> David Hildenbrand (3):
->>>   mm/memory_hotplug: Export generic_online_page()
->>>   hv_balloon: Use generic_online_page()
->>>   mm/memory_hotplug: Remove __online_page_free() and
->>>     __online_page_increment_counters()
->>>
->>>  drivers/hv/hv_balloon.c        |  3 +--
->>>  include/linux/memory_hotplug.h |  4 +---
->>>  mm/memory_hotplug.c            | 17 ++---------------
->>>  3 files changed, 4 insertions(+), 20 deletions(-)
->>>
->>
->> Ping, any comments on this one?
-> 
-> Unification makes a lot of sense to me. You can add
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> I will most likely won't surprise if I asked for more here though ;)
+On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-I'm not surprised, but definitely not in a negative sense ;) I was
-asking myself if we could somehow rework this, too.
+> The XTAL clock is an actual crystal on the PCB. Thus the meson8b clock
+> driver should not register the XTAL clock - instead it should be
+> provided via .dts and then passed to the clock controller.
+>
+> Skip the registration of the XTAL clock if a parent clock is provided
+> via OF. Fall back to registering the XTAL clock if this is not the case
+> to keep support for old .dtbs.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/clk/meson/meson8b.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> index b785b67baf2b..15ec14fde2a0 100644
+> --- a/drivers/clk/meson/meson8b.c
+> +++ b/drivers/clk/meson/meson8b.c
+> @@ -3682,10 +3682,16 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
+>  		meson8b_clk_regmaps[i]->map = map;
+>  
+>  	/*
+> -	 * register all clks
+> -	 * CLKID_UNUSED = 0, so skip it and start with CLKID_XTAL = 1
+> +	 * always skip CLKID_UNUSED and also skip XTAL if the .dtb provides the
+> +	 * XTAL clock as input.
+>  	 */
+> -	for (i = CLKID_XTAL; i < CLK_NR_CLKS; i++) {
+> +	if (of_clk_get_parent_count(np))
 
-> I have to confess I really detest the whole concept of a hidden callback
-> with a very weird API. Is this something we can do about? I do realize
-> that adding a callback would require either cluttering the existing APIs
-> but maybe we can come up with something more clever. Or maybe existing
-> external users of online callback can do that as a separate step after
-> the online is completed - or is this impossible due to locking
-> guarantees?
-> 
+If we are going for this, I'd prefer if could explicity check for the
+clock named "xtal" instead of just checking if DT has clocks.
 
-The use case of this (somewhat special) callback really is to avoid
-selected (unbacked in the hypervisor) pages to get put to the buddy just
-now, but instead to defer that (sometimes, defer till infinity ;) ).
-Especially, to hinder these pages from getting touched at all. Pages
-that won't be put to the buddy will usually get PG_offline set (e.g.,
-Hyper-V and XEN) - the only two users I am aware of.
-
-For Hyper-V (and also eventually virtio-mem), it is important to set
-PG_offline before marking the section to be online (SECTION_IS_ONLINE).
-Only this way, PG_offline is properly set on all pfn_to_online_page()
-pages, meaning "don't touch this page" - e.g., used to skip over such
-pages when suspending or by makedumpfile to skip over such offline pages
-when creating a memory dump.
-
-So if we would e.g., try to piggy-back onto the memory_notify()
-infrastructure, we could
-1. Online all pages to the buddy (dropping the callback)
-2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
--> in the notifier, pull pages from the buddy, mark sections online
-3. Set all involved sections online (online_mem_sections())
-
-However, I am not sure what actually happens after 1. - we are only
-holding the device hotplug lock and the memory hotplug lock, so the
-pages can just get allocated. Also, it sounds like more work and code
-for the same end result (okay, if the rework is really necessary, though).
-
-So yeah, while the current callback might not be optimal, I don't see an
-easy and clean way to rework this. With the change in this series we are
-at least able to simply defer doing what would have been done without
-the callback - not perfect but better.
-
-Do you have anything in mind that could work out and make this nicer?
-
--- 
-
-Thanks,
-
-David / dhildenb
+> +		i = CLKID_PLL_FIXED;
+> +	else
+> +		i = CLKID_XTAL;
+> +
+> +	/* register all clks */
+> +	for (; i < CLK_NR_CLKS; i++) {
+>  		/* array might be sparse */
+>  		if (!clk_hw_onecell_data->hws[i])
+>  			continue;
+> -- 
+> 2.23.0
