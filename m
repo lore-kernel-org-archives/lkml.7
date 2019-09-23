@@ -2,98 +2,75 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F89C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456EFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0706E2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569222806;
-	bh=x+yd3boIMCsHaSZk+TqzekVrhgOFXF6EFImnFK48aXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Duw5Rj+5N34wmViYCLtE1osDjIy3gqGQzqexbSDQZ6Jm2GoiU6Q7DsG2rxo1RFsMF
-	 BgQnFea/52y4GfQEZsExVn/RdhuQFo91BOuCqI0EgTmiqMcLy+jc0bbC053T9Els9E
-	 saTlz8C2OJFUtzrJp8VxcnbdEXua+nsrGt0dlNzM=
+	by mail.kernel.org (Postfix) with ESMTP id 10B0120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 07:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ghzSBv0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbfIWHNY (ORCPT
+        id S2393251AbfIWHTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 03:13:24 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:33925 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfIWHNY (ORCPT
+        Mon, 23 Sep 2019 03:19:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40042 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729404AbfIWHTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 03:13:24 -0400
-Received: by mail-wr1-f51.google.com with SMTP id a11so12651962wrx.1;
-        Mon, 23 Sep 2019 00:13:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VSmtFloVdT4HdH3hqBjqDRmLKrDCbhhNO9xFa74XQG8=;
-        b=G3D9JQFe1aD/VVzJlK3yQVrMZ1uDbaxPU5zwYdUMeeJFm2VhiIYSh9yEdXGY9DPAuN
-         lKIbFbVCtESG9c0aEpkNV7b6kAaWeQTqSlx+9BUipngGskHZsKdgi+Lx5Z0WFdYku3Jt
-         M5piux6/h3te81uz4TcotcC2IA2Mu2Udml+0JlpQZq8+eWnfWRx70Vk37bWwmswdBrcX
-         IxmAJNAWp88xeYgh4F1F6L3RmCoboyUvzDXijEk6lozbhFxnpnqRPo/9Dmy4aX5pdNxp
-         P/oksAL7Q36C9wivQJhy34pYj6h6cYAwID48lrezQ32y7bE3qPwJUqaQd2QSrmAfR00X
-         cqrA==
-X-Gm-Message-State: APjAAAUrRkh7z3puhKOCH6qxUKUF9NlK9WQ7j3lza/sJq85oB+7qKbO1
-        I4/GV9g1Dx4pqPHSmpuGFi4=
-X-Google-Smtp-Source: APXvYqzX7JpyywmwssCCGsX2MCih3fvE8W7RgPMGaeHxIMgUzIQu7rnAOAOtO0lypZquJEuBiDcaVQ==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr9285624wrv.315.1569222800656;
-        Mon, 23 Sep 2019 00:13:20 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id a18sm20701185wrh.25.2019.09.23.00.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 00:13:19 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 09:13:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [RFT v3 4/8] ARM: dts: exynos: Remove MCT subnode for interrupt
- map on Exynos4210
-Message-ID: <20190923071317.GA4246@pi3>
-References: <20190921170152.5033-1-krzk@kernel.org>
- <CGME20190921203810epcas3p39f3d9e3224d2c5ef61c1e18df2ab403d@epcas3p3.samsung.com>
- <20190921170152.5033-4-krzk@kernel.org>
- <c1d02aa3-b5f2-1c5b-0b7b-8749e7c0ce9a@samsung.com>
+        Mon, 23 Sep 2019 03:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ycpk1YiwPb/Tbr+693kk82MkGbYMJrQgSJFb5bbpHPw=; b=ghzSBv0Na1HFvhyhj5bATlwqp
+        D/cF3iVNybe8tkimAk7EXEtl8I8mXPKPEHqFQYh8Mu59XuOsGVYhkn8DkcDizK/QfQBfQp8Ji+5DK
+        SrbrZKqSnYCljgtaZGfsGEkCSqNsSQDJKrTDWSmRMJdWhhrVh4gVw4zd70z8FayB12QDUYVvusyFy
+        6VMacB5ILeuiXZC4qdvV5o4Feh+sTOCBiAITTwk7hXqVx7tRSFIfklqG2s87y79Bg3rXOTr+AtU/T
+        lBK9RMlErFeZooh4CqdfmKUbEosQ+g3OGjTGK5u4CeOKhiJwwV2ABNseiEGOXnx/emVRzRSjMyHxN
+        +d6pCty/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCIdE-0000ui-TI; Mon, 23 Sep 2019 07:19:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 931FB303DFD;
+        Mon, 23 Sep 2019 09:18:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8EE3529E3288E; Mon, 23 Sep 2019 09:19:32 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 09:19:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] sched/wait: Add wait_threshold
+Message-ID: <20190923071932.GD2349@hirez.programming.kicks-ass.net>
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c1d02aa3-b5f2-1c5b-0b7b-8749e7c0ce9a@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <d99ce2f7c98d4408aea50f515bbb6b89bc7850e8.1569139018.git.asml.silence@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 08:56:46AM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
+On Sun, Sep 22, 2019 at 11:08:50AM +0300, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
 > 
-> On 21.09.2019 19:01, Krzysztof Kozlowski wrote:
-> > Multi Core Timer node has interrupts routed to two different parents -
-> > GIC and combiner.  This was modeled with a interrupt-map within a
-> > subnode but can be expressed in an easier and more common way, directly
-> > in the node itself.
-> 
-> Maybe we should simply use 'interrupts-extended' based approach and 
-> simplify mct node even more (get rid of interrupt-parent, interrupts, 
-> size/address cells)?
+> Add wait_threshold -- a custom wait_event derivative, that waits until
+> a value is equal to or greater than the specified threshold.
 
-Indeed, that looks like the tool for this job. Thanks for hint, I'll try
-it.
+This is quite insufficient justification for this monster... what exact
+semantics do you want?
 
-Best regards,
-Krzysztof
-
+Why can't you do this exact same with a slightly more complicated @cond
+?
