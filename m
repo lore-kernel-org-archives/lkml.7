@@ -2,27 +2,27 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F5C32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99EDC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135A120856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D38C20867
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408303AbfIWN6T (ORCPT
+        id S2408241AbfIWN6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:58:19 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:42132 "EHLO mx1.emlix.com"
+        Mon, 23 Sep 2019 09:58:16 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:42116 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408206AbfIWN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408205AbfIWN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 09:58:16 -0400
 Received: from mailer.emlix.com (unknown [81.20.119.6])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 57A3C600FF;
+        by mx1.emlix.com (Postfix) with ESMTPS id 462A25FD5D;
         Mon, 23 Sep 2019 15:58:14 +0200 (CEST)
 From:   Philipp Puschmann <philipp.puschmann@emlix.com>
 To:     linux-kernel@vger.kernel.org
@@ -32,12 +32,10 @@ Cc:     jlu@pengutronix.de, yibin.gong@nxp.com, fugang.duan@nxp.com,
         festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH v5 3/3] dmaengine: imx-sdma: drop redundant variable
-Date:   Mon, 23 Sep 2019 15:58:08 +0200
-Message-Id: <20190923135808.815-4-philipp.puschmann@emlix.com>
+Subject: [PATCH v5 0/3] Fix UART DMA freezes for i.MX SOCs
+Date:   Mon, 23 Sep 2019 15:58:05 +0200
+Message-Id: <20190923135808.815-1-philipp.puschmann@emlix.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190923135808.815-1-philipp.puschmann@emlix.com>
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,53 +43,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sdma_prep_dma_cyclic buf is redundant. Drop it.
+For some years and since many kernel versions there are reports that
+RX UART DMA channel stops working at one point. So far the usual
+workaround was to disable RX DMA. This patches fix the underlying
+problem.
+
+When a running sdma script does not find any usable destination buffer
+to put its data into it just leads to stopping the channel being
+scheduled again. As solution we manually retrigger the sdma script for
+this channel and by this dissolve the freeze.
+
+While this seems to work fine so far, it may come to buffer overruns
+when the channel - even temporary - is stopped. This case has to be
+addressed by device drivers by increasing the number of DMA periods.
+
+This patch series was tested with the current kernel and backported to
+kernel 4.15 with a special use case using a WL1837MOD via UART and
+provoking the hanging of UART RX DMA within seconds after starting a
+test application. It resulted in well known
+  "Bluetooth: hci0: command 0x0408 tx timeout"
+errors and complete stop of UART data reception. Our Bluetooth traffic
+consists of many independent small packets, mostly only a few bytes,
+causing high usage of periods.
 
 Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
+
 ---
 
-Changelog v3,v4,v5:
- - no changes
+Changelog v5:
+ - join with patch version from Jan Luebbe
+ - adapt comments and patch descriptions
+ - add Reviewed-by
 
+Changelog v4:
+ - fixed the fixes tags
+ 
+Changelog v3:
+ - fixes typo in dma_wmb
+ - add fixes tags
+ 
 Changelog v2:
- - add Reviewed-by tag
+ - adapt title (this patches are not only for i.MX6)
+ - improve some comments and patch descriptions
+ - add a dma_wb() around BD_DONE flag
+ - add Reviewed-by tags
+ - split off  "serial: imx: adapt rx buffer and dma periods"
 
- drivers/dma/imx-sdma.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Philipp Puschmann (3):
+  dmaengine: imx-sdma: fix buffer ownership
+  dmaengine: imx-sdma: fix dma freezes
+  dmaengine: imx-sdma: drop redundant variable
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 0b1d6a62423d..0d62664e534e 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1549,7 +1549,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
- 	struct sdma_engine *sdma = sdmac->sdma;
- 	int num_periods = buf_len / period_len;
- 	int channel = sdmac->channel;
--	int i = 0, buf = 0;
-+	int i;
- 	struct sdma_desc *desc;
- 
- 	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
-@@ -1570,7 +1570,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
- 		goto err_bd_out;
- 	}
- 
--	while (buf < buf_len) {
-+	for (i = 0; i < num_periods; i++) {
- 		struct sdma_buffer_descriptor *bd = &desc->bd[i];
- 		int param;
- 
-@@ -1597,9 +1597,6 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
- 		bd->mode.status = param;
- 
- 		dma_addr += period_len;
--		buf += period_len;
--
--		i++;
- 	}
- 
- 	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
+ drivers/dma/imx-sdma.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
+
 -- 
 2.23.0
 
