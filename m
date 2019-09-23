@@ -2,111 +2,242 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA77C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D1C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4183A20867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p+BtS+Cq"
+	by mail.kernel.org (Postfix) with ESMTP id CCD13214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439895AbfIWO3g (ORCPT
+        id S2394395AbfIWO3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:29:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59254 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407299AbfIWO3g (ORCPT
+        Mon, 23 Sep 2019 10:29:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41335 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389590AbfIWO3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:29:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEIeL0102769;
-        Mon, 23 Sep 2019 14:28:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=q5TJ75p55cKVn+qFcqXUsCLG1Wf/7eC+Ue1ViO1Q42c=;
- b=p+BtS+CqyxQjrnq4MQcvate3UyrpnBNh6AHYOGpkNCKCOucPkYDOS866v0J+SOSbrDj2
- lqcYmWf4qTUxwpeZjH4Xd9kk2ggannIyp23Ev5M4KnLEAaFvJBfpgSZKoO+km4NIMWTz
- Liau1kqyj1A64T1yXmbufVZZwTk5TFyjkrCgAdqHuTLGB9RiIFNhJjJQtp2h3b+9R4Vm
- E5UvlGrTMtzAkk8GDzzteog57xCasZNwqOOYQeT7kTtXj0T/Pva/+dZCUtk8Istc3aac
- PEheyeMAi24bkgENf3rFNjaIsbyNbaQH9EAhBIgXEHCK7uMyNtim6g07Vf4rSSQpFQjj WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2v5cgqq74c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 14:28:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8NEJDET129046;
-        Mon, 23 Sep 2019 14:26:49 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2v5bpgfupy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 14:26:48 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8NEQgVu011155;
-        Mon, 23 Sep 2019 14:26:42 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Sep 2019 07:26:42 -0700
-Date:   Mon, 23 Sep 2019 17:26:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] rcu/nocb: Fix uninitialized variable in nocb_gp_wait()
-Message-ID: <20190923142634.GC31251@mwanda>
+        Mon, 23 Sep 2019 10:29:54 -0400
+Received: from [172.58.27.190] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCPLW-0001df-Gy; Mon, 23 Sep 2019 14:29:47 +0000
+Date:   Mon, 23 Sep 2019 16:29:34 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: For review: pidfd_send_signal(2) manual page
+Message-ID: <20190923142932.2gujbddnzyp4ujeu@wittgenstein>
+References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909230140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909230140
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We never set this to false.  This probably doesn't affect most people's
-runtime because GCC will automatically initialize it to false at certain
-common optimization levels.  But that behavior is related to a bug in
-GCC and obviously should not be relied on.
+On Mon, Sep 23, 2019 at 11:12:00AM +0200, Michael Kerrisk (man-pages) wrote:
+> Hello Christian and all,
+> 
+> Below, I have the rendered version of the current draft of
+> the pidfd_send_signal(2) manual page that I have written.
+> The page source can be found in a Git branch at:
+> https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/log/?h=draft_pidfd
+> 
+> I would be pleased to receive corrections and notes on any
+> details that should be added. (For example, are there error
+> cases that I have missed?)
+> 
+> Would you be able to review please?
 
-Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- kernel/rcu/tree_plugin.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Michael,
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 2defc7fe74c3..fa08d55f7040 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -1946,7 +1946,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 	int __maybe_unused cpu = my_rdp->cpu;
- 	unsigned long cur_gp_seq;
- 	unsigned long flags;
--	bool gotcbs;
-+	bool gotcbs = false;
- 	unsigned long j = jiffies;
- 	bool needwait_gp = false; // This prevents actual uninitialized use.
- 	bool needwake;
--- 
-2.20.1
+A big big thank you for doing this! Really appreciated.
+I'm happy to review this!
 
+> 
+> Thanks,
+> 
+> Michael
+> 
+> 
+> NAME
+>        pidfd_send_signal - send a signal to a process specified by a file
+>        descriptor
+> 
+> SYNOPSIS
+>        int pidfd_send_signal(int pidfd, int sig, siginfo_t info,
+>                              unsigned int flags);
+> 
+> DESCRIPTION
+>        The pidfd_send_signal() system call sends the signal  sig  to  the
+>        target  process  referred  to by pidfd, a PID file descriptor that
+>        refers to a process.
+> 
+>        If the info argument points to a  siginfo_t  buffer,  that  buffer
+>        should be populated as described in rt_sigqueueinfo(2).
+> 
+>        If  the  info  argument  is  a NULL pointer, this is equivalent to
+>        specifying a pointer to a siginfo_t buffer whose fields match  the
+>        values  that  are  implicitly supplied when a signal is sent using
+>        kill(2):
+> 
+>        *  si_signo is set to the signal number;
+>        *  si_errno is set to 0;
+>        *  si_code is set to SI_USER;
+>        *  si_pid is set to the caller's PID; and
+>        *  si_uid is set to the caller's real user ID.
+> 
+>        The calling process must either be in the same  PID  namespace  as
+>        the  process  referred  to  by pidfd, or be in an ancestor of that
+>        namespace.
+> 
+>        The flags argument is reserved for  future  use;  currently,  this
+>        argument must be specified as 0.
+> 
+> RETURN VALUE
+>        On  success,  pidfd_send_signal()  returns  0.   On success, -1 is
+
+This should probably be "On error, -1 is [...]".
+
+>        returned and errno is set to indicate the cause of the error.
+> 
+> ERRORS
+>        EBADF  pidfd is not a valid PID file descriptor.
+> 
+>        EINVAL sig is not a valid signal.
+> 
+>        EINVAL The calling process is not in a PID namespace from which it
+>               can send a signal to the target process.
+> 
+>        EINVAL flags is not 0.
+> 
+>        EPERM  The  calling  process  does not have permission to send the
+>               signal to the target process.
+> 
+>        EPERM  pidfd  doesn't  refer   to   the   calling   process,   and
+>               info.si_code is invalid (see rt_sigqueueinfo(2)).
+> 
+>        ESRCH  The target process does not exist.
+> 
+> VERSIONS
+>        pidfd_send_signal() first appeared in Linux 5.1.
+> 
+> CONFORMING TO
+>        pidfd_send_signal() is Linux specific.
+> 
+> NOTES
+>        Currently, there is no glibc wrapper for this system call; call it
+>        using syscall(2).
+> 
+>    PID file descriptors
+>        The pidfd argument is a PID file  descriptor,  a  file  descriptor
+>        that  refers  to  process.  Such a file descriptor can be obtained
+>        in any of the following ways:
+> 
+>        *  by opening a /proc/[pid] directory;
+> 
+>        *  using pidfd_open(2); or
+> 
+>        *  via the PID file descriptor that  is  returned  by  a  call  to
+>           clone(2) or clone3(2) that specifies the CLONE_PIDFD flag.
+> 
+>        The  pidfd_send_signal()  system call allows the avoidance of race
+>        conditions that occur when using traditional interfaces  (such  as
+>        kill(2)) to signal a process.  The problem is that the traditional
+>        interfaces specify the target process via a process ID (PID), with
+>        the  result  that the sender may accidentally send a signal to the
+>        wrong process if the originally intended target process has termi‐
+>        nated  and its PID has been recycled for another process.  By con‐
+>        trast, a PID file descriptor is a stable reference to  a  specific
+>        process;  if  that  process  terminates,  then the file descriptor
+>        ceases to be  valid  and  the  caller  of  pidfd_send_signal()  is
+>        informed of this fact via an ESRCH error.
+> 
+> EXAMPLE
+>        #define _GNU_SOURCE
+>        #include <limits.h>
+>        #include <signal.h>
+>        #include <fcntl.h>
+>        #include <stdio.h>
+>        #include <string.h>
+>        #include <stdlib.h>
+>        #include <unistd.h>
+>        #include <sys/syscall.h>
+> 
+>        #ifndef __NR_pidfd_send_signal
+>        #define __NR_pidfd_send_signal 424
+>        #endif
+> 
+>        static
+>        int pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
+>                unsigned int flags)
+>        {
+>            return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
+>        }
+> 
+>        int
+>        main(int argc, char *argv[])
+>        {
+>            siginfo_t info;
+>            char path[PATH_MAX];
+>            int pidfd, sig;
+> 
+>            if (argc != 3) {
+>                fprintf(stderr, "Usage: %s <pid> <signal>\n", argv[0]);
+>                exit(EXIT_FAILURE);
+>            }
+> 
+>            sig = atoi(argv[2]);
+> 
+>            /* Obtain a PID file descriptor by opening the /proc/PID directory
+>               of the target process */
+> 
+>            snprintf(path, sizeof(path), "/proc/%s", argv[1]);
+> 
+>            pidfd = open(path, O_RDONLY);
+>            if (pidfd == -1) {
+>                perror("open");
+>                exit(EXIT_FAILURE);
+>            }
+> 
+>            /* Populate a 'siginfo_t' structure for use with
+>               pidfd_send_signal() */
+> 
+>            memset(&info, 0, sizeof(info));
+>            info.si_code = SI_QUEUE;
+>            info.si_signo = sig;
+>            info.si_errno = 0;
+>            info.si_uid = getuid();
+>            info.si_pid = getpid();
+>            info.si_value.sival_int = 1234;
+> 
+>            /* Send the signal */
+> 
+>            if (pidfd_send_signal(pidfd, sig, &info, 0) == -1) {
+>                perror("pidfd_send_signal");
+>                exit(EXIT_FAILURE);
+>            }
+> 
+>            exit(EXIT_SUCCESS);
+>        }
+> 
+> SEE ALSO
+>        clone(2),   kill(2),   pidfd_open(2),  rt_sigqueueinfo(2),  sigac‐
+>        tion(2), pid_namespaces(7), signal(7)
+> 
