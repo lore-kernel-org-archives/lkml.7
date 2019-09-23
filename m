@@ -2,149 +2,124 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BEBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB65C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB0C20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:17:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t8VS6tSn"
+	by mail.kernel.org (Postfix) with ESMTP id 1073E2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569251957;
+	bh=Lm+zAU2cPaj1e8Ux2VjuHcR6luxiwka3ykYzHf7wJYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TUe/taK5Sv/u24YO1lXJe3RcHcokyqCK2yr1DzMeaEl5TMoIeTw/SMS/o/m0DQraL
+	 X0JE57Pzg/KOgHSLTMIouWNWZsNgIUYDI2XY6chXCA8fpQLSHGOFv6lRP6RNS3HVD4
+	 yqDVFRZfIDyRZ8DoGp6yzQCt+ZezwOTGs6iGaFr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfIWPRR (ORCPT
+        id S1727224AbfIWPTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:17:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43144 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfIWPRQ (ORCPT
+        Mon, 23 Sep 2019 11:19:16 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43767 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfIWPTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:17:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BQxmWDdzGIFE7S88Yi92UG2auB0mbgTz3kRl3Taa3FI=; b=t8VS6tSnmrlzM+Dk9CyzGPLMt
-        N8isqB9JLD9XPobqT8fc3dfzorxqXbSBbiePOLH9slgkt7c8/x6l847kAc6lrKnV82aAO5bDorIMu
-        YjjxsscQB6tQ50zT9SFofb+NFESL297iEmmU8/JL29dFjRYomSrEu+QShhTIPw86PoSsMyCz+N/PP
-        LCH1puLwbn+9Vw8dPbpuqmsdVuBEbsqqLtzmB4pFdqhwkPpTebf2j/lYsEMVsp/CuFdG7Po9RBYan
-        uhdIMZv8znk6MUH0UjYoAWnErPz6C7zS3yuGzEh25kpJXJFr0fXRrE7G8EnTUy9x8JgpkFEGhRUbf
-        J3QKktDWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCQ3h-0004cS-VH; Mon, 23 Sep 2019 15:15:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8633303DFD;
-        Mon, 23 Sep 2019 17:14:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D4E7C20C3E176; Mon, 23 Sep 2019 17:15:19 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 17:15:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
-        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org, mhocko@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190923151519.GE2369@hirez.programming.kicks-ass.net>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+        Mon, 23 Sep 2019 11:19:15 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h126so15770455qke.10;
+        Mon, 23 Sep 2019 08:19:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BvW4XrcJWJ2oTXG4RUy/CKw7q4mi60s93JIV6af2rgQ=;
+        b=kZ9aYPC16gNRz8i6VP9vO/K4GSoP3wLXMPBBsvZekcVzoYCp/ynmSRnetM732vuOVt
+         OplO7ek58sNltclJVPlLk3kXaWOY0/aKmhkIGg/ZzyowhzqQUH1704eivsGOhumopc0r
+         QwYRF1yD3mYkDkXi89VJAG8h7DHCWbt3vyQGbhgozsC7BEsdu8Pa8lYemXVkNKbfNRyq
+         9z4vXH6unj3EQUqEzNrtgWBcwkyLUl7UQ0NNDlmcHhAcaHpgREmhh4sGDh3l/6f5ffVN
+         FoJpE/QOETTp9mQCKVr5lc5jEkxhyokKa2fOASiGdNRQPkiyxgIBLN1SLU5HridFuQl+
+         JqLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BvW4XrcJWJ2oTXG4RUy/CKw7q4mi60s93JIV6af2rgQ=;
+        b=ab5R/KqifupnEDqe79PaHxutO2Ta+oOTf59Spqmmr9Ri8pq55Egq4pfdaF6jjJsQI1
+         J1nKTDHPF1umzevY4b+MsIScbyAxnChtLqavgbH+HZwJzRr/IOHbdEo8TPmgM9D4h/SU
+         A5nURPk1xBlckKxHQNehZN8p6x3cvdKG9Tho7zG0PysINscm1VZ7TvlUhKobXg0qyy72
+         iqdHoijlsvAvt06iCdapKsJ2HktemgVB1She5xkkBcOOw3l4LKGy4YRoe3qAPGraZeCK
+         SM41simnrW1EG6zzvjncYw8AOx8bnXxCX5CLO/WBApBxrgGuITV4CNl2iIbOKsiUjT6/
+         YKiw==
+X-Gm-Message-State: APjAAAWq3crtVdIFXia0Hc9AD6XQZhwdC5MK363EfsOa9Y7ZFIcaCGnj
+        i06xUyAfj21QBvUMRws+Byk=
+X-Google-Smtp-Source: APXvYqwI5hVrjpHY8AFygfYIP1Y4nxJNb5fZko8g6cKD6P/lKgXS9sB7qIB/Epsms0XVHt1hGghPxg==
+X-Received: by 2002:a37:4794:: with SMTP id u142mr303789qka.265.1569251954464;
+        Mon, 23 Sep 2019 08:19:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:83ca])
+        by smtp.gmail.com with ESMTPSA id q44sm6356054qtk.16.2019.09.23.08.19.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 08:19:13 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 08:19:12 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+Message-ID: <20190923151912.GG2233839@devbig004.ftw2.facebook.com>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 08:48:54PM +0800, Yunsheng Lin wrote:
-> When passing the return value of dev_to_node() to cpumask_of_node()
-> without checking if the device's node id is NUMA_NO_NODE, there is
-> global-out-of-bounds detected by KASAN.
+Hello,
+
+On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
+> On 23/09/2019 17.52, Tejun Heo wrote:
+> >Hello, Konstantin.
+> >
+> >On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
+> >>With vm.dirty_write_behind 1 or 2 files are written even faster and
+> >
+> >Is the faster speed reproducible?  I don't quite understand why this
+> >would be.
 > 
-> From the discussion [1], NUMA_NO_NODE really means no node affinity,
-> which also means all cpus should be usable. So the cpumask_of_node()
-> should always return all cpus online when user passes the node id as
-> NUMA_NO_NODE, just like similar semantic that page allocator handles
-> NUMA_NO_NODE.
+> Writing to disk simply starts earlier.
+
+I see.
+
+> >Generic write-behind would definitely have other benefits and also a
+> >bunch of regression possibilities.  I'm not trying to say that
+> >write-behind isn't a good idea but it'd be useful to consider that a
+> >good portion of the benefits can already be obtained fairly easily.
+> >
 > 
-> But we cannot really copy the page allocator logic. Simply because the
-> page allocator doesn't enforce the near node affinity. It just picks it
-> up as a preferred node but then it is free to fallback to any other numa
-> node. This is not the case here and node_to_cpumask_map will only restrict
-> to the particular node's cpus which would have really non deterministic
-> behavior depending on where the code is executed. So in fact we really
-> want to return cpu_online_mask for NUMA_NO_NODE.
-> 
-> Also there is a debugging version of node_to_cpumask_map() for x86 and
-> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1125789/
+> I'm afraid this could end badly if each simple task like file copying
+> will require own systemd job and container with manual tuning.
 
-That is bloody unusable, don't do that. Use:
+At least the write window size part of it is pretty easy - the range
+of acceptable values is fiarly wide - and setting up a cgroup and
+running a command in it isn't that expensive.  It's not like these
+need full-on containers.  That said, yes, there sure are benefits to
+the kernel being able to detect and handle these conditions
+automagically.
 
-  https://lkml.kernel.org/r/$MSGID
+Thanks.
 
-if anything. Then I can find it in my local mbox without having to
-resort to touching a mouse and shitty browser software.
-
-(also patchwork is absolute crap for reading email threads)
-
-Anyway, I found it -- I think, I refused to click the link. I replied
-there.
-
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-
-
-
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index 4123100e..9859acb 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
->   */
->  const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-
-This mandates the caller holds cpus_read_lock() or something, I'm pretty
-sure that if I put:
-
-	lockdep_assert_cpus_held();
-
-here, it comes apart real quick. Without holding the cpu hotplug lock,
-the online mask is gibberish.
-
-> +
->  	if ((unsigned)node >= nr_node_ids) {
->  		printk(KERN_WARNING
->  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
-
-I still think this makes absolutely no sense what so ever.
+-- 
+tejun
