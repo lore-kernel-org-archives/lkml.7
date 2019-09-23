@@ -2,193 +2,118 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A0C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DB9C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41E52089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vm2SuMXH"
+	by mail.kernel.org (Postfix) with ESMTP id 211C72168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569256937;
+	bh=j5r+6XuhjKJ1Z8KYz75Xk8jUl3r/TVx0tgV4XM0YVoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZDGrsvalKrplxECNQqQcGzaZ7UmM6FzkUKfCz5WUyivIjCqqzCW5W6MkaFAxWHxs+
+	 Eb+ouIrmoMXMrieDbBs4nv9PM9qs9mXW5T3zQ/WGwtGgeqUFyK+ePyS2PdQqkYl2St
+	 LMuWUTVX4jFupi/iQiqr8DTnJPvon8Gpay/PEajk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390262AbfIWQlq (ORCPT
+        id S2390506AbfIWQmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:41:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43316 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387922AbfIWQlp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:41:45 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q17so14743795wrx.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FXoCM+vURwhSk7IHFkXmfesD/d5r88C2Nn0FFc0Z0aM=;
-        b=Vm2SuMXHk/xd1lnEb0fChTR6UpM5XZan8EO+pNLbFbsclXb5Ef2P2pRq1kyhS9Hc3K
-         UKJFkK+NhlxpbYaTVPABYhL49/jJe42FkIgipI0KK4ihQ40JCsif6210uQ2SUj0N6zw6
-         l0kfdVzlN+fq8ZPvB/B4Hp32ytdhYV0gCa6xF9qCjyEl1zMjscoOvQJLiUj+HaZYICcg
-         uNyFf/Iq1EmgSDdGvRXauUe/O0QsFbkVChoAricMf7TIsnJYSIMS1RdakSF/LlHgcYql
-         L/SFwY5IV+s/uPxMmuE68F3ddizk1TFdaCF6lB3gyHlHFNqKYQ9zBExLbto6EOX0iIJl
-         jsug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FXoCM+vURwhSk7IHFkXmfesD/d5r88C2Nn0FFc0Z0aM=;
-        b=fwDp45w63k+N8Jgysl2zegPFc4xhaH307HvtwSNXiL8rmbL/Zp8IWRcIRCtem/WH0P
-         OLhrfCyrTRe+RqnnkpOpHt7COD4gm6OV2m1w7r2TSyif9aReSxBYXvKUJkwKX39XNnK6
-         NDZifDkcLfAytFOTPAI8pVTH4f+RKicTRahNmubTVMKFoZHjb0bU0ss0eh5qBuHmnHAQ
-         Als+yPcBJuvU9/mPYRu5bZnzCDDmh6e7qCG7WaNt8SKhc4D82j3gbonQJffVR4E4GzjD
-         dpWK9kjW67Dn5B41zwe9EbyvFzTqdAimE5ZAIeEQY++3z+pX5KXTzVKiy9nG+wBxzrX7
-         10jQ==
-X-Gm-Message-State: APjAAAVzjMsF/rOQIJFWq6tPuzbx/AKEymjEW4z0SJ4VBo2RagyxBrfd
-        r6k0/0REF2JGcOcvlb+073hhLIpwSfRdnQ4Lxkc6yg==
-X-Google-Smtp-Source: APXvYqzgcosAPmXoP1zU0OZTwImemvuu8iAhvqWwpvwmS91j9IKVfOo16gefUIf9LBA/CS7GhkMPGnIKq8gYizVfiUA=
-X-Received: by 2002:adf:ee45:: with SMTP id w5mr288827wro.246.1569256902740;
- Mon, 23 Sep 2019 09:41:42 -0700 (PDT)
+        Mon, 23 Sep 2019 12:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387922AbfIWQmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:42:16 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205BE2089F;
+        Mon, 23 Sep 2019 16:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569256935;
+        bh=j5r+6XuhjKJ1Z8KYz75Xk8jUl3r/TVx0tgV4XM0YVoc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BM8BOxMf68g4/WepglhG7a6pSQuN8RN85YMHAzOefxueUHAVZ/fiH6QQprzfTnkz2
+         LGy7vYg8B5O26OnxkQlQzeXwD2PDZHOHdyeyVl51XR9UTMfxwljrdjT8FBMEK9eSoZ
+         N0jb+C4Bs0L6Q1vlVvZ2qByx/J7SR1qer2bfz4No=
+Date:   Mon, 23 Sep 2019 12:42:14 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.2 072/185] ALSA: hda: Add codec on bus address
+ table lately
+Message-ID: <20190923164213.GG8171@sasha-vm>
+References: <20190922184924.32534-1-sashal@kernel.org>
+ <20190922184924.32534-72-sashal@kernel.org>
+ <s5h8sqgm9qz.wl-tiwai@suse.de>
+ <20190923133025.GE8171@sasha-vm>
+ <s5hpnjrku5e.wl-tiwai@suse.de>
 MIME-Version: 1.0
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck> <7f05a25a-36c7-929c-484d-bc964587917c@arm.com>
-In-Reply-To: <7f05a25a-36c7-929c-484d-bc964587917c@arm.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 23 Sep 2019 18:41:31 +0200
-Message-ID: <CAKv+Gu9EvwM22HaFJvX55HQhptcNUoQZCxq3nxyzquUjcq6DUg@mail.gmail.com>
-Subject: Re: Problems with arm64 compat vdso
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <s5hpnjrku5e.wl-tiwai@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 at 18:33, Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
+On Mon, Sep 23, 2019 at 03:40:45PM +0200, Takashi Iwai wrote:
+>On Mon, 23 Sep 2019 15:30:25 +0200,
+>Sasha Levin wrote:
+>>
+>> On Sun, Sep 22, 2019 at 09:06:12PM +0200, Takashi Iwai wrote:
+>> >On Sun, 22 Sep 2019 20:47:30 +0200,
+>> >Sasha Levin wrote:
+>> >>
+>> >> From: Takashi Iwai <tiwai@suse.de>
+>> >>
+>> >> [ Upstream commit ee5f85d9290fe25d460bd320b7fe073075d72d33 ]
+>> >>
+>> >> The call of snd_hdac_bus_add_device() is needed only for registering
+>> >> the codec onto the bus caddr_tbl[] that is referred essentially only
+>> >> in the unsol event handler.  That is, the reason of this call and the
+>> >> release by the counter-part function snd_hdac_bus_remove_device() is
+>> >> just to assure that the unsol event gets notified to the codec.
+>> >>
+>> >> But the current implementation of the unsol notification wouldn't work
+>> >> properly when the codec is still in a premature init state.  So this
+>> >> patch tries to work around it by delaying the caddr_tbl[] registration
+>> >> at the point of snd_hdac_device_register().
+>> >>
+>> >> Also, the order of snd_hdac_bus_remove_device() and device_del() calls
+>> >> are shuffled to make sure that the unsol event is masked before
+>> >> deleting the device.
+>> >>
+>> >> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
+>> >> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+>> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> >
+>> >The upstream commit was reverted later by 246bb4aaa4f4, which has even
+>> >Fixes tag pointing this.  So please drop this.
+>>
+>> I'll drop it, thank you.
+>>
+>> >BTW, this is the second time AUTOSEL overlooked the existing revert.
+>> >I'm afraid something is missing in the check.
+>>
+>> Usually it's the case that I check for fixes/reverts once I compile the
+>> series, and again right before I queue it up to a stable tree. In
+>> between fixes and reverts tend to sneak in just like in this case.
+>>
+>> In general, I also check the -rcs for fixes and reverts during their
+>> review window, so while sometimes we send out mails with patches that
+>> have a fix or revert upstream, they rarely make it into a released
+>> stable kernel.
 >
-> Hi Will,
->
-> thank you for reporting this.
->
-> On 20/09/2019 15:27, Will Deacon wrote:
-> > Hi Vincenzo,
-> >
-> > I've been running into a few issues with the COMPAT vDSO. Please could
-> > you have a look?
-> >
->
-> I will be at Linux Recipes next week. I will look at this with priority w=
-hen I
-> come back.
->
+>IMO, it'd be great if you have some check before sending for reviews.
+>The Fixes tag chain can be parsed relatively easily, after all.
 
-Hi all,
+True. I'll update my scripts to do that.
 
-I noticed another issue: I build out of tree, and the VDSO gets
-rebuilt every time I build the kernel, even if I haven't made any
-changes to the source tree at all.
-
-Could you please look into that as well? (once you get around to it)
-
+--
 Thanks,
-Ard.
-
-
-> > If I do the following:
-> >
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- defconfig
-> > [...]
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- menuconfig
-> > [set CONFIG_CROSS_COMPILE_COMPAT_VDSO=3D"arm-linux-gnueabihf-"]
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu-
-> >
-> > Then I see the following warning:
-> >
-> > arch/arm64/Makefile:62: CROSS_COMPILE_COMPAT not defined or empty, the =
-compat vDSO will not be built
-> >
-> > even though the compat vDSO *has* been built:
-> >
-> > $ file arch/arm64/kernel/vdso32/vdso.so
-> > arch/arm64/kernel/vdso32/vdso.so: ELF 32-bit LSB pie executable, ARM, E=
-ABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=3Dc67f6c786f2d2d6f=
-86c71f708595594aa25247f6, stripped
-> >
-> > However, I also get some warnings because arm64 headers are being inclu=
-ded
-> > in the compat vDSO build:
-> >
-> > In file included from ./arch/arm64/include/asm/thread_info.h:17:0,
-> >                  from ./include/linux/thread_info.h:38,
-> >                  from ./arch/arm64/include/asm/preempt.h:5,
-> >                  from ./include/linux/preempt.h:78,
-> >                  from ./include/linux/spinlock.h:51,
-> >                  from ./include/linux/seqlock.h:36,
-> >                  from ./include/linux/time.h:6,
-> >                  from /usr/local/google/home/willdeacon/work/linux/lib/=
-vdso/gettimeofday.c:7,
-> >                  from <command-line>:0:
-> > ./arch/arm64/include/asm/memory.h: In function =E2=80=98__tag_set=E2=80=
-=99:
-> > ./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer to=
- integer of different size [-Wpointer-to-int-cast]
-> >   u64 __addr =3D (u64)addr & ~__tag_shifted(0xff);
-> >                ^
-> > In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8:0,
-> >                  from ./arch/arm64/include/asm/processor.h:34,
-> >                  from ./arch/arm64/include/asm/elf.h:118,
-> >                  from ./include/linux/elf.h:5,
-> >                  from ./include/linux/elfnote.h:62,
-> >                  from arch/arm64/kernel/vdso32/note.c:11:
-> > ./arch/arm64/include/asm/memory.h: In function =E2=80=98__tag_set=E2=80=
-=99:
-> > ./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer to=
- integer of different size [-Wpointer-to-int-cast]
-> >   u64 __addr =3D (u64)addr & ~__tag_shifted(0xff);
-> >                ^
-> > Worse, if your compat binutils isn't up-to-date, you'll actually run in=
-to
-> > a build failure:
-> >
-> > /tmp/ccFCrjUg.s:80: Error: invalid barrier type -- `dmb ishld'
-> > /tmp/ccFCrjUg.s:124: Error: invalid barrier type -- `dmb ishld'
-> >
-> > There also appears to be a problem getting the toolchain prefix from Kc=
-onfig.
-> > If, for example, I do:
-> >
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- defconfig
-> > [...]
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- menuconfig
-> > [set CONFIG_CROSS_COMPILE_COMPAT_VDSO=3D"vincenzo"]
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu-
-> > arch/arm64/Makefile:64: *** vincenzogcc not found, check CROSS_COMPILE_=
-COMPAT.  Stop.
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- menuconfig
-> > [set CONFIG_CROSS_COMPILE_COMPAT_VDSO=3D"arm-linux-gnueabihf-"]
-> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu-
-> > arch/arm64/Makefile:64: *** vincenzogcc not found, check CROSS_COMPILE_=
-COMPAT.  Stop.
-> > $ grep CONFIG_CROSS_COMPILE_COMPAT_VDSO .config
-> > CONFIG_CROSS_COMPILE_COMPAT_VDSO=3D"arm-linux-gnueabihf-"
-> >
-> > which is irritating, because it seems to force a 'mrproper' if you don'=
-t
-> > get the prefix right first time.
-> >
-> > Cheers,
-> >
-> > Will
-> >
->
-> --
-> Regards,
-> Vincenzo
+Sasha
