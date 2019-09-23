@@ -2,174 +2,311 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF600C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3E5C32755
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F8220882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fzuWAz6s"
+	by mail.kernel.org (Postfix) with ESMTP id 0397920867
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501877AbfIWKbf (ORCPT
+        id S2501888AbfIWKeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:31:35 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57640 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501858AbfIWKbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:31:35 -0400
-Received: from zn.tnic (p200300EC2F060400856443B6AC31000F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:400:8564:43b6:ac31:f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4760E1EC0819;
-        Mon, 23 Sep 2019 12:31:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569234694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=OzEauiKzs5TUo3H8T9Cb11zn4jhjc8YS2cm34loDntE=;
-        b=fzuWAz6sVNZ2V/wJSH9QtjBbSVphnSwtEeh111PaD405rba1m7JxJHzrzV4DL3mgRSueUf
-        cL5rmZ1xCbVlzrJvAFNzv/2cqs2Mh0QV/9GoYuJ06Nuo+OZe5spYZKIe+KfHgTay2HS7PG
-        4cZOEQmwi7nGLIR2X/HNe1iHGQC5E9o=
-Date:   Mon, 23 Sep 2019 12:31:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, kbuild test robot <lkp@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
-Message-ID: <20190923103139.GD15355@zn.tnic>
-References: <20190922083342.GO13569@xsang-OptiPlex-9020>
- <20190922150328.6722-1-alexander.kapshuk@gmail.com>
+        Mon, 23 Sep 2019 06:34:12 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:54445
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439424AbfIWKeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:34:11 -0400
+X-IronPort-AV: E=Sophos;i="5.64,539,1559512800"; 
+   d="scan'208";a="320310025"
+Received: from unknown (HELO hadrien) ([65.39.69.237])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 12:34:06 +0200
+Date:   Mon, 23 Sep 2019 12:34:06 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Valentin Schneider <valentin.schneider@arm.com>
+cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: sched: make struct task_struct::state 32-bit
+In-Reply-To: <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+Message-ID: <alpine.DEB.2.21.1909231228200.2272@hadrien>
+References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com> <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de> <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com> <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190922150328.6722-1-alexander.kapshuk@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Masami.
 
-On Sun, Sep 22, 2019 at 06:03:28PM +0300, Alexander Kapshuk wrote:
-> This patch fixes the regexp warnings shown below:
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+On Mon, 23 Sep 2019, Valentin Schneider wrote:
 
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-> awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-> awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
-> 
-> The ':' and '&' characters need not escaping when used in string constants
-> as part of regular expressions.
-
-I could use a reasoning here, as in, "gawk manual doesn't have those two
-characters in the list here:
-
-https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html"
-
-or so.
-
-> 
-> [Test-run]
-> awk -f arch/x86/tools/gen-insn-attr-x86.awk \
-> 	arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
-> 
-> diff arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
-> 0
-> 
-> awk -f tools/arch/x86/tools/gen-insn-attr-x86.awk \
-> 	tools/arch/x86/lib/x86-opcode-map.txt >../tmp/inat-tables.c
-> 
-> diff tools/objtool/arch/x86/lib/inat-tables.c ~/tmp/inat-tables.c; echo $?
-> 0
-
-No need for that - just say that diffing the output before and after
-shows no changes.
-
-> [Debugging output]
-> DBG:ext:(66&F2)
-> DBG:match(ext, ...):(66&F2)
-> DBG:match(..., lprefix3_expr):\((F2|!F3|66&F2)\)
-
-That is supposed to say what exactly? That it still does what it is
-expected to do?
-
-Leaving in the rest for Masami.
-
-Thx.
-
-> Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
+> On 05/09/2019 17:52, Valentin Schneider wrote:
+> > I actually got rid of the task_struct* parameter and now just match
+> > against task_struct.p accesses in the function body, which has the
+> > added bonus of not caring about the order of the parameters.
+> >
+> > Still not there yet but making progress in the background, hope it's
+> > passable entertainment to see me struggle my way there :)
+> >
+>
+> Bit of hiatus on my end there. I did play around some more with Coccinelle
+> on the way to/from Plumbers. The main problems I'm facing ATM is "current"
+> not being recognized as a task_struct* expression, and the need to
+> "recursively" match task_struct.state modifiers, i.e. catch both functions
+> for something like:
+>
+> foo(long state)
+> {
+> 	__foo(state);
+> }
+>
+> __foo(long state)
+> {
+> 	current->state = state;
+> }
+>
+>
+> Here's where I'm at:
 > ---
->  arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
->  tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-> index b02a36b2c14f..a42015b305f4 100644
-> --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -69,7 +69,7 @@ BEGIN {
-> 
->  	lprefix1_expr = "\\((66|!F3)\\)"
->  	lprefix2_expr = "\\(F3\\)"
-> -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-> +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
->  	lprefix_expr = "\\((66|F2|F3)\\)"
->  	max_lprefix = 4
-> 
-> @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
->  	return add_flags(imm, mod)
->  }
-> 
-> -/^[0-9a-f]+\:/ {
-> +/^[0-9a-f]+:/ {
->  	if (NR == 1)
->  		next
->  	# get index
-> diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> index b02a36b2c14f..a42015b305f4 100644
-> --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -69,7 +69,7 @@ BEGIN {
-> 
->  	lprefix1_expr = "\\((66|!F3)\\)"
->  	lprefix2_expr = "\\(F3\\)"
-> -	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-> +	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
->  	lprefix_expr = "\\((66|F2|F3)\\)"
->  	max_lprefix = 4
-> 
-> @@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
->  	return add_flags(imm, mod)
->  }
-> 
-> -/^[0-9a-f]+\:/ {
-> +/^[0-9a-f]+:/ {
->  	if (NR == 1)
->  		next
->  	# get index
-> --
-> 2.23.0
-> 
+> virtual patch
+> virtual report
+>
+> // Match variables that represent task states
+> // They can be read from / written to task_struct.state, or be compared
+> // to TASK_* values
+> @state_access@
+> struct task_struct *p;
+> // FIXME: current not recognized as task_struct*, fixhack with regexp
+> identifier current =~ "^current$";
 
--- 
-Regards/Gruss,
-    Boris.
+Please don't do this.  Just use the word current.  It doesn't have to be a
+metavariable.  You will though get a warning about it.  To eliminate the
+warning, you can say symbol current;
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> identifier task_state =~ "^TASK_";
+
+Are there a lot of options?  You can also enumerate them in {}, ie
+
+identifier task_state = {TASK_BLAH, TASK_BLAHBLAH};
+
+> identifier state_var;
+> position pos;
+> @@
+>
+> (
+>   p->state & state_var@pos
+> |
+>   current->state & state_var@pos
+> |
+>   p->state | state_var@pos
+> |
+>   current->state | state_var@pos
+> |
+>   p->state < state_var@pos
+> |
+>   current->state < state_var@pos
+> |
+>   p->state > state_var@pos
+> |
+>   current->state > state_var@pos
+> |
+>   state_var@pos = p->state
+> |
+>   state_var@pos = current->state
+> |
+>   p->state == state_var@pos
+> |
+>   current->state == state_var@pos
+> |
+>   p->state != state_var@pos
+> |
+>   current->state != state_var@pos
+> |
+> // FIXME: match functions that do something with state_var underneath?
+> // How to do recursive rules?
+
+You want to look at the definitions of called functions?  Coccinelle
+doesn't really support that, but there are hackish ways to add that.  How
+many function calls would you expect have to be unrolled?
+
+>   set_current_state(state_var@pos)
+> |
+>   set_special_state(state_var@pos)
+> |
+>   signal_pending_state(state_var@pos, p)
+> |
+>   signal_pending_state(state_var@pos, current)
+> |
+>   state_var@pos & task_state
+> |
+>   state_var@pos | task_state
+> )
+>
+> // Fixup local variables
+> @depends on patch && state_access@
+> identifier state_var = state_access.state_var;
+> @@
+> (
+> - long
+> + int
+> |
+> - unsigned long
+> + unsigned int
+> )
+> state_var;
+>
+> // Fixup function parameters
+> @depends on patch && state_access@
+> identifier fn;
+> identifier state_var = state_access.state_var;
+> @@
+>
+> fn(...,
+> - long state_var
+> + int state_var
+> ,...)
+> {
+> 	...
+> }
+>
+> // FIXME: find a way to squash that with the above?
+
+I think that you can make a disjunction on a function parameter
+
+fn(...,
+(
+- T1 x1
++ T2 x2
+|
+- T3 x3
++ T4 x4
+)
+, ...) { ... }
+
+julia
+
+> // Fixup function parameters
+> @depends on patch && state_access@
+> identifier fn;
+> identifier state_var = state_access.state_var;
+> @@
+>
+> fn(...,
+> - unsigned long
+> + unsigned int
+> state_var
+> ,...)
+> {
+> 	...
+> }
+> ---
+>
+> This gives me the following diff on kernel/:
+>
+> ---
+> diff -u -p a/locking/mutex.c b/locking/mutex.c
+> --- a/locking/mutex.c
+> +++ b/locking/mutex.c
+> @@ -923,7 +923,7 @@ __ww_mutex_add_waiter(struct mutex_waite
+>   * Lock a mutex (possibly interruptible), slowpath:
+>   */
+>  static __always_inline int __sched
+> -__mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
+> +__mutex_lock_common(struct mutex *lock, int state, unsigned int subclass,
+>  		    struct lockdep_map *nest_lock, unsigned long ip,
+>  		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx)
+>  {
+> @@ -1097,14 +1097,14 @@ err_early_kill:
+>  }
+>
+>  static int __sched
+> -__mutex_lock(struct mutex *lock, long state, unsigned int subclass,
+> +__mutex_lock(struct mutex *lock, int state, unsigned int subclass,
+>  	     struct lockdep_map *nest_lock, unsigned long ip)
+>  {
+>  	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false);
+>  }
+>
+>  static int __sched
+> -__ww_mutex_lock(struct mutex *lock, long state, unsigned int subclass,
+> +__ww_mutex_lock(struct mutex *lock, int state, unsigned int subclass,
+>  		struct lockdep_map *nest_lock, unsigned long ip,
+>  		struct ww_acquire_ctx *ww_ctx)
+>  {
+> diff -u -p a/locking/semaphore.c b/locking/semaphore.c
+> --- a/locking/semaphore.c
+> +++ b/locking/semaphore.c
+> @@ -201,7 +201,7 @@ struct semaphore_waiter {
+>   * constant, and thus optimised away by the compiler.  Likewise the
+>   * 'timeout' parameter for the cases without timeouts.
+>   */
+> -static inline int __sched __down_common(struct semaphore *sem, long state,
+> +static inline int __sched __down_common(struct semaphore *sem, int state,
+>  								long timeout)
+>  {
+>  	struct semaphore_waiter waiter;
+> diff -u -p a/freezer.c b/freezer.c
+> --- a/freezer.c
+> +++ b/freezer.c
+> @@ -64,7 +64,7 @@ bool __refrigerator(bool check_kthr_stop
+>  	/* Hmm, should we be allowed to suspend when there are realtime
+>  	   processes around? */
+>  	bool was_frozen = false;
+> -	long save = current->state;
+> +	int save = current->state;
+>
+>  	pr_debug("%s entered refrigerator\n", current->comm);
+>
+> diff -u -p a/sched/core.c b/sched/core.c
+> --- a/sched/core.c
+> +++ b/sched/core.c
+> @@ -1888,7 +1888,7 @@ out:
+>   * smp_call_function() if an IPI is sent by the same process we are
+>   * waiting to become inactive.
+>   */
+> -unsigned long wait_task_inactive(struct task_struct *p, long match_state)
+> +unsigned long wait_task_inactive(struct task_struct *p, int match_state)
+>  {
+>  	int running, queued;
+>  	struct rq_flags rf;
+> @@ -3185,7 +3185,7 @@ static struct rq *finish_task_switch(str
+>  {
+>  	struct rq *rq = this_rq();
+>  	struct mm_struct *mm = rq->prev_mm;
+> -	long prev_state;
+> +	int prev_state;
+>
+>  	/*
+>  	 * The previous task will have left us with a preempt_count of 2
+> @@ -5964,7 +5964,7 @@ void sched_show_task(struct task_struct
+>  EXPORT_SYMBOL_GPL(sched_show_task);
+>
+>  static inline bool
+> -state_filter_match(unsigned long state_filter, struct task_struct *p)
+> +state_filter_match(unsigned int state_filter, struct task_struct *p)
+>  {
+>  	/* no filter, everything matches */
+>  	if (!state_filter)
+> @@ -5985,7 +5985,7 @@ state_filter_match(unsigned long state_f
+>  }
+>
+>
+> -void show_state_filter(unsigned long state_filter)
+> +void show_state_filter(unsigned int state_filter)
+>  {
+>  	struct task_struct *g, *p;
+>
+> ---
+>
