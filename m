@@ -2,120 +2,81 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D46C432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F15C432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D440B206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RsebLDQx"
+	by mail.kernel.org (Postfix) with ESMTP id A2DA2206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503142AbfIWVbM (ORCPT
+        id S2390053AbfIWVeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:31:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58418 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbfIWVbK (ORCPT
+        Mon, 23 Sep 2019 17:34:08 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:37261 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388117AbfIWVeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:31:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O4AJzqwx8UNRh0+dCT8Ph5aKpjRexgGPb//cNFsda+Y=; b=RsebLDQx/T22kd9NN7O9OTg5V
-        3+HWJNeFeZV/brf5F4kVky0J3WD+Z+J5wsncdtuiDeJ+I8f7U2CGR85reETvmwKxf5biit/usSFwR
-        3cftnFOqk8YwTtJFcihOFpkCr1jCDWydkdIIBYrKxjyBx2d/G8rpQuaa8QU4v4cPfVfqn19BeZQ5g
-        fSFL5NQWTeG0vsDULREYmkyX7fRbz7/KMJepTGQnSicewM6G9fyfXHKlb0mKqJ9X3DgwMnDHkXoUl
-        F+E8CXXrYh6HFgMbuPhRs1smdzdW8pn/gcbnOYVKmIlZ5b95l20n2HvhukC3CB2lp3GnAEnMttbsH
-        CxzckVOxw==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCVuZ-0003lg-TH; Mon, 23 Sep 2019 21:30:23 +0000
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
- KUnit
-To:     shuah <shuah@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Felix Guo <felixguoxiuping@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com>
- <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
- <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
- <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
- <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <437bc2d1-f26b-0f04-324f-cbdca989e42c@infradead.org>
-Date:   Mon, 23 Sep 2019 14:30:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 17:34:07 -0400
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6F140200005;
+        Mon, 23 Sep 2019 21:34:04 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 23:34:03 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] clk: at91: avoid sleeping early
+Message-ID: <20190923213403.GF4141@piout.net>
+References: <20190920153906.20887-1-alexandre.belloni@bootlin.com>
+ <20190923165848.3108A20882@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190923165848.3108A20882@mail.kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 2:18 PM, shuah wrote:
+On 23/09/2019 09:58:47-0700, Stephen Boyd wrote:
+> Quoting Alexandre Belloni (2019-09-20 08:39:06)
+> > It is not allowed to sleep to early in the boot process and this may lead
+> > to kernel issues if the bootloader didn't prepare the slow clock and main
+> > clock.
+> > 
+> > This results in the following error and dump stack on the AriettaG25:
+> >    bad: scheduling from the idle thread!
+> > 
+> > Ensure it is possible to sleep, else simply have a delay.
+> > 
+> > Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> > 
+> > Note that this was already discussed a while ago and Arnd said this approach was
+> > reasonable:
+> >   https://lore.kernel.org/lkml/6120818.MyeJZ74hYa@wuerfel/
+> 
+> Does this need a Fixes: tag?
+> 
 
-> I would like to apply the series very soon so it gets some soak time
-> after this move in linux-next and it can still make the rc1.
-> 
-> Since there changes can be addressed after rc1, I would like to not
-> require Brendan to do another version before I apply.
-> 
-> Hope you are okay with that Randy!
-> 
-> thanks,
-> -- Shuah
+I'm not sure how far this can get backported
 
-Sure, no problem, go for it .
+Fixes: 80eded6ce8bb ("clk: at91: add slow clks driver")
+
 
 -- 
-~Randy
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
