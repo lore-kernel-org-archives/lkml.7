@@ -2,89 +2,109 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E15FC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C5FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648F020640
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B618821850
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440175AbfIWRbN (ORCPT
+        id S2440182AbfIWReZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:31:13 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:40234 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437821AbfIWRbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:31:13 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Sep 2019 13:34:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42022 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389167AbfIWReZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 13:34:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 3E7FF20042;
-        Mon, 23 Sep 2019 19:31:08 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 19:31:06 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/36] drm/atmel-hlcdc: use bpp instead of cpp for
- drm_format_info
-Message-ID: <20190923173106.GA13649@ravnborg.org>
-References: <1569243119-183293-1-git-send-email-hjc@rock-chips.com>
- <1569243119-183293-2-git-send-email-hjc@rock-chips.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id A26483082E6E;
+        Mon, 23 Sep 2019 17:34:24 +0000 (UTC)
+Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12D4960852;
+        Mon, 23 Sep 2019 17:34:22 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 13:34:21 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/17] x86: spec_ctrl: fix SPEC_CTRL initialization after
+ kexec
+Message-ID: <20190923173421.GA13551@redhat.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-2-aarcange@redhat.com>
+ <c56d8911-5323-ac40-97b3-fa8920725197@redhat.com>
+ <20190923153057.GA18195@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1569243119-183293-2-git-send-email-hjc@rock-chips.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=s8YR1HE3AAAA:8
-        a=GZYic5qFh62CaahH_tAA:9 a=CjuIK1q_8ugA:10 a=jGH_LyMDp9YhSvY-UuyI:22
+In-Reply-To: <20190923153057.GA18195@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 23 Sep 2019 17:34:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandy.
+Hello,
 
-Thanks for taking care of this, but...
+On Mon, Sep 23, 2019 at 08:30:57AM -0700, Sean Christopherson wrote:
+> On Mon, Sep 23, 2019 at 12:22:23PM +0200, Paolo Bonzini wrote:
+> > On 20/09/19 23:24, Andrea Arcangeli wrote:
+> > > We can't assume the SPEC_CTRL msr is zero at boot because it could be
+> > > left enabled by a previous kernel booted with
+> > > spec_store_bypass_disable=on.
+> > > 
+> > > Without this fix a boot with spec_store_bypass_disable=on followed by
+> > > a kexec boot with spec_store_bypass_disable=off would erroneously and
+> > > unexpectedly leave bit 2 set in SPEC_CTRL.
+> > > 
+> > > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> > 
+> > Can you send this out separately, so that Thomas et al. can pick it up
+> > as a bug fix?
 
-On Mon, Sep 23, 2019 at 08:51:45PM +0800, Sandy Huang wrote:
-> cpp[BytePerPlane] can't describe the 10bit data format correctly,
-> So we use bpp[BitPerPlane] to instead cpp.
-> 
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> ---
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> index 89f5a75..ab7d423 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> @@ -644,7 +644,7 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
->  		int xdiv = i ? fb->format->hsub : 1;
->  		int ydiv = i ? fb->format->vsub : 1;
->  
-> -		state->bpp[i] = fb->format->cpp[i];
-> +		state->bpp[i] = fb->format->bpp[i] / 8;
->  		if (!state->bpp[i])
->  			return -EINVAL;
+As specified in the cover letter 1/17 was already intended to be
+merged separately. I just keep this included in case people had the
+idea of using kexec to benchmark this work, because I was bitten by
+that bug myself and it wasted a few days worth of benchmarks.
 
-Awaiting conclusion on Daniels comment on PATCH 1 and has dropped this
-patch for now.
-And please address the concerns Rob has about bisectability in your
-cover letter for v2.
+> Can all off the patches that are not directly related to the monolithic
+> conversion be sent separately?  AFAICT, patches 01, 03, 07, 08, 14, 15, 16
+> and 17 are not required or dependent on the conversion to a monolithic
+> module.  That's almost half the series...
 
-	Sam
+03 07 08 are directly related to the monolithic conversion as the
+subject of the patch clarifies. In fact I should try to reorder 7/8 in
+front to make things more bisectable under all config options.
+
+Per subject of the patch, 14 is also an optimization that while not a
+strict requirement, is somewhat related to the monolithic conversion
+because in fact it may naturally disappear if I rename the vmx/svm
+functions directly.
+
+15 16 17 don't have the monolithic tag in the subject of the patch and
+they're obviously unrelated to the monolithic conversion, but when I
+did the first research on this idea of dropping kvm.ko a couple of
+months ago, things didn't really work well until I got rid of those
+few last retpolines too. If felt as if the large retpoline regression
+wasn't linear with the number of retpolines executed for each vmexit,
+and that it was more linear with the percentage of vmexits that hit on
+any number of retpolines. So while they're not part of the monolithic
+conversion I assumed they're required to run any meaningful benchmark.
+
+I can drop 15 16 17 from further submits of course, after clarifying
+benchmark should be only run on the v1 full set I posted earlier, or
+they wouldn't be meaningful.
+
+Thanks,
+Andrea
