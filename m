@@ -2,97 +2,185 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67527C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC51C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AEF20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0258C20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:54:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="HYeBM2Qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439696AbfIWMyM (ORCPT
+        id S2439707AbfIWMyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:54:12 -0400
-Received: from regular1.263xmail.com ([211.150.70.205]:38198 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437412AbfIWMyL (ORCPT
+        Mon, 23 Sep 2019 08:54:18 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46286 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439697AbfIWMyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:54:11 -0400
-Received: from hjc?rock-chips.com (unknown [192.168.167.236])
-        by regular1.263xmail.com (Postfix) with ESMTP id 352B045D;
-        Mon, 23 Sep 2019 20:54:07 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17988T139868132738816S1569243231409431_;
-        Mon, 23 Sep 2019 20:54:07 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <084f3f145c6b5f8aeb6e10a2d2d49b50>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: dri-devel@lists.freedesktop.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Sandy Huang <hjc@rock-chips.com>
-To:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Allison Randal <allison@lohutok.net>,
+        Mon, 23 Sep 2019 08:54:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so13777042wrv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 05:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AovsfvrkVC8KgehdY4+Z592P7dBIQY37LqoSTZ8Zeho=;
+        b=HYeBM2QpSXqbmldBl/VrqKVlCePEW918eFcjyJyHTWUNdbLCTZvsYKhdc8gAKYhMQ3
+         onS/RCKaAqam1IA/rnrzUrG+d7bZJr2jWsdDZkfh4si4j5R5w4HYXf0LAGhhfEQta0VH
+         kOBETSMUfxF4BbeVChawSoHw5c/AqsVpt+ZYrtYpzU7nRnQBVA20F3pvTns/+ea10zfQ
+         3lBnqyOgUJHfGIr8j6LZs4YD/QrIBGZVH71lwS4eH1TSI15nbdNFNbGMZDcU0+pPHYDb
+         fKiRaH3Q7y7oQ6BZr9K95rEDYWpXA3J7EJA9gsU8++gi2Mp8u0O7xXR4hJuREj8UxXok
+         ifZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AovsfvrkVC8KgehdY4+Z592P7dBIQY37LqoSTZ8Zeho=;
+        b=rfBvFtAcjlGMsFudFCjfKPMfdlJlOlCPP2vq2X6oXVOTlwhOrQduXH/lLqxvNUXzoF
+         G5ZQty9mzwK6b9m4+R1CBx1EMn1P8z3K7awHeQpvUF1iXvMlqFS2WWgmg4IVDptKBMRM
+         3GCpLe48d1bro8Gh2sjDIds2rzflY7Dd/mCq4VfaDxg49DNvb7ZnTP0kAgC25AzCHJso
+         FMvF4BHA8uDDFI9dtC/OSJYlh0y+e9AyF/dvaBu9DaAi9dZvCeDUXy4xrwW0OvJJ+dUa
+         kww7Z5kd4PWLmwX/bRA/e7+g61NYICaTYaRzL+ZPdrjNJGKGkDA+YoPILYdWBtLyK2dW
+         0nMQ==
+X-Gm-Message-State: APjAAAUWnr/dyUtnEzGSHz6XzfxZbRo4c9TFvmj4CEOjmEPDESkgAoyk
+        oTHJ+lzveq0MnmBXR/GhzVPEDRDDQcvBGRXUpPhgeNRJ
+X-Google-Smtp-Source: APXvYqwsHYbO+9L86VnJoBwoB8mk7eZ22lokkO725a1cKAw31Hv4kO0LqdHgIV0+Yju7xAlyzJlQVzY0aMbR9OJm2Ec=
+X-Received: by 2002:a05:6000:2:: with SMTP id h2mr20587928wrx.309.1569243255021;
+ Mon, 23 Sep 2019 05:54:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-13-anup.patel@wdc.com>
+ <3c149ec4-38df-9073-2880-b28148d3c059@amazon.com>
+In-Reply-To: <3c149ec4-38df-9073-2880-b28148d3c059@amazon.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 23 Sep 2019 18:24:02 +0530
+Message-ID: <CAAhSdy1A-FZJ5DeyzFzZn8h-Vs4QR16uFgeeCNpJi2KMQMbPmQ@mail.gmail.com>
+Subject: Re: [PATCH v7 11/21] RISC-V: KVM: Handle WFI exits for VCPU
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Sean Paul <sean@poorly.run>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 35/36] drm/udl: use bpp instead of cpp for drm_format_info
-Date:   Mon, 23 Sep 2019 20:53:49 +0800
-Message-Id: <1569243230-183568-5-git-send-email-hjc@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569243230-183568-1-git-send-email-hjc@rock-chips.com>
-References: <1569243230-183568-1-git-send-email-hjc@rock-chips.com>
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpp[BytePerPlane] can't describe the 10bit data format correctly,
-So we use bpp[BitPerPlane] to instead cpp.
+On Mon, Sep 23, 2019 at 12:24 PM Alexander Graf <graf@amazon.com> wrote:
+>
+>
+>
+> On 04.09.19 18:15, Anup Patel wrote:
+> > We get illegal instruction trap whenever Guest/VM executes WFI
+> > instruction.
+> >
+> > This patch handles WFI trap by blocking the trapped VCPU using
+> > kvm_vcpu_block() API. The blocked VCPU will be automatically
+> > resumed whenever a VCPU interrupt is injected from user-space
+> > or from in-kernel IRQCHIP emulation.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >   arch/riscv/kvm/vcpu_exit.c | 72 ++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 72 insertions(+)
+> >
+> > diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
+> > index d75a6c35b6c7..39469f67b241 100644
+> > --- a/arch/riscv/kvm/vcpu_exit.c
+> > +++ b/arch/riscv/kvm/vcpu_exit.c
+> > @@ -12,6 +12,13 @@
+> >   #include <linux/kvm_host.h>
+> >   #include <asm/csr.h>
+> >
+> > +#define INSN_OPCODE_MASK     0x007c
+> > +#define INSN_OPCODE_SHIFT    2
+> > +#define INSN_OPCODE_SYSTEM   28
+> > +
+> > +#define INSN_MASK_WFI                0xffffff00
+> > +#define INSN_MATCH_WFI               0x10500000
+> > +
+> >   #define INSN_MATCH_LB               0x3
+> >   #define INSN_MASK_LB                0x707f
+> >   #define INSN_MATCH_LH               0x1003
+> > @@ -112,6 +119,67 @@
+> >                                (s32)(((insn) >> 7) & 0x1f))
+> >   #define MASK_FUNCT3         0x7000
+> >
+> > +static int truly_illegal_insn(struct kvm_vcpu *vcpu,
+> > +                           struct kvm_run *run,
+> > +                           ulong insn)
+> > +{
+> > +     /* Redirect trap to Guest VCPU */
+> > +     kvm_riscv_vcpu_trap_redirect(vcpu, EXC_INST_ILLEGAL, insn);
+> > +
+> > +     return 1;
+> > +}
+> > +
+> > +static int system_opcode_insn(struct kvm_vcpu *vcpu,
+> > +                           struct kvm_run *run,
+> > +                           ulong insn)
+> > +{
+> > +     if ((insn & INSN_MASK_WFI) == INSN_MATCH_WFI) {
+> > +             vcpu->stat.wfi_exit_stat++;
+> > +             if (!kvm_arch_vcpu_runnable(vcpu)) {
+> > +                     srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
+> > +                     kvm_vcpu_block(vcpu);
+> > +                     vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+> > +                     kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+> > +             }
+> > +             vcpu->arch.guest_context.sepc += INSN_LEN(insn);
+> > +             return 1;
+> > +     }
+> > +
+> > +     return truly_illegal_insn(vcpu, run, insn);
+> > +}
+> > +
+> > +static int illegal_inst_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> > +                           unsigned long insn)
+> > +{
+> > +     unsigned long ut_scause = 0;
+> > +     struct kvm_cpu_context *ct;
+> > +
+> > +     if (unlikely((insn & 3) != 3)) {
+>
+> What do the low 2 bits mean here? Maybe you can use a define instead?
 
-Signed-off-by: Sandy Huang <hjc@rock-chips.com>
----
- drivers/gpu/drm/udl/udl_fb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+These bits are for instruction length (16bit or 32bit).
 
-diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
-index ef3504d..33a42bd 100644
---- a/drivers/gpu/drm/udl/udl_fb.c
-+++ b/drivers/gpu/drm/udl/udl_fb.c
-@@ -88,8 +88,8 @@ int udl_handle_damage(struct udl_framebuffer *fb, int x, int y,
- 	int aligned_x;
- 	int log_bpp;
- 
--	BUG_ON(!is_power_of_2(fb->base.format->cpp[0]));
--	log_bpp = __ffs(fb->base.format->cpp[0]);
-+	BUG_ON(!is_power_of_2(fb->base.format->bpp[0] / 8));
-+	log_bpp = __ffs(fb->base.format->bpp[0] / 8);
- 
- 	if (!fb->active_16)
- 		return 0;
--- 
-2.7.4
+I will add appropriate defines for these bits.
 
+Regards,
+Anup
 
-
+>
+>
+> Alex
+>
+>
+>
+>
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
+>
+>
