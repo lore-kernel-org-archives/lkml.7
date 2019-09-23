@@ -2,169 +2,131 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A3DC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494E9C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E146320B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254C720B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbfIWTXM (ORCPT
+        id S2440443AbfIWTYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:23:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39669 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbfIWTXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:23:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 12:23:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="193192367"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 23 Sep 2019 12:23:10 -0700
-Date:   Mon, 23 Sep 2019 12:27:15 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
-Message-ID: <20190923122715.53de79d0@jacob-builder>
-In-Reply-To: <20190923122454.9888-1-baolu.lu@linux.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 23 Sep 2019 15:24:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54494 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2440392AbfIWTYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 15:24:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F23CAD72;
+        Mon, 23 Sep 2019 19:23:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Sep 2019 21:23:57 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <normalperson@yhbt.net>
+Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
+ CONFIG_DEBUG_LOCK_ALLOC
+In-Reply-To: <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
+References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+ <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
+Message-ID: <1b26e25fcc0e6c54cbdb9e66dade17db@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
+On 2019-09-23 17:43, Jason Baron wrote:
+> On 9/4/19 4:22 PM, Jason Baron wrote:
+>> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
+>> ep_call_nested() in order to pass the correct subclass argument to
+>> spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
+>> checks for epoll depth and loops that are already verified when doing
+>> EPOLL_CTL_ADD. This mirrors a conversion that was done for
+>> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
+>> ep_call_nested() from ep_eventpoll_poll()")
+>> 
+>> Signed-off-by: Jason Baron <jbaron@akamai.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Roman Penyaev <rpenyaev@suse.de>
+>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>> Cc: Eric Wong <normalperson@yhbt.net>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> ---
+>>  fs/eventpoll.c | 36 +++++++++++++-----------------------
+>>  1 file changed, 13 insertions(+), 23 deletions(-)
+>> 
+>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>> index d7f1f50..a9b2737 100644
+>> --- a/fs/eventpoll.c
+>> +++ b/fs/eventpoll.c
+>> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls 
+>> *ncalls,
+>>   */
+>>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>> 
+>> -static struct nested_calls poll_safewake_ncalls;
+>> -
+>> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int 
+>> call_nests)
+>> -{
+>> -	unsigned long flags;
+>> -	wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
+>> -
+>> -	spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
+>> -	wake_up_locked_poll(wqueue, EPOLLIN);
+>> -	spin_unlock_irqrestore(&wqueue->lock, flags);
+>> -
+>> -	return 0;
+>> -}
+>> +static DEFINE_PER_CPU(int, wakeup_nest);
+>> 
+>>  static void ep_poll_safewake(wait_queue_head_t *wq)
+>>  {
+>> -	int this_cpu = get_cpu();
+>> -
+>> -	ep_call_nested(&poll_safewake_ncalls,
+>> -		       ep_poll_wakeup_proc, NULL, wq, (void *) (long) this_cpu);
+>> +	unsigned long flags;
+>> +	int subclass;
+>> 
+>> -	put_cpu();
+>> +	local_irq_save(flags);
+>> +	preempt_disable();
+>> +	subclass = __this_cpu_read(wakeup_nest);
+>> +	spin_lock_nested(&wq->lock, subclass + 1);
+>> +	__this_cpu_inc(wakeup_nest);
+>> +	wake_up_locked_poll(wq, POLLIN);
+>> +	__this_cpu_dec(wakeup_nest);
+>> +	spin_unlock(&wq->lock);
+>> +	local_irq_restore(flags);
+>> +	preempt_enable();
+>>  }
 
-On Mon, 23 Sep 2019 20:24:50 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+What if reduce number of lines with something as the following:
 
-> This patchset aims to move IOVA (I/O Virtual Address) translation
-> to 1st-level page table under scalable mode. The major purpose of
-> this effort is to make guest IOVA support more efficient.
-> 
-> As Intel VT-d architecture offers caching-mode, guest IOVA (GIOVA)
-> support is now implemented in a shadow page manner. The device
-> simulation software, like QEMU, has to figure out GIOVA->GPA mapping
-> and writes to a shadowed page table, which will be used by pIOMMU.
-> Each time when mappings are created or destroyed in vIOMMU, the
-> simulation software will intervene. The change on GIOVA->GPA will be
-> shadowed to host, and the pIOMMU will be updated via VFIO/IOMMU
-> interfaces.
-> 
-> 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .--------------------.
->      |           |IOTLB flush trap |        QEMU        |
->      .-----------. (map/unmap)     |--------------------|
->      | GVA->GPA  |---------------->|      .----------.  |
->      '-----------'                 |      | GPA->HPA |  |
->      |           |                 |      '----------'  |
->      '-----------'                 |                    |
->                                    |                    |
->                                    '--------------------'
->                                                 |
->             <------------------------------------
->             |
->             v VFIO/IOMMU API
->       .-----------.
->       |  pIOMMU   |
->       |-----------|
->       |           |
->       .-----------.
->       | GVA->HPA  |
->       '-----------'
->       |           |
->       '-----------'
-> 
-> In VT-d 3.0, scalable mode is introduced, which offers two level
-> translation page tables and nested translation mode. Regards to
-> GIOVA support, it can be simplified by 1) moving the GIOVA support
-> over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
-> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
-> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
-> dual stage) translation in host. Compared with current shadow GIOVA
-> support, the new approach is more secure and software is simplified
-> as we only need to flush the pIOMMU IOTLB and possible device-IOTLB
-> when an IOVA mapping in vIOMMU is torn down.
-> 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .-----------.
->      |           |IOTLB flush trap |   QEMU    |
->      .-----------.    (unmap)      |-----------|
->      | GVA->GPA  |---------------->|           |
->      '-----------'                 '-----------'
->      |           |                       |
->      '-----------'                       |
->            <------------------------------
->            |      VFIO/IOMMU          
->            |  cache invalidation and  
->            | guest gpd bind interfaces
->            v
-For vSVA, the guest PGD bind interface will mark the PASID as guest
-PASID and will inject page request into the guest. In FL gIOVA case, I
-guess we are assuming there is no page fault for GIOVA. I will need to
-add a flag in the gpgd bind such that any PRS will be auto responded
-with invalid.
+    int this_cpu = get_cpu();
+    subclass = __this_cpu_inc_return(wakeup_nest);
+    spin_lock_irqsave_nested(&wq->lock, flags, subclass);
+    wake_up_locked_poll(wq, POLLIN);
+    spin_unlock_irqrestore(&wq->lock, flags);
+    __this_cpu_dec(wakeup_nest);
+    put_cpu();
 
-Also, native use of IOVA FL map is not to be supported? i.e. IOMMU API
-and DMA API for native usage will continue to be SL only?
->      .-----------.
->      |  pIOMMU   |
->      |-----------|
->      .-----------.
->      | GVA->GPA  |<---First level
->      '-----------'
->      | GPA->HPA  |<---Scond level
->      '-----------'
->      '-----------'
-> 
-> This patch series only aims to achieve the first goal, a.k.a using
-> first level translation for IOVA mappings in vIOMMU. I am sending
-> it out for your comments. Any comments, suggestions and concerns are
-> welcomed.
-> 
+Other than that looks good to me.
 
+Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
 
-> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
-> Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
-> Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
-> Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-> 
-> Lu Baolu (4):
->   iommu/vt-d: Move domain_flush_cache helper into header
->   iommu/vt-d: Add first level page table interfaces
->   iommu/vt-d: Map/unmap domain with mmmap/mmunmap
->   iommu/vt-d: Identify domains using first level page table
-> 
->  drivers/iommu/Makefile             |   2 +-
->  drivers/iommu/intel-iommu.c        | 142 ++++++++++--
->  drivers/iommu/intel-pgtable.c      | 342
-> +++++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
-> 31 ++- include/trace/events/intel_iommu.h |  60 +++++
->  5 files changed, 553 insertions(+), 24 deletions(-)
->  create mode 100644 drivers/iommu/intel-pgtable.c
-> 
-
-[Jacob Pan]
+--
+Roman
