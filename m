@@ -2,72 +2,48 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3A6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE6AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF66206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20267206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 10:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439511AbfIWKW1 (ORCPT
+        id S2439512AbfIWK0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 06:22:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50558 "EHLO mx1.redhat.com"
+        Mon, 23 Sep 2019 06:26:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:40214 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406701AbfIWKW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:22:26 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D84F1811DC
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 10:22:25 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id 190so6441005wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 03:22:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fOXb2zotSIWB4X/sQrsrANj/mMFRoi6WdNsUfB4y3ds=;
-        b=Cecj5dX3pmzInOw4I5MwxmIrlb1KoTXCIhxWDzK9Oxx+xFBOvk2tvPFs8jztsEeYsF
-         GpPrxPisoM5alD9LuuuxPcAb2Ry+P+c6mXmt4/2RUllWLN0MAPGLqax7hJJZOtsExtyZ
-         DhdQJn/fgC2fHPzrgeK+qSZvCPkRh8QM+vNIuVZi/cuSrVN+U2aUDt3O4QbnTMvG6wlU
-         K2xqy3G50KH1cZfXDn2Q2Fu1HMqgWAUb63nLqqR+2UFKnTaFXunk+CMVv+HSq417goSW
-         ZDV7bDNlVqGhL1mzSsz6O/kuXVoqTFSsFop9bH6KAY/F56HphDjjSnetw7svVACN7lz8
-         8iow==
-X-Gm-Message-State: APjAAAXsBOmuYhF0+730zaVyQIXRzKlbu/CQK+sJyaNGbZQsxHiczMBj
-        yXqd76WA1rNqa8vkwJuEnB/VFqnvqT/g0KjDRVHPzGgl59oNSYdP/eY3JFQjVS9JZ/YETE4Swcu
-        wAPKRthxkVAX8DuwU2FIfHGEA
-X-Received: by 2002:adf:f44e:: with SMTP id f14mr19897297wrp.290.1569234144366;
-        Mon, 23 Sep 2019 03:22:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz6zfWDCrO5uyrF7XiNRNtg5AchHWZTbVkzNHhwvuNee2mlm3NGz1GASMsttwusekXqn0QzPw==
-X-Received: by 2002:adf:f44e:: with SMTP id f14mr19897284wrp.290.1569234144093;
-        Mon, 23 Sep 2019 03:22:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id o12sm17311097wrm.23.2019.09.23.03.22.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 03:22:23 -0700 (PDT)
-Subject: Re: [PATCH 01/17] x86: spec_ctrl: fix SPEC_CTRL initialization after
- kexec
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-2-aarcange@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <c56d8911-5323-ac40-97b3-fa8920725197@redhat.com>
-Date:   Mon, 23 Sep 2019 12:22:23 +0200
+        id S1728126AbfIWK0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:26:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BECCE142F;
+        Mon, 23 Sep 2019 03:26:06 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69C883F694;
+        Mon, 23 Sep 2019 03:26:05 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: sched: make struct task_struct::state 32-bit
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julia Lawall <julia.lawall@lip6.fr>
+References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+ <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de>
+ <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com>
+Message-ID: <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+Date:   Mon, 23 Sep 2019 11:26:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190920212509.2578-2-aarcange@redhat.com>
+In-Reply-To: <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -76,20 +52,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/09/19 23:24, Andrea Arcangeli wrote:
-> We can't assume the SPEC_CTRL msr is zero at boot because it could be
-> left enabled by a previous kernel booted with
-> spec_store_bypass_disable=on.
+On 05/09/2019 17:52, Valentin Schneider wrote:
+> I actually got rid of the task_struct* parameter and now just match
+> against task_struct.p accesses in the function body, which has the
+> added bonus of not caring about the order of the parameters.
 > 
-> Without this fix a boot with spec_store_bypass_disable=on followed by
-> a kexec boot with spec_store_bypass_disable=off would erroneously and
-> unexpectedly leave bit 2 set in SPEC_CTRL.
+> Still not there yet but making progress in the background, hope it's
+> passable entertainment to see me struggle my way there :)
 > 
-> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 
-Can you send this out separately, so that Thomas et al. can pick it up
-as a bug fix?
+Bit of hiatus on my end there. I did play around some more with Coccinelle 
+on the way to/from Plumbers. The main problems I'm facing ATM is "current"
+not being recognized as a task_struct* expression, and the need to 
+"recursively" match task_struct.state modifiers, i.e. catch both functions
+for something like:
 
-Thanks,
+foo(long state)
+{
+	__foo(state);
+}
 
-Paolo
+__foo(long state)
+{
+	current->state = state;
+}
+
+
+Here's where I'm at:
+---
+virtual patch
+virtual report
+
+// Match variables that represent task states
+// They can be read from / written to task_struct.state, or be compared
+// to TASK_* values
+@state_access@
+struct task_struct *p;
+// FIXME: current not recognized as task_struct*, fixhack with regexp
+identifier current =~ "^current$";
+identifier task_state =~ "^TASK_";
+identifier state_var;
+position pos;
+@@
+
+(
+  p->state & state_var@pos
+|
+  current->state & state_var@pos
+|
+  p->state | state_var@pos
+|
+  current->state | state_var@pos
+|
+  p->state < state_var@pos
+|
+  current->state < state_var@pos
+|
+  p->state > state_var@pos
+|
+  current->state > state_var@pos
+|
+  state_var@pos = p->state
+|
+  state_var@pos = current->state
+|
+  p->state == state_var@pos
+|
+  current->state == state_var@pos
+|
+  p->state != state_var@pos
+|
+  current->state != state_var@pos
+|
+// FIXME: match functions that do something with state_var underneath?
+// How to do recursive rules?
+  set_current_state(state_var@pos)
+|
+  set_special_state(state_var@pos)
+|
+  signal_pending_state(state_var@pos, p)
+|
+  signal_pending_state(state_var@pos, current)
+|
+  state_var@pos & task_state
+|
+  state_var@pos | task_state
+)
+
+// Fixup local variables
+@depends on patch && state_access@
+identifier state_var = state_access.state_var;
+@@
+(
+- long
++ int
+|
+- unsigned long
++ unsigned int
+)
+state_var;
+
+// Fixup function parameters
+@depends on patch && state_access@
+identifier fn;
+identifier state_var = state_access.state_var;
+@@
+
+fn(...,
+- long state_var
++ int state_var
+,...)
+{
+	...
+}
+
+// FIXME: find a way to squash that with the above?
+// Fixup function parameters
+@depends on patch && state_access@
+identifier fn;
+identifier state_var = state_access.state_var;
+@@
+
+fn(...,
+- unsigned long
++ unsigned int
+state_var
+,...)
+{
+	...
+}
+---
+
+This gives me the following diff on kernel/:
+
+---
+diff -u -p a/locking/mutex.c b/locking/mutex.c
+--- a/locking/mutex.c
++++ b/locking/mutex.c
+@@ -923,7 +923,7 @@ __ww_mutex_add_waiter(struct mutex_waite
+  * Lock a mutex (possibly interruptible), slowpath:
+  */
+ static __always_inline int __sched
+-__mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
++__mutex_lock_common(struct mutex *lock, int state, unsigned int subclass,
+ 		    struct lockdep_map *nest_lock, unsigned long ip,
+ 		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx)
+ {
+@@ -1097,14 +1097,14 @@ err_early_kill:
+ }
+ 
+ static int __sched
+-__mutex_lock(struct mutex *lock, long state, unsigned int subclass,
++__mutex_lock(struct mutex *lock, int state, unsigned int subclass,
+ 	     struct lockdep_map *nest_lock, unsigned long ip)
+ {
+ 	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false);
+ }
+ 
+ static int __sched
+-__ww_mutex_lock(struct mutex *lock, long state, unsigned int subclass,
++__ww_mutex_lock(struct mutex *lock, int state, unsigned int subclass,
+ 		struct lockdep_map *nest_lock, unsigned long ip,
+ 		struct ww_acquire_ctx *ww_ctx)
+ {
+diff -u -p a/locking/semaphore.c b/locking/semaphore.c
+--- a/locking/semaphore.c
++++ b/locking/semaphore.c
+@@ -201,7 +201,7 @@ struct semaphore_waiter {
+  * constant, and thus optimised away by the compiler.  Likewise the
+  * 'timeout' parameter for the cases without timeouts.
+  */
+-static inline int __sched __down_common(struct semaphore *sem, long state,
++static inline int __sched __down_common(struct semaphore *sem, int state,
+ 								long timeout)
+ {
+ 	struct semaphore_waiter waiter;
+diff -u -p a/freezer.c b/freezer.c
+--- a/freezer.c
++++ b/freezer.c
+@@ -64,7 +64,7 @@ bool __refrigerator(bool check_kthr_stop
+ 	/* Hmm, should we be allowed to suspend when there are realtime
+ 	   processes around? */
+ 	bool was_frozen = false;
+-	long save = current->state;
++	int save = current->state;
+ 
+ 	pr_debug("%s entered refrigerator\n", current->comm);
+ 
+diff -u -p a/sched/core.c b/sched/core.c
+--- a/sched/core.c
++++ b/sched/core.c
+@@ -1888,7 +1888,7 @@ out:
+  * smp_call_function() if an IPI is sent by the same process we are
+  * waiting to become inactive.
+  */
+-unsigned long wait_task_inactive(struct task_struct *p, long match_state)
++unsigned long wait_task_inactive(struct task_struct *p, int match_state)
+ {
+ 	int running, queued;
+ 	struct rq_flags rf;
+@@ -3185,7 +3185,7 @@ static struct rq *finish_task_switch(str
+ {
+ 	struct rq *rq = this_rq();
+ 	struct mm_struct *mm = rq->prev_mm;
+-	long prev_state;
++	int prev_state;
+ 
+ 	/*
+ 	 * The previous task will have left us with a preempt_count of 2
+@@ -5964,7 +5964,7 @@ void sched_show_task(struct task_struct
+ EXPORT_SYMBOL_GPL(sched_show_task);
+ 
+ static inline bool
+-state_filter_match(unsigned long state_filter, struct task_struct *p)
++state_filter_match(unsigned int state_filter, struct task_struct *p)
+ {
+ 	/* no filter, everything matches */
+ 	if (!state_filter)
+@@ -5985,7 +5985,7 @@ state_filter_match(unsigned long state_f
+ }
+ 
+ 
+-void show_state_filter(unsigned long state_filter)
++void show_state_filter(unsigned int state_filter)
+ {
+ 	struct task_struct *g, *p;
+ 
+---
