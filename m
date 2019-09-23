@@ -2,162 +2,210 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAA8C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A125EC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B160207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7182A207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJqyyi0T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eI1DfEo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440039AbfIWOjc (ORCPT
+        id S2440051AbfIWOjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:39:32 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37245 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438136AbfIWOjc (ORCPT
+        Mon, 23 Sep 2019 10:39:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46667 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438136AbfIWOjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:39:32 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d2so17438499qtr.4;
-        Mon, 23 Sep 2019 07:39:31 -0700 (PDT)
+        Mon, 23 Sep 2019 10:39:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so8097911pgm.13;
+        Mon, 23 Sep 2019 07:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jz4K68fBy8pZ1BsZkrFiMwqpHU2gfCQLS/Qs1fCJ12c=;
-        b=YJqyyi0Tf8+7VHYPShYR6G+g2fZaC0nW1bVaWc74oovFKQHMD8Zejf/VapZaVhxd53
-         3jV4BJgvEDmlvAfsRxO3w+K/NbfhVHB7a9I5kMGqDYbBSEIaMEz1q46FvbiG0A2nKjoZ
-         IitVbghh5wqWiF0m2rNlLy9Ks9ibwaK6QPcT81p55dTQv25srqecBsc8UYbsngAr04eM
-         NrCbVgYdP1LuoH0dgMuXJhKhcEFC9Kgjaz4RWas4w4rl+eCVuGoeNIAixaw9A1w2IW/S
-         Gr2pDvidAEi4RPPVEbcPumQH2IcSFxbhyxr59U0IQvHxrSpjUZUBCJcGEhc9Omu55VKK
-         wFmw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sJoG4/F1I+TtaRnM/HMHSRHzFNBAwV4xic8q4mc4yYo=;
+        b=eI1DfEo5UhMuksPO0WZHtJKkmk1L3H/N8+V9oqi7lcqn915bxgvBS2KEgnk6o4AUdD
+         Umuej+xN3D+Ho8ZJmOruImaefZQnZU3Sh+pns/gPk1O+3GdTtriJaFzP2M1SchyfgAKe
+         +MkyZVW0UHaIUUl3T5BQet+vljodDKTjJ8yGZoiHNm2NE/7DRutcABx3fRpI7qecWkTC
+         3kPdhegY3NuR/w5zDCQhh32SjF/+RRgHJ6fgWOthC5zCVbTl691SqfMjcsHEQPscVaIR
+         ladt7lP3v6qsihUYBbFrcvjwOijrlcMkx1bZ6q8xuvrGRNM/oUgOEaZWlixhp9+jxBqE
+         JugA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jz4K68fBy8pZ1BsZkrFiMwqpHU2gfCQLS/Qs1fCJ12c=;
-        b=QnD9lCip9poBX57zpFgX+r/Xrd42kTA+OQfP/0Xox0jphd8iW20Sv4KJKYirVdocHD
-         Jo4Q52CMhNb3IQengt4LLlebROvuahLx2YQFDY3K8ZWVgi+KgMZ3RN/YNNLdesgjkb9V
-         pvgqdkwnzGIInNe8sTGtGRX2Ux6spGajtlKt6zJeSonERcD2m5bo6GRtJ+es6KoRT4+V
-         SpzeblbMV7SPXxh7xXDK6VCa9B+ho+RRWx/zGRaEgGVfwmXX1u5+6gP1KgaFthtRAO11
-         2mU7tDUoofZ50Fn8TPYqvRIHvQR+H2JnCDiiFDF+1AduARM8Y4SPGh2B1tDfjNa6Bkak
-         hY6Q==
-X-Gm-Message-State: APjAAAVHzZNiheWa8bqPVOD8Q3l2l164EBG/4vnKMdR+ibXfuWH08Hoi
-        nromIYMFx6lijTfIuF9RfJw=
-X-Google-Smtp-Source: APXvYqygJwYrW7BX+oau30H2huyThSBduU7bsEyFTWa8WCAZdopncbF4KJeooPtzse3iRLxEH6/VXA==
-X-Received: by 2002:ac8:3647:: with SMTP id n7mr231216qtb.159.1569249570759;
-        Mon, 23 Sep 2019 07:39:30 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id g19sm7125120qtb.2.2019.09.23.07.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 07:39:30 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 993BD41105; Mon, 23 Sep 2019 11:39:27 -0300 (-03)
-Date:   Mon, 23 Sep 2019 11:39:27 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/6] tools/lib/traceevent: Man page updates and some file
- movement
-Message-ID: <20190923143927.GE16544@kernel.org>
-References: <20190919212335.400961206@goodmis.org>
- <20190923142839.GD16544@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sJoG4/F1I+TtaRnM/HMHSRHzFNBAwV4xic8q4mc4yYo=;
+        b=eTgtYDht8Ow17MM3fAXh1cwqN0jM9buRjB3HuUeAiSM6raAMxu24UHGIoLQFgrbphb
+         HSdK942+HawH1KpvbRuknWFxJUDghSnNhSN4kjuZqmbw0akmQoFJcD0jJfFVi4Dkjr1Q
+         LzFtO5I8eCPH7izQEP4ZTQkxqLSpKHzhCou3pEH/PEK99wDLy5Xn1r2x6yiCpm6jnXxS
+         amEHwtPWAk5OEZXLG8StB4ewE563UidiB1mNzsjUI/Qk9ZkE8xZFwL3oo0SZSHtWctG2
+         1uCaCupYTOHRxm57j9ilCNUW/B2lQk1Zm7I2DSHQONNEBF7enPoGZLdX/tmizP2DWQ6S
+         JyRg==
+X-Gm-Message-State: APjAAAW3kAedV7ActBl0TSif67q4rYo07whgThCoBtkV9OBJvaOq18sV
+        2Q8RPkrqrpkKLcffkALssKexxIBJlZI=
+X-Google-Smtp-Source: APXvYqxtmmwyKS6PK/mR/D9CxatWeCtX/L+59liROKwU8CoRgIb72mveTBWkLdvefNCsiJFbUAbN8A==
+X-Received: by 2002:a62:870a:: with SMTP id i10mr33261778pfe.259.1569249579034;
+        Mon, 23 Sep 2019 07:39:39 -0700 (PDT)
+Received: from [10.230.28.130] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y15sm13013373pfp.111.2019.09.23.07.39.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 07:39:38 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
+To:     Marc Zyngier <maz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
+ <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
+ <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <8b0f18ef-7b72-e6fd-9930-0f698ced270b@gmail.com>
+Date:   Mon, 23 Sep 2019 07:39:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923142839.GD16544@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Sep 23, 2019 at 11:28:39AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Sep 19, 2019 at 05:23:35PM -0400, Steven Rostedt escreveu:
-> > Hi Arnaldo,
-> > 
-> > This is a series of man page updates to the libtraceevent code, as
-> > well as a fix to one missing prototype and some movement of the location
-> > of the plugins (to have the plugins in their own directory).
- 
-> Thanks, applied.
-
-Its breaking the build on Ubuntu 19.04 cross building to aarch64, I'll
-see if I can fix it:
-
-perfbuilder@9660e1237188:~$ m
-make: Entering directory '/git/perf/tools/perf'
-  BUILD:   Doing 'make -j8' parallel build
-sh: 1: command: Illegal option -c
-
-Auto-detecting system features:
-...                         dwarf: [ on  ]
-...            dwarf_getlocations: [ on  ]
-...                         glibc: [ on  ]
-...                          gtk2: [ OFF ]
-...                      libaudit: [ OFF ]
-...                        libbfd: [ OFF ]
-...                        libcap: [ OFF ]
-...                        libelf: [ on  ]
-...                       libnuma: [ OFF ]
-...        numa_num_possible_cpus: [ OFF ]
-...                       libperl: [ OFF ]
-...                     libpython: [ OFF ]
-...                     libcrypto: [ OFF ]
-...                     libunwind: [ OFF ]
-...            libdw-dwarf-unwind: [ on  ]
-...                          zlib: [ on  ]
-...                          lzma: [ OFF ]
-...                     get_cpuid: [ OFF ]
-...                           bpf: [ on  ]
-...                        libaio: [ on  ]
-...                       libzstd: [ OFF ]
-...        disassembler-four-args: [ OFF ]
-
-Makefile.config:497: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-Makefile.config:545: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-Makefile.config:637: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
-Makefile.config:653: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
-Makefile.config:670: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
-Makefile.config:697: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev
-Makefile.config:724: No python interpreter was found: disables Python support - please install python-devel/python-dev
-Makefile.config:782: No bfd.h/libbfd found, please install binutils-dev[el]/zlib-static/libiberty-dev to gain symbol demangling
-Makefile.config:813: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
-Makefile.config:826: No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR
-Makefile.config:837: No libcap found, disables capability support, please install libcap-devel/libcap-dev
-Makefile.config:850: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
-Makefile.config:905: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-Makefile.config:931: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-  DESCEND  plugins
-make[3]: *** No rule to make target '/tmp/build/perf/libtraceevent-dynamic-list'.  Stop.
-make[2]: *** [Makefile.perf:740: /tmp/build/perf/libtraceevent-dynamic-list] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [Makefile.perf:221: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
-make: Leaving directory '/git/perf/tools/perf'
-perfbuilder@9660e1237188:~$ export
-declare -x ARCH="arm64"
-declare -x CROSS_COMPILE="aarch64-linux-gnu-"
-declare -x EXTRA_MAKE_ARGS="CORESIGHT=1"
-declare -x HOME="/home/perfbuilder"
-declare -x HOSTNAME="9660e1237188"
-declare -x OLDPWD="/"
-declare -x PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-declare -x PWD="/home/perfbuilder"
-declare -x SHLVL="1"
-declare -x TARGET="aarch64-linux-gnu"
-declare -x TERM="xterm"
-declare -x container="podman"
-perfbuilder@9660e1237188:~$
 
 
+On 9/23/2019 1:52 AM, Marc Zyngier wrote:
+> On 22/09/2019 20:08, Florian Fainelli wrote:
+>>
+>>
+>> On 9/22/2019 5:38 AM, Marc Zyngier wrote:
+>>> On Fri, 13 Sep 2019 12:15:42 -0700
+>>> Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>
+>>>> On some specific chips like 7211 we need to leave some interrupts
+>>>> untouched/forwarded to the VPU which is another agent in the system
+>>>> making use of that interrupt controller hardware (goes to both ARM GIC
+>>>> and VPU L1 interrupt controller). Make that possible by using the
+>>>> existing brcm,int-fwd-mask property.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
+>>>>  1 file changed, 13 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+>>>> index 0673a44bbdc2..811a34201dd4 100644
+>>>> --- a/drivers/irqchip/irq-bcm7038-l1.c
+>>>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+>>>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
+>>>>  	struct list_head	list;
+>>>>  	u32			wake_mask[MAX_WORDS];
+>>>>  #endif
+>>>> +	u32			irq_fwd_mask[MAX_WORDS];
+>>>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+>>>>  };
+>>>>  
+>>>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  	resource_size_t sz;
+>>>>  	struct bcm7038_l1_cpu *cpu;
+>>>>  	unsigned int i, n_words, parent_irq;
+>>>> +	int ret;
+>>>>  
+>>>>  	if (of_address_to_resource(dn, idx, &res))
+>>>>  		return -EINVAL;
+>>>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  	else if (intc->n_words != n_words)
+>>>>  		return -EINVAL;
+>>>>  
+>>>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
+>>>
+>>> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
+>>
+>> Here it is meant to be "forward", we have defined this property name
+>> before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
+>> multiplying properties would be appropriate, see patch #4. If you prefer
+>> something named brcm,firmware-configured-mask, let me know.
+> 
+> It's just a name, but I found it a bit confusing. Bah, never mind.
+> 
+>>>
+>>>> +					 intc->irq_fwd_mask, n_words);
+>>>> +	if (ret != 0 && ret != -EINVAL) {
+>>>> +		/* property exists but has the wrong number of words */
+>>>> +		pr_err("invalid brcm,int-fwd-mask property\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +
+>>>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+>>>>  					GFP_KERNEL);
+>>>>  	if (!cpu)
+>>>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  		return -ENOMEM;
+>>>>  
+>>>>  	for (i = 0; i < n_words; i++) {
+>>>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
+>>>> -		cpu->mask_cache[i] = 0xffffffff;
+>>>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
+>>>> +			  cpu->map_base + reg_mask_set(intc, i));
+>>>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+>>>
+>>> I seem to remember that (0xffffffff & whatever) == whatever, as long as
+>>> 'whatever' is a 32bit quantity. So what it this for?
+>>
+>> It is 0xffff_ffff & ~whatever here.
+> 
+> Which doesn't change anything.
+> 
+>> In the absence of this property
+>> being specified, the data is all zeroed out, so we would have
+>> 0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
+>> specified, we would have one more or bits set, and it would be e.g.:
+>> 0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
+>> what we would want here to preserve whatever the firmware has already
+>> configured.
+> 
+> OK, I must be stupid:
+> 
+> #include <stdio.h>
+> 
+> int main(int argc, char *argv[])
+> {
+> 	unsigned int v = 0x100;
+> 	printf ("%x\n", ~v);
+> }
+> maz@filthy-habit$ ./x
+> fffffeff
+> 
+> You might as well OR it with zeroes, if you want.
+
+Not sure I understand your point here.
+
+We used to write 0xffff_ffff to both the hardware and the mask cache to
+have all interrupts masked by default. Now we want to have some bits
+optionally set to 0 (unmasked), based on the brcm,int-fwd-mask property,
+which is what this patch achieves (or tries to). If we write, say
+0xffff_feff to the hardware, which has a Write Only register behavior,
+then we also want to have the mask cache be set to the same value for
+consistency if nothing else. Am I failing at doing what I just described
+and also failing at see it?
+-- 
+Florian
