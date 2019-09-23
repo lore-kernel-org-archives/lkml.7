@@ -2,112 +2,105 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5059AC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A1C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C0D20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2DzTF2B"
+	by mail.kernel.org (Postfix) with ESMTP id 4609320B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569245703;
+	bh=hXQkKliC0S2X43voVjhiTVkMxCC4tIPV9acNAETqUso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CzXqC4gjbGJBX+z+xpkh5DTv/cYXFpduuDy8oOm0dp7qc12WtL/BnLCWuR+Z2lL1R
+	 y+4fHG4GZhW2q/mL3XDfVVs2CwzVaArvGRn69IEQFtCt8PJge12DZJ4lCofZQQogbv
+	 6QFy9DNnvmYQm9fKRYwr89/tjXQgf4f0qcOjErAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408034AbfIWNev (ORCPT
+        id S2408090AbfIWNfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:34:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42838 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404581AbfIWNeu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:34:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c10so12066839otd.9;
-        Mon, 23 Sep 2019 06:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2NRNT/qm8AbtyX6bm4uZ/GQHYcwpqJ9Os6l2yxnGLhE=;
-        b=b2DzTF2BOhkGeYitm3sbUSyDhsdflg0iKZF0VWDo33bqNgftOXXbPT01yqRcQkceHG
-         rZ2edpkQAP8t/XQuB7QOvOHQ/XUcJLVr18zr+GPbSQ+3bPHDO9zYQtrZU3TwAjHeyBf6
-         Mkk862v2GT5hokib9oE0IKthOiwqSr4ga6BOspmBYs7oLvCavH5XvMlAnwJxMCoue9Y7
-         6y7/s8BQ4qetaS3M2c6LXJ17v5W/F++FfDkF+bSGBUDLiC8beElJi//OdmSqg85lcq92
-         yKcS3BJMQaO1DXyMO5QBM1etfQ321grLj2YjlCH7SUiJDV4vztg98Xb/TgmYlgpqS9q1
-         aOiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2NRNT/qm8AbtyX6bm4uZ/GQHYcwpqJ9Os6l2yxnGLhE=;
-        b=VCh3dcDrZrTzFwTPGJIAToxbyk+JN8pz8cifGsuXaKlYKU3puYohBQnvfbeDOAPE4E
-         McZ2ZVCIQdc2czhhVSDrHkwNEpmGVZe1TNL4mW8yb21NU4hknxClgmO/eCCMAbKCac0V
-         8+XEQGjX1kv9lH4w4ISkP/uQmf5vN28dncvJrsQljJDvnxKZ5655PNazWjdbL7ZifgbO
-         2vMpyLYg93GIq6yrufZ9cQfh1qPKFXkBp5ZDs3qcoBtpEYLfZBytje5VOLVMF0C4CydJ
-         uYLsXS25uezMhQskOLktVDgVZlo24rg2snUVOUB7ldJLEnMrBFTOt2y1CkTHVNIkDBs+
-         e0rg==
-X-Gm-Message-State: APjAAAUm9h956yq+WDDHicayOHtmYVoC3PUyHHluW5MTZ2xeSkaPnmxe
-        UlaWuBNQCrIPruAUCvMGOfZKgiiLn5ZpnbPymulugQMYovnQZw==
-X-Google-Smtp-Source: APXvYqxO3XWPSWwL+e9d4kqs68XLgFOn9a/IPLBkTuqUmJzXIoobr1YJ8g7tefWdo1jhzaITR/cg9iUjme01Re05vy0=
-X-Received: by 2002:a9d:7407:: with SMTP id n7mr13868528otk.16.1569245689782;
- Mon, 23 Sep 2019 06:34:49 -0700 (PDT)
+        Mon, 23 Sep 2019 09:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404581AbfIWNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 09:35:02 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C0920820;
+        Mon, 23 Sep 2019 13:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569245701;
+        bh=hXQkKliC0S2X43voVjhiTVkMxCC4tIPV9acNAETqUso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FeeJhFEYpa8NQNgnmMZ03oC875vWZGIk2sDIDJW6viNc1wFklKbOaxWAIJZiDv3z9
+         VPL+5mYyMBGkryM57asvTYICU4x115rVu0DFVAjBJvQeXxR61BtdSSXkhiv2dR+/em
+         4ofSqLwfC02dVakvOgrS63rQNTOJczJ7yNnUIGkc=
+Date:   Mon, 23 Sep 2019 09:35:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.3 084/203] media: omap3isp: Don't set streaming
+ state on random subdevs
+Message-ID: <20190923133500.GF8171@sasha-vm>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-84-sashal@kernel.org>
+ <20190923071942.GJ5525@valkosipuli.retiisi.org.uk>
+ <20190923072503.GA5056@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20190917065044.GA173797@LGEARND20B15>
-In-Reply-To: <20190917065044.GA173797@LGEARND20B15>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Mon, 23 Sep 2019 22:34:39 +0900
-Message-ID: <CADLLry5b1RDjXX8Dbc4ebbZOFFaAd0wc3rDCaD-V9RBwrpNyMA@mail.gmail.com>
-Subject: Re: [PATCH] rtlwifi: rtl8723ae: Remove unused 'rtstatus' variable
-To:     pkshih@realtek.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190923072503.GA5056@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Maintainers...
-Would you please review above patch if you are available?
+On Mon, Sep 23, 2019 at 10:25:03AM +0300, Laurent Pinchart wrote:
+>On Mon, Sep 23, 2019 at 10:19:42AM +0300, Sakari Ailus wrote:
+>> Hi Sasha,
+>>
+>> On Sun, Sep 22, 2019 at 02:41:50PM -0400, Sasha Levin wrote:
+>> > From: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> >
+>> > [ Upstream commit 7ef57be07ac146e70535747797ef4aee0f06e9f9 ]
+>> >
+>> > The streaming state should be set to the first upstream sub-device only,
+>> > not everywhere, for a sub-device driver itself knows how to best control
+>> > the streaming state of its own upstream sub-devices.
+>> >
+>> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>
+>> I don't disagree with this going to the stable trees as well, but in that
+>> case it *must* be accompanied by commit e9eb103f0277 ("media: omap3isp: Set
+>> device on omap3isp subdevs") or the driver will mostly cease to work.
+>>
+>> Could you pick that up as well?
+>
+>While I don't disagree either, I also think there's no requirement to
+>get this commit backported to stable branches. It seems to be the result
+>of a too aggressive auto-selection.
 
+I'd very much agree that AUTOSEL is trying to be aggressive with it's
+patch selection (it's actually sort of like a "dial" I can adjust and
+now it's adjusted pretty high).
+
+However, please don't see it as something that is forced on you; if the
+maintainers disagree with patch selection please just let me know and it
+will dropped. The only reason I'm being aggressive with AUTOSEL is that
+I'm hopefull it will provide better experience for our users.
+
+--
 Thanks,
-Austin Kim
-
-2019=EB=85=84 9=EC=9B=94 17=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 3:50, A=
-ustin Kim <austindh.kim@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> 'rtstatus' local variable is not used,
-> so remove it for clean-up.
->
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c b/drive=
-rs/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-> index 54a3aec..22441dd 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-> @@ -485,15 +485,12 @@ bool rtl8723e_phy_config_rf_with_headerfile(struct =
-ieee80211_hw *hw,
->                                             enum radio_path rfpath)
->  {
->         int i;
-> -       bool rtstatus =3D true;
->         u32 *radioa_array_table;
->         u16 radioa_arraylen;
->
->         radioa_arraylen =3D RTL8723ERADIOA_1TARRAYLENGTH;
->         radioa_array_table =3D RTL8723E_RADIOA_1TARRAY;
->
-> -       rtstatus =3D true;
-> -
->         switch (rfpath) {
->         case RF90_PATH_A:
->                 for (i =3D 0; i < radioa_arraylen; i =3D i + 2) {
-> --
-> 2.6.2
->
+Sasha
