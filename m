@@ -2,51 +2,51 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC3FC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31496C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E334220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D33217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732977AbfIWS0M (ORCPT
+        id S1732995AbfIWS0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:26:12 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:47785 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbfIWS0L (ORCPT
+        Mon, 23 Sep 2019 14:26:13 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:52014 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732942AbfIWS0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:26:11 -0400
-Received: by mail-io1-f70.google.com with SMTP id k14so15951290iot.14
+        Mon, 23 Sep 2019 14:26:12 -0400
+Received: by mail-io1-f69.google.com with SMTP id x13so9770323ioa.18
         for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FanSXGQI5lw6yGFgc2B75WGYu1kp8UskH2qFwnqdt54=;
-        b=U/8wMXTGI1va2dKqOGSqE9GJCJV6UWGSlJfp70DzNDFCrKE83X1q4/bKxoGkGBgAnL
-         n9VRzEIozNELdUCKUyMVn1ryd+KlmcFxHajlh3OP4IHbKe/9+q57BQDz01QNLk+ggl/K
-         C+xhMigW3tOFiEQXpGpViuBnJfwR+5KhN+esWqxOUrEeZeXKS6Q95k9sJyB0iFHXQnYQ
-         TLAxINrU4lLE1O8496AfeZiFadmTmjWjklvHoSL7KCODvLyb5jmYk5ETJ5K+kUHnaveM
-         +gEvD/bnRzpLOIqmvwqr5r6i4Jhj8BpEIY+hp7QAa4Lk9WIiKN+KsaHSRYZVGzDxTDRY
-         avjQ==
-X-Gm-Message-State: APjAAAUSg8XQiiWYJL2aLL5W1Fh1/2CAOlyfGfy4bKEc4QMfNZ1an2SD
-        fr0BgTTkyUKuKi03Tba9iLW7SCcRqSRPpSWU3D2cUfSd4ZpO
-X-Google-Smtp-Source: APXvYqz+RF9YagAAYHdO3Dw8gF85oVxfTzC7UNEtjE/LDYjvsY8hDi+Wp/NsOAVaqNDCo7WiopdOgCPqjlTN+p/PZwRh06yBCxgN
+        bh=Wp+WOxmIS7xEA02hFIkA48OyPRBkMcKVWO+Q59/ep3w=;
+        b=TaxWI6XIPDvHX5oY6yrN9k5nHnbk1HFSu8ElDI0RS8lvwDFvbhSz28jB/+U/RbVnfw
+         Pjozxd3YCb3zlZftRB+YpYbDeywe/KKssrWMRnxDIJicl1VFcq4R9zjM4tYbE3LdyDd/
+         LSvhdN0qjsbeY1GfPLDiYv3aLpXWssPeBKjjAQarRF84f6GzAS6EA3KZmN0RpV8xke47
+         92aVKyDJdVZQWtg5MbRXMb805s8vBUplfJzMJqAreKw3+PGtMHP9u3qusPizyNkMtzvn
+         ZvNwdY37gAuspwqM5Y8cD2SChtluBZCPrjDP3jXpsrt4vmh1DMfIvgEno3Rbgos7v58q
+         LORg==
+X-Gm-Message-State: APjAAAWqiUwofkM1vcodWpGF6PmtgsyS7Kv6aUqtqm9fNyFN3naclh2c
+        cANh2aXtBICR0/8ERMsoqcGL6ddES1OJtpF9G7Wpx9a51nrT
+X-Google-Smtp-Source: APXvYqxXKvyI6gkF2fxEbgVSBMSnm/K5sNn1xNC4xSjPHJP1Zu+7ehuPVelloZn8PCtalDMPhbxYLmpW2im/PNrqrRraa3dXqS0B
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7708:: with SMTP id n8mr768559iom.198.1569263171041;
+X-Received: by 2002:a5e:8c17:: with SMTP id n23mr818164ioj.46.1569263171386;
  Mon, 23 Sep 2019 11:26:11 -0700 (PDT)
 Date:   Mon, 23 Sep 2019 11:26:11 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000de7f8c05933c8de0@google.com>
-Subject: WARNING in blk_mq_sched_free_requests (2)
-From:   syzbot <syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000e3c7de05933c8d39@google.com>
+Subject: general protection fault in finish_writeback_work
+From:   syzbot <syzbot+828abc56e48ada4b0195@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,75 +57,70 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    574cc453 Merge tag 'drm-next-2019-09-18' of git://anongit...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=167c3c7e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4c1d6bfa784bebea
-dashboard link: https://syzkaller.appspot.com/bug?extid=da3b7677bb913dc1b737
+HEAD commit:    24ccb0ab qede: qede_fp: simplify a bit 'qede_rx_build_skb()'
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a5b229600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dfcf592db22b9132
+dashboard link: https://syzkaller.appspot.com/bug?extid=828abc56e48ada4b0195
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+Reported-by: syzbot+828abc56e48ada4b0195@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 9291 at block/blk-mq-sched.c:558  
-blk_mq_sched_free_requests.cold+0x11/0x21 block/blk-mq-sched.c:558
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9291 Comm: syz-executor.1 Not tainted 5.3.0+ #0
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8777 Comm: kworker/u4:5 Not tainted 5.3.0+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+RIP: 0010:__lock_acquire+0x1265/0x4e70 kernel/locking/lockdep.c:3828
+Code: 00 0f 85 0e 26 00 00 48 81 c4 e8 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 dd 2a 00 00 49 81 3e a0 25 06 8a 0f 84 4e ee ff
+RSP: 0018:ffff88806930f938 EFLAGS: 00010007
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 03fffe22022b47e2 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88806930fa48 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff138cf90 R11: ffff8880693002c0 R12: 1ffff110115a3f15
+R13: 0000000000000000 R14: 1ffff110115a3f15 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2136820ea0 CR3: 000000008ab86000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:blk_mq_sched_free_requests.cold+0x11/0x21 block/blk-mq-sched.c:558
-Code: fe 45 85 f6 0f 84 ab e9 ff ff e9 29 e8 ff ff 48 89 cf e8 43 0e 7d fe  
-eb ce e8 bc c3 42 fe 48 c7 c7 00 65 e5 87 e8 84 47 2c fe <0f> 0b e9 47 f3  
-ff ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57
-RSP: 0018:ffff88805aa6f9e0 EFLAGS: 00010286
-RAX: 0000000000000024 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815c26d6 RDI: ffffed100b54df2e
-RBP: ffff88805aa6fa30 R08: 0000000000000024 R09: ffffed1015d260d1
-R10: ffffed1015d260d0 R11: ffff8880ae930687 R12: 00000000fffffff4
-R13: ffff8880a3100100 R14: ffff88808521e1d8 R15: ffff8880a3100100
-  blk_mq_init_sched+0x32c/0x766 block/blk-mq-sched.c:543
-  elevator_init_mq+0x1d3/0x3f0 block/elevator.c:719
-  __device_add_disk+0xd57/0x1230 block/genhd.c:705
-  device_add_disk+0x2b/0x40 block/genhd.c:763
-  add_disk include/linux/genhd.h:429 [inline]
-  loop_add+0x635/0x8d0 drivers/block/loop.c:2051
-  loop_control_ioctl drivers/block/loop.c:2152 [inline]
-  loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2134
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459a09
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f4830110c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
-RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000005
-RBP: 000000000075c118 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f48301116d4
-R13: 00000000004c3118 R14: 00000000004d69f8 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
+  __wake_up+0xe/0x10 kernel/sched/wait.c:142
+  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
+  wb_do_writeback fs/fs-writeback.c:2030 [inline]
+  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace b7a1091622454beb ]---
+RIP: 0010:__lock_acquire+0x1265/0x4e70 kernel/locking/lockdep.c:3828
+Code: 00 0f 85 0e 26 00 00 48 81 c4 e8 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 dd 2a 00 00 49 81 3e a0 25 06 8a 0f 84 4e ee ff
+RSP: 0018:ffff88806930f938 EFLAGS: 00010007
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 03fffe22022b47e2 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88806930fa48 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff138cf90 R11: ffff8880693002c0 R12: 1ffff110115a3f15
+R13: 0000000000000000 R14: 1ffff110115a3f15 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2136820ea0 CR3: 000000008ab86000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
