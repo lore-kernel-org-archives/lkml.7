@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E68C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19798C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5B020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AEC20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263312;
-	bh=S/2TilRY8Jgz0Z+ebYs0iFjbeAgPyekihDilT67FsAc=;
+	s=default; t=1569263315;
+	bh=rT1g/raMHC8EmgZx/1zwUJDNQKU4ZVLYts5C3N9/83M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMq0dLQzQByurWRd0kk/zlvRpX710OlmTCrFfnpJMlU2rGvsLlCfOF0N7+h5ghpKq
-	 WbKqMXtWx5hwLgbDwNB/TotApX3P6C4fsn7BIvPstVZzmeNi1C817JgqPNQGe060XA
-	 XkdqR7jr0qyrGEuWt8XQ8dyHmxIvGnKTLKrDOkpw=
+	b=GnjE/NAyWQHSIfdk2t2aRhHFZurP5yyR5cDmPo4Gy2TD4J5FwsVKfdDBdr5+v+LHJ
+	 YD1IjANkhHQVgGTVNTIGX40+6BeYFz4BXQC9mgziCH+pQsObPUNKWDyEvkW4Z/QvQm
+	 HHoNNedmRv1vU+sTQt1rKq6uyVRTA1An3g3otp3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502427AbfIWS2b (ORCPT
+        id S1733094AbfIWS2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:28:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:47262 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 14:28:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:47282 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733081AbfIWS22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:28:28 -0400
+        id S1733081AbfIWS2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:28:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D66582D91;
-        Mon, 23 Sep 2019 11:28:27 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECBC12D97;
+        Mon, 23 Sep 2019 11:28:31 -0700 (PDT)
 Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 304723F694;
-        Mon, 23 Sep 2019 11:28:25 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4139A3F694;
+        Mon, 23 Sep 2019 11:28:28 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -43,9 +43,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 33/35] KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
-Date:   Mon, 23 Sep 2019 19:26:04 +0100
-Message-Id: <20190923182606.32100-34-maz@kernel.org>
+Subject: [PATCH 34/35] KVM: arm64: GICv4.1: Configure SGIs as HW interrupts
+Date:   Mon, 23 Sep 2019 19:26:05 +0100
+Message-Id: <20190923182606.32100-35-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
 References: <20190923182606.32100-1-maz@kernel.org>
@@ -56,216 +56,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the GICv3 emulation code that deals with SGIs now has to be
-aware of the v4.1 capabilities in order to benefit from it.
+To enable HW delivery of SGIs, set their hw flag to true, link them
+to the corresponding Linux interrupt, which is then activated.
 
-Add such support, keyed on the interrupt having the hw flag set and
-being a SGI.
+This configures the SGIs at the ITS level, and put the show
+on the road!
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
- virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
- 2 files changed, 96 insertions(+), 7 deletions(-)
+ virt/kvm/arm/vgic/vgic-v4.c | 42 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index 7dfd15dbb308..d73f4ffd7d36 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -6,6 +6,7 @@
- #include <linux/irqchip/arm-gic-v3.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/interrupt.h>
- #include <kvm/iodev.h>
- #include <kvm/arm_vgic.h>
- 
-@@ -939,8 +940,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
- 		 * generate interrupts of either group.
- 		 */
- 		if (!irq->group || allow_group1) {
--			irq->pending_latch = true;
--			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+			if (!irq->hw) {
-+				irq->pending_latch = true;
-+				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+			} else {
-+				/* HW SGI? Ask the GIC to inject it */
-+				int err;
-+				err = irq_set_irqchip_state(irq->host_irq,
-+							    IRQCHIP_STATE_PENDING,
-+							    true);
-+				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			}
- 		} else {
- 			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- 		}
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index 0d090482720d..6ebf747a7806 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -5,6 +5,8 @@
- 
- #include <linux/bitops.h>
- #include <linux/bsearch.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <kvm/iodev.h>
-@@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
- 	return value;
+diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+index e61c7a149515..0ff6dac16cba 100644
+--- a/virt/kvm/arm/vgic/vgic-v4.c
++++ b/virt/kvm/arm/vgic/vgic-v4.c
+@@ -97,6 +97,46 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+ 	return IRQ_HANDLED;
  }
  
-+static void vgic_update_vsgi(struct vgic_irq *irq)
++static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
 +{
-+	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
++	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
++	vpe->sgi_config[irq->intid].group 	= irq->group;
++	vpe->sgi_config[irq->intid].priority	= irq->priority;
 +}
 +
- void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
- 			   unsigned int len, unsigned long val)
- {
-@@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 		irq->group = !!(val & BIT(i));
--		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			vgic_update_vsgi(irq);
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+		} else {
-+			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-+		}
- 
- 		vgic_put_irq(vcpu->kvm, irq);
- 	}
-@@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
--		if (vgic_irq_is_mapped_level(irq)) {
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			if (!irq->enabled) {
-+				struct irq_data *data;
++static void vgic_v4_init_vsgis(struct kvm_vcpu *vcpu)
++{
++	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
++	int i;
 +
-+				irq->enabled = true;
-+				data = &irq_to_desc(irq->host_irq)->irq_data;
-+				while (irqd_irq_disabled(data))
-+					enable_irq(irq->host_irq);
-+			}
++	if (!kvm_vgic_global_state.has_gicv4_1)
++		return;
 +
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
++	/*
++	 * With GICv4.1, every virtual SGI can be directly injected. So
++	 * let's pretend that they are HW interrupts, tied to a host
++	 * IRQ. The SGI code will do its magic.
++	 */
++	for (i = 0; i < VGIC_NR_SGIS; i++) {
++		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
++		struct irq_desc *desc;
++		int ret;
 +
-+			continue;
-+		} else if (vgic_irq_is_mapped_level(irq)) {
- 			bool was_high = irq->line_level;
- 
- 			/*
-@@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
-+			disable_irq_nosync(irq->host_irq);
- 
- 		irq->enabled = false;
- 
-@@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
- 	for (i = 0; i < len * 8; i++) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 		unsigned long flags;
-+		bool val;
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
--		if (irq_is_pending(irq))
--			value |= (1U << i);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			int err;
-+
-+			val = false;
-+			err = irq_get_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    &val);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+		} else {
-+			val = irq_is_pending(irq);
-+		}
-+
-+		value |= ((u32)val << i);
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- 
- 		vgic_put_irq(vcpu->kvm, irq);
-@@ -236,6 +276,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 		}
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-+
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			/* HW SGI? Ask the GIC to inject it */
-+			int err;
-+			err = irq_set_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    true);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
-+
-+			continue;
-+		}
-+
- 		if (irq->hw)
- 			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
- 		else
-@@ -290,6 +345,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+			/* HW SGI? Ask the GIC to inject it */
-+			int err;
-+			err = irq_set_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    false);
-+			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-+
-+			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-+			vgic_put_irq(vcpu->kvm, irq);
-+
-+			continue;
-+		}
-+
- 		if (irq->hw)
- 			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
- 		else
-@@ -339,8 +408,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 
- 	raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
--	if (irq->hw) {
-+	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
- 		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
-+	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++		irq->hw = true;
++		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
++		vgic_v4_sync_sgi_config(vpe, irq);
 +		/*
-+		 * GICv4.1 VSGI feature doesn't track an active state,
-+		 * so let's not kid ourselves, there is nothing we can
-+		 * do here.
++		 * SGIs are initialised as disabled. Enable them if
++		 * required by the rest of the VGIC init code.
 +		 */
-+		irq->active = false;
- 	} else {
- 		u32 model = vcpu->kvm->arch.vgic.vgic_model;
- 		u8 active_source;
-@@ -514,6 +590,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 		/* Narrow the priority range to what we actually support */
- 		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
-+		if (irq->hw && vgic_irq_is_sgi(irq->intid))
-+			vgic_update_vsgi(irq);
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++		desc = irq_to_desc(irq->host_irq);
++		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
++					      false);
++		WARN_ON(ret);
++		vgic_put_irq(vcpu->kvm, irq);
++	}
++}
++
+ /**
+  * vgic_v4_init - Initialize the GICv4 data structures
+  * @kvm:	Pointer to the VM being initialized
+@@ -168,6 +208,8 @@ int vgic_v4_init(struct kvm *kvm)
+ 			dist->its_vm.nr_vpes = i;
+ 			break;
+ 		}
++
++		vgic_v4_init_vsgis(vcpu);
+ 	}
  
- 		vgic_put_irq(vcpu->kvm, irq);
+ 	if (ret)
 -- 
 2.20.1
 
