@@ -2,78 +2,110 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27395C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E709AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84922064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B752920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UsZPbcuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfIWImV (ORCPT
+        id S1731534AbfIWIqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:42:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43670 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfIWImV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:42:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DF00E83F40;
-        Mon, 23 Sep 2019 08:42:20 +0000 (UTC)
-Received: from localhost (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12C3B60852;
-        Mon, 23 Sep 2019 08:42:19 +0000 (UTC)
-Date:   Mon, 23 Sep 2019 16:42:17 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     tj@kernel.org
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] memcg: Only record foreign writebacks with dirty pages
- when memcg is not disabled
-Message-ID: <20190923084217.GA342@MiWiFi-R3L-srv>
-References: <20190923083030.6442-1-bhe@redhat.com>
+        Mon, 23 Sep 2019 04:46:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33614 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbfIWIqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:46:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y127so9485555lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 01:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BJHjML3SI9D2+EbTLuvMPDk5GTC8ZZ5KbbxFlhyt+ws=;
+        b=UsZPbcuZRmE+Z3GSClH5/Mu9pa0xactT8q65lCY9ZQRMxMBG6shGQrEFWmS0QPKePT
+         NbH/aWlJIVV/9FnXQijrVB5eG14WBp07hOFwnBLnZojOsILfMyD9JEsCCB6pT1OcWCp4
+         eMpNQCu4hZN0omTdSXytMm98/IpN8fCAY9LZQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BJHjML3SI9D2+EbTLuvMPDk5GTC8ZZ5KbbxFlhyt+ws=;
+        b=dTWgZEb7OT6DvG1P8LiPcb6CXttJqW1Y7Fz7ozCCq8IIjb20o0WshYK4E2nd8jHDYt
+         lmhVb0jHbQxpfPfXtNgTxP07NsC+QX+5ZbiPo7VHVzgGl7eACfcusp7hlXgH8OD0QsEl
+         rY2EVXb6OEnnvjYFDbGlCNPgjRX/CioxHf36lQxHvz2PpMiVzCmn+xXqg6yVGaIvHYoC
+         B1SZHhzc8HbMg3XjD613XixcNBR18BzvZWTSPG6dl5UC9ws+bSG6W+SyE3AsxMDBrFIV
+         dASWhptrhG3LCGaYYXuECXq+PxgojYbxxl9eVhZC5YtFQyLpsg5+pL8mOJ9nfPTbrdly
+         oTBQ==
+X-Gm-Message-State: APjAAAV0MCCqCyzNi2c1A47oii35tTo6n4VRIwV3evSR0zIfhQyOPbpc
+        vix1LXtXrWNVSjOQZmG5+Gd4Zg==
+X-Google-Smtp-Source: APXvYqwfwYktaF6d2R/jJPuhIAVMBaQ1LbNQL8tbVJGh4whnsoZQo/JOgdIOZpuQji6Y+7cNLWAfXQ==
+X-Received: by 2002:a19:4f5a:: with SMTP id a26mr15849533lfk.116.1569228358242;
+        Mon, 23 Sep 2019 01:45:58 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id 134sm2072003lfk.70.2019.09.23.01.45.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 01:45:57 -0700 (PDT)
+Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+ <20190923081348.6843-4-linux@rasmusvillemoes.dk>
+ <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
+Date:   Mon, 23 Sep 2019 10:45:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923083030.6442-1-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 23 Sep 2019 08:42:20 +0000 (UTC)
+In-Reply-To: <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/23/19 at 04:30pm, Baoquan He wrote:
- 
-> ---
->  include/linux/memcontrol.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On 23/09/2019 10.27, Uwe Kleine-König wrote:
+> On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
+>>
+>>  
+>> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
+>> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
+>> +
+>>  	writel(duty_cycles << 16,
+>>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
+>> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
+>> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
 > 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index ad8f1a397ae4..fa53f9d51205 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1261,7 +1261,8 @@ void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
->  static inline void mem_cgroup_track_foreign_dirty(struct page *page,
->  						  struct bdi_writeback *wb)
->  {
-> -	if (unlikely(&page->mem_cgroup->css != wb->memcg_css))
-> +	if (unlikely(&page->mem_cgroup->css != wb->memcg_css)
-> +		&& !mem_cgroup_disabled())
+> When will this affect the output? Only on the next start of a period, or
+> immediatly? Can it happen that this results in a mixed output (i.e. a
+> period that has already the new duty cycle from the line above but not
+> the new polarity (or period)?
 
-Sorry, this is the draft patch I was testing. Later I think this
-had better be moved into mem_cgroup_track_foreign_dirty_slowpath().
+The data sheet says "Also, when the user reprograms the channel in this
+manner, the new register values will not take effect until the beginning
+of a new output period. This eliminates the potential for output
+glitches that could occur if the registers were updated while the
+channel was enabled and in the middle of a cycle.". So I think this
+should be ok. "this manner" refers to the registers being written in the
+proper order (first ACTIVEn, then PERIODn).
 
-Not very sure about this. Will send a v2 to match the patch log.
-
->  		mem_cgroup_track_foreign_dirty_slowpath(page, wb);
->  }
->  
-> -- 
-> 2.17.2
-> 
+Rasmus
