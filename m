@@ -2,148 +2,119 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8366EC432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16C1C432C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADA82190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8901721D56
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569282561;
+	bh=jL+W7CvZH4IgiJNH4Ta0EhwbKZYehXX/NJi8o1uDX1k=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rubFTho21krROBWq7c6Bbfu22aqyUAEwfHlVpf7WsneOaqscTFvPEb67Mx7yhE4al
+	 1kHDzSQHRMy2kNcdY2dXlRnzim4CVV+TKJ4WNO6e3EVPHCpeiu6WsQBNoRzHMwuojq
+	 ER8vgLv4LOnWYkSkUjQByZGpk0YjnCdZj1G65i/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408393AbfIWXpC (ORCPT
+        id S2391199AbfIWXtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 19:45:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:15863 "EHLO mga04.intel.com"
+        Mon, 23 Sep 2019 19:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391461AbfIWXpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 19:45:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 16:45:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,542,1559545200"; 
-   d="scan'208";a="190834460"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 23 Sep 2019 16:45:01 -0700
-Date:   Mon, 23 Sep 2019 16:45:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/17] KVM: monolithic: x86: handle the
- request_immediate_exit variation
-Message-ID: <20190923234500.GR18195@linux.intel.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-4-aarcange@redhat.com>
- <20190923223526.GQ18195@linux.intel.com>
- <20190923230626.GF19996@redhat.com>
+        id S1729276AbfIWXtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 19:49:20 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [170.225.9.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96F8D21A4C;
+        Mon, 23 Sep 2019 23:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569282559;
+        bh=jL+W7CvZH4IgiJNH4Ta0EhwbKZYehXX/NJi8o1uDX1k=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=UeC4Jud0+mJMm5/0QRXUluKExkV2v4Bm5v3jzNKZ9VsWLHJzNJkLgrWRdKSERFccH
+         8oYzNCEwjAUNxdFdfT1TRHetfT/Jo2kgOTSq4CCw9PHx7lOo3OYcfgv0VhyOlEL546
+         wNPDBQXOMW5lCPjtrIITjD0QwQxNeORyEsBQ2H8A=
+Date:   Mon, 23 Sep 2019 16:49:16 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 -rcu dev 0/5] kfree_rcu() additions for -rcu
+Message-ID: <20190923234916.GF7828@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20190830163633.104099-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923230626.GF19996@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190830163633.104099-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 07:06:26PM -0400, Andrea Arcangeli wrote:
-> On Mon, Sep 23, 2019 at 03:35:26PM -0700, Sean Christopherson wrote:
-> > On Fri, Sep 20, 2019 at 05:24:55PM -0400, Andrea Arcangeli wrote:
-> > > request_immediate_exit is one of those few cases where the pointer to
-> > > function of the method isn't fixed at build time and it requires
-> > > special handling because hardware_setup() may override it at runtime.
-> > > 
-> > > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/vmx_ops.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/vmx/vmx_ops.c b/arch/x86/kvm/vmx/vmx_ops.c
-> > > index cdcad73935d9..25d441432901 100644
-> > > --- a/arch/x86/kvm/vmx/vmx_ops.c
-> > > +++ b/arch/x86/kvm/vmx/vmx_ops.c
-> > > @@ -498,7 +498,10 @@ int kvm_x86_ops_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-> > >  
-> > >  void kvm_x86_ops_request_immediate_exit(struct kvm_vcpu *vcpu)
-> > >  {
-> > > -	vmx_request_immediate_exit(vcpu);
-> > > +	if (likely(enable_preemption_timer))
-> > > +		vmx_request_immediate_exit(vcpu);
-> > > +	else
-> > > +		__kvm_request_immediate_exit(vcpu);
-> > 
-> > Rather than wrap this in VMX code, what if we instead take advantage of a
-> > monolithic module and add an inline to query enable_preemption_timer?
-> > That'd likely save a few CALL/RET/JMP instructions and eliminate
-> > __kvm_request_immediate_exit.
-> > 
-> > E.g. something like:
-> > 
-> > 	if (req_immediate_exit) {
-> > 		kvm_make_request(KVM_REQ_EVENT, vcpu);
-> > 		if (kvm_x86_has_request_immediate_exit())
-> > 			kvm_x86_request_immediate_exit(vcpu);
-> > 		else
-> > 			smp_send_reschedule(vcpu->cpu);
-> > 	}
+On Fri, Aug 30, 2019 at 12:36:28PM -0400, Joel Fernandes (Google) wrote:
+> Hi,
 > 
-> Yes, I mentioned the inlining possibilities in part of comment of
-> 2/17:
+> This is a series on top of the patch "rcu/tree: Add basic support for kfree_rcu() batching".
 > 
-> ===
-> Further incremental minor optimizations that weren't possible before
-> are now enabled by the monolithic model. For example it would be
-> possible later to convert some of the small external methods to inline
-> functions from the {svm,vmx}_ops.c file to kvm_ops.h. However that
-> will require more Makefile tweaks.
-> ===
+> It adds performance tests, some clean ups and removal of "lazy" RCU callbacks.
+> 
+> Now that kfree_rcu() is handled separately from call_rcu(), we also get rid of
+> kfree "lazy" handling from tree RCU as suggested by Paul which will be unused.
+> 
+> Based on patch:
+> Link: http://lore.kernel.org/r/20190814160411.58591-1-joel@joelfernandes.org
+> 
+> 
+> v1 series:
+> 	https://lkml.org/lkml/2019/8/27/1315
+> 	https://lore.kernel.org/patchwork/project/lkml/list/?series=408218
+> 
+> Joel Fernandes (Google) (5):
+> rcu/rcuperf: Add kfree_rcu() performance Tests
+> rcu/tree: Add multiple in-flight batches of kfree_rcu work
+> rcu/tree: Add support for debug_objects debugging for kfree_rcu()
+> rcu: Remove kfree_rcu() special casing and lazy handling
+> rcu: Remove kfree_call_rcu_nobatch()
 
-With a straight rename to kvm_x86_<function>() instead of wrappers, we
-shouldn't need kvm_ops.c.  kvm_ops.h might be helpful, but it'd be just
-as easy to keep them in kvm_host.h and would likely yield a more
-insightful diff[*].
+Hello, Joel,
 
-> To implement your kvm_x86_has_request_immediate_exit() we need more
-> Makefile tweaking, basically we need a -D__SVM__ -D__VMX__ kind of
-> thing so we can put an #ifdef __SVM__ in the kvm_ops.h equivalent to
-> put inline code there. Or some other better solution if you think of
-> any, that was my only idea so far with regard to inlining.
+I have reworked these as we discussed.  Please see below for a preliminary
+series on -rcu.  I say "preliminary" because most (if not all) of my
+patchlets should be merged with one or another of yours.  I split them
+out to make it easier for you to review my changes.  Also, I need to
+swap your first two commits, if I am not mistaken -- they are switched
+for ease of testing.
 
-Hmm, I was thinking more along the lines of extending the kvm_host.h
-pattern down into vendor specific code, e.g. arch/x86/kvm/vmx/kvm_host.h.
-Probably with a different name though, two of those is confusing enough.
+Thoughts?
 
-It'd still need Makefile changes, but we wouldn't litter the code with
-#ifdefs.  Future enhancments can also take advantage of the per-vendor
-header to inline other things.  Such a header would also make it possible
-to fully remove kvm_x86_ops in this series (I think).
+						Thanx, Paul
 
-[*] Tying into the thought above, if we go for a straight rename and
-    eliminate the conditionally-implemented kvm_x86_ops ahead of time,
-    e.g. with inlines that return -EINVAL or something, then the
-    conversion to direct calls can be a straight replacement of
-    "kvm_x86_ops->" with "kvm_x86_" at the same time the declarations
-    are changed from members of kvm_x86_ops to externs.
+------------------------------------------------------------------------
 
-Actually, typing out the above made me realize the immediate exit code
-can be:
-
-	if (req_immediate_exit) {
-		kvm_make_request(KVM_REQ_EVENT, vcpu);
-		if (kvm_x86_request_immediate_exit(vcpu))
-			smp_send_reschedule(vcpu->cpu);
-	}
-
-Where kvm_x86_request_immediate_exit() returns 0 on success, e.g. the SVM
-implementation can be "return -EINVAL" or whatever is appropriate, which
-I assume the compiler can optimize out.  Or maybe a boolean return is
-better in this case?
+b2674c7 rcuperf: Add kfree_rcu() performance Tests
+ff8db00 rcu: Make batched kfree_rcu() work during early boot
+0784b59 rcu: Add crude self-test for early boot kfree_rcu()
+196c1d9 rcu: Kick kfree_rcu() state machine for early boot calls
+52a10e8 rcu: Use docbook header comment for struct kfree_rcu_cpu
+099f53b rcu: Rework comments, indentation, and line breaks for kfree_rcu()
+7ab6387 rcu EXP: Non-atomic ->monitor_todo, step 1
+4a908098 rcu EXP: Non-atomic ->monitor_todo, step 2
+783f00d rcu EXP: Non-atomic ->monitor_todo, step 3
+4fe2018 rcu EXP: Non-atomic ->monitor_todo, step 4
+b389141 rcu EXP: Non-atomic ->monitor_todo, step 5
+8889da8 rcu EXP: Non-atomic ->monitor_todo, step 6
+149b93e rcu EXP: Non-atomic ->monitor_todo, step 7
+733e6a7 rcu: Add multiple in-flight batches of kfree_rcu() work
+3acdea0 rcu: Add support for debug_objects debugging for kfree_rcu()
+463db53 rcu: Remove kfree_rcu() special casing and lazy-callback handling
+49e601b rcu: Remove kfree_call_rcu_nobatch()
