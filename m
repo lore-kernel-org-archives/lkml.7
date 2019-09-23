@@ -2,130 +2,198 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B52C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E90C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DA0206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="s19vFEsh"
+	by mail.kernel.org (Postfix) with ESMTP id 361F021850
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502265AbfIWTi2 (ORCPT
+        id S1733245AbfIWTlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:38:28 -0400
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:46097 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfIWTi2 (ORCPT
+        Mon, 23 Sep 2019 15:41:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35526 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728033AbfIWTlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:38:28 -0400
-Received: by mail-pl1-f174.google.com with SMTP id q24so6908005plr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=riBJUAnFgj9nDVI+i5Nb/om+rNkxXzEsRdcl+2egnO4=;
-        b=s19vFEshxAW384piB/ezxkPFrjjo13YeQzWF9b9dbk7vhPuK6amZjiAprUOKGKulzy
-         yXIjNkpzVOWZ9v7f+nSqJOGWNG/A8UlqcyzOiz2GG6BekJNXTU3gDTVIPxDHVX4PZQ6M
-         Fg/AnN/Ig6SV3jwOioONtvHTgDNK9lzVDyB5IUVR+anl4me9busAYBKVPueDFmzF8XH9
-         r4uDtyUitwNi/mzP0GNiwWmKnO+luk3lIzz8VeRTc6NgUyZ/IHA+og0kAHD9KiyvyhXx
-         aLNA2J5lzu8v3WYkt+1a3yCw74DidaaAyZ337wSYXbOrFipS3JbDFPaZmpYmGRp+I1Mx
-         8OBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=riBJUAnFgj9nDVI+i5Nb/om+rNkxXzEsRdcl+2egnO4=;
-        b=G2lR8n+VFM+qyN9Sxv7Dccst+qovnzzttPzjtE3Ml79EYM6x44kb7608w8U7dmhxqt
-         /eEbCwC7ccVMsuBeWpG6b3hnYbZ4zXuN8coGdztcoCMZPgZQ7kZ882h/EAsh/qHfhWtp
-         Wn3HbTgpALgZuhOxB9aTD4XVnyAW6j0EvGc+IXIwW9ZJuIBT0b54Kju4Jq2G2vsN93IU
-         ZuVaxpZkTsxaxNOpYnb9Y3d+wPMBi25Itq5ZDWNhmU+oUEu536x6xuC7JXFV1t0M4zON
-         FPkqRR8/JcN3BlEb+G8ok6dt/9sk5g9nI7/x4gtEPOHSEH04m4SD5RRKcuJKzLoCv1cs
-         VTPQ==
-X-Gm-Message-State: APjAAAUnsZe1YiypnqDfxEjt04RlkfDzWwZw/G+23lXHe1Z2+6aCVOkc
-        cbScF1ktcXxTnxA6mFLTw1Fm4g==
-X-Google-Smtp-Source: APXvYqxZF87yHJ5Xz3fYmOys+zaQo1oYbLk64QvbewX8GlJWL2gsgDdynRDgYaTLsrdYO/mfhhuXJw==
-X-Received: by 2002:a17:902:7846:: with SMTP id e6mr1464546pln.136.1569267507352;
-        Mon, 23 Sep 2019 12:38:27 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id r186sm17219515pfr.40.2019.09.23.12.38.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 12:38:26 -0700 (PDT)
-Subject: Re: Is congestion broken?
-To:     Matthew Wilcox <willy@infradead.org>, Lin Feng <linf@wangsu.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, corbet@lwn.net,
-        mcgrof@kernel.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        keescook@chromium.org, mchehab+samsung@kernel.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
-        hannes@cmpxchg.org, Omar Sandoval <osandov@fb.com>,
-        Ming Lei <ming.lei@redhat.com>
-References: <20190917115824.16990-1-linf@wangsu.com>
- <20190917120646.GT29434@bombadil.infradead.org>
- <20190918123342.GF12770@dhcp22.suse.cz>
- <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
- <20190919034949.GF9880@bombadil.infradead.org>
- <20190923111900.GH15392@bombadil.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <45d8b7a6-8548-65f5-cccf-9f451d4ae3d4@kernel.dk>
-Date:   Mon, 23 Sep 2019 13:38:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 15:41:21 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NJcWf4138884;
+        Mon, 23 Sep 2019 15:40:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v740wgqtm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 15:40:52 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NJepRZ145246;
+        Mon, 23 Sep 2019 15:40:51 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v740wgqt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 15:40:51 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NJaKCj017805;
+        Mon, 23 Sep 2019 19:40:51 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v5bg6p73a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 19:40:51 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NJemWb60358990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 19:40:48 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BB18C605F;
+        Mon, 23 Sep 2019 19:40:48 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D39C4C605B;
+        Mon, 23 Sep 2019 19:40:43 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.184])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 19:40:43 +0000 (GMT)
+Message-ID: <dc9fad3577551d34ead36c0f7340a573086c0cab.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
+ method to skip serializing
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 23 Sep 2019 16:40:39 -0300
+In-Reply-To: <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
+References: <20190920195047.7703-1-leonardo@linux.ibm.com>
+         <20190920195047.7703-12-leonardo@linux.ibm.com>
+         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
+         <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
+         <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
+         <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
+         <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-msT9mHa9dsgVOOqF07pT"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190923111900.GH15392@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 5:19 AM, Matthew Wilcox wrote:
-> 
-> Ping Jens?
-> 
-> On Wed, Sep 18, 2019 at 08:49:49PM -0700, Matthew Wilcox wrote:
->> On Thu, Sep 19, 2019 at 10:33:10AM +0800, Lin Feng wrote:
->>> On 9/18/19 20:33, Michal Hocko wrote:
->>>> I absolutely agree here. From you changelog it is also not clear what is
->>>> the underlying problem. Both congestion_wait and wait_iff_congested
->>>> should wake up early if the congestion is handled. Is this not the case?
->>>
->>> For now I don't know why, codes seem should work as you said, maybe I need to
->>> trace more of the internals.
->>> But weird thing is that once I set the people-disliked-tunable iowait
->>> drop down instantly, this is contradictory to the code design.
->>
->> Yes, this is quite strange.  If setting a smaller timeout makes a
->> difference, that indicates we're not waking up soon enough.  I see
->> two possibilities; one is that a wakeup is missing somewhere -- ie the
->> conditions under which we call clear_wb_congested() are wrong.  Or we
->> need to wake up sooner.
->>
->> Umm.  We have clear_wb_congested() called from exactly one spot --
->> clear_bdi_congested().  That is only called from:
->>
->> drivers/block/pktcdvd.c
->> fs/ceph/addr.c
->> fs/fuse/control.c
->> fs/fuse/dev.c
->> fs/nfs/write.c
->>
->> Jens, is something supposed to be calling clear_bdi_congested() in the
->> block layer?  blk_clear_congested() used to exist until October 29th
->> last year.  Or is something else supposed to be waking up tasks that
->> are sleeping on congestion?
 
-Congestion isn't there anymore. It was always broken as a concept imho,
-since it was inherently racy. We used the old batching mechanism in the
-legacy stack to signal it, and it only worked for some devices.
+--=-msT9mHa9dsgVOOqF07pT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+On Mon, 2019-09-23 at 11:14 -0700, John Hubbard wrote:
+> On 9/23/19 10:25 AM, Leonardo Bras wrote:
+> [...]
+> That part is all fine, but there are no run-time memory barriers in the=
+=20
+> atomic_inc() and atomic_dec() additions, which means that this is not
+> safe, because memory operations on CPU 1 can be reordered. It's safe
+> as shown *if* there are memory barriers to keep the order as shown:
+>=20
+> CPU 0                            CPU 1
+> ------                         --------------
+>                                atomic_inc(val) (no run-time memory barrie=
+r!)
+> pmd_clear(pte)
+> if (val)
+>     run_on_all_cpus(): IPI
+>                                local_irq_disable() (also not a mem barrie=
+r)
+>=20
+>                                READ(pte)
+>                                if(pte)
+>                                   walk page tables
+>=20
+>                                local_irq_enable() (still not a barrier)
+>                                atomic_dec(val)
+>=20
+> free(pte)
+>=20
+> thanks,
+
+This is serialize:
+
+void serialize_against_pte_lookup(struct mm_struct *mm)
+{
+	smp_mb();
+	if (running_lockless_pgtbl_walk(mm))
+		smp_call_function_many(mm_cpumask(mm), do_nothing,
+NULL, 1);
+}
+
+That would mean:
+
+CPU 0                            CPU 1
+------                         --------------
+                               atomic_inc(val)=20
+pmd_clear(pte)
+smp_mb()
+if (val)
+    run_on_all_cpus(): IPI
+                               local_irq_disable()=20
+
+                               READ(pte)
+                               if(pte)
+                                  walk page tables
+
+                               local_irq_enable() (still not a barrier)
+                               atomic_dec(val)
+
+By https://www.kernel.org/doc/Documentation/memory-barriers.txt :
+'If you need all the CPUs to see a given store at the same time, use
+smp_mb().'
+
+Is it not enough?=20
+Do you suggest adding 'smp_mb()' after atomic_{inc,dec} ?
+
+--=-msT9mHa9dsgVOOqF07pT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JH7cACgkQlQYWtz9S
+ttQbsg/+NzuiDsKHci5TYegDW6BmUL/AMfyvUr6EHhP0ki98ppV+Z6T24LKU8/Fd
+FviJPbDIJMZlkk3vc1ZvDxxOYsF9DOojVxXXqBFb9HlecMgPJDWY/qwMUjzXlQSP
+IpOfbeRXZ+qhq912shlCqBPQh1a4cj4MGp2OaxLEgyblj5tWciakunL+TqIBU3Gs
+YYNpf1sBQ+y0uboAHDu9CH0ssN6czr9PyaR/8pgjQKPUCd8Cei26gcU45qnhqllU
+ls8Fo5QjlKiY5DTGzX2cOvj5A+ZP8/AbL42nB1DEm2NsndmtGG3kNOmGxGzAnIO7
+DwesqALzC/yKwwSLR6EFGFW7y+Ucm9FknrZ8e3ai/Filvd71YwsAF8LkQosC+qjv
+BvWhR+RJLjjpysn8nQDYkJeWCEJ+8civxf1mgz4oBQ7bT/AHhQ75lolWe8QhZZwx
+QnRpRBglBdZwir9gy15Huevjke3p3FklIwuDN4otTPlrWWS966BXLKxK+XAhb5j5
+hzovVwge/iaSStEEZrLtBl8rhMmowXKa55/I97dBeDrnBHDVoJyYb5+moAYU75UA
+M/5z1wwNQQWP7ftV2fkngtCsUsED6tDklyyyrAQ0zsfzOF6IZ6gbcvpZhrQyz5G5
+WFPpc7V2uJWZJRN+Afk8Ittnl/GOH7WBozDka6dGiLurBnTnc50=
+=mRcx
+-----END PGP SIGNATURE-----
+
+--=-msT9mHa9dsgVOOqF07pT--
 
