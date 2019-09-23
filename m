@@ -2,111 +2,117 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A53C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EC3C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B9B20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5814020856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569262370;
-	bh=5tDDKgWw72hL/Kj8mDZN6XB9KcgZBBMsronFxJwR3Wo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LeUDPzuuNpUWinDfvARKZ/db1A5XZXgriO8cYmFlWN61Dt1ou/1004ocDvme7y3nV
-	 +7RSJHOL9BLJwQtJCjY0qNy37viE0Alykv69pCJh1Vkg+iRdJHu68EgwoaNqW2uQRq
-	 NFKQTBukBq/GunKanIpXdHF9ImmylBqgJRSRmSEw=
+	s=default; t=1569262479;
+	bh=9JnE4fmdEWiKSwublyyIWd6j/KzXUP9nRmeoN6pKKxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OnsGVg9+u8DeWfmBaiScSA3w+kcrehND+ls/EsKKePnGYdSBklQPA1G1cue7XnSDp
+	 VCEjOrzr7MK6F0pHb6xr1aUwilB50tz/KUoykrQ70McA2MIGwe+RMuGdEYgUJpg7Am
+	 +VNUNBIjfZPW4xvFLb1Cgrc4pWOot/QORo+Kbxao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440351AbfIWSMt (ORCPT
+        id S2440360AbfIWSOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:12:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38181 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438090AbfIWSMt (ORCPT
+        Mon, 23 Sep 2019 14:14:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56794 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437960AbfIWSOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:12:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u28so10865160lfc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R4shg+scIpJfCZC41SED7+qonFl33tfza4anQMhH3cw=;
-        b=iFhS4Y7yp8j4dD31DmizpunLsN676aOnZOftmOzWSVKYsaIXYR5qCXzu4sfTZ71kMR
-         4yn55X3l4wqby8Lln6hkzwjFw+M0XMEyj2M9ZSeSQtMYsMGdXP2LKdoZdyVLK5BRdt1u
-         bYlGFZDsY+HEXSU5dWNJ/rfhbckx0y3OC9Amc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4shg+scIpJfCZC41SED7+qonFl33tfza4anQMhH3cw=;
-        b=VfH62yZ19j5YNbt0eu2ZtbCvJQSDx9y83f3FqPyqLubeDXXM6tHjxNW8Wg0c43UIzI
-         1RimcadyIYjX5PWfuH5vMaG9pjSpcnmVXfhEpGx5fQaSKjzyPVjQwlZfPB7fCKrDAdIA
-         Jw9yQqDk0T7I4HyO9HMvkiJKB4dSFrrJ7jgR7XCD2lev0/2CkBKA+q0t7YvNxDvECuVm
-         9cCNq2niu8N7/uTmy13UXcP/JT0Wqo/OX5hrPv+LDuAuaEllLXNrESWRu/0d3QGA9725
-         h7xeZpEl94aCCQGYBM1rMO9mjSFui9/Nm51qA4dgqWrT1KVpUAbxY4ZZw3f0kamFBKbB
-         cG3Q==
-X-Gm-Message-State: APjAAAVOK44Wr7yNJlMttWB+U4XJmGaSFzmHCNg1D3/roTonu+Ykpipy
-        HTKw0LhL2lB17KJQ3g44GREJqVTsR48=
-X-Google-Smtp-Source: APXvYqxVd6+Rk4KQtZbLRvQKSZetaBp2hfkZngcl5k2XejmDhMsjmOP+svphSetZWs51yVU0LIrBww==
-X-Received: by 2002:a19:f707:: with SMTP id z7mr558694lfe.142.1569262364868;
-        Mon, 23 Sep 2019 11:12:44 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id e8sm2689080ljk.54.2019.09.23.11.12.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 11:12:44 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id b20so9291740ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:12:43 -0700 (PDT)
-X-Received: by 2002:a2e:2c02:: with SMTP id s2mr434883ljs.156.1569262363228;
- Mon, 23 Sep 2019 11:12:43 -0700 (PDT)
+        Mon, 23 Sep 2019 14:14:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HCO9H13hsLGlf0IU4gFCSB/WykjOxYi/O/UOB7GTiPU=; b=qUf6Le+pnZyKScoYdTpB1aoFq
+        AyeXuA1UmnNF+LErbecWhBfua3o2ufC5IHbKBRgWrqZzeY3npKa2bANyDYCf2DETARTLeZGOEBUwu
+        hiA6aH6pI1Td2GVPv1GTasB9Nvy46v1Wg5nUH4MxtSnfXLOYAVTdzrumkjwJYlxL4qxpU=;
+Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCSr3-0004To-Ht; Mon, 23 Sep 2019 18:14:33 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id BB79CD01FE8; Mon, 23 Sep 2019 19:14:31 +0100 (BST)
+Date:   Mon, 23 Sep 2019 11:14:31 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>, zhang.chunyan@linaro.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count
+ usage
+Message-ID: <20190923181431.GU2036@sirena.org.uk>
+References: <20190917154021.14693-1-m.felsch@pengutronix.de>
+ <20190917154021.14693-2-m.felsch@pengutronix.de>
+ <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190919055312.3020652-1-songliubraving@fb.com> <20190923112744.GK2349@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190923112744.GK2349@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 23 Sep 2019 11:12:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiRARoL=c0zSJbA9v8n7jqBnxaUyxOPGppoz9M4G+mahw@mail.gmail.com>
-Message-ID: <CAHk-=wiRARoL=c0zSJbA9v8n7jqBnxaUyxOPGppoz9M4G+mahw@mail.gmail.com>
-Subject: Re: [PATCH] x86/mm/pti: Handle unaligned addr to PMD-mapped page in pti_clone_pgtable
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com, "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J19t2I20ndwispKK"
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 4:28 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> I'm conflicted on this one... the only use of addr here is
-> pti_user_pagetable_walk_pmd() and that already masks things, so the
-> fixup is 'pointless'.
 
-No it's not.
+--J19t2I20ndwispKK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The *other* use of 'addr' is
+On Mon, Sep 23, 2019 at 11:02:26AM -0700, Doug Anderson wrote:
 
-        addr += PMD_SIZE;
+> I will freely admit my ignorance here, but I've always been slightly
+> confused by the "always-on" vs. "boot-on" distinction...
 
-and then repeat the loop.
+> The bindings say:
 
-And that repeat might then use it for the page-level case the next iteration.
+>   regulator-always-on:
+>     description: boolean, regulator should never be disabled
 
-> Also the location is weird; we'd want to do alignment enforcement before
-> we commence the for-loop, methinks.
+>   regulator-boot-on:
+>     description: bootloader/firmware enabled regulator
 
-No. See again. The alignment is different for the different cases
-inside the loop. Some do per-page stuff, some do per-pmd stuff, and
-some do per-pud stuff.
+> For 'boot-on' that's a bit ambiguous about what it means.  The
+> constraints have a bit more details:
 
-And you don't know which you'll hit a-priori (because it's not limited
-to the 'level' testing).
+Boot on means that it's powered on when the kernel starts, it's
+for regulators that we can't read back the status of.
 
-           Linus
+> ...but then that begs the question of why we have two attributes?
+> Maybe this has already been discussed before and someone can point me
+> to a previous discussion?  We should probably make it more clear in
+> the bindings and/or the constraints.
+
+boot-on just refers to the status at boot, we can still turn
+those regulators off later on if we want to.
+
+--J19t2I20ndwispKK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JC4YACgkQJNaLcl1U
+h9Cw9Qf/ZIeAGiJh/nkJJEspZ/933nlFfSOVQp075WtLBEPxwZcMwK+l3ub1FKtA
+Fgi6KR3Ig/Sh5MSIJKJsqbhtv7bhOuYwPtsFrDoBdfMU6hCfHLrZBb0WxFJMzGfh
+Ta9yCbXOiviw0GaVDSmK7io7Uwle+lxkr3pIU37BfVlyL8HmZ6OlbNJW95SvYFwo
+gIhUdadCTDHOagRMqlA/iDYl1pBX0XexRGT6qcRobrzhYmIJnvRHNnjm1W3V0k6M
+6OJvmtnTUE/s2DnQaNM7MOnuvhHfI39qEAVB9/UefwBLVigLgAvqH4QKj7fk960W
+hvwhs8dPtTgi8o1O9WFNRXQh4uYL+w==
+=aqxZ
+-----END PGP SIGNATURE-----
+
+--J19t2I20ndwispKK--
