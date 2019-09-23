@@ -2,91 +2,147 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06ADC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C786EC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67E920835
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8CC2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 08:30:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kiAR8ZIH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jOn1C3cw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VzwT0cUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406274AbfIWIao (ORCPT
+        id S2436465AbfIWIaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 04:30:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59192 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404824AbfIWIaj (ORCPT
+        Mon, 23 Sep 2019 04:30:55 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40552 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404824AbfIWIay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 04:30:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C8F5360850; Mon, 23 Sep 2019 08:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569227438;
-        bh=HnVJwJj5gHPia0BvUBaqff8A/iNw+l5vst68Tr3N/wc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=kiAR8ZIHao1pQs13hKha1x/JKGbQjIH1jPav2rr2uOwx+O3dRvuRxe4pENeyeoszX
-         3QT6Et+F4jpSZDqLparwjzFWJM9OYODtT/8CtJlxJ/LSTnMK7WSdNas/o5an3nqWAZ
-         lVAvT1DBYttVy/BTHQhBlxrmRjYW141yM3Jtn4BI=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Mon, 23 Sep 2019 04:30:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yXSriKdf2FrqGoCR9I7OdOZuAhyFtOG8Jie2xNu+Qls=; b=VzwT0cUXkN0GSRCz2/JwtuMAh
+        Z7Sn1+WZMPND5nRp4JdjRM+pboRlnjlVp0m7JCE9HL8DKpYP11g5V003y9tj6Th7Ai5yAApnqmThB
+        Tb2mft51o49fJsDcO28/Kt4uEVNTZ9UXe21c35InXGSVX6fyUQs3oVMSG5AIantxtRm2U0GUOc/88
+        yN+DTdTdauaYhUELlFLNARTIxSEF9ud172OSbcu6fnc9hRauGAcVrv8mN92AT6juMzrGlpgf/SBgC
+        BbfeMhvGhs3Al+zlngSNuBjWe+yKC1s3OL68RDrKckZjOSFPsDjAIxNynJQnPPvld6rU33RBEqJqO
+        3zFTcbsnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCJk6-0001O8-3y; Mon, 23 Sep 2019 08:30:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED8E66034D;
-        Mon, 23 Sep 2019 08:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569227438;
-        bh=HnVJwJj5gHPia0BvUBaqff8A/iNw+l5vst68Tr3N/wc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=jOn1C3cwpkY5l/Q8GPPzdvehHy/RTXK8Eh/7pzSYj3BnRI0IbqEQcSk1gRC528yjN
-         o7Dk+uuuKQMbqGBDU+ri+4EDNOP6pbznwHhO3eVe4CKYVGte4DxjoDeMepHFSroUS5
-         Nz+WFL6FQU7XVqX7ZKYWWSyxZ8llGG0ajGe1oYGs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED8E66034D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 09509305E43;
+        Mon, 23 Sep 2019 10:29:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EA9932B1204C6; Mon, 23 Sep 2019 10:30:42 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 10:30:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC patch 09/15] entry: Provide generic exit to usermode
+ functionality
+Message-ID: <20190923083042.GE2349@hirez.programming.kicks-ass.net>
+References: <20190919150314.054351477@linutronix.de>
+ <20190919150809.340471236@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: fix memory leak
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190920013632.30796-1-navid.emamdoost@gmail.com>
-References: <20190920013632.30796-1-navid.emamdoost@gmail.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     unlisted-recipients:; (no To-header on input) emamd001@umn.edu,
-        smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)emamd001@umn.edu
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190923083038.C8F5360850@smtp.codeaurora.org>
-Date:   Mon, 23 Sep 2019 08:30:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919150809.340471236@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
+On Thu, Sep 19, 2019 at 05:03:23PM +0200, Thomas Gleixner wrote:
+> +static unsigned long core_exit_to_usermode_work(struct pt_regs *regs,
+> +						unsigned long ti_work)
+> +{
+> +	/*
+> +	 * Before returning to user space ensure that all pending work
+> +	 * items have been completed.
+> +	 */
+> +	while (ti_work & EXIT_TO_USERMODE_WORK) {
+> +
+> +		local_irq_enable_exit_to_user(ti_work);
+> +
+> +		if (ti_work & _TIF_NEED_RESCHED)
+> +			schedule();
+> +
+> +		if (ti_work & _TIF_UPROBE)
+> +			uprobe_notify_resume(regs);
+> +
+> +		if (ti_work & _TIF_PATCH_PENDING)
+> +			klp_update_patch_state(current);
+> +
+> +		if (ti_work & _TIF_SIGPENDING)
+> +			arch_do_signal(regs);
+> +
+> +		if (ti_work & _TIF_NOTIFY_RESUME) {
+> +			clear_thread_flag(TIF_NOTIFY_RESUME);
+> +			tracehook_notify_resume(regs);
+> +			rseq_handle_notify_resume(NULL, regs);
+> +		}
+> +
+> +		/* Architecture specific TIF work */
+> +		arch_exit_to_usermode_work(regs, ti_work);
+> +
+> +		/*
+> +		 * Disable interrupts and reevaluate the work flags as they
+> +		 * might have changed while interrupts and preemption was
+> +		 * enabled above.
+> +		 */
+> +		local_irq_disable_exit_to_user();
+> +		ti_work = READ_ONCE(current_thread_info()->flags);
+> +	}
+> +	/*
+> +	 * Was checked in exit_to_usermode_work() already, but the above
+> +	 * loop might have wreckaged it.
+> +	 */
+> +	addr_limit_user_check();
+> +	return ti_work;
+> +}
+> +
+> +static void do_exit_to_usermode(struct pt_regs *regs)
+> +{
+> +	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
+> +
+> +	lockdep_sys_exit();
+> +
+> +	addr_limit_user_check();
+> +
+> +	if (unlikely(ti_work & EXIT_TO_USERMODE_WORK))
+> +		ti_work = core_exit_to_usermode_work(regs, ti_work);
 
-> In ath10k_usb_hif_tx_sg the allocated urb should be released if
-> usb_submit_urb fails.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+would it make sense to do:
 
-Patch applied to ath-next branch of ath.git, thanks.
+	lockdep_sys_exit();
+	addr_limit_user_check();
 
-b8d17e7d93d2 ath10k: fix memory leak
+here instead of before core_exit_to_usermode_work(); that would also
+allow getting rid of that second addr_limit_user_check() invocation.
 
--- 
-https://patchwork.kernel.org/patch/11153699/
+And movind that lockdep check later would catch any of the
+EXIT_TO_USERMODE_WORK users leaking a lock.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> +
+> +	arch_exit_to_usermode(regs, ti_work);
+> +	/* Return to userspace right after this which turns on interrupts */
+> +	trace_hardirqs_on();
+> +}
