@@ -2,218 +2,805 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB9C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA2C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD8A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YARDN5pc"
+	by mail.kernel.org (Postfix) with ESMTP id AFD8320835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569253561;
+	bh=hUVLfshzfB7SRmn4BTNy1JsrK83Xokcj18CtGg9MafE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SnVel4DHH9cWGAayHADPcwDJ5yitS+d4HeOLnQoe0lrdWiiOPLKMhavK11kv+Xky8
+	 nJ31r6UVVb+OxPSTk2bwdrPQadxTLPEAHxGEsFgA2shIILqUhMoa0wR+4D1i6dNnlp
+	 WTwZ7OUyK8/kYOuN/Qeq99RCQodTftJMdFH+QEDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbfIWPoM (ORCPT
+        id S1728471AbfIWPqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:44:12 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:14444 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732362AbfIWPoL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:44:11 -0400
-Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
-        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x8NFb82o006988;
-        Mon, 23 Sep 2019 16:43:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=qX9gUJnUPb1Fcd+p95CXTaKPJoXRkYXmCntvF2VuC1U=;
- b=YARDN5pcyVBafhMU39v9guV9kFLt98byO8ytBI60+09E0lqOkoxfT7kvghI/NnX04W4D
- 0Ijmpf6SPrf9tQXLN088cHZhxZByMhOVbdayZP5b1EAt+pD+xDSCc3/PwPawgWNbbrn/
- 1oyckYorcDUV2W6/CsUgs1Dm2yuv3ODE4WGHNsEmr1Nu4yFODxOP4UhvuxXWMzakKs4j
- q6BF9+wTQezaQkUlb3qltXDfdH4AhF0PCp8mixSZLzq06ZIw0qJNRNNeeAobkD8xFrXL
- yDgYiYeGkt9ze03HhT9vv8Ofyt1sSjuMQBciAexEw3cx+2PFs9TeKR8sDjzATniRwyP6 jg== 
-Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
-        by m0050096.ppops.net-00190b01. with ESMTP id 2v5c98h2bs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 16:43:59 +0100
-Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
-        by prod-mail-ppoint6.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x8NFZdhT032160;
-        Mon, 23 Sep 2019 11:43:58 -0400
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint6.akamai.com with ESMTP id 2v5f6wamyd-1;
-        Mon, 23 Sep 2019 11:43:58 -0400
-Received: from [172.29.170.83] (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id 1EC661FCAA;
-        Mon, 23 Sep 2019 15:43:58 +0000 (GMT)
-Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
- CONFIG_DEBUG_LOCK_ALLOC
-From:   Jason Baron <jbaron@akamai.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Wong <normalperson@yhbt.net>
-References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
- 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
- JeQ7iQ==
-Message-ID: <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
-Date:   Mon, 23 Sep 2019 11:43:07 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909230147
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-23_05:2019-09-23,2019-09-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- impostorscore=0 spamscore=0 clxscore=1015 suspectscore=1 phishscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1909230148
+        Mon, 23 Sep 2019 11:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfIWPqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:46:00 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FCA20673;
+        Mon, 23 Sep 2019 15:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569253558;
+        bh=hUVLfshzfB7SRmn4BTNy1JsrK83Xokcj18CtGg9MafE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PCNYCVDVGvTAGqMjbzZeNQQ1INXvQwFKDXIvE9lJMaIPP18ncY6wnTN9LtXsUQbtd
+         Y4jRBEBCo3bf2LBr52/ukElJ0+72BLxnB92olPwpFIXiYtS5tJgi4BE0VtU0Fexb9i
+         tBm62HBkl02ZGaBJK0yGARtdQ9MGtWlq6Ue6pDVY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jiri Kosina <trivial@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH trivial] sound: Fix Kconfig indentation
+Date:   Mon, 23 Sep 2019 17:45:47 +0200
+Message-Id: <20190923154547.26532-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+    $ sed -e 's/^        /\t/' -i */Kconfig
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ sound/core/Kconfig             | 28 ++++++++++----------
+ sound/drivers/Kconfig          | 20 +++++++-------
+ sound/firewire/Kconfig         |  6 ++---
+ sound/isa/Kconfig              | 18 ++++++-------
+ sound/mips/Kconfig             | 12 ++++-----
+ sound/pci/Kconfig              |  2 +-
+ sound/soc/cirrus/Kconfig       | 14 +++++-----
+ sound/soc/codecs/Kconfig       | 32 +++++++++++------------
+ sound/soc/intel/Kconfig        |  2 +-
+ sound/soc/intel/boards/Kconfig | 48 +++++++++++++++++-----------------
+ sound/soc/pxa/Kconfig          | 16 ++++++------
+ sound/soc/qcom/Kconfig         | 20 +++++++-------
+ sound/soc/samsung/Kconfig      |  8 +++---
+ sound/soc/sof/imx/Kconfig      | 12 ++++-----
+ sound/soc/sof/intel/Kconfig    | 22 ++++++++--------
+ sound/soc/xilinx/Kconfig       | 20 +++++++-------
+ sound/soc/zte/Kconfig          | 12 ++++-----
+ sound/usb/Kconfig              | 32 +++++++++++------------
+ 18 files changed, 162 insertions(+), 162 deletions(-)
 
-On 9/4/19 4:22 PM, Jason Baron wrote:
-> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
-> ep_call_nested() in order to pass the correct subclass argument to
-> spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
-> checks for epoll depth and loops that are already verified when doing
-> EPOLL_CTL_ADD. This mirrors a conversion that was done for
-> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
-> ep_call_nested() from ep_eventpoll_poll()")
-> 
-> Signed-off-by: Jason Baron <jbaron@akamai.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Roman Penyaev <rpenyaev@suse.de>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Eric Wong <normalperson@yhbt.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  fs/eventpoll.c | 36 +++++++++++++-----------------------
->  1 file changed, 13 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index d7f1f50..a9b2737 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls *ncalls,
->   */
->  #ifdef CONFIG_DEBUG_LOCK_ALLOC
->  
-> -static struct nested_calls poll_safewake_ncalls;
-> -
-> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int call_nests)
-> -{
-> -	unsigned long flags;
-> -	wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
-> -
-> -	spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
-> -	wake_up_locked_poll(wqueue, EPOLLIN);
-> -	spin_unlock_irqrestore(&wqueue->lock, flags);
-> -
-> -	return 0;
-> -}
-> +static DEFINE_PER_CPU(int, wakeup_nest);
->  
->  static void ep_poll_safewake(wait_queue_head_t *wq)
->  {
-> -	int this_cpu = get_cpu();
-> -
-> -	ep_call_nested(&poll_safewake_ncalls,
-> -		       ep_poll_wakeup_proc, NULL, wq, (void *) (long) this_cpu);
-> +	unsigned long flags;
-> +	int subclass;
->  
-> -	put_cpu();
-> +	local_irq_save(flags);
-> +	preempt_disable();
-> +	subclass = __this_cpu_read(wakeup_nest);
-> +	spin_lock_nested(&wq->lock, subclass + 1);
-> +	__this_cpu_inc(wakeup_nest);
-> +	wake_up_locked_poll(wq, POLLIN);
-> +	__this_cpu_dec(wakeup_nest);
-> +	spin_unlock(&wq->lock);
-> +	local_irq_restore(flags);
-> +	preempt_enable();
->  }
->  
->  #else
-> @@ -2370,11 +2365,6 @@ static int __init eventpoll_init(void)
->  	 */
->  	ep_nested_calls_init(&poll_loop_ncalls);
->  
-> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> -	/* Initialize the structure used to perform safe poll wait head wake ups */
-> -	ep_nested_calls_init(&poll_safewake_ncalls);
-> -#endif
-> -
->  	/*
->  	 * We can have many thousands of epitems, so prevent this from
->  	 * using an extra cache line on 64-bit (and smaller) CPUs
-> 
+diff --git a/sound/core/Kconfig b/sound/core/Kconfig
+index 4ee79ad6ae22..4044c42d8595 100644
+--- a/sound/core/Kconfig
++++ b/sound/core/Kconfig
+@@ -72,11 +72,11 @@ config SND_PCM_OSS
+ config SND_PCM_OSS_PLUGINS
+ 	bool "OSS PCM (digital audio) API - Include plugin system"
+ 	depends on SND_PCM_OSS
+-        default y
++	default y
+ 	help
+-          If you disable this option, the ALSA's OSS PCM API will not
+-          support conversion of channels, formats and rates. It will
+-          behave like most of new OSS/Free drivers in 2.4/2.6 kernels.
++	  If you disable this option, the ALSA's OSS PCM API will not
++	  support conversion of channels, formats and rates. It will
++	  behave like most of new OSS/Free drivers in 2.4/2.6 kernels.
+ 
+ config SND_PCM_TIMER
+ 	bool "PCM timer interface" if EXPERT
+@@ -128,13 +128,13 @@ config SND_SUPPORT_OLD_API
+ 	  or older).
+ 
+ config SND_PROC_FS
+-        bool "Sound Proc FS Support" if EXPERT
+-        depends on PROC_FS
+-        default y
+-        help
+-          Say 'N' to disable Sound proc FS, which may reduce code size about
+-          9KB on x86_64 platform.
+-          If unsure say Y.
++	bool "Sound Proc FS Support" if EXPERT
++	depends on PROC_FS
++	default y
++	help
++	  Say 'N' to disable Sound proc FS, which may reduce code size about
++	  9KB on x86_64 platform.
++	  If unsure say Y.
+ 
+ config SND_VERBOSE_PROCFS
+ 	bool "Verbose procfs contents"
+@@ -142,8 +142,8 @@ config SND_VERBOSE_PROCFS
+ 	default y
+ 	help
+ 	  Say Y here to include code for verbose procfs contents (provides
+-          useful information to developers when a problem occurs).  On the
+-          other side, it makes the ALSA subsystem larger.
++	  useful information to developers when a problem occurs).  On the
++	  other side, it makes the ALSA subsystem larger.
+ 
+ config SND_VERBOSE_PRINTK
+ 	bool "Verbose printk"
+@@ -164,7 +164,7 @@ config SND_DEBUG_VERBOSE
+ 	depends on SND_DEBUG
+ 	help
+ 	  Say Y here to enable extra-verbose debugging messages.
+-	  
++
+ 	  Let me repeat: it enables EXTRA-VERBOSE DEBUGGING messages.
+ 	  So, say Y only if you are ready to be annoyed.
+ 
+diff --git a/sound/drivers/Kconfig b/sound/drivers/Kconfig
+index 09932cc98e9d..15d6d46acf9c 100644
+--- a/sound/drivers/Kconfig
++++ b/sound/drivers/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config SND_MPU401_UART
+-        tristate
+-        select SND_RAWMIDI
++	tristate
++	select SND_RAWMIDI
+ 
+ config SND_OPL3_LIB
+ 	tristate
+@@ -90,16 +90,16 @@ config SND_DUMMY
+ 	  will be called snd-dummy.
+ 
+ config SND_ALOOP
+-        tristate "Generic loopback driver (PCM)"
+-        select SND_PCM
+-        help
+-          Say 'Y' or 'M' to include support for the PCM loopback device.
++	tristate "Generic loopback driver (PCM)"
++	select SND_PCM
++	help
++	  Say 'Y' or 'M' to include support for the PCM loopback device.
+ 	  This module returns played samples back to the user space using
+ 	  the standard ALSA PCM device. The devices are routed 0->1 and
+-          1->0, where first number is the playback PCM device and second
++	  1->0, where first number is the playback PCM device and second
+ 	  number is the capture device. Module creates two PCM devices and
+ 	  configured number of substreams (see the pcm_substreams module
+-          parameter).
++	  parameter).
+ 
+ 	  The loopback device allows time sychronization with an external
+ 	  timing source using the time shift universal control (+-20%
+@@ -142,12 +142,12 @@ config SND_MTS64
+ 	select SND_RAWMIDI
+ 	help
+ 	  The ESI Miditerminal 4140 is a 4 In 4 Out MIDI Interface with 
+-          additional SMPTE Timecode capabilities for the parallel port.
++	  additional SMPTE Timecode capabilities for the parallel port.
+ 
+ 	  Say 'Y' to include support for this device.
+ 
+ 	  To compile this driver as a module, chose 'M' here: the module 
+-          will be called snd-mts64.
++	  will be called snd-mts64.
+ 
+ config SND_SERIAL_U16550
+ 	tristate "UART16550 serial MIDI driver"
+diff --git a/sound/firewire/Kconfig b/sound/firewire/Kconfig
+index b0a904cdb932..995c2cefc222 100644
+--- a/sound/firewire/Kconfig
++++ b/sound/firewire/Kconfig
+@@ -77,7 +77,7 @@ config SND_BEBOB
+ 	tristate "BridgeCo DM1000/DM1100/DM1500 with BeBoB firmware"
+ 	select SND_FIREWIRE_LIB
+ 	select SND_HWDEP
+-        help
++	help
+ 	 Say Y here to include support for FireWire devices based
+ 	 on BridgeCo DM1000/DM1100/DM1500 with BeBoB firmware:
+ 	  * Edirol FA-66/FA-101
+@@ -111,8 +111,8 @@ config SND_BEBOB
+ 	  * M-Audio FireWire 1814/ProjectMix IO
+ 	  * Digidesign Mbox 2 Pro
+ 
+-          To compile this driver as a module, choose M here: the module
+-          will be called snd-bebob.
++	  To compile this driver as a module, choose M here: the module
++	  will be called snd-bebob.
+ 
+ config SND_FIREWIRE_DIGI00X
+ 	tristate "Digidesign Digi 002/003 family support"
+diff --git a/sound/isa/Kconfig b/sound/isa/Kconfig
+index b690ed937cbe..6ffa48dd5983 100644
+--- a/sound/isa/Kconfig
++++ b/sound/isa/Kconfig
+@@ -2,22 +2,22 @@
+ # ALSA ISA drivers
+ 
+ config SND_WSS_LIB
+-        tristate
+-        select SND_PCM
++	tristate
++	select SND_PCM
+ 	select SND_TIMER
+ 
+ config SND_SB_COMMON
+-        tristate
++	tristate
+ 
+ config SND_SB8_DSP
+-        tristate
+-        select SND_PCM
+-        select SND_SB_COMMON
++	tristate
++	select SND_PCM
++	select SND_SB_COMMON
+ 
+ config SND_SB16_DSP
+-        tristate
+-        select SND_PCM
+-        select SND_SB_COMMON
++	tristate
++	select SND_PCM
++	select SND_SB_COMMON
+ 
+ menuconfig SND_ISA
+ 	bool "ISA sound devices"
+diff --git a/sound/mips/Kconfig b/sound/mips/Kconfig
+index 8a33402fd415..b497b803c834 100644
+--- a/sound/mips/Kconfig
++++ b/sound/mips/Kconfig
+@@ -14,15 +14,15 @@ config SND_SGI_O2
+ 	tristate "SGI O2 Audio"
+ 	depends on SGI_IP32
+ 	select SND_PCM
+-        help
+-                Sound support for the SGI O2 Workstation. 
++	help
++	  Sound support for the SGI O2 Workstation.
+ 
+ config SND_SGI_HAL2
+-        tristate "SGI HAL2 Audio"
+-        depends on SGI_HAS_HAL2
++	tristate "SGI HAL2 Audio"
++	depends on SGI_HAS_HAL2
+ 	select SND_PCM
+-        help
+-                Sound support for the SGI Indy and Indigo2 Workstation.
++	help
++	  Sound support for the SGI Indy and Indigo2 Workstation.
+ 
+ endif	# SND_MIPS
+ 
+diff --git a/sound/pci/Kconfig b/sound/pci/Kconfig
+index 7630f808d087..93bc9bef7641 100644
+--- a/sound/pci/Kconfig
++++ b/sound/pci/Kconfig
+@@ -217,7 +217,7 @@ config SND_CMIPCI
+ 	  will be called snd-cmipci.
+ 
+ config SND_OXYGEN_LIB
+-        tristate
++	tristate
+ 
+ config SND_OXYGEN
+ 	tristate "C-Media 8786, 8787, 8788 (Oxygen)"
+diff --git a/sound/soc/cirrus/Kconfig b/sound/soc/cirrus/Kconfig
+index 2333efac758a..8039a8febefa 100644
+--- a/sound/soc/cirrus/Kconfig
++++ b/sound/soc/cirrus/Kconfig
+@@ -33,13 +33,13 @@ config SND_EP93XX_SOC_AC97
+ 	select SND_SOC_AC97_BUS
+ 
+ config SND_EP93XX_SOC_SNAPPERCL15
+-        tristate "SoC Audio support for Bluewater Systems Snapper CL15 module"
+-        depends on SND_EP93XX_SOC && MACH_SNAPPER_CL15 && I2C
+-        select SND_EP93XX_SOC_I2S
+-        select SND_SOC_TLV320AIC23_I2C
+-        help
+-          Say Y or M here if you want to add support for I2S audio on the
+-          Bluewater Systems Snapper CL15 module.
++	tristate "SoC Audio support for Bluewater Systems Snapper CL15 module"
++	depends on SND_EP93XX_SOC && MACH_SNAPPER_CL15 && I2C
++	select SND_EP93XX_SOC_I2S
++	select SND_SOC_TLV320AIC23_I2C
++	help
++	  Say Y or M here if you want to add support for I2S audio on the
++	  Bluewater Systems Snapper CL15 module.
+ 
+ config SND_EP93XX_SOC_SIMONE
+ 	tristate "SoC Audio support for Simplemachines Sim.One board"
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 229cc89f8c5a..ef9d73b89623 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -257,16 +257,16 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_WM9705 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+ 	select SND_SOC_WM9712 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+ 	select SND_SOC_WM9713 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+-        help
+-          Normally ASoC codec drivers are only built if a machine driver which
+-          uses them is also built since they are only usable with a machine
+-          driver.  Selecting this option will allow these drivers to be built
+-          without an explicit machine driver for test and development purposes.
++	help
++	  Normally ASoC codec drivers are only built if a machine driver which
++	  uses them is also built since they are only usable with a machine
++	  driver.  Selecting this option will allow these drivers to be built
++	  without an explicit machine driver for test and development purposes.
+ 
+ 	  Support for the bus types used to access the codecs to be built must
+ 	  be selected separately.
+ 
+-          If unsure select "N".
++	  If unsure select "N".
+ 
+ config SND_SOC_88PM860X
+ 	tristate
+@@ -570,8 +570,8 @@ config SND_SOC_CS42XX8_I2C
+ 
+ # Cirrus Logic CS43130 HiFi DAC
+ config SND_SOC_CS43130
+-        tristate "Cirrus Logic CS43130 CODEC"
+-        depends on I2C
++	tristate "Cirrus Logic CS43130 CODEC"
++	depends on I2C
+ 
+ config SND_SOC_CS4341
+ 	tristate "Cirrus Logic CS4341 CODEC"
+@@ -643,19 +643,19 @@ config SND_SOC_L3
+        tristate
+ 
+ config SND_SOC_DA7210
+-        tristate
++	tristate
+ 
+ config SND_SOC_DA7213
+-        tristate
++	tristate
+ 
+ config SND_SOC_DA7218
+ 	tristate
+ 
+ config SND_SOC_DA7219
+-        tristate
++	tristate
+ 
+ config SND_SOC_DA732X
+-        tristate
++	tristate
+ 
+ config SND_SOC_DA9055
+ 	tristate
+@@ -717,7 +717,7 @@ config SND_SOC_INNO_RK3036
+ 	select REGMAP_MMIO
+ 
+ config SND_SOC_ISABELLE
+-        tristate
++	tristate
+ 
+ config SND_SOC_LM49453
+ 	tristate
+@@ -988,7 +988,7 @@ config SND_SOC_RT5640
+ 	tristate
+ 
+ config SND_SOC_RT5645
+-        tristate
++	tristate
+ 
+ config SND_SOC_RT5651
+ 	tristate
+@@ -1220,7 +1220,7 @@ config SND_SOC_UDA134X
+        tristate
+ 
+ config SND_SOC_UDA1380
+-        tristate
++	tristate
+ 	depends on I2C
+ 
+ config SND_SOC_WCD9335
+@@ -1348,7 +1348,7 @@ config SND_SOC_WM8904
+ 	depends on I2C
+ 
+ config SND_SOC_WM8940
+-        tristate
++	tristate
+ 
+ config SND_SOC_WM8955
+ 	tristate
+diff --git a/sound/soc/intel/Kconfig b/sound/soc/intel/Kconfig
+index 01c99750212a..597516c0c192 100644
+--- a/sound/soc/intel/Kconfig
++++ b/sound/soc/intel/Kconfig
+@@ -113,7 +113,7 @@ config SND_SOC_INTEL_SKYLAKE
+ 	select SND_SOC_INTEL_CNL
+ 	select SND_SOC_INTEL_CFL
+ 	help
+-          This is a backwards-compatible option to select all devices
++	  This is a backwards-compatible option to select all devices
+ 	  supported by the Intel SST/Skylake driver. This option is no
+ 	  longer recommended and will be deprecated when the SOF
+ 	  driver is introduced.  Distributions should explicitly
+diff --git a/sound/soc/intel/boards/Kconfig b/sound/soc/intel/boards/Kconfig
+index 5c27f7ab4a5f..882ff36a7c9c 100644
+--- a/sound/soc/intel/boards/Kconfig
++++ b/sound/soc/intel/boards/Kconfig
+@@ -3,13 +3,13 @@ menuconfig SND_SOC_INTEL_MACH
+ 	bool "Intel Machine drivers"
+ 	depends on SND_SOC_INTEL_SST_TOPLEVEL || SND_SOC_SOF_INTEL_TOPLEVEL
+ 	help
+-         Intel ASoC Machine Drivers. If you have a Intel machine that
+-         has an audio controller with a DSP and I2S or DMIC port, then
+-         enable this option by saying Y
++	 Intel ASoC Machine Drivers. If you have a Intel machine that
++	 has an audio controller with a DSP and I2S or DMIC port, then
++	 enable this option by saying Y
+ 
+-         Note that the answer to this question doesn't directly affect the
+-         kernel: saying N will just cause the configurator to skip all
+-         the questions about Intel ASoC machine drivers.
++	 Note that the answer to this question doesn't directly affect the
++	 kernel: saying N will just cause the configurator to skip all
++	 the questions about Intel ASoC machine drivers.
+ 
+ if SND_SOC_INTEL_MACH
+ 
+@@ -114,11 +114,11 @@ config SND_SOC_INTEL_CHT_BSW_RT5672_MACH
+ 	depends on X86_INTEL_LPSS || COMPILE_TEST
+ 	select SND_SOC_ACPI
+ 	select SND_SOC_RT5670
+-        help
+-          This adds support for ASoC machine driver for Intel(R) Cherrytrail & Braswell
+-          platforms with RT5672 audio codec.
+-          Say Y or m if you have such a device. This is a recommended option.
+-          If unsure select "N".
++	help
++	  This adds support for ASoC machine driver for Intel(R) Cherrytrail & Braswell
++	  platforms with RT5672 audio codec.
++	  Say Y or m if you have such a device. This is a recommended option.
++	  If unsure select "N".
+ 
+ config SND_SOC_INTEL_CHT_BSW_RT5645_MACH
+ 	tristate "Cherrytrail & Braswell with RT5645/5650 codec"
+@@ -311,20 +311,20 @@ config SND_SOC_INTEL_KBL_RT5663_MAX98927_MACH
+ 	  If unsure select "N".
+ 
+ config SND_SOC_INTEL_KBL_RT5663_RT5514_MAX98927_MACH
+-        tristate "KBL with RT5663, RT5514 and MAX98927 in I2S Mode"
++	tristate "KBL with RT5663, RT5514 and MAX98927 in I2S Mode"
+ 	depends on I2C && ACPI
+ 	depends on MFD_INTEL_LPSS || COMPILE_TEST
+-        depends on SPI
+-        select SND_SOC_RT5663
+-        select SND_SOC_RT5514
+-        select SND_SOC_RT5514_SPI
+-        select SND_SOC_MAX98927
+-        select SND_SOC_HDAC_HDMI
+-        help
+-          This adds support for ASoC Onboard Codec I2S machine driver. This will
+-          create an alsa sound card for RT5663 + RT5514 + MAX98927.
+-          Say Y or m if you have such a device. This is a recommended option.
+-          If unsure select "N".
++	depends on SPI
++	select SND_SOC_RT5663
++	select SND_SOC_RT5514
++	select SND_SOC_RT5514_SPI
++	select SND_SOC_MAX98927
++	select SND_SOC_HDAC_HDMI
++	help
++	  This adds support for ASoC Onboard Codec I2S machine driver. This will
++	  create an alsa sound card for RT5663 + RT5514 + MAX98927.
++	  Say Y or m if you have such a device. This is a recommended option.
++	  If unsure select "N".
+ 
+ config SND_SOC_INTEL_KBL_DA7219_MAX98357A_MACH
+ 	tristate "KBL with DA7219 and MAX98357A in I2S Mode"
+@@ -393,7 +393,7 @@ config SND_SOC_INTEL_SKL_HDA_DSP_GENERIC_MACH
+ 	help
+ 	  This adds support for ASoC machine driver for Intel platforms
+ 	  SKL/KBL/BXT/APL with iDisp, HDA audio codecs.
+-          Say Y or m if you have such a device. This is a recommended option.
++	  Say Y or m if you have such a device. This is a recommended option.
+ 	  If unsure select "N".
+ 
+ endif ## SND_SOC_INTEL_SKYLAKE_HDAUDIO_CODEC || SND_SOC_SOF_HDA_AUDIO_CODEC
+diff --git a/sound/soc/pxa/Kconfig b/sound/soc/pxa/Kconfig
+index 213d4dab0346..295cfffa4646 100644
+--- a/sound/soc/pxa/Kconfig
++++ b/sound/soc/pxa/Kconfig
+@@ -190,14 +190,14 @@ config SND_PXA2XX_SOC_MAGICIAN
+ 	  HTC Magician.
+ 
+ config SND_PXA2XX_SOC_MIOA701
+-        tristate "SoC Audio support for MIO A701"
+-        depends on SND_PXA2XX_SOC && MACH_MIOA701
++	tristate "SoC Audio support for MIO A701"
++	depends on SND_PXA2XX_SOC && MACH_MIOA701
+ 	depends on AC97_BUS=n
+-        select SND_PXA2XX_SOC_AC97
+-        select SND_SOC_WM9713
+-        help
+-          Say Y if you want to add support for SoC audio on the
+-          MIO A701.
++	select SND_PXA2XX_SOC_AC97
++	select SND_SOC_WM9713
++	help
++	  Say Y if you want to add support for SoC audio on the
++	  MIO A701.
+ 
+ config SND_PXA2XX_SOC_IMOTE2
+        tristate "SoC Audio support for IMote 2"
+@@ -205,7 +205,7 @@ config SND_PXA2XX_SOC_IMOTE2
+        select SND_PXA2XX_SOC_I2S
+        select SND_SOC_WM8940
+        help
+-         Say Y if you want to add support for SoC audio on the
++	 Say Y if you want to add support for SoC audio on the
+ 	 IMote 2.
+ 
+ config SND_MMP_SOC_BROWNSTONE
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 60086858e920..6530d2462a9e 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -3,8 +3,8 @@ config SND_SOC_QCOM
+ 	tristate "ASoC support for QCOM platforms"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	help
+-          Say Y or M if you want to add support to use audio devices
+-          in Qualcomm Technologies SOC-based platforms.
++	  Say Y or M if you want to add support to use audio devices
++	  in Qualcomm Technologies SOC-based platforms.
+ 
+ config SND_SOC_LPASS_CPU
+ 	tristate
+@@ -30,17 +30,17 @@ config SND_SOC_STORM
+ 	select SND_SOC_LPASS_IPQ806X
+ 	select SND_SOC_MAX98357A
+ 	help
+-          Say Y or M if you want add support for SoC audio on the
+-          Qualcomm Technologies IPQ806X-based Storm board.
++	  Say Y or M if you want add support for SoC audio on the
++	  Qualcomm Technologies IPQ806X-based Storm board.
+ 
+ config SND_SOC_APQ8016_SBC
+ 	tristate "SoC Audio support for APQ8016 SBC platforms"
+ 	depends on SND_SOC_QCOM
+ 	select SND_SOC_LPASS_APQ8016
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8016 SOC-based systems.
+-          Say Y if you want to use audio devices on MI2S.
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8016 SOC-based systems.
++	  Say Y if you want to use audio devices on MI2S.
+ 
+ config SND_SOC_QCOM_COMMON
+ 	tristate
+@@ -93,9 +93,9 @@ config SND_SOC_MSM8996
+ 	select SND_SOC_QDSP6
+ 	select SND_SOC_QCOM_COMMON
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8096 SoC-based systems.
+-          Say Y if you want to use audio device on this SoCs
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8096 SoC-based systems.
++	  Say Y if you want to use audio device on this SoCs
+ 
+ config SND_SOC_SDM845
+ 	tristate "SoC Machine driver for SDM845 boards"
+diff --git a/sound/soc/samsung/Kconfig b/sound/soc/samsung/Kconfig
+index 638983123d8f..9304177de78a 100644
+--- a/sound/soc/samsung/Kconfig
++++ b/sound/soc/samsung/Kconfig
+@@ -195,10 +195,10 @@ config SND_SOC_ODROID
+ 	  Say Y here to enable audio support for the Odroid XU3/XU4.
+ 
+ config SND_SOC_ARNDALE_RT5631_ALC5631
+-        tristate "Audio support for RT5631(ALC5631) on Arndale Board"
+-        depends on I2C
+-        select SND_SAMSUNG_I2S
+-        select SND_SOC_RT5631
++	tristate "Audio support for RT5631(ALC5631) on Arndale Board"
++	depends on I2C
++	select SND_SAMSUNG_I2S
++	select SND_SOC_RT5631
+ 
+ config SND_SOC_SAMSUNG_TM2_WM5110
+ 	tristate "SoC I2S Audio support for WM5110 on TM2 board"
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 5acae75f5750..6315fba8ce71 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -5,9 +5,9 @@ config SND_SOC_SOF_IMX_TOPLEVEL
+ 	depends on ARM64|| COMPILE_TEST
+ 	depends on SND_SOC_SOF_OF
+ 	help
+-          This adds support for Sound Open Firmware for NXP i.MX platforms.
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	  This adds support for Sound Open Firmware for NXP i.MX platforms.
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ if SND_SOC_SOF_IMX_TOPLEVEL
+ 
+@@ -16,8 +16,8 @@ config SND_SOC_SOF_IMX8
+ 	depends on IMX_SCU
+ 	depends on IMX_DSP
+ 	help
+-          This adds support for Sound Open Firmware for NXP i.MX8 platforms
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index 479ba249e219..18c41fdc47c8 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -36,7 +36,7 @@ config SND_SOC_SOF_INTEL_PCI
+ config SND_SOC_SOF_INTEL_HIFI_EP_IPC
+ 	tristate
+ 	help
+-          This option is not user-selectable but automagically handled by
++	  This option is not user-selectable but automagically handled by
+ 	  'select' statements at a higher level
+ 
+ config SND_SOC_SOF_INTEL_ATOM_HIFI_EP
+@@ -217,31 +217,31 @@ config SND_SOC_SOF_COMETLAKE_H_SUPPORT
+ config SND_SOC_SOF_TIGERLAKE_SUPPORT
+ 	bool "SOF support for Tigerlake"
+ 	help
+-          This adds support for Sound Open Firmware for Intel(R) platforms
+-          using the Tigerlake processors.
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	  This adds support for Sound Open Firmware for Intel(R) platforms
++	  using the Tigerlake processors.
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ config SND_SOC_SOF_TIGERLAKE
+ 	tristate
+ 	select SND_SOC_SOF_HDA_COMMON
+ 	help
+-          This option is not user-selectable but automagically handled by
++	  This option is not user-selectable but automagically handled by
+ 	  'select' statements at a higher level
+ 
+ config SND_SOC_SOF_ELKHARTLAKE_SUPPORT
+ 	bool "SOF support for ElkhartLake"
+ 	help
+-          This adds support for Sound Open Firmware for Intel(R) platforms
+-          using the ElkhartLake processors.
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	  This adds support for Sound Open Firmware for Intel(R) platforms
++	  using the ElkhartLake processors.
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ config SND_SOC_SOF_ELKHARTLAKE
+ 	tristate
+ 	select SND_SOC_SOF_HDA_COMMON
+ 	help
+-          This option is not user-selectable but automagically handled by
++	  This option is not user-selectable but automagically handled by
+ 	  'select' statements at a higher level
+ 
+ config SND_SOC_SOF_HDA_COMMON
+diff --git a/sound/soc/xilinx/Kconfig b/sound/soc/xilinx/Kconfig
+index 69973179ef15..1d3586b68db7 100644
+--- a/sound/soc/xilinx/Kconfig
++++ b/sound/soc/xilinx/Kconfig
+@@ -9,15 +9,15 @@ config SND_SOC_XILINX_I2S
+ 	  encapsulates PCM in AES format and sends AES data.
+ 
+ config SND_SOC_XILINX_AUDIO_FORMATTER
+-        tristate "Audio support for the the Xilinx audio formatter"
+-        help
+-          Select this option to enable Xilinx audio formatter
+-          support. This provides DMA platform device support for
+-          audio functionality.
++	tristate "Audio support for the the Xilinx audio formatter"
++	help
++	  Select this option to enable Xilinx audio formatter
++	  support. This provides DMA platform device support for
++	  audio functionality.
+ 
+ config SND_SOC_XILINX_SPDIF
+-        tristate "Audio support for the the Xilinx SPDIF"
+-        help
+-          Select this option to enable Xilinx SPDIF Audio.
+-          This provides playback and capture of SPDIF audio in
+-          AES format.
++	tristate "Audio support for the the Xilinx SPDIF"
++	help
++	  Select this option to enable Xilinx SPDIF Audio.
++	  This provides playback and capture of SPDIF audio in
++	  AES format.
+diff --git a/sound/soc/zte/Kconfig b/sound/soc/zte/Kconfig
+index a7842e4b791c..a23d4f13ca19 100644
+--- a/sound/soc/zte/Kconfig
++++ b/sound/soc/zte/Kconfig
+@@ -18,9 +18,9 @@ config ZX_I2S
+ 	  ZTE ZX I2S interface
+ 
+ config ZX_TDM
+-        tristate "ZTE ZX TDM Driver Support"
+-        depends on COMMON_CLK
+-        select SND_SOC_GENERIC_DMAENGINE_PCM
+-        help
+-          Say Y or M if you want to add support for codecs attached to the
+-          ZTE ZX TDM interface
++	tristate "ZTE ZX TDM Driver Support"
++	depends on COMMON_CLK
++	select SND_SOC_GENERIC_DMAENGINE_PCM
++	help
++	  Say Y or M if you want to add support for codecs attached to the
++	  ZTE ZX TDM interface
+diff --git a/sound/usb/Kconfig b/sound/usb/Kconfig
+index e2c53a0841da..059242f15d75 100644
+--- a/sound/usb/Kconfig
++++ b/sound/usb/Kconfig
+@@ -107,24 +107,24 @@ config SND_USB_US122L
+ 	  will be called snd-usb-us122l.
+ 
+ config SND_USB_6FIRE
+-        tristate "TerraTec DMX 6Fire USB"
+-        select FW_LOADER
+-        select BITREVERSE
+-        select SND_RAWMIDI
+-        select SND_PCM
+-        select SND_VMASTER
+-        help
+-          Say Y here to include support for TerraTec 6fire DMX USB interface.
+-
+-          You will need firmware files in order to be able to use the device
+-          after it has been coldstarted. An install script for the firmware
+-          and further help can be found at
+-          http://sixfireusb.sourceforge.net
++	tristate "TerraTec DMX 6Fire USB"
++	select FW_LOADER
++	select BITREVERSE
++	select SND_RAWMIDI
++	select SND_PCM
++	select SND_VMASTER
++	help
++	  Say Y here to include support for TerraTec 6fire DMX USB interface.
++
++	  You will need firmware files in order to be able to use the device
++	  after it has been coldstarted. An install script for the firmware
++	  and further help can be found at
++	  http://sixfireusb.sourceforge.net
+ 
+ config SND_USB_HIFACE
+-        tristate "M2Tech hiFace USB-SPDIF driver"
+-        select SND_PCM
+-        help
++	tristate "M2Tech hiFace USB-SPDIF driver"
++	select SND_PCM
++	help
+ 	  Select this option to include support for M2Tech hiFace USB-SPDIF
+ 	  interface.
+ 
+-- 
+2.17.1
 
-
-Hi,
-
-Any thoughts on this one?
-
-Thanks,
-
--Jason
