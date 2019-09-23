@@ -2,179 +2,126 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7EAC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C857DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A5120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B4F2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hdBdcqWb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cn+X8r4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408203AbfIWNxZ (ORCPT
+        id S2408136AbfIWN5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 09:53:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35367 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405257AbfIWNxX (ORCPT
+        Mon, 23 Sep 2019 09:57:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40915 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406362AbfIWN5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 09:53:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v8so14084894wrt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:53:21 -0700 (PDT)
+        Mon, 23 Sep 2019 09:57:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so8059109pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 06:57:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=CUltmpQ2AlBO4eycXmiTLJT5nKA9BvVkulNXtb0WayY=;
-        b=hdBdcqWbo+YdpT++zSZaEJialEDIstyafYV7j1YnJzpDs6Gj0EXlF7fW98kUlywpKV
-         MiFP1HlOHMn91oNXbci+8ViuGco8KKXEEC6GYBnxW+XwEqeVXEF2k5Vst9DcAv2jCNnj
-         25TkRNP+yvhFZk4uiSTE929IIzqSAJP/cWNzzWxo9xQVexYFwHM21MH+thDJwO0QYjlf
-         ZWCf/jWeS/SDRYNtYcNSy8LsDpcQ+P5yPH5iwvxUncOfYRoSQyEo2Ht/ji0T0mchIki9
-         //SAK3HjU5+Q5yGHeHtmhqXXjfgPaRH28GvJxVwriOILlFhIag2gbKz+uGyTKNxo7UXo
-         KT4g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vh231WMV2ivWs55DEErMfh8G5ByHHFCoNJUSWzLVISU=;
+        b=cn+X8r4N29tWYhUPaIF9sgpCyWWDn5rzKDhmPhMpd6+EovbrDiKU4kleehawYApRCY
+         fCZijjEsZtcLK+chNOmk0QVamPsXX4shbo1HalDXbsFHMbaGBwYYSjkV/lMIsi+9db4Y
+         EhVBWHBjDfy0Kh1IPA4zbFyitBp9jARKh+Kz5eQPSTsW+f/8c3AXscIc+HQju4X8XDpH
+         +uusOt3917tb0v7Fi/Ia49dbzRcJ1ON2KyjoPFDEybGqNdbzbyyNYRkrAbnihbZd42ul
+         eVHMZLPI3/Zq+V4vvDgt3hltjL9KRupNZOaBYoZN5dA4e0s2Rlimp/5v26DIS4hUsaN3
+         dZvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=CUltmpQ2AlBO4eycXmiTLJT5nKA9BvVkulNXtb0WayY=;
-        b=WBCAJuXgHoLihKaWqzsLcmGWqs/vY6oEhQ3OgmDiw2jYttRqUjxAw8gGuOLvBzJwZr
-         rop6ZTI8Q/ONgZIAMvpPHZycGg0kbtnHuoEfQPd9QylQ6MwUZowHI7qHYjEBSmF7Tw/E
-         +6MsryFiOv4FtZgN+tTVdRFi9VUK2/OOkrcvIdEF5aj1vuq7oFjADbiyOVS0FuemJALg
-         MiO83R3rlDMLFjZcNxHCYwoA+oYV0HOnZdePYMq3XUfgN+fxTu0gg6V5uY0uAhQ19/9X
-         GQQwsq2Wj7Ws0hkZ48CwLhPGlSqkwGan6OdFCS6LqNRRXNg4l2Fud5OFStHtvgbUJ7tJ
-         639g==
-X-Gm-Message-State: APjAAAX6kyO3JGfvf5w8TwxC8ctDVYQwC4dh6QocqAI99n1dIcNKZJUy
-        g7b8yuJpaYpST+0jSdrsF3yNBg==
-X-Google-Smtp-Source: APXvYqzZx/ovJxMoA6feQzS2sGuSyT/hsoukqIzidanssroKWlBydFpyilC/dlz7CJPlMtXIcE1bBw==
-X-Received: by 2002:adf:f081:: with SMTP id n1mr22383279wro.273.1569246800846;
-        Mon, 23 Sep 2019 06:53:20 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t123sm14627323wma.40.2019.09.23.06.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 06:53:20 -0700 (PDT)
-Subject: Re: [PATCH] drm/rockchip: Add AFBC support
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190923122014.18229-1-andrzej.p@collabora.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
- GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
- RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
- NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
- 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
- ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
- YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
- GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
- coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
- SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
- YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
- mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
- zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
- 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
- 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
- RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
- C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
- Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
- GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
- 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
- 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
- zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
- wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
- 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
- 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
- xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
- K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
- AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
- AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
- n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
- 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
- 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
- EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
- /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
- NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
- 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
- yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
- bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
- KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
- KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
- WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
- VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <da7f0c5e-9ca9-020d-5366-2b21a42acdff@baylibre.com>
-Date:   Mon, 23 Sep 2019 15:53:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vh231WMV2ivWs55DEErMfh8G5ByHHFCoNJUSWzLVISU=;
+        b=qSxwWg2PWuoDSYou/pPrOMr/AxnRhX5QI7BUMWKAKUTeqzazREP3gtUeWQNUYSHQCS
+         rhMzem7tMe/dvlUNgiw8YKsFzJN8xMgISZvqb+sa0kBkeZ4rETT6eh8DrMrYmIMMBVL+
+         /sLqDgP8BM+VKws7QIZJsUGua3ghMS45l3S19IbuWJlLRUB0Zn4HnnzC9AMiV04qN7Qe
+         okSIwPVwRDrKWPgUvB7n3t9pBTNqwRInYAQJ2uSN+Tuw+XfEXP5xuoYTMTumCI0AZItz
+         0iK2vSTNVisoKeUcseweBXDdUR0OqEg3xsDyOuWgiOjzv8THmiCkPilAKKIXR85MLKZm
+         XqBQ==
+X-Gm-Message-State: APjAAAVifR1NulMODu2KYF+MbL9jQNLSnqDnBGznT4IdjceRUlRiNA9F
+        sDpAvyCNSC94rPXXfmA4+y47QQ==
+X-Google-Smtp-Source: APXvYqy25l2lGHysPit/QeYW2D3xxOswz/kQvKmjC7grygQ6MEygsYLyqXGOeVrHJDihF8TAlwLLkQ==
+X-Received: by 2002:a65:5546:: with SMTP id t6mr59005pgr.441.1569247019584;
+        Mon, 23 Sep 2019 06:56:59 -0700 (PDT)
+Received: from localhost ([12.206.46.61])
+        by smtp.gmail.com with ESMTPSA id 1sm14156061pff.39.2019.09.23.06.56.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Sep 2019 06:56:55 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 19:26:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
+ framework
+Message-ID: <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923122014.18229-1-andrzej.p@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/2019 14:20, Andrzej Pietrasiewicz wrote:
-> From: Ezequiel Garcia <ezequiel@collabora.com>
+On 22-09-19, 23:12, Dmitry Osipenko wrote:
+> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
 > 
-> AFBC is a proprietary lossless image compression protocol and format.
-> It helps reduce memory bandwidth of the graphics pipeline operations.
-> This, in turn, improves power efficiency.
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> [locking improvements]
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> [squashing the above, commit message and Rockchip AFBC modifier]
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  | 27 ++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 94 ++++++++++++++++++++-
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 12 +++
->  drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 18 ++++
->  include/uapi/drm/drm_fourcc.h               |  3 +
->  5 files changed, 151 insertions(+), 3 deletions(-)
+> [   87.952369] ==================================================================
+> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
 > 
+> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+> (print_address_description.constprop.0+0x3d/0x340)
+> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+> (__kasan_report+0xe3/0x12c)
+> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+> (blocking_notifier_chain_register+0x29/0x3c)
+> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+> (dev_pm_qos_add_notifier+0x79/0xf8)
+> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
 
-[...]
+Hi Dmitry,
 
-> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> index 3feeaa3f987a..ba6caf06c824 100644
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -742,6 +742,9 @@ extern "C" {
->   */
->  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
->  
-> +#define AFBC_FORMAT_MOD_ROCKCHIP \
-> +	(AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | AFBC_FORMAT_MOD_SPARSE)
+Unfortunately I am traveling right now and can't test this stuff, though I may
+have found the root cause here. Can you please test the below diff for me ?
 
-This define looks useless, what's Rockchip specific here ?
+diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
+index 6c90fd7e2ff8..9ac244ee05fe 100644
+--- a/drivers/base/power/qos.c
++++ b/drivers/base/power/qos.c
+@@ -328,6 +328,8 @@ void dev_pm_qos_constraints_destroy(struct device *dev)
+        spin_unlock_irq(&dev->power.lock);
+ 
+        kfree(qos->resume_latency.notifiers);
++       kfree(qos->min_frequency.notifiers);
++       kfree(qos->max_frequency.notifiers);
+        kfree(qos);
+ 
+  out:
 
-Neil
-
-> +
->  /*
->   * Allwinner tiled modifier
->   *
-> 
-
+-- 
+viresh
