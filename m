@@ -2,93 +2,105 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD20C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5504C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72784206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C0D2168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569262728;
-	bh=LO4GTKKSHWB9kcHekO7hnomAZooSVXs0I2xg7poD4DY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mhDWPixasQMMaD5rF6CmfIrnVUsdBJqW1LOy/eELg3a6Cli3CKCgNZWqKZTeEBwYX
-	 gSo4ZntAwlVOl64pLwwJ92l3jOEjhJoWTfnPNTp4vtFxH6bx9j2Q52DMLpbZX3qo41
-	 pNwkCS+6oTHOpYzkp/Hc47Zj/SaNDL00/0AsGfJA=
+	s=default; t=1569262926;
+	bh=XXgV7GdpmgrRQlQQcHSeBjZLF84UP9XKc48/jnVV6SI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YCIXbTCctosUEa+NTSo1fO3NLUaVmkUFONJLMwJVV5zAfbsiLGICq47LdFbMkrZFM
+	 Mn4iGrpMDxrjnu16WZ6D/X+v60lR49534dtBiK45YhnznYGj9MmUvsn44aofZi3HvS
+	 j7syzUsdJwh7bZdZKiWiu73TXraf2B8Ar+i6u5HE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440438AbfIWSSr (ORCPT
+        id S1732954AbfIWSWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438191AbfIWSSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:18:47 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7116E2168B
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569262726;
-        bh=LO4GTKKSHWB9kcHekO7hnomAZooSVXs0I2xg7poD4DY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j0BZXQIpX2MOlhf9SNznn8IGzntp+2babJIqLVhkcA9epdql6lJxsc3WfrZx4AT2H
-         sCnl/bTZ5yOO4OB4REdI7QlHWu57x01sWSen0jTwTw33GaDgw8KHXRFivZkFtwGjq1
-         /saaLIbAjaaHg35vxirC2Q74D3G6RlwxqQiPpEJU=
-Received: by mail-wm1-f47.google.com with SMTP id v17so10329360wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:18:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAU4RwyfCoMn+M18UsyBrrZn/JhVTbgbj8ObcW/8Q3CTntAQEpiM
-        A6twtWcdj0obVJVyYGwZIOrcevUAhs3gfd8No3SLrA==
-X-Google-Smtp-Source: APXvYqyuY3H2DKNpr0Bzr8dbUHAxIiCTpvK12u2LHOiAR0CZVPK82iYnYzgf0u3M5gP9FATk1J7gn1h2vcuI6Q6N73Y=
-X-Received: by 2002:a1c:6143:: with SMTP id v64mr689647wmb.79.1569262724979;
- Mon, 23 Sep 2019 11:18:44 -0700 (PDT)
+        Mon, 23 Sep 2019 14:22:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41084 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfIWSWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:22:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XXgV7GdpmgrRQlQQcHSeBjZLF84UP9XKc48/jnVV6SI=; b=bu2aAu+YXPhQH48WDuTnDrOVX
+        IghH+dZIbly1gCKvFJq7zLQCauDtFzTTy/xOxU4CrKWqmizv3So3IZdOwrE7aTNGmE6Dzr+yns/yJ
+        lwrhdhjrhQOV0B8sOq5ogFWFKgAGUk23tzhA4ue9aLrhdv2cS4BW/FXnofBW34V1bu57M=;
+Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCSyH-0004WT-Q4; Mon, 23 Sep 2019 18:22:02 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A53DFD0218A; Mon, 23 Sep 2019 19:21:59 +0100 (BST)
+Date:   Mon, 23 Sep 2019 11:21:59 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: Re: [PATCH AUTOSEL 5.3 087/203] ASoC: mediatek: mt6358: add delay
+ after dmic clock on
+Message-ID: <20190923182159.GV2036@sirena.org.uk>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-87-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190919150314.054351477@linutronix.de>
-In-Reply-To: <20190919150314.054351477@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 23 Sep 2019 11:18:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrVpG9iH821LMuL5OOrAeRekYjYE9fyK3KkCwohN6ZUcXg@mail.gmail.com>
-Message-ID: <CALCETrVpG9iH821LMuL5OOrAeRekYjYE9fyK3KkCwohN6ZUcXg@mail.gmail.com>
-Subject: Re: [RFC patch 00/15] entry: Provide generic implementation for host
- and guest entry/exit work
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GvlH2BAVfmx8aXCn"
+Content-Disposition: inline
+In-Reply-To: <20190922184350.30563-87-sashal@kernel.org>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 8:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> When working on a way to move out the posix cpu timer expiry out of the
-> timer interrupt context, I noticed that KVM is not handling pending task
-> work before entering a guest. A quick hack was to add that to the x86 KVM
-> handling loop. The discussion ended with a request to make this a generic
-> infrastructure possible with also moving the per arch implementations of
-> the enter from and return to user space handling generic.
->
->   https://lore.kernel.org/r/89E42BCC-47A8-458B-B06A-D6A20D20512C@amacapital.net
->
-> You asked for it, so don't complain that you have to review it :)
->
-> The series implements the syscall enter/exit and the general exit to
-> userspace work handling along with the pre guest enter functionality.
->
-> The series converts x86 and ARM64. x86 is fully tested including selftests
-> etc. ARM64 is only compile tested for now as my only ARM64 testbox is not
-> available right now.
 
-Other than the comments I sent so far, I like this series.
+--GvlH2BAVfmx8aXCn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Sep 22, 2019 at 02:41:53PM -0400, Sasha Levin wrote:
+> From: Jiaxin Yu <jiaxin.yu@mediatek.com>
+>=20
+> [ Upstream commit ccb1fa21ef58a2ac15519bb878470762e967e8b3 ]
+>=20
+> Most dmics produce a high level when they receive clock. The difference
+> between power-on and memory record time is about 10ms, but the dmic
+> needs 50ms to output normal data.
+>=20
+> This commit add 100ms delay after SoC output clock so that we can cut
+> off the pop noise at the beginning.
+
+This might mess up a production system, please don't backport it.
+In general delays to eliminate pops and clicks that are part of
+the PCM statup path (as opposed to DAPM) are not safe to
+backport.
+
+--GvlH2BAVfmx8aXCn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JDUYACgkQJNaLcl1U
+h9Cfjwf/fbkShV8/UolzJ8PGsV1OdUCT+bsh5Q5GlcvcZu/2l/l1tV6XvaHwI8c6
+orAex5tPUCGIiJ1hBdJnwp9T44OL7on8a3leXh1tsQt/4aPuI+XFm5n2EUrsKGRe
+tSG+vOEC0zoGa1mfci8LLtSVL8xmABYz/Umi/EbmVqDJhfQT+yX1yTocAl5x7yhz
+aSnifbJ4nuOLdwlXeuMPnIVa+MJhP6dsglPd32fEeET8pOuPAEP0/SyeD2Zumzcp
+oXO+NcQq4o4btSdNY6miy9i/lYtv7f4CI/i4Jo78/Kl2BUVL/zfOTbNvCxNAEUsB
+ZA84mwXstsAh+I9gwkJ9wxjlLGUqvQ==
+=7zoR
+-----END PGP SIGNATURE-----
+
+--GvlH2BAVfmx8aXCn--
