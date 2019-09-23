@@ -2,121 +2,115 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F12C88CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E877C88CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD23F20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23B2207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Uc1rJg9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502681AbfIWUtv (ORCPT
+        id S2502757AbfIWUtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:49:51 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38778 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389848AbfIWUtu (ORCPT
+        Mon, 23 Sep 2019 16:49:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44648 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502482AbfIWUtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 16:49:50 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C47F88062D; Mon, 23 Sep 2019 22:49:31 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 22:49:45 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: chaos generating driver was Re: Linux 5.3-rc8
-Message-ID: <20190923204944.GA1107@bug>
-References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
- <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+Received: by mail-ot1-f68.google.com with SMTP id 21so13364579otj.11;
+        Mon, 23 Sep 2019 13:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MAD3Xg1lcz/vWNfKOXbNQkNK8JcAqagoLevWw8c1H8w=;
+        b=Uc1rJg9EHlGwJNJeN6soMEoo/3M+ZsjMSxAMCVEA+f9rOyJvTLPXhHKYXJwgIcEzBr
+         e+3CndfndOMezv1Ptw3MLfFegfdCU9l142+6xMNb6yc4r537qDyguMUGRJy+2tVBa8tR
+         F3znac2BBuFbLhadIwE1d+eNekHVycr0brsa51/cTtZc6+gj6CyZzfwmL64hoJreYrbK
+         BNsn+vt4zqHzlSpK9FPzf9skcHsynz8YunjI1ogBbKbkLYBspiO7cYeF+/GORadBkgQs
+         BoXGJUuzpml3+FLUCkphSuXEpIZ0v82lo8jO+mArHKkjDH3EoiOUfBwEJn5ZHqf0JXAZ
+         jGjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MAD3Xg1lcz/vWNfKOXbNQkNK8JcAqagoLevWw8c1H8w=;
+        b=PLmrPInu5OXnrGrF8J7C3YZJPgTC4PA3T1SG+S5f9yInUquXSo3wMwL19gp1IopejS
+         pGudY5gqp4/noo/VMd6QHJk3hCnCc7wTcIA3gUuNmrG6lJmCPHdVOupDwH4kaaWH4oGq
+         xHypUMEO+YGQTs36GXsUYDHlw+uqTiKCzf4BmYruJSvAi/etUv82cpkIZ2X9dvmupfCy
+         djI+IfRoa9LjU9FDw+PnbmQT5Yg892pEGwSIRJ3TFfUaKxkhjVnkqftpT2Jvt2Wd6u5P
+         6cL/VMB4JbsQ7+B2nl/DkDCieb0eAddFrU9Psr9xC2DeAmyP4yaBE+Y3kd6t+IyTIpnx
+         MAJw==
+X-Gm-Message-State: APjAAAUzh5pabybEZajfMJt/lIO+Kp/ge+ets2T0xHoMXIJgbF3cbPcz
+        KW3pt01wV7waswd0CmEmVC6ndQIkW6IUEVBHCqI=
+X-Google-Smtp-Source: APXvYqxg9tfZ17T4nhNMMZMbP5FnSoEzZH0Yj/hpHqWL0Dt5cVhCyLOpWwrFdj59nZDuupSIBtRiMaKO4g+TxYTiSnw=
+X-Received: by 2002:a9d:7d17:: with SMTP id v23mr161527otn.81.1569271789175;
+ Mon, 23 Sep 2019 13:49:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com> <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 23 Sep 2019 22:49:37 +0200
+Message-ID: <CAFBinCAHD+D=a2mHeHMGq12MvoksHBr308jSrdcH+UYsUmwd8w@mail.gmail.com>
+Subject: Re: [PATCH 0/6] add the DDR clock controller on Meson8 and Meson8b
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
+        devicetree@vger.kernel.org, khilman@baylibre.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi Jerome,
 
-> >     => src/random-seed/random-seed.c:
-> >     /*
-> >      * Let's make this whole job asynchronous, i.e. let's make
-> >      * ourselves a barrier for proper initialization of the
-> >      * random pool.
-> >      */
-...
-> >      k = getrandom(buf, buf_size, GRND_NONBLOCK);
-> >      if (k < 0 && errno == EAGAIN && synchronous) {
-> >          log_notice("Kernel entropy pool is not initialized yet, "
-> >                     "waiting until it is.");
+On Mon, Sep 23, 2019 at 12:06 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> On Sat 21 Sep 2019 at 17:18, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+>
+> > Meson8 and Meson8b SoCs embed a DDR clock controller in their MMCBUS
+> > registers. This series:
+> > - adds support for this DDR clock controller (patches 0 and 1)
+> > - wires up the DDR PLL as input for two audio clocks (patches 2 and 3)
+>
+> Have you been able to validate somehow that DDR rate calculated by CCF
+> is the actual rate that gets to the audio clocks ?
+no, I haven't been able to validate this (yet)
+
+> While I understand the interest for completeness, I suspect the having
+> the DDR clock as an audio parent was just for debugging purpose. IOW,
+> I'm not sure if adding this parent is useful to an actual audio use
+> case. As far as audio would be concerned, I think we are better of
+> without this parent.
+there at least three other (potential) consumers of the ddr_pll clocks
+on the 32-bit SoCs:
+- CPU clock mux [0]
+- clk81 mux [1]
+- USB PHY [2]
+
+I have not validated any of these either
+
+> > - adds the DDR clock controller to meson8.dtsi and meson8b.dtsi
 > >
-> >          k = getrandom(buf, buf_size, 0); /* retry synchronously */
-> >      }
-> 
-> Yeah, the above is yet another example of completely broken garbage.
-> 
-> You can't just wait and block at boot. That is simply 100%
-> unacceptable, and always has been, exactly because that may
-> potentially mean waiting forever since you didn't do anything that
-> actually is likely to add any entropy.
+>
+> Could you please separate the driver and DT series in the future ? Those
+> take different paths and are meant for different maintainers.
+sure - so far Kevin has been doing a great job of still tracking these
+but I'm happy to split this into two patchsets
 
-Hmm. This actually points to a solution, and I believe solution is in the
-kernel. Userspace is not the best place to decide what is the best way to
-generate entropy.
 
-> As mentioned, this has already historically been a huge issue on
-> embedded devices, and with disks turnign not just to NVMe but to
-> actual polling nvdimm/xpoint/flash, the amount of true "entropy"
-> randomness we can give at boot is very questionable.
-> 
-> We can (and will) continue to do a best-effort thing (including very
-> much using rdread and friends), but the whole "wait for entropy"
-> simply *must* stop.
+Martin
 
-And we can stop it... from kernel, and without hacks. Simply by generating some
-entropy. We do not need to sit quietly while userspace waits for entropy to appear.
 
-We can for example do some reads from the disk. (find / should be good for generating
-entropy on many systems). For systems with rtc but not timestamp counter, we can
-actually just increase register, then read it from interrupt...
-...to get precise timings. We know system is blocked waiting for entropy, we can
-do expensive things we would not "normally" do.
-
-Yes, it would probably mean new kind of "driver" whose purpose is to generate some
-kind of activity so that interrupts happen and entropy is generated... But that is
-still better solution than fixing all of the userspace.
-
-(With some proposals here, userspace _could_ do 
-
-while (getrandom() == -EINVAL) {
-    system("find / &");
-    sleep(1);
-}
-
-...but I believe we really want to do it once, in kernel, and less hacky than this)
-
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+[0] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L441
+[1] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L452
+[2] https://github.com/endlessm/u-boot-meson/blob/f1ee03e3f7547d03e1478cc1fc967a9e5a121d92/arch/arm/cpu/aml_meson/m8/firmware/usb_boot/platform.c#L22
