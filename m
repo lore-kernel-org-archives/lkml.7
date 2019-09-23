@@ -2,118 +2,126 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAEAC761B0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C6C5AD68
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F7F207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569272012;
-	bh=Khwt3BWzLZkpHEWvhmzpmfGvnbddkHyEAyn7h86wwXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Od7+TODGH36PfAWL4PhMadIFNI0VzilZrv8m8Vj5MOU5o/74uMaoGaQcWi0+f2gnW
-	 WO8DK+y7MHc267PCQLB44cU9DePIkiaru4bPr6SBkELqEqMI+KlknsHtTf2h5zh+rc
-	 17b44Z9R11XLUqaJ0JMXPvbVlUY4ZmsbRYL0+aoo=
+	by mail.kernel.org (Postfix) with ESMTP id 7D04F20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 20:56:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="J6iZz4W8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfIWUxb (ORCPT
+        id S2388465AbfIWU4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 16:53:31 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:51206 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387617AbfIWUxb (ORCPT
+        Mon, 23 Sep 2019 16:56:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39190 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388120AbfIWU4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 16:53:31 -0400
-Received: by mail-wm1-f54.google.com with SMTP id 7so11501751wme.1;
-        Mon, 23 Sep 2019 13:53:29 -0700 (PDT)
+        Mon, 23 Sep 2019 16:56:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s22so13423702otr.6;
+        Mon, 23 Sep 2019 13:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mTa4bZT/5UrHG0lWADElPHHf/xGZTHN6ndQmHlpfS98=;
-        b=sduTLnFAc8Xd8b24ZwUXyRsIbyE9Kff7ORVmVe+3u08R7QFEthD6oVOIfccdH4/7BX
-         8jUgSssdJV0dIRNyqJeoFV+h0PkD1Bpjsk99MlvQW1/+ND7ewA0KtFyJQd9MAviTgU8T
-         7IRO8GB/HGOUqZMTA3Ldjn4P9yYyrjr1OMA1K4OtimxMrhGpjIhoPSnFm6h5/H8noUQ6
-         KJDUVhmCMrgFGXqU5nk+oMyiMY3TIjqfmub1VS22Qt/P+baD1n4CcKQ/f3qpvNe0UTEo
-         1pxM5Q/L3hyJOQ6VGoOKrlbgEfVjfZcMXa+ZqhpQqElbRUsMAHkkk4AbW2UcilEHR68C
-         eqUw==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NCBVHzoVPJRdaVAQ/V0UNMxjnGUzoZBL++du/W+XNNU=;
+        b=J6iZz4W8Ac0KBesx6BZtBfbxR7BQScJgoudoCWm4eqelCxtbb8CRR1OpkUlLJgnKMy
+         uiw/NRW+0NW3vCN7M2fC1JsmjKmnH2LxLFkq7Vb68H/dFCwMXbRBJWQgo2oJFOHy9sx+
+         +7OrBps8hEGSVo1mM/yqiENDR15b/8qkGabDROQaiYpnBOfnd7u9YAD9boIvjV9Bk67+
+         Wo12mduo9QhmGcu39rq+MSbbfYh4YAVsQVzrQQx5d0Oehe2ivPKTcPC0CXJEus6t62pV
+         5BhF1i61A7KsfXX4on3Vt/2KVsZREtoSJxwo5hZBPL/VNEIx3v6ifpCPFVmdVbj3MwXI
+         Fwqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mTa4bZT/5UrHG0lWADElPHHf/xGZTHN6ndQmHlpfS98=;
-        b=Ox9z1rM70qaeQgPPtn3vI42+5Zp8xBZYxvm2UCa+8hD0ROcB6ymc4HOF4FlPGMzTDL
-         /gpp/OV1DCVhuFUFigGOaaiszL6gbwVYmKz87rVcRpbyYgQMaJzFrXF8MGJouYDG2Noc
-         zQJ2/TATmV6Z2cRDf7ER39ZYOzpPRFPaR3me0ms1fK1UT5HPlutcQ/qJg+aE1kVATfM7
-         Fu2fqTkVYQOa433pX0y1mulBMaPAgMg1AQbyt+V1nUBY8DtKrELmdc13HP7N1LmhYpl2
-         AxtzQ1fUGdt3xZ1zfkKrP6B38kSS9q0xGcUAMFSs6aYnJ2gE7eAwhfNsIcK9YpgQHPIQ
-         Efmw==
-X-Gm-Message-State: APjAAAUrqPUv/luFXB0QHyylvd1WgEYtVXoqGj7VAgAtmjzY7IztM4u0
-        nnA4uuwpRFf3BD3z1r9RUMI=
-X-Google-Smtp-Source: APXvYqz6PxZpcewnWl0zFX3VSkSGm3xom7Nm87NBpfbP6nUQxaM5SoCLc94oNzQLuIUdeOUnTrS7lw==
-X-Received: by 2002:a05:600c:110a:: with SMTP id b10mr564127wma.18.1569272008807;
-        Mon, 23 Sep 2019 13:53:28 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id d78sm16630690wmd.47.2019.09.23.13.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 13:53:27 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 22:53:25 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-Message-ID: <20190923205325.GA121000@gmail.com>
-References: <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
- <20190922112555.GB122003@gmail.com>
- <20190922115247.GA2679387@kroah.com>
- <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
- <20190923194322.GA55255@gmail.com>
- <32d0e94d-bf9a-01e9-2548-1fc976c7f17b@infradead.org>
- <f4c21702-f7b5-e6f9-b31d-8fc9e4d1c67d@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NCBVHzoVPJRdaVAQ/V0UNMxjnGUzoZBL++du/W+XNNU=;
+        b=SpMSPIZ5QxT5AXZ2eDFZjSrEfxeuP2x/IEl3cTfuQXAja9kWt/CWfGBc/eZZVSWKvM
+         J76smjD5+IMiT2liCIzfwNqrW1IWK/G/XuXC+JDd2x15JOlT8lKC+2TPQ7WGDl0b+QEi
+         jdhtzoA7Hk/hkdMgy8m6KwTdUeKTQVWdeUPjBh4EdQnxmI2J9oYcUzPY09zyDEpeA0vS
+         hZVbOhyG+eE81azwcfj0Paa4bzoCx9p/p84Fdk/nanbE92H7rwGmswun9I2BXXaNT/e8
+         jNxXBFMKaq+UKGD2v/eZM4AJBprwWI7BzihXF6GseBAUna2S54Dtm+tdqHe0M8s7WcEz
+         JobQ==
+X-Gm-Message-State: APjAAAXX83Jv3XnFiknuGUUmFCgaBp4pZ6KpBnjPa59Hh66p3YB/QYih
+        DGiQO5LRkjgkFpfsZo0DQ5YvxV+9UaJc5KZWyow=
+X-Google-Smtp-Source: APXvYqyFuoyRlSXDjYvUjGpC3v15Fq1MINoED6Nm8UI7SCewQGRK7t4EFd08t605KjoTnJyFeyLibLTPt+LwwMFBvsY=
+X-Received: by 2002:a9d:6084:: with SMTP id m4mr197808otj.6.1569272199532;
+ Mon, 23 Sep 2019 13:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4c21702-f7b5-e6f9-b31d-8fc9e4d1c67d@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com> <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 23 Sep 2019 22:56:28 +0200
+Message-ID: <CAFBinCA0NaCJEDfNEg+LRfW3wxfNFGbXmGS+z7D5792TsupVAA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
+        devicetree@vger.kernel.org, khilman@baylibre.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jerome,
 
-* Shuah Khan <skhan@linuxfoundation.org> wrote:
+On Mon, Sep 23, 2019 at 11:29 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+>
+> > So far the HHI clock controller has been providing the XTAL clock on
+> > Amlogic Meson8/Meson8b/Meson8m2 SoCs.
+> > This is not correct because the XTAL is actually a crystal on the
+> > boards and the SoC has a dedicated input for it.
+> >
+> > This updates the dt-bindings of the HHI clock controller and defines
+> > a fixed-clock in meson.dtsi (along with switching everything over to
+> > use this clock).
+> > The clock driver needs three updates to use this:
+> > - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
+> >   the explicit reference to CLKID_XTAL while at the same time making
+> >   the code much easier (thanks to Neil for providing this new method
+> >   as part of the G12A CPU clock bringup!)
+> > - patch #3 ensures that the clock driver doesn't rely on it's internal
+> >   XTAL clock while not losing support for older .dtbs that don't have
+> >   the XTAL clock input yet
+> > - with patch #4 the clock controller's own XTAL clock is not registered
+> >   anymore when a clock input is provided via OF
+> >
+> > This series is a functional no-op. It's main goal is to better represent
+> > how the actual hardware looks like.
+>
+> I'm a bit unsure about this series.
+>
+> On one hand, I totally agree with you ... having the xtal in DT is the
+> right way to do it ... when done from the start
+yep
 
-> Right. What you suggesting is very similar to and more complete than 
-> what I have been thinking about and proposed at the KS kselftest track.
-> 
-> i.e move tools/testing/selftests to kselftest at the root level. I like 
-> your idea of moving tools/testing up to root and keep selftests under 
-> it.
-> 
-> If we are good with this kind of change, I would like to get this done 
-> sooner than later. There is some back-porting churn to worry about.
+> On the other hand, things have been this way for years, they are working
+> and going for xtal in DT does not solve any pending issue. Doing this
+> means adding complexity in the driver to support both methods. It is
+> also quite a significant change in DT :/
+my two main motivations were:
+- keeping the 32-bit SoCs as similar as possible to the 64-bit ones in
+terms of "how are the [clock] drivers implemented"
+- with the DDR clock controller the .dts looked weird: &ddr_clkc took
+CLKID_XTAL from &clkc as input and &clkc took DDR_CLKID_DDR_PLL as
+input from &ddr_clkc
 
-I think the movement I suggested would be sufficient:
+RE complexity in the driver to support both:
+I still have a cleanup of the meson8b.c init code on my TODO-list
+because we're still supporting .dtbs without parent syscon
+my plan is to drop that code-path along with the newly added fallback
+for "skip CLKID_XTAL" (assuming this is accepted) together for v5.6 or
+v5.7
 
-  tools/testing/selftests/ =>  tools/selftests/
 
-I.e. let's not clutter up the top level directory.
-
-Thanks,
-
-	Ingo
+Martin
