@@ -2,96 +2,476 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC73C432C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35727C4320D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3713821971
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/Q3H3Th"
+	by mail.kernel.org (Postfix) with ESMTP id 08BB021D71
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569279508;
+	bh=+T6SXgfbrBUwzMFS5UV+Sf/Q9vGJeKcUUBFpDPW/JSw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Nk3+FTBnEnD2yWorMKlRJzVyYPDOZhyy6bs8J/PJgcn4qx9PFSIzNK4wq26rcQuaB
+	 2XmlyjgMlOEhPIQ5vGcI87KpKCAX2+KpPisunagulrwRdZRo4zt3w38o/kEqYCz8fw
+	 ZeQebkXx15ptLy/i/JwK7RAhA95P07yK8gE/uP8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407680AbfIWW51 (ORCPT
+        id S2407714AbfIWW61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 18:57:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34799 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbfIWW50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 18:57:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so37727531ion.1;
-        Mon, 23 Sep 2019 15:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ROaL1ywY/Q2RCn2pJT/rR2PzIDfgf2z/1+keY+ag5Po=;
-        b=Q/Q3H3ThqKBSLPSFiylG5f8KZkJHXgUMiGWFzFzBlRwuBU03X/kdLUuSNmwAq+wQ4X
-         apgn8ERLRW749INr3d5G2KONR0vRhxmEl8QzNvtWMOxQAzGlF2aAwF8GX+Mf/HpWjkfP
-         Ay9klDk2d9/Zcn4A87Ktqt9I2HECAs0BpJ9QGHDCrm/jVCTf6I86GanyHru2bUU7398e
-         4SIpHhhGniqzqkWK7MZJvONxI0taDhVHIR/yDcsLPWN63XRzdsJvcwhMKgDtCKvwkvhw
-         nGYJdkRyVRDhTkXAT6p+/60DSznOjMaR4FraHQk5vReR8bnDjVcb45TlhFXyMSyB6nze
-         Xhmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ROaL1ywY/Q2RCn2pJT/rR2PzIDfgf2z/1+keY+ag5Po=;
-        b=SNM1NKwDVrXnf3G7pfm1YaV66kYfS+Vm8CItLnn3SdCYQV45CtFZ4xAp9012rC8Yx6
-         wzwWCz3t3pHG3Z5TaS5BhRGBRt2TnSsBHBGoO7P5EQ5zNdpRNsKhwH/IWpGbTlVU15mJ
-         D7SRsMPU7+jfyWatOUin+zb8+KP55USc7OnnWxKTYzFbTRP2+mCWD9zlhscfDrvclBvf
-         WGBFnM3EIS+/UjqB9PR8Cfgx4tn+HsNwwHuBl8KIA0CYCUAZqLd3PqNMR08sv2YCnR+f
-         JfvXBx2PvuHuBpQP6YpLGUTEwpW8Yb8vxxzEDwB2nXJSoW2bYexMvXdjUvGz0k/nRAwq
-         xd2w==
-X-Gm-Message-State: APjAAAU/gLliMXf0GYAYQeI9pflklB9heX5RHeJalL9jQftI0JhIK5qS
-        k4Zp7Wp6OG8HRZnamUWUlMw=
-X-Google-Smtp-Source: APXvYqw4xR+V0W+nnaECtbCLv7B0EIt1U1Z9y5K5kkiSgO8J3Wjr+Om0PTPNKx78UMbRaEAYEWHMRw==
-X-Received: by 2002:a5d:91c8:: with SMTP id k8mr2268069ior.232.1569279445977;
-        Mon, 23 Sep 2019 15:57:25 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id r141sm38647ior.53.2019.09.23.15.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 15:57:25 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: prevent memory leak in super.c
-Date:   Mon, 23 Sep 2019 17:57:10 -0500
-Message-Id: <20190923225713.13381-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 23 Sep 2019 18:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729156AbfIWW61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 18:58:27 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDC721971;
+        Mon, 23 Sep 2019 22:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569279505;
+        bh=+T6SXgfbrBUwzMFS5UV+Sf/Q9vGJeKcUUBFpDPW/JSw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F6cEOylWQ2PlXlX6GXhCETwj0nYNVzh1svJUvNeCjoGA6C4bCNXL0zvBbWmB33L3d
+         zRC7yg5nAeEWxtB7KE0GcOZeJ66It11Svn9puHwsqxTK2/rR893EwfJDQuw5XANoN5
+         jeyBE6C9ghMXzU561LYcL+oW5d/WPyRmazcJPxIc=
+Date:   Mon, 23 Sep 2019 17:58:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] PCI changes for v5.4
+Message-ID: <20190923225822.GC11938@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In btrfs_mount_root the last error checking was not going to the error
-handling path. Fixed it.
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- fs/btrfs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 1b151af25772..9f3f62c000fa 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1565,7 +1565,7 @@ static struct dentry *btrfs_mount_root(struct file_system_type *fs_type,
- 	security_free_mnt_opts(&new_sec_opts);
- 	if (error) {
- 		deactivate_locked_super(s);
--		return ERR_PTR(error);
-+		goto error_close_devices;
- 	}
- 
- 	return dget(s->s_root);
--- 
-2.17.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.4-changes
+
+for you to fetch changes up to c5048a73b4770304699cb15e3ffcb97acab685f7:
+
+  Merge branch 'pci/trivial' (2019-09-23 16:10:31 -0500)
+
+----------------------------------------------------------------
+
+You should see minor conflicts in drivers/pci/Kconfig and
+drivers/pci/controller/pci-hyperv.c related to some changes merged via
+the net tree.
+
+
+Enumeration:
+
+  - Consolidate _HPP/_HPX stuff in pci-acpi.c and simplify it (Krzysztof
+    Wilczynski)
+
+  - Fix incorrect PCIe device types and remove dev->has_secondary_link to
+    simplify code that deals with upstream/downstream ports (Mika
+    Westerberg)
+
+  - After suspend, restore Resizable BAR size bits correctly for 1MB BARs
+    (Sumit Saxena)
+
+  - Enable PCI_MSI_IRQ_DOMAIN support for RISC-V (Wesley Terpstra)
+
+Virtualization:
+
+  - Add ACS quirks for iProc PAXB (Abhinav Ratna), Amazon Annapurna Labs
+    (Ali Saidi)
+
+  - Move sysfs SR-IOV functions to iov.c (Kelsey Skunberg)
+
+  - Remove group write permissions from sysfs sriov_numvfs,
+    sriov_drivers_autoprobe (Kelsey Skunberg)
+
+Hotplug:
+
+  - Simplify pciehp indicator control (Denis Efremov)
+
+Peer-to-peer DMA:
+
+  - Allow P2P DMA between root ports for whitelisted bridges (Logan
+    Gunthorpe)
+
+  - Whitelist some Intel host bridges for P2P DMA (Logan Gunthorpe)
+
+  - DMA map P2P DMA requests that traverse host bridge (Logan Gunthorpe)
+
+Amazon Annapurna Labs host bridge driver:
+
+  - Add DT binding and controller driver (Jonathan Chocron)
+
+Hyper-V host bridge driver:
+
+  - Fix hv_pci_dev->pci_slot use-after-free (Dexuan Cui)
+
+  - Fix PCI domain number collisions (Haiyang Zhang)
+
+  - Use instance ID bytes 4 & 5 as PCI domain numbers (Haiyang Zhang)
+
+  - Fix build errors on non-SYSFS config (Randy Dunlap)
+
+i.MX6 host bridge driver:
+
+  - Limit DBI register length (Stefan Agner)
+
+Intel VMD host bridge driver:
+
+  - Fix config addressing issues (Jon Derrick)
+
+Layerscape host bridge driver:
+
+  - Add bar_fixed_64bit property to endpoint driver (Xiaowei Bao)
+
+  - Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC drivers separately (Xiaowei
+    Bao)
+
+Mediatek host bridge driver:
+
+  - Add MT7629 controller support (Jianjun Wang)
+
+Mobiveil host bridge driver:
+
+  - Fix CPU base address setup (Hou Zhiqiang)
+
+  - Make "num-lanes" property optional (Hou Zhiqiang)
+
+Tegra host bridge driver:
+
+  - Fix OF node reference leak (Nishka Dasgupta)
+
+  - Disable MSI for root ports to work around design problem (Vidya Sagar)
+
+  - Add Tegra194 DT binding and controller support (Vidya Sagar)
+
+  - Add support for sideband pins and slot regulators (Vidya Sagar)
+
+  - Add PIPE2UPHY support (Vidya Sagar)
+
+Misc:
+
+  - Remove unused pci_block_cfg_access() et al (Kelsey Skunberg)
+
+  - Unexport pci_bus_get(), etc (Kelsey Skunberg)
+
+  - Hide PM, VC, link speed, ATS, ECRC, PTM constants and interfaces in the
+    PCI core (Kelsey Skunberg)
+
+  - Clean up sysfs DEVICE_ATTR() usage (Kelsey Skunberg)
+
+  - Mark expected switch fall-through (Gustavo A. R. Silva)
+
+  - Propagate errors for optional regulators and PHYs (Thierry Reding)
+
+  - Fix kernel command line resource_alignment parameter issues (Logan
+    Gunthorpe)
+
+
+----------------------------------------------------------------
+Abhinav Ratna (1):
+      PCI: Add ACS quirk for iProc PAXB
+
+Alexey Kardashevskiy (1):
+      PCI: Correct pci=resource_alignment parameter example
+
+Ali Saidi (1):
+      PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Bjorn Helgaas (21):
+      PCI: Fix typos and whitespace errors
+      PCI: pciehp: Refer to "Indicators" instead of "LEDs" in comments
+      Merge branch 'pci/aspm'
+      Merge branch 'pci/encapsulate'
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/msi'
+      Merge branch 'pci/p2pdma'
+      Merge branch 'pci/pciehp'
+      Merge branch 'pci/resource'
+      Merge branch 'remotes/lorenzo/pci/al'
+      Merge branch 'remotes/lorenzo/pci/dwc'
+      Merge branch 'remotes/lorenzo/pci/hv'
+      Merge branch 'remotes/lorenzo/pci/imx'
+      Merge branch 'remotes/lorenzo/pci/layerscape'
+      Merge branch 'remotes/lorenzo/pci/mediatek'
+      Merge branch 'remotes/lorenzo/pci/misc'
+      Merge branch 'remotes/lorenzo/pci/mobiveil'
+      Merge branch 'lorenzo/pci/tegra'
+      Merge branch 'remotes/lorenzo/pci/vmd'
+      Merge branch 'pci/trivial'
+
+Denis Efremov (6):
+      PCI: Convert pci_resource_to_user() to a weak function
+      PCI: Use PCI_SRIOV_NUM_BARS in loops instead of PCI_IOV_RESOURCE_END
+      PCI: pciehp: Add pciehp_set_indicators() to set both indicators
+      PCI: pciehp: Combine adjacent indicator updates
+      PCI: pciehp: Remove pciehp_set_attention_status()
+      PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+
+Dexuan Cui (1):
+      PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
+
+Fuqian Huang (1):
+      PCI: Use devm_add_action_or_reset()
+
+Gustavo A. R. Silva (1):
+      PCI: Mark expected switch fall-through
+
+Haiyang Zhang (2):
+      PCI: hv: Detect and fix Hyper-V PCI domain number collision
+      PCI: hv: Use bytes 4 and 5 from instance ID as the PCI domain numbers
+
+Herbert Xu (1):
+      PCI: Add pci_irq_vector() and other stubs when !CONFIG_PCI
+
+Hou Zhiqiang (5):
+      PCI: mobiveil: Fix the CPU base address setup in inbound window
+      dt-bindings: PCI: designware: Remove the num-lanes from Required properties
+      PCI: dwc: Return directly when num-lanes is not found
+      ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+      arm64: dts: fsl: Remove num-lanes property from PCIe nodes
+
+Jianjun Wang (2):
+      dt-bindings: PCI: Add support for MT7629
+      PCI: mediatek: Add controller support for MT7629
+
+Jon Derrick (2):
+      PCI: vmd: Fix config addressing when using bus offsets
+      PCI: vmd: Fix shadow offsets to reflect spec changes
+
+Jonathan Chocron (6):
+      PCI: Add Amazon's Annapurna Labs vendor ID
+      PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
+      PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs Root Port
+      dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+      PCI: dwc: al: Add Amazon Annapurna Labs PCIe controller driver
+      PCI: dwc: Add validation that PCIe core is set to correct mode
+
+Kelsey Skunberg (19):
+      PCI: Remove pci_block_cfg_access() et al (unused)
+      PCI: Unexport pci_bus_get() and pci_bus_put()
+      PCI: Unexport pci_bus_sem
+      PCI: Make PCI_PM_* delay times private
+      PCI: Make pci_check_pme_status(), pci_pme_wakeup_bus() private
+      PCI: Make pci_get_host_bridge_device(), pci_put_host_bridge_device() private
+      PCI: Make pci_save_vc_state(), pci_restore_vc_state(), etc private
+      PCI: Make pci_hotplug_io_size, mem_size, and bus_size private
+      PCI: Make pci_bus_get(), pci_bus_put() private
+      PCI: Make pcie_update_link_speed() private
+      PCI: Make pci_ats_init() private
+      PCI: Make pcie_set_ecrc_checking(), pcie_ecrc_get_policy() private
+      PCI: Make pci_enable_ptm() private
+      PCI: Make pci_set_of_node(), etc private
+      PCI: sysfs: Define device attributes with DEVICE_ATTR*()
+      PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()
+      PCI: sysfs: Change permissions from symbolic to octal
+      PCI/IOV: Move sysfs SR-IOV functions to iov.c
+      PCI/IOV: Remove group write permission from sriov_numvfs, sriov_drivers_autoprobe
+
+Krzysztof Wilczynski (7):
+      PCI: Move ASPM declarations to linux/pci.h
+      PCI/ACPI: Rename _HPX structs from hpp_* to hpx_*
+      PCI/ACPI: Move _HPP & _HPX functions to pci-acpi.c
+      PCI/ACPI: Remove unnecessary struct hotplug_program_ops
+      PCI: Remove unnecessary returns
+      PCI: Add pci_info_ratelimited() to ratelimit PCI separately
+      PCI: Use static const struct, not const static struct
+
+Logan Gunthorpe (17):
+      PCI/P2PDMA: Introduce private pagemap structure
+      PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct
+      PCI/P2PDMA: Add constants for map type results to upstream_bridge_distance()
+      PCI/P2PDMA: Factor out __upstream_bridge_distance()
+      PCI/P2PDMA: Apply host bridge whitelist for ACS
+      PCI/P2PDMA: Factor out host_bridge_whitelist()
+      PCI/P2PDMA: Whitelist some Intel host bridges
+      PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
+      PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
+      PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
+      PCI/P2PDMA: Store mapping method in an xarray
+      PCI/P2PDMA: dma_map() requests that traverse the host bridge
+      PCI/P2PDMA: Allow IOMMU for host bridge whitelist
+      PCI/P2PDMA: Update pci_p2pdma_distance_many() documentation
+      PCI: Clean up resource_alignment parameter to not require static buffer
+      PCI: Move pci_[get|set]_resource_alignment_param() into their callers
+      PCI: Force trailing new line to resource_alignment_param in sysfs
+
+Lorenzo Pieralisi (1):
+      MAINTAINERS: Add PCI native host/endpoint controllers designated reviewer
+
+Lubomir Rintel (1):
+      PCI: OF: Correct of_irq_parse_pci() documentation
+
+Mika Westerberg (2):
+      PCI: Make pcie_downstream_port() available outside of access.c
+      PCI: Get rid of dev->has_secondary_link flag
+
+Nishka Dasgupta (2):
+      PCI: tegra: Fix OF node reference leak
+      PCI: kirin: Make structure kirin_dw_pcie_ops constant
+
+Randy Dunlap (1):
+      PCI: pci-hyperv: Fix build errors on non-SYSFS config
+
+Stefan Agner (1):
+      PCI: imx6: Limit DBI register length
+
+Sumit Saxena (1):
+      PCI: Restore Resizable BAR size bits correctly for 1MB BARs
+
+Thierry Reding (6):
+      PCI: rockchip: Propagate errors for optional regulators
+      PCI: exynos: Propagate errors for optional PHYs
+      PCI: imx6: Propagate errors for optional regulators
+      PCI: armada8x: Propagate errors for optional PHYs
+      PCI: histb: Propagate errors for optional regulators
+      PCI: iproc: Propagate errors for optional PHYs
+
+Vidya Sagar (19):
+      PCI: Add #defines for some of PCIe spec r4.0 features
+      PCI: Disable MSI for Tegra root ports
+      PCI: dwc: Group DBI registers writes requiring unlocking
+      PCI: dwc: Move config space capability search API
+      PCI: dwc: Add extended configuration space capability search API
+      PCI: dwc: Export dw_pcie_wait_for_link() API
+      dt-bindings: PCI: designware: Add binding for CDM register check
+      PCI: dwc: Add support to enable CDM register check
+      dt-bindings: Add PCIe supports-clkreq property
+      dt-bindings: PCI: tegra: Add device tree support for Tegra194
+      dt-bindings: PHY: P2U: Add Tegra194 P2U block
+      phy: tegra: Add PCIe PIPE2UPHY support
+      PCI: tegra: Add Tegra194 PCIe support
+      dt-bindings: PCI: tegra: Add sideband pins configuration entries
+      dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+      PCI: tegra: Add support to configure sideband pins
+      PCI: tegra: Add support to enable slot regulators
+      arm64: tegra: Add configuration for PCIe C5 sideband signals
+      arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+
+Wesley Terpstra (1):
+      PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for RISC-V
+
+Xiaowei Bao (2):
+      PCI: layerscape: Add the bar_fixed_64bit property to the endpoint driver
+      PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
+
+ Documentation/admin-guide/kernel-parameters.txt    |    5 +-
+ .../devicetree/bindings/pci/designware-pcie.txt    |    6 +-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |    2 +-
+ .../devicetree/bindings/pci/mediatek-pcie.txt      |    1 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt          |  171 ++
+ .../devicetree/bindings/pci/pci-armada8k.txt       |    2 +-
+ Documentation/devicetree/bindings/pci/pci.txt      |    5 +
+ Documentation/devicetree/bindings/pci/pcie-al.txt  |   46 +
+ .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |   28 +
+ MAINTAINERS                                        |    4 +-
+ arch/arm/boot/dts/ls1021a.dtsi                     |    2 -
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     |    1 -
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     |    3 -
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |    6 -
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |    3 -
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |    4 -
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     |   24 +
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |    4 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |   38 +-
+ arch/microblaze/include/asm/pci.h                  |    2 -
+ arch/mips/include/asm/pci.h                        |    1 -
+ arch/powerpc/include/asm/pci.h                     |    2 -
+ arch/sparc/include/asm/pci.h                       |    2 -
+ drivers/acpi/pci_root.c                            |    1 -
+ drivers/char/xillybus/xillybus_pcie.c              |    1 -
+ drivers/infiniband/core/rw.c                       |    6 +-
+ drivers/net/ethernet/intel/e1000e/e1000.h          |    1 -
+ drivers/net/ethernet/jme.c                         |    1 -
+ drivers/net/ethernet/realtek/r8169_main.c          |    1 -
+ drivers/net/wireless/ath/ath5k/pci.c               |    1 -
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c     |    1 -
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c     |    1 -
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |    1 -
+ drivers/nvme/host/pci.c                            |   10 +-
+ drivers/pci/Kconfig                                |    6 +-
+ drivers/pci/access.c                               |    9 -
+ drivers/pci/bus.c                                  |    2 -
+ drivers/pci/controller/dwc/Kconfig                 |   42 +-
+ drivers/pci/controller/dwc/Makefile                |    4 +-
+ drivers/pci/controller/dwc/pci-exynos.c            |    2 +-
+ drivers/pci/controller/dwc/pci-imx6.c              |   37 +-
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     |    1 +
+ drivers/pci/controller/dwc/pcie-al.c               |  365 +++++
+ drivers/pci/controller/dwc/pcie-armada8k.c         |    7 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   45 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  |   30 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   96 +-
+ drivers/pci/controller/dwc/pcie-designware.h       |   12 +
+ drivers/pci/controller/dwc/pcie-histb.c            |    4 +-
+ drivers/pci/controller/dwc/pcie-kirin.c            |    2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c         | 1732 ++++++++++++++++++++
+ drivers/pci/controller/pci-host-common.c           |    3 +-
+ drivers/pci/controller/pci-hyperv.c                |   94 +-
+ drivers/pci/controller/pci-tegra.c                 |   22 +-
+ drivers/pci/controller/pcie-iproc-platform.c       |    9 +-
+ drivers/pci/controller/pcie-mediatek.c             |   20 +-
+ drivers/pci/controller/pcie-mobiveil.c             |   10 +-
+ drivers/pci/controller/pcie-rockchip-host.c        |   16 +-
+ drivers/pci/controller/vmd.c                       |   25 +-
+ drivers/pci/hotplug/cpci_hotplug_core.c            |    1 -
+ drivers/pci/hotplug/cpqphp_core.c                  |    1 -
+ drivers/pci/hotplug/cpqphp_ctrl.c                  |    4 -
+ drivers/pci/hotplug/cpqphp_nvram.h                 |    5 +-
+ drivers/pci/hotplug/ibmphp_res.c                   |    1 +
+ drivers/pci/hotplug/pciehp.h                       |   11 +-
+ drivers/pci/hotplug/pciehp_core.c                  |    9 +-
+ drivers/pci/hotplug/pciehp_ctrl.c                  |   39 +-
+ drivers/pci/hotplug/pciehp_hpc.c                   |   87 +-
+ drivers/pci/hotplug/rpadlpar_core.c                |    1 -
+ drivers/pci/hotplug/rpaphp_core.c                  |    1 -
+ drivers/pci/iov.c                                  |  171 +-
+ drivers/pci/of.c                                   |    2 +-
+ drivers/pci/p2pdma.c                               |  374 +++--
+ drivers/pci/pci-acpi.c                             |  410 ++++-
+ drivers/pci/pci-bridge-emul.c                      |    4 +-
+ drivers/pci/pci-sysfs.c                            |  223 +--
+ drivers/pci/pci.c                                  |   87 +-
+ drivers/pci/pci.h                                  |   68 +-
+ drivers/pci/pcie/aspm.c                            |    9 +-
+ drivers/pci/pcie/err.c                             |    2 +-
+ drivers/pci/probe.c                                |  326 +---
+ drivers/pci/quirks.c                               |  106 +-
+ drivers/pci/search.c                               |    1 -
+ drivers/pci/setup-bus.c                            |    4 +-
+ drivers/pci/vc.c                                   |    5 +-
+ drivers/pci/vpd.c                                  |    6 +
+ drivers/phy/tegra/Kconfig                          |    7 +
+ drivers/phy/tegra/Makefile                         |    1 +
+ drivers/phy/tegra/phy-tegra194-p2u.c               |  120 ++
+ drivers/scsi/aacraid/linit.c                       |    1 -
+ drivers/scsi/hpsa.c                                |    1 -
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c               |    1 -
+ include/linux/memremap.h                           |    1 -
+ include/linux/pci-aspm.h                           |   36 -
+ include/linux/pci-p2pdma.h                         |   28 +-
+ include/linux/pci.h                                |  133 +-
+ include/linux/pci_hotplug.h                        |  100 --
+ include/linux/pci_ids.h                            |    3 +
+ include/uapi/linux/pci_regs.h                      |   15 +-
+ 99 files changed, 4201 insertions(+), 1186 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+ delete mode 100644 include/linux/pci-aspm.h
