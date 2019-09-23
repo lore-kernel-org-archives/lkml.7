@@ -2,141 +2,99 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04556C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAD2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F7E217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074DB20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569263205;
-	bh=koHXnSQ/ffYHG+8C4SAhi8d08GLBDqZbfZNRMSjE+xY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgIFHLPvxqrpbpf2dBj9aQDZhbVqGjRRzr37ZpDIzM8qHrn5l0x5LHjYrkk9Qxa0q
-	 27aAmVKYetuim/pIe2lIQXtj8w0aibCV2ORqrC3Ola4RRhcgVbSC1ZRHIhPMgOHd9d
-	 TSrOrBGrJAUXOcQo2K10bGrN0Da7qfXkLU4gfGeQ=
+	s=default; t=1569263210;
+	bh=ANQO2ApB2En3pMDbZlXOjrig9w/lz+tn8yahenzVHaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lo/426F4etJSvCCSzzgModRNZQ5+cOJ9sqJsnJbyAbPcnxZIlC4NLtZut75bgnDMU
+	 wtRKv/8mQ9iX+wjmI3Z5qnpyse3jXFgHu2UY5SGv/DNC3NFl41Q6QtDBWAHa5GjHC0
+	 9sCk7zViAHmxlcPeZbK//wEX2zb9vGnPGweUF6nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440470AbfIWS0o (ORCPT
+        id S2440483AbfIWS0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:26:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:46682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438244AbfIWS0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:26:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E3DF15AB;
-        Mon, 23 Sep 2019 11:26:43 -0700 (PDT)
-Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC8DD3F694;
-        Mon, 23 Sep 2019 11:26:39 -0700 (PDT)
-From:   Marc Zyngier <maz@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH 04/35] irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
-Date:   Mon, 23 Sep 2019 19:25:35 +0100
-Message-Id: <20190923182606.32100-5-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190923182606.32100-1-maz@kernel.org>
-References: <20190923182606.32100-1-maz@kernel.org>
+        Mon, 23 Sep 2019 14:26:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49010 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438244AbfIWS0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:26:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zw+H0cLzv/wwqoCNPLuepePG6BXzshdDMwI7nmGluWE=; b=fKjhg1afHN0bskjgwyq9Io5Cu
+        Uy0KP8nn8p8ohmwBpELJ9JE/+fVoxTyba9bySGimHT6golLOxvZ0pAbFoNxr9uKGSvSA5BIxMtEXm
+        yzngWO3G+0KzgEAjcKOxDl9W86UWTmdQi6InLrl40Pfi9MGte/6+khTJKabJteeX0bAb8=;
+Received: from [12.157.10.114] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCT2X-0004Xp-9o; Mon, 23 Sep 2019 18:26:25 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 46260D01F26; Mon, 23 Sep 2019 19:26:23 +0100 (BST)
+Date:   Mon, 23 Sep 2019 11:26:23 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jiri Kosina <trivial@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH trivial] sound: Fix Kconfig indentation
+Message-ID: <20190923182623.GX2036@sirena.org.uk>
+References: <20190923154547.26532-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AaroDtM9M79Ffl67"
+Content-Disposition: inline
+In-Reply-To: <20190923154547.26532-1-krzk@kernel.org>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GICv4.1 supports the RVPEID ("Residency per vPE ID"), which allows for
-a much efficient way of making virtual CPUs resident (to allow direct
-injection of interrupts).
 
-The functionnality needs to be discovered on each and every redistributor
-in the system, and disabled if the settings are inconsistent.
+--AaroDtM9M79Ffl67
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3.c       | 21 ++++++++++++++++++---
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- 2 files changed, 20 insertions(+), 3 deletions(-)
+On Mon, Sep 23, 2019 at 05:45:47PM +0200, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+>     $ sed -e 's/^        /\t/' -i */Kconfig
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 422664ac5f53..0b545e2c3498 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -849,8 +849,21 @@ static int __gic_update_rdist_properties(struct redist_region *region,
- 					 void __iomem *ptr)
- {
- 	u64 typer = gic_read_typer(ptr + GICR_TYPER);
-+
- 	gic_data.rdists.has_vlpis &= !!(typer & GICR_TYPER_VLPIS);
--	gic_data.rdists.has_direct_lpi &= !!(typer & GICR_TYPER_DirectLPIS);
-+
-+	/* RVPEID implies some form of DirectLPI, no matter what the doc says... :-/ */
-+	gic_data.rdists.has_rvpeid &= !!(typer & GICR_TYPER_RVPEID);
-+	gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
-+					   gic_data.rdists.has_rvpeid);
-+
-+	/* Detect non-sensical configurations */
-+	if (WARN_ON_ONCE(gic_data.rdists.has_rvpeid && !gic_data.rdists.has_vlpis)) {
-+		gic_data.rdists.has_direct_lpi = false;
-+		gic_data.rdists.has_vlpis = false;
-+		gic_data.rdists.has_rvpeid = false;
-+	}
-+
- 	gic_data.ppi_nr = min(GICR_TYPER_NR_PPIS(typer), gic_data.ppi_nr);
- 
- 	return 1;
-@@ -863,9 +876,10 @@ static void gic_update_rdist_properties(void)
- 	if (WARN_ON(gic_data.ppi_nr == UINT_MAX))
- 		gic_data.ppi_nr = 0;
- 	pr_info("%d PPIs implemented\n", gic_data.ppi_nr);
--	pr_info("%sVLPI support, %sdirect LPI support\n",
-+	pr_info("%sVLPI support, %sdirect LPI support, %sRVPEID support\n",
- 		!gic_data.rdists.has_vlpis ? "no " : "",
--		!gic_data.rdists.has_direct_lpi ? "no " : "");
-+		!gic_data.rdists.has_direct_lpi ? "no " : "",
-+		!gic_data.rdists.has_rvpeid ? "no " : "");
- }
- 
- /* Check whether it's single security state view */
-@@ -1546,6 +1560,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 						 &gic_data);
- 	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
- 	gic_data.rdists.rdist = alloc_percpu(typeof(*gic_data.rdists.rdist));
-+	gic_data.rdists.has_rvpeid = true;
- 	gic_data.rdists.has_vlpis = true;
- 	gic_data.rdists.has_direct_lpi = true;
- 
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 5cc10cf7cb3e..b34e0c113697 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -234,6 +234,7 @@
- #define GICR_TYPER_VLPIS		(1U << 1)
- #define GICR_TYPER_DirectLPIS		(1U << 3)
- #define GICR_TYPER_LAST			(1U << 4)
-+#define GICR_TYPER_RVPEID		(1U << 7)
- 
- #define GIC_V3_REDIST_SIZE		0x20000
- 
-@@ -613,6 +614,7 @@ struct rdists {
- 	u64			flags;
- 	u32			gicd_typer;
- 	bool			has_vlpis;
-+	bool			has_rvpeid;
- 	bool			has_direct_lpi;
- };
- 
--- 
-2.20.1
+Acked-by: Mark Brown <broonie@kernel.org>
 
+--AaroDtM9M79Ffl67
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2JDk4ACgkQJNaLcl1U
+h9AK3Af/Tumh0ikqpRGJ0LZQlwnZL1S5vUwKQexSehpfKUrROssuMuDooB4KfBpz
+ADosYAcnRlbfTq0/WyLAbhOUUYfA11tff0W8JqcdhWDupk+DWkHGiSgARTy18/fx
+QQIiYsgO/MAiMJLVUS8Qm55ro7At6IGI6nGxDUtLowI/2OBxRrIXLlik9szhF9UL
+hfh0nRX4R2gIj33W/MuTWPLiRf2SUAvK95Z7+0QoiCMAwY+d4NKkjNTdqCKJWfeK
+FRBvFxRrd7KWIVq41QLWFp7FX3+fPEMhi2Setm0a7XVTszCKb09uxOIIKNJ8JwDv
+vOR6rMrZvaRkVnVT+BsW5n9HY6OksQ==
+=gZw4
+-----END PGP SIGNATURE-----
+
+--AaroDtM9M79Ffl67--
