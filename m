@@ -2,199 +2,151 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AC9C4320D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1F9C432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF5C21971
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1D420820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 23:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nODLwMTR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQ6TfzgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407792AbfIWXAb (ORCPT
+        id S2407806AbfIWXF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 19:00:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40691 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407756AbfIWXAa (ORCPT
+        Mon, 23 Sep 2019 19:05:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36079 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404332AbfIWXF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 19:00:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so8891108pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:00:30 -0700 (PDT)
+        Mon, 23 Sep 2019 19:05:57 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so3139pgb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:05:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Cxi307Bkpn4j+jiDXKsNJo43HrT9bZvKE+wlsNTb2vo=;
-        b=nODLwMTRvcFnGrX/zrqVQmiRwJplI1RrjiEAU6Zj6tA0Y7w4ftRM/iNbtP2VVCojIx
-         MKCGE/iJ7EYbTPMCb61gdelYNeeIWDaFwvmmm8fM53w3T8h0lZslkySjqG2pyvNxaVO+
-         bjU8V3X9T+tUUE0boXjqVWqbmCRG75WNganvYsIH6qNh0o69xd7CmKX6u9Y1xzDENblT
-         rkcyg5cAPU8wacBT9N8eNQlxXO4YdiMbfc/uZtMLO4i5tVHIPK7DQ5zqllka0gQEBD3z
-         d9jGw34v0TCyCq1Pued+j5FYRJBFijr7Udm939aOXQHq7GM4xHQDTRghwrnqQxc/VAnN
-         WYVA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=8GW2ZAMOExxQqbATbwezF6NgpB/8s7Vd0S2JE2TvzMw=;
+        b=SQ6TfzgVKHsPa7qoO3x2FDRQuqXM4QHm//nv6NynsbpMmNYceMtAQsFaQQVyoBHset
+         9H0APDmWw4HYH9TAKK2yf5A985926S2pXXSqQbak1HRPUpfledqEV38BL2uP2IxOBZbw
+         bC1pea9EbLfFy5YIKRQGluCeU3Nawbszh/aoNnRKJXnU6tx+5WzGZ/tXqVrGJcvDVBuv
+         66Tc96u+TWxKN/xonY7+q2c4MHUHDZEwWZKz2l76b3GscGbqRV92cbDGldMOqPriLm6U
+         6yeMxturyRTjr1mAtaoxYEf6mIOEB7EBJc08zlTbw8Ug81ZbT4iJ/pHvmgMqaliIesty
+         QcUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cxi307Bkpn4j+jiDXKsNJo43HrT9bZvKE+wlsNTb2vo=;
-        b=oIV0Hz3vMkvwC+Pup5bBVQQwJAS7fDkgqJHmvcAZYS7NiL00zzBe3tFxxbq8oy9h+o
-         MBAXbzsaQIn/p2yJDc2e9L/7JJk+Z5wGH2VYyWq4NNM2cdpHsgyjkwmC1K5994GNUIe3
-         MSIZXerjFZWVRoNoDzptb9aLKSo5+qKoFY3NuYM2HDqinKoWRgOp4hxrJp8kDxliwh+m
-         mlr/XtiG1iW9PhJdlmRMHOY3vw/ny+L+Ocoy4/VCnMM44i4tGwkXeRw4JM6aG1Uylg9O
-         UJ30oQrjkK3i3iYVfZ/0WfbraN6SzxuF2VgAkxd+dKK88+vrEM5pVT5z5vSuZIiEvtGw
-         qklg==
-X-Gm-Message-State: APjAAAWrNc8takywzLJpikv1b4Xrv2FLj8S2COELp6BtQr6XcqCBg11F
-        ATzVAV1gK+Mc/5qBbciPMtURIdCMJYI=
-X-Google-Smtp-Source: APXvYqyjbEye/XbSU187L1OdRVB7k7qjYrq7gfkFPmEuO36sQdB/ogRa8PveZWy3H4fXpgrq6zYpuA==
-X-Received: by 2002:a17:90a:fc8c:: with SMTP id ci12mr1972096pjb.38.1569279629150;
-        Mon, 23 Sep 2019 16:00:29 -0700 (PDT)
-Received: from ?IPv6:2600:380:7421:c743:b137:2b87:43b6:a795? ([2600:380:7421:c743:b137:2b87:43b6:a795])
-        by smtp.gmail.com with ESMTPSA id i37sm12006325pje.23.2019.09.23.16.00.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 16:00:28 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
- <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
-Message-ID: <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
-Date:   Mon, 23 Sep 2019 17:00:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=8GW2ZAMOExxQqbATbwezF6NgpB/8s7Vd0S2JE2TvzMw=;
+        b=Czh4tFjIBsfOnCJ+E6WuCMP09uReGL/wf+DGsktc8Mu34/wtsXKLfYt2eScqC0gbIN
+         1uKssQTHWBSyOUFIwKp1ZC+wf/5PNvQbXuOmtB3kfn0fnepOxdaza0B/2E5RECsY02/C
+         srkZVOF/VDDID3GMsf3q9I5l6fw3foBX79HeUGHTt2j1aQKqw5ML8ndnDMt674mC9Irm
+         t+ODFakQ9GqJ3eDmogFgJpkRSpdYN3Dfx68QXxkviRoTdItnnHLreaH7S3iVGTTwZsj3
+         2epsXo4UYKfzWWvpMmeS572qRIaJ1SvrJg1chboHq/AtZnYhlVEOtgjXKlygZrd8TmAB
+         i1Gw==
+X-Gm-Message-State: APjAAAViNipo5S/YxT7yA//vuYxa5Bz/qFCf43cb9h5RU2DxOGe/g+90
+        rmS263MtaD7AR2WGoG+7ccLcau9gUegHmw==
+X-Google-Smtp-Source: APXvYqx0gLhUcmUCEl8p/O2UANVWsKSq7sWSDFzQkpaYnf5dq8qLsX8LzUCGfvg79At1wAoIZLhYvg==
+X-Received: by 2002:a17:90b:903:: with SMTP id bo3mr2035155pjb.52.1569279956601;
+        Mon, 23 Sep 2019 16:05:56 -0700 (PDT)
+Received: from dell ([12.157.10.118])
+        by smtp.gmail.com with ESMTPSA id q2sm15061006pfg.144.2019.09.23.16.05.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Sep 2019 16:05:55 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 00:05:54 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Backlight for v5.4
+Message-ID: <20190923230554.GA4469@dell>
 MIME-Version: 1.0
-In-Reply-To: <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 2:48 PM, Jens Axboe wrote:
-> On 9/23/19 10:32 AM, Pavel Begunkov wrote:
->> Sorry, mixed the threads.
->>
->>>>
->>>> I'm not sure an extension is needed for such a special interface, why not
->>>> just put a ->threshold value next to the ctx->wait field and use either
->>>> the regular wait_event() APIs with the proper condition, or
->>>> wait_event_cmd() style APIs if you absolutely need something more complex
->>>> to happen inside?
->> Ingo,
->> io_uring works well without this patch just using wait_event_*() with
->> proper condition, but there are performance issues with spurious
->> wakeups. Detailed description in the previous mail.
->> Am I missing something?
-> 
-> I think we can do the same thing, just wrapping the waitqueue in a
-> structure with a count in it, on the stack. Got some flight time
-> coming up later today, let me try and cook up a patch.
+Linus,
 
-Totally untested, and sent out 5 min before departure... But something
-like this.
+Enjoy!
 
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index ca7570aca430..c2f9e1da26dd 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2768,6 +2768,37 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
- 	return submit;
- }
- 
-+struct io_wait_queue {
-+	struct wait_queue_entry wq;
-+	struct io_ring_ctx *ctx;
-+	struct task_struct *task;
-+	unsigned to_wait;
-+	unsigned nr_timeouts;
-+};
-+
-+static inline bool io_should_wake(struct io_wait_queue *iowq)
-+{
-+	struct io_ring_ctx *ctx = iowq->ctx;
-+
-+	return io_cqring_events(ctx->rings) >= iowq->to_wait ||
-+			atomic_read(&ctx->cq_timeouts) != iowq->nr_timeouts;
-+}
-+
-+static int io_wake_function(struct wait_queue_entry *curr, unsigned int mode,
-+			    int wake_flags, void *key)
-+{
-+	struct io_wait_queue *iowq = container_of(curr, struct io_wait_queue,
-+							wq);
-+
-+	if (io_should_wake(iowq)) {
-+		list_del_init(&curr->entry);
-+		wake_up_process(iowq->task);
-+		return 1;
-+	}
-+
-+	return -1;
-+}
-+
- /*
-  * Wait until events become available, if we don't already have some. The
-  * application must reap them itself, as they reside on the shared cq ring.
-@@ -2775,8 +2806,16 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
- static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			  const sigset_t __user *sig, size_t sigsz)
- {
-+	struct io_wait_queue iowq = {
-+		.wq = {
-+			.func	= io_wake_function,
-+			.entry	= LIST_HEAD_INIT(iowq.wq.entry),
-+		},
-+		.task		= current,
-+		.ctx		= ctx,
-+		.to_wait	= min_events,
-+	};
- 	struct io_rings *rings = ctx->rings;
--	unsigned nr_timeouts;
- 	int ret;
- 
- 	if (io_cqring_events(rings) >= min_events)
-@@ -2795,15 +2834,16 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			return ret;
- 	}
- 
--	nr_timeouts = atomic_read(&ctx->cq_timeouts);
--	/*
--	 * Return if we have enough events, or if a timeout occured since
--	 * we started waiting. For timeouts, we always want to return to
--	 * userspace.
--	 */
--	ret = wait_event_interruptible(ctx->wait,
--				io_cqring_events(rings) >= min_events ||
--				atomic_read(&ctx->cq_timeouts) != nr_timeouts);
-+	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
-+	prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
-+	do {
-+		if (io_should_wake(&iowq))
-+			break;
-+		schedule();
-+		set_current_state(TASK_INTERRUPTIBLE);
-+	} while (1);
-+	finish_wait(&ctx->wait, &iowq.wq);
-+
- 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 	if (ret == -ERESTARTSYS)
- 		ret = -EINTR;
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git tags/backlight-next-5.4
+
+for you to fetch changes up to c0b64faf0fe6ca2574a00faed1ae833130db4e08:
+
+  backlight: pwm_bl: Set scale type for brightness curves specified in the DT (2019-09-02 15:55:15 +0100)
+
+----------------------------------------------------------------
+ - Core Frameworks
+   - Obtain scale type through sysfs
+
+ - New Functionality
+   - Provide Device Tree functionality; rave-sp-backlight
+   - Calculate if scale type is (non-)linear; pwm_bl
+
+ - Fix-ups
+   - Simplify code; lm3630a_bl
+   - Trivial rename/whitespace/typo fixes; lms283gf05
+   - Remove superfluous NULL check; tosa_lcd
+   - Fix power state initialisation; gpio_backlight
+   - List supported file; MAINTAINERS
+
+ - Bug Fixes
+   - Kconfig - default to not building unless requested; {LED,BACKLIGHT}_CLASS_DEVICE
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      backlight: lm3630a: Switch to use fwnode_property_count_uXX()
+
+Christophe JAILLET (1):
+      backlight: lms283gf05: Fix a typo in the description passed to 'devm_gpio_request_one()'
+
+Geert Uytterhoeven (1):
+      video: backlight: Drop default m for {LCD,BACKLIGHT_CLASS_DEVICE}
+
+Lucas Stach (1):
+      backlight: rave-sp: Leave initial state and register with correct device
+
+Matthias Kaehlcke (4):
+      MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+      backlight: Expose brightness curve type through sysfs
+      backlight: pwm_bl: Set scale type for CIE 1931 curves
+      backlight: pwm_bl: Set scale type for brightness curves specified in the DT
+
+Peter Ujfalusi (1):
+      backlight: gpio-backlight: Correct initial power state handling
+
+Wolfram Sang (1):
+      video: backlight: tosa_lcd: drop check because i2c_unregister_device() is NULL safe
+
+ Documentation/ABI/testing/sysfs-class-backlight | 26 ++++++++++++++++++
+ MAINTAINERS                                     |  2 ++
+ drivers/video/backlight/Kconfig                 |  2 --
+ drivers/video/backlight/backlight.c             | 19 ++++++++++++++
+ drivers/video/backlight/gpio_backlight.c        | 24 ++++++++++++++---
+ drivers/video/backlight/lm3630a_bl.c            |  3 +--
+ drivers/video/backlight/lms283gf05.c            |  2 +-
+ drivers/video/backlight/pwm_bl.c                | 35 ++++++++++++++++++++++++-
+ drivers/video/backlight/rave-sp-backlight.c     | 10 +++++--
+ drivers/video/backlight/tosa_lcd.c              |  3 +--
+ include/linux/backlight.h                       |  8 ++++++
+ 11 files changed, 120 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 
 -- 
-Jens Axboe
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
