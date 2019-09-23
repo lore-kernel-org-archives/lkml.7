@@ -2,71 +2,73 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26197C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4ED220882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0D120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 06:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392101AbfIWFxn (ORCPT
+        id S2392273AbfIWGAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 01:53:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387519AbfIWFxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 01:53:42 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1AFA97CF542F51D455A4;
-        Mon, 23 Sep 2019 13:53:40 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
- 13:53:30 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <miklos@szeredi.hu>, <mszeredi@redhat.com>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] fuse: Make fuse_args_to_req static
-Date:   Mon, 23 Sep 2019 13:52:31 +0800
-Message-ID: <20190923055231.19728-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 23 Sep 2019 02:00:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43150 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387519AbfIWGAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:00:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Sep 2019 23:00:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,539,1559545200"; 
+   d="scan'208";a="363524324"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga005.jf.intel.com with ESMTP; 22 Sep 2019 23:00:23 -0700
+Date:   Mon, 23 Sep 2019 14:00:05 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: fix return value of p[um]dp_set_access_flags
+Message-ID: <20190923060005.GB7750@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190919082549.3895-1-richardw.yang@linux.intel.com>
+ <307c9866-c037-5d87-709f-840bdb577283@intel.com>
+ <20190920021821.GA8472@richard>
+ <2fde036a-f64e-ce58-65bf-a089e7c673aa@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fde036a-f64e-ce58-65bf-a089e7c673aa@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Fri, Sep 20, 2019 at 09:16:12AM -0700, Dave Hansen wrote:
+>On 9/19/19 7:18 PM, Wei Yang wrote:
+>> Last but not least, since update_mmu_cache_pmd is empty, even return
+>> value is not correct, it doesn't break anything.
+>
+>In other words, this patch has no functional effect and does not provide
+>a "fix".  What's the point of patching this stuff if it has no effect?
 
-fs/fuse/dev.c:468:6: warning: symbol 'fuse_args_to_req' was not declared. Should it be static?
+It correct the function semantics. The return value of these function doesn't
+meet the requirement, which will be misleading and we still need to dig in the
+history to find out the correct answer.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/fuse/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In case we would have a valid cache update mechanism, this would introduce a
+problem.
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 46d68d4..7844d35 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -465,7 +465,7 @@ static void fuse_force_creds(struct fuse_conn *fc, struct fuse_req *req)
- 	req->in.h.pid = pid_nr_ns(task_pid(current), fc->pid_ns);
- }
- 
--void fuse_args_to_req(struct fuse_req *req, struct fuse_args *args)
-+static void fuse_args_to_req(struct fuse_req *req, struct fuse_args *args)
- {
- 	req->in.h.opcode = args->opcode;
- 	req->in.h.nodeid = args->nodeid;
+So I suggest to fix the return value to reflect the true meaning.
+
 -- 
-2.7.4
-
-
+Wei Yang
+Help you, Help me
