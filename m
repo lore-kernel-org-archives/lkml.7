@@ -2,110 +2,71 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F0BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052AA20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4ED220882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 05:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392252AbfIWFq0 (ORCPT
+        id S2392101AbfIWFxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 01:46:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:37348 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387559AbfIWFqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 01:46:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5D0E142F;
-        Sun, 22 Sep 2019 22:46:24 -0700 (PDT)
-Received: from [10.162.40.137] (p8cg001049571a15.blr.arm.com [10.162.40.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 069EC3F59C;
-        Sun, 22 Sep 2019 22:46:21 -0700 (PDT)
-Subject: Re: [PATCH] mm/hotplug: Reorder memblock_[free|remove]() calls in
- try_remove_memory()
-To:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Oscar Salvador <osalvador@suse.de>, Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f505cc64-ddff-4c1a-2659-7a3890055d73@arm.com>
-Date:   Mon, 23 Sep 2019 11:16:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 23 Sep 2019 01:53:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387519AbfIWFxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 01:53:42 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1AFA97CF542F51D455A4;
+        Mon, 23 Sep 2019 13:53:40 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Sep 2019
+ 13:53:30 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <miklos@szeredi.hu>, <mszeredi@redhat.com>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] fuse: Make fuse_args_to_req static
+Date:   Mon, 23 Sep 2019 13:52:31 +0800
+Message-ID: <20190923055231.19728-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix sparse warning:
+
+fs/fuse/dev.c:468:6: warning: symbol 'fuse_args_to_req' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/fuse/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 46d68d4..7844d35 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -465,7 +465,7 @@ static void fuse_force_creds(struct fuse_conn *fc, struct fuse_req *req)
+ 	req->in.h.pid = pid_nr_ns(task_pid(current), fc->pid_ns);
+ }
+ 
+-void fuse_args_to_req(struct fuse_req *req, struct fuse_args *args)
++static void fuse_args_to_req(struct fuse_req *req, struct fuse_args *args)
+ {
+ 	req->in.h.opcode = args->opcode;
+ 	req->in.h.nodeid = args->nodeid;
+-- 
+2.7.4
 
 
-On 09/16/2019 11:17 AM, Anshuman Khandual wrote:
-> In add_memory_resource() the memory range to be hot added first gets into
-> the memblock via memblock_add() before arch_add_memory() is called on it.
-> Reverse sequence should be followed during memory hot removal which already
-> is being followed in add_memory_resource() error path. This now ensures
-> required re-order between memblock_[free|remove]() and arch_remove_memory()
-> during memory hot-remove.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Original patch https://lkml.org/lkml/2019/9/3/327
-> 
-> Memory hot remove now works on arm64 without this because a recent commit
-> 60bb462fc7ad ("drivers/base/node.c: simplify unregister_memory_block_under_nodes()").
-> 
-> David mentioned that re-ordering should still make sense for consistency
-> purpose (removing stuff in the reverse order they were added). This patch
-> is now detached from arm64 hot-remove series.
-> 
-> https://lkml.org/lkml/2019/9/3/326
-> 
->  mm/memory_hotplug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c73f09913165..355c466e0621 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> -	memblock_free(start, size);
-> -	memblock_remove(start, size);
->  
->  	/* remove memory block devices before removing memory */
->  	remove_memory_block_devices(start, size);
->  
->  	arch_remove_memory(nid, start, size, NULL);
-> +	memblock_free(start, size);
-> +	memblock_remove(start, size);
->  	__release_memory_resource(start, size);
->  
->  	try_offline_node(nid);
-> 
-
-Hello Andrew,
-
-Any feedbacks on this, does it look okay ?
-
-- Anshuman
