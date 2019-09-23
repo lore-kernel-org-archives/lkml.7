@@ -2,100 +2,109 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357D9C432C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E76FC4360C
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DC920856
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308CE20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 22:26:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QkV2uEzl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aj0n9SYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503250AbfIWWYX (ORCPT
+        id S2503276AbfIWW00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 18:24:23 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:56389 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390460AbfIWWYW (ORCPT
+        Mon, 23 Sep 2019 18:26:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43891 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390460AbfIWW00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 18:24:22 -0400
-Received: by mail-pg1-f202.google.com with SMTP id 135so4867502pgc.23
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:24:22 -0700 (PDT)
+        Mon, 23 Sep 2019 18:26:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r9so14454153edl.10;
+        Mon, 23 Sep 2019 15:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=wBbyke/1peveMpLtlqWbxcVdjMGJbQeDIQGAiWlcIhI=;
-        b=QkV2uEzl0J91ToT9bwa71ngvkxZNYIMmxnl+jVL0xM3sLqOb8PhAPO36SU43Ejv5In
-         x6LOK3aSC0qaPa7IHZ4l8FVTL5oWw3Lr1MyGmUMlqG7upjwfyAwWirWrDZAg5N/LYYSf
-         sJIqOLxSa7qJUEZFOg8tGWaHaKsiViBd2Do9CFKmCJc3zRRNOm1/d8lPBjHEXBjpdDd9
-         Fwk+WCo0lo7IFC98NB/yvRvIuV1FknfVQ+H860kZ4TR82W+TkSYG18bv+VKm6vi8VGCS
-         uR0svdGUeTcC4EXk1bVjWP7XS9IplSM2Zg/7wWMW8FGp5zbqtQ2lLqcSFIyqw4sc0k/x
-         3g5w==
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rs2RJDT5CsHbbEtk6Tq8OPTXVr0+QPsaOdJbfaooK0s=;
+        b=aj0n9SYvFIYCRxpn20Jz+FRTJT0KI+N5uVRMrxxEpuhyjLbdEoS1G9UzMTavhqTMWL
+         1LCe2i8i2ERqrH2v8e+Br3FQO+eO6jERm2FkKcW6wPK0ChFI2+XTooznTacB4rvoJzbJ
+         EwL2dOAquvmqhdDCmqLqSIMqII9gJxgpCwt4zV/JvI+xFOKzoT9d2Gxer0x6aoxYbYFw
+         PfcImqKzbV6AYykpbw9rwmP+G5tfi1N5t8tyx5ueI1CdVQ14TsY2lS6yEO5k5j41/Gpy
+         JPpOQXcdiOsRx8HloPeT68q5AHuowfy7lgwJaRyrfeF0Jdy0vCjpTW0WM1crdjdZ7sIC
+         OJgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=wBbyke/1peveMpLtlqWbxcVdjMGJbQeDIQGAiWlcIhI=;
-        b=LErHaHfDSL4PjdbfvVy/BEH3CtKcsLx6McS0wLpfIz6vJI6t1rpN38a+CsJDW/1kFj
-         0VGNst387qVrkXMLW7nYWaWc2YKwwJIWUsLBJs7KpuvRwSqki7+u0RyO0UiHeLpQfUoR
-         foXCdaAT5qSCSR/KHOvUlkEIgS8f0EbeMSFLYPfo6oYz805nH1x/5/UdMvHs2FGXPiIv
-         mhmyc8toFO8PCOtIfgEqXDD70Sg84dtk2IU8OK3Dr9lmMzHgi9UKRK8K4Y/kma7s45D0
-         iqUaKH7jxcmMmzCsXZyqCNwPMG4AmiOxkrnCbTEJXrRLgTziMUsHTw4rULKcFpgYJjLP
-         /BIQ==
-X-Gm-Message-State: APjAAAW+AO9kIG/w9/tkrF8OVvkP1JCbVJXRMr4taEf2+c/57uI7awpD
-        B7tqyEL2JW+cOxzLXFkhqFpN6+t2vH/ufINvGHY=
-X-Google-Smtp-Source: APXvYqwclkudlhpDijvGvhUJRap5SXd4lJiUN5+2zLrXyLkHY+XZ6dnG/AS8h9uPn66Uq/2CoeMokkBwIHkGskWq5hw=
-X-Received: by 2002:a63:2006:: with SMTP id g6mr2091942pgg.287.1569277461795;
- Mon, 23 Sep 2019 15:24:21 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 15:24:02 -0700
-Message-Id: <20190923222403.22956-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH] x86, realmode: explicitly set ENTRY in linker script
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rs2RJDT5CsHbbEtk6Tq8OPTXVr0+QPsaOdJbfaooK0s=;
+        b=aw6lr4twK+3f6JLmTaTooj4yuHni9sqDLpQG8/gSWRl4HKZOczF+a1bZUii3AzeT/V
+         /YCGKZjfwzMl2k95l8F0pHmHBGF+8gieyijkBTzL0T/CQiKwkADxlfW5IXPltSRjEgmY
+         CLuKNiqrFwpl7QsCRk5VYz6Ko6hx9558UrBO0zl84BMcKA0X+AXBgrIHk2Iiy5W5BWQL
+         3HW3HbyjaNC+ixog7ZOQHgqRd5acnX1w0q9iep5+zfFUnNecRJCD3ZlerCXmDKE1UGdl
+         EBO77it8APyuuaOETA9dR8prFmj+HzFZTA5YRtP0w+wdHav8SZo+U913ThVuHldoOO02
+         BDtA==
+X-Gm-Message-State: APjAAAXvfDBpxrr/zk0PlkhEVDAFwhhGReRvhDXsJst6wnPWU1sIBM6y
+        ioVZLiU1icVcXLNWihaTgwVoZai35T2MqATMYk8=
+X-Google-Smtp-Source: APXvYqySJ1IkREdlT+UI4UOVQVT+SfLT1tYPl30tjmrGFsNVQKX6YQUTs7Yc92vR0eMvX6JFzK296KU+kWVADdNeZTs=
+X-Received: by 2002:a50:918d:: with SMTP id g13mr2529336eda.64.1569277583256;
+ Mon, 23 Sep 2019 15:26:23 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:aa7:c354:0:0:0:0:0 with HTTP; Mon, 23 Sep 2019 15:26:22
+ -0700 (PDT)
+In-Reply-To: <20190807155738.GA9394@azazel.net>
+References: <20190807183606.372ca1a4@canb.auug.org.au> <f54391d9-6259-d08b-8b5f-c844093071d8@infradead.org>
+ <20190807155738.GA9394@azazel.net>
+From:   Ivan Kalvachev <ikalvachev@gmail.com>
+Date:   Tue, 24 Sep 2019 01:26:22 +0300
+Message-ID: <CABA=pqeES0C2+7GpAOYuCOqd5DrbZhjS1Tkrxn4kGxXQJkrAfg@mail.gmail.com>
+Subject: Re: linux-next: Tree for Aug 7 (net/bridge/netfilter/nf_conntrack_bridge.c)
+To:     Jeremy Sowden <jeremy@azazel.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bridge@lists.linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linking with ld.lld via $ make LD=ld.lld produces the warning:
-ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
+On 8/7/19, Jeremy Sowden <jeremy@azazel.net> wrote:
+> On 2019-08-07, at 08:29:44 -0700, Randy Dunlap wrote:
+>> On 8/7/19 1:36 AM, Stephen Rothwell wrote:
+>> > Hi all,
+>> >
+>> > Changes since 20190806:
+>>
+>> on i386:
+>> when CONFIG_NF_TABLES is not set/enabled:
+>>
+>>   CC      net/bridge/netfilter/nf_conntrack_bridge.o
+>> In file included from
+>> ../net/bridge/netfilter/nf_conntrack_bridge.c:21:0:
+>> ../include/net/netfilter/nf_tables.h: In function
+>> =E2=80=98nft_gencursor_next=E2=80=99:
+>> ../include/net/netfilter/nf_tables.h:1224:14: error: =E2=80=98const stru=
+ct
+>> net=E2=80=99 has no member named =E2=80=98nft=E2=80=99; did you mean =E2=
+=80=98nf=E2=80=99?
+>>   return net->nft.gencursor + 1 =3D=3D 1 ? 1 : 0;
+>>               ^~~
+>
+> I've just posted a series of fixes for netfilter header compilation
+> failures, and I think it includes the fix for that:
+>
+>
+> https://lore.kernel.org/netdev/20190807141705.4864-5-jeremy@azazel.net/T/=
+#u
 
-Linking with ld.bfd shows the default entry is 0x1000:
-$ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
-  Entry point address:               0x1000
+Have these patches been committed?
 
-While ld.lld is being pedantic, just set the entry point explicitly,
-instead of depending on the implicit default.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/216
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- arch/x86/realmode/rm/realmode.lds.S | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
-index 3bb980800c58..2034f5f79bff 100644
---- a/arch/x86/realmode/rm/realmode.lds.S
-+++ b/arch/x86/realmode/rm/realmode.lds.S
-@@ -11,6 +11,7 @@
- 
- OUTPUT_FORMAT("elf32-i386")
- OUTPUT_ARCH(i386)
-+ENTRY(0x1000)
- 
- SECTIONS
- {
--- 
-2.23.0.351.gc4317032e6-goog
-
+I just hit the same bug in linux-5.3.1 release.
