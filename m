@@ -2,124 +2,240 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB65C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E630C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1073E2089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569251957;
-	bh=Lm+zAU2cPaj1e8Ux2VjuHcR6luxiwka3ykYzHf7wJYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TUe/taK5Sv/u24YO1lXJe3RcHcokyqCK2yr1DzMeaEl5TMoIeTw/SMS/o/m0DQraL
-	 X0JE57Pzg/KOgHSLTMIouWNWZsNgIUYDI2XY6chXCA8fpQLSHGOFv6lRP6RNS3HVD4
-	 yqDVFRZfIDyRZ8DoGp6yzQCt+ZezwOTGs6iGaFr0=
+	by mail.kernel.org (Postfix) with ESMTP id 41D7520820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUBoXuQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfIWPTQ (ORCPT
+        id S1727238AbfIWPVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:19:16 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43767 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfIWPTP (ORCPT
+        Mon, 23 Sep 2019 11:21:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54659 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfIWPVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:19:15 -0400
-Received: by mail-qk1-f193.google.com with SMTP id h126so15770455qke.10;
-        Mon, 23 Sep 2019 08:19:15 -0700 (PDT)
+        Mon, 23 Sep 2019 11:21:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p7so10456487wmp.4;
+        Mon, 23 Sep 2019 08:20:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=BvW4XrcJWJ2oTXG4RUy/CKw7q4mi60s93JIV6af2rgQ=;
-        b=kZ9aYPC16gNRz8i6VP9vO/K4GSoP3wLXMPBBsvZekcVzoYCp/ynmSRnetM732vuOVt
-         OplO7ek58sNltclJVPlLk3kXaWOY0/aKmhkIGg/ZzyowhzqQUH1704eivsGOhumopc0r
-         QwYRF1yD3mYkDkXi89VJAG8h7DHCWbt3vyQGbhgozsC7BEsdu8Pa8lYemXVkNKbfNRyq
-         9z4vXH6unj3EQUqEzNrtgWBcwkyLUl7UQ0NNDlmcHhAcaHpgREmhh4sGDh3l/6f5ffVN
-         FoJpE/QOETTp9mQCKVr5lc5jEkxhyokKa2fOASiGdNRQPkiyxgIBLN1SLU5HridFuQl+
-         JqLQ==
+        bh=brsvz/rH/l0iuVy/KKjxn5pihaXPh2FmuzxzRBgra3M=;
+        b=cUBoXuQkLMLUptz8U4OfiJWCLnY4AmrhYgBKUWeGEYXAE4yF/yW3UHT4opNjqileV2
+         gqafZZkdB1IQTQHn9SAcWnYHlqJy92BdD775ILOwH1kDxv3S6kLAN18TX4Ylh6RAhw2h
+         YTq1WUEIghzmZGEZ54tpJU8W4HPkVVIlSTFwUW0Li+IyEYxTtrazzrNs8CpWx0yyCrUh
+         eyIJEDBpXcakFzccpRMepoVkhNydMT1kz59pFsfr2AHuV4ZGrxva2h72QFb30P9ehPBh
+         +ZegkMn9TxEhhW6R6rN2jUasAZvh0UJymC9L6qkgMayVewWKBBUVVW/sArJ5Ownz3ZXw
+         09mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BvW4XrcJWJ2oTXG4RUy/CKw7q4mi60s93JIV6af2rgQ=;
-        b=ab5R/KqifupnEDqe79PaHxutO2Ta+oOTf59Spqmmr9Ri8pq55Egq4pfdaF6jjJsQI1
-         J1nKTDHPF1umzevY4b+MsIScbyAxnChtLqavgbH+HZwJzRr/IOHbdEo8TPmgM9D4h/SU
-         A5nURPk1xBlckKxHQNehZN8p6x3cvdKG9Tho7zG0PysINscm1VZ7TvlUhKobXg0qyy72
-         iqdHoijlsvAvt06iCdapKsJ2HktemgVB1She5xkkBcOOw3l4LKGy4YRoe3qAPGraZeCK
-         SM41simnrW1EG6zzvjncYw8AOx8bnXxCX5CLO/WBApBxrgGuITV4CNl2iIbOKsiUjT6/
-         YKiw==
-X-Gm-Message-State: APjAAAWq3crtVdIFXia0Hc9AD6XQZhwdC5MK363EfsOa9Y7ZFIcaCGnj
-        i06xUyAfj21QBvUMRws+Byk=
-X-Google-Smtp-Source: APXvYqwI5hVrjpHY8AFygfYIP1Y4nxJNb5fZko8g6cKD6P/lKgXS9sB7qIB/Epsms0XVHt1hGghPxg==
-X-Received: by 2002:a37:4794:: with SMTP id u142mr303789qka.265.1569251954464;
-        Mon, 23 Sep 2019 08:19:14 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:83ca])
-        by smtp.gmail.com with ESMTPSA id q44sm6356054qtk.16.2019.09.23.08.19.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Sep 2019 08:19:13 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 08:19:12 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-Message-ID: <20190923151912.GG2233839@devbig004.ftw2.facebook.com>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
- <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
- <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=brsvz/rH/l0iuVy/KKjxn5pihaXPh2FmuzxzRBgra3M=;
+        b=aissu9c8zT5QWaspAstHCkCCWEHxk5j2nUUJbucUlZnKMZhWmQM9zQGCBOt/9crEH2
+         zkhiQTE2HA1Obo6TMWf8adga6HecHBGgEOCsb2ub2oDc1keVGZPnHigKywdfD2NWIc4Z
+         w2btDq9QofI0wPjog1IdrXGrRVXvS3KzHp0FoyyJ8Z+rf6Y/XF5E/mzQo1Q3OyI++IzR
+         iUaFuZC2PYJ7lbfvBJ+udgtMRBHD6+kusQ+0VTS2Q27M4v5akHBnk4cHl31DHLPhcyJm
+         hrfeLTvoQQTERFYYmk8wiVOG3WVMUHTvvjM+H5NNXrnUDcJlMHIDF9NMyaX0VA+sz7T7
+         hUoQ==
+X-Gm-Message-State: APjAAAV9VtsXGroJuHqMhMJtIJvtsruj92xLJYx6djT/iMK11QvkRxob
+        8s2YjKfCek/S5uOiNPP1uZM=
+X-Google-Smtp-Source: APXvYqya/2MexYGkI++mWd3gYFe3Thgt0DUKr+QWCNbE+n0FjqxPPEKaEtwg0BbaZD9yKd5MtDMbZw==
+X-Received: by 2002:a05:600c:2052:: with SMTP id p18mr155473wmg.13.1569252057854;
+        Mon, 23 Sep 2019 08:20:57 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id f8sm12698261wmb.37.2019.09.23.08.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 08:20:56 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 17:20:54 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org,
+        Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v9 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Message-ID: <20190923152054.GA17178@ulmo>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+ <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
+ <20190921002149.GB86019@mithrandir>
+ <1569208857.4102.9.camel@mtksdccf07>
+ <20190923133626.GA4671@ulmo>
+ <1569251515.4102.31.camel@mtksdccf07>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Content-Disposition: inline
-In-Reply-To: <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1569251515.4102.31.camel@mtksdccf07>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
-> On 23/09/2019 17.52, Tejun Heo wrote:
-> >Hello, Konstantin.
-> >
-> >On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
-> >>With vm.dirty_write_behind 1 or 2 files are written even faster and
-> >
-> >Is the faster speed reproducible?  I don't quite understand why this
-> >would be.
-> 
-> Writing to disk simply starts earlier.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I see.
+On Mon, Sep 23, 2019 at 11:11:55PM +0800, Sam Shih wrote:
+> On Mon, 2019-09-23 at 15:36 +0200, Thierry Reding wrote:
+> > On Mon, Sep 23, 2019 at 11:20:57AM +0800, Sam Shih wrote:
+> > > On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
+> > > > On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
+> > > > > From: Ryder Lee <ryder.lee@mediatek.com>
+> > > > >=20
+> > > > > This adds a property "num-pwms" in example so that we could
+> > > > > specify the number of PWM channels via device tree.
+> > > > >=20
+> > > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > > Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > > > > ---
+> > > > > Changes since v6:
+> > > > > Follow reviewers's comments:
+> > > > > - The subject should indicate this is for Mediatek
+> > > > >=20
+> > > > > Changes since v5:
+> > > > > - Add an Acked-by tag
+> > > > > - This file is original v4 patch 5/10
+> > > > > (https://patchwork.kernel.org/patch/11102577/)
+> > > > >=20
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++-=
+--
+> > > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > >=20
+> > > > You failed to address Rob's questions repeatedly and I agree with h=
+im
+> > > > that you can just as easily derive the number of PWMs from the spec=
+ific
+> > > > compatible string. I won't be applying this and none of the patches=
+ that
+> > > > depend on it.
+> > > >=20
+> > >=20
+> > > Hi,=20
+> > >=20
+> > > Thanks for getting back to me.
+> > >=20
+> > > New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
+> > > dynamically") can support different variants with different number of
+> > > PWMs by the new property <num-pwms>
+> > >=20
+> > > For example:
+> > > 1. Use "num-pwms" =3D <2> and assign clocks pwm1, pwm2 for mt7622
+> > > 2. Use "num-pwms" =3D <6> and assign clocks pwm1, pwm2, pwm3, pwm4, p=
+wm5,
+> > > pwm6 for mt7622.
+> > >=20
+> > > If we just as easily derive the number of PWMs from the specific
+> > > compatible string in this document:
+> > >=20
+> > >    - "pwm1-6": the six per PWM clocks for mt7622
+> > >   =20
+> > > This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
+> > > required property in DT, It doesn't make sense.
+> >=20
+> > I don't understand. Why doesn't that make sense? If your hardware block
+> > has 6 PWMs and each can be driven by its own clock, then you need to
+> > provide references for each of those clocks, otherwise you won't be able
+> > to use them.
+>=20
+> Thank you for your instruction,
+> I will add all clock-names and clocks according to
+> hardware blocks instead of value of <num-pwms> in DT.
+>=20
+> > >   =20
+> > > So we removed those descriptions and added =20
+> > >=20
+> > >    - "pwm1-N": the PWM clocks for each channel=20
+> > >   =20
+> > >   =20
+> > > But the max number of clocks from the compatible string are still
+> > > important information that should be provide in this document.
+> > >=20
+> > >=20
+> > > What do you think of this?
+> > >=20
+> > >    - "pwm1-N": per PWM clocks for mt2712, the max number of PWM chann=
+els
+> > > is 8
+> > >=20
+> > >    - "pwm1-N": per PWM clocks for mt7622, the max number of PWM chann=
+els
+> > > is 6
+> > >=20
+> > >    - "pwm1-N": per PWM clocks for mt7623, the max number of PWM chann=
+els
+> > > is 5
+> >=20
+> > That's what's in the bindings already, isn't it?
+> >=20
+> > 	 - clocks: phandle and clock specifier of the PWM reference clock.
+> > 	 - clock-names: must contain the following, except for MT7628 which
+> > 			has no clocks
+> > 	   - "top": the top clock generator
+> > 	   - "main": clock used by the PWM core
+> > 	   - "pwm1-8": the eight per PWM clocks for mt2712
+> > 	   - "pwm1-6": the six per PWM clocks for mt7622
+> > 	   - "pwm1-5": the five per PWM clocks for mt7623
+>=20
+> Yes, You are right,=20
+> I will keep original description and remove "pwm1-N" from this patch.
+> 	   - "top": the top clock generator
+> 	   - "main": clock used by the PWM core
+> 	   - "pwm1-8": the eight per PWM clocks for mt2712
+> 	   - "pwm1-6": the six per PWM clocks for mt7622
+> 	   - "pwm1-5": the five per PWM clocks for mt7623      =20
+>=20
+> Actually, MT7629 also use "mediatek,mt7622-pwm" as compatible string,
+> but it's hardware only support one pwm, so I was wrongly stick by
+> expecting "pwm1-N" in clock-names based on "num-pwms" in DT.
+> (that we can assign num-pwms to 1 and only provide pwm1 as clock-names)
+>=20
+> Maybe added mt7629 description to this document can solve this simply.
+> 	   - "pwm1": the PWM1 clock for mt7629   =20
 
-> >Generic write-behind would definitely have other benefits and also a
-> >bunch of regression possibilities.  I'm not trying to say that
-> >write-behind isn't a good idea but it'd be useful to consider that a
-> >good portion of the benefits can already be obtained fairly easily.
-> >
-> 
-> I'm afraid this could end badly if each simple task like file copying
-> will require own systemd job and container with manual tuning.
+Yeah, if mt7629 support only one PWM channel, you should list it's
+compatible string separately and also update the driver to reflect the
+number of channels associated with the hardware.
 
-At least the write window size part of it is pretty easy - the range
-of acceptable values is fiarly wide - and setting up a cgroup and
-running a command in it isn't that expensive.  It's not like these
-need full-on containers.  That said, yes, there sure are benefits to
-the kernel being able to detect and handle these conditions
-automagically.
+Thierry
 
-Thanks.
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-tejun
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2I4tQACgkQ3SOs138+
+s6GbFBAAm+k7tV+3Xh1QL6SPZABvtkVY3oUEY61Cxq5OkODBJ5woXtGKlfmiaBZT
+tbj0lYgNMF2G3ZYu43uVxcFDlhkL2sFjHlphN8Y7i+5yQC4Im86JoDf1MEYa0QJm
+bVovqvHV0s16V3xpxxYPN1yhERfWXfanTcqVHGiKXyK2eoEPytH6tlNtJr026KhI
+sXcMCkZNC/d7orXLoKEh9SWVxaK+G2EGyTW3HxdUyyWDc/aGI5/OfxGmrYCDvSKX
+Y+150lc+8CA0pHqklRnUHm5QLX2gUWJC8Mpw4DyvoRW1WQuOyO55Q6et5O251HA7
+y/dK85FiLLIfLMU4TaZ0xaF4wtei2+VoZKCJCPEdE8agDLSrXvpe5IlQTQWeC+wm
+I/AOv8S0TifOgI54lSwqWiz78JUDMX+RwV04Dh8AC6nBjGL5Jdj7JrOUL6Gh5Jiu
+5lsZk5O8xZLBZSiVHKAhK+0ZBQK+rQkhlIE2pa8XeImqwycevxEzv6dACfM3XjvH
+KgVFFHCpZBJLteqmlvwif48gjcUkuptJdMFyb7VetH5rmt5ZQsRkw7PeGW1t+TaU
+qSUxF3yBpAaL/ZHpywN6F5rQRv+wZ+vQULlChpHijyRfVos3OBF3QzO3mKiGHxhe
+XiaTvGqK4KkOvmG7A1i3q99lUOllZZdFqvOGizk2mQbpio/mZeU=
+=F38s
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
