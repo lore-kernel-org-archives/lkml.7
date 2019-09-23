@@ -2,227 +2,145 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063AFC04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E75C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE19820673
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="szKAfDtw"
+	by mail.kernel.org (Postfix) with ESMTP id 377C720673
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfIWPM0 (ORCPT
+        id S1731748AbfIWPMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:12:26 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38502 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfIWPM0 (ORCPT
+        Mon, 23 Sep 2019 11:12:31 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45495 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731612AbfIWPM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:12:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x10so8175005pgi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+e6VKyi4RDxzO+rMfy4D/+EuNanataS4taqwSVna9oM=;
-        b=szKAfDtwzpOu4MZzLe0ZS4E5nlYUrmKWuqmfRRece3j9lH1xpomjbFMSeTm7Xuaq+c
-         N05YLh4za/0+mnyWOjpM0CQxPIfktO5s3X987svSdq7nLxlp2617ZoCJDt++CZLnbswM
-         rWLLbODhLuJlYoktGAhG6lgaavTOGHR/AOKHAWOQqK8wEmmIVdlLxSfF7YW7jdaxFcWl
-         4odWWj9MeB1XmW6JjXQXyZNE4U4vaKioGvjF4q4xaupCgNFBJHjcmZOYlg3vhQWPBlcG
-         2xnsPTb+P/bF3MjIsbE8nioHprPNIVmUDbtsh48UVJ9SJI4OpxnyK3dWCF8HVBWYMa38
-         MvMQ==
+        Mon, 23 Sep 2019 11:12:29 -0400
+Received: by mail-ua1-f65.google.com with SMTP id j5so4434956uak.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:12:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+e6VKyi4RDxzO+rMfy4D/+EuNanataS4taqwSVna9oM=;
-        b=ITvdwTv/T/1D4Eq0oMsxS9GILGLPQ08vvVynYMtF3VsEptZ9fHWWwoqsEAvKLaY/Vu
-         hbXUfbIfHIPemDzpO/zCAoYK7joR82HHJPNgo+B1Gh3ar2KdYdfyrV5T/8TPVOC5H8gT
-         QzXomeOBpIljZ3V1wn23w1DmmqPENdJTegovEtUkESOMsZ51X8urYJYguD+9tggGAc8o
-         zfmAlc6XPgXRsMpxKXNcvFJ7wWP5AB5Hr2WSOjjOvt4Pz8ILYkM0CbsrvDJoSKsdZX1K
-         seNarFnX3VCfp8hyBSyE7e9pjMvdiiOoJ4zQ13ZwedNUMXPrYNTZ3mQXd7ip5meLDTmM
-         09Ng==
-X-Gm-Message-State: APjAAAXtHrvYJxEWecNncsHEAklplp5xyR3SAIJHWQqeugn2sCNli/WN
-        xhaqKiC2Y3vw6AzTdWzP6BncxECRSesYigM9LNEt9A==
-X-Google-Smtp-Source: APXvYqzQu3zf7MwD5dSwHodhAcyLgVZAG0O7QPJ49rUXrKnnT4WLwPcTm7oGBXASJ4CDZCVhP2HnLUytdNiWsdA8EXo=
-X-Received: by 2002:aa7:8bcc:: with SMTP id s12mr34228pfd.93.1569251544634;
- Mon, 23 Sep 2019 08:12:24 -0700 (PDT)
+        bh=s3kJHh6x6PZgjBD0We03FtFePJ26YGI0fd0dSyGdyrw=;
+        b=tiJsBpVMiQZTI+Ynikr8AtIzWl96aHMK84/+l99+SNHx64Ux+HLNN7ibRjGyPFlYie
+         W2O/kRYDrLgm+cjbeNj8Ax0M8LD4u65NnywI5EbPVVOUjMslppt5V50Kado6rY/3XOsg
+         KtYnDiJa8hHHdhZxSDp5sURq5mKC9/RFydJQx6HSwAiZ+Sw4zajoJ9Ot6hpEQydO6dX4
+         9WZYXS7g924bQQ9bZzPG0uPVEGObZml6s6XUNm9bu7ZVmMLLBr/vMd8qBKFL09Twtw0a
+         oyFIEd3s+JtGAECN9R6mQO5srjsA7d1iFzCCYstuHd6sIL01FcRwhIEp3KP5bC45kb0K
+         ZzlQ==
+X-Gm-Message-State: APjAAAXKuUa6wuLrOsTS3gzj7mbX7DFmPKN7vldhMOA08UC5r24pQuds
+        6zuC1+2BA/sFq+t/xlNPbGW1/w57YFgbnEghFVU=
+X-Google-Smtp-Source: APXvYqzQoQmYenWT7/Rp/GfofyPGwYSQdRq84aMIVrUQrSCxufEIPREpZK2n9BbCiTar8xtgEzovOQ3o2DCwEH89QN4=
+X-Received: by 2002:a9f:21f6:: with SMTP id 109mr15199844uac.109.1569251546830;
+ Mon, 23 Sep 2019 08:12:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000058cce90593394589@google.com>
-In-Reply-To: <00000000000058cce90593394589@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 23 Sep 2019 17:12:13 +0200
-Message-ID: <CAAeHK+ywLa2CLMnxNxck2VStxj-xrxo4QLjJFmamJ7G25Tu+CA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in v4l2_release (2)
-To:     syzbot <syzbot+ac438d7ad8171b0ecbbe@syzkaller.appspotmail.com>
-Cc:     boris.brezillon@collabora.com, ezequiel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        niklas.soderlund+renesas@ragnatech.se, s.nawrocki@samsung.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <1569242880-182878-1-git-send-email-hjc@rock-chips.com> <1569242880-182878-3-git-send-email-hjc@rock-chips.com>
+In-Reply-To: <1569242880-182878-3-git-send-email-hjc@rock-chips.com>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Mon, 23 Sep 2019 11:12:15 -0400
+Message-ID: <CAKb7Uvgo=93HxGX9F9BvReKbPpbQRozztk0_+GXKqZ3PydCHsA@mail.gmail.com>
+Subject: Re: [PATCH 13/36] drm/nouveau: use bpp instead of cpp for drm_format_info
+To:     Sandy Huang <hjc@rock-chips.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 4:31 PM syzbot
-<syzbot+ac438d7ad8171b0ecbbe@syzkaller.appspotmail.com> wrote:
+On Mon, Sep 23, 2019 at 8:56 AM Sandy Huang <hjc@rock-chips.com> wrote:
 >
-> Hello,
+> cpp[BytePerPlane] can't describe the 10bit data format correctly,
+> So we use bpp[BitPerPlane] to instead cpp.
 >
-> syzbot found the following crash on:
->
-> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14d4b6a1600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ac438d7ad8171b0ecbbe
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+ac438d7ad8171b0ecbbe@syzkaller.appspotmail.com
->
-> usb 4-1: usbvision_write_reg: failed: error -19
-> usbvision_audio_off: can't write reg
-> usbvision_radio_close: Final disconnect
-> ==================================================================
-> BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390
-> drivers/media/v4l2-core/v4l2-dev.c:459
-> Read of size 4 at addr ffff8881c5c55228 by task v4l_id/16726
->
-> CPU: 0 PID: 16726 Comm: v4l_id Not tainted 5.3.0+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:618
->   v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
->   __fput+0x2d7/0x840 fs/file_table.c:280
->   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7f26b3e742b0
-> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0
-> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-> RSP: 002b:00007fff0e393978 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f26b3e742b0
-> RDX: 00007f26b412adf0 RSI: 0000000000000001 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 00007f26b412adf0 R09: 000000000000000a
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-> R13: 00007fff0e393ad0 R14: 0000000000000000 R15: 0000000000000000
->
-> Allocated by task 2757:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:493 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:466
->   kmalloc include/linux/slab.h:552 [inline]
->   kzalloc include/linux/slab.h:748 [inline]
->   usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1298 [inline]
->   usbvision_probe.cold+0x5c5/0x1f1f
-> drivers/media/usb/usbvision/usbvision-video.c:1452
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 16726:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:455
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1474 [inline]
->   slab_free mm/slub.c:3016 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3957
->   usbvision_release+0x181/0x1c0
-> drivers/media/usb/usbvision/usbvision-video.c:1347
->   usbvision_radio_close.cold+0x6f/0x74
-> drivers/media/usb/usbvision/usbvision-video.c:1113
->   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
->   __fput+0x2d7/0x840 fs/file_table.c:280
->   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:300
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> The buggy address belongs to the object at ffff8881c5c54200
->   which belongs to the cache kmalloc-8k of size 8192
-> The buggy address is located 4136 bytes inside of
->   8192-byte region [ffff8881c5c54200, ffff8881c5c56200)
-> The buggy address belongs to the page:
-> page:ffffea0007171400 refcount:1 mapcount:0 mapping:ffff8881da00c500
-> index:0x0 compound_mapcount: 0
-> flags: 0x200000000010200(slab|head)
-> raw: 0200000000010200 0000000000000000 0000000100000001 ffff8881da00c500
-> raw: 0000000000000000 0000000080030003 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881c5c55100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881c5c55180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ffff8881c5c55200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                    ^
->   ffff8881c5c55280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881c5c55300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
+> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  drivers/gpu/drm/nouveau/dispnv04/crtc.c     | 7 ++++---
+>  drivers/gpu/drm/nouveau/dispnv50/base507c.c | 4 ++--
+>  drivers/gpu/drm/nouveau/dispnv50/ovly507e.c | 2 +-
+>  3 files changed, 7 insertions(+), 6 deletions(-)
 >
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> diff --git a/drivers/gpu/drm/nouveau/dispnv04/crtc.c b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> index f22f010..59d2f07 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> @@ -874,11 +874,12 @@ nv04_crtc_do_mode_set_base(struct drm_crtc *crtc,
+>
+>         /* Update the framebuffer location. */
+>         regp->fb_start = nv_crtc->fb.offset & ~3;
+> -       regp->fb_start += (y * drm_fb->pitches[0]) + (x * drm_fb->format->cpp[0]);
+> +       regp->fb_start += (y * drm_fb->pitches[0]) +
+> +                               (x * drm_fb->format->bpp[0] / 8);
+>         nv_set_crtc_base(dev, nv_crtc->index, regp->fb_start);
+>
+>         /* Update the arbitration parameters. */
+> -       nouveau_calc_arb(dev, crtc->mode.clock, drm_fb->format->cpp[0] * 8,
+> +       nouveau_calc_arb(dev, crtc->mode.clock, drm_fb->format->bpp[0],
+>                          &arb_burst, &arb_lwm);
+>
+>         regp->CRTC[NV_CIO_CRE_FF_INDEX] = arb_burst;
+> @@ -1238,7 +1239,7 @@ nv04_crtc_page_flip(struct drm_crtc *crtc, struct drm_framebuffer *fb,
+>
+>         /* Initialize a page flip struct */
+>         *s = (struct nv04_page_flip_state)
+> -               { { }, event, crtc, fb->format->cpp[0] * 8, fb->pitches[0],
+> +               { { }, event, crtc, fb->format->bpp[0], fb->pitches[0],
+>                   new_bo->bo.offset };
+>
+>         /* Keep vblanks on during flip, for the target crtc of this flip */
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/base507c.c b/drivers/gpu/drm/nouveau/dispnv50/base507c.c
+> index d5e295c..59883bd0 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/base507c.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/base507c.c
+> @@ -190,12 +190,12 @@ base507c_acquire(struct nv50_wndw *wndw, struct nv50_wndw_atom *asyw,
+>                 return ret;
+>
+>         if (!wndw->func->ilut) {
+> -               if ((asyh->base.cpp != 1) ^ (fb->format->cpp[0] != 1))
+> +               if (asyh->base.cpp != 1 ^ fb->format->bpp[0] != 8)
 
-Most probably the same bug as:
+Please leave the parens in. Even if it works out to the same thing
+(don't know), ^ vs != ordering isn't fresh in many people's minds
+(mine included).
 
-https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
-
-#syz dup: general protection fault in usb_set_interface
+>                         asyh->state.color_mgmt_changed = true;
+>         }
+>
+>         asyh->base.depth = fb->format->depth;
+> -       asyh->base.cpp = fb->format->cpp[0];
+> +       asyh->base.cpp = fb->format->bpp[0] / 8;
+>         asyh->base.x = asyw->state.src.x1 >> 16;
+>         asyh->base.y = asyw->state.src.y1 >> 16;
+>         asyh->base.w = asyw->state.fb->width;
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/ovly507e.c b/drivers/gpu/drm/nouveau/dispnv50/ovly507e.c
+> index cc41766..c6c2e0b 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/ovly507e.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/ovly507e.c
+> @@ -135,7 +135,7 @@ ovly507e_acquire(struct nv50_wndw *wndw, struct nv50_wndw_atom *asyw,
+>         if (ret)
+>                 return ret;
+>
+> -       asyh->ovly.cpp = fb->format->cpp[0];
+> +       asyh->ovly.cpp = fb->format->bpp[0] / 8;
+>         return 0;
+>  }
+>
+> --
+> 2.7.4
+>
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
