@@ -2,198 +2,122 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E90C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7AAC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361F021850
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9A020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569267810;
+	bh=4XgcKu0Zi4YtIkORdWKTezTFXUwQOp+yMfXv1oIxhAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NcnAxKzjs2thS1ytBbdr+MPwK2eqWuXtylE7gH3q6anHTq0xcy2nZHyElhwWvugSo
+	 GllHAaHI4OPVSCxdQyu3QUpp9immF0sreZiqN+BjyoY6R1kD4IU9IAWICebFK7XJrw
+	 e1A06o31zQVtHVQ3J/Cy5JvEb5SaKGwdmi7Q5mCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbfIWTlW (ORCPT
+        id S2502255AbfIWTn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:41:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35526 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728033AbfIWTlV (ORCPT
+        Mon, 23 Sep 2019 15:43:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39486 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbfIWTn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:41:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NJcWf4138884;
-        Mon, 23 Sep 2019 15:40:52 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v740wgqtm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 15:40:52 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NJepRZ145246;
-        Mon, 23 Sep 2019 15:40:51 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v740wgqt2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 15:40:51 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NJaKCj017805;
-        Mon, 23 Sep 2019 19:40:51 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 2v5bg6p73a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 19:40:51 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NJemWb60358990
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 19:40:48 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BB18C605F;
-        Mon, 23 Sep 2019 19:40:48 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D39C4C605B;
-        Mon, 23 Sep 2019 19:40:43 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.184])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 19:40:43 +0000 (GMT)
-Message-ID: <dc9fad3577551d34ead36c0f7340a573086c0cab.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
- method to skip serializing
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 23 Sep 2019 16:40:39 -0300
-In-Reply-To: <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
-References: <20190920195047.7703-1-leonardo@linux.ibm.com>
-         <20190920195047.7703-12-leonardo@linux.ibm.com>
-         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
-         <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
-         <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
-         <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
-         <8706a1f1-0c5e-d152-938b-f355b9a5aaa8@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-msT9mHa9dsgVOOqF07pT"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 23 Sep 2019 15:43:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r3so15314155wrj.6;
+        Mon, 23 Sep 2019 12:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ltPYUxFooOhed88EBLtldCYWPv0nxqna9LT7y/vhHOU=;
+        b=mujarN8aF/SeAzAKIU/93Xr8lcOtSx/iIkwtF4zYsMPUndWPBgxpvCTBMz66n7vM0u
+         /jXMNl/fP2LSbS8hjRLooB5a8EOw09SjRkLMTTqmoWt292wegxX7f1XOB2aDnUWuZcL8
+         6g76kKEkacecmPbDMkC/CisE2RHXnN8PA0ZUpE925MWPh469TVO2rDtYy83jJ/XyQZR3
+         TDTt8OYj7oicDYxmp1Us9hMfLHiT2gT/v6xeJDOY4PkBOlaoz+NGj8K3PEKG6bPpq8DJ
+         UWb1luBSinwwxRQSw14nvdQHzc9RC6+T9A10mGs9b8MKmeJTBVpiw+aKMIeAhojEMkHn
+         B+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ltPYUxFooOhed88EBLtldCYWPv0nxqna9LT7y/vhHOU=;
+        b=ZKV793Rt5Q4GGkSzSEd56B8q7JSXRXTN9QBFhctIawCy4NBZ7+GE412/FIR0VjLn8p
+         yAmkeJlarJ69bMgkVK/g0BUD/93UYoBrKb6Arv5dg7Uz9og6NLoXZjdTaIOH2wYS8GGl
+         15q9RncTL4/gsk156M8n0BmVFIBsNL5UtGE7JHRhvKOsNeFN/xEAhkhiUFNA8JsYzmKF
+         9FCuN7T+gu0kMhI1bsFAbhvgbTt8kV0dFiDIejlFLtsifLsYk/edwR58nQvf3EEd+OIw
+         JHdD6iGLN5nQ6BdUkeHQnS4Sxps19+FYzdYm8HTcYoQ9TFBOzHiyhuobTe39lcCt0Xfq
+         qXcg==
+X-Gm-Message-State: APjAAAXvppjghuam5UsxkPL91f6AwtUzgGjn4k0Cs/1i1KOhg8w/w1HR
+        J1ilBkXTjjecK4QhmUmHvp0=
+X-Google-Smtp-Source: APXvYqyn4x52E3p+WymflXE2LT2U4YUXdHiN4rlb8xOXSC69QvGXwDbVsCbw7cgDvEdlzFWvY3c9MQ==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr797873wrj.30.1569267805107;
+        Mon, 23 Sep 2019 12:43:25 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id m16sm11232098wml.11.2019.09.23.12.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 12:43:24 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 21:43:22 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
+Message-ID: <20190923194322.GA55255@gmail.com>
+References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
+ <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
+ <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
+ <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
+ <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
+ <20190922112555.GB122003@gmail.com>
+ <20190922115247.GA2679387@kroah.com>
+ <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ab5da69-e4f2-8990-20f9-354461235581@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-msT9mHa9dsgVOOqF07pT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+* Shuah Khan <skhan@linuxfoundation.org> wrote:
 
-On Mon, 2019-09-23 at 11:14 -0700, John Hubbard wrote:
-> On 9/23/19 10:25 AM, Leonardo Bras wrote:
-> [...]
-> That part is all fine, but there are no run-time memory barriers in the=
-=20
-> atomic_inc() and atomic_dec() additions, which means that this is not
-> safe, because memory operations on CPU 1 can be reordered. It's safe
-> as shown *if* there are memory barriers to keep the order as shown:
->=20
-> CPU 0                            CPU 1
-> ------                         --------------
->                                atomic_inc(val) (no run-time memory barrie=
-r!)
-> pmd_clear(pte)
-> if (val)
->     run_on_all_cpus(): IPI
->                                local_irq_disable() (also not a mem barrie=
-r)
->=20
->                                READ(pte)
->                                if(pte)
->                                   walk page tables
->=20
->                                local_irq_enable() (still not a barrier)
->                                atomic_dec(val)
->=20
-> free(pte)
->=20
-> thanks,
+> I am exploring the possibility to move selftests to a better location 
+> or add a git alias so it can be found easily. With the addition of 
+> KUnit and future work that is planned to connect kselftest and KUnit, 
+> it would make sense have selftests to be in a location that is better 
+> suited than where it currently resides.
+> 
+> I have been getting feedback from some developers that they would like 
+> to see selftests more visible and easier to find.
+> 
+> There are some dependencies (unintended, shouldn't exist) between some 
+> tests and content under tools that might pose some logistical problems, 
+> in addition to the churn of backporting.
+> 
+> I haven't explored "git alias" yet though. Since this topic of moving 
+> came up, I would liek to get feedback on selftests location in general 
+> and where would be a good place for it.
 
-This is serialize:
+I'm not sure about the Git alias thing - but I do agree that 
+tools/testing/selftests is a pretty obscure location given the importance 
+of kernel unit tests - and I think it could be moved one level higher, to 
+tools/selftests? The "selftest" name already implies the "test" aspect 
+after all.
 
-void serialize_against_pte_lookup(struct mm_struct *mm)
-{
-	smp_mb();
-	if (running_lockless_pgtbl_walk(mm))
-		smp_call_function_many(mm_cpumask(mm), do_nothing,
-NULL, 1);
-}
+Thanks,
 
-That would mean:
-
-CPU 0                            CPU 1
-------                         --------------
-                               atomic_inc(val)=20
-pmd_clear(pte)
-smp_mb()
-if (val)
-    run_on_all_cpus(): IPI
-                               local_irq_disable()=20
-
-                               READ(pte)
-                               if(pte)
-                                  walk page tables
-
-                               local_irq_enable() (still not a barrier)
-                               atomic_dec(val)
-
-By https://www.kernel.org/doc/Documentation/memory-barriers.txt :
-'If you need all the CPUs to see a given store at the same time, use
-smp_mb().'
-
-Is it not enough?=20
-Do you suggest adding 'smp_mb()' after atomic_{inc,dec} ?
-
---=-msT9mHa9dsgVOOqF07pT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JH7cACgkQlQYWtz9S
-ttQbsg/+NzuiDsKHci5TYegDW6BmUL/AMfyvUr6EHhP0ki98ppV+Z6T24LKU8/Fd
-FviJPbDIJMZlkk3vc1ZvDxxOYsF9DOojVxXXqBFb9HlecMgPJDWY/qwMUjzXlQSP
-IpOfbeRXZ+qhq912shlCqBPQh1a4cj4MGp2OaxLEgyblj5tWciakunL+TqIBU3Gs
-YYNpf1sBQ+y0uboAHDu9CH0ssN6czr9PyaR/8pgjQKPUCd8Cei26gcU45qnhqllU
-ls8Fo5QjlKiY5DTGzX2cOvj5A+ZP8/AbL42nB1DEm2NsndmtGG3kNOmGxGzAnIO7
-DwesqALzC/yKwwSLR6EFGFW7y+Ucm9FknrZ8e3ai/Filvd71YwsAF8LkQosC+qjv
-BvWhR+RJLjjpysn8nQDYkJeWCEJ+8civxf1mgz4oBQ7bT/AHhQ75lolWe8QhZZwx
-QnRpRBglBdZwir9gy15Huevjke3p3FklIwuDN4otTPlrWWS966BXLKxK+XAhb5j5
-hzovVwge/iaSStEEZrLtBl8rhMmowXKa55/I97dBeDrnBHDVoJyYb5+moAYU75UA
-M/5z1wwNQQWP7ftV2fkngtCsUsED6tDklyyyrAQ0zsfzOF6IZ6gbcvpZhrQyz5G5
-WFPpc7V2uJWZJRN+Afk8Ittnl/GOH7WBozDka6dGiLurBnTnc50=
-=mRcx
------END PGP SIGNATURE-----
-
---=-msT9mHa9dsgVOOqF07pT--
-
+	Ingo
