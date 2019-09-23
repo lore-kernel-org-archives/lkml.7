@@ -2,175 +2,149 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DCFC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28492C4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCFE20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F353A2089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 17:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uR4Tos2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407581AbfIWR1E (ORCPT
+        id S2437868AbfIWR15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 13:27:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407411AbfIWR1E (ORCPT
+        Mon, 23 Sep 2019 13:27:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38473 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389338AbfIWR15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 13:27:04 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NHN69O047941;
-        Mon, 23 Sep 2019 13:26:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v70cvce19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 13:26:02 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8NHN7wV048081;
-        Mon, 23 Sep 2019 13:26:01 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v70cvce0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 13:26:01 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NHPD51024308;
-        Mon, 23 Sep 2019 17:26:00 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 2v5bg72k8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 17:26:00 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NHPxRQ11076200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 17:25:59 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5037BAC05E;
-        Mon, 23 Sep 2019 17:25:59 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 555A3AC059;
-        Mon, 23 Sep 2019 17:25:56 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.184])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 17:25:56 +0000 (GMT)
-Message-ID: <18c5c378db98f223a0663034baa9fd6ce42f1ec7.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 11/11] powerpc/mm/book3s64/pgtable: Uses counting
- method to skip serializing
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Allison Randal <allison@lohutok.net>
-Date:   Mon, 23 Sep 2019 14:25:51 -0300
-In-Reply-To: <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
-References: <20190920195047.7703-1-leonardo@linux.ibm.com>
-         <20190920195047.7703-12-leonardo@linux.ibm.com>
-         <1b39eaa7-751d-40bc-d3d7-41aaa15be42a@nvidia.com>
-         <24863d8904c6e05e5dd48cab57db4274675ae654.camel@linux.ibm.com>
-         <4ea26ffb-ad03-bdff-7893-95332b22a5fd@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QkhmEMJu3huKrEpzj07X"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 23 Sep 2019 13:27:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id b20so9156916ljj.5;
+        Mon, 23 Sep 2019 10:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ynd2Huq/W1JVW4gwoa1s+Sns1ACUyaWf0IT0B4FOulY=;
+        b=uR4Tos2pgCCsXD8pWPJOv3IBomp+UsSW614q3eidHlx92imCTEi85ptduWUDMapBjc
+         a2kKOefmKPtJYpFtkrpCf+FXC0vt4qjM+GSR00hqupIN/ijRF9VhmTOGazn8K2QH5dp4
+         sqB3o2JWA1qWOl1NHgmgpHRd1OhesrCLgXBxastTwNQ+LD90n/4fv25aziWAQnlFobGU
+         8erPNpVaq7r1zraLzgVqZ4JnJpvgdkofQ6xc6UkhM4UhSOCKtvpGkllc3NmHviWMM3u1
+         aM1Bj/qqfxGVCwn0mf1awhWr0l3xjI2xp3g0N1a187VGjv/VK1G6H7sJzyPFv8PO45RQ
+         aNxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ynd2Huq/W1JVW4gwoa1s+Sns1ACUyaWf0IT0B4FOulY=;
+        b=uRaYwmVkkbL5GuDDPk9T3/l1ZYgAz31RlSlc6kBAP/8PkIQB8fwshi/qLLU/yrHiKR
+         I2J1anatRIAsuZScw96mp7IOzmquOfGDn+s/q9xeJcBEHkVMUV8uKPB2Nsa73FzPwW8N
+         0dEglh+3gu3FighmFvV+OknJEE4x7rsLG2aepPSRYn30sqWOI+fGS2qfKxr5s+Y7TogN
+         J1KDn9xQkBClexHXbzrO7/QQCA9K7YptpZIjk83jPHxCAghMA2I0qtxraY3lJsMgGBQL
+         BYmzdB/ZfQc3J4z6tngdXXpc3ABAaqd5W5IU7B26unkmxFa8qkO3fYtWIfsMXjImCIN3
+         Tk8A==
+X-Gm-Message-State: APjAAAXNAlXslDtKzG3BzAZ6+2UAU/zqGPlrgLsyDGoERYVKK+4slwxj
+        je3E9frhzia7zdTwPkmGlpIgHYn3
+X-Google-Smtp-Source: APXvYqxTC9/fZLOhVSWwi3ml6goC4lcaHDI+ml5SYAhK5B9bK/99xXzQwN3pd1bpWnMfcc6dL2sBfw==
+X-Received: by 2002:a2e:b4c4:: with SMTP id r4mr302405ljm.69.1569259672854;
+        Mon, 23 Sep 2019 10:27:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-32-67.pppoe.spdop.ru. [94.29.32.67])
+        by smtp.googlemail.com with ESMTPSA id r5sm2338437lfc.85.2019.09.23.10.27.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 10:27:52 -0700 (PDT)
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
+ framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+ <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <16bfccc5-36d5-3050-fd8d-5bce59e2d7b3@gmail.com>
+Date:   Mon, 23 Sep 2019 20:27:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=661 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230156
+In-Reply-To: <20190923135654.wcsdl5jdzxqeht3l@vireshk-mac-ubuntu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+23.09.2019 16:56, Viresh Kumar пишет:
+> On 22-09-19, 23:12, Dmitry Osipenko wrote:
+>> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+>>
+>>
+>> [   87.952369] ==================================================================
+>> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+>> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+>>
+>> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+>> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+>> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+>> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+>> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+>> (print_address_description.constprop.0+0x3d/0x340)
+>> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+>> (__kasan_report+0xe3/0x12c)
+>> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+>> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+>> (blocking_notifier_chain_register+0x29/0x3c)
+>> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+>> (dev_pm_qos_add_notifier+0x79/0xf8)
+>> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+> 
+> Hi Dmitry,
+> 
+> Unfortunately I am traveling right now and can't test this stuff, though I may
+> have found the root cause here. Can you please test the below diff for me ?
+> 
+> diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
+> index 6c90fd7e2ff8..9ac244ee05fe 100644
+> --- a/drivers/base/power/qos.c
+> +++ b/drivers/base/power/qos.c
+> @@ -328,6 +328,8 @@ void dev_pm_qos_constraints_destroy(struct device *dev)
+>         spin_unlock_irq(&dev->power.lock);
+>  
+>         kfree(qos->resume_latency.notifiers);
+> +       kfree(qos->min_frequency.notifiers);
+> +       kfree(qos->max_frequency.notifiers);
+>         kfree(qos);
+>  
+>   out:
+> 
 
---=-QkhmEMJu3huKrEpzj07X
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Doesn't help. The use-after-free bugs are usually caused by a missing
+NULL assignment after kfree(), like in this snippet:
 
-On Fri, 2019-09-20 at 17:48 -0700, John Hubbard wrote:
->=20
-[...]
-> So it seems that full memory barriers (not just compiler barriers) are re=
-quired.
-> If the irq enable/disable somehow provides that, then your new code just =
-goes
-> along for the ride and Just Works. (You don't have any memory barriers in
-> start_lockless_pgtbl_walk() / end_lockless_pgtbl_walk(), just the compile=
-r
-> barriers provided by the atomic inc/dec.)
->=20
-> So it's really a pre-existing question about the correctness of the gup_f=
-ast()
-> irq disabling approach.
+	..
+	if (!a)
+		a = kmalloc();
+	..
+	kfree(a);
+	// a = NULL    <-- missing!
+	..
 
-I am not experienced in other archs, and I am still pretty new to
-Power, but by what I could understand, this behavior is better
-explained in serialize_against_pte_lookup.=20
+I briefly looked through the code and don't see anything obviously
+wrong. The bug isn't critical since unlikely that somebody reloads
+cpufreq module for a non-development purposes, so it's not a big deal
+and can wait. Please take your time.
 
-What happens here is that, before doing a THP split/collapse, the
-function does a update of the pmd and a serialize_against_pte_lookup,
-in order do avoid a invalid output on a lockless pagetable walk.
-
-Serialize basically runs a do_nothing in every cpu related to the
-process, and wait for it to return.=20
-
-This running depends on interrupt being enabled, so disabling it before
-gup_pgd_range() and re-enabling after the end, makes the THP
-split/collapse wait for gup_pgd_range() completion in every cpu before
-continuing. (here happens the lock)
-
-(As told before, every gup_pgd_range() that occurs after it uses a
-updated pmd, so no problem.)
-
-I am sure other archs may have a similar mechanism using
-local_irq_{disable,enable}.
-
-Did it answer your questions?
-
-Best regards,
-
-Leonardo Bras
-
---=-QkhmEMJu3huKrEpzj07X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2JAB8ACgkQlQYWtz9S
-ttRr1Q//T4jMYmkfmx27+Bg69sKonvlgnqSo2pOluY9vzcehO8orfWtP3QQO2WNv
-ruCYAfCtzUh9x6sByQylolwbt1e/8dI82HBybU4Cy0lgP7ZfDTe+YiWJzMUiUh1l
-Mm36hPPdVyN3EC0UgWQ7nnfnk2xR7UDOfw701rOzvIsK9P568qP65Iryf7uu0V3n
-jvZ5JhVJX9eit1OMfEfVBvZigAuv4eAMvu0LK4ko2uTRUgRdkgZa+Pgf9N38Ok8/
-iaHvDIcbUaZM/PiHkMSdh1iypyAnkGEYb9zpu0He41DiMOsjSkspvcJPRv19/N7X
-p71AztGoVXZd02F6tAMkO+794GqIT2/sixX3gUPCCY7d1uhae2d/u5lMhvXK+sCS
-ktivTMvPqwVfAOGpMheFkugQAu7GhGkUvhslC+YXcZUZJDShK1exMfpbF9slvpEy
-x8/IkF0EGNWei1jw9iW5ic6b9Abk0WoxwbAAjCgZIkbSliZp9O5eD5+woyMn6DRT
-c9CSagzNt6ztFsoAMFbtGHq0bgyW8THVNt9Oq1mijpPEwmfGoa7yfMRmt4+KU4bh
-n6NHbeStFsqhe+59pFTpLRRFkTbMoTQHWsNCLVRlG6fTVZOp0kurs2IjywGqVV8X
-KyFpkCPlUtX8N69af3sVNbUHG11DDvFF4F+FPPjpRnCpqiyRs3E=
-=BjCh
------END PGP SIGNATURE-----
-
---=-QkhmEMJu3huKrEpzj07X--
-
+I also want to point out that kernel crashes after second module reload,
+hence the KASAN report should be valid.
