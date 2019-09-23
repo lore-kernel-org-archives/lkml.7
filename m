@@ -2,151 +2,126 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC94C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FCDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A231205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED62A205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NXlQx8He"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732793AbfIWPum (ORCPT
+        id S1732804AbfIWPvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:50:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728353AbfIWPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:50:41 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B670781DEC
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:50:40 +0000 (UTC)
-Received: by mail-qk1-f200.google.com with SMTP id x62so18133039qkb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:50:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cj6Y1lnq7bXcC3kz0vWm87eC1U075TsPfURyzMigVaw=;
-        b=YLQAC1O1vDqOrkW1BmKYdYnyiB/xNsl31Tw7QZtL6RSo+Ao5mc/szQrp7Z3LL1yRUW
-         uZ+tYahvhddFVdKGMSlnOHqHgk3zdhfDA3LBlgs7pgNwDiSZlrNjw8+cApDXQ2mnzk87
-         hN88kxnoeLXvj5VTks4lYGRDjrqDIViNpEvZDy/MtZrWs7+m5yplWUhfaYeLxV4R25eJ
-         aldomSkpv9cQIn7KWceXPv2XL8XC2KskvTxYc+Hqm23spHkYj//A6OowqKxYgsPh3got
-         jwkeYhvrf3pAZv3+kCgcGOn8Jsuf2AUwS+s7HbJX3Z4r2Qvlfb+3yDU29XKiqEN68E0F
-         oLIg==
-X-Gm-Message-State: APjAAAXcs6bciHvEt8E5zmSqOh/khwDaIadMUeaimUJWgnK5/TrjJ+Qo
-        tjlIurjDH1ks8LJf1CRYW46D3zagtFfc4/oOCgoz4baaOEwuVj/waSizlAKsyrx/eYAhqvNUAJi
-        Gd3OkKrv+0FlKT8R/jKbe2w2x
-X-Received: by 2002:a37:bc82:: with SMTP id m124mr466933qkf.231.1569253840054;
-        Mon, 23 Sep 2019 08:50:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxEKUtkTOCpbmKAVsuN5DEp8c5GEKKqBTQD9x7NMYUI+PUXnD6G5Fo6ixIl97M10Uj/81ScUg==
-X-Received: by 2002:a37:bc82:: with SMTP id m124mr466905qkf.231.1569253839907;
-        Mon, 23 Sep 2019 08:50:39 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id g10sm5061349qki.41.2019.09.23.08.50.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 08:50:39 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 11:50:31 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
-Message-ID: <20190923114946-mutt-send-email-mst@kernel.org>
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
- <20190918175249.23474.51171.stgit@localhost.localdomain>
- <20190923041330-mutt-send-email-mst@kernel.org>
- <CAKgT0UfFBO9h3heGSo+AaZgUNpy5uuOm3yh62bYwYJ5dq+t1gQ@mail.gmail.com>
- <20190923105746-mutt-send-email-mst@kernel.org>
- <CAKgT0Ufp0bdz3YkbAoKWd5DALFjAkHaSUn_UywW1+3hk4tjPSQ@mail.gmail.com>
- <20190923113722-mutt-send-email-mst@kernel.org>
- <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
- <49395e48-175f-8483-77f5-5fc3aca8b7cb@redhat.com>
+        Mon, 23 Sep 2019 11:51:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40272 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728720AbfIWPvF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:51:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0RDd3iHkouZU1pRFRB48/lD4Y4fOddJfRH7mBxc6Vao=; b=NXlQx8HeAqeDb6yqEaTk/519B
+        dPw5dQx+43R/Xql9eX//W6l/1vbSDqJBsSKbX0+GgxGyR/lMzRBIJJLwaiBlYUPovHMUeZ4WuI2U9
+        pqR/T7IrCuH324g5O+5uhidav3oL5K11yioHiIVa88PxC9Lhl8Af25UBQiNsPQjgWAv5dhal7H8Pm
+        kjjT0b4sbkwdVtooJ5V/S1z3/O080RdL39Z8BxDGhymwdoNXrZ7KMaQqR08JJFpuEuA5JxPauwCNC
+        NwI5i96tju02O7rB8oB1RofYv2QQUL82ESd4By1d+WKKUSotGlAN05bG1WBwAaFYH+M7oRF/I/hUL
+        8rRYpfeYg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCQa9-0006CY-8C; Mon, 23 Sep 2019 15:49:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CEBBA303DFD;
+        Mon, 23 Sep 2019 17:48:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0AF5F20D80D41; Mon, 23 Sep 2019 17:48:53 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 17:48:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <49395e48-175f-8483-77f5-5fc3aca8b7cb@redhat.com>
+In-Reply-To: <20190923152856.GB17206@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 05:47:24PM +0200, David Hildenbrand wrote:
-> On 23.09.19 17:45, David Hildenbrand wrote:
-> > On 23.09.19 17:37, Michael S. Tsirkin wrote:
-> >> On Mon, Sep 23, 2019 at 08:28:00AM -0700, Alexander Duyck wrote:
-> >>> On Mon, Sep 23, 2019 at 8:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >>>>
-> >>>> On Mon, Sep 23, 2019 at 07:50:15AM -0700, Alexander Duyck wrote:
-> >>>>>>> +static inline void
-> >>>>>>> +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
-> >>>>>>> +{
-> >>>>>>> +     int index;
-> >>>>>>> +
-> >>>>>>> +     if (order < PAGE_REPORTING_MIN_ORDER)
-> >>>>>>> +             return;
-> >>>>>>> +     if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-> >>>>>>> +             return;
-> >>>>>>> +
-> >>>>>>> +     index = get_reporting_index(order, mt);
-> >>>>>>> +     reported_boundary[index] = &zone->free_area[order].free_list[mt];
-> >>>>>>> +}
-> >>>>>>
-> >>>>>> So this seems to be costly.
-> >>>>>> I'm guessing it's the access to flags:
-> >>>>>>
-> >>>>>>
-> >>>>>>         /* zone flags, see below */
-> >>>>>>         unsigned long           flags;
-> >>>>>>
-> >>>>>>         /* Primarily protects free_area */
-> >>>>>>         spinlock_t              lock;
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> which is in the same cache line as the lock.
-> >>>>>
-> >>>>> I'm not sure what you mean by this being costly?
-> >>>>
-> >>>> I've just been wondering why does will it scale report a 1.5% regression
-> >>>> with this patch.
-> >>>
-> >>> Are you talking about data you have collected from a test you have
-> >>> run, or the data I have run?
-> >>
-> >> About the kernel test robot auto report that was sent recently.
+On Mon, Sep 23, 2019 at 05:28:56PM +0200, Michal Hocko wrote:
+> On Mon 23-09-19 17:15:19, Peter Zijlstra wrote:
+
+> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > > index 4123100e..9859acb 100644
+> > > --- a/arch/x86/mm/numa.c
+> > > +++ b/arch/x86/mm/numa.c
+> > > @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+> > >   */
+> > >  const struct cpumask *cpumask_of_node(int node)
+> > >  {
+> > > +	if (node == NUMA_NO_NODE)
+> > > +		return cpu_online_mask;
 > > 
-> > https://lkml.org/lkml/2019/9/21/112
+> > This mandates the caller holds cpus_read_lock() or something, I'm pretty
+> > sure that if I put:
 > > 
-> > And if I'm correct, that regression is observable in case reporting is
-> > not enabled. (so with this patch applied only, e.g., on a bare-metal system)
-> > 
+> > 	lockdep_assert_cpus_held();
 > 
-> To be even more precise: # CONFIG_PAGE_REPORTING is not set
+> Is this documented somewhere?
 
-Even if it was, I'd hope for 0 overhead when not present runtime.
+No idea... common sense :-)
 
--- 
-MST
+> Also how does that differ from a normal
+> case when a proper node is used? The cpumask will always be dynamic in
+> the cpu hotplug presence, right?
+
+As per normal yes, and I'm fairly sure there's a ton of bugs. Any
+'online' state is subject to change except when you're holding
+sufficient locks to stop it.
+
+Disabling preemption also stabilizes it, because cpu unplug relies on
+stop-machine.
+
+> > here, it comes apart real quick. Without holding the cpu hotplug lock,
+> > the online mask is gibberish.
+> 
+> Can the returned cpu mask go away?
+
+No, the cpu_online_mask itself has static storage, the contents OTOH can
+change at will. Very little practical difference :-)
+
+
