@@ -2,88 +2,106 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC7C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3B5C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CA620882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569264135;
-	bh=jh64/+Mh1tv9gqnwGn/6R1p+9BuONhUOHdnYdG9WQDo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nE6j+qbB+CrrVnhqGLff3Tr8vDhznifsNJwjSzyQJverVDG2zhCg9FoJy1Ya4Zj7P
-	 9hy3Te4NOpErohLyXVptczXSpasW8gizRZncil5XWDAgB+wY8NGPM2/HF2TupP4kzN
-	 BTewfxRYw48+Xwn7DTiJppJGBPVPFM07tahlFXiI=
+	by mail.kernel.org (Postfix) with ESMTP id 5703F217D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 18:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733024AbfIWSmO (ORCPT
+        id S1731231AbfIWSoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 14:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfIWSmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 14:42:13 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D692A217F4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569264133;
-        bh=jh64/+Mh1tv9gqnwGn/6R1p+9BuONhUOHdnYdG9WQDo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LN56fypZJ27Zy37NVd37Wcdv7C172QPewnf72fmSvvDoGl5X0KRe6wXjM1ewQpfs4
-         eOSnwnw+Ly8K/VMFrH3FkF5KFJLkKtfB/7gHXKjG3xohQ+zmxI5/f95uYmMw2eA0HB
-         6PmYQmkxLC8Q/jJTww3thq8tRCJ25rU8yJf1ajYM=
-Received: by mail-wm1-f48.google.com with SMTP id y21so10409463wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:42:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAVJQd8M1g114d3TAmLbZjz64rVX0KJ06ZhHoWPXl4pQO0sVGcDc
-        CtbhjHOY/wKschzy1kspajUY+/fCqRMdOo/N+VdX4g==
-X-Google-Smtp-Source: APXvYqzlorbAOK1pZewfmhFMCZa9D1IW2om6vHHCEX4YXqvLd98q3SRZFESbOSIcQdidWUK/iViVSejOT+cnBl7sG/4=
-X-Received: by 2002:a7b:c353:: with SMTP id l19mr695433wmj.173.1569264131365;
- Mon, 23 Sep 2019 11:42:11 -0700 (PDT)
+        Mon, 23 Sep 2019 14:44:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726206AbfIWSoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 14:44:03 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NIbVCQ125700;
+        Mon, 23 Sep 2019 14:43:51 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v70mspk4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 14:43:51 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8NIf4VX005965;
+        Mon, 23 Sep 2019 18:43:50 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v5bg6ntk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Sep 2019 18:43:50 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NIhnGi32047478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Sep 2019 18:43:49 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97186112061;
+        Mon, 23 Sep 2019 18:43:49 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98CBB112062;
+        Mon, 23 Sep 2019 18:43:48 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.184])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Sep 2019 18:43:48 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 0/3] Replace current->mm by kvm->mm on powerpc/kvm
+Date:   Mon, 23 Sep 2019 15:43:29 -0300
+Message-Id: <20190923184332.412-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190920131907.6886-1-christian.brauner@ubuntu.com> <20190923094916.GB15355@zn.tnic>
-In-Reply-To: <20190923094916.GB15355@zn.tnic>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 23 Sep 2019 11:41:59 -0700
-X-Gmail-Original-Message-ID: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
-Message-ID: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
-Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-um@lists.infradead.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=710 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909230160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 2:49 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
-> > While touching seccomp code I realized that the struct seccomp_data
-> > argument to secure_computing() seems to be unused by all current
-> > callers. So let's remove it unless there is some subtlety I missed.
-> > Note, I only tested this on x86.
->
-> What was amluto thinking in
->
-> 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
+By replacing, we would reduce the use of 'global' current on code,
+relying more in the contents of kvm struct.
 
-IIRC there was a period of time in which x86 used secure_computing()
-for normal syscalls, and it was a good deal faster to have the arch
-code supply seccomp_data.  x86 no longer works like this, and syscalls
-aren't fast anymore ayway :(
+On code, I found that in kvm_create_vm() there is:
+kvm->mm = current->mm;
+
+And that on every kvm_*_ioctl we have tests like that:
+if (kvm->mm != current->mm)
+        return -EIO;
+
+So this change would be safe.
+
+I split the changes in 3 patches, so it would be easier to read
+and reject separated parts. If decided that squashing is better,
+I see no problem doing that.
+
+Best regards,
+
+Leonardo Bras (3):
+  powerpc/kvm/book3s: Replace current->mm by kvm->mm
+  powerpc/kvm/book3e: Replace current->mm by kvm->mm
+  powerpc/kvm/e500: Replace current->mm by kvm->mm
+
+ arch/powerpc/kvm/book3s_64_mmu_hv.c |  4 ++--
+ arch/powerpc/kvm/book3s_64_vio.c    |  6 +++---
+ arch/powerpc/kvm/book3s_hv.c        | 10 +++++-----
+ arch/powerpc/kvm/booke.c            |  2 +-
+ arch/powerpc/kvm/e500_mmu_host.c    |  6 +++---
+ 5 files changed, 14 insertions(+), 14 deletions(-)
+
+-- 
+2.20.1
+
