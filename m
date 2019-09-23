@@ -2,210 +2,120 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EC7C432C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44074C432C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321F9206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YFcWeVOP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dgCmRKJ7"
+	by mail.kernel.org (Postfix) with ESMTP id 1656E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569274550;
+	bh=diYMA/O6NLFOVNj4TPX/3etTJQHQdavAYL2sljSgdDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1rxC+KjBYG8C/DEL3FNDrlWVtVDjKjEdON9+yzNO4NPBd2VwWwjZuwQdt6yXvVIu1
+	 nCL3h3DNVYqXrrXlF+6/ZWtwKLpVYYDqP26c3ohz3s+UsFZqDD09XKMY62fd6A8fQp
+	 gmb9MDbh+UAt2OBcFBYTKMLIWJCWk8MSIgQ3C87o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbfIWVfg (ORCPT
+        id S2502974AbfIWVft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:35:36 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57574 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbfIWVfg (ORCPT
+        Mon, 23 Sep 2019 17:35:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41649 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729120AbfIWVfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:35:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CBF80602CC; Mon, 23 Sep 2019 21:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569274534;
-        bh=3gVfmwZnaCbRSwwu9Wjpej8a131QZ7soIErZsrCYxrY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YFcWeVOPuaLbu5jlwlFkHHEJEIcOGKV8nisoNq/qwod+qtIDYZxzeAyHkU3kPpm7D
-         v5hK0lHO9shnbr417cR8mI9uE6fZj2ub+ygXGDHJxYyVNJPSKn/oNDm/uu7ceP+q1d
-         vsL7coT5HwqWybk/PCRIUQhuDH2sl37eJl7lko/8=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 3149060240;
-        Mon, 23 Sep 2019 21:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569274533;
-        bh=3gVfmwZnaCbRSwwu9Wjpej8a131QZ7soIErZsrCYxrY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dgCmRKJ7UFitfIyjPDHQ1LSiE18P5kQ3BC1Gjf2NalbcR7d4+R8rdZFtXYPw4JLBB
-         Pu5r2Io3c+iW/tVfL2Xxvcgyl5/haPXv3FO1B50ZjP76kYP+gvM/qs6ZrUy/Q8mN9o
-         eHj+ZyIzQjpefYZvky9OEIwvFRs5zW6zg9s7+tms=
+        Mon, 23 Sep 2019 17:35:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f5so15205022ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 14:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9rPInDrQugcHITDKVlAr25OdVNJWqsDyo3I0eQIcB8s=;
+        b=QRQw9OiPKf3NL4+42cCQt9hdrKOKSwqrn7y+nD4tFRTZhdtc1rRPQE3KLj7T0ud8Nb
+         O4lyuCLSC6h7R9V0+6rlQYTgkDuHSM2x3HgaHrXIDvJa8n/IcSMtLHWVemU5M7jQVfQ1
+         K7zBB1/KHELfhnbpTOVxgWweyzfVmmjNrhRtE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9rPInDrQugcHITDKVlAr25OdVNJWqsDyo3I0eQIcB8s=;
+        b=mTrVzjak7RxGJTr8L+OSvmkyzwyPdEwdd2+fw75GMmyz5o2AeUeEthx7UbHhXc6/J8
+         W7Va+bcCCj0MLS25d+s9dFJlmUwDNGakq+eLxVh/civ9Oerz99KSkBfkCq0EsVVUXI7s
+         dF4IYjl/KMAQAbtov6vdKQXE4LN7fxtdq4d7HI41P8ZxiY3XRv2ytaPLcpVVfWBgX3el
+         2aTpJ3MyZSYDp+j4nJr1ODAg79wNFPTyby5Un6gvPMoCl/LL16WP3ujHRLKX4Dc1xIsu
+         zwTuISSsCL/8g3HVluhSFdI71QGw/GCH7OKbfn6TWsBKV/+WPZwhtn+aT2GekL/Pga8f
+         eu+A==
+X-Gm-Message-State: APjAAAWOSo3QATPpX51KOTkVwSVPYYhEv5liY9a7excQ0GwqvgC7FGSo
+        qRrA+Qly5mURuvJzToSiLfawwyXSvr4=
+X-Google-Smtp-Source: APXvYqxSijKXcREWKI6/CL5PK06Tm2CO2zZtFL2NF1dBayqxyJ0ka8iwx6/pJ+Dmqzuh6VKlUEa9CQ==
+X-Received: by 2002:a2e:761a:: with SMTP id r26mr824152ljc.137.1569274546195;
+        Mon, 23 Sep 2019 14:35:46 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id c4sm2472738lfm.4.2019.09.23.14.35.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 14:35:45 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id m13so15138887ljj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 14:35:45 -0700 (PDT)
+X-Received: by 2002:a2e:3015:: with SMTP id w21mr814171ljw.165.1569274544776;
+ Mon, 23 Sep 2019 14:35:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Sep 2019 14:35:33 -0700
-From:   mnalajal@codeaurora.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-In-Reply-To: <20190920061006.GC473898@kroah.com>
-References: <1568927624-13682-1-git-send-email-mnalajal@codeaurora.org>
- <20190919213203.GA395325@kroah.com> <20190919215300.GC1418@minitux>
- <20190919215836.GA426988@kroah.com> <20190919221456.GA63675@minitux>
- <20190919222525.GA445429@kroah.com> <20190919224017.GB63675@minitux>
- <20190919224514.GA447028@kroah.com> <20190920033651.GC63675@minitux>
- <20190920061006.GC473898@kroah.com>
-Message-ID: <5d9d1f3d11b1e4173990d4c5ac547193@codeaurora.org>
-X-Sender: mnalajal@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <745ac819-f2ae-4525-1855-535daf783638@schaufler-ca.com>
+In-Reply-To: <745ac819-f2ae-4525-1855-535daf783638@schaufler-ca.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 23 Sep 2019 14:35:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg1zkUTdnx5pNVOf=uuSJiEywNiztQe4oRiPb1pfA399w@mail.gmail.com>
+Message-ID: <CAHk-=wg1zkUTdnx5pNVOf=uuSJiEywNiztQe4oRiPb1pfA399w@mail.gmail.com>
+Subject: Re: [GIT PULL] Smack patches for v5.4 - retry
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-19 23:10, Greg KH wrote:
-> On Thu, Sep 19, 2019 at 08:36:51PM -0700, Bjorn Andersson wrote:
->> On Thu 19 Sep 15:45 PDT 2019, Greg KH wrote:
->> 
->> > On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
->> > > On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
->> > >
->> > > > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
->> > > > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
->> > > > >
->> > > > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
->> > > > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
->> > > > > > >
->> > > > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
->> > > > > > > > > If the soc drivers want to add custom sysfs entries it needs to
->> > > > > > > > > access "dev" field in "struct soc_device". This can be achieved
->> > > > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
->> > > > > > > > > module they need above API to be exported. Otherwise one can
->> > > > > > > > > observe compilation issues.
->> > > > > > > > >
->> > > > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
->> > > > > > > > > ---
->> > > > > > > > >  drivers/base/soc.c | 1 +
->> > > > > > > > >  1 file changed, 1 insertion(+)
->> > > > > > > > >
->> > > > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
->> > > > > > > > > index 7c0c5ca..4ad52f6 100644
->> > > > > > > > > --- a/drivers/base/soc.c
->> > > > > > > > > +++ b/drivers/base/soc.c
->> > > > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
->> > > > > > > > >  {
->> > > > > > > > >  	return &soc_dev->dev;
->> > > > > > > > >  }
->> > > > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
->> > > > > > > > >
->> > > > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
->> > > > > > > > >  				struct attribute *attr,
->> > > > > > > >
->> > > > > > > > What in-kernel driver needs this?
->> > > > > > > >
->> > > > > > >
->> > > > > > > Half of the drivers interacting with the soc driver calls this API,
->> > > > > > > several of these I see no reason for being builtin (e.g.
->> > > > > > > ux500 andversatile). So I think this patch makes sense to allow us to
->> > > > > > > build these as modules.
->> > > > > > >
->> > > > > > > > Is linux-next breaking without this?
->> > > > > > > >
->> > > > > > >
->> > > > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
->> > > > > > > socinfo driver.
->> > > > > > >
->> > > > > > > > We don't export things unless we have a user of the export.
->> > > > > > > >
->> > > > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
->> > > > > > > > thing to do at all.  The driver should be doing it, by setting up the
->> > > > > > > > attribute group properly so that the driver core can do it automatically
->> > > > > > > > for it.
->> > > > > > > >
->> > > > > > > > No driver should be doing individual add/remove of sysfs files.  If it
->> > > > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
->> > > > > > > > userspace.
->> > > > > > > >
->> > > > > > >
->> > > > > > > The problem here is that the attributes are expected to be attached to
->> > > > > > > the soc driver, which is separate from the platform-specific drivers. So
->> > > > > > > there's no way to do platform specific attributes the right way.
->> > > > > > >
->> > > > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
->> > > > > > > > been working on fixing that up, look at the patches now in Linus's tree
->> > > > > > > > for platform and USB drivers that do this as examples of how to do it
->> > > > > > > > right.
->> > > > > > > >
->> > > > > > >
->> > > > > > > Agreed, this patch should not be used as an approval for any crazy
->> > > > > > > attributes; but it's necessary in order to extend the soc device's
->> > > > > > > attributes, per the current design.
->> > > > > >
->> > > > > > Wait, no, let's not let the "current design" remain if it is broken!
->> > > > > >
->> > > > > > Why can't the soc driver handle the attributes properly so that the
->> > > > > > individual driver doesn't have to do the create/remove?
->> > > > > >
->> > > > >
->> > > > > The custom attributes that these drivers want to add to the common ones
->> > > > > are known in advance, so I presume we could have them passed into
->> > > > > soc_device_register() and registered together with the common
->> > > > > attributes...
->> > > > >
->> > > > > It sounds like it's worth a prototype.
->> > > >
->> > > > Do you have an in-kernel example I can look at to get an idea of what is
->> > > > needed here?
->> > > >
->> > >
->> > > realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
->> > > implements the current mechanism of acquiring the soc's struct device
->> > > and then issuing a few device_create_file calls on that.
->> >
->> > That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
->> > ("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
->> > example of how to do this.
->> >
->> 
->> The difference between the two cases is that in the fsl-usb case it's
->> attributes of the device itself, while in the soc case the 
->> realview-soc
->> driver (or the others doing this) calls soc_device_register() to
->> register a new (dangling) soc device, which it then adds its 
->> attributes
->> onto.
-> 
-> That sounds really really odd.  Why can't the soc device do the 
-> creation
-> "automatically" when the device is registered?  The soc core should
-> handle this for the soc "drivers", that's what it is there for.
-> 
-Clients are registering to soc framework using "soce_device_register()"
-with "soc_device_attribute". This attribute structure does not have all
-the sysfs fields what client are interested. Hence clients are handling
-their required sysfs fields in their drivers.
-https://elixir.bootlin.com/linux/v5.3/source/drivers/base/soc.c#L114
+On Mon, Sep 23, 2019 at 1:14 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+> Thank for the instruction. I think this is correct.
 
->> We can't use dev_groups, because the soc_device (soc.c) isn't actually 
->> a
->> driver and the list of attributes is a combination of things from 
->> soc.c
->> and e.g. soc-realview.c.
->> 
->> But if we pass a struct attribute_group into soc_device_register() and
->> then have that register both groups using dev.groups, this should be
->> much cleaner at least.
-> 
-> Don't you have a structure you can store these in as well?
-At present client is populating entries one-by-one
-https://android.googlesource.com/kernel/msm/+/android-7.1.0_r0.2/drivers/soc/qcom/socinfo.c#1254
+Looks fine, pulled.
 
-> 
-> thanks,
-> 
-> greg k-h
+That said, when I look closer:
+
+> Jia-Ju Bai (1):
+>       security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
+
+This one seems wrong.
+
+Not seriously so, but the quoting the logic from the commit:
+
+    In smack_socket_sock_rcv_skb(), there is an if statement
+    on line 3920 to check whether skb is NULL:
+
+        if (skb && skb->secmark != 0)
+
+    This check indicates skb can be NULL in some cases.
+
+and the fact is, skb _cannot_ be NULL, because when you test the
+security of receiving an skb, you by definition always have an skb.
+
+There is one single place that calls security_sock_rcv_skb(), and it
+very much has a real skb.
+
+So instead of adding a _new_ test for skb being NULL, the old test for
+a NULL skb should just have been removed. It really doesn't make any
+sense to have a NULL skb in that path - if some memory allocation had
+failed on the receive path, that just means that the receive is never
+done, it doesn't mean that you'd test a NULL skb for security policy
+violations.
+
+Anyway, it's pulled, but I think somebody should have checked and
+thought about the automated tool reports a bit more..
+
+               Linus
