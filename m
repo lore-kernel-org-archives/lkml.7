@@ -2,131 +2,100 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E338C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54029C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC9820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D8E20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:01:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HkZLp6T2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbfIWQA4 (ORCPT
+        id S1732889AbfIWQA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:00:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53812 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732882AbfIWQAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:00:55 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8DEA881F31
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:00:54 +0000 (UTC)
-Received: by mail-qt1-f197.google.com with SMTP id m6so17755663qtk.23
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:00:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FnrZlG9onHbzoUOas395WBpQBkqdPWiXJrz3kgJAMNs=;
-        b=uPrCEuwgYM1mv+vcWdVdM5SGTy3DQsOvwy5Fv5nikjtblwlrersdKhlh7+WPpKITst
-         H4aSg8qQv0eGbyJy7rmpI3OfznYX9CoA8QlvLS7mQ3es0mqeCJ9jMRYAp0Ea+7l0ZFfB
-         MIVkxAdZBvxRnQIkmoKu5II5seD12lZGJpmMKryZKkupFkJgsTCOhsgqHTF5UO+P3kNg
-         JnzXa+6qnQHxJwkk3cncmyA4lQBCxo+NUx1STzFHrMzr4lXMvOyQvqyaNkG05ou8Uh+z
-         gN2xZXi/f+2MnVsNPPoPtyYRcu0CJcn9i4JMTPgg7Ek5A07ndG2p2bl7+cW5pWUqCK1R
-         Aqsw==
-X-Gm-Message-State: APjAAAV57t8EF5ujn1hcEiwXH/x5sa1J5ScNy8UYeCkofw/ByJIFQGnF
-        3+CGRKhQlUSWvSBs2NQ/NoQN3zIJ9nqC1vsjmLp92g2ZKByfUsRg+P4KbOT2oRBDLadTIDuXcOU
-        oD/WZ8rEZLsaID+xeFFtRW1rJ
-X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662847qvl.38.1569254453722;
-        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzeS0qH7VWztyzQkjfFK33LHuBL/0r9aVYJeACu8zWG4i5I+VaFWBP3hOAewtn9oF8WJysLNw==
-X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662820qvl.38.1569254453463;
-        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id m125sm5840827qkd.3.2019.09.23.09.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 09:00:52 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 12:00:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
-Subject: Re: [PATCH 5/6] vringh: fix copy direction of vringh_iov_push_kern()
-Message-ID: <20190923115930-mutt-send-email-mst@kernel.org>
-References: <20190923130331.29324-1-jasowang@redhat.com>
- <20190923130331.29324-6-jasowang@redhat.com>
- <20190923094559.765da494@x1.home>
+        Mon, 23 Sep 2019 12:00:59 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49992 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387706AbfIWQA5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:00:57 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 270F653B;
+        Mon, 23 Sep 2019 18:00:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1569254455;
+        bh=Etat8NN7YLvsW2f3sC337/iHi/6qZmsmzIordeWfKk0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HkZLp6T2S5QxbJRI7OaV54luhyvzV8n+O1mR5gtRTjuF6hnhK/kji0uJzF7LsONPJ
+         iuYn0eUA3oYTT/3KqkHeTICg0gzqMTAho7VwH2/bxjlXlMB2MGtA5Z2ziIQCplolcU
+         peP0LQ0N1BnqbCyXMyxbqkGL0PZNe+/YlxqQjCTE=
+Date:   Mon, 23 Sep 2019 19:00:45 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 06/11] drm/bridge: ti-tfp410: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20190923160045.GE5056@pendragon.ideasonboard.com>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <20190911075215.78047-7-dmitry.torokhov@gmail.com>
+ <20190920231228.GH12672@pendragon.ideasonboard.com>
+ <20190923150333.GD16243@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190923094559.765da494@x1.home>
+In-Reply-To: <20190923150333.GD16243@kuha.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 09:45:59AM -0600, Alex Williamson wrote:
-> On Mon, 23 Sep 2019 21:03:30 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
-> 
-> > We want to copy from iov to buf, so the direction was wrong.
+Hi Heikki,
+
+On Mon, Sep 23, 2019 at 06:03:33PM +0300, Heikki Krogerus wrote:
+> On Sat, Sep 21, 2019 at 02:12:28AM +0300, Laurent Pinchart wrote:
+> > Hi Dmitry,
 > > 
-> > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/vhost/vringh.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > (CC'ing Heikki as the original author of software nodes support)
+> > 
+> > Thank you for the patch.
+> > 
+> > On Wed, Sep 11, 2019 at 12:52:10AM -0700, Dmitry Torokhov wrote:
+> > > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), bit
+> > 
+> > s/bit/but/
+> > 
+> > > works with arbitrary firmware node.
+> > > 
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > On a side note, as I'm not very familiar with software nodes, I tried to
+> > see how they are to be used, and it seems they are completely
+> > undocumented :-( Heikki, is this something that could be fixed ?
 > 
-> 
-> Why is this included in the series?  Seems like an unrelated fix being
-> held up within a proposal for a new feature.  Thanks,
-> 
-> Alex
+> OK. I'll start writing API documentation for it.
 
-It's better to have it as patch 1/6, but it's a dependency of the
-example driver in the series. I can reorder when I apply.
+That's great, thanks ! I'll do my best to review it if you CC me.
 
+-- 
+Regards,
 
-> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
-> > index 08ad0d1f0476..a0a2d74967ef 100644
-> > --- a/drivers/vhost/vringh.c
-> > +++ b/drivers/vhost/vringh.c
-> > @@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
-> >  	return 0;
-> >  }
-> >  
-> > +static inline int kern_xfer(void *dst, void *src, size_t len)
-> > +{
-> > +	memcpy(dst, src, len);
-> > +	return 0;
-> > +}
-> > +
-> >  /**
-> >   * vringh_init_kern - initialize a vringh for a kernelspace vring.
-> >   * @vrh: the vringh to initialize.
-> > @@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
-> >  ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
-> >  			     const void *src, size_t len)
-> >  {
-> > -	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
-> > +	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
-> >  }
-> >  EXPORT_SYMBOL(vringh_iov_push_kern);
-> >  
+Laurent Pinchart
