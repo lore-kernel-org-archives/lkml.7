@@ -2,102 +2,163 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF37C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E087FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2587206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC52220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 02:34:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VeY2Vi3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404480AbfIWCd5 (ORCPT
+        id S2404630AbfIWCeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 22:33:57 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:46756 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404135AbfIWCd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 22:33:57 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8N2WsLZ016325, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8N2WsLZ016325
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 23 Sep 2019 10:32:54 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Mon, 23 Sep
- 2019 10:32:53 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sun, 22 Sep 2019 22:34:13 -0400
+Received: from mail-eopbgr40046.outbound.protection.outlook.com ([40.107.4.46]:8483
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404135AbfIWCeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Sep 2019 22:34:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mg4vD9ymds1DhtMIKmBv6QCg2T63Wmf+TEszKqft23a0TYmEe2DLm1QJSi8gUdGgyJ/ztLGrf/60UAfCuXk8HAOPekh6L8YgmA4i9/f8l6F8Z0LwOVd0Qu4K1edxIuiFPjvV92tkRGJgBas1Vb7orefRcLRGcqUqtW8J4IUdhfH8vTAlXsZYpkRW5B3k/zO8MzR5TuDSb2vGi95zWpG97K7lTWlIfqyUhjwQlRgha1xGCrjzRxWkH+lbJQ1jVh4u1WlNaRsDTZYMQj5qayEG6q9J77KzNz1Dyjg7poLbucpq6GWhv79W9cFncRTzKr3RfuaYtcwAdp+JCxOU00GQFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BIB8reF8ZJulh2+Bq0eXH3RvKOKQJBYzvqQ4/KEr0wU=;
+ b=kf02hr2r28BKy60kRRrg2eL/f6K64NoyaPOzGTPsmk/bMcbqgq0XUFkFyGievZCKQSCmAn6DdkCvnRDweO4cgUSB7joCCVLGzeB0ITUX2+p21ykjNbDHpnpxFX8av/mqHWg/3pxwLHqDjNNYBNN70YlrYCc2ykYSkDyTfPhQbmQZ8wnJlIVooZ7Cgz5BAZKJKw7ItvBAA3S6YSXYErs6IoEmJgeR7L+4Aj+zqvOYG9ZntPwkwOug1oPv3u10pRdoGh1pcPbSdj76vNfRRm9rR1bW3SqPqfdnD11jSSRlJG4CZtsumPd05JwfL9FA+SfxLNRL7O/gMFwAzWSyVw0/8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BIB8reF8ZJulh2+Bq0eXH3RvKOKQJBYzvqQ4/KEr0wU=;
+ b=VeY2Vi3Nlf/WGhISQCqZPdHK0NKwcOeog/omtNVTxPAhFVsrNiE7fb/5GN9cB6ZNs5TBgXoPJHKfCsFbQw7EtqiGmPkoH4H/gXB/DSbcDUI8zGeXkZ13GLRLHin70IIz49mPqLXFN8RPrVreS8RHb/lOHTHE9vWZ5EpRd1WI2Zo=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3945.eurprd04.prod.outlook.com (52.134.65.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Mon, 23 Sep 2019 02:34:07 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
+ 02:34:07 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Thierry Reding" <treding@nvidia.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        "Rob Herring" <robh@kernel.org>,
-        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Subject: RE: [PATCH] ARM: Add support for Realtek SOC
-Thread-Topic: [PATCH] ARM: Add support for Realtek SOC
-Thread-Index: AQHVY67V+8blpY45FUyr2dN3mgK/RqccOwQAgAf67ACAAW8fgIAABQEAgBI1EbA=
-Date:   Mon, 23 Sep 2019 02:32:52 +0000
-Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8E7CEE@RTITMBSVM04.realtek.com.tw>
-References: <20190905054647.1235-1-james.tai@realtek.com>
- <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
- <43B123F21A8CFE44A9641C099E4196FFCF8DA1D0@RTITMBSVM04.realtek.com.tw>
- <CAK8P3a39VrC1Xn+HZc5gvh1-nUYKywDGjTfO9WPCqim89WtGAg@mail.gmail.com>
- <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
-In-Reply-To: <CAK7LNATpbAMGU1u6T_1tX57mHbCR-57q+kDwXMOHAJ2R5kvfrg@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Thread-Topic: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Thread-Index: AQHVYfv+INaxBRtrokqtKaL9fDhNpqc3/ZaAgACs9fA=
+Date:   Mon, 23 Sep 2019 02:34:07 +0000
+Message-ID: <DB3PR0402MB3916F48DA2A16E57C624432BF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <20190922161415.GD1999@bug>
+In-Reply-To: <20190922161415.GD1999@bug>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 82796835-2c6a-456e-12ce-08d73fce825a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3945;
+x-ms-traffictypediagnostic: DB3PR0402MB3945:|DB3PR0402MB3945:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB39453BEC49A7526822837F8CF5850@DB3PR0402MB3945.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0169092318
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(189003)(199004)(256004)(6436002)(305945005)(8676002)(66446008)(66476007)(64756008)(76116006)(66946007)(66556008)(25786009)(476003)(11346002)(81166006)(14454004)(5660300002)(71200400001)(71190400001)(81156014)(6916009)(26005)(86362001)(7736002)(478600001)(7416002)(74316002)(8936002)(76176011)(6506007)(186003)(9686003)(52536014)(33656002)(7696005)(3846002)(486006)(6246003)(102836004)(99286004)(66066001)(4326008)(44832011)(55016002)(2906002)(316002)(54906003)(446003)(6116002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3945;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eYvOSZWaT2i+bXf8YtdrpBVstRzdWnVy3aF6Z4SjJWMS6NVS+4cak2NgxasN++EtpZnxTLoXh+bsM8aKaFrBdaNiUuCmZtNRK2nSt94IlkFIA7rC4wenUj5W5d8XXs5M20uoc7+qTNBG//I1YD0W9QnQxDGMSOlXDb+NjELTYwNZQSM333YPNPMb2GhCVZQlqx45W4DEPernFq0ntQcVRHezFgqE4b+1IRlejLH16uQWLIGlVtMOyMQ3KAkH8NVnp3qYlXM04XSa40jao1WF1EX2V5q8J4ZJ2hRZQ57sALhvYy/Vcx8VAosukI5sMs4oliQ3HNTn3oBddYKG8TjKFfF4hd7KjUwSA3g30oVftgYd8NL39zDCzS0msgqOnFf4uJzxshnSuNRBcaByB30eFUpkm5lF+QMDYo/MmVMHddE=
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82796835-2c6a-456e-12ce-08d73fce825a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 02:34:07.7689
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Jh5FZn2/A0J4G8IN0IlN2v5qppsDBDo9nvOQhd5NX7ZAy5Df1RYHS90/i6YZaLARo7bNV0bcBRT9dyGnInxTPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3945
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IEFkZCBzdXBwb3J0IGZvciBSZWFsdGVrIFNPQw0K
-PiANCj4gT24gV2VkLCBTZXAgMTEsIDIwMTkgYXQgNToxNyBQTSBBcm5kIEJlcmdtYW5uIDxhcm5k
-QGFybmRiLmRlPiB3cm90ZToNCj4gPg0KPiA+IE9uIFdlZCwgU2VwIDExLCAyMDE5IGF0IDk6NDYg
-QU0gSmFtZXMgVGFpW+aItOW/l+WzsF0NCj4gPGphbWVzLnRhaUByZWFsdGVrLmNvbT4gd3JvdGU6
-DQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogQWRkIHN1cHBvcnQgZm9yIFJlYWx0
-ZWsgU09DDQo+ID4NCj4gPiA+ID4gPiBAQCAtMTQ4LDYgKzE0OCw3IEBAIGVuZGlmDQo+ID4gPiA+
-ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004WDYwKSA6PSAweDAwMjA4MDAwDQo+ID4gPiA+
-ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NU004OTYwKSA6PSAweDAwMjA4MDAwDQo+ID4gPiA+
-ID4gIHRleHRvZnMtJChDT05GSUdfQVJDSF9NRVNPTikgOj0gMHgwMDIwODAwMA0KPiA+ID4gPiA+
-ICt0ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfUkVBTFRFSykgOj0gMHgwMDIwODAwMA0KPiA+ID4gPiA+
-ICB0ZXh0b2ZzLSQoQ09ORklHX0FSQ0hfQVhYSUEpIDo9IDB4MDAzMDgwMDANCj4gPiA+ID4NCj4g
-PiA+ID4gQ2FuIHlvdSBleHBsYWluIHdoeSB0aGlzIGlzIG5lZWRlZCBmb3IgeW91ciBwbGF0Zm9y
-bT8NCj4gPiA+ID4NCj4gPiA+IFdlIG5lZWQgdG8gcmVzZXJ2ZSBtZW1vcnkgKDB4MDAwMDAwMDAg
-fiAweDAwMUIwMDAwKSBmb3Igcm9tIGFuZCBib290DQo+IGNvZGUuDQo+ID4NCj4gPiBPay4NCj4g
-DQo+IA0KPiBJIGRvIG5vdCBsaWtlIHRoaXMgbXVjaC4NCj4gDQo+IFRoaXMgcGxhdGZvcm0gaXMg
-QVJDSF9NVUxUSV9WNy4NCj4gDQo+IEFSTV9QQVRDSF9QSFlTX1ZJUlQgYWxsb3dzIHlvdSB0byBw
-bGFjZSB0aGUga2VybmVsIGltYWdlIGFueXdoZXJlIGluDQo+IG1lbW9yeSBhcyBsb25nIGFzIHRo
-ZSBiYXNlIGlzIGFsaWduZWQgYXQgMTZNQi4NCj4gDQo+IFRoZSBtaW5pbXVtICd0ZXh0b2ZzLXkg
-Oj0gMHgwMDA4MDAwJyArIGV4dHJhIDE2TUIgb2Zmc2V0IHdpbGwgY3JlYXRlIGEgc3BhY2UNCj4g
-KDB4MDAwMDAwMDAgfiAweDAxMDA4MDAwKS4NCj4gDQo+IFRoaXMgaXMgbW9yZSB0aGFuIG5lZWRl
-ZCwgYnV0IGl0IGlzIG5vdCBhIGJpZyBkZWFsIHRvIHdhc3RlIHNvbWUgbWVnYWJ5dGVzIG9mDQo+
-IG1lbW9yeS4NCj4gDQoNCk9LLiBJIHVuZGVyc3RhbmQuDQoNCj4gLS0NCj4gQmVzdCBSZWdhcmRz
-DQo+IE1hc2FoaXJvIFlhbWFkYQ0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZp
-cm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
+SGksIFBhdmVsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMiAxLzVdIGR0LWJpbmRpbmdzOiBm
+c2w6IHNjdTogYWRkIHNjdSBwb3dlciBrZXkgYmluZGluZw0KPiANCj4gT24gVHVlIDIwMTktMDkt
+MDMgMTA6MDM6NDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IE5YUCBpLk1YOFFYUCBpcyBhbiBB
+Uk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lkZSBhcyBzeXN0ZW0NCj4gPiBjb250
+cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9mIHN5c3RlbSBwb3dl
+ciwgY2xvY2sNCj4gPiBhbmQgcG93ZXIga2V5IGV2ZW50IGV0Yy4gbWFuYWdlbWVudCwgTGludXgg
+a2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZQ0KPiA+IHdpdGggc3lzdGVtIGNvbnRyb2xsZXIgdmlh
+IE1VIChtZXNzYWdlIHVuaXQpIElQQyB0byBnZXQgcG93ZXIga2V5DQo+ID4gZXZlbnQsIGFkZCBi
+aW5kaW5nIGRvYyBmb3IgaS5NWCBzeXN0ZW0gY29udHJvbGxlciBwb3dlciBrZXkgZHJpdmVyLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBWMToNCj4gPiAJLSByZW1vdmUgIndha2V1cC1z
+b3VyY2UiIHByb3BlcnR5LCBhcyBpdCBpcyBOT1QgbmVlZGVkIGZvciBTQ1UNCj4gaW50ZXJydXB0
+Ow0KPiA+IAktIHJlbW92ZSAic3RhdHVzIiBpbiBleGFtcGxlLg0KPiA+IC0tLQ0KPiA+ICAuLi4v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0ICAgICAgICAgIHwg
+MTQNCj4gKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMo
+KykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IGluZGV4IGMx
+NDlmYWQuLmY5M2UyZTQgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+IEBA
+IC0xNTcsNiArMTU3LDE1IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gIE9wdGlvbmFsIHBy
+b3BlcnRpZXM6DQo+ID4gIC0gdGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1l
+b3V0IGluIHNlY29uZHMuDQo+ID4NCj4gPiArUG93ZXIga2V5IGJpbmRpbmdzIGJhc2VkIG9uIFND
+VSBNZXNzYWdlIFByb3RvY29sDQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVy
+dGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6DQo+ID4gKyAgICAgICAgICAgICAg
+ImZzbCxpbXg4cXhwLXNjLXB3cmtleSINCj4gPiArICAgICAgICAgICAgICBmb2xsb3dlZCBieSAi
+ZnNsLGlteC1zYy1wd3JrZXkiOw0KPiA+ICstIGxpbnV4LGtleWNvZGVzOiBTZWUNCj4gPiArRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L2tleXMudHh0DQo+IA0KPiBOb3Rl
+IHlvdSBoYXZlIGtleWNvZGVfc18gaGVyZSwgYnV0IGtleWNvZGUgaW4gdGhlIGV4YW1wbGUgYW5k
+IGluIHRoZSBkdHMNCj4gcGF0Y2guDQoNCk5PVCBxdWl0ZSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQs
+IGNvdWxkIHlvdSBwbGVhc2UgcHJvdmlkZSBtb3JlIGRldGFpbHM/DQoNClRoYW5rcywNCkFuc29u
+DQo=
