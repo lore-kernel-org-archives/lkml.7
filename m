@@ -2,128 +2,90 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E22C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0731CC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259BB2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zBxpjFaP"
+	by mail.kernel.org (Postfix) with ESMTP id CE6FA2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436896AbfIXOKa (ORCPT
+        id S2441248AbfIXOLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:10:30 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:42548 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409712AbfIXOKa (ORCPT
+        Tue, 24 Sep 2019 10:11:06 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:33563 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436897AbfIXOLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:10:30 -0400
-Received: by mail-wr1-f49.google.com with SMTP id n14so2120057wrw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 07:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=CD8NXjWHXI1PHdT+Yt5q2iCIoHrQv0Ncx4K7iwz1VKY=;
-        b=zBxpjFaP7l2EinUCWp0CpW2Sg1KTXXAkWldWE1wejALSHl3jp0sFDuHfH9Gi2HC2Au
-         kzQ8eNjBepwuBE+WbnhNaJeaA2YgNuzXB5kwhQzzLXinKPvQCT716XwpcJ0OQwEW4Q1k
-         mYBZVNfAVOI9FS3MUBcZFqmEz8BMf5scqsMrQSYS7a0Jda+62JkKZCi45L2ODbr/7ITr
-         EoZCg4hKA2dNdppOt/WLSZcVso9BHBuKo+dAoQSrK79NYYuSijPjb9/ZAnfpmak9bhlW
-         Khimacswau6lOgHXL5Nurct25X6UOV0+d8wHpX6mo9I/A7DTGUsuFceEWn1DJa/iOWon
-         b9dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CD8NXjWHXI1PHdT+Yt5q2iCIoHrQv0Ncx4K7iwz1VKY=;
-        b=VYTmq+obH/icdYDcAdAX3El5+vJcVR21KXVqMC6QSe4gI3LEwgz48SgfSHFlGtL5Zz
-         cFMqZv3pieL7jtnsygKzKDtfMfUJlgmKHhtTdfm57CePh5VyGr8FLLMW9/tzpEuRnNZu
-         J5o2DeA5Hf/wUBgYWm7Nab5fHtnJ7luIZduSWuB5eq1qhWO5YW3iVbFJ2L5w6TzJdpiH
-         colxxydWAFszolfLR9jw2SUmJd0jh4w4GhwZxEwRjH6M8mD4msrcEeKWlIRFmDvWOKd+
-         1FnIBBV+Jcern1ih3hgIdesHpdtvA/JZqxPUStaa3WCX9Rcu+T2i0VIJjRE0ASRn57Wo
-         yTvQ==
-X-Gm-Message-State: APjAAAVtgp5zCf1e6hVKww4gvotCCWZ1gkhOkag00Rab/OlvvI8+v05F
-        nYjAUPIAddwknX48pyk8fT5zbg==
-X-Google-Smtp-Source: APXvYqyxcFFWxlfEByHp+UI2Ozbsm+7ZlCpzeuoY03TS06zxKMIrzCq38xzQB0qK8eF54jJ/spcLAg==
-X-Received: by 2002:adf:e7ca:: with SMTP id e10mr2442564wrn.234.1569334227683;
-        Tue, 24 Sep 2019 07:10:27 -0700 (PDT)
-Received: from localhost (uluru.liltaz.com. [163.172.81.188])
-        by smtp.gmail.com with ESMTPSA id f83sm61195wmf.43.2019.09.24.07.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 07:10:26 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Ankur Tyagi <Ankur.Tyagi@gallagher.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-clk\@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tero Kristo <t-kristo@ti.com>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-amlogic\@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-arm-msm\@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-rockchip\@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-omap\@vger.kernel.org" <linux-omap@vger.kernel.org>
-Subject: RE: [PATCH 2/3] clk: let init callback return an error code
-In-Reply-To: <ME2PR01MB4738B127557AE20F6315AA7FE5840@ME2PR01MB4738.ausprd01.prod.outlook.com>
-References: <20190924123954.31561-1-jbrunet@baylibre.com> <20190924123954.31561-3-jbrunet@baylibre.com> <ME2PR01MB4738B127557AE20F6315AA7FE5840@ME2PR01MB4738.ausprd01.prod.outlook.com>
-Date:   Tue, 24 Sep 2019 16:10:25 +0200
-Message-ID: <1jv9thlr8u.fsf@starbuckisacylon.baylibre.com>
+        Tue, 24 Sep 2019 10:11:05 -0400
+Received: from localhost.localdomain ([93.23.14.234])
+        by mwinf5d19 with ME
+        id 5SB02100B52zbZp03SB1gG; Tue, 24 Sep 2019 16:11:03 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 24 Sep 2019 16:11:03 +0200
+X-ME-IP: 93.23.14.234
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     bharat@chelsio.com, dledford@redhat.com, jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] RDMA/iw_cgxb4: Fix an error handling path in 'c4iw_connect()'
+Date:   Mon, 23 Sep 2019 21:07:46 +0200
+Message-Id: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24 Sep 2019 at 13:38, Ankur Tyagi <Ankur.Tyagi@gallagher.com> wrote:
+We should jump to fail3 in order to undo the 'xa_insert_irq()' call.
 
-> Hi,
->
-> I am no expert here but just looked at the patch and found few
-> discrepancy that I have mentioned inline.
->
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Not sure which Fixes tag to use because of the many refactorings in this
+area. So I've choosen to use none :).
+The issue was already there in 4a740838bf44c. This commit has renamed
+all labels because a new fail1 was introduced. I've not searched further.
 
-[...]
+Naming of error labels should be improved. Having nowadays a fail5
+between fail2 and fail3 (because fail5 was the last
+error handling path added) is not that readable.
+However, it goes beyong the purpose of this patch.
 
->
-> Aren't all functions returning 0 always?
->
+Maybe, just using a fail2a, just as already done in 9f5a9632e412 (which
+introduced fail5) would be enough.
+---
+ drivers/infiniband/hw/cxgb4/cm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes, on purpose. This patch is an API conversion to let the init()
-callback of the clock ops return an error code or 0.
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index e87fc0408470..81440eaf0a00 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -3381,7 +3381,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
+ 		if (raddr->sin_addr.s_addr == htonl(INADDR_ANY)) {
+ 			err = pick_local_ipaddrs(dev, cm_id);
+ 			if (err)
+-				goto fail2;
++				goto fail3;
+ 		}
+ 
+ 		/* find a route */
+@@ -3403,7 +3403,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
+ 		if (ipv6_addr_type(&raddr6->sin6_addr) == IPV6_ADDR_ANY) {
+ 			err = pick_local_ip6addrs(dev, cm_id);
+ 			if (err)
+-				goto fail2;
++				goto fail3;
+ 		}
+ 
+ 		/* find a route */
+-- 
+2.20.1
 
-The patch is not meant to change anything in the prior behavior of the
-clock drivers which is why every exit path return 0 with this change.
-
-IOW, yes there are all returning 0 for now, but it will eventually
-change.
-
-
->>   *
->>   * @debug_init:Set up type-specific debugfs entries for this clock.  This
->>   *is called once, after the debugfs directory entry for this
->> @@ -243,7 +247,7 @@ struct clk_ops {
->>    struct clk_duty *duty);
->>  int(*set_duty_cycle)(struct clk_hw *hw,
->>    struct clk_duty *duty);
->> -void(*init)(struct clk_hw *hw);
->> +int(*init)(struct clk_hw *hw);
->>  void(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
->>  };
->>
->> --
->> 2.21.0
->
-> ________________________________
->  This email is confidential and may contain information subject to legal privilege. If you are not the intended recipient please advise us of our error by return e-mail then delete this email and any attached files. You may not copy, disclose or use the contents in any way. The views expressed in this email may not be those of Gallagher Group Ltd or subsidiary companies thereof.
-> ________________________________
