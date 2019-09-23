@@ -2,95 +2,84 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B74C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AF7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3101A206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB1A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 19:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IWsVG8Im"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RvF0xvcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502439AbfIWTuh (ORCPT
+        id S2502446AbfIWTv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 15:50:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51074 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbfIWTug (ORCPT
+        Mon, 23 Sep 2019 15:51:27 -0400
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:40938 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfIWTv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:50:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eUUUPJp8Q+5PlAv7/AOGceOtoVnI1K3PZLVv987cVRU=; b=IWsVG8Im3Z8uUrSD/S3h+TdHQ
-        xHv1A9gVSzgMJ+kavZxPZT1xVWv/jjm2sfWSXfFzdZXciz5sTxLQIXQbckhIgFNYBWXOW56MeYtce
-        RDRk8PXLYa9JQjzqNAneuoj1DvrREkcaGQzDzLU/3LMcEVdSMIHU76lE/eq38yRXFCg081K4ExSo1
-        3FzbuLuNzJemUVQmfTaqi81/oFTUI+Th3OPTWOS6vX+oxZcGfA5LtBulYnbTXPP5bCHavi6YOqx9z
-        e56+yGYscXzBmfqZYNNhNJZMvVMvRWVJ5BD1Js8eMwTSDhc/tN/DGap0FCPAVWCU6SvBatYXJP2Hz
-        KnM7z0gbQ==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCULM-0004hv-CB; Mon, 23 Sep 2019 19:49:56 +0000
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
- KUnit
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Felix Guo <felixguoxiuping@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com>
- <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
- <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
-Date:   Mon, 23 Sep 2019 12:49:54 -0700
+        Mon, 23 Sep 2019 15:51:27 -0400
+Received: by mail-pl1-f175.google.com with SMTP id d22so6944922pll.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 12:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pvonEcCzxrOzVmnLLiSvnHsK/n4PyoTSVxNoNMSLtQE=;
+        b=RvF0xvcBpWSY04xjtnau7M91nps87eOT9SCjg69WURxqqzzAigzyXdYDaAwRjtk0FP
+         j9klXFbb/0n1Y5HHQNeaK2IAmYggBcZ/JBrpLJ5K3TR/Xes5gQ1UzfTAXA9McXNAfwjr
+         iuT2swg4/dwxVxAxeTtGOPmjL3Pdk9gphmyfzYFHA6vSQemzitmbYjttIlCCf/KjXCUn
+         Y2W2eCVhuu2Gjy4Cc1MJ9y9glWCB+2MqIsrm7ckXoFf23B4Yr3ugH2/VJzZRqHz1rHaa
+         aGtHMBZ/qI+LDLnbSY7mkiBmu7Ocu+71Etz09XKWg+8/yilYpMiv3HSKARYKOloD/YCZ
+         3xZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pvonEcCzxrOzVmnLLiSvnHsK/n4PyoTSVxNoNMSLtQE=;
+        b=API1QSr94WJlxKbc68FyO84/kZhO1Hd2jfKbYGtQhpMZm7AUDpa1UMPB4SSwk6cFO5
+         Pz6zZu7GOY/ztKJKvaVx001W6d3awERjNUcWFUbvRkqyxnlORdBTwDNB++5AwR7Vwzri
+         bgjpi3vP+9QNL+5R9xupDBrmQkcAbD7r2CGTdsENsd70NfkxrJdMacC+aVgs53gZkHDJ
+         s8c9QMPhF6W1gHyUpYBQmtRemNpOp1svyHdw/34Rj4SqtXlZGQVsQpg7qPrFSw6OiQYc
+         d3wyu5tme+vm1qF9wyk9PjgMwGQmhikmkRv2zIrBvquMeCKrgpbIaeaR3qloaO9WKwqo
+         9yQw==
+X-Gm-Message-State: APjAAAVBVs+yBZRIl/V5aGrqGZvASHUSAhAiFlt2MtV8rMF+/Q4b7m3M
+        xIFSm6znL+9wnPeu1R83Wbn2VQ==
+X-Google-Smtp-Source: APXvYqyBSU6OJVhkVbCaDlQ8RW9Dmt2OhhDjODmaRa7nHIphHO6r5fIvZNOhq7vN4Aeh5gaO6mDOlw==
+X-Received: by 2002:a17:902:8303:: with SMTP id bd3mr1405130plb.273.1569268284883;
+        Mon, 23 Sep 2019 12:51:24 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id c64sm21133426pfc.19.2019.09.23.12.51.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 12:51:24 -0700 (PDT)
+Subject: Re: Is congestion broken?
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Lin Feng <linf@wangsu.com>, Michal Hocko <mhocko@kernel.org>,
+        corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        keescook@chromium.org, mchehab+samsung@kernel.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, Omar Sandoval <osandov@fb.com>,
+        Ming Lei <ming.lei@redhat.com>
+References: <20190917115824.16990-1-linf@wangsu.com>
+ <20190917120646.GT29434@bombadil.infradead.org>
+ <20190918123342.GF12770@dhcp22.suse.cz>
+ <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
+ <20190919034949.GF9880@bombadil.infradead.org>
+ <20190923111900.GH15392@bombadil.infradead.org>
+ <45d8b7a6-8548-65f5-cccf-9f451d4ae3d4@kernel.dk>
+ <20190923194509.GC1855@bombadil.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ce7975cd-6353-3f29-b52c-7a81b1d07caa@kernel.dk>
+Date:   Mon, 23 Sep 2019 13:51:21 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+In-Reply-To: <20190923194509.GC1855@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -99,135 +88,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 11:06 AM, Brendan Higgins wrote:
-> On Mon, Sep 23, 2019 at 8:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 9/23/19 2:02 AM, Brendan Higgins wrote:
->>> Add documentation for KUnit, the Linux kernel unit testing framework.
->>> - Add intro and usage guide for KUnit
->>> - Add API reference
+On 9/23/19 1:45 PM, Matthew Wilcox wrote:
+> On Mon, Sep 23, 2019 at 01:38:23PM -0600, Jens Axboe wrote:
+>> On 9/23/19 5:19 AM, Matthew Wilcox wrote:
 >>>
->>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
->>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>> Cc: Jonathan Corbet <corbet@lwn.net>
->>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->>> ---
->>>  Documentation/dev-tools/index.rst           |   1 +
->>>  Documentation/dev-tools/kunit/api/index.rst |  16 +
->>>  Documentation/dev-tools/kunit/api/test.rst  |  11 +
->>>  Documentation/dev-tools/kunit/faq.rst       |  62 +++
->>>  Documentation/dev-tools/kunit/index.rst     |  79 +++
->>>  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
->>>  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
->>>  7 files changed, 925 insertions(+)
->>>  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/faq.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/index.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/start.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/usage.rst
+>>> Ping Jens?
+>>>
+>>> On Wed, Sep 18, 2019 at 08:49:49PM -0700, Matthew Wilcox wrote:
+>>>> On Thu, Sep 19, 2019 at 10:33:10AM +0800, Lin Feng wrote:
+>>>>> On 9/18/19 20:33, Michal Hocko wrote:
+>>>>>> I absolutely agree here. From you changelog it is also not clear what is
+>>>>>> the underlying problem. Both congestion_wait and wait_iff_congested
+>>>>>> should wake up early if the congestion is handled. Is this not the case?
+>>>>>
+>>>>> For now I don't know why, codes seem should work as you said, maybe I need to
+>>>>> trace more of the internals.
+>>>>> But weird thing is that once I set the people-disliked-tunable iowait
+>>>>> drop down instantly, this is contradictory to the code design.
+>>>>
+>>>> Yes, this is quite strange.  If setting a smaller timeout makes a
+>>>> difference, that indicates we're not waking up soon enough.  I see
+>>>> two possibilities; one is that a wakeup is missing somewhere -- ie the
+>>>> conditions under which we call clear_wb_congested() are wrong.  Or we
+>>>> need to wake up sooner.
+>>>>
+>>>> Umm.  We have clear_wb_congested() called from exactly one spot --
+>>>> clear_bdi_congested().  That is only called from:
+>>>>
+>>>> drivers/block/pktcdvd.c
+>>>> fs/ceph/addr.c
+>>>> fs/fuse/control.c
+>>>> fs/fuse/dev.c
+>>>> fs/nfs/write.c
+>>>>
+>>>> Jens, is something supposed to be calling clear_bdi_congested() in the
+>>>> block layer?  blk_clear_congested() used to exist until October 29th
+>>>> last year.  Or is something else supposed to be waking up tasks that
+>>>> are sleeping on congestion?
 >>
->>
->>> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
->>> new file mode 100644
->>> index 000000000000..6dc229e46bb3
->>> --- /dev/null
->>> +++ b/Documentation/dev-tools/kunit/start.rst
->>> @@ -0,0 +1,180 @@
->>> +.. SPDX-License-Identifier: GPL-2.0
->>> +
->>> +===============
->>> +Getting Started
->>> +===============
->>> +
->>> +Installing dependencies
->>> +=======================
->>> +KUnit has the same dependencies as the Linux kernel. As long as you can build
->>> +the kernel, you can run KUnit.
->>> +
->>> +KUnit Wrapper
->>> +=============
->>> +Included with KUnit is a simple Python wrapper that helps format the output to
->>> +easily use and read KUnit output. It handles building and running the kernel, as
->>> +well as formatting the output.
->>> +
->>> +The wrapper can be run with:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +   ./tools/testing/kunit/kunit.py run
->>> +
->>> +Creating a kunitconfig
->>> +======================
->>> +The Python script is a thin wrapper around Kbuild as such, it needs to be
->>
->>                                        around Kbuild. As such,
+>> Congestion isn't there anymore. It was always broken as a concept imho,
+>> since it was inherently racy. We used the old batching mechanism in the
+>> legacy stack to signal it, and it only worked for some devices.
 > 
-> Thanks for pointing this out.
-> 
->>
->>> +configured with a ``kunitconfig`` file. This file essentially contains the
->>> +regular Kernel config, with the specific test targets as well.
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
->>> +     cd $PATH_TO_LINUX_REPO
->>> +     ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
->>> +
->>> +You may want to add kunitconfig to your local gitignore.
->>> +
->>> +Verifying KUnit Works
->>> +---------------------
->>> +
->>> +To make sure that everything is set up correctly, simply invoke the Python
->>> +wrapper from your kernel repo:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     ./tools/testing/kunit/kunit.py
->>> +
->>> +.. note::
->>> +   You may want to run ``make mrproper`` first.
->>
->> I normally use O=builddir when building kernels.
->> Does this support using O=builddir ?
-> 
-> Yep, it supports specifying a separate build directory.
-> 
->>> +
->>> +If everything worked correctly, you should see the following:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     Generating .config ...
->>> +     Building KUnit Kernel ...
->>> +     Starting KUnit Kernel ...
->>> +
->>> +followed by a list of tests that are run. All of them should be passing.
->>> +
->>> +.. note::
->>> +   Because it is building a lot of sources for the first time, the ``Building
->>> +   kunit kernel`` step may take a while.
->>> +
->>> +Writing your first test
->>> +=======================
->>
->> [snip]
->>
->>> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
->>> new file mode 100644
->>> index 000000000000..c6e69634e274
->>> --- /dev/null
->>> +++ b/Documentation/dev-tools/kunit/usage.rst
->>
->> TBD...
-> 
-> What did you mean by this comment?
+> Umm.  OK.  Well, something that used to work is now broken.  So how
 
-I plan to review usage.rst soon... (To Be Done :)
+It didn't really...
+
+> should we fix it?  Take a look at shrink_node() in mm/vmscan.c.  If we've
+> submitted a lot of writes to a device, and overloaded it, we want to
+> sleep until it's able to take more writes:
+> 
+>                  /*
+>                   * Stall direct reclaim for IO completions if underlying BDIs
+>                   * and node is congested. Allow kswapd to continue until it
+>                   * starts encountering unqueued dirty pages or cycling through
+>                   * the LRU too quickly.
+>                   */
+>                  if (!sc->hibernation_mode && !current_is_kswapd() &&
+>                     current_may_throttle() && pgdat_memcg_congested(pgdat, root))
+>                          wait_iff_congested(BLK_RW_ASYNC, HZ/10);
+> 
+> With a standard block device, that now sleeps until the timeout (100ms)
+> expires, which is far too long for a modern SSD but is probably tuned
+> just right for some legacy piece of spinning rust (or indeed a modern
+> USB stick).  How would the block layer like to indicate to the mm layer
+> "I am too busy, please let the device work for a bit"?
+
+Maybe base the sleep on the bdi write speed? We can't feasibly tell you
+if something is congested. It used to sort of work on things like sata
+drives, since we'd get congested when we hit the queue limit and that
+wasn't THAT far off with reality. Didn't work on SCSI with higher queue
+depths, and certainly doesn't work on NVMe where most devices have very
+deep queues.
+
+Or we can have something that does "sleep until X requests/MB have been
+flushed", something that the vm would actively call. Combined with a
+timeout as well, probably.
+
+For the vm case above, it's further complicated by it being global
+state. I think you'd be better off just making the delay smaller.  100ms
+is an eternity, and 10ms wakeups isn't going to cause any major issues
+in terms of CPU usage. If we're calling the above wait_iff_congested(),
+it better because we're otherwise SOL.
 
 -- 
-~Randy
+Jens Axboe
+
