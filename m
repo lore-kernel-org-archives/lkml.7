@@ -2,275 +2,113 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D48CC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41D9C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688E820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LZhI9SgU"
+	by mail.kernel.org (Postfix) with ESMTP id A3FF620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440057AbfIWOpz (ORCPT
+        id S2440068AbfIWOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:45:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52596 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437697AbfIWOpz (ORCPT
+        Mon, 23 Sep 2019 10:47:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42280 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438206AbfIWOrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:45:55 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8NEjoWu108889;
-        Mon, 23 Sep 2019 09:45:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569249950;
-        bh=KNjuOX+vwg6GtwTQNfFD1HZBpvPavaNQbyRLTvz612Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LZhI9SgUPNBO+xnYBpS5ULVjqcqVRdqyeOlY+eHUTykb4AL6YNMAu1mbLxIE22rlj
-         uxO7/Jdi9q2hzk0xAmN4Jv74FQNZQt9CJBetVp8sQ0hXkpUbRDENdeyp44/VFkssoP
-         yHvw1PrRsv7icCfBOvZ+xZKvD8fvhqppfiSMj/5Q=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8NEjo75112345
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Sep 2019 09:45:50 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 23
- Sep 2019 09:45:44 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 23 Sep 2019 09:45:49 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8NEjnpL015659;
-        Mon, 23 Sep 2019 09:45:49 -0500
-Subject: Re: [PATCH v8 2/9] documention: leds: Add multicolor class
- documentation
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-3-dmurphy@ti.com>
- <2f2d40d7-aa4f-a38d-19a7-425a111adb64@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <56d9a7a6-7cdb-8ac0-5e41-f45fad914c55@ti.com>
-Date:   Mon, 23 Sep 2019 09:50:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 10:47:39 -0400
+Received: from [172.58.27.190] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCPcd-000393-Is; Mon, 23 Sep 2019 14:47:28 +0000
+Date:   Mon, 23 Sep 2019 16:47:13 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: For review: pidfd_open(2) manual page
+Message-ID: <20190923144711.ssbrg6bdquhewo7q@wittgenstein>
+References: <90399dee-53d8-a82c-3871-9ec8f94601ce@gmail.com>
+ <87tv939td6.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-In-Reply-To: <2f2d40d7-aa4f-a38d-19a7-425a111adb64@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87tv939td6.fsf@mid.deneb.enyo.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Mon, Sep 23, 2019 at 12:53:09PM +0200, Florian Weimer wrote:
+> * Michael Kerrisk:
+> 
+> > SYNOPSIS
+> >        int pidfd_open(pid_t pid, unsigned int flags);
+> 
+> Should this mention <sys/types.h> for pid_t?
+> 
+> > ERRORS
+> >        EINVAL flags is not 0.
+> >
+> >        EINVAL pid is not valid.
+> >
+> >        ESRCH  The process specified by pid does not exist.
+> 
+> Presumably, EMFILE and ENFILE are also possible errors, and so is
+> ENOMEM.
 
-Thanks for the review
+So, error codes that could surface are:
+EMFILE: too many open files
+ENODEV: the anon inode filesystem is not available in this kernel (unlikely)
+ENOMEM: not enough memory (to allocate the backing struct file)
+ENFILE: you're over the max_files limit which can be set through proc
 
-On 9/21/19 7:28 AM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/20/19 7:41 PM, Dan Murphy wrote:
->> Add the support documentation on the multicolor LED framework.
->> This document defines the directores and file generated by the
-> Now there will be one directory created.
->
-> Apart from that - all documentation should go in the same patch
-> as the feature being added. So patches 1,2 and 3 should be melded
-> together.
+I think that should be it.
 
-I think only patches 1 & 2 should be squashed into a single patch.
+> 
+> >        A  PID  file descriptor can be monitored using poll(2), select(2),
+> >        and epoll(7).  When the process that it refers to terminates,  the
+> >        file descriptor indicates as readable.  Note, however, that in the
+> >        current implementation, nothing can be read from the file descrip‐
+> >        tor.
+> 
+> “is indicated as readable” or “becomes readable”?  Will reading block?
+> 
+> >        The  pidfd_open()  system call is the preferred way of obtaining a
+> >        PID file descriptor.  The alternative is to obtain a file descrip‐
+> >        tor by opening a /proc/[pid] directory.  However, the latter tech‐
+> >        nique is possible only if the proc(5) file system is mounted; fur‐
+> >        thermore,  the  file  descriptor  obtained in this way is not pol‐
+> >        lable.
+> 
+> One question is whether the glibc wrapper should fall back back to the
+> /proc subdirectory if it is not available.  Probably not.
 
-Patch 3 are the dt-bindings which should be separated
+No, that would not be transparent to userspace. Especially because both
+fds differ in what can be done with them.
 
+> 
+> >        static
+> >        int pidfd_open(pid_t pid, unsigned int flags)
+> >        {
+> >            return syscall(__NR_pidfd_open, pid, flags);
+> >        }
+> 
+> Please call this function something else (not pidfd_open), so that the
+> example continues to work if glibc provides the system call wrapper.
 
->
->> multicolor framework.  It also documents usage.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   Documentation/leds/index.rst                 |  1 +
->>   Documentation/leds/leds-class-multicolor.rst | 91 ++++++++++++++++++++
->>   2 files changed, 92 insertions(+)
->>   create mode 100644 Documentation/leds/leds-class-multicolor.rst
->>
->> diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
->> index 060f4e485897..bc70c6aa7138 100644
->> --- a/Documentation/leds/index.rst
->> +++ b/Documentation/leds/index.rst
->> @@ -9,6 +9,7 @@ LEDs
->>   
->>      leds-class
->>      leds-class-flash
->> +   leds-class-multicolor
->>      ledtrig-oneshot
->>      ledtrig-transient
->>      ledtrig-usbport
->> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
->> new file mode 100644
->> index 000000000000..063c9a411a1d
->> --- /dev/null
->> +++ b/Documentation/leds/leds-class-multicolor.rst
->> @@ -0,0 +1,91 @@
->> +====================================
->> +Multi Color LED handling under Linux
->> +====================================
->> +
->> +Description
->> +===========
->> +There are varying monochrome LED colors available for application.  These
->> +LEDs can be used as a single use case LED or can be mixed with other color
->> +LEDs to produce the full spectrum of color.
-> I'd say it won't be the most frequent use case. We can expect rather
-> compound RGB, RGBA[UV] etc. LED elements being connected to iouts of
-> multi color LED controllers like LP50xx. TI mentions RGB LEDs in its
-> application notes for instance. I'd mention that in the first place
-> and leave what you have above as another use case.
-
-Which application notes are you referring to?
-
-
->> Color LEDs that are grouped
->> +can be presented under a single LED node with individual color control.
-> Let's skip "with individual color control". This is rather a means for
-> keeping backward compatibility. Main goal of the MC class is multi color
-> control. We can elaborate on how individual control can be achieved,
-> namely one needs to set brightness to max and then can use
-> the whole 0-<color>_max_intensity intensity scale for given iout.
-> But his can be implied from the information provided below.
-
-Ack
-
-
->> +The multicolor class groups these LEDs and allows dynamically setting the value
-> What does "dynamically" stand for here? I assume you thought of altering
-> colors without changing global brightness, but now it is not the case.
-
-I updated this from what you said below
-
-
->> +of a single LED or setting the intensity values of the LEDs in the group and
->> +updating the LEDs virtually simultaneously.
-> I propose below instead of the above three lines:
->
-> The multi color class groups these LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via <color>_intensity files and the latter is controlled
-> via brightness file.
->
-> For more details on hue and lightness notions please refer to
-> https://en.wikipedia.org/wiki/CIECAM02.
->
-> Note that intensity files only cache the written value and the actual
-> change of hardware state occurs upon writing brightness file. This
-> allows for changing many factors of the perceived color in a virtually
-> unnoticeable way for the human observer.
-
-Ack
-
-
->> +Multicolor Class Control
->> +========================
->> +The multicolor class presents the LED groups under a directory called "colors".
->> +This directory is a child under the LED parent node created by the led_class
->> +framework.  The led_class framework is documented in led-class.rst within this
->> +documentation directory.
->> +
->> +Each colored LED will have two files created under the colors directory
->> +<led_color>_intensity and <led_color>_max_intensity. These files will contain
-> s/led_color/color/
-Ack
->
->> +one of LED_COLOR_ID_* definitions from the header
->> +include/dt-bindings/leds/common.h.
->> +
->> +Directory Layout Example
->> +========================
->> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
->> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
->> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
->> +
->> +Multicolor Class Brightness Control
->> +===================================
->> +The multiclor class framework will calculate each monochrome LEDs intensity.
->> +
->> +The brightness level for each LED is calculated based on the color LED
->> +intensity setting divided by the color LED max intensity setting multiplied by
->> +the requested value.
-> s/value/brightness/
-
-Ack
-
-
->> +
->> +led_brightness = requested_value * led_color_intensity/led_color_max_intensity
-> led_brightness = brightness * <color>_intensity/<color>_max_intensity
-
-Ack
-
-
->> +
->> +Example:
->> +Three LEDs are present in the group as defined in "Directory Layout Example"
->> +within this document.
->> +
->> +A user first writes the color LED brightness file with the brightness level that
->> +is necessary to achieve a blueish violet output from the RGB LED group.
->> +
->> +echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
->> +echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
->> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
->> +
->> +red -
->> +	intensity = 138
->> +	max_intensity = 255
->> +green -
->> +	intensity = 43
->> +	max_intensity = 255
->> +blue -
->> +	intensity = 226
->> +	max_intensity = 255
->> +
->> +The user can control the brightness of that RGB group by writing the parent
->> +'brightness' control.  Assuming a parent max_brightness of 255 the user may want
->> +to dim the LED color group to half.  The user would write a value of 128 to the
->> +parent brightness file then the values written to each LED will be adjusted
->> +base on this value
->> +
->> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
->> +255
->> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
->> +
->> +adjusted_red_value = 128 * 138/255 = 69
->> +adjusted_green_value = 128 * 43/255 = 21
->> +adjusted_blue_value = 128 * 226/255 = 113
->> +
->> +Reading the parent brightness file will return the current brightness value of
->> +the color LED group.
->> +
->> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
->> +255
->> +
->> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
->> +
->> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
-> s/max_brightness/brightness/
->
-Ack
-
-Dan
-
->> +128
->>
+Agreed!
