@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D3DC32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A795AC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B1220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDE220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbfIWO44 (ORCPT
+        id S1731563AbfIWO5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:56:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58823 "EHLO
+        Mon, 23 Sep 2019 10:57:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58810 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbfIWO4s (ORCPT
+        with ESMTP id S1731270AbfIWO4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 10:56:48 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1iCPlf-0007as-Fz; Mon, 23 Sep 2019 16:56:47 +0200
-Message-Id: <20190923145528.963075294@linutronix.de>
+        id 1iCPle-0007ae-Mn; Mon, 23 Sep 2019 16:56:46 +0200
+Message-Id: <20190923145528.764987925@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 23 Sep 2019 16:54:41 +0200
+Date:   Mon, 23 Sep 2019 16:54:39 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
@@ -34,9 +34,10 @@ Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
         Ingo Molnar <mingo@kernel.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Michael Kerrisk <mtk.manpages@googlemail.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [patch V2 6/6] posix-cpu-timers: Return -EPERM if ptrace permission
- check fails
+        Kees Cook <keescook@chromium.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [patch V2 4/6] posix-cpu-timers: Make PID=0 and PID=self handling
+ consistent
 References: <20190923145435.507024424@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,50 +46,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Returning -EINVAL when a permission check fails is not really intuitive and
-can cause hard to diagnose problems.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-The POSIX specification for clock_gettime() and timer_create() requires to
-obtain the clock id first by invoking clock_getcpuclockid().
+If the PID encoded into the clock id is 0 then the target is either the
+calling thread itself or the process to which it belongs.
 
-clock_getcpuclockid() can return -EPERM if the caller does not have
-permissions. That does not make sense in two aspects:
+If the current thread encodes its own PID on a process wide clock then
+there is no reason not to treat it in the same way as the PID=0 case.
 
- - Nothing prevents the caller to make up a clockid and feed it into the
-   syscalls
-
- - clock_getcpuclockid() is a helper function in glibc which just mangles
-   the PID/TID bits to the proper place and glibc cannot do any permission
-   checks at all for this function.
-
-In order to prevent abuse the kernel has to do the permission checking in
-timer_create() and clock_gettime(). Those functions have only -EINVAL as
-documented return values, but returning -EINVAL for a valid clockid when
-the permission check fails is not understandable for programmers.
-
-So ignore the POSIX specification and return -EPERM when the ptrace
-permission check fails.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-V2: New patch.
-
-TODO: Update timer_create.2 and clock_gettime.2 manpages
+V2: Remove the extra same_thread_group() check which is pointless.
 ---
- kernel/time/posix-cpu-timers.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -107,7 +107,7 @@ static struct task_struct *lookup_task(c
+@@ -90,18 +90,20 @@ static struct task_struct *lookup_task(c
+ 
+ 	} else {
+ 		/*
++		 * Timer is going to be attached to a process. If p is
++		 * current then treat it like the PID=0 case above.
++		 * This also avoids the ptrace overhead.
++		 */
++		if (p == current)
++			return current->group_leader;
++
++		/*
+ 		 * Process wide timers need the group leader because they
+ 		 * take a reference on it and store the task pointer until
+ 		 * the timer is destroyed.
+ 		 */
+ 		if (!has_group_leader_pid(p))
+ 			return NULL;
+-
+-		/*
+-		 * Avoid the ptrace overhead when this is current's process
+-		 */
+-		if (same_thread_group(p, current))
+-			return p;
  	}
  
  	/* Decide based on the ptrace permissions. */
--	return ptrace_may_access(p, mode) ? p : ERR_PTR(-EINVAL);
-+	return ptrace_may_access(p, mode) ? p : ERR_PTR(-EPERM);
- }
- 
- static struct task_struct *__get_task_for_clock(const clockid_t clock,
 
 
