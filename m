@@ -2,199 +2,150 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8582C4CED0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F9C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB55205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WDxDdSVt"
+	by mail.kernel.org (Postfix) with ESMTP id 2C4152089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbfIWPsf (ORCPT
+        id S2387484AbfIWPtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:48:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38498 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbfIWPse (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:48:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M6naaO3eN2JtKgsodjGmbFEb7omduasR6eHtDOBj/YU=; b=WDxDdSVtxB4MQheuYDglZVo77
-        ITnMkIz7R+0s/TcK9u0iB564ZvSW2OG/lJv1lRwdjnxBatB+wSX35svuC1yd5Ea1AxQ52gRn6cmF2
-        /83K/HFVn4+skc/Wt6uGE+DwUbc77iTcslmEjK/CRAvgV+6YQUkzJbtlBrr5Q+8JJKlmrTyBq44/u
-        TJiHeSIwQ3VM6J44S1d1yNryMKLsQ8iZf1OrD6FnYs6OHkND8aMMMkrLPNGm6nhYxiQsA6gnvmund
-        vT7S7hcNSvEXvCDhPF31ee1v2WxWOnkGIihjEU+7pqNLhV5/Kty9KSYUOFACXDa3f7vCTTX3UOnh6
-        bZwx9NxQw==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCQZ9-00063q-MO; Mon, 23 Sep 2019 15:47:55 +0000
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
- KUnit
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
-        torvalds@linux-foundation.org,
-        Felix Guo <felixguoxiuping@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
-Date:   Mon, 23 Sep 2019 08:47:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 11:49:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49420 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfIWPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:49:12 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 934C580F7C
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 15:49:11 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id y10so17839818qti.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 08:49:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DtFe2+5JtbV/OwUJETgyRdR0XjjvYqOvroBO1aiGGnE=;
+        b=Wvr0puzAl3GpiE6lbkIAdJo4hikHbGQY4AXH+nK3KY0/ol9NJLScQcxRREPPeaQbgd
+         dvygB1Tm/haNtn9FF544LtpWQF/geRHO3iYM5Bv3snMRdPurT+FbQYjJm3/EAJXuFgt8
+         TX1M5nRRWezcMzyukQwZXGsoE7yszb7qYnLYMvEFZQy2D/wXdbiC2OEUhwmn/DhXdsBe
+         S7Ak2BPa2V9dk1JUKCw+dGQL+ASuauICG4sKFnrfGwqUR9zIZZlqfafZ5s4YWwt9+ksf
+         zg6s8NOSiciXgQJJHexRkIiZGw5+SNn500Vu8QN64wRWey5R8CwNbP0boLZ895VA67MK
+         g9qw==
+X-Gm-Message-State: APjAAAVzgS5YxindT3vNmeMRHdgAFl3GTnjVv3UIgbucc9GmwyFXJbxm
+        5/3HElAlwhkUv2NVqssE56C2aVySl4KSyI/k9O7JSuIGU4Zex4qaQbJSbhctmn1z5trDcVjj6vM
+        DD+bXZP/Dp95oO/TS5S12iFUD
+X-Received: by 2002:a37:f61e:: with SMTP id y30mr500110qkj.208.1569253750897;
+        Mon, 23 Sep 2019 08:49:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzol6drxsIFmKvmhlgbnLArJa9kxX+uy/D+M1Of/zo/DzG9baRX9vu805PC9WY2snt/4bzaNA==
+X-Received: by 2002:a37:f61e:: with SMTP id y30mr500077qkj.208.1569253750741;
+        Mon, 23 Sep 2019 08:49:10 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id v5sm7307386qtk.66.2019.09.23.08.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 08:49:09 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 11:49:01 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
+Message-ID: <20190923114840-mutt-send-email-mst@kernel.org>
+References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+ <20190918175249.23474.51171.stgit@localhost.localdomain>
+ <20190923041330-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfFBO9h3heGSo+AaZgUNpy5uuOm3yh62bYwYJ5dq+t1gQ@mail.gmail.com>
+ <20190923105746-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ufp0bdz3YkbAoKWd5DALFjAkHaSUn_UywW1+3hk4tjPSQ@mail.gmail.com>
+ <20190923113722-mutt-send-email-mst@kernel.org>
+ <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923090249.127984-16-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <baf3dd5c-9368-d621-a83a-114bb5ae8291@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/23/19 2:02 AM, Brendan Higgins wrote:
-> Add documentation for KUnit, the Linux kernel unit testing framework.
-> - Add intro and usage guide for KUnit
-> - Add API reference
+On Mon, Sep 23, 2019 at 05:45:29PM +0200, David Hildenbrand wrote:
+> On 23.09.19 17:37, Michael S. Tsirkin wrote:
+> > On Mon, Sep 23, 2019 at 08:28:00AM -0700, Alexander Duyck wrote:
+> >> On Mon, Sep 23, 2019 at 8:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>
+> >>> On Mon, Sep 23, 2019 at 07:50:15AM -0700, Alexander Duyck wrote:
+> >>>>>> +static inline void
+> >>>>>> +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
+> >>>>>> +{
+> >>>>>> +     int index;
+> >>>>>> +
+> >>>>>> +     if (order < PAGE_REPORTING_MIN_ORDER)
+> >>>>>> +             return;
+> >>>>>> +     if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
+> >>>>>> +             return;
+> >>>>>> +
+> >>>>>> +     index = get_reporting_index(order, mt);
+> >>>>>> +     reported_boundary[index] = &zone->free_area[order].free_list[mt];
+> >>>>>> +}
+> >>>>>
+> >>>>> So this seems to be costly.
+> >>>>> I'm guessing it's the access to flags:
+> >>>>>
+> >>>>>
+> >>>>>         /* zone flags, see below */
+> >>>>>         unsigned long           flags;
+> >>>>>
+> >>>>>         /* Primarily protects free_area */
+> >>>>>         spinlock_t              lock;
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> which is in the same cache line as the lock.
+> >>>>
+> >>>> I'm not sure what you mean by this being costly?
+> >>>
+> >>> I've just been wondering why does will it scale report a 1.5% regression
+> >>> with this patch.
+> >>
+> >> Are you talking about data you have collected from a test you have
+> >> run, or the data I have run?
+> > 
+> > About the kernel test robot auto report that was sent recently.
 > 
-> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  Documentation/dev-tools/index.rst           |   1 +
->  Documentation/dev-tools/kunit/api/index.rst |  16 +
->  Documentation/dev-tools/kunit/api/test.rst  |  11 +
->  Documentation/dev-tools/kunit/faq.rst       |  62 +++
->  Documentation/dev-tools/kunit/index.rst     |  79 +++
->  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
->  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
->  7 files changed, 925 insertions(+)
->  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
->  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
->  create mode 100644 Documentation/dev-tools/kunit/faq.rst
->  create mode 100644 Documentation/dev-tools/kunit/index.rst
->  create mode 100644 Documentation/dev-tools/kunit/start.rst
->  create mode 100644 Documentation/dev-tools/kunit/usage.rst
+> https://lkml.org/lkml/2019/9/21/112
+> 
+> And if I'm correct, that regression is observable in case reporting is
+> not enabled. (so with this patch applied only, e.g., on a bare-metal system)
 
+Exactly. That's what makes it interesting.
 
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> new file mode 100644
-> index 000000000000..6dc229e46bb3
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/start.rst
-> @@ -0,0 +1,180 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===============
-> +Getting Started
-> +===============
-> +
-> +Installing dependencies
-> +=======================
-> +KUnit has the same dependencies as the Linux kernel. As long as you can build
-> +the kernel, you can run KUnit.
-> +
-> +KUnit Wrapper
-> +=============
-> +Included with KUnit is a simple Python wrapper that helps format the output to
-> +easily use and read KUnit output. It handles building and running the kernel, as
-> +well as formatting the output.
-> +
-> +The wrapper can be run with:
-> +
-> +.. code-block:: bash
-> +
-> +   ./tools/testing/kunit/kunit.py run
-> +
-> +Creating a kunitconfig
-> +======================
-> +The Python script is a thin wrapper around Kbuild as such, it needs to be
-
-                                       around Kbuild. As such,
-
-> +configured with a ``kunitconfig`` file. This file essentially contains the
-> +regular Kernel config, with the specific test targets as well.
-> +
-> +.. code-block:: bash
-> +
-> +	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
-> +	cd $PATH_TO_LINUX_REPO
-> +	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
-> +
-> +You may want to add kunitconfig to your local gitignore.
-> +
-> +Verifying KUnit Works
-> +---------------------
-> +
-> +To make sure that everything is set up correctly, simply invoke the Python
-> +wrapper from your kernel repo:
-> +
-> +.. code-block:: bash
-> +
-> +	./tools/testing/kunit/kunit.py
-> +
-> +.. note::
-> +   You may want to run ``make mrproper`` first.
-
-I normally use O=builddir when building kernels.
-Does this support using O=builddir ?
-
-> +
-> +If everything worked correctly, you should see the following:
-> +
-> +.. code-block:: bash
-> +
-> +	Generating .config ...
-> +	Building KUnit Kernel ...
-> +	Starting KUnit Kernel ...
-> +
-> +followed by a list of tests that are run. All of them should be passing.
-> +
-> +.. note::
-> +   Because it is building a lot of sources for the first time, the ``Building
-> +   kunit kernel`` step may take a while.
-> +
-> +Writing your first test
-> +=======================
-
-[snip]
-
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> new file mode 100644
-> index 000000000000..c6e69634e274
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-
-TBD...
-
-
--- 
-~Randy
+> 
+> -- 
+> 
+> Thanks,
+> 
+> David / dhildenb
