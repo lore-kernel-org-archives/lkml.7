@@ -2,126 +2,164 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33152C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B8C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0399720867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D5320835
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 14:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569247434;
+	bh=pwXvFeRJ74oELh5A1ID0O5jPJIyhmMhXXqdO9auxWmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cmIYAhps7qpjt9STXrrKgO3p+tbbGxpxqotKx7SmlY497bkxjioXpnHvB4/rog6uY
+	 grBhGRn7uuPzP1Byw5KHbTCVY8sE2o/3nIPg02RTQUKoB31KHaU4jGIA6lBSHS+nCl
+	 rA2p0Qk06y9X2z/1Fpe+zl3RBwn2k4QA7HGDYpXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbfIWODv (ORCPT
+        id S1730820AbfIWODx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 10:03:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56532 "EHLO mx1.redhat.com"
+        Mon, 23 Sep 2019 10:03:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfIWODu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:03:50 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728860AbfIWODv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 10:03:51 -0400
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E138D20FF;
-        Mon, 23 Sep 2019 14:03:49 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 70E545D717;
-        Mon, 23 Sep 2019 14:03:49 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id CDAF511DF; Mon, 23 Sep 2019 11:03:45 -0300 (BRT)
-Date:   Mon, 23 Sep 2019 11:03:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@elte.hu,
-        jolsa@redhat.com, namhyung@kernel.org
-Subject: Re: [PATCH v2] perf record: fix priv level with branch sampling for
- paranoid=2
-Message-ID: <20190923140345.GA3617@redhat.com>
-References: <20190920230356.41420-1-eranian@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFBF20673;
+        Mon, 23 Sep 2019 14:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569247430;
+        bh=pwXvFeRJ74oELh5A1ID0O5jPJIyhmMhXXqdO9auxWmQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xet+PgpDuLyUypZes8zEg4ZD0cZvHlS+ngVUxzofQF9/vE5BRLT3TGmUvKkylyVed
+         wxNWejz07hFiQgBNBj40jyQD74Tb6TDgmQDYIx7adWtwL/RQniDxl/5KnUcuLD3hPJ
+         2uoiXgtN8QV0MqivHJtvBkbVe/pINhECcmDhpF10=
+Date:   Mon, 23 Sep 2019 16:03:48 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 5/6] posix-cpu-timers: Sanitize thread clock permissions
+Message-ID: <20190923140347.GA10778@lenoir>
+References: <20190905120339.561100423@linutronix.de>
+ <20190905120540.068959005@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920230356.41420-1-eranian@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Mon, 23 Sep 2019 14:03:50 +0000 (UTC)
+In-Reply-To: <20190905120540.068959005@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 20, 2019 at 04:03:56PM -0700, Stephane Eranian escreveu:
-> Now that the default perf_events paranoid level is set to 2, a regular user
-> cannot monitor kernel level activity anymore. As such, with the following
-> cmdline:
+On Thu, Sep 05, 2019 at 02:03:44PM +0200, Thomas Gleixner wrote:
+> The thread clock permissions are restricted to tasks of the same thread
+> group, but that also prevents a ptracer from reading them. This is
+> inconsistent vs. the process restrictions and unnecessary strict.
 > 
-> $ perf record -e cycles date
+> Relax it to ptrace permissions in the same way as process permissions are
+> handled.
 > 
-> The perf tool first tries cycles:uk but then falls back to cycles:u
-> as can be seen in the perf report --header-only output:
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/time/posix-cpu-timers.c |   56 +++++++++++++++++++++--------------------
+>  1 file changed, 29 insertions(+), 27 deletions(-)
 > 
->   cmdline : /export/hda3/tmp/perf.tip record -e cycles ls
->   event : name = cycles:u, , id = { 436186, ... }
-> 
-> This is okay as long as there is way to learn the priv level was changed
-> internally by the tool.
-> 
-> But consider a similar example:
-> 
-> $ perf record -b -e cycles date
-> Error:
-> You may not have permission to collect stats.
-> 
-> Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-> which controls use of the performance events system by
-> unprivileged users (without CAP_SYS_ADMIN).
-> ...
-> 
-> Why is that treated differently given that the branch sampling inherits the
-> priv level of the first event in this case, i.e., cycles:u? It turns out
-> that the branch sampling code is more picky and also checks exclude_hv.
-> 
-> In the fallback path, perf record is setting exclude_kernel = 1, but it
-> does not change exclude_hv. This does not seem to match the restriction
-> imposed by paranoid = 2.
-> 
-> This patch fixes the problem by forcing exclude_hv = 1 in the fallback
-> for paranoid=2. With this in place:
-> 
-> $ perf record -b -e cycles date
->   cmdline : /export/hda3/tmp/perf.tip record -b -e cycles ls
->   event : name = cycles:u, , id = { 436847, ... }
-> 
-> And the command succeeds as expected.
-> 
-> V2 fix a white space.
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -51,6 +51,7 @@ void update_rlimit_cpu(struct task_struc
+>  static struct task_struct *lookup_task(const pid_t pid, bool thread,
+>  				       bool gettime)
+>  {
+> +	unsigned int mode = PTRACE_MODE_ATTACH_REALCREDS;
+>  	struct task_struct *p;
+>  
+>  	/*
+> @@ -64,44 +65,45 @@ static struct task_struct *lookup_task(c
+>  	if (!p)
+>  		return p;
+>  
+> -	if (thread)
+> -		return same_thread_group(p, current) ? p : NULL;
+> -
+>  	if (gettime) {
+>  		/*
+>  		 * For clock_gettime() the task does not need to be the
+>  		 * actual group leader. tsk->sighand gives access to the
+> -		 * group's clock. current can obviously access itself, so
+> -		 * spare the ptrace check below.
+> +		 * group's clock.
+> +		 *
+> +		 * The trivial case is that p is current or in the same
+> +		 * thread group, i.e. sharing p->signal. Spare the ptrace
+> +		 * check in that case.
+>  		 */
+> -		if (p == current)
+> +		if (same_thread_group(p, current))
+>  			return p;
+>  
+> -		if (!thread_group_leader(p))
+> -			return NULL;
+> +		mode = PTRACE_MODE_READ_REALCREDS;
+>  
+> -		if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
+> -			return NULL;
+> -		return p;
+> -	}
+> +	} else if (thread) {
+> +		/*
+> +		 * Timer is going to be attached to a thread. If p is
+> +		 * current or in the same thread group, granted.
+> +		 */
+> +		if (same_thread_group(p, current))
+> +			return p;
+>  
+> -	/*
+> -	 * For processes require that p is group leader.
+> -	 */
+> -	if (!has_group_leader_pid(p))
+> -		return NULL;
+> +	} else {
+> +		/*
+> +		 * For processes require that p is group leader.
+> +		 */
+> +		if (!has_group_leader_pid(p))
+> +			return NULL;
+>  
+> -	/*
+> -	 * Avoid the ptrace overhead when this is current's process
+> -	 */
+> -	if (same_thread_group(p, current))
+> -		return p;
+> +		/*
+> +		 * Avoid the ptrace overhead when this is current's process
+> +		 */
+> +		if (same_thread_group(p, current))
 
-Thanks, tested added Jiri's Acked-by, applied, added this note:
+Should it be "if (p == current)" ?
 
-Committer testing:
+Other than that:
 
-After aplying the patch we get:
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-  [acme@quaco ~]$ perf record -b -e cycles date
-  WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-  check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
 
-  Samples in kernel functions may not be resolved if a suitable vmlinux
-  file is not found in the buildid cache or in the vmlinux path.
-
-  Samples in kernel modules won't be resolved at all.
-
-  If some relocation was applied (e.g. kexec) symbols may be misresolved
-  even with a suitable vmlinux or kallsyms file.
-
-  Mon 23 Sep 2019 11:00:59 AM -03
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.005 MB perf.data (14 samples) ]
-  [acme@quaco ~]$ perf evlist -v
-  cycles:u: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
-  [acme@quaco ~]$
-
-That warning about restricted kernel maps will be suppressed in a follow
-up patch, as perf_event_attr.exclude_kernel is set, i.e. no samples for
-the kernel will be taken and thus no need for those maps
+> +			return p;
+> +	}
+>  
+> -	/*
+> -	 * Creating timers on processes which cannot be ptraced is not
+> -	 * permitted:
+> -	 */
+> -	return ptrace_may_access(p, PTRACE_MODE_ATTACH_REALCREDS) ? p : NULL;
+> +	/* Decide based on the ptrace permissions. */
+> +	return ptrace_may_access(p, mode) ? p : NULL;
+>  }
