@@ -2,148 +2,152 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6B5C04EBF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80ADC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8415B206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDFC21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569237363;
+	bh=THNDA433EVvnWZ505Ku9XRDy9r98iyeeF0PNX2GYsEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k+4QKhNfDKwGCSZ7RVmRztz30f9PqjdQRWBEUtIRbP/Q2geW9IjJhYte3L5S8l+VA
+	 eLCZt48FtpzVro2UUvJfNrCQcBwMv0U6hm2bwxgEj007pTzE3IP54ybqNSIJcscs2I
+	 TqEeNjMgaKg0N22ko2gK3Kwz422llC+wl0K/8fdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbfIWLMY (ORCPT
+        id S1732176AbfIWLQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:12:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37704 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfIWLMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:12:23 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC40389AC4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:12:22 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id f11so4667763wrt.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:12:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uxD2Y3WBGHkLvQqCAXXWzhnVRm7+WSVZkhBdGyUy/Zg=;
-        b=Ov0/ub5PLhPIQsZZRGUBlqarggm8QVIG3n/Ew8U8wQh144n3oSFoQ7KWsST7jiczbd
-         RxcKoSWjFXVWouHANEUAsecDtQyMTQ0PVGClZGTxcrWDXNfsnbpl9qJy8oDBFz8CQxIR
-         CzqAhtXhOF6NdwJoZgYtmoHx3Wk8P9rvRFIpFloAImkVPuO2Oic/2oYLQA6O0SI0KCH4
-         XDEy0KSkKfTbol9nRBqOtt3AMdsGL3jMWEXK52L3Rc15s/6XV74BzHplt/cfFvcKg+7l
-         GasrJIKltEf9QIdSnoxIr8n2Yen9O4YxZuyq8ASgAl1so3xb/B5aGpFdg3caT6RJsrtL
-         WxVA==
-X-Gm-Message-State: APjAAAWs+LltjTWjZf+ZTNuX9emsCBTERtAaQixSlQG4SodaW3RZ/HXF
-        9LOTiCYMJyVC+MSnTgt8JCEgdAxtw+rv1iIjc7X7Bg7ZmdHPXhDJddOpL33uw3THRhQneTtL6bY
-        n6lTfNDyPFpTv0IfR6U1nBWsJ
-X-Received: by 2002:adf:cc87:: with SMTP id p7mr20853219wrj.43.1569237141151;
-        Mon, 23 Sep 2019 04:12:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzMW44zhOI1DG3DXgqsJqxbWPiZJb1HLWTJc4XK+mxiK6jX2sDL9nFCMUqBJJ1EN+ViAcwPtQ==
-X-Received: by 2002:adf:cc87:: with SMTP id p7mr20853197wrj.43.1569237140829;
-        Mon, 23 Sep 2019 04:12:20 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id s12sm14065554wrn.90.2019.09.23.04.12.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 04:12:20 -0700 (PDT)
-Subject: Re: [PATCH v7 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190904161245.111924-1-anup.patel@wdc.com>
- <20190904161245.111924-12-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8c44ac8a-3fdc-b9dd-1815-06e86cb73047@redhat.com>
-Date:   Mon, 23 Sep 2019 13:12:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 07:16:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37212 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730155AbfIWLQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:16:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4084CAE6E;
+        Mon, 23 Sep 2019 11:16:00 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 13:15:59 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        linux-hyperv@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
+Message-ID: <20190923111559.GK6016@dhcp22.suse.cz>
+References: <20190909114830.662-1-david@redhat.com>
+ <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
+ <20190923085807.GD6016@dhcp22.suse.cz>
+ <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904161245.111924-12-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/19 18:15, Anup Patel wrote:
-> +	unsigned long guest_sstatus =
-> +			vcpu->arch.guest_context.sstatus | SR_MXR;
-> +	unsigned long guest_hstatus =
-> +			vcpu->arch.guest_context.hstatus | HSTATUS_SPRV;
-> +	unsigned long guest_vsstatus, old_stvec, tmp;
-> +
-> +	guest_sstatus = csr_swap(CSR_SSTATUS, guest_sstatus);
-> +	old_stvec = csr_swap(CSR_STVEC, (ulong)&__kvm_riscv_unpriv_trap);
-> +
-> +	if (read_insn) {
-> +		guest_vsstatus = csr_read_set(CSR_VSSTATUS, SR_MXR);
-
-Is this needed?  IIUC SSTATUS.MXR encompasses a wider set of permissions:
-
-  The HS-level MXR bit makes any executable page readable.  {\tt
-  vsstatus}.MXR makes readable those pages marked executable at the VS
-  translation level, but only if readable at the guest-physical
-  translation level.
-
-So it should be enough to set SSTATUS.MXR=1 I think.  But you also
-shouldn't set SSTATUS.MXR=1 in the !read_insn case.
-
-Also, you can drop the irq save/restore (which is already a save/restore
-of SSTATUS) since you already write 0 to SSTATUS.SIE in your csr_swap.
-Perhaps add a BUG_ON(guest_sstatus & SR_SIE) before the csr_swap?
-
-> +		asm volatile ("\n"
-> +			"csrrw %[hstatus], " STR(CSR_HSTATUS) ", %[hstatus]\n"
-> +			"li %[tilen], 4\n"
-> +			"li %[tscause], 0\n"
-> +			"lhu %[val], (%[addr])\n"
-> +			"andi %[tmp], %[val], 3\n"
-> +			"addi %[tmp], %[tmp], -3\n"
-> +			"bne %[tmp], zero, 2f\n"
-> +			"lhu %[tmp], 2(%[addr])\n"
-> +			"sll %[tmp], %[tmp], 16\n"
-> +			"add %[val], %[val], %[tmp]\n"
-> +			"2: csrw " STR(CSR_HSTATUS) ", %[hstatus]"
-> +		: [hstatus] "+&r"(guest_hstatus), [val] "=&r" (val),
-> +		  [tmp] "=&r" (tmp), [tilen] "+&r" (tilen),
-> +		  [tscause] "+&r" (tscause)
-> +		: [addr] "r" (addr));
-> +		csr_write(CSR_VSSTATUS, guest_vsstatus);
-
+On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
+> On 23.09.19 10:58, Michal Hocko wrote:
+> > On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
+> >> On 09.09.19 13:48, David Hildenbrand wrote:
+> >>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
+> >>>
+> >>> Let's replace the __online_page...() functions by generic_online_page().
+> >>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
+> >>> can simpy re-use the generic function.
+> >>>
+> >>> Only compile-tested.
+> >>>
+> >>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> >>>
+> >>> David Hildenbrand (3):
+> >>>   mm/memory_hotplug: Export generic_online_page()
+> >>>   hv_balloon: Use generic_online_page()
+> >>>   mm/memory_hotplug: Remove __online_page_free() and
+> >>>     __online_page_increment_counters()
+> >>>
+> >>>  drivers/hv/hv_balloon.c        |  3 +--
+> >>>  include/linux/memory_hotplug.h |  4 +---
+> >>>  mm/memory_hotplug.c            | 17 ++---------------
+> >>>  3 files changed, 4 insertions(+), 20 deletions(-)
+> >>>
+> >>
+> >> Ping, any comments on this one?
+> > 
+> > Unification makes a lot of sense to me. You can add
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> > 
+> > I will most likely won't surprise if I asked for more here though ;)
 > 
-> +#ifndef CONFIG_RISCV_ISA_C
-> +			"li %[tilen], 4\n"
-> +#else
-> +			"li %[tilen], 2\n"
-> +#endif
+> I'm not surprised, but definitely not in a negative sense ;) I was
+> asking myself if we could somehow rework this, too.
+> 
+> > I have to confess I really detest the whole concept of a hidden callback
+> > with a very weird API. Is this something we can do about? I do realize
+> > that adding a callback would require either cluttering the existing APIs
+> > but maybe we can come up with something more clever. Or maybe existing
+> > external users of online callback can do that as a separate step after
+> > the online is completed - or is this impossible due to locking
+> > guarantees?
+> > 
+> 
+> The use case of this (somewhat special) callback really is to avoid
+> selected (unbacked in the hypervisor) pages to get put to the buddy just
+> now, but instead to defer that (sometimes, defer till infinity ;) ).
+> Especially, to hinder these pages from getting touched at all. Pages
+> that won't be put to the buddy will usually get PG_offline set (e.g.,
+> Hyper-V and XEN) - the only two users I am aware of.
+> 
+> For Hyper-V (and also eventually virtio-mem), it is important to set
+> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
+> Only this way, PG_offline is properly set on all pfn_to_online_page()
+> pages, meaning "don't touch this page" - e.g., used to skip over such
+> pages when suspending or by makedumpfile to skip over such offline pages
+> when creating a memory dump.
 
-Can you use an assembler directive to force using a non-compressed
-format for ld and lw?  This would get rid of tilen, which is costing 6
-bytes (if I did the RVC math right) in order to save two. :)
+Thanks for the clarification. I have never really studied what those
+callbacks are doing really.
 
-Paolo
+> So if we would e.g., try to piggy-back onto the memory_notify()
+> infrastructure, we could
+> 1. Online all pages to the buddy (dropping the callback)
+> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
+> -> in the notifier, pull pages from the buddy, mark sections online
+> 3. Set all involved sections online (online_mem_sections())
 
-> +			"li %[tscause], 0\n"
-> +#ifdef CONFIG_64BIT
-> +			"ld %[val], (%[addr])\n"
-> +#else
-> +			"lw %[val], (%[addr])\n"
-> +#endif
+This doesn't really sound any better. For one pages are immediately
+usable when they hit the buddy allocator so this is racy and thus not
+reliable.
+
+> However, I am not sure what actually happens after 1. - we are only
+> holding the device hotplug lock and the memory hotplug lock, so the
+> pages can just get allocated. Also, it sounds like more work and code
+> for the same end result (okay, if the rework is really necessary, though).
+> 
+> So yeah, while the current callback might not be optimal, I don't see an
+> easy and clean way to rework this. With the change in this series we are
+> at least able to simply defer doing what would have been done without
+> the callback - not perfect but better.
+> 
+> Do you have anything in mind that could work out and make this nicer?
+
+I am wondering why those pages get onlined when they are, in fact,
+supposed to be offline.
+-- 
+Michal Hocko
+SUSE Labs
