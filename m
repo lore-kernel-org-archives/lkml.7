@@ -2,52 +2,76 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439DC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1F8C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323F220882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3226720882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439989AbfIWQvP (ORCPT
+        id S2501997AbfIWQvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:51:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:45482 "EHLO foss.arm.com"
+        Mon, 23 Sep 2019 12:51:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52170 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390796AbfIWQvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:51:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 415371000;
-        Mon, 23 Sep 2019 09:51:14 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F22DD3F67D;
-        Mon, 23 Sep 2019 09:51:06 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] perf cs-etm: Refactor instruction size handling
-To:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>
-References: <20190923160759.14866-1-leo.yan@linaro.org>
- <20190923160759.14866-2-leo.yan@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <2b675e24-8b06-fbd6-ab73-214a6afb2a07@arm.com>
-Date:   Mon, 23 Sep 2019 17:51:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S2390796AbfIWQvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:51:48 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DB92D5859E
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 16:51:47 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id h6so5087484wrh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 09:51:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3RbYm8r31nf5/CgoKO2hq1IVIw3F2t6/IIFZwh76KkU=;
+        b=rj+9yS0920taGBgKX5Km/v4bIDdCfOvzKMTWE3c9LfgMZ3VJB7KdZh41UhgfXOZ10C
+         1wBhh9HNQrRHDInQd03S/E0LgBWGbaQvvJvo+eZV32a0YdyTkEnY+tfvtXnRKz9AhtBt
+         h9OnuE8NBDBVFmO+KXMEp9o2jmy5yYgfbF9YfyZIZ1KBdkoIYxql0egnJiHhSEUILyDg
+         IjJGkz+dsfwfE7i0Jv5Zsswf4uYz5Mt2tZolh2P0qjd6157/rwuqDoaXl5cGXrIJLa/6
+         3CRVriFXpqdm2RTmWzI34Fin8wIUrDnfQ6NkVHozMtp8Utevp+U3haDSX0RxBnM46asg
+         BqTQ==
+X-Gm-Message-State: APjAAAWeYEvXWRemEop+m7iyFDGXRmU7FW1FycJ2Tp5SAAzrD3j3Wczq
+        UOuA+UCr8jQBw88WAxLv2wS2/vV5GJ5R2azDs3xsjm5fwX8AqiMc+oivuriUePrOYngm6TRylhp
+        0cD9Evtwg+uRnyk8YkvjNO6gD
+X-Received: by 2002:a5d:430f:: with SMTP id h15mr289722wrq.177.1569257506294;
+        Mon, 23 Sep 2019 09:51:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyajlkv9A6Ku4HYClKecGn3/36UfGhv+IfcMvF2aTqfZ8o+21QEdB5W3/2BDE+bNBaUn3Nghg==
+X-Received: by 2002:a5d:430f:: with SMTP id h15mr289702wrq.177.1569257506049;
+        Mon, 23 Sep 2019 09:51:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id n2sm10154924wmc.1.2019.09.23.09.51.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 09:51:45 -0700 (PDT)
+Subject: Re: [PATCH 02/17] KVM: monolithic: x86: convert the kvm_x86_ops
+ methods to external functions
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-3-aarcange@redhat.com>
+ <9b188fb8-b930-047f-d1c0-fe27cbe27338@redhat.com>
+ <20190923161352.GC18195@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0ffed044-c5e1-4cc9-365a-ae51c4d2b2cb@redhat.com>
+Date:   Mon, 23 Sep 2019 18:51:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190923160759.14866-2-leo.yan@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190923161352.GC18195@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,90 +79,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leo,
-
-On 23/09/2019 17:07, Leo Yan wrote:
-> In cs-etm.c there have several functions need to know instruction size
-> based on address, e.g. cs_etm__instr_addr() and cs_etm__copy_insn()
-> these two functions both calculate the instruction size separately.
-> Furthermore, if we consider to add new features later which also might
-> require to calculate instruction size.
+On 23/09/19 18:13, Sean Christopherson wrote:
+> Alternatively, what if we use macros in the call sites, e.g. keep/require
+> vmx_ and svm_ prefixes for all functions, renaming VMX and SVM code as
+> needed?  E.g.:
 > 
-> For this reason, this patch refactors the code to introduce a new
-> function cs_etm__instr_size(), it will be a central place to calculate
-> the instruction size based on ISA type and instruction address.
 > 
-> For a neat implementation, cs_etm__instr_addr() will always execute the
-> loop without checking ISA type, this allows cs_etm__instr_size() and
-> cs_etm__instr_addr() have no any duplicate code with each other and both
-> functions can be changed independently later without breaking anything.
-> As a side effect, cs_etm__instr_addr() will do a few more iterations for
-> A32/A64 instructions, this would be fine if consider perf tool runs in
-> the user space.
+>   #define X86_OP(name) kvm_x86_vendor##_##name
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-
-Your changes look fine to me. However, please see my comment below.
-
-> ---
->   tools/perf/util/cs-etm.c | 48 +++++++++++++++++++++++-----------------
->   1 file changed, 28 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index f87b9c1c9f9a..1de3f9361193 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -917,6 +917,26 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->   	return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
->   }
->   
-> +static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
-> +				     u8 trace_chan_id,
-> +				     enum cs_etm_isa isa,
-> +				     u64 addr)
-> +{
-> +	int insn_len;
-> +
-> +	/*
-> +	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
-> +	 * cs_etm__t32_instr_size().
-> +	 */
-> +	if (isa == CS_ETM_ISA_T32)
-> +		insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id, addr);
-> +	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
-> +	else
-> +		insn_len = 4;
-> +
-> +	return insn_len;
-> +}
-> +
->   static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+>   int kvm_arch_init(void *opaque)
 >   {
->   	/* Returns 0 for the CS_ETM_DISCONTINUITY packet */
-> @@ -941,19 +961,15 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
->   				     const struct cs_etm_packet *packet,
->   				     u64 offset)
->   {
-> -	if (packet->isa == CS_ETM_ISA_T32) {
-> -		u64 addr = packet->start_addr;
-> +	u64 addr = packet->start_addr;
->   
-> -		while (offset > 0) {
-> -			addr += cs_etm__t32_instr_size(etmq,
-> -						       trace_chan_id, addr);
-> -			offset--;
-> -		}
-> -		return addr;
-> +	while (offset > 0) {
+> 	if (X86_OP(supported_by_cpu())) {
 
-Given that offset is u64, the check above is not appropriate. You could either
-change it to :
-	while (offset) // if you are sure (s64)offset always is a postive
-integer and we always reduce it by 1.
+Please no, the extra parentheses would be a mess to review.
 
-Otherwise you may switch the offset to a signed type. I understand that this
-is not introduced by your changes. But you may fix that up in a separate patch.
-
-
-Kind regards
-Suzuki
+Paolo
