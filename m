@@ -2,115 +2,146 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21077C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DADEC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFC820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073A620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIL1sv8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfIWP1Z (ORCPT
+        id S1731729AbfIWP2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:27:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9466 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725951AbfIWP1Y (ORCPT
+        Mon, 23 Sep 2019 11:28:12 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44564 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfIWP2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:27:24 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NFR8Xw052875
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:27:23 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v6ykfu04v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:27:22 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
-        Mon, 23 Sep 2019 16:27:21 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 23 Sep 2019 16:27:18 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NFRHW143712550
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 15:27:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3124A11C058;
-        Mon, 23 Sep 2019 15:27:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E613511C050;
-        Mon, 23 Sep 2019 15:27:16 +0000 (GMT)
-Received: from oc5311105230.ibm.com (unknown [9.145.92.229])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 15:27:16 +0000 (GMT)
-Subject: Re: [PATCH net v2 0/3] net/smc: move some definitions to UAPI
-To:     Eugene Syromiatnikov <esyr@redhat.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>
-References: <cover.1568993930.git.esyr@redhat.com>
-From:   Ursula Braun <ubraun@linux.ibm.com>
-Openpgp: preference=signencrypt
-Date:   Mon, 23 Sep 2019 17:27:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 11:28:12 -0400
+Received: by mail-io1-f65.google.com with SMTP id j4so34366979iog.11;
+        Mon, 23 Sep 2019 08:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ovt/JswJZVCgn7gC8S4lJscYd7cbBemmVRbh0mTK6j8=;
+        b=DIL1sv8HFoMOCTvY7W467j9MaGY0XQ/cpfliC2FJd/FeyrcnifvBizVcCTvnyAFGIO
+         cGheg0eSIIuJBVwN3y7Zr6AyEA6w42em57dkPqn/YBaIGXhMY+V3T02jinZJJdmndquZ
+         wmQjkGFyh4MAxEMt95AnBtjAbpPBEgxpszO0c1Jhco2oTN/3BzvoJk4R22PEA65ByoAs
+         hERyYTCJW35FEYvB9k5mPgTit9zhbKRMFJtM4CaQY7vGLmPJESVRCVfwVRRpWb6+zdws
+         At0ZjLLmFGNozw0nE8OSV6p54JuOZl5KaOWm8llJUap4yEcI7FuKiYJbA9urGVmIhU1E
+         iHoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ovt/JswJZVCgn7gC8S4lJscYd7cbBemmVRbh0mTK6j8=;
+        b=uP2A97MXVMvtIOQJvAaipBhFS5du5aab9hT61+L7We0Q4TXDuCIdxqQsQJZurApbSd
+         RD5qgV/3TK42EYfyQd+0I9t8pVDhI+i+EAKRf+9FOaU45HfV3rOjIcPtJ+oaVF2jr3gz
+         P1g0Qx90XZzrMNP4439tG7SCjESjN1NUnFPHNlC8w21dyjqyVuUul2a0/CjVcm+gTwka
+         MV/n3gpdsn/3g/McAx6ts6sehetchpC8ZuIV3nCV+cwsMxNnn7I955R2sKitb7hmK2J0
+         wm6SIYI90q6uzYrM9HNarjhrtMqhQ8+dm8GIbrraFD8j2FeADrqFnXCEi9/M3sFPGgKY
+         EybA==
+X-Gm-Message-State: APjAAAU+kfrd7Zd/O3OoX60QGGwicYyUEJo88OlEw7o6/x1zO5k8kL01
+        EcBFucqIWYrW7mROhIcGZ0ibKjTUMGLVRxEqft8=
+X-Google-Smtp-Source: APXvYqy2qdjvGFEyVfH+HCnC4m6roo43HVkj5cfovY7yzUHvANgw9POBQ+vbh318GLdMzmTYpQDcuZxK3VD9smRReus=
+X-Received: by 2002:a5e:990f:: with SMTP id t15mr1173125ioj.270.1569252491032;
+ Mon, 23 Sep 2019 08:28:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cover.1568993930.git.esyr@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092315-0008-0000-0000-00000319FD4F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092315-0009-0000-0000-00004A388D8B
-Message-Id: <c5d4a6d4-cb91-1add-5ed8-8b08a56c70d5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230146
+References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+ <20190918175249.23474.51171.stgit@localhost.localdomain> <20190923041330-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfFBO9h3heGSo+AaZgUNpy5uuOm3yh62bYwYJ5dq+t1gQ@mail.gmail.com> <20190923105746-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190923105746-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 23 Sep 2019 08:28:00 -0700
+Message-ID: <CAKgT0Ufp0bdz3YkbAoKWd5DALFjAkHaSUn_UywW1+3hk4tjPSQ@mail.gmail.com>
+Subject: Re: [PATCH v10 3/6] mm: Introduce Reported pages
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 8:00 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Sep 23, 2019 at 07:50:15AM -0700, Alexander Duyck wrote:
+> > > > +static inline void
+> > > > +page_reporting_reset_boundary(struct zone *zone, unsigned int order, int mt)
+> > > > +{
+> > > > +     int index;
+> > > > +
+> > > > +     if (order < PAGE_REPORTING_MIN_ORDER)
+> > > > +             return;
+> > > > +     if (!test_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
+> > > > +             return;
+> > > > +
+> > > > +     index = get_reporting_index(order, mt);
+> > > > +     reported_boundary[index] = &zone->free_area[order].free_list[mt];
+> > > > +}
+> > >
+> > > So this seems to be costly.
+> > > I'm guessing it's the access to flags:
+> > >
+> > >
+> > >         /* zone flags, see below */
+> > >         unsigned long           flags;
+> > >
+> > >         /* Primarily protects free_area */
+> > >         spinlock_t              lock;
+> > >
+> > >
+> > >
+> > > which is in the same cache line as the lock.
+> >
+> > I'm not sure what you mean by this being costly?
+>
+> I've just been wondering why does will it scale report a 1.5% regression
+> with this patch.
 
+Are you talking about data you have collected from a test you have
+run, or the data I have run?
 
-On 9/20/19 5:41 PM, Eugene Syromiatnikov wrote:
-> Hello.
-> 
-> As of now, it's a bit difficult to use SMC protocol, as significant part
-> of definitions related to it are defined in private headers and are not
-> part of UAPI. The following commits move some definitions to UAPI,
-> making them readily available to the user space.
-> 
-> Changes since v1[1]:
->  * Patch "provide fallback diagnostic codes in UAPI" is updated
->    in accordance with the updated set of diagnostic codes.
-> 
-> [1] https://lkml.org/lkml/2018/10/7/177
-> 
+In the case of the data I have run I notice almost no difference as
+long as the pages are not actually being madvised. Once I turn on the
+madvise then I start seeing the regression, but almost all of that is
+due to page zeroing/faulting. There isn't expected to be a gain from
+this patchset until you start having guests dealing with memory
+overcommit on the host. Then at that point the patch set should start
+showing gains when the madvise bits are enabled in QEMU.
 
-Thanks Eugene, your patches look good. They will be part of our next SMC
-patch submission for the net-next tree.
+Also the test I have been running is a modified version of the
+page_fault1 test to specifically target transparent huge pages in
+order to make this test that much more difficult, the standard
+page_fault1 test wasn't showing much of anything since the overhead
+for breaking a 2M page into 512 4K pages and zeroing those
+individually in the guest  was essentially drowning out the effect of
+the patches themselves.
 
-Regards, Ursula
-
-> Eugene Syromiatnikov (3):
->   uapi, net/smc: move protocol constant definitions to UAPI
->   uapi, net/smc: provide fallback diagnostic codes in UAPI
->   uapi, net/smc: provide socket state constants in UAPI
-> 
->  include/uapi/linux/smc.h      | 32 +++++++++++++++++++++++++++++++-
->  include/uapi/linux/smc_diag.h | 17 +++++++++++++++++
->  net/smc/smc.h                 | 22 ++--------------------
->  net/smc/smc_clc.h             | 22 ----------------------
->  4 files changed, 50 insertions(+), 43 deletions(-)
-> 
-
+- Alex
