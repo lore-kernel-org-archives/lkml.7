@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57636C47E48
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD56C47E4A
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28BD2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EFD21850
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 21:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502995AbfIWVUh (ORCPT
+        id S2502983AbfIWVTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 17:20:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48531 "EHLO mga06.intel.com"
+        Mon, 23 Sep 2019 17:19:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48485 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502984AbfIWVUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 17:20:37 -0400
+        id S2387449AbfIWVTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 17:19:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 14:20:36 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 14:19:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,541,1559545200"; 
-   d="scan'208";a="339861676"
+   d="scan'208";a="339861469"
 Received: from ray.jf.intel.com (HELO [10.24.9.85]) ([10.24.9.85])
-  by orsmga004.jf.intel.com with ESMTP; 23 Sep 2019 14:20:36 -0700
-Subject: Re: [PATCH v2 2/2] x86/boot/64: round memory hole size up to next PMD
- page.
+  by orsmga004.jf.intel.com with ESMTP; 23 Sep 2019 14:19:46 -0700
+Subject: Re: [PATCH v2 1/2] x86/boot/64: Make level2_kernel_pgt pages invalid
+ outside kernel area.
 To:     Steve Wahl <steve.wahl@hpe.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -44,7 +44,7 @@ To:     Steve Wahl <steve.wahl@hpe.com>,
 Cc:     Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
         dimitri.sivanich@hpe.com, mike.travis@hpe.com
 References: <cover.1569004922.git.steve.wahl@hpe.com>
- <b0c6487fdd8ca33daa2ac1604b60fac8ed5b020f.1569004923.git.steve.wahl@hpe.com>
+ <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
 From:   Dave Hansen <dave.hansen@intel.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -90,29 +90,51 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <edd60d59-fdfc-2383-6cc8-e084e86e7a37@intel.com>
-Date:   Mon, 23 Sep 2019 14:20:35 -0700
+Message-ID: <63a38733-974f-9032-1980-9a8289d72d21@intel.com>
+Date:   Mon, 23 Sep 2019 14:19:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <b0c6487fdd8ca33daa2ac1604b60fac8ed5b020f.1569004923.git.steve.wahl@hpe.com>
+In-Reply-To: <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 9/23/19 11:15 AM, Steve Wahl wrote:
-> The kernel image map is created using PMD pages, which can include
-> some extra space beyond what's actually needed.  Round the size of the
-> memory hole we search for up to the next PMD boundary, to be certain
-> all of the space to be mapped is usable RAM and includes no reserved
-> areas.
+>  	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
+> -	for (i = 0; i < PTRS_PER_PMD; i++) {
+> +	for (i = 0; i < pmd_index((unsigned long)_text); i++)
+> +		pmd[i] &= ~_PAGE_PRESENT;
+> +
+> +	for (; i <= pmd_index((unsigned long)_end); i++)
+>  		if (pmd[i] & _PAGE_PRESENT)
+>  			pmd[i] += load_delta;
+> -	}
+> +
+> +	for (; i < PTRS_PER_PMD; i++)
+> +		pmd[i] &= ~_PAGE_PRESENT;
 
-This looks good.  It also fully closes any possibility that anyone's
-future hardware will hit issues like this as long as they mark the
-memory reserved, right?
+This is looking a bunch better.  The broken-up loop could probably use
+some comments, or you could combine it back to a single loop like this:
+
+	int text_start_pmd_index = pmd_index((unsigned long)_text);
+	int text_end_pmd_index   = pmd_index((unsigned long)_end);
+
+	for (i = 0; i < PTRS_PER_PMD; i++) {
+		if ((i < text_start_pmd_index) ||
+		    (i > text_end_pmd_index)) {
+			/* Unmap entries not mapping the kernel image */
+			pmd[i] &= ~_PAGE_PRESENT;
+		} else if (pmd[i] & _PAGE_PRESENT)
+ 			pmd[i] += load_delta;
+		}
+	}
+
+Although I'd prefer it get commented or rewritten, it's passable like
+this, so:
 
 Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
