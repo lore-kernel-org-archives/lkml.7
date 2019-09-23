@@ -2,408 +2,203 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C3AC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85287C4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2C12089F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6652089F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 16:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxgGsYVA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uIRt2mQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbfIWQbu (ORCPT
+        id S2389294AbfIWQcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 12:31:50 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34601 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfIWQbt (ORCPT
+        Mon, 23 Sep 2019 12:32:47 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38817 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387922AbfIWQcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 12:31:49 -0400
-Received: by mail-vs1-f67.google.com with SMTP id d3so9876137vsr.1;
-        Mon, 23 Sep 2019 09:31:48 -0700 (PDT)
+        Mon, 23 Sep 2019 12:32:47 -0400
+Received: by mail-ed1-f65.google.com with SMTP id l21so8673734edr.5;
+        Mon, 23 Sep 2019 09:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=l2tJEqzHnv6SXlQuHsd3hOyscPeROk0Nh2yTJ+a5uyQ=;
-        b=FxgGsYVAsCnBLLOvalqPZXXp9FtfUsz5vdpQkK/TRK5Xc5HPIc176exvXKsGiRp+31
-         44CgGyb4HFjefjSrZwm7Q0L6d1EMs9xirQOprYYR8WDdr3TOCUZPvH+X+KeaXN5rmQ4q
-         B9WU5c7+KlpIT/7KCx/qfL5YCyYvletVM2rSSefUykzZmwcLW2ORS44vLiRhMU7G7KDk
-         zrqSqE3uCOTZxhwWbWECD4WGmi8MJeHl3XfQx78l2Q/4t8NLmQZ0zqFjBnNEhugrYBqI
-         suh4Bb6DbQLbrXNwxTspd32ViJZQcB3GY3MgLkJOZ7R3svY7WmTcCSc141BDN75IFLeW
-         bKYg==
+        h=from:to:cc:references:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=cJX4Lq7MQipASm58rHED+Etk7MU2SLIFubzctqKqN4o=;
+        b=uIRt2mQjZtD3nKzfzXJL0smEqamnz1qs/J37yuObNEThzZvE0YZ7DIRrft1WYbomFZ
+         wQ44kb89+2IsPB0yvdHyFbfcKMz2OLct0TuvFcD9CJZU0tqXPGDEZKSRd2yCZEFZOstT
+         bzOzKps7dzp+OM8JN0f5QwJaBmo6/6Uc/h1lwholgXG2DnVPGKyNUqEHT2tNnzRFgSLE
+         27wjcm+CROD4TVLyMJk/KB0UC3izSExSVlYVWBtDm/sNz9MYtURvZMb01Hgw8WBwHPac
+         AecXwxvMInW08la4gI048WApc8oJF9IETIngVea3Ix9eBCfPh8D/gbd/JCCnorwu9oBz
+         ZWIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=l2tJEqzHnv6SXlQuHsd3hOyscPeROk0Nh2yTJ+a5uyQ=;
-        b=rD9PCfWFEeIUFNQehHtHmDfwj8pn8ih3xfrfzpGeeRmER0oz6UAkQjlv4Q0NHBWf2j
-         Zp3pvcAu3sQe2J12srNzFT1rdSzm1a5UmsuMPy1a8Ia2RRaKvKpm1YUv8eLBEvyPwvzl
-         +mp+FnSDjhh3rYj5b1Q0lnynOHWd67kEZcwDwVVwi4vH28MgVPYFJ1X1h21+lb93RcRo
-         e0NzeAB3S/nnUOTYCOYwmNGeJU8rMcktO1mrwNPO7dKB+Bab1DyH4zyOg/vD8cuDDEE+
-         l3nZ67PfYkVjn5bcphos+6VL7+y8/BvCstfOIYiPiNOicQRUIYv9xadOWjfXxv8YC47l
-         V/vQ==
-X-Gm-Message-State: APjAAAWxUwXbJXY1vGPEd4SZuruZThIsjoVki71uMYcJxq9H4/rsUhFV
-        EtQbjMGHXsDjOOq1uYOxhmfBPg0lmS5ItD6+/FA=
-X-Google-Smtp-Source: APXvYqwIVyawganWqhPEMoK2JdvNIz0I0IVnVb3kgZmKX2y2uxVA04rka9xj7wQmdVVu6WYgVlyUknAhx8LgY2w8jTA=
-X-Received: by 2002:a67:328f:: with SMTP id y137mr18062vsy.199.1569256308066;
- Mon, 23 Sep 2019 09:31:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=cJX4Lq7MQipASm58rHED+Etk7MU2SLIFubzctqKqN4o=;
+        b=DDO4Cyocf4hDNSrtB0pZZ2ClDoHiF+Og8/f9nxW/Nov/KcdOrGijJDDH/ILqd9TDA0
+         dydbLlxsBHSdc82iu5q5dFQqb+pPaFKKbC9TkZzak79THiAGpDxwL72uh9IgE4CyKO3p
+         JjJbJiMuSjW/M4PL7dCMUbVyfymZoBwUW02wiCwSu/abZj0uk7OdjBP+CBt7QCA9wqU0
+         7EmrEmpkZyZbKty/24Ax6AbdxwtkjNS669KRFw16++P8fBp2oqVnJfNcRKbTl4Je7+Hk
+         +EK90zglAy6hAdUebDX6O7m4n1NH083Xp6a+BfBaEtZn6mYgHFrdwXg9226Q6Etc6i4G
+         L3dQ==
+X-Gm-Message-State: APjAAAX82gvsPav1LkRoCCHrbv5vUHURN+hk1mPWxGCM5oDLfF2986D8
+        wJQyKzreFIk9yTO0wxRrpuMqAVWcNgPP8g==
+X-Google-Smtp-Source: APXvYqzmS53TcM9tXHkdkD8gOudmZMUNpqqSgRXX5BHsovxKbZkE/ROe6wc/A+LYKSzKL7oV4SABAw==
+X-Received: by 2002:a17:907:2126:: with SMTP id qo6mr710479ejb.256.1569256365446;
+        Mon, 23 Sep 2019 09:32:45 -0700 (PDT)
+Received: from [192.168.43.245] ([91.135.68.130])
+        by smtp.gmail.com with ESMTPSA id p1sm1184663ejg.10.2019.09.23.09.32.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 09:32:44 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Ingo Molnar <mingo@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+Message-ID: <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+Date:   Mon, 23 Sep 2019 19:32:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190920185843.4096-1-matthew.cover@stackpath.com>
- <20190922080326-mutt-send-email-mst@kernel.org> <CAGyo_hqGbFdt1PoDrmo=S5iTO8TwbrbtOJtbvGT1WrFFMLwk-Q@mail.gmail.com>
- <20190922162546-mutt-send-email-mst@kernel.org> <CAGyo_hr+_oSwVSKSqKTXaouaMK-6b8+NVLTxWmZD3vn07GEGWA@mail.gmail.com>
- <f2e5b3d5-f38c-40e7-dda9-e1ed737a0135@redhat.com> <CAGyo_hohbFP+=eu3jWL954hrOgqu4upaw6HTH2=1qC9jcENWxQ@mail.gmail.com>
- <7d3abb5d-c5a7-9fbd-f82e-88b4bf717a0b@redhat.com> <CAGyo_hondiOXi8GtqZg-YNV3A+COV=5PMHoNKaHbBjnTRTUe9Q@mail.gmail.com>
- <b96ecf36-8f13-4a52-5355-7d88ec9e4a98@redhat.com>
-In-Reply-To: <b96ecf36-8f13-4a52-5355-7d88ec9e4a98@redhat.com>
-From:   Matt Cover <werekraken@gmail.com>
-Date:   Mon, 23 Sep 2019 09:31:36 -0700
-Message-ID: <CAGyo_hq2fyVOOJ9ktDoM9M4umAonb0ofhP6puTz91UHEp=ojDA@mail.gmail.com>
-Subject: Re: [PATCH net-next] tuntap: Fallback to automq on TUNSETSTEERINGEBPF
- prog negative return
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com,
-        Eric Dumazet <edumazet@google.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Matthew Cover <matthew.cover@stackpath.com>,
-        mail@timurcelik.de, pabeni@redhat.com,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        wangli39@baidu.com, lifei.shirley@bytedance.com,
-        tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="3B4EqaQuciegMUNCAnz5Lzg5cTwJnM1uT"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 10:16 PM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2019/9/23 =E4=B8=8A=E5=8D=8811:18, Matt Cover wrote:
-> > On Sun, Sep 22, 2019 at 7:34 PM Jason Wang <jasowang@redhat.com> wrote:
-> >>
-> >> On 2019/9/23 =E4=B8=8A=E5=8D=889:15, Matt Cover wrote:
-> >>> On Sun, Sep 22, 2019 at 5:51 PM Jason Wang <jasowang@redhat.com> wrot=
-e:
-> >>>> On 2019/9/23 =E4=B8=8A=E5=8D=886:30, Matt Cover wrote:
-> >>>>> On Sun, Sep 22, 2019 at 1:36 PM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
-> >>>>>> On Sun, Sep 22, 2019 at 10:43:19AM -0700, Matt Cover wrote:
-> >>>>>>> On Sun, Sep 22, 2019 at 5:37 AM Michael S. Tsirkin <mst@redhat.co=
-m> wrote:
-> >>>>>>>> On Fri, Sep 20, 2019 at 11:58:43AM -0700, Matthew Cover wrote:
-> >>>>>>>>> Treat a negative return from a TUNSETSTEERINGEBPF bpf prog as a=
- signal
-> >>>>>>>>> to fallback to tun_automq_select_queue() for tx queue selection=
-.
-> >>>>>>>>>
-> >>>>>>>>> Compilation of this exact patch was tested.
-> >>>>>>>>>
-> >>>>>>>>> For functional testing 3 additional printk()s were added.
-> >>>>>>>>>
-> >>>>>>>>> Functional testing results (on 2 txq tap device):
-> >>>>>>>>>
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-tun no prog =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue()=
- returned '-1'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue=
-() ran
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-tun prog -1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb()=
- returned '-1'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue()=
- returned '-1'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_automq_select_queue=
-() ran
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-tun prog 0 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb()=
- returned '0'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue()=
- returned '0'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-tun prog 1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb()=
- returned '1'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue()=
- returned '1'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-tun prog 2 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: bpf_prog_run_clear_cb()=
- returned '2'
-> >>>>>>>>>      [Fri Sep 20 18:33:27 2019] tuntap: tun_ebpf_select_queue()=
- returned '0'
-> >>>>>>>>>
-> >>>>>>>>> Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
-> >>>>>>>> Could you add a bit more motivation data here?
-> >>>>>>> Thank you for these questions Michael.
-> >>>>>>>
-> >>>>>>> I'll plan on adding the below information to the
-> >>>>>>> commit message and submitting a v2 of this patch
-> >>>>>>> when net-next reopens. In the meantime, it would
-> >>>>>>> be very helpful to know if these answers address
-> >>>>>>> some of your concerns.
-> >>>>>>>
-> >>>>>>>> 1. why is this a good idea
-> >>>>>>> This change allows TUNSETSTEERINGEBPF progs to
-> >>>>>>> do any of the following.
-> >>>>>>>     1. implement queue selection for a subset of
-> >>>>>>>        traffic (e.g. special queue selection logic
-> >>>>>>>        for ipv4, but return negative and use the
-> >>>>>>>        default automq logic for ipv6)
-> >>>>>>>     2. determine there isn't sufficient information
-> >>>>>>>        to do proper queue selection; return
-> >>>>>>>        negative and use the default automq logic
-> >>>>>>>        for the unknown
-> >>>>>>>     3. implement a noop prog (e.g. do
-> >>>>>>>        bpf_trace_printk() then return negative and
-> >>>>>>>        use the default automq logic for everything)
-> >>>>>>>
-> >>>>>>>> 2. how do we know existing userspace does not rely on existing b=
-ehaviour
-> >>>>>>> Prior to this change a negative return from a
-> >>>>>>> TUNSETSTEERINGEBPF prog would have been cast
-> >>>>>>> into a u16 and traversed netdev_cap_txqueue().
-> >>>>>>>
-> >>>>>>> In most cases netdev_cap_txqueue() would have
-> >>>>>>> found this value to exceed real_num_tx_queues
-> >>>>>>> and queue_index would be updated to 0.
-> >>>>>>>
-> >>>>>>> It is possible that a TUNSETSTEERINGEBPF prog
-> >>>>>>> return a negative value which when cast into a
-> >>>>>>> u16 results in a positive queue_index less than
-> >>>>>>> real_num_tx_queues. For example, on x86_64, a
-> >>>>>>> return value of -65535 results in a queue_index
-> >>>>>>> of 1; which is a valid queue for any multiqueue
-> >>>>>>> device.
-> >>>>>>>
-> >>>>>>> It seems unlikely, however as stated above is
-> >>>>>>> unfortunately possible, that existing
-> >>>>>>> TUNSETSTEERINGEBPF programs would choose to
-> >>>>>>> return a negative value rather than return the
-> >>>>>>> positive value which holds the same meaning.
-> >>>>>>>
-> >>>>>>> It seems more likely that future
-> >>>>>>> TUNSETSTEERINGEBPF programs would leverage a
-> >>>>>>> negative return and potentially be loaded into
-> >>>>>>> a kernel with the old behavior.
-> >>>>>> OK if we are returning a special
-> >>>>>> value, shouldn't we limit it? How about a special
-> >>>>>> value with this meaning?
-> >>>>>> If we are changing an ABI let's at least make it
-> >>>>>> extensible.
-> >>>>>>
-> >>>>> A special value with this meaning sounds
-> >>>>> good to me. I'll plan on adding a define
-> >>>>> set to -1 to cause the fallback to automq.
-> >>>> Can it really return -1?
-> >>>>
-> >>>> I see:
-> >>>>
-> >>>> static inline u32 bpf_prog_run_clear_cb(const struct bpf_prog *prog,
-> >>>>                                            struct sk_buff *skb)
-> >>>> ...
-> >>>>
-> >>>>
-> >>>>> The way I was initially viewing the old
-> >>>>> behavior was that returning negative was
-> >>>>> undefined; it happened to have the
-> >>>>> outcomes I walked through, but not
-> >>>>> necessarily by design.
-> >>>> Having such fallback may bring extra troubles, it requires the eBPF
-> >>>> program know the existence of the behavior which is not a part of ke=
-rnel
-> >>>> ABI actually. And then some eBPF program may start to rely on that w=
-hich
-> >>>> is pretty dangerous. Note, one important consideration is to have
-> >>>> macvtap support where does not have any stuffs like automq.
-> >>>>
-> >>>> Thanks
-> >>>>
-> >>> How about we call this TUN_SSE_ABORT
-> >>> instead of TUN_SSE_DO_AUTOMQ?
-> >>>
-> >>> TUN_SSE_ABORT could be documented as
-> >>> falling back to the default queue
-> >>> selection method in either space
-> >>> (presumably macvtap has some queue
-> >>> selection method when there is no prog).
-> >>
-> >> This looks like a more complex API, we don't want userspace to differ
-> >> macvtap from tap too much.
-> >>
-> >> Thanks
-> >>
-> > This is barely more complex and provides
-> > similar to what is done in many places.
-> > For xdp, an XDP_PASS enacts what the
-> > kernel would do if there was no bpf prog.
-> > For tc cls in da mode, TC_ACT_OK enacts
-> > what the kernel would do if there was
-> > no bpf prog. For xt_bpf, false enacts
-> > what the kernel would do if there was
-> > no bpf prog (as long as negation
-> > isn't in play in the rule, I believe).
->
->
-> I think this is simply because you can't implement e.g
-> XDP_PASS/TC_ACT_OK through eBPF itself which is not the case of steering
-> prog here.
->
->
-> >
-> > I know that this is somewhat of an
-> > oversimplification and that each of
-> > these also means something else in
-> > the respective hookpoint, but I standby
-> > seeing value in this change.
-> >
-> > macvtap must have some default (i.e the
-> > action which it takes when no prog is
-> > loaded), even if that is just use queue
-> > 0. We can provide the same TUN_SSE_ABORT
-> > in userspace which does the same thing;
-> > enacts the default when returned. Any
-> > differences left between tap and macvtap
-> > would be in what the default is, not in
-> > these changes. And that difference already
-> > exists today.
->
->
-> I think it's better to safe to just drop the packet instead of trying to
-> workaround it.
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3B4EqaQuciegMUNCAnz5Lzg5cTwJnM1uT
+Content-Type: multipart/mixed; boundary="dzGye9qwqLYQx04F4ajWCDwJOPGLZdKrs";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+In-Reply-To: <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
 
-This patch aside, dropping the packet here
-seems like the wrong choice. Loading a
-prog at this hookpoint "configures"
-steering. The action of configuring
-steering should not result in dropped
-packets.
+--dzGye9qwqLYQx04F4ajWCDwJOPGLZdKrs
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Suboptimal delivery is generally preferable
-to no delivery. Leaving the behavior as-is
-(i.e. relying on netdev_cap_txqueue()) or
-making any return which doesn't fit in a
-u16 simply use queue 0 would be highly
-preferable to dropping the packet.
+Sorry, mixed the threads.
 
-> Thanks
->
->
-> >
-> >>>>> In order to keep the new behavior
-> >>>>> extensible, how should we state that a
-> >>>>> negative return other than -1 is
-> >>>>> undefined and therefore subject to
-> >>>>> change. Is something like this
-> >>>>> sufficient?
-> >>>>>
-> >>>>>      Documentation/networking/tc-actions-env-rules.txt
-> >>>>>
-> >>>>> Additionally, what should the new
-> >>>>> behavior implement when a negative other
-> >>>>> than -1 is returned? I would like to have
-> >>>>> it do the same thing as -1 for now, but
-> >>>>> with the understanding that this behavior
-> >>>>> is undefined. Does this sound reasonable?
-> >>>>>
-> >>>>>>>> 3. why doesn't userspace need a way to figure out whether it run=
-s on a kernel with and
-> >>>>>>>>       without this patch
-> >>>>>>> There may be some value in exposing this fact
-> >>>>>>> to the ebpf prog loader. What is the standard
-> >>>>>>> practice here, a define?
-> >>>>>> We'll need something at runtime - people move binaries between ker=
-nels
-> >>>>>> without rebuilding then. An ioctl is one option.
-> >>>>>> A sysfs attribute is another, an ethtool flag yet another.
-> >>>>>> A combination of these is possible.
-> >>>>>>
-> >>>>>> And if we are doing this anyway, maybe let userspace select
-> >>>>>> the new behaviour? This way we can stay compatible with old
-> >>>>>> userspace...
-> >>>>>>
-> >>>>> Understood. I'll look into adding an
-> >>>>> ioctl to activate the new behavior. And
-> >>>>> perhaps a method of checking which is
-> >>>>> behavior is currently active (in case we
-> >>>>> ever want to change the default, say
-> >>>>> after some suitably long transition
-> >>>>> period).
-> >>>>>
-> >>>>>>>> thanks,
-> >>>>>>>> MST
-> >>>>>>>>
-> >>>>>>>>> ---
-> >>>>>>>>>     drivers/net/tun.c | 20 +++++++++++---------
-> >>>>>>>>>     1 file changed, 11 insertions(+), 9 deletions(-)
-> >>>>>>>>>
-> >>>>>>>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> >>>>>>>>> index aab0be4..173d159 100644
-> >>>>>>>>> --- a/drivers/net/tun.c
-> >>>>>>>>> +++ b/drivers/net/tun.c
-> >>>>>>>>> @@ -583,35 +583,37 @@ static u16 tun_automq_select_queue(struct=
- tun_struct *tun, struct sk_buff *skb)
-> >>>>>>>>>          return txq;
-> >>>>>>>>>     }
-> >>>>>>>>>
-> >>>>>>>>> -static u16 tun_ebpf_select_queue(struct tun_struct *tun, struc=
-t sk_buff *skb)
-> >>>>>>>>> +static int tun_ebpf_select_queue(struct tun_struct *tun, struc=
-t sk_buff *skb)
-> >>>>>>>>>     {
-> >>>>>>>>>          struct tun_prog *prog;
-> >>>>>>>>>          u32 numqueues;
-> >>>>>>>>> -     u16 ret =3D 0;
-> >>>>>>>>> +     int ret =3D -1;
-> >>>>>>>>>
-> >>>>>>>>>          numqueues =3D READ_ONCE(tun->numqueues);
-> >>>>>>>>>          if (!numqueues)
-> >>>>>>>>>                  return 0;
-> >>>>>>>>>
-> >>>>>>>>> +     rcu_read_lock();
-> >>>>>>>>>          prog =3D rcu_dereference(tun->steering_prog);
-> >>>>>>>>>          if (prog)
-> >>>>>>>>>                  ret =3D bpf_prog_run_clear_cb(prog->prog, skb)=
-;
-> >>>>>>>>> +     rcu_read_unlock();
-> >>>>>>>>>
-> >>>>>>>>> -     return ret % numqueues;
-> >>>>>>>>> +     if (ret >=3D 0)
-> >>>>>>>>> +             ret %=3D numqueues;
-> >>>>>>>>> +
-> >>>>>>>>> +     return ret;
-> >>>>>>>>>     }
-> >>>>>>>>>
-> >>>>>>>>>     static u16 tun_select_queue(struct net_device *dev, struct =
-sk_buff *skb,
-> >>>>>>>>>                              struct net_device *sb_dev)
-> >>>>>>>>>     {
-> >>>>>>>>>          struct tun_struct *tun =3D netdev_priv(dev);
-> >>>>>>>>> -     u16 ret;
-> >>>>>>>>> +     int ret;
-> >>>>>>>>>
-> >>>>>>>>> -     rcu_read_lock();
-> >>>>>>>>> -     if (rcu_dereference(tun->steering_prog))
-> >>>>>>>>> -             ret =3D tun_ebpf_select_queue(tun, skb);
-> >>>>>>>>> -     else
-> >>>>>>>>> +     ret =3D tun_ebpf_select_queue(tun, skb);
-> >>>>>>>>> +     if (ret < 0)
-> >>>>>>>>>                  ret =3D tun_automq_select_queue(tun, skb);
-> >>>>>>>>> -     rcu_read_unlock();
-> >>>>>>>>>
-> >>>>>>>>>          return ret;
-> >>>>>>>>>     }
-> >>>>>>>>> --
-> >>>>>>>>> 1.8.3.1
+>>
+>> I'm not sure an extension is needed for such a special interface, why =
+not=20
+>> just put a ->threshold value next to the ctx->wait field and use eithe=
+r=20
+>> the regular wait_event() APIs with the proper condition, or=20
+>> wait_event_cmd() style APIs if you absolutely need something more comp=
+lex=20
+>> to happen inside?
+Ingo,
+io_uring works well without this patch just using wait_event_*() with
+proper condition, but there are performance issues with spurious
+wakeups. Detailed description in the previous mail.
+Am I missing something?
+Thanks
+
+
+>>
+>> Should result in a much lower linecount and no scheduler changes. :-)
+>>
+>> Thanks,
+>>
+>> 	Ingo
+>>
+>=20
+
+--=20
+Yours sincerely,
+Pavel Begunkov
+
+
+--dzGye9qwqLYQx04F4ajWCDwJOPGLZdKrs--
+
+--3B4EqaQuciegMUNCAnz5Lzg5cTwJnM1uT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2I86IACgkQWt5b1Glr
++6XqNxAAm4KZCQh3M7BMDBgN/Rnq89kWjICkQLKXqvhV/nPSu9bsY6fCB3tj1C/V
+s1tMQXuWEynbB6iewvBr/laIENP2hqiS27NdevYzjY12amktPxru6rpQs9GafCi7
+N0Wip72JhCiaptGAmIdAair0HoWx6HQ+4WF5lMYFR2Zc8pyLIdkz+lk/xdHAs/+F
+T/viybKa9v4ZQ3T5VG/1grlCT9x71bHgOLdsMW6vAGEIdzNIMkwNr+6PxQAEAwWk
+sbjD0xezUN4e3W/RtXlhKL5hWUafciIZWavYlbM1f+llbk/TXRJPyw3qaKl7CZxA
+lfDARP566jkt5rfAA6aS4bkzpNz3zee5qdulOWsLYPLePSC5paqPJKvUpZuBhidU
+f7nx61lbsFAyI2XRN0rZDRsWaIGbtkFF0pzrFiWA8DEkrNTF2tM6MMguUcDNmRYV
+TQliaArdtycCET1QI0g3lQw3G0cZQhbbbpWbsLT3/NMDbPx6yLA6WAvP0DwQFdBi
+Jysi9akB/U9YrAXB/bAZyCMrKNpjYZWKIwMxU1s+1xhTTxcYyR6vtOlNhWr1ev0w
+CUd0DaNH57rzRY2v/07YmRafHcCDf7r1tCZ7DS6hmHp2wAP+dal2acjxfesxd6g5
+eSkSJT/2pQVnc69xciG0eC1GVP6ZnSGwAYHnZT54rhw4O1r3hD0=
+=3vGs
+-----END PGP SIGNATURE-----
+
+--3B4EqaQuciegMUNCAnz5Lzg5cTwJnM1uT--
