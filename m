@@ -2,214 +2,148 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80214C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6B5C04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D032206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8SDD/2I"
+	by mail.kernel.org (Postfix) with ESMTP id 8415B206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfIWLLB (ORCPT
+        id S1730115AbfIWLMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:11:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37202 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfIWLLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:11:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i1so13443826wro.4;
-        Mon, 23 Sep 2019 04:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qtQ45fwloWjBlifREEUJV5bQdHg/Ixd1tAtGl3/qHQY=;
-        b=o8SDD/2Icte4oZCfSphkKpTh1ZO8m6SvLc4ALLi+3AK9muyEWmsAjKuureFZ0oGs7D
-         WHQcG9wcTUqcaLrGUOtN9Ihb49re8ZbwjVJC2htaCP7Ps8V/HJr1ztuGfCvE3WNWx10q
-         gSU/0+LaaEazotMFOy0lCbO7hy0C6U0TyBOl4QPt7Ha+oXXDlRBD6wfXzjGXr6ty0g8N
-         y6yNmzJUFV1+jaWcwWSvwmkhVC2VrFhdxH8DrauXJRBEH38WPL4zZgiVEELxYeFT4i7Y
-         WgMVBKW7thyvW3jIRsWrWrJBf/HmJQ6xX/zzObiSqd995zwd38jC6r6Np+fr/p2yGR1h
-         q6Zg==
+        Mon, 23 Sep 2019 07:12:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37704 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727145AbfIWLMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:12:23 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC40389AC4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 11:12:22 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id f11so4667763wrt.18
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:12:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qtQ45fwloWjBlifREEUJV5bQdHg/Ixd1tAtGl3/qHQY=;
-        b=S0CFrgMx836FKFrB+RDV8+Tl1ibFc+kg6d3YGmQJUEdKbhSbfkx/8OlCKBtyQJO0EK
-         ZQzeZQul/7cMaStBcxm0lSZtaLNHhO2FwwPx2ORKKpnJ1iAI/sJOYKy10c+u5DtgX5TP
-         qfqadgk8SFj/3Q6KU5YIw2395wH8n1YVsUB9T61iqToDacga43VsbAi5/nsXppycPKI6
-         uA1guaYvUbX507N0CaTZ5Au3i23MNuEVywhP/FWbPhz6mIDkr+5lulV9T4RO7jo4iaKj
-         3p0w/OyQwb07u0mb73P2JNx5PgVT7K0qLxQHTm7uzx11fMJmN4LT02gePg72yaUW32c7
-         u03g==
-X-Gm-Message-State: APjAAAUdEyikRiF4e5jMMZVweDRWTQsJJIVk2gxO+BPi3G8jXXwXYge4
-        S3i1f1pe/O7bwgXjQX/ltEo=
-X-Google-Smtp-Source: APXvYqyyAhG5GzXGG0OOBrW89t4gOdDg7ww0VFg0o4kN5sqV0yxdpjnqFaCIJmaMng/Nln/0Qzo35w==
-X-Received: by 2002:a5d:6785:: with SMTP id v5mr22057575wru.9.1569237058047;
-        Mon, 23 Sep 2019 04:10:58 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id 207sm20220357wme.17.2019.09.23.04.10.56
+        bh=uxD2Y3WBGHkLvQqCAXXWzhnVRm7+WSVZkhBdGyUy/Zg=;
+        b=Ov0/ub5PLhPIQsZZRGUBlqarggm8QVIG3n/Ew8U8wQh144n3oSFoQ7KWsST7jiczbd
+         RxcKoSWjFXVWouHANEUAsecDtQyMTQ0PVGClZGTxcrWDXNfsnbpl9qJy8oDBFz8CQxIR
+         CzqAhtXhOF6NdwJoZgYtmoHx3Wk8P9rvRFIpFloAImkVPuO2Oic/2oYLQA6O0SI0KCH4
+         XDEy0KSkKfTbol9nRBqOtt3AMdsGL3jMWEXK52L3Rc15s/6XV74BzHplt/cfFvcKg+7l
+         GasrJIKltEf9QIdSnoxIr8n2Yen9O4YxZuyq8ASgAl1so3xb/B5aGpFdg3caT6RJsrtL
+         WxVA==
+X-Gm-Message-State: APjAAAWs+LltjTWjZf+ZTNuX9emsCBTERtAaQixSlQG4SodaW3RZ/HXF
+        9LOTiCYMJyVC+MSnTgt8JCEgdAxtw+rv1iIjc7X7Bg7ZmdHPXhDJddOpL33uw3THRhQneTtL6bY
+        n6lTfNDyPFpTv0IfR6U1nBWsJ
+X-Received: by 2002:adf:cc87:: with SMTP id p7mr20853219wrj.43.1569237141151;
+        Mon, 23 Sep 2019 04:12:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzMW44zhOI1DG3DXgqsJqxbWPiZJb1HLWTJc4XK+mxiK6jX2sDL9nFCMUqBJJ1EN+ViAcwPtQ==
+X-Received: by 2002:adf:cc87:: with SMTP id p7mr20853197wrj.43.1569237140829;
+        Mon, 23 Sep 2019 04:12:20 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id s12sm14065554wrn.90.2019.09.23.04.12.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 04:10:57 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
- <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
- <87r24piwhm.fsf@x220.int.ebiederm.org>
- <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
- <87ftl5donm.fsf@x220.int.ebiederm.org>
- <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
- <20190910111551.scam5payogqqvlri@wittgenstein>
- <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
- <871rwnda47.fsf@x220.int.ebiederm.org>
- <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
- <87ef0hbezt.fsf@x220.int.ebiederm.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <cc21557f-1568-68c3-e322-47ceb52fdf53@gmail.com>
-Date:   Mon, 23 Sep 2019 13:10:56 +0200
+        Mon, 23 Sep 2019 04:12:20 -0700 (PDT)
+Subject: Re: [PATCH v7 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190904161245.111924-1-anup.patel@wdc.com>
+ <20190904161245.111924-12-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8c44ac8a-3fdc-b9dd-1815-06e86cb73047@redhat.com>
+Date:   Mon, 23 Sep 2019 13:12:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <87ef0hbezt.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20190904161245.111924-12-anup.patel@wdc.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eric,
+On 04/09/19 18:15, Anup Patel wrote:
+> +	unsigned long guest_sstatus =
+> +			vcpu->arch.guest_context.sstatus | SR_MXR;
+> +	unsigned long guest_hstatus =
+> +			vcpu->arch.guest_context.hstatus | HSTATUS_SPRV;
+> +	unsigned long guest_vsstatus, old_stvec, tmp;
+> +
+> +	guest_sstatus = csr_swap(CSR_SSTATUS, guest_sstatus);
+> +	old_stvec = csr_swap(CSR_STVEC, (ulong)&__kvm_riscv_unpriv_trap);
+> +
+> +	if (read_insn) {
+> +		guest_vsstatus = csr_read_set(CSR_VSSTATUS, SR_MXR);
 
-On 9/15/19 8:17 PM, Eric W. Biederman wrote:
-> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
-> 
->> Hello Eric,
->>
->> On 9/11/19 1:06 AM, Eric W. Biederman wrote:
->>> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
->>>
->>>> Hello Christian,
->>>>
->>>>>> All: I plan to add the following text to the manual page:
->>>>>>
->>>>>>        new_root and put_old may be the same  directory.   In  particular,
->>>>>>        the following sequence allows a pivot-root operation without need‐
->>>>>>        ing to create and remove a temporary directory:
->>>>>>
->>>>>>            chdir(new_root);
->>>>>>            pivot_root(".", ".");
->>>>>>            umount2(".", MNT_DETACH);
->>>>>
->>>>> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
->>>>> before the umount2()? Especially for the container case... I think we
->>>>> discussed this briefly yesterday in person.
->>>> Thanks for noticing. That detail (more precisely: not MS_SHARED) is
->>>> already covered in the numerous other changes that I have pending
->>>> for this page:
->>>>
->>>>        The following restrictions apply:
->>>>        ...
->>>>        -  The propagation type of new_root and its parent mount must  not
->>>>           be MS_SHARED; similarly, if put_old is an existing mount point,
->>>>           its propagation type must not be MS_SHARED.
->>>
->>> Ugh.  That is close but not quite correct.
->>>
->>> A better explanation:
->>>
->>>     The pivot_root system call will never propagate any changes it makes.
->>>     The pivot_root system call ensures this is safe by verifying that
->>>     none of put_old, the parent of new_root, and parent of the root directory
->>>     have a propagation type of MS_SHARED.
->>
->> Thanks for that. However, another question. You text has two changes.
->> First, I understand why you reword the discussion to indicate the
->> _purpose_ of the rules. However, you also, AFAICS, list a different set of
->> of directories that can't be MS_SHARED:
->>
->> I said: new_root, the parent of new_root, and put_old
->> You said: the parent of new_root, and put_old, and parent of the
->> root directory.
-> 
-> 
->> Was I wrong on this detail also?
-> 
-> That is how I read the code.  The code says:
-> 
-> 	if (IS_MNT_SHARED(old_mnt) ||
-> 		IS_MNT_SHARED(new_mnt->mnt_parent) ||
-> 		IS_MNT_SHARED(root_mnt->mnt_parent))
-> 		goto out4;
-> 
-> We both agree on put_old and the parent of new_mnt.
-> 
-> When I look at the code root_mnt comes from the root directory, not new_mnt.
+Is this needed?  IIUC SSTATUS.MXR encompasses a wider set of permissions:
 
-Hmm -- I had checked the code when I wrote my text, but somehow
-I misread things. Going back to recheck the code, you are obviously
-correct. Thanks for catching that.
+  The HS-level MXR bit makes any executable page readable.  {\tt
+  vsstatus}.MXR makes readable those pages marked executable at the VS
+  translation level, but only if readable at the guest-physical
+  translation level.
 
-> Furthermore those checks fundamentally makes sense as the root directory
-> and new_root that are moving.  The directory put_old simply has
-> something moving onto it.
+So it should be enough to set SSTATUS.MXR=1 I think.  But you also
+shouldn't set SSTATUS.MXR=1 in the !read_insn case.
+
+Also, you can drop the irq save/restore (which is already a save/restore
+of SSTATUS) since you already write 0 to SSTATUS.SIE in your csr_swap.
+Perhaps add a BUG_ON(guest_sstatus & SR_SIE) before the csr_swap?
+
+> +		asm volatile ("\n"
+> +			"csrrw %[hstatus], " STR(CSR_HSTATUS) ", %[hstatus]\n"
+> +			"li %[tilen], 4\n"
+> +			"li %[tscause], 0\n"
+> +			"lhu %[val], (%[addr])\n"
+> +			"andi %[tmp], %[val], 3\n"
+> +			"addi %[tmp], %[tmp], -3\n"
+> +			"bne %[tmp], zero, 2f\n"
+> +			"lhu %[tmp], 2(%[addr])\n"
+> +			"sll %[tmp], %[tmp], 16\n"
+> +			"add %[val], %[val], %[tmp]\n"
+> +			"2: csrw " STR(CSR_HSTATUS) ", %[hstatus]"
+> +		: [hstatus] "+&r"(guest_hstatus), [val] "=&r" (val),
+> +		  [tmp] "=&r" (tmp), [tilen] "+&r" (tilen),
+> +		  [tscause] "+&r" (tscause)
+> +		: [addr] "r" (addr));
+> +		csr_write(CSR_VSSTATUS, guest_vsstatus);
+
 > 
->>> The concern from our conversation at the container mini-summit was that
->>> there is a pathology if in your initial mount namespace all of the
->>> mounts are marked MS_SHARED like systemd does (and is almost necessary
->>> if you are going to use mount propagation), that if new_root itself
->>> is MS_SHARED then unmounting the old_root could propagate.
->>>
->>> So I believe the desired sequence is:
->>>
->>>>>>            chdir(new_root);
->>> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
->>>>>>            pivot_root(".", ".");
->>>>>>            umount2(".", MNT_DETACH);
->>>
->>> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
->>> long as it is not MS_SHARED the mount won't propagate back to the
->>> parent mount namespace.
->>
->> Thanks. I made that change.
-> 
-> For what it is worth.  The sequence above without the change in mount
-> attributes will fail if it is necessary to change the mount attributes
-> as "." is both put_old as well as new_root.
-> 
-> When I initially suggested the change I saw "." was new_root and forgot
-> "." was also put_old.  So I thought there was a silent danger without
-> that sequence.
+> +#ifndef CONFIG_RISCV_ISA_C
+> +			"li %[tilen], 4\n"
+> +#else
+> +			"li %[tilen], 2\n"
+> +#endif
 
-So, now I am a little confused by the comments you added here. Do you
-now mean that the 
+Can you use an assembler directive to force using a non-compressed
+format for ld and lw?  This would get rid of tilen, which is costing 6
+bytes (if I did the RVC math right) in order to save two. :)
 
-mount("", ".", MS_SLAVE | MS_REC, NULL);
+Paolo
 
-call is not actually necessary?
-
-Thanks,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> +			"li %[tscause], 0\n"
+> +#ifdef CONFIG_64BIT
+> +			"ld %[val], (%[addr])\n"
+> +#else
+> +			"lw %[val], (%[addr])\n"
+> +#endif
