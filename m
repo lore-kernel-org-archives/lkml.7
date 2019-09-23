@@ -2,163 +2,208 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BAEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B67DC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CB720867
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zAsyPvNJ"
+	by mail.kernel.org (Postfix) with ESMTP id D6FA820820
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 11:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfIWLeH (ORCPT
+        id S2393921AbfIWLeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 07:34:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33351 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfIWLeH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:34:07 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a22so13361957ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 04:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1iHVMQKqhTvi2xyeEpHSWZnbXdJb6BZcBgLx05z/RJY=;
-        b=zAsyPvNJsGYcnnQeTbbprStzO4yMGANU4Wwf8P25L0D1n7azLLG750ich1xVRaWDAW
-         IyAmTFGaVwCJP9xiUik/8q1b66zr5cFf/PG4QRArX19JS2/PwOhFis27q9CH5IQFsysc
-         IgjgN8DM+EhVr1ffjmOsBsngMuGC94o0StTmi8fH6jmvYVS/LlBjgjM+UkpoZerHGp6z
-         LXaU9ZShi7/y/Ab2WMrtyF6IRiCp2pmUvmooh3KCl4I4dI7zDmL/n2AFYqE3OsIifJyt
-         6xY4M3QgfFH8s4DCfBRwSCg7ZbiUvuwl9kfgIS3JzDNAIos56QJeqRygXAFE+sMLd3YD
-         aIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1iHVMQKqhTvi2xyeEpHSWZnbXdJb6BZcBgLx05z/RJY=;
-        b=ZVttwri01LRprT+vuJI+AxrW3ULvgqO0L37aSlwOEVhi47tT6LJdaXH3J75UlB0+Um
-         QJWgYdqomt4pBdr2DYv/xmnn8OUxo+s07Le+gfAP1AMoWtSmBYxmPTYjgLW4rW+aNi/r
-         Gq8ilunO48FUrnmh6wtvlfbga8xvSK1KD3PMoPUtUgLFsNfmBLoUGZAD+VT6RoHGYnbQ
-         1vtoeRIbqJwOlXgEtqCpgU2AQp/VhxtJTHZPxb+tooh0ifVSrUNEcLIrmdKYWyyMbSBg
-         LMrTjmPfmgxZrhz64mgdz3HjJZYN1l8cvezU8DNhjXco6Evs6vjKIePCVe31e3zyuXPV
-         mysw==
-X-Gm-Message-State: APjAAAWoAUYFbu+MlV7+wXJT7rySYJ1OXNuRTvsmBZCFh2tigEG4w3Zz
-        Mz6/MIETRUTUKwnr0QvvKBFr8A==
-X-Google-Smtp-Source: APXvYqyLM/Stp8gNwOtRCJqDNGvGHQVfcCbloLsy0YfOl+HNNgEkESrWd92Ftx28l5PJGALh+qbOug==
-X-Received: by 2002:a2e:8789:: with SMTP id n9mr17263051lji.52.1569238444804;
-        Mon, 23 Sep 2019 04:34:04 -0700 (PDT)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id 126sm2326083lfh.45.2019.09.23.04.34.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 04:34:04 -0700 (PDT)
-Date:   Mon, 23 Sep 2019 13:34:03 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH] media: platform: Use devm_platform_ioremap_resource() in
- two functions
-Message-ID: <20190923113403.GA14837@bigcity.dyn.berto.se>
-References: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
+        Mon, 23 Sep 2019 07:34:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38602 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393808AbfIWLeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:34:23 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C7C5018C8933;
+        Mon, 23 Sep 2019 11:34:22 +0000 (UTC)
+Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B984C60925;
+        Mon, 23 Sep 2019 11:34:19 +0000 (UTC)
+Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        linux-hyperv@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20190909114830.662-1-david@redhat.com>
+ <f73c4d0f-ad81-81a6-1107-852f2b9cad41@redhat.com>
+ <20190923085807.GD6016@dhcp22.suse.cz>
+ <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
+ <20190923111559.GK6016@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
+Date:   Mon, 23 Sep 2019 13:34:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d80a685a-c3de-b9c9-ad32-e1da9308c393@web.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190923111559.GK6016@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 23 Sep 2019 11:34:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+On 23.09.19 13:15, Michal Hocko wrote:
+> On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
+>> On 23.09.19 10:58, Michal Hocko wrote:
+>>> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
+>>>> On 09.09.19 13:48, David Hildenbrand wrote:
+>>>>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
+>>>>>
+>>>>> Let's replace the __online_page...() functions by generic_online_page().
+>>>>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
+>>>>> can simpy re-use the generic function.
+>>>>>
+>>>>> Only compile-tested.
+>>>>>
+>>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>>>>>
+>>>>> David Hildenbrand (3):
+>>>>>   mm/memory_hotplug: Export generic_online_page()
+>>>>>   hv_balloon: Use generic_online_page()
+>>>>>   mm/memory_hotplug: Remove __online_page_free() and
+>>>>>     __online_page_increment_counters()
+>>>>>
+>>>>>  drivers/hv/hv_balloon.c        |  3 +--
+>>>>>  include/linux/memory_hotplug.h |  4 +---
+>>>>>  mm/memory_hotplug.c            | 17 ++---------------
+>>>>>  3 files changed, 4 insertions(+), 20 deletions(-)
+>>>>>
+>>>>
+>>>> Ping, any comments on this one?
+>>>
+>>> Unification makes a lot of sense to me. You can add
+>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>
+>>> I will most likely won't surprise if I asked for more here though ;)
+>>
+>> I'm not surprised, but definitely not in a negative sense ;) I was
+>> asking myself if we could somehow rework this, too.
+>>
+>>> I have to confess I really detest the whole concept of a hidden callback
+>>> with a very weird API. Is this something we can do about? I do realize
+>>> that adding a callback would require either cluttering the existing APIs
+>>> but maybe we can come up with something more clever. Or maybe existing
+>>> external users of online callback can do that as a separate step after
+>>> the online is completed - or is this impossible due to locking
+>>> guarantees?
+>>>
+>>
+>> The use case of this (somewhat special) callback really is to avoid
+>> selected (unbacked in the hypervisor) pages to get put to the buddy just
+>> now, but instead to defer that (sometimes, defer till infinity ;) ).
+>> Especially, to hinder these pages from getting touched at all. Pages
+>> that won't be put to the buddy will usually get PG_offline set (e.g.,
+>> Hyper-V and XEN) - the only two users I am aware of.
+>>
+>> For Hyper-V (and also eventually virtio-mem), it is important to set
+>> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
+>> Only this way, PG_offline is properly set on all pfn_to_online_page()
+>> pages, meaning "don't touch this page" - e.g., used to skip over such
+>> pages when suspending or by makedumpfile to skip over such offline pages
+>> when creating a memory dump.
+> 
+> Thanks for the clarification. I have never really studied what those
+> callbacks are doing really.
+> 
+>> So if we would e.g., try to piggy-back onto the memory_notify()
+>> infrastructure, we could
+>> 1. Online all pages to the buddy (dropping the callback)
+>> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
+>> -> in the notifier, pull pages from the buddy, mark sections online
+>> 3. Set all involved sections online (online_mem_sections())
+> 
+> This doesn't really sound any better. For one pages are immediately
+> usable when they hit the buddy allocator so this is racy and thus not
+> reliable.
+> 
+>> However, I am not sure what actually happens after 1. - we are only
+>> holding the device hotplug lock and the memory hotplug lock, so the
+>> pages can just get allocated. Also, it sounds like more work and code
+>> for the same end result (okay, if the rework is really necessary, though).
+>>
+>> So yeah, while the current callback might not be optimal, I don't see an
+>> easy and clean way to rework this. With the change in this series we are
+>> at least able to simply defer doing what would have been done without
+>> the callback - not perfect but better.
+>>
+>> Do you have anything in mind that could work out and make this nicer?
+> 
+> I am wondering why those pages get onlined when they are, in fact,
+> supposed to be offline.
+> 
 
-Thanks for your patch.
-
-On 2019-09-18 11:30:30 +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 18 Sep 2019 11:20:48 +0200
-> 
-> Simplify these function implementations by using a known wrapper function.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c | 8 +-------
->  drivers/media/platform/rcar-vin/rcar-core.c            | 7 +------
-
-For rcar-vin:
-
-Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-
->  2 files changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> index 00d090df11bb..944771ee5f5c 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> @@ -253,13 +253,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
->  	}
-> 
->  	for (i = 0; i < NUM_MAX_VDEC_REG_BASE; i++) {
-> -		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-> -		if (res == NULL) {
-> -			dev_err(&pdev->dev, "get memory resource failed.");
-> -			ret = -ENXIO;
-> -			goto err_res;
-> -		}
-> -		dev->reg_base[i] = devm_ioremap_resource(&pdev->dev, res);
-> +		dev->reg_base[i] = devm_platform_ioremap_resource(pdev, i);
->  		if (IS_ERR((__force void *)dev->reg_base[i])) {
->  			ret = PTR_ERR((__force void *)dev->reg_base[i]);
->  			goto err_res;
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 6993484ff0f3..334c62805959 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -1282,7 +1282,6 @@ static int rcar_vin_probe(struct platform_device *pdev)
->  {
->  	const struct soc_device_attribute *attr;
->  	struct rvin_dev *vin;
-> -	struct resource *mem;
->  	int irq, ret;
-> 
->  	vin = devm_kzalloc(&pdev->dev, sizeof(*vin), GFP_KERNEL);
-> @@ -1301,11 +1300,7 @@ static int rcar_vin_probe(struct platform_device *pdev)
->  	if (attr)
->  		vin->info = attr->data;
-> 
-> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (mem == NULL)
-> -		return -EINVAL;
-> -
-> -	vin->base = devm_ioremap_resource(vin->dev, mem);
-> +	vin->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(vin->base))
->  		return PTR_ERR(vin->base);
-> 
-> --
-> 2.23.0
-> 
+It's the current way of emulating sub-memory-block hotplug on top of the
+memory bock device API we have. Hyper-V and XEN have been using that for
+a long time.
 
 -- 
-Regards,
-Niklas Söderlund
+
+Thanks,
+
+David / dhildenb
