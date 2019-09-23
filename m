@@ -2,81 +2,234 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13248C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4101C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C53208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8121721907
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 09:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UPuXtBmu"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="zai3pCST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfIWJHM (ORCPT
+        id S1731861AbfIWJHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 23 Sep 2019 05:07:14 -0400
+Received: from mail-eopbgr780092.outbound.protection.outlook.com ([40.107.78.92]:18496
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726730AbfIWJHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Sep 2019 05:07:12 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40864 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfIWJHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 05:07:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AjuKs2CX8YZOaZpDdYn464XH+IGUCzon57YKAFj2bE4=; b=UPuXtBmuKBTIoDbRHzW020qs4
-        bpZ5pOwRuM2jaAsZQlWMbIlj8LdsZV3W16eWXWMKgscrdPbg9VxZj9lfSgr3qzEVebE1ae7Po2w69
-        HFoM8xqgsyaWY0VWBmvuZod40xPSovIimc4lL5IunH3JcFlSTZKTSMuRDI5D+CVc8yLQkOe5er/yC
-        8WLSATSerjr27Q+baLLt0W87woenejlsOszCwGWR9ZpBeLCfJQfNtFvGsTxpPkBoqowZ7sJKzOmAR
-        OOoIrdYcLKissVkbUhJcLPpOeDNGzPynkNPhjDz/6KTWqAQshVSH4C+ZdUoptOTmEA/LOXwuj5qho
-        eCeeA4TeQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCKIp-0001hv-1D; Mon, 23 Sep 2019 09:06:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B5BDC3060D5;
-        Mon, 23 Sep 2019 11:05:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 772822B1204E2; Mon, 23 Sep 2019 11:06:36 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 11:06:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH for 5.4 0/7] Membarrier fixes and cleanups
-Message-ID: <20190923090636.GH2349@hirez.programming.kicks-ass.net>
-References: <20190919173705.2181-1-mathieu.desnoyers@efficios.com>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GPH/5d0BwrGY9VQyvv4PDljNgl3feAPF3YCjPLarTYtgeKmYDMUus1sJHmzf6lj/M/90KU/BpPRTkOO8JMOZaWf6VGK60Osru3a146YjC7CGxQZV6g0gHPnlWhmnDSe7mKGEuaN8m+qdi13WUlt8YKUNYYT7Au/2Fa8gR0cnSLZ5fik648VJzIM99HjBz9HQPthAoE+26DNS2WuoGHe6mB1qedc7hHEwdr6yhgX966Jsz85zKHlWW3sB8fCMtATzSXAOcHSHptzic+a0MLnn76eu7oMcPANpP6SrqAMEeI9MS1YUrt+WMeis3QIp69LwtmWMMqEyzqdUBRcKyWZ+Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N+S2CWm5kGm/Uu+OLCLguSa5qkZptRgxpnU3HJ34PMk=;
+ b=UNvpcWctecbOUexNSdH76IZ/gdLWxAI5V+NmdFqO/NFjH5WvUKQVjWR+oIc03/EOeT+RDF2HdzoPV3WdjGqQNPEEKkEQlua+Fklam22aVrOAd70FZahA9uv7NhPJain81iewgqteJ067MSA5sjHqQeD9OA9g5rVCWzHrJTC7CNoo6bGvf6ogYnx6LC14B0AJhbl+WwSm5Pn37Gn6wouQjHYm+eYDNppP99mZJy62pXLbUQZe0AJMlyWJn5tkJoP5Mmg5ZPiPJlgoHVnQV9E1RBvo2kazjA574R8halOSPaQkPO+TnsIMbxgjKSFLLfzIUecq08DlfgfIhwOKPdqIFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N+S2CWm5kGm/Uu+OLCLguSa5qkZptRgxpnU3HJ34PMk=;
+ b=zai3pCSTIbntRMVTDGPR9UvUfEup9pcxa8GOQcX5bYjMqfTGJ2lGzWgeJtvFXUL+KOUMQhMnrdsVfe0DgUK+xEUZq2n/jfd5ktmKvH+1C1UYp6DBW21r4sNtxSRHsrFOMtNh4fiuRVrZGFm2qaPyOQoqjdjP+Q7q/r1IaKXhQZg=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB6079.namprd04.prod.outlook.com (20.178.247.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Mon, 23 Sep 2019 09:07:11 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.023; Mon, 23 Sep 2019
+ 09:07:11 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Topic: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Index: AQHVce5I8PjxKPS5PEGdfXNMa0Wt9w==
+Date:   Mon, 23 Sep 2019 09:07:10 +0000
+Message-ID: <8415b5229354359732052f6ba7ae9ce063c34983.1569229197.git.xji@analogixsemi.com>
+References: <cover.1569229197.git.xji@analogixsemi.com>
+In-Reply-To: <cover.1569229197.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR01CA0049.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::13) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a465587d-34dc-47c0-4cb7-08d740056ad9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6079;
+x-ms-traffictypediagnostic: MN2PR04MB6079:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB6079553C6E9193CAE0C0E149C7850@MN2PR04MB6079.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:854;
+x-forefront-prvs: 0169092318
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(136003)(39840400004)(366004)(346002)(199004)(189003)(66556008)(64756008)(66446008)(11346002)(3846002)(446003)(76176011)(8676002)(6306002)(54906003)(305945005)(7736002)(66476007)(6486002)(4326008)(81156014)(110136005)(25786009)(81166006)(66946007)(6512007)(8936002)(36756003)(6506007)(476003)(386003)(486006)(26005)(102836004)(2906002)(2616005)(71200400001)(186003)(71190400001)(478600001)(118296001)(52116002)(66066001)(14454004)(99286004)(5660300002)(107886003)(6436002)(7416002)(6116002)(86362001)(256004)(2501003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6079;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0p9H7mHaP+DkBch2NxtKl+O5RgcBOqKKTtirCFI6/Caae1yKOqbotgSwYiGUhHCuHh0sm0/iQHrWXaIvzYDmB0alkXeMlBHgdgtSqGrpTNunpLFMunu4mkDO3g9pX1kVFUIp3K7Fb0FSoCUBatMWhEACeUeXmac/6e2UZf2OvqYf9gxFN3KplNfla/aO6zV9IrKAD19GtSMAkNpEkxfSxG68ScBqaYvM8CivLvlyyjGDAI1Q2A7u9b9SjHIdzx/AQfVdy0CN82lvFf+b3/0rUw0n/ppMNhJFsZrUp3XUAYycLrZa8wt9a6tdqecnhzCmC6HF4e62d4vhJCjfMzHDQKE/KwfyOzkUWOLOOmLq6leEdo8GhtN6azXD2vuYrf4uVjWyWfp+Fl+Axk7icGxga9ihqFb2L7gmhaT1VGcCWkw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B393E0F35731364991EA500670F9D114@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919173705.2181-1-mathieu.desnoyers@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a465587d-34dc-47c0-4cb7-08d740056ad9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2019 09:07:11.0083
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Kz/qouMh6YZnV8K9ufadFstqrRfkc1hvx0ciwAPDTIvvoEaYxlA00gev5myM/eYDXAaYjY3krjqYUwQU7Jg3hQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 01:36:58PM -0400, Mathieu Desnoyers wrote:
-> Hi,
-> 
-> Those series of fixes and cleanups are initially motivated by the report
-> of race in membarrier, which can load p->mm->membarrier_state after mm
-> has been freed (use-after-free).
-> 
+The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+for portable device. It converts MIPI to DisplayPort 1.3 4K.
 
-The lot looks good to me; what do you want done with them (them being
-RFC and all) ?
+You can add support to your board with binding.
+
+Example:
+	anx_bridge: anx7625@58 {
+		compatible =3D "analogix,anx7625";
+		reg =3D <0x58>;
+		low-power-mode =3D <1>;
+		enable-gpios =3D <&gpio0 45 GPIO_ACTIVE_LOW>;
+		reset-gpios =3D <&gpio0 73 GPIO_ACTIVE_LOW>;
+		status =3D "okay";
+		port@0 {
+			reg =3D <0>;
+			anx7625_1_in: endpoint {
+				remote-endpoint =3D <&mipi_dsi_bridge_1>;
+			};
+		};
+	};
+
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ .../bindings/display/bridge/anx7625.yaml           | 84 ++++++++++++++++++=
+++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml =
+b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+new file mode 100644
+index 0000000..2991039
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Analogix Semiconductor, Inc.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
++
++maintainers:
++  - Xin Ji <xji@analogixsemi.com>
++
++description: |
++  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
++  designed for portable devices.
++
++properties:
++  compatible:
++    items:
++      - const: analogix,anx7625
++
++  reg:
++    maxItems: 1
++
++  low-power-mode:
++    description: Low power mode support feature
++    maxItems: 1
++
++  hpd-gpios:
++    description: used for HPD interrupt
++    maxItems: 1
++
++  enable-gpios:
++    description: used for power on chip control
++    maxItems: 1
++
++  reset-gpios:
++    description: used for reset chip control
++    maxItems: 1
++
++  port@0:
++    type: object
++    description:
++      A port node pointing to MIPI DSI host port node.
++
++  port@1:
++    type: object
++    description:
++      A port node pointing to MIPI DPI host port node.
++
++  port@2:
++    type: object
++    description:
++      A port node pointing to external connector port node.
++
++  port@3:
++    type: object
++    description:
++      A port node pointing to internal panel port node.
++
++  port@4:
++    type: object
++    description:
++      A port node pointing to normal eDP port node.
++
++required:
++  - compatible
++  - reg
++  - port@0 | port@1
++
++example:
++  - |
++    anx_bridge: anx7625@58 {
++        compatible =3D "analogix,anx7625";
++        reg =3D <0x58>;
++        low-power-mode =3D <0>;
++        status =3D "okay";
++        port@0 {
++          reg =3D <0>;
++          anx7625_1_in: endpoint {
++            remote-endpoint =3D <&mipi_dsi_bridge_1>;
++          };
++        };
++    };
+--=20
+2.7.4
+
