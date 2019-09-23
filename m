@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C15C3A5A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEAFC4740C
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A0E20830
+	by mail.kernel.org (Postfix) with ESMTP id 644C520B7C
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 00:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PmBToTGz"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KscoU/sk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389784AbfIWApf (ORCPT
+        id S1730571AbfIWApk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Sep 2019 20:45:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39618 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730404AbfIWApe (ORCPT
+        Sun, 22 Sep 2019 20:45:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42220 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730404AbfIWApi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Sep 2019 20:45:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so6987498pgi.6
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 17:45:34 -0700 (PDT)
+        Sun, 22 Sep 2019 20:45:38 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so5738042pls.9
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Xe6w22bWITBFPjRp++ggW69XwtTJrJMismAgnjjWSps=;
-        b=PmBToTGz0+dZ/glKnK/OlEoCj1mNWi/zbC2c9P4ZtOaJh5w3AQinn0yAoCpOrlmf86
-         2m5U4WdDZn+vS7w6Sv06LAsngXesLM1oS1JbpoEkBq6R/k+gspCkfd/qRezSZbNlZxnD
-         RIu54SEfR/BFLOqT7EwmoUeQ+E7JKNB73Agv7weHGFxcum3Gd2B+RAziKVcZC+eVPZaI
-         qqQTsI9BGvWjYhqxWwpQ1JupMfdd8tqP6hCswZQdzlJanzfkDS84qxBBoDDdENWsZAdw
-         uQBS/uv0EH5hERpRmTpVZWPVD5mi6v3VihJsIxwUiFqMGqKozQ5cEm4KxBnpjvW54buN
-         Wibw==
+        bh=Chejk/4+FmCtrFrzQ3cdh4eTfnbOVSILTOMfH5BS3rg=;
+        b=KscoU/skknCbbY8YZs5H+cAOddHExj4kT3l2GqX65Qs42T2g2BLJ54/9rRxImmw1UJ
+         4T+vSMp30+jX7EQr7yLlnw1/JMWgD1jPDci+wH8ngsQUbX4sOABn5I6dcBkOO1Q2eVAm
+         MM/HVsl6/x48oqbevT5I/loUiE1aaPKLNzNxdzPT+wjfs6/aFJl4CPxyN2uTncujwFEG
+         RQhmbpjr/TruZWtqmbjS3M+ObiSvMNaBcUCcY1cUu2v5Kr9hJFHGVj4JOZD91LiZKs0Z
+         3KBUDZghfRVtT/2ak7BUWOsBhPvJwTL74as+9gWJsXjF0GvvNKGQG1lWKJq006JrUP5m
+         DLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Xe6w22bWITBFPjRp++ggW69XwtTJrJMismAgnjjWSps=;
-        b=ZRdRpiApFx5XkvxeJF29VFXOobmQfoGGNRH/rSbbkp8+XbLIn17rUVJSMUT5ye21jp
-         CsOvBKg32NQfMbVW2lVIZ8miEghUWPXJyifa9PcSWeuYwmQnTvQe9SQQk27f7gfiVLh0
-         mPFuc2PwDD8QA/qZOVeOfDT4k56sHu12xwgG+AKml7SZoTM9575PataYcW390F8M5K7p
-         tzKqrhFNp5sHotB8H5v7CSHwW8g/xNE6yQNJFvt9uXPkbhvPEE5cheu3Ppd9hkEmwZOg
-         eGoiwa0ehswEBRM5d1ccoa/XH5zf5XfSXnYvFO4aiRe6/SxUHMR3cknN829oE7yGz8kj
-         XPiA==
-X-Gm-Message-State: APjAAAUOMddXGr8nSgAAdJfEqQ6ZPdzKpaLa2FJWjPFWBl2evQ8o/a2K
-        cYF+IerZ1rYVC4NqmbjxGvfcFg==
-X-Google-Smtp-Source: APXvYqxg4RUC/k2zKdp20whugiWXsLNyuWV+p9lSYD7axTO2cCrPhiQ6pzUiMr0f5rXmVr+g0e8oZA==
-X-Received: by 2002:a17:90a:2464:: with SMTP id h91mr18803713pje.9.1569199534032;
-        Sun, 22 Sep 2019 17:45:34 -0700 (PDT)
+        bh=Chejk/4+FmCtrFrzQ3cdh4eTfnbOVSILTOMfH5BS3rg=;
+        b=BhHpNDfbHXPtMKGfLtzVvC3zg1LSc6O4Fs2dOSWWWTrFOMcYEiJ9kHvq6QXSX4VXJ9
+         XV/7d632I46JoKQCA5kVdrF1hSEk5/DB5m6aTy6YhjpD2YobkoCCT6/NlqpZ1xR62C4H
+         af9DBh6aCdIivVcwDZhD4G/QUCyeDpeG8HDsbnYaIijeM5AqUb2AbJ5Nca4dWNQp0MeJ
+         BjLswl3dKm2OAswIaYLsW81O7VLsrFQVpEnyjktq8+uJFKDyQ12oyGrKLOVSUu3n2MbI
+         3vlKHhwsaN3MHuBnC9m9NnKO4aaHqCcpYLdvTUo1dWjtwyM+Jx34R/5ykve/93M/r25y
+         hLag==
+X-Gm-Message-State: APjAAAWn4VSGQDuCFW3pMhlWDYvQlXoP0HyQ9Ufj6vROcFkB1gap4Xzs
+        qvn/+f9ROdUQhf88ASuBhzEUYA==
+X-Google-Smtp-Source: APXvYqxTVhkh+52M6mkBzcoHkL548c6/8rX+BxMVIXbVMNx8toD/c9dkZqmokUYv/q5COofkwXP/Tg==
+X-Received: by 2002:a17:902:7615:: with SMTP id k21mr28543207pll.116.1569199537599;
+        Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
 Received: from localhost.localdomain (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id l7sm9139392pjy.12.2019.09.22.17.45.32
+        by smtp.gmail.com with ESMTPSA id l7sm9139392pjy.12.2019.09.22.17.45.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 22 Sep 2019 17:45:33 -0700 (PDT)
+        Sun, 22 Sep 2019 17:45:37 -0700 (PDT)
 From:   Vincent Chen <vincent.chen@sifive.com>
 To:     linux-riscv@lists.infradead.org
 Cc:     paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
         linux-kernel@vger.kernel.org, vincent.chen@sifive.com
-Subject: [PATCH 1/4] riscv: avoid kernel hangs when trapped in BUG()
-Date:   Mon, 23 Sep 2019 08:45:14 +0800
-Message-Id: <1569199517-5884-2-git-send-email-vincent.chen@sifive.com>
+Subject: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread trapped in WARN()
+Date:   Mon, 23 Sep 2019 08:45:15 +0800
+Message-Id: <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
 References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
@@ -70,49 +70,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the CONFIG_GENERIC_BUG is disabled by disabling CONFIG_BUG, if a
-kernel thread is trapped by BUG(), the whole system will be in the
-loop that infinitely handles the ebreak exception instead of entering the
-die function. To fix this problem, the do_trap_break() will always call
-the die() to deal with the break exception as the type of break is
-BUG_TRAP_TYPE_BUG.
+On RISC-V, when the kernel runs code on behalf of a user thread, and the
+kernel executes a WARN() or WARN_ON(), the user thread will be sent
+a bogus SIGTRAP.  Fix the RISC-V kernel code to not send a SIGTRAP when
+a WARN()/WARN_ON() is executed.
 
 Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
 ---
- arch/riscv/kernel/traps.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/riscv/kernel/traps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 424eb72d56b1..055a937aca70 100644
+index 055a937aca70..82f42a55451e 100644
 --- a/arch/riscv/kernel/traps.c
 +++ b/arch/riscv/kernel/traps.c
-@@ -124,23 +124,23 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
- 
- asmlinkage void do_trap_break(struct pt_regs *regs)
- {
--#ifdef CONFIG_GENERIC_BUG
- 	if (!user_mode(regs)) {
- 		enum bug_trap_type type;
- 
- 		type = report_bug(regs->sepc, regs);
- 		switch (type) {
-+#ifdef CONFIG_GENERIC_BUG
- 		case BUG_TRAP_TYPE_NONE:
+@@ -134,7 +134,7 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
  			break;
  		case BUG_TRAP_TYPE_WARN:
  			regs->sepc += get_break_insn_length(regs->sepc);
- 			break;
+-			break;
++			return;
  		case BUG_TRAP_TYPE_BUG:
-+#endif /* CONFIG_GENERIC_BUG */
-+		default:
- 			die(regs, "Kernel BUG");
- 		}
- 	}
--#endif /* CONFIG_GENERIC_BUG */
--
- 	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
- }
- 
+ #endif /* CONFIG_GENERIC_BUG */
+ 		default:
 -- 
 2.7.4
 
