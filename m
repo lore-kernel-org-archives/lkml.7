@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EEFC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D4AC4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F5920882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D9C205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 15:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569253806;
-	bh=FFzbPPyzstoUTQIh5AyphTjoKpbu5dT+XJPhAdHJBEY=;
+	s=default; t=1569253811;
+	bh=a/gnp0VA43q9tw8vxlsMsjkP9jypIqy2k1SvccaheYU=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0w790mmaNVYaGZhNOWum4oYHycrqQhjzVJgYPkQ74Mny7/Bc/G9/vBbwhy/ckL889
-	 RN8BSIpQ9impPLkFhSCIxE/kX5GFnArsyGXpHJ3aygQXvtsmG4Bb6b0GDgKRsFlVyI
-	 f/MHHbh4jGT9OaLKEUSQFMHYd1IOZWXIbC5h720w=
+	b=dd5u9Gi4akO2YvDu+IEgL2w+rCuJQXV6uyrla36F3U/Kqp1rthfMu9ukvuzjVz0KH
+	 dp4S1VcMR+njOfL2KmnXsb4xAihVJniVpF2wqR4NWWP4ZJKTKkTyeyCrSCj4Kmmo6o
+	 t+UIwcPHknut+Fcz0dP3chvEzgI8GD7pfvCRbIos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732774AbfIWPuG (ORCPT
+        id S1732786AbfIWPuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 11:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        Mon, 23 Sep 2019 11:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbfIWPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:50:05 -0400
+        id S1728182AbfIWPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 11:50:09 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38AB4205F4;
-        Mon, 23 Sep 2019 15:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D06020835;
+        Mon, 23 Sep 2019 15:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569253804;
-        bh=FFzbPPyzstoUTQIh5AyphTjoKpbu5dT+XJPhAdHJBEY=;
+        s=default; t=1569253808;
+        bh=a/gnp0VA43q9tw8vxlsMsjkP9jypIqy2k1SvccaheYU=;
         h=From:To:Cc:Subject:Date:From;
-        b=WBIhvdLMxJGUloK7m32dwhWXk2Pzythdg85Y3TSxn4AHNwXEWcHxcw+rY7vVpAs+Q
-         4dhoLEiE6ZtMnGhsyFxIqOBxx6+90XwCjhNUtY1//+iHfp7u1ky5Fhe0MJZ5gEjI9k
-         6r7Wug9n5vYaVA7XEoPXnv+IcQKMLQJqAU7x4fjc=
+        b=bPQYcEFIvxg2tJ8VOXDkany+/p5qbWPIVaEMsk5bLaFy05XP0ZCkEdTGVN2mbLSEw
+         vS5Of4Mlv3hzBkDxqzu0apHXHhplWRlPBDjTPQtqJFYn1M53Kyw6cF3iR2UOIUGLob
+         s/ODlBe8DHnmg8aOKaltmArUNfPYLWGQNIPSAI0Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jiri Kosina <trivial@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        lima@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH trivial] usb: Fix Kconfig indentation
-Date:   Mon, 23 Sep 2019 17:49:56 +0200
-Message-Id: <20190923154956.6868-1-krzk@kernel.org>
+Subject: [PATCH trivial] gpu: Fix Kconfig indentation
+Date:   Mon, 23 Sep 2019 17:49:32 +0200
+Message-Id: <20190923154932.6807-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,327 +66,516 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/usb/dwc3/Kconfig           |  4 +-
- drivers/usb/gadget/legacy/Kconfig  | 20 ++++-----
- drivers/usb/gadget/udc/Kconfig     |  2 +-
- drivers/usb/host/Kconfig           | 68 +++++++++++++++---------------
- drivers/usb/misc/Kconfig           |  8 ++--
- drivers/usb/misc/sisusbvga/Kconfig |  2 +-
- drivers/usb/serial/Kconfig         | 44 +++++++++----------
- 7 files changed, 74 insertions(+), 74 deletions(-)
+ drivers/gpu/drm/Kconfig                  |  10 +-
+ drivers/gpu/drm/amd/display/Kconfig      |  20 ++--
+ drivers/gpu/drm/bridge/Kconfig           |   8 +-
+ drivers/gpu/drm/i915/Kconfig             |  12 +-
+ drivers/gpu/drm/i915/Kconfig.debug       | 144 +++++++++++------------
+ drivers/gpu/drm/lima/Kconfig             |   2 +-
+ drivers/gpu/drm/mgag200/Kconfig          |   8 +-
+ drivers/gpu/drm/nouveau/Kconfig          |   2 +-
+ drivers/gpu/drm/omapdrm/displays/Kconfig |   6 +-
+ drivers/gpu/drm/omapdrm/dss/Kconfig      |  12 +-
+ drivers/gpu/drm/rockchip/Kconfig         |   8 +-
+ drivers/gpu/drm/udl/Kconfig              |   2 +-
+ drivers/gpu/vga/Kconfig                  |   2 +-
+ 13 files changed, 118 insertions(+), 118 deletions(-)
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 89abc6078703..cc431376fcd0 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -103,7 +103,7 @@ config USB_DWC3_MESON_G12A
-        default USB_DWC3
-        select USB_ROLE_SWITCH
-        help
--         Support USB2/3 functionality in Amlogic G12A platforms.
-+	 Support USB2/3 functionality in Amlogic G12A platforms.
- 	 Say 'Y' or 'M' if you have one such device.
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index e67c194c2aca..7cb6e4eb99e8 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -207,8 +207,8 @@ config DRM_RADEON
+ 	tristate "ATI Radeon"
+ 	depends on DRM && PCI && MMU
+ 	select FW_LOADER
+-        select DRM_KMS_HELPER
+-        select DRM_TTM
++	select DRM_KMS_HELPER
++	select DRM_TTM
+ 	select POWER_SUPPLY
+ 	select HWMON
+ 	select BACKLIGHT_CLASS_DEVICE
+@@ -226,9 +226,9 @@ config DRM_AMDGPU
+ 	tristate "AMD GPU"
+ 	depends on DRM && PCI && MMU
+ 	select FW_LOADER
+-        select DRM_KMS_HELPER
++	select DRM_KMS_HELPER
+ 	select DRM_SCHED
+-        select DRM_TTM
++	select DRM_TTM
+ 	select POWER_SUPPLY
+ 	select HWMON
+ 	select BACKLIGHT_CLASS_DEVICE
+@@ -266,7 +266,7 @@ config DRM_VKMS
+ 	  If M is selected the module will be called vkms.
  
- config USB_DWC3_OF_SIMPLE
-@@ -111,7 +111,7 @@ config USB_DWC3_OF_SIMPLE
-        depends on OF && COMMON_CLK
-        default USB_DWC3
-        help
--         Support USB2/3 functionality in simple SoC integrations.
-+	 Support USB2/3 functionality in simple SoC integrations.
- 	 Currently supports Xilinx and Qualcomm DWC USB3 IP.
- 	 Say 'Y' or 'M' if you have one such device.
+ config DRM_ATI_PCIGART
+-        bool
++	bool
  
-diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
-index 69ff7f8c86f5..38eaa9417b38 100644
---- a/drivers/usb/gadget/legacy/Kconfig
-+++ b/drivers/usb/gadget/legacy/Kconfig
-@@ -154,16 +154,16 @@ config USB_ETH_EEM
- 	select USB_LIBCOMPOSITE
- 	select USB_F_EEM
-        help
--         CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
--         and therefore can be supported by more hardware.  Technically ECM and
--         EEM are designed for different applications.  The ECM model extends
--         the network interface to the target (e.g. a USB cable modem), and the
--         EEM model is for mobile devices to communicate with hosts using
--         ethernet over USB.  For Linux gadgets, however, the interface with
--         the host is the same (a usbX device), so the differences are minimal.
--
--         If you say "y" here, the Ethernet gadget driver will use the EEM
--         protocol rather than ECM.  If unsure, say "n".
-+	 CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
-+	 and therefore can be supported by more hardware.  Technically ECM and
-+	 EEM are designed for different applications.  The ECM model extends
-+	 the network interface to the target (e.g. a USB cable modem), and the
-+	 EEM model is for mobile devices to communicate with hosts using
-+	 ethernet over USB.  For Linux gadgets, however, the interface with
-+	 the host is the same (a usbX device), so the differences are minimal.
-+
-+	 If you say "y" here, the Ethernet gadget driver will use the EEM
-+	 protocol rather than ECM.  If unsure, say "n".
+ source "drivers/gpu/drm/exynos/Kconfig"
  
- config USB_G_NCM
- 	tristate "Network Control Model (NCM) support"
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index d7e611645533..485c92ef888a 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -123,7 +123,7 @@ config USB_GR_UDC
-        tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driver"
-        depends on HAS_DMA
-        help
--          Select this to support Aeroflex Gaisler GRUSBDC cores from the GRLIB
-+	  Select this to support Aeroflex Gaisler GRUSBDC cores from the GRLIB
- 	  VHDL IP core library.
+diff --git a/drivers/gpu/drm/amd/display/Kconfig b/drivers/gpu/drm/amd/display/Kconfig
+index 71991a28a775..0a35cb8e803a 100644
+--- a/drivers/gpu/drm/amd/display/Kconfig
++++ b/drivers/gpu/drm/amd/display/Kconfig
+@@ -23,16 +23,16 @@ config DRM_AMD_DC_DCN2_0
+ 	depends on DRM_AMD_DC && X86
+ 	depends on DRM_AMD_DC_DCN1_0
+ 	help
+-	    Choose this option if you want to have
+-	    Navi support for display engine
++	  Choose this option if you want to have
++	  Navi support for display engine
  
- config USB_OMAP
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 79b2e79dddd0..d6164ede63d3 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -220,12 +220,12 @@ config USB_EHCI_HCD_ORION
- 	  Marvell PXA/MMP USB controller" for those.
- 
- config USB_EHCI_HCD_SPEAR
--        tristate "Support for ST SPEAr on-chip EHCI USB controller"
--        depends on USB_EHCI_HCD && PLAT_SPEAR
--        default y
--        ---help---
--          Enables support for the on-chip EHCI controller on
--          ST SPEAr chips.
-+	tristate "Support for ST SPEAr on-chip EHCI USB controller"
-+	depends on USB_EHCI_HCD && PLAT_SPEAR
-+	default y
-+	---help---
-+	  Enables support for the on-chip EHCI controller on
-+	  ST SPEAr chips.
- 
- config USB_EHCI_HCD_STI
- 	tristate "Support for ST STiHxxx on-chip EHCI USB controller"
-@@ -237,12 +237,12 @@ config USB_EHCI_HCD_STI
- 	  STMicroelectronics consumer electronics SoC's.
- 
- config USB_EHCI_HCD_AT91
--        tristate  "Support for Atmel on-chip EHCI USB controller"
--        depends on USB_EHCI_HCD && ARCH_AT91
--        default y
--        ---help---
--          Enables support for the on-chip EHCI controller on
--          Atmel chips.
-+	tristate  "Support for Atmel on-chip EHCI USB controller"
-+	depends on USB_EHCI_HCD && ARCH_AT91
-+	default y
-+	---help---
-+	  Enables support for the on-chip EHCI controller on
-+	  Atmel chips.
- 
- config USB_EHCI_TEGRA
-        tristate "NVIDIA Tegra HCD support"
-@@ -250,8 +250,8 @@ config USB_EHCI_TEGRA
-        select USB_EHCI_ROOT_HUB_TT
-        select USB_TEGRA_PHY
-        help
--         This driver enables support for the internal USB Host Controllers
--         found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
-+	 This driver enables support for the internal USB Host Controllers
-+	 found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
- 
- config USB_EHCI_HCD_PPC_OF
- 	bool "EHCI support for PPC USB controller on OF platform bus"
-@@ -409,12 +409,12 @@ config USB_OHCI_HCD_OMAP1
- 	  Enables support for the OHCI controller on OMAP1/2 chips.
- 
- config USB_OHCI_HCD_SPEAR
--        tristate "Support for ST SPEAr on-chip OHCI USB controller"
--        depends on USB_OHCI_HCD && PLAT_SPEAR
--        default y
--        ---help---
--          Enables support for the on-chip OHCI controller on
--          ST SPEAr chips.
-+	tristate "Support for ST SPEAr on-chip OHCI USB controller"
-+	depends on USB_OHCI_HCD && PLAT_SPEAR
-+	default y
-+	---help---
-+	  Enables support for the on-chip OHCI controller on
-+	  ST SPEAr chips.
- 
- config USB_OHCI_HCD_STI
- 	tristate "Support for ST STiHxxx on-chip OHCI USB controller"
-@@ -426,12 +426,12 @@ config USB_OHCI_HCD_STI
- 	  STMicroelectronics consumer electronics SoC's.
- 
- config USB_OHCI_HCD_S3C2410
--        tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
--        depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX)
--        default y
--        ---help---
--          Enables support for the on-chip OHCI controller on
--          S3C24xx/S3C64xx chips.
-+	tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
-+	depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX)
-+	default y
-+	---help---
-+	  Enables support for the on-chip OHCI controller on
-+	  S3C24xx/S3C64xx chips.
- 
- config USB_OHCI_HCD_LPC32XX
- 	tristate "Support for LPC on-chip OHCI USB controller"
-@@ -440,8 +440,8 @@ config USB_OHCI_HCD_LPC32XX
- 	depends on USB_ISP1301
- 	default y
- 	---help---
--          Enables support for the on-chip OHCI controller on
--          NXP chips.
-+	  Enables support for the on-chip OHCI controller on
-+	  NXP chips.
- 
- config USB_OHCI_HCD_PXA27X
- 	tristate "Support for PXA27X/PXA3XX on-chip OHCI USB controller"
-@@ -456,8 +456,8 @@ config USB_OHCI_HCD_AT91
- 	depends on USB_OHCI_HCD && ARCH_AT91 && OF
- 	default y
- 	---help---
--          Enables support for the on-chip OHCI controller on
--          Atmel chips.
-+	  Enables support for the on-chip OHCI controller on
-+	  Atmel chips.
- 
- config USB_OHCI_HCD_OMAP3
- 	tristate "OHCI support for OMAP3 and later chips"
-@@ -716,11 +716,11 @@ config USB_IMX21_HCD
-        tristate "i.MX21 HCD support"
-        depends on ARM && ARCH_MXC
-        help
--         This driver enables support for the on-chip USB host in the
--         i.MX21 processor.
-+	 This driver enables support for the on-chip USB host in the
-+	 i.MX21 processor.
- 
--         To compile this driver as a module, choose M here: the
--         module will be called "imx21-hcd".
-+	 To compile this driver as a module, choose M here: the
-+	 module will be called "imx21-hcd".
- 
- config USB_HCD_BCMA
- 	tristate "BCMA usb host driver"
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index bdae62b2ffe0..664d27bb6086 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -191,8 +191,8 @@ config USB_TEST
- 	  including sample test device firmware and "how to use it".
- 
- config USB_EHSET_TEST_FIXTURE
--        tristate "USB EHSET Test Fixture driver"
+ config DRM_AMD_DC_DCN2_1
+-        bool "DCN 2.1 family"
+-        depends on DRM_AMD_DC && X86
+-        depends on DRM_AMD_DC_DCN2_0
 -        help
-+	tristate "USB EHSET Test Fixture driver"
+-            Choose this option if you want to have
+-            Renoir support for display engine
++	bool "DCN 2.1 family"
++	depends on DRM_AMD_DC && X86
++	depends on DRM_AMD_DC_DCN2_0
 +	help
- 	  Say Y here if you want to support the special test fixture device
- 	  used for the USB-IF Embedded Host High-Speed Electrical Test procedure.
++	  Choose this option if you want to have
++	  Renoir support for display engine
  
-@@ -247,13 +247,13 @@ config USB_HSIC_USB3503
-        depends on I2C
-        select REGMAP_I2C
-        help
--         This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
-+	 This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
- 
- config USB_HSIC_USB4604
-        tristate "USB4604 HSIC to USB20 Driver"
-        depends on I2C
-        help
--         This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
-+	 This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
- 
- config USB_LINK_LAYER_TEST
- 	tristate "USB Link Layer Test driver"
-diff --git a/drivers/usb/misc/sisusbvga/Kconfig b/drivers/usb/misc/sisusbvga/Kconfig
-index 9b632ab24f03..c16121276a21 100644
---- a/drivers/usb/misc/sisusbvga/Kconfig
-+++ b/drivers/usb/misc/sisusbvga/Kconfig
-@@ -4,7 +4,7 @@ config USB_SISUSBVGA
- 	tristate "USB 2.0 SVGA dongle support (Net2280/SiS315)"
- 	depends on (USB_MUSB_HDRC || USB_EHCI_HCD)
- 	select FONT_SUPPORT if USB_SISUSBVGA_CON
--        ---help---
-+	---help---
- 	  Say Y here if you intend to attach a USB2VGA dongle based on a
- 	  Net2280 and a SiS315 chip.
- 
-diff --git a/drivers/usb/serial/Kconfig b/drivers/usb/serial/Kconfig
-index 67279c6bce33..0a8c16a8cda2 100644
---- a/drivers/usb/serial/Kconfig
-+++ b/drivers/usb/serial/Kconfig
-@@ -271,17 +271,17 @@ config USB_SERIAL_F8153X
- config USB_SERIAL_GARMIN
-        tristate "USB Garmin GPS driver"
-        help
--         Say Y here if you want to connect to your Garmin GPS.
--         Should work with most Garmin GPS devices which have a native USB port.
-+	 Say Y here if you want to connect to your Garmin GPS.
-+	 Should work with most Garmin GPS devices which have a native USB port.
- 
--         See <http://sourceforge.net/projects/garmin-gps> for the latest
--         version of the driver.
-+	 See <http://sourceforge.net/projects/garmin-gps> for the latest
-+	 version of the driver.
- 
--         To compile this driver as a module, choose M here: the
--         module will be called garmin_gps.
-+	 To compile this driver as a module, choose M here: the
-+	 module will be called garmin_gps.
- 
- config USB_SERIAL_IPW
--        tristate "USB IPWireless (3G UMTS TDD) Driver"
-+	tristate "USB IPWireless (3G UMTS TDD) Driver"
- 	select USB_SERIAL_WWAN
+ config DRM_AMD_DC_DSC_SUPPORT
+ 	bool "DSC support"
+@@ -41,8 +41,8 @@ config DRM_AMD_DC_DSC_SUPPORT
+ 	depends on DRM_AMD_DC_DCN1_0
+ 	depends on DRM_AMD_DC_DCN2_0
  	help
- 	  Say Y here if you want to use a IPWireless USB modem such as
-@@ -341,20 +341,20 @@ config USB_SERIAL_KLSI
- 	  module will be called kl5kusb105.
+-	    Choose this option if you want to have
+-	    Dynamic Stream Compression support
++	  Choose this option if you want to have
++	  Dynamic Stream Compression support
  
- config USB_SERIAL_KOBIL_SCT
--        tristate "USB KOBIL chipcard reader"
--        ---help---
--          Say Y here if you want to use one of the following KOBIL USB chipcard
--          readers:
--
--            - USB TWIN
--            - KAAN Standard Plus
--            - KAAN SIM
--            - SecOVID Reader Plus
--            - B1 Professional
--            - KAAN Professional
--
--          Note that you need a current CT-API.
--          To compile this driver as a module, choose M here: the
-+	tristate "USB KOBIL chipcard reader"
-+	---help---
-+	  Say Y here if you want to use one of the following KOBIL USB chipcard
-+	  readers:
-+
-+	    - USB TWIN
-+	    - KAAN Standard Plus
-+	    - KAAN SIM
-+	    - SecOVID Reader Plus
-+	    - B1 Professional
-+	    - KAAN Professional
-+
-+	  Note that you need a current CT-API.
-+	  To compile this driver as a module, choose M here: the
- 	  module will be called kobil_sct.
+ config DEBUG_KERNEL_DC
+ 	bool "Enable kgdb break in DC"
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 1cc9f502c1f2..a5aa7ec16000 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -60,10 +60,10 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+ 	select DRM_KMS_HELPER
+ 	select DRM_PANEL
+ 	---help---
+-          This is a driver for the display bridges of
+-          GE B850v3 that convert dual channel LVDS
+-          to DP++. This is used with the i.MX6 imx-ldb
+-          driver. You are likely to say N here.
++	  This is a driver for the display bridges of
++	  GE B850v3 that convert dual channel LVDS
++	  to DP++. This is used with the i.MX6 imx-ldb
++	  driver. You are likely to say N here.
  
- config USB_SERIAL_MCT_U232
-@@ -458,7 +458,7 @@ config USB_SERIAL_OTI6858
- 	tristate "USB Ours Technology Inc. OTi-6858 USB To RS232 Bridge Controller"
+ config DRM_NXP_PTN3460
+ 	tristate "NXP PTN3460 DP/LVDS bridge"
+diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
+index 0d21402945ab..3c6d57df262d 100644
+--- a/drivers/gpu/drm/i915/Kconfig
++++ b/drivers/gpu/drm/i915/Kconfig
+@@ -76,7 +76,7 @@ config DRM_I915_CAPTURE_ERROR
+ 	  This option enables capturing the GPU state when a hang is detected.
+ 	  This information is vital for triaging hangs and assists in debugging.
+ 	  Please report any hang to
+-            https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
++	    https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
+ 	  for triaging.
+ 
+ 	  If in doubt, say "Y".
+@@ -105,11 +105,11 @@ config DRM_I915_USERPTR
+ 	  If in doubt, say "Y".
+ 
+ config DRM_I915_GVT
+-        bool "Enable Intel GVT-g graphics virtualization host support"
+-        depends on DRM_I915
+-        depends on 64BIT
+-        default n
+-        help
++	bool "Enable Intel GVT-g graphics virtualization host support"
++	depends on DRM_I915
++	depends on 64BIT
++	default n
++	help
+ 	  Choose this option if you want to enable Intel GVT-g graphics
+ 	  virtualization technology host support with integrated graphics.
+ 	  With GVT-g, it's possible to have one integrated graphics
+diff --git a/drivers/gpu/drm/i915/Kconfig.debug b/drivers/gpu/drm/i915/Kconfig.debug
+index 00786a142ff0..eea79125b3ea 100644
+--- a/drivers/gpu/drm/i915/Kconfig.debug
++++ b/drivers/gpu/drm/i915/Kconfig.debug
+@@ -1,34 +1,34 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config DRM_I915_WERROR
+-        bool "Force GCC to throw an error instead of a warning when compiling"
+-        # As this may inadvertently break the build, only allow the user
+-        # to shoot oneself in the foot iff they aim really hard
+-        depends on EXPERT
+-        # We use the dependency on !COMPILE_TEST to not be enabled in
+-        # allmodconfig or allyesconfig configurations
+-        depends on !COMPILE_TEST
++	bool "Force GCC to throw an error instead of a warning when compiling"
++	# As this may inadvertently break the build, only allow the user
++	# to shoot oneself in the foot iff they aim really hard
++	depends on EXPERT
++	# We use the dependency on !COMPILE_TEST to not be enabled in
++	# allmodconfig or allyesconfig configurations
++	depends on !COMPILE_TEST
+ 	select HEADER_TEST
+-        default n
+-        help
+-          Add -Werror to the build flags for (and only for) i915.ko.
+-          Do not enable this unless you are writing code for the i915.ko module.
++	default n
++	help
++	  Add -Werror to the build flags for (and only for) i915.ko.
++	  Do not enable this unless you are writing code for the i915.ko module.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_DEBUG
+-        bool "Enable additional driver debugging"
+-        depends on DRM_I915
+-        select DEBUG_FS
+-        select PREEMPT_COUNT
+-        select REFCOUNT_FULL
+-        select I2C_CHARDEV
+-        select STACKDEPOT
+-        select DRM_DP_AUX_CHARDEV
+-        select X86_MSR # used by igt/pm_rpm
+-        select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
+-        select DRM_DEBUG_MM if DRM=y
++	bool "Enable additional driver debugging"
++	depends on DRM_I915
++	select DEBUG_FS
++	select PREEMPT_COUNT
++	select REFCOUNT_FULL
++	select I2C_CHARDEV
++	select STACKDEPOT
++	select DRM_DP_AUX_CHARDEV
++	select X86_MSR # used by igt/pm_rpm
++	select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
++	select DRM_DEBUG_MM if DRM=y
+ 	select DRM_DEBUG_SELFTEST
+ 	select DMABUF_SELFTESTS
+ 	select SW_SYNC # signaling validation framework (igt/syncobj*)
+@@ -36,14 +36,14 @@ config DRM_I915_DEBUG
+ 	select DRM_I915_SELFTEST
+ 	select DRM_I915_DEBUG_RUNTIME_PM
+ 	select DRM_I915_DEBUG_MMIO
+-        default n
+-        help
+-          Choose this option to turn on extra driver debugging that may affect
+-          performance but will catch some internal issues.
++	default n
++	help
++	  Choose this option to turn on extra driver debugging that may affect
++	  performance but will catch some internal issues.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_DEBUG_MMIO
+ 	bool "Always insert extra checks around mmio access by default"
+@@ -59,16 +59,16 @@ config DRM_I915_DEBUG_MMIO
+ 	  If in doubt, say "N".
+ 
+ config DRM_I915_DEBUG_GEM
+-        bool "Insert extra checks into the GEM internals"
+-        default n
+-        depends on DRM_I915_WERROR
+-        help
+-          Enable extra sanity checks (including BUGs) along the GEM driver
+-          paths that may slow the system down and if hit hang the machine.
++	bool "Insert extra checks into the GEM internals"
++	default n
++	depends on DRM_I915_WERROR
++	help
++	  Enable extra sanity checks (including BUGs) along the GEM driver
++	  paths that may slow the system down and if hit hang the machine.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_ERRLOG_GEM
+ 	bool "Insert extra logging (very verbose) for common GEM errors"
+@@ -111,41 +111,41 @@ config DRM_I915_TRACE_GTT
+ 	  If in doubt, say "N".
+ 
+ config DRM_I915_SW_FENCE_DEBUG_OBJECTS
+-        bool "Enable additional driver debugging for fence objects"
+-        depends on DRM_I915
+-        select DEBUG_OBJECTS
+-        default n
+-        help
+-          Choose this option to turn on extra driver debugging that may affect
+-          performance but will catch some internal issues.
++	bool "Enable additional driver debugging for fence objects"
++	depends on DRM_I915
++	select DEBUG_OBJECTS
++	default n
++	help
++	  Choose this option to turn on extra driver debugging that may affect
++	  performance but will catch some internal issues.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_SW_FENCE_CHECK_DAG
+-        bool "Enable additional driver debugging for detecting dependency cycles"
+-        depends on DRM_I915
+-        default n
+-        help
+-          Choose this option to turn on extra driver debugging that may affect
+-          performance but will catch some internal issues.
++	bool "Enable additional driver debugging for detecting dependency cycles"
++	depends on DRM_I915
++	default n
++	help
++	  Choose this option to turn on extra driver debugging that may affect
++	  performance but will catch some internal issues.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_DEBUG_GUC
+-        bool "Enable additional driver debugging for GuC"
+-        depends on DRM_I915
+-        default n
+-        help
+-          Choose this option to turn on extra driver debugging that may affect
+-          performance but will help resolve GuC related issues.
++	bool "Enable additional driver debugging for GuC"
++	depends on DRM_I915
++	default n
++	help
++	  Choose this option to turn on extra driver debugging that may affect
++	  performance but will help resolve GuC related issues.
+ 
+-          Recommended for driver developers only.
++	  Recommended for driver developers only.
+ 
+-          If in doubt, say "N".
++	  If in doubt, say "N".
+ 
+ config DRM_I915_SELFTEST
+ 	bool "Enable selftests upon driver load"
+@@ -178,15 +178,15 @@ config DRM_I915_SELFTEST_BROKEN
+ 	  If in doubt, say "N".
+ 
+ config DRM_I915_LOW_LEVEL_TRACEPOINTS
+-        bool "Enable low level request tracing events"
+-        depends on DRM_I915
+-        default n
+-        help
+-          Choose this option to turn on low level request tracing events.
+-          This provides the ability to precisely monitor engine utilisation
+-          and also analyze the request dependency resolving timeline.
+-
+-          If in doubt, say "N".
++	bool "Enable low level request tracing events"
++	depends on DRM_I915
++	default n
++	help
++	  Choose this option to turn on low level request tracing events.
++	  This provides the ability to precisely monitor engine utilisation
++	  and also analyze the request dependency resolving timeline.
++
++	  If in doubt, say "N".
+ 
+ config DRM_I915_DEBUG_VBLANK_EVADE
+ 	bool "Enable extra debug warnings for vblank evasion"
+diff --git a/drivers/gpu/drm/lima/Kconfig b/drivers/gpu/drm/lima/Kconfig
+index bb4ddc6bb0a6..652af7f50ea9 100644
+--- a/drivers/gpu/drm/lima/Kconfig
++++ b/drivers/gpu/drm/lima/Kconfig
+@@ -10,4 +10,4 @@ config DRM_LIMA
+        depends on OF
+        select DRM_SCHED
+        help
+-         DRM driver for ARM Mali 400/450 GPUs.
++	 DRM driver for ARM Mali 400/450 GPUs.
+diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/Kconfig
+index 76fee0fbdcae..4b31ef376abc 100644
+--- a/drivers/gpu/drm/mgag200/Kconfig
++++ b/drivers/gpu/drm/mgag200/Kconfig
+@@ -6,8 +6,8 @@ config DRM_MGAG200
+ 	select DRM_VRAM_HELPER
  	help
- 	  Say Y here if you want to use the OTi-6858 single port USB to serial
--          converter device.
-+	  converter device.
+ 	 This is a KMS driver for the MGA G200 server chips, it
+-         does not support the original MGA G200 or any of the desktop
+-         chips. It requires 0.3.0 of the modesetting userspace driver,
+-         and a version of mga driver that will fail on KMS enabled
+-         devices.
++	 does not support the original MGA G200 or any of the desktop
++	 chips. It requires 0.3.0 of the modesetting userspace driver,
++	 and a version of mga driver that will fail on KMS enabled
++	 devices.
  
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called oti6858.
+diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+index 3558df043592..9c990266e876 100644
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -2,7 +2,7 @@
+ config DRM_NOUVEAU
+ 	tristate "Nouveau (NVIDIA) cards"
+ 	depends on DRM && PCI && MMU
+-        select FW_LOADER
++	select FW_LOADER
+ 	select DRM_KMS_HELPER
+ 	select DRM_TTM
+ 	select BACKLIGHT_CLASS_DEVICE if DRM_NOUVEAU_BACKLIGHT
+diff --git a/drivers/gpu/drm/omapdrm/displays/Kconfig b/drivers/gpu/drm/omapdrm/displays/Kconfig
+index 240dda102845..b562a8cd61bf 100644
+--- a/drivers/gpu/drm/omapdrm/displays/Kconfig
++++ b/drivers/gpu/drm/omapdrm/displays/Kconfig
+@@ -8,18 +8,18 @@ config DRM_OMAP_ENCODER_OPA362
+ 	  through a GPIO.
+ 
+ config DRM_OMAP_ENCODER_TPD12S015
+-        tristate "TPD12S015 HDMI ESD protection and level shifter"
++	tristate "TPD12S015 HDMI ESD protection and level shifter"
+ 	help
+ 	  Driver for TPD12S015, which offers HDMI ESD protection and level
+ 	  shifting.
+ 
+ config DRM_OMAP_CONNECTOR_HDMI
+-        tristate "HDMI Connector"
++	tristate "HDMI Connector"
+ 	help
+ 	  Driver for a generic HDMI connector.
+ 
+ config DRM_OMAP_CONNECTOR_ANALOG_TV
+-        tristate "Analog TV Connector"
++	tristate "Analog TV Connector"
+ 	help
+ 	  Driver for a generic analog TV connector.
+ 
+diff --git a/drivers/gpu/drm/omapdrm/dss/Kconfig b/drivers/gpu/drm/omapdrm/dss/Kconfig
+index 956f23e1452d..72ae79c0c9b4 100644
+--- a/drivers/gpu/drm/omapdrm/dss/Kconfig
++++ b/drivers/gpu/drm/omapdrm/dss/Kconfig
+@@ -6,12 +6,12 @@ config OMAP_DSS_BASE
+ 	tristate
+ 
+ menuconfig OMAP2_DSS
+-        tristate "OMAP2+ Display Subsystem support"
++	tristate "OMAP2+ Display Subsystem support"
+ 	select OMAP_DSS_BASE
+ 	select VIDEOMODE_HELPERS
+ 	select OMAP2_DSS_INIT
+ 	select HDMI
+-        help
++	help
+ 	  OMAP2+ Display Subsystem support.
+ 
+ if OMAP2_DSS
+@@ -52,7 +52,7 @@ config OMAP2_DSS_DPI
+ 
+ config OMAP2_DSS_VENC
+ 	bool "VENC support"
+-        default y
++	default y
+ 	help
+ 	  OMAP Video Encoder support for S-Video and composite TV-out.
+ 
+@@ -61,7 +61,7 @@ config OMAP2_DSS_HDMI_COMMON
+ 
+ config OMAP4_DSS_HDMI
+ 	bool "HDMI support for OMAP4"
+-        default y
++	default y
+ 	select OMAP2_DSS_HDMI_COMMON
+ 	help
+ 	  HDMI support for OMAP4 based SoCs.
+@@ -85,7 +85,7 @@ config OMAP5_DSS_HDMI
+ 
+ config OMAP2_DSS_SDI
+ 	bool "SDI support"
+-        default n
++	default n
+ 	help
+ 	  SDI (Serial Display Interface) support.
+ 
+@@ -94,7 +94,7 @@ config OMAP2_DSS_SDI
+ 
+ config OMAP2_DSS_DSI
+ 	bool "DSI support"
+-        default n
++	default n
+ 	help
+ 	  MIPI DSI (Display Serial Interface) support.
+ 
+diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+index 6f4222f8beeb..1670a5cae3c7 100644
+--- a/drivers/gpu/drm/rockchip/Kconfig
++++ b/drivers/gpu/drm/rockchip/Kconfig
+@@ -28,17 +28,17 @@ config ROCKCHIP_ANALOGIX_DP
+ 	  on RK3288 or RK3399 based SoC, you should select this option.
+ 
+ config ROCKCHIP_CDN_DP
+-        bool "Rockchip cdn DP"
++	bool "Rockchip cdn DP"
+ 	depends on EXTCON=y || (EXTCON=m && DRM_ROCKCHIP=m)
+-        help
++	help
+ 	  This selects support for Rockchip SoC specific extensions
+ 	  for the cdn DP driver. If you want to enable Dp on
+ 	  RK3399 based SoC, you should select this
+ 	  option.
+ 
+ config ROCKCHIP_DW_HDMI
+-        bool "Rockchip specific extensions for Synopsys DW HDMI"
+-        help
++	bool "Rockchip specific extensions for Synopsys DW HDMI"
++	help
+ 	  This selects support for Rockchip SoC specific extensions
+ 	  for the Synopsys DesignWare HDMI driver. If you want to
+ 	  enable HDMI on RK3288 or RK3399 based SoC, you should select
+diff --git a/drivers/gpu/drm/udl/Kconfig b/drivers/gpu/drm/udl/Kconfig
+index b4d179b87f01..b13aa33990f3 100644
+--- a/drivers/gpu/drm/udl/Kconfig
++++ b/drivers/gpu/drm/udl/Kconfig
+@@ -8,4 +8,4 @@ config DRM_UDL
+ 	select DRM_KMS_HELPER
+ 	help
+ 	  This is a KMS driver for the USB displaylink video adapters.
+-          Say M/Y to add support for these devices via drm/kms interfaces.
++	  Say M/Y to add support for these devices via drm/kms interfaces.
+diff --git a/drivers/gpu/vga/Kconfig b/drivers/gpu/vga/Kconfig
+index c8c770b05ed9..1ad4c4ef0b5e 100644
+--- a/drivers/gpu/vga/Kconfig
++++ b/drivers/gpu/vga/Kconfig
+@@ -28,6 +28,6 @@ config VGA_SWITCHEROO
+ 	help
+ 	  Many laptops released in 2008/9/10 have two GPUs with a multiplexer
+ 	  to switch between them. This adds support for dynamic switching when
+-          X isn't running and delayed switching until the next logoff. This
++	  X isn't running and delayed switching until the next logoff. This
+ 	  feature is called hybrid graphics, ATI PowerXpress, and Nvidia
+ 	  HybridPower.
 -- 
 2.17.1
 
