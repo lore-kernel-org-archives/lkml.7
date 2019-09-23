@@ -2,283 +2,278 @@ Return-Path: <SRS0=bmbz=XS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F241AC32755
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6949CC04EBF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01F220882
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 12:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26202207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Sep 2019 13:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="KHxg3sfh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Cx1v6F1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394759AbfIWM7R (ORCPT
+        id S2394834AbfIWNBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 08:59:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40140 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394080AbfIWM7R (ORCPT
+        Mon, 23 Sep 2019 09:01:08 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7811 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394772AbfIWNBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 08:59:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b24so9200758wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 05:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HTuM7/0UVWYw13uPzi+JxNLECRLsoMfgODIyjcc3VMA=;
-        b=KHxg3sfhcAxqdoLBIjcXRxE8lVWuEiR3G6gv/GECDpR+XLvkcYfONyKgPhyWO12Pxx
-         bsoM3Ln/JaM6ElP9GokIc9e7ZaT3JRpe00aXBJLKz3S4DQXQNxqU1l5bED1DlOzaKfAv
-         bowzzJgpS8ooLWUkfNkTWPTGzDerYIiFNVxEUOuSQPrnOmYZkyF5nz8STB5vOw1hPANL
-         RdGwHspHWsGCDayIoY4pNRNM5sBD17QO/DUasnMzcH5w71bpRyAYsL1/b/Gwe8Qff8yx
-         3zGBlhk93p7X7uGHGWFiHM7aznecCqdV8N0avWMGCiIzzgAX63kBE6zAC3k7q6TJLyit
-         E2rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HTuM7/0UVWYw13uPzi+JxNLECRLsoMfgODIyjcc3VMA=;
-        b=sTp0QYU47svQf81pUcFqa254U8SGr55HnnR2zsBBfSj9bbDY2+vt/aGZqoELU4LDzn
-         HQycYOivCy4Fj9d3JIEw+mH/tDH4G/adzzfIKjK1E41HrLLogveI6vOtUarVVyNF2RAA
-         AxF33gV28Evdry4mlZeb94uNgPOPcowcm9fsYUFZFqXcrxJl1TtXyhDfYE/frQczJ19J
-         yHLqZQmmkAvKN5lXLzpZH8J87XsSTr2VXOYfxkAoTca18h1OhwW1AtGQJ2kaZig4xR9b
-         S+R2z9jQ+P9j6ey+eJZ2JQxNOuGR6nhCcpZPDOCM+YzvYLP0nMYuDJUMHHZ43tJjziUy
-         2eIg==
-X-Gm-Message-State: APjAAAU+H/Wb9wY51FsLAz/U/lCw0jevtk4IPEvAob/FskWvbg1NUMBN
-        MR0KT00eIRTtTJVCnSogJ2hv09bKolAKNE/c1SxKJQ==
-X-Google-Smtp-Source: APXvYqzh2IBz0cIlPb7hv46bd1P8/dI9ldz/B7wmwEcTK3TnZ6Hf8lVRsJVYT/tG4aQeI5ajqHIpCC6rKKf/Oh9nAIE=
-X-Received: by 2002:a1c:5451:: with SMTP id p17mr13776037wmi.103.1569243552938;
- Mon, 23 Sep 2019 05:59:12 -0700 (PDT)
+        Mon, 23 Sep 2019 09:01:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d88c2180001>; Mon, 23 Sep 2019 06:01:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 23 Sep 2019 06:01:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 23 Sep 2019 06:01:05 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 13:01:05 +0000
+Received: from [10.21.133.50] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Sep
+ 2019 13:01:03 +0000
+Subject: Re: [PATCH v4 1/2] soc/tegra: pmc: Query PCLK clock rate at probe
+ time
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190804202927.15014-1-digetx@gmail.com>
+ <23856887-06b0-66a8-1df2-ef4d7b48dc68@nvidia.com>
+ <854c90c4-9e42-2020-5fa7-8711203f56a5@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c5a5a059-c949-1a25-c7ac-59d88ad9a026@nvidia.com>
+Date:   Mon, 23 Sep 2019 14:01:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-20-anup.patel@wdc.com>
- <d144652e-898b-bf6b-dc73-352fb1fffd40@amazon.com>
-In-Reply-To: <d144652e-898b-bf6b-dc73-352fb1fffd40@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 23 Sep 2019 18:29:01 +0530
-Message-ID: <CAAhSdy3HE_s5mqGmC0w8WWxJ4C6HJPyo-9Pdc-7snQ4aN9vKOA@mail.gmail.com>
-Subject: Re: [PATCH v7 18/21] RISC-V: KVM: Add SBI v0.1 support
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <854c90c4-9e42-2020-5fa7-8711203f56a5@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1569243672; bh=kJJvQNJruyE7QCT+k9grSSwh9PRvE6v8j++nsh31nF4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Cx1v6F1qCNGUgpPjXQNES5QPQbYiSo0IeEVXBGuDYt7H/iPl+9HaeUMRTG6xrOykd
+         L8ny3ZwqdSHoM8EAW3evGtRu+pESjze/iNw5kcsuKDi9pRmpGTfiyrsCwxi6nt02UC
+         iHqVBwXuEgomnenP3vu6S01k1N+EQjgZnStxLW+HS12VsHdiJWDrd8VHQ2z+YETfVb
+         fDKXGfzPX3ymUz/nxrhQDyvj+CdHoha56q6raG9A/zfCfYYFYfC5fLreVvR+hdF12m
+         sO2EK5aJOW63YPZjdJ5E7KlPPdoFjQLq60jbM7ozVEfWCWxc7jWF0LdsESJlq8gcno
+         85DnYNVmZc2YA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:31 PM Alexander Graf <graf@amazon.com> wrote:
->
->
->
-> On 04.09.19 18:16, Anup Patel wrote:
-> > From: Atish Patra <atish.patra@wdc.com>
-> >
-> > The KVM host kernel running in HS-mode needs to handle SBI calls coming
-> > from guest kernel running in VS-mode.
-> >
-> > This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-> > implemented correctly except remote tlb flushes. For remote TLB flushes,
-> > we are doing full TLB flush and this will be optimized in future.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >   arch/riscv/include/asm/kvm_host.h |   2 +
-> >   arch/riscv/kvm/Makefile           |   2 +-
-> >   arch/riscv/kvm/vcpu_exit.c        |   3 +
-> >   arch/riscv/kvm/vcpu_sbi.c         | 104 ++++++++++++++++++++++++++++++
-> >   4 files changed, 110 insertions(+), 1 deletion(-)
-> >   create mode 100644 arch/riscv/kvm/vcpu_sbi.c
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> > index 928c67828b1b..269bfa5641b1 100644
-> > --- a/arch/riscv/include/asm/kvm_host.h
-> > +++ b/arch/riscv/include/asm/kvm_host.h
-> > @@ -250,4 +250,6 @@ bool kvm_riscv_vcpu_has_interrupt(struct kvm_vcpu *vcpu);
-> >   void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
-> >   void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
-> >
-> > +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu);
-> > +
-> >   #endif /* __RISCV_KVM_HOST_H__ */
-> > diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-> > index 3e0c7558320d..b56dc1650d2c 100644
-> > --- a/arch/riscv/kvm/Makefile
-> > +++ b/arch/riscv/kvm/Makefile
-> > @@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
-> >   kvm-objs := $(common-objs-y)
-> >
-> >   kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
-> > -kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-> > +kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
-> >
-> >   obj-$(CONFIG_KVM)   += kvm.o
-> > diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> > index 39469f67b241..0ee4e8943f4f 100644
-> > --- a/arch/riscv/kvm/vcpu_exit.c
-> > +++ b/arch/riscv/kvm/vcpu_exit.c
-> > @@ -594,6 +594,9 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
-> >                   (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
-> >                       ret = stage2_page_fault(vcpu, run, scause, stval);
-> >               break;
-> > +     case EXC_SUPERVISOR_SYSCALL:
-> > +             if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-> > +                     ret = kvm_riscv_vcpu_sbi_ecall(vcpu);
->
-> implicit fall-through
 
-Okay, I will add break here.
+On 23/09/2019 13:49, Dmitry Osipenko wrote:
+> 23.09.2019 13:56, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 04/08/2019 21:29, Dmitry Osipenko wrote:
+>>> It is possible to get a lockup if kernel decides to enter LP2 cpuidle
+>>> from some clk-notifier, in that case CCF's "prepare" mutex is kept lock=
+ed
+>>> and thus clk_get_rate(pclk) blocks on the same mutex with interrupts be=
+ing
+>>> disabled.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v4: Added clk-notifier to track PCLK rate-changes, which may become use=
+ful
+>>>     in the future. That's done in response to v3 review comment from Pe=
+ter
+>>>     De Schrijver.
+>>>
+>>>     Now properly handling case where clk pointer is intentionally NULL =
+on
+>>>     the driver's probe.
+>>>
+>>> v3: Changed commit's message because I actually recalled what was the
+>>>     initial reason for the patch, since the problem reoccurred once aga=
+in.
+>>>
+>>> v2: Addressed review comments that were made by Jon Hunter to v1 by
+>>>     not moving the memory barrier, replacing one missed clk_get_rate()
+>>>     with pmc->rate, handling possible clk_get_rate() error on probe and
+>>>     slightly adjusting the commits message.
+>>>
+>>>  drivers/soc/tegra/pmc.c | 71 ++++++++++++++++++++++++++++++-----------
+>>>  1 file changed, 53 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index 9f9c1c677cf4..4e44943d0b26 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -309,6 +309,7 @@ static const char * const tegra210_reset_sources[] =
+=3D {
+>>>   * @pctl_dev: pin controller exposed by the PMC
+>>>   * @domain: IRQ domain provided by the PMC
+>>>   * @irq: chip implementation for the IRQ domain
+>>> + * @clk_nb: pclk clock changes handler
+>>>   */
+>>>  struct tegra_pmc {
+>>>  	struct device *dev;
+>>> @@ -344,6 +345,8 @@ struct tegra_pmc {
+>>> =20
+>>>  	struct irq_domain *domain;
+>>>  	struct irq_chip irq;
+>>> +
+>>> +	struct notifier_block clk_nb;
+>>>  };
+>>> =20
+>>>  static struct tegra_pmc *pmc =3D &(struct tegra_pmc) {
+>>> @@ -1192,7 +1195,7 @@ static int tegra_io_pad_prepare(struct tegra_pmc =
+*pmc, enum tegra_io_pad id,
+>>>  		return err;
+>>> =20
+>>>  	if (pmc->clk) {
+>>> -		rate =3D clk_get_rate(pmc->clk);
+>>> +		rate =3D pmc->rate;
+>>>  		if (!rate) {
+>>>  			dev_err(pmc->dev, "failed to get clock rate\n");
+>>>  			return -ENODEV;
+>>
+>> So this error should never happen now, right? Assuming that rate is
+>> never set to 0. But ...
+>=20
+> Good catch!
+>=20
+>>> @@ -1433,6 +1436,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspen=
+d_mode mode)
+>>>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>>>  {
+>>>  	unsigned long long rate =3D 0;
+>>> +	u64 ticks;
+>>>  	u32 value;
+>>> =20
+>>>  	switch (mode) {
+>>> @@ -1441,31 +1445,22 @@ void tegra_pmc_enter_suspend_mode(enum tegra_su=
+spend_mode mode)
+>>>  		break;
+>>> =20
+>>>  	case TEGRA_SUSPEND_LP2:
+>>> -		rate =3D clk_get_rate(pmc->clk);
+>>> +		rate =3D pmc->rate;
+>>>  		break;
+>>> =20
+>>>  	default:
+>>>  		break;
+>>>  	}
+>>> =20
+>>> -	if (WARN_ON_ONCE(rate =3D=3D 0))
+>>> -		rate =3D 100000000;
+>>> -
+>>> -	if (rate !=3D pmc->rate) {
+>>> -		u64 ticks;
+>>> -
+>>> -		ticks =3D pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+>>> -		do_div(ticks, USEC_PER_SEC);
+>>> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>>> +	ticks =3D pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+>>> +	do_div(ticks, USEC_PER_SEC);
+>>> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>>> =20
+>>> -		ticks =3D pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+>>> -		do_div(ticks, USEC_PER_SEC);
+>>> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>>> +	ticks =3D pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+>>> +	do_div(ticks, USEC_PER_SEC);
+>>> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>>> =20
+>>> -		wmb();
+>>> -
+>>> -		pmc->rate =3D rate;
+>>> -	}
+>>> +	wmb();
+>>> =20
+>>>  	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>  	value &=3D ~PMC_CNTRL_SIDE_EFFECT_LP0;
+>>> @@ -2019,6 +2014,20 @@ static int tegra_pmc_irq_init(struct tegra_pmc *=
+pmc)
+>>>  	return 0;
+>>>  }
+>>> =20
+>>> +static int tegra_pmc_clk_notify_cb(struct notifier_block *nb,
+>>> +				   unsigned long action, void *ptr)
+>>> +{
+>>> +	struct clk_notifier_data *data =3D ptr;
+>>> +	struct tegra_pmc *pmc;
+>>> +
+>>> +	if (action =3D=3D POST_RATE_CHANGE) {
+>>> +		pmc =3D container_of(nb, struct tegra_pmc, clk_nb);
+>>> +		pmc->rate =3D data->new_rate;
+>>> +	}
+>>> +
+>>> +	return NOTIFY_OK;
+>>> +}
+>>> +
+>>>  static int tegra_pmc_probe(struct platform_device *pdev)
+>>>  {
+>>>  	void __iomem *base;
+>>> @@ -2082,6 +2091,30 @@ static int tegra_pmc_probe(struct platform_devic=
+e *pdev)
+>>>  		pmc->clk =3D NULL;
+>>>  	}
+>>> =20
+>>> +	/*
+>>> +	 * PCLK clock rate can't be retrieved using CLK API because it
+>>> +	 * causes lockup if CPU enters LP2 idle state from some other
+>>> +	 * CLK notifier, hence we're caching the rate's value locally.
+>>> +	 */
+>>> +	if (pmc->clk) {
+>>> +		pmc->clk_nb.notifier_call =3D tegra_pmc_clk_notify_cb;
+>>> +		err =3D clk_notifier_register(pmc->clk, &pmc->clk_nb);
+>>> +		if (err) {
+>>> +			dev_err(&pdev->dev,
+>>> +				"failed to register clk notifier\n");
+>>> +			return err;
+>>> +		}
+>>> +
+>>> +		pmc->rate =3D clk_get_rate(pmc->clk);
+>>> +	}
+>>> +
+>>> +	if (!pmc->rate) {
+>>> +		if (pmc->clk)
+>>> +			dev_err(&pdev->dev, "failed to get pclk rate\n");
+>>> +
+>>> +		pmc->rate =3D 100000000;
+>>
+>> I wonder if we should just let this fail. Or set to 0 so that if the
+>> rate is not set we will never suspend or configure the IO pads? I could
+>> run some quick tests to see if there are any problems by failing here.
+>=20
+> Do you mean to fail the PMC driver to probe? I guess that will be fatal
+> and system won't be in a useful state, from a user perspective that
+> should be equal to a hang on boot with a black screen. On the other
+> hand, it seems that failing tegra_io_pad_prepare() should have similar
+> fatal result.
+>=20
+> I'm wondering whether that IO PAD misconfiguration could be harmful. If
+> not, then looks like falling back to 100Mhz should be good enough. In
+> practice clk_get_rate() shouldn't ever fail unless there is some serious
+> bug in clk/. What do you think?
 
->
-> >       default:
-> >               break;
-> >       };
-> > diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> > new file mode 100644
-> > index 000000000000..b415b8b54bb1
-> > --- /dev/null
-> > +++ b/arch/riscv/kvm/vcpu_sbi.c
-> > @@ -0,0 +1,104 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/**
-> > + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-> > + *
-> > + * Authors:
-> > + *     Atish Patra <atish.patra@wdc.com>
-> > + */
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/err.h>
-> > +#include <linux/kvm_host.h>
-> > +#include <asm/csr.h>
-> > +#include <asm/kvm_vcpu_timer.h>
-> > +
-> > +#define SBI_VERSION_MAJOR                    0
-> > +#define SBI_VERSION_MINOR                    1
-> > +
-> > +static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu, u32 type)
-> > +{
-> > +     int i;
-> > +     struct kvm_vcpu *tmp;
-> > +
-> > +     kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-> > +             tmp->arch.power_off = true;
-> > +     kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-> > +
-> > +     memset(&vcpu->run->system_event, 0, sizeof(vcpu->run->system_event));
-> > +     vcpu->run->system_event.type = type;
-> > +     vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
->
-> Is there a particular reason this has to be implemented in kernel space?
+Exactly. I think that if clk_get_rate() is failing then something bad is
+happening. I can see if this causes any obvious problems across the
+different boards we test, but it would be great to get rid of this
+100MHz value (unless Peter knows of a good reason to keep it).
 
-It's not implemented in kernel space. We are forwarding it to user space
-using exit reason KVM_EXIT_SYSTEM_EVENT. These exit reason is
-arch independent and both QEMU and KVMTOOL already implement
-it in arch independent way.
+Jon
 
-> It's not performance critical and all stopping vcpus is something user
-> space should be able to do as well, no?
-
-Yes, it's not performance critical but it's done in user space.
-
->
-> > +}
-> > +
-> > +int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu)
-> > +{
-> > +     int i, ret = 1;
-> > +     u64 next_cycle;
-> > +     struct kvm_vcpu *rvcpu;
-> > +     bool next_sepc = true;
-> > +     ulong hmask, ut_scause = 0;
-> > +     struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-> > +
-> > +     if (!cp)
-> > +             return -EINVAL;
-> > +
-> > +     switch (cp->a7) {
-> > +     case SBI_SET_TIMER:
-> > +#if __riscv_xlen == 32
-> > +             next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
-> > +#else
-> > +             next_cycle = (u64)cp->a0;
-> > +#endif
-> > +             kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-> > +             break;
-> > +     case SBI_CLEAR_IPI:
-> > +             kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
-> > +             break;
-> > +     case SBI_SEND_IPI:
-> > +             hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-> > +                                                &ut_scause);
-> > +             if (ut_scause) {
-> > +                     kvm_riscv_vcpu_trap_redirect(vcpu, ut_scause,
-> > +                                                  cp->a0);
-> > +                     next_sepc = false;
-> > +             } else {
-> > +                     for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-> > +                             rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
-> > +                             kvm_riscv_vcpu_set_interrupt(rvcpu, IRQ_S_SOFT);
-> > +                     }
-> > +             }
-> > +             break;
-> > +     case SBI_SHUTDOWN:
-> > +             kvm_sbi_system_shutdown(vcpu, KVM_SYSTEM_EVENT_SHUTDOWN);
-> > +             ret = 0;
-> > +             break;
-> > +     case SBI_REMOTE_FENCE_I:
-> > +             sbi_remote_fence_i(NULL);
-> > +             break;
-> > +     /*
-> > +      * TODO: There should be a way to call remote hfence.bvma.
-> > +      * Preferred method is now a SBI call. Until then, just flush
-> > +      * all tlbs.
-> > +      */
-> > +     case SBI_REMOTE_SFENCE_VMA:
-> > +             /* TODO: Parse vma range. */
-> > +             sbi_remote_sfence_vma(NULL, 0, 0);
-> > +             break;
-> > +     case SBI_REMOTE_SFENCE_VMA_ASID:
-> > +             /* TODO: Parse vma range for given ASID */
-> > +             sbi_remote_sfence_vma(NULL, 0, 0);
-> > +             break;
-> > +     default:
-> > +             /*
-> > +              * For now, just return error to Guest.
-> > +              * TODO: In-future, we will route unsupported SBI calls
-> > +              * to user-space.
-> > +              */
-> > +             cp->a0 = -ENOTSUPP;
-> > +             break;
-> > +     };
-> > +
-> > +     if (ret >= 0)
-> > +             cp->sepc += 4;
->
-> I don't see you ever setting ret except for shutdown?
->
-> Really, now is the time to plumb SBI calls down to user space. It allows
-> you to have a clean shutdown story from day 1.
-
-I agree with you.
-
-I will implement unsupported SBI call forwarding to user-space in v8 series.
-
-Regards,
-Anup
+--=20
+nvpublic
