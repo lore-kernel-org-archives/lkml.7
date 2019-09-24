@@ -2,142 +2,191 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAEEC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE79C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257272146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6743A2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W1PlBy5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441780AbfIXUfN (ORCPT
+        id S2441985AbfIXUhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:35:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22499 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbfIXUfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:35:13 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 91AC118C8914;
-        Tue, 24 Sep 2019 20:35:12 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E70B5D9CA;
-        Tue, 24 Sep 2019 20:35:09 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 14:35:09 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Tina Zhang <tina.zhang@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        yi.l.liu@intel.com
-Subject: Re: [PATCH v6 2/6] vfio: Introduce vGPU display irq type
-Message-ID: <20190924143509.181affe2@x1.home>
-In-Reply-To: <20190924064143.9282-3-tina.zhang@intel.com>
-References: <20190924064143.9282-1-tina.zhang@intel.com>
-        <20190924064143.9282-3-tina.zhang@intel.com>
-Organization: Red Hat
+        Tue, 24 Sep 2019 16:37:23 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44421 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfIXUhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 16:37:23 -0400
+Received: by mail-io1-f68.google.com with SMTP id j4so7760530iog.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uaeaWBdArEAfa39+a057CzHk1IE9AGe9Y48nXTxnl5Y=;
+        b=W1PlBy5P5VtV3sQkddl5oJuJMX55KxCaG67/yBgqducKodDImfrDuvr2N862waA2nj
+         HQ5wdmPprUhTQMt+Hn9AIRQuuANbNohI7f3KbNc68ZWBmo/JAcWledMia/LrjmLWnQzN
+         IsB3ZwPhyfjP9RMJweb+tOAkpq3xdcTfNcsYo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uaeaWBdArEAfa39+a057CzHk1IE9AGe9Y48nXTxnl5Y=;
+        b=MU0G7IrCfeLHD2q+4xg5ZHz1zHj+GLFV6SMIOlFChSX0IT4dxx82SBxyw/ii9kRgeb
+         JcjaiKObS8AAgYN9GK76oypo+uzj5JkK0NBBCSS8F2r56zUcNtqQmFkyR7NUY1j7oXwH
+         ggn0kmKV23Wgr0bi3AIrjjTtoqkRCuIqb88Qjwrt9AKLL8g1Ko7XNUbFy42gFzpDHY1J
+         VqJF1VpeWp6rnArwiSCQhx95izsFkTiaUD+9qyklrUfe299gwLdVJioAyih9XVbdD7VT
+         n7JDK6oeT2FtZAWiAZVOvJAUuQ7749x5qoddF2mtnymz4w9u+nH3ptKFKK0sDrPHY/q+
+         MraQ==
+X-Gm-Message-State: APjAAAUXR0mrRyYkNpJy3vb8j4Ht1UpQlRYNB+N9W/xuQTScyxfUnlHF
+        ty5wxfVOBnkZS1cySMslrZb0AtCeJJw=
+X-Google-Smtp-Source: APXvYqzx9Mbt02iaJ9dtwVyRrdw332Z4biD5zuMgXnHM/n7mi8haZ5vY52NkKew9kLrj6ebiQjE7eg==
+X-Received: by 2002:a02:a617:: with SMTP id c23mr870925jam.14.1569357441958;
+        Tue, 24 Sep 2019 13:37:21 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:798c:e494:921c:d544])
+        by smtp.gmail.com with ESMTPSA id u11sm3787705iof.22.2019.09.24.13.37.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 13:37:21 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Campello <campello@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v5] platform/chrome: wilco_ec: Add debugfs test_event file
+Date:   Tue, 24 Sep 2019 14:37:16 -0600
+Message-Id: <20190924203716.209420-1-campello@chromium.org>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 24 Sep 2019 20:35:12 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Sep 2019 14:41:39 +0800
-Tina Zhang <tina.zhang@intel.com> wrote:
+This change introduces a new debugfs file 'test_event' that when written
+to causes the EC to generate a test event.
+This adds a second sub cmd for the test event, and pulls out send_ec_cmd
+to be a common helper between h1_gpio_get and test_event_set.
 
-> Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
-> VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display.
-> 
-> Introduce vfio_irq_info_cap_display_plane_events capability to notify
-> user space with the vGPU's plane update events
-> 
-> v3:
-> - Add more description to VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ and
->   VFIO_IRQ_INFO_CAP_DISPLAY. (Alex & Gerd)
-> 
-> v2:
-> - Add VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ description. (Alex & Kechen)
-> - Introduce vfio_irq_info_cap_display_plane_events. (Gerd & Alex)
-> 
-> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> ---
->  include/uapi/linux/vfio.h | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index aa6850f1daef..2946a028b0c3 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -476,6 +476,44 @@ struct vfio_irq_info_cap_type {
->  	__u32 subtype;  /* type specific */
->  };
->  
-> +/* vGPU IRQ TYPE */
-> +#define VFIO_IRQ_TYPE_GFX			(1)
-> +
-> +/* sub-types for VFIO_IRQ_TYPE_GFX */
-> +/*
-> + * vGPU device display refresh interrupt request. This irq asking for
-> + * a user space display refresh, covers all display updates events,
-> + * i.e. user space can stop the display update timer and fully depend
-> + * on getting the notification if an update is needed.
-> + */
-> +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ	(1)
-> +
-> +/*
-> + * Display capability of reporting display refresh interrupt events.
+Signed-off-by: Daniel Campello <campello@chromium.org>
+---
+Changes for v2:
+  - Cleaned up and added comments.
+  - Renamed and updated function signature from write_to_mailbox to
+    send_ec_cmd.
+Changes for v3:
+  - Switched NULL format string to empty format string
+  - Renamed val parameter on send_ec_cmd to out_val
+Changes for v4:
+  - Provided a format string to avoid -Wformat-zero-length warning
+Changes for v5:
+  - Updated commit message to include more implementation details
+  - Restored removed empty line between functions
 
-Perhaps, "Capability for interpreting GFX_DISPLAY_IRQ eventfd value"
+ drivers/platform/chrome/wilco_ec/debugfs.c | 47 +++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
-> + * This gives user space the capability to identify different display
-> + * updates events of the display refresh interrupt request.
-> + *
-> + * When notified by VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ, user space can
-> + * use the eventfd counter value to identify which plane has been
-> + * updated.
-> + *
-> + * Note that there might be some cases like counter_value >
-> + * (cur_event_val + pri_event_val), if notifications haven't been
-> + * handled on time in user mode. These cases can be handled as all
-> + * plane updated case or signle plane updated case depending on the
-> + * value.
+diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+index 8d65a1e2f1a3..df5a5f6c3ec6 100644
+--- a/drivers/platform/chrome/wilco_ec/debugfs.c
++++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+@@ -160,29 +160,29 @@ static const struct file_operations fops_raw = {
 
-Seems like in the GVT-g implementation such a value is not possible.
-In fact, when this capability is provided, doesn't userspace interpret
-the eventfd value more as a bitmask of events rather than a counter?
-If so, (cur_event_val + pri_event_val) may be mathematically accurate,
-but maybe obfuscates the logical interpretation... or maybe that's just
-me.
+ #define CMD_KB_CHROME		0x88
+ #define SUB_CMD_H1_GPIO		0x0A
++#define SUB_CMD_TEST_EVENT	0x0B
 
-> + *
-> + * cur_event_val: eventfd counter value for cursor plane change event.
-> + * pri_event_val: eventfd counter value for primary plane change event.
+-struct h1_gpio_status_request {
++struct ec_request {
+ 	u8 cmd;		/* Always CMD_KB_CHROME */
+ 	u8 reserved;
+-	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
++	u8 sub_cmd;
+ } __packed;
 
-I think there should be a note that this capability is optional and
-lacking this feature, userspace should refresh all display events on
-notification.
+-struct hi_gpio_status_response {
++struct ec_response {
+ 	u8 status;	/* 0 if allowed */
+-	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
++	u8 val;
+ } __packed;
 
-> + */
-> +#define VFIO_IRQ_INFO_CAP_DISPLAY	2
-> +
-> +struct vfio_irq_info_cap_display_plane_events {
-> +	struct vfio_info_cap_header header;
-> +	__u64 cur_event_val;
-> +	__u64 pri_event_val;
+-static int h1_gpio_get(void *arg, u64 *val)
++static int send_ec_cmd(struct wilco_ec_device *ec, u8 sub_cmd, u8 *out_val)
+ {
+-	struct wilco_ec_device *ec = arg;
+-	struct h1_gpio_status_request rq;
+-	struct hi_gpio_status_response rs;
++	struct ec_request rq;
++	struct ec_response rs;
+ 	struct wilco_ec_message msg;
+ 	int ret;
 
-AIUI, the GVT-g implementation sets a single bit and userspace expects
-one or both of those bits to be set on notification.  Should we
-simplify this a bit and just define these as cur_event_bit,
-pri_event_bit and use a __u8 for each to define the bit position?
-Thanks,
+ 	memset(&rq, 0, sizeof(rq));
+ 	rq.cmd = CMD_KB_CHROME;
+-	rq.sub_cmd = SUB_CMD_H1_GPIO;
++	rq.sub_cmd = sub_cmd;
 
-Alex
+ 	memset(&msg, 0, sizeof(msg));
+ 	msg.type = WILCO_EC_MSG_LEGACY;
+@@ -196,13 +196,38 @@ static int h1_gpio_get(void *arg, u64 *val)
+ 	if (rs.status)
+ 		return -EIO;
+
+-	*val = rs.val;
++	*out_val = rs.val;
+
+ 	return 0;
+ }
+
++/**
++ * h1_gpio_get() - Gets h1 gpio status.
++ * @arg: The wilco EC device.
++ * @val: BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL
++ */
++static int h1_gpio_get(void *arg, u64 *val)
++{
++	return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
++}
++
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
+
++/**
++ * test_event_set() - Sends command to EC to cause an EC test event.
++ * @arg: The wilco EC device.
++ * @val: unused.
++ */
++static int test_event_set(void *arg, u64 val)
++{
++	u8 ret;
++
++	return send_ec_cmd(arg, SUB_CMD_TEST_EVENT, &ret);
++}
++
++/* Format is unused since it is only required for get method which is NULL */
++DEFINE_DEBUGFS_ATTRIBUTE(fops_test_event, NULL, test_event_set, "%llu\n");
++
+ /**
+  * wilco_ec_debugfs_probe() - Create the debugfs node
+  * @pdev: The platform device, probably created in core.c
+@@ -226,6 +251,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
+ 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
+ 	debugfs_create_file("h1_gpio", 0444, debug_info->dir, ec,
+ 			    &fops_h1_gpio);
++	debugfs_create_file("test_event", 0200, debug_info->dir, ec,
++			    &fops_test_event);
+
+ 	return 0;
+ }
+--
+2.23.0.351.gc4317032e6-goog
+
