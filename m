@@ -2,87 +2,73 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4363C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569EEC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F221214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351232146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504592AbfIXLFb (ORCPT
+        id S2440789AbfIXLGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:05:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58476 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504557AbfIXLF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:05:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 04:05:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="190989266"
-Received: from pktinlab.iind.intel.com ([10.66.253.121])
-  by orsmga003.jf.intel.com with ESMTP; 24 Sep 2019 04:05:23 -0700
-From:   Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-To:     pankaj.bharadiya@gmail.com, andriy.shevchenko@linux.intel.com,
-        kernel-hardening@lists.openwall.com, keescook@chromium.org,
-        akpm@linux-foundation.org, mayhs11saini@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     pankaj.laxminarayan.bharadiya@intel.com
-Subject: [PATCH 5/5] stddef.h: Remove sizeof_field macro
-Date:   Tue, 24 Sep 2019 16:28:39 +0530
-Message-Id: <20190924105839.110713-6-pankaj.laxminarayan.bharadiya@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
-References: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
+        Tue, 24 Sep 2019 07:06:05 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:53815 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438600AbfIXLGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:06:04 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46cyzZ4Bsxz1rLPh;
+        Tue, 24 Sep 2019 13:06:02 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46cyzZ3dW3z1qqkG;
+        Tue, 24 Sep 2019 13:06:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id mritbTMQesNz; Tue, 24 Sep 2019 13:06:01 +0200 (CEST)
+X-Auth-Info: sCc3ghK+gZ5oOxkg3UznVI/8Y3ZyFTKYP/gfWzsOp0M=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 24 Sep 2019 13:06:01 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        krzk@kernel.org, Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH 0/2] spi: Fix problem with interrupted slave transmission
+Date:   Tue, 24 Sep 2019 13:05:45 +0200
+Message-Id: <20190924110547.14770-1-lukma@denx.de>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have sizeof_member macro to find the size of a member of a
-struct.
+This patch series fixes problem with recovering Vybrid's NXP DSPI
+controller state after master transmission distortion.
 
-sizeof_field  macro is not getting used any more hence remove it.
-Also modify the offsetofend macro to get rid of it.
+It was tested with a setup where /dev/spidevX.Y devices were used in
+a loopback mode (provided by proper HW connections). During this test
+the distortion was introduced and the system was assessed if it is
+possible to continue correct SPI transmission.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
----
- include/linux/stddef.h | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+This series applies clearly on v5.2 (tag) and current mainline:
+SHA1: 4c07e2ddab5b6b57dbcb09aedbda1f484d5940cc
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 998a4ba28eba..2181719fd907 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -19,14 +19,6 @@ enum {
- #define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
- #endif
- 
--/**
-- * sizeof_field(TYPE, MEMBER)
-- *
-- * @TYPE: The structure containing the field of interest
-- * @MEMBER: The field to return the size of
-- */
--#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
--
- /**
-  * offsetofend(TYPE, MEMBER)
-  *
-@@ -34,6 +26,6 @@ enum {
-  * @MEMBER: The member within the structure to get the end offset of
-  */
- #define offsetofend(TYPE, MEMBER) \
--	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
-+	(offsetof(TYPE, MEMBER)	+ sizeof(((TYPE *)0)->MEMBER))
- 
- #endif
+Lukasz Majewski (2):
+  spi: Add call to spi_slave_abort() function when spidev driver is
+    released
+  spi: Introduce dspi_slave_abort() function for NXP's dspi SPI driver
+
+ drivers/spi/spi-fsl-dspi.c | 20 ++++++++++++++++++++
+ drivers/spi/spidev.c       |  1 +
+ 2 files changed, 21 insertions(+)
+
 -- 
-2.17.1
+2.20.1
 
