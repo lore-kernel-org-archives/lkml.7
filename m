@@ -2,107 +2,155 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2141C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376F1C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A425B207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569355522;
-	bh=nB3ANp+/569VNYtSayN5jMF7IHRxY+m3iP1QD1TGWw8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=YIrjNM9y1cqSk93xrog55zsHWkBKrTncmySK4Ttd6syPvlVXnuEgcCW1aup1Ij0Ih
-	 ypNVNDLBxijZaZiJlMzbmc2OtYc5BeXjC7IEbFZqeY6y7TNmqppvhOYoDk+uzZC3gB
-	 L8OF0F9nRciuoSTd1h1xtrQ9hBxi2MEh3IDPja2Y=
+	by mail.kernel.org (Postfix) with ESMTP id F3E0D214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407372AbfIXUFW (ORCPT
+        id S1731617AbfIXUHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:05:22 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36309 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbfIXUFV (ORCPT
+        Tue, 24 Sep 2019 16:07:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38737 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728405AbfIXUHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:05:21 -0400
-Received: by mail-io1-f68.google.com with SMTP id b136so7611732iof.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tzqNMqA07jBcBpcqIcid0j0G7N4xLkFUhmGjg7IIOuU=;
-        b=DCyKK193tOOwAbtGLptlJdOOKYY/0pAfa4quNNXrWUvG3TJ7wXw/pThGwGpG+9QiwN
-         FazKM7SpbmIueD8YLUzNgzzgixAWUC4leRTPUG/z7IwX9zqjQydBTyOUnRi/xqLq7O0X
-         vwnBLD/ePKlVhAXYcazuiJhoHAT+eKbgJPEi0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tzqNMqA07jBcBpcqIcid0j0G7N4xLkFUhmGjg7IIOuU=;
-        b=qpNOAqa5tUkZ54vmn+BQHq+t7KOzXIL8IfIwrv/OHPtPxETIsHezbEft5z+LB49mhf
-         Cf3N2Xe5u7YntLDeESVD82zdABwRn5kQKSDVNOH0YOhEj0fRNRh01yHzpFppJjJO9twP
-         zUmqWQQdZkomndcCefVWHnxfMasRtgxr1fwzlSo+TkOMw36sAqh4ayQddYFlkk4RsNeq
-         XD7ZIEOrcQS/5k6YkF6LjR0lA1Gc9VMGvHm8jlqUmStBRirW0KXQ1fODHDXt6ycJgYyV
-         btloEosTrStwBFhavm+QFQ/6+YQlzNGVb3ipGBw4oSwv4ynn2paQMuFa8S5EBSuWgsvH
-         fnCA==
-X-Gm-Message-State: APjAAAWzf5xdCO7nyk16PbACwfj6QaJiztYs+gYxoWo5WzX8jAGg3Dvz
-        M+OXHv+U6plQFiooZIz0KAVP9w==
-X-Google-Smtp-Source: APXvYqxALuZ+2sOPVcl1PCpmgHoIsSghK1bXD0k9qNItmHh8nea4aKSF+aMNcivHLWvltHMCZ47cgQ==
-X-Received: by 2002:a5d:89da:: with SMTP id a26mr4311422iot.61.1569355520865;
-        Tue, 24 Sep 2019 13:05:20 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id k66sm4656319iof.25.2019.09.24.13.05.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 13:05:20 -0700 (PDT)
-Subject: Re: [PATCH] selftests: proc: Fix _GNU_SOURCE redefined build warns
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     shuah@kernel.org, akpm@linux-foundation.org,
-        sabyasachi.linux@gmail.com, jrdr.linux@gmail.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <20190924181910.23588-1-skhan@linuxfoundation.org>
- <20190924181910.23588-2-skhan@linuxfoundation.org>
- <20190924195253.GA2633@avx2>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f6c20b9b-4984-f865-3698-70b61bcd4be0@linuxfoundation.org>
-Date:   Tue, 24 Sep 2019 14:05:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 16:07:47 -0400
+Received: from lmontsouris-656-1-55-152.w80-15.abo.wanadoo.fr ([80.15.152.152] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCr65-0008FZ-2D; Tue, 24 Sep 2019 20:07:42 +0000
+Date:   Tue, 24 Sep 2019 22:07:36 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Florian Weimer <fw@deneb.enyo.de>, Oleg Nesterov <oleg@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: For review: pidfd_send_signal(2) manual page
+Message-ID: <20190924200735.2dvqhan7ynnmfc7s@wittgenstein>
+References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+ <87pnjr9rth.fsf@mid.deneb.enyo.de>
+ <20190923142325.jowzbnwjw7g7si7j@wittgenstein>
+ <90dd38d5-34b3-b72f-8e5a-b51f944f22fb@gmail.com>
+ <20190924195701.7pw2olbviieqsg5q@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <20190924195253.GA2633@avx2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190924195701.7pw2olbviieqsg5q@wittgenstein>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 1:52 PM, Alexey Dobriyan wrote:
-> On Tue, Sep 24, 2019 at 12:19:10PM -0600, Shuah Khan wrote:
->> Fix the following _GNU_SOURCE redefined build warns:
->>
->> proc-loadavg-001.c:17: warning: "_GNU_SOURCE" redefined
->> proc-self-syscall.c:16: warning: "_GNU_SOURCE" redefined
->> proc-uptime-002.c:18: warning: "_GNU_SOURCE" redefined
+On Tue, Sep 24, 2019 at 09:57:04PM +0200, Christian Brauner wrote:
+> On Tue, Sep 24, 2019 at 09:44:49PM +0200, Michael Kerrisk (man-pages) wrote:
+> > Hello Christian,
+> > 
+> > On 9/23/19 4:23 PM, Christian Brauner wrote:
+> > > On Mon, Sep 23, 2019 at 01:26:34PM +0200, Florian Weimer wrote:
+> > >> * Michael Kerrisk:
+> > >>
+> > >>> SYNOPSIS
+> > >>>        int pidfd_send_signal(int pidfd, int sig, siginfo_t info,
+> > >>>                              unsigned int flags);
+> > >>
+> > >> This probably should reference a header for siginfo_t.
+> > > 
+> > > Agreed.
+> > > 
+> > >>
+> > >>>        ESRCH  The target process does not exist.
+> > >>
+> > >> If the descriptor is valid, does this mean the process has been waited
+> > >> for?  Maybe this can be made more explicit.
+> > > 
+> > > If by valid you mean "refers to a process/thread-group leader" aka is a
+> > > pidfd then yes: Getting ESRCH means that the process has exited and has
+> > > already been waited upon.
+> > > If it had only exited but not waited upon aka is a zombie, then sending
+> > > a signal will just work because that's currently how sending signals to
+> > > zombies works, i.e. if you only send a signal and don't do any
+> > > additional checks you won't notice a difference between a process being
+> > > alive and a process being a zombie. The userspace visible behavior in
+> > > terms of signaling them is identical.
+> > 
+> > (Thanks for the clarification. I added the text "(i.e., it has 
+> > terminated and been waited on)" to the ESRCH error.)
+> > 
+> > >>>        The  pidfd_send_signal()  system call allows the avoidance of race
+> > >>>        conditions that occur when using traditional interfaces  (such  as
+> > >>>        kill(2)) to signal a process.  The problem is that the traditional
+> > >>>        interfaces specify the target process via a process ID (PID), with
+> > >>>        the  result  that the sender may accidentally send a signal to the
+> > >>>        wrong process if the originally intended target process has termi‐
+> > >>>        nated  and its PID has been recycled for another process.  By con‐
+> > >>>        trast, a PID file descriptor is a stable reference to  a  specific
+> > >>>        process;  if  that  process  terminates,  then the file descriptor
+> > >>>        ceases to be  valid  and  the  caller  of  pidfd_send_signal()  is
+> > >>>        informed of this fact via an ESRCH error.
+> > >>
+> > >> It would be nice to explain somewhere how you can avoid the race using
+> > >> a PID descriptor.  Is there anything else besides CLONE_PIDFD?
+> > > 
+> > > If you're the parent of the process you can do this without CLONE_PIDFD:
+> > > pid = fork();
+> > > pidfd = pidfd_open();
+> > > ret = pidfd_send_signal(pidfd, 0, NULL, 0);
+> > > if (ret < 0 && errno == ESRCH)
+> > > 	/* pidfd refers to another, recycled process */
+> > 
+> > Although there is still the race between the fork() and the
+> > pidfd_open(), right?
 > 
->> +#ifndef _GNU_SOURCE
->>   #define _GNU_SOURCE
->> +#endif
+> Actually no and my code is even too complex.
+> If you are the parent, and this is really a sequence that obeys the
+> ordering pidfd_open() before waiting:
 > 
-> Why are you doing this.
+> pid = fork();
+> if (pid == 0)
+> 	exit(EXIT_SUCCESS);
+> pidfd = pidfd_open(pid, 0);
+> waitid(pid, ...);
 > 
-> There are 140 redefinitions of _GNU_SOURCE
-> 
+> Then you are guaranteed that pidfd will refer to pid. No recycling can
+> happen since the process has not been waited upon yet (That is,
+> excluding special cases such as where you have a mainloop where a
+> callback reacts to a SIGCHLD event and waits on the child behind your
+> back and your next callback in the mainloop calls pidfd_open() while the
+> pid has been recycled etc.).
 
+If we wanted to be super nitpicky one could also get in that situation
+where you do:
 
-Is there something wrong with getting rid of this warning?
+signal(SIGCHLD,SIG_IGN);
 
-thanks,
--- Shuah
+// or
+
+struct sigaction sa;
+sa.sa_handler = SIG_IGN;
+sigemptyset(&sa.sa_mask);
+sa.sa_flags = 0;
+sigaction(SIGCHLD, &sa, 0)
+
+pid = fork();
+if (pid == 0)
+	exit(EXIT_SUCCESS);
+pidfd = pidfd_open();
+
+because then the process gets autoreaped and can be recycled. But again,
+that's just bad form and in that scenario one should again use
+clone(CLONE_PIDFD) instead of fork().
+
+Christian
