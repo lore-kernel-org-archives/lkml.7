@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D42C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B2FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D3F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7619A214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343315;
-	bh=l7SVIHAjohUAHLLjL6LFbSWx39cHsD0Jnyhm3JkmAAc=;
+	s=default; t=1569343320;
+	bh=KYbWE63g/VHZHZTTkgaSsk6DWKM+oronJAj0DJlgtuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qy1B0TEEgQVWYeo7Ig97XyfRlcqnkJRKIGPenyWs0Zjzl52aGoBsJber+fmwgmJCe
-	 tmXQv8e/8CrBRdrVxgqNuuUw45W3j/Xsh3hYiWvgEmo235dod6SSF4D+x4Sz8k6JX2
-	 WEVK+cwgKEXrcRgSFKR7afCUSY8DvEPw/lmQaptE=
+	b=SCEH4R1813c/Q6syD4+vOlqBuUrv6qCqWPU9W1X+4y2Xa4UtGwCa/RGSfols9lC5S
+	 ytCNWBnUHvpX0t/OE65E6IBr17dzu2l+mjrmilweHZqUlbY7q+25U7uFBClEzw6UbG
+	 tB1Xh8cgzB238UG/czpulk42E9e/kaqP+scPIm0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391439AbfIXQlz (ORCPT
+        id S2391535AbfIXQl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391096AbfIXQlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:41:53 -0400
+        id S2391350AbfIXQly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:41:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C04FA20872;
-        Tue, 24 Sep 2019 16:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D166021783;
+        Tue, 24 Sep 2019 16:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343312;
-        bh=l7SVIHAjohUAHLLjL6LFbSWx39cHsD0Jnyhm3JkmAAc=;
+        s=default; t=1569343313;
+        bh=KYbWE63g/VHZHZTTkgaSsk6DWKM+oronJAj0DJlgtuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vYyTM2XrJnTRHz/sqISb5SJJif0Lg9XUwNbZ6e4peWURx1BkZxRCx9kd44lGdFPE
-         aHgsb90g8VAQTmBsTwujMoW1UZYEGbKKCWKCyD0bsrGjOqrlXfp4U5DrGfAD/z1xC5
-         AbSYYaDvaRDDUDE6QmQVRjG9yO59/3sqCyMSL958=
+        b=KeQ0Sq3V5Fdxkr5Ys9NMev+1+oCe0hOlP18PZ2IPmYgJ9xZestVj/dK7iKDRvnjxr
+         1OmsP4SSS/CRkuBJBVM6Z+0JzCZuLtAWosk9WwjnGVKn6EYp4ZR/XD2SpY6Hxt5DTk
+         aOtBtKyJE7WBBLkT95UnW9pVBhBuuN5RoZtyELEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 04/87] drm/bridge: adv7511: Attach to DSI host at probe time
-Date:   Tue, 24 Sep 2019 12:40:20 -0400
-Message-Id: <20190924164144.25591-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 05/87] drm/kms: Catch mode_object lifetime errors
+Date:   Tue, 24 Sep 2019 12:40:21 -0400
+Message-Id: <20190924164144.25591-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,64 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Redfearn <matt.redfearn@thinci.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 83f35bc3a852f1c3892c7474998c5cec707c7ba3 ]
+[ Upstream commit 4f5368b5541a902f6596558b05f5c21a9770dd32 ]
 
-In contrast to all of the DSI panel drivers in drivers/gpu/drm/panel
-which attach to the DSI host via mipi_dsi_attach() at probe time, the
-ADV7533 bridge device does not. Instead it defers this to the point that
-the upstream device connects to its bridge via drm_bridge_attach().
-The generic Synopsys MIPI DSI host driver does not register it's own
-drm_bridge until the MIPI DSI has attached. But it does not call
-drm_bridge_attach() on the downstream device until the upstream device
-has attached. This leads to a chicken and the egg failure and the DRM
-pipeline does not complete.
-Since all other mipi_dsi_device drivers call mipi_dsi_attach() in
-probe(), make the adv7533 mipi_dsi_device do the same. This ensures that
-the Synopsys MIPI DSI host registers it's bridge such that it is
-available for the upstream device to connect to.
+Only dynamic mode objects, i.e. those which are refcounted and have a free
+callback, can be added while the overall drm_device is visible to
+userspace. All others must be added before drm_dev_register and
+removed after drm_dev_unregister.
 
-Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190627151740.2277-1-matt.redfearn@thinci.com
+Small issue around drivers still using the load/unload callbacks, we
+need to make sure we set dev->registered so that load/unload code in
+these callbacks doesn't trigger false warnings. Only a small
+adjustement in drm_dev_register was needed.
+
+Motivated by some irc discussions about object ids of dynamic objects
+like blobs become invalid, and me going on a bit an audit spree.
+
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614061723.1173-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_drv.c         | 4 ++--
+ drivers/gpu/drm/drm_mode_object.c | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index f6d2681f69273..98bccace8c1c0 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -874,9 +874,6 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
- 				 &adv7511_connector_helper_funcs);
- 	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 9d00947ca447f..e652305d8f98a 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -978,14 +978,14 @@ int drm_dev_register(struct drm_device *dev, unsigned long flags)
+ 	if (ret)
+ 		goto err_minors;
  
--	if (adv->type == ADV7533)
--		ret = adv7533_attach_dsi(adv);
+-	dev->registered = true;
 -
- 	if (adv->i2c_main->irq)
- 		regmap_write(adv->regmap, ADV7511_REG_INT_ENABLE(0),
- 			     ADV7511_INT0_HPD);
-@@ -1222,8 +1219,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
- 	drm_bridge_add(&adv7511->bridge);
+ 	if (dev->driver->load) {
+ 		ret = dev->driver->load(dev, flags);
+ 		if (ret)
+ 			goto err_minors;
+ 	}
  
- 	adv7511_audio_init(dev, adv7511);
++	dev->registered = true;
 +
-+	if (adv7511->type == ADV7533) {
-+		ret = adv7533_attach_dsi(adv7511);
-+		if (ret)
-+			goto err_remove_bridge;
-+	}
-+
- 	return 0;
+ 	if (drm_core_check_feature(dev, DRIVER_MODESET))
+ 		drm_modeset_register_all(dev);
  
-+err_remove_bridge:
-+	drm_bridge_remove(&adv7511->bridge);
- err_unregister_cec:
- 	i2c_unregister_device(adv7511->i2c_cec);
- 	if (adv7511->cec_clk)
+diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
+index 1c6e511359624..c355ba8e6d5dd 100644
+--- a/drivers/gpu/drm/drm_mode_object.c
++++ b/drivers/gpu/drm/drm_mode_object.c
+@@ -42,6 +42,8 @@ int __drm_mode_object_add(struct drm_device *dev, struct drm_mode_object *obj,
+ {
+ 	int ret;
+ 
++	WARN_ON(dev->registered && !obj_free_cb);
++
+ 	mutex_lock(&dev->mode_config.idr_mutex);
+ 	ret = idr_alloc(&dev->mode_config.object_idr, register_obj ? obj : NULL,
+ 			1, 0, GFP_KERNEL);
+@@ -102,6 +104,8 @@ void drm_mode_object_register(struct drm_device *dev,
+ void drm_mode_object_unregister(struct drm_device *dev,
+ 				struct drm_mode_object *object)
+ {
++	WARN_ON(dev->registered && !object->free_cb);
++
+ 	mutex_lock(&dev->mode_config.idr_mutex);
+ 	if (object->id) {
+ 		idr_remove(&dev->mode_config.object_idr, object->id);
 -- 
 2.20.1
 
