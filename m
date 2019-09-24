@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B33C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01EBC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E367A21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763B820673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343543;
-	bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
+	s=default; t=1569343550;
+	bh=es2vIaM7f5xW4Dh/JCsV+tGaGa4oEA9m7N0liZ52Yc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNizD0LkBmGc/aKL4Ha0jn6aZs/sg6R0rVBf1NGuiXTQFXDxIXafQE4Ze9pDcJQ8x
-	 PkLK/5ACOTl2cUGsUo3WrbsVaFdI3XxA4TzTtDUFWCS0sZi1BAsB8XS7f7GLP1+Hmr
-	 iLBvx0qPrr8f99Xyk4uWUdxU6VsjHBa6j94Y5is0=
+	b=cYzCUuavirEEolUvQxnhHOc2A5dEq9sX1xeh9RZVawsSI4RhZgv+DghkqDnm/cxem
+	 60tkqjbxKj/8jDO/mQOGVrcDHbifRxCc1oxYMscuCFPADNjAasbcL1A0r5wlSjyOau
+	 cqHWZlhr08xqMpe96IJo/F1DhtMC1Ji4q7j2ptIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410019AbfIXQpm (ORCPT
+        id S2410035AbfIXQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35556 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410005AbfIXQpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:45:38 -0400
+        id S2410020AbfIXQpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:45:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021D720872;
-        Tue, 24 Sep 2019 16:45:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8215321906;
+        Tue, 24 Sep 2019 16:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343537;
-        bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
+        s=default; t=1569343543;
+        bh=es2vIaM7f5xW4Dh/JCsV+tGaGa4oEA9m7N0liZ52Yc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DAFcJ4Ueo4qqfiWr4z0gN5q40kSnzw4hJ/V+Kt0VJYGyYJI/YKeZjOjGxfACLwiS
-         TIW31K2muFSEzl8QSXUn+RrdxsFFxU9yR7oSow/GTRREXfuLY+mWXJdBpWn+ksCFj6
-         +wqwJwdtG7QWl9mRm6m5ZKISYz1sxitrWH+7Vf5Y=
+        b=osj07c0IXhuLTG04IobP44rH9U4B/NQgdNQ2utQT1GyBYX76NbjTUgUfMmcq2ReZl
+         1lJY96dOpJ4aO88uzAVp6k9GgG6D0yk+C8//NzO5quf0enAzewJQQDa8Cx9TTRgumN
+         r4eHEAsX25ElzUrrQyCkf5T9IkEQ/TuOtTSkxmD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 82/87] clk: sprd: add missing kfree
-Date:   Tue, 24 Sep 2019 12:41:38 -0400
-Message-Id: <20190924164144.25591-82-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.3 86/87] f2fs: fix to drop meta/node pages during umount
+Date:   Tue, 24 Sep 2019 12:41:42 -0400
+Message-Id: <20190924164144.25591-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,43 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 5e75ea9c67433a065b0e8595ad3c91c7c0ca0d2d ]
+[ Upstream commit a8933b6b68f775b5774e7b075447fae13f4d01fe ]
 
-The number of config registers for different pll clocks probably are not
-same, so we have to use malloc, and should free the memory before return.
+As reported in bugzilla:
 
-Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Link: https://lkml.kernel.org/r/20190905103009.27166-1-zhang.lyra@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=204193
+
+A null pointer dereference bug is triggered in f2fs under kernel-5.1.3.
+
+ kasan_report.cold+0x5/0x32
+ f2fs_write_end_io+0x215/0x650
+ bio_endio+0x26e/0x320
+ blk_update_request+0x209/0x5d0
+ blk_mq_end_request+0x2e/0x230
+ lo_complete_rq+0x12c/0x190
+ blk_done_softirq+0x14a/0x1a0
+ __do_softirq+0x119/0x3e5
+ irq_exit+0x94/0xe0
+ call_function_single_interrupt+0xf/0x20
+
+During umount, we will access NULL sbi->node_inode pointer in
+f2fs_write_end_io():
+
+	f2fs_bug_on(sbi, page->mapping == NODE_MAPPING(sbi) &&
+				page->index != nid_of_node(page));
+
+The reason is if disable_checkpoint mount option is on, meta dirty
+pages can remain during umount, and then be flushed by iput() of
+meta_inode, however node_inode has been iput()ed before
+meta_inode's iput().
+
+Since checkpoint is disabled, all meta/node datas are useless and
+should be dropped in next mount, so in umount, let's adjust
+drop_inode() to give a hint to iput_final() to drop all those dirty
+datas correctly.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sprd/pll.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/f2fs/super.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
-index 36b4402bf09e3..640270f51aa56 100644
---- a/drivers/clk/sprd/pll.c
-+++ b/drivers/clk/sprd/pll.c
-@@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
- 					 k2 + refin * nint * CLK_PLL_1M;
- 	}
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 78a1b873e48ad..aa3178f1b145d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -873,7 +873,21 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
  
-+	kfree(cfg);
- 	return rate;
- }
- 
-@@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
- 	if (!ret)
- 		udelay(pll->udelay);
- 
-+	kfree(cfg);
- 	return ret;
- }
- 
+ static int f2fs_drop_inode(struct inode *inode)
+ {
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	int ret;
++
++	/*
++	 * during filesystem shutdown, if checkpoint is disabled,
++	 * drop useless meta/node dirty pages.
++	 */
++	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
++		if (inode->i_ino == F2FS_NODE_INO(sbi) ||
++			inode->i_ino == F2FS_META_INO(sbi)) {
++			trace_f2fs_drop_inode(inode, 1);
++			return 1;
++		}
++	}
++
+ 	/*
+ 	 * This is to avoid a deadlock condition like below.
+ 	 * writeback_single_inode(inode)
 -- 
 2.20.1
 
