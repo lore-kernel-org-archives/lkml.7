@@ -2,251 +2,132 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203BAC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5641C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62DA20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YXu0expJ"
+	by mail.kernel.org (Postfix) with ESMTP id 95EA020872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441129AbfIXNxq (ORCPT
+        id S2441149AbfIXNyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:53:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54898 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438668AbfIXNxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:53:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ODrY1g046558;
-        Tue, 24 Sep 2019 08:53:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569333214;
-        bh=I+ndL9UN+xitCCkAJmg8WMtwHoyKQ2WaYNCRG2in++o=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=YXu0expJ6nldXO3KHaVCX4bCge8OFC73vFGagSnFRpBdnJqTReOwyembxnsuONQB/
-         F4SNsTigfE7cKJVzFlHYcqjfAlyxkh/u5xaEcGFDTgfw1YTCOoHkr6KcBrD2IdQiyh
-         psaqHXTj3TOtlbvOLaZfL735bpMTgKst6ds5cch0=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ODrYfI121802
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Sep 2019 08:53:34 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
- Sep 2019 08:53:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 24 Sep 2019 08:53:27 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ODrUvW060521;
-        Tue, 24 Sep 2019 08:53:30 -0500
-Subject: Re: [PATCH v2 00/14] dmaengine/soc: Add Texas Instruments UDMA
- support
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
-Message-ID: <bcb3cf68-f3f6-51d4-bcae-b68fb441cd26@ti.com>
-Date:   Tue, 24 Sep 2019 16:54:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 09:54:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441133AbfIXNyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:54:07 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0A3A4306E171;
+        Tue, 24 Sep 2019 13:54:07 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 715DA60852;
+        Tue, 24 Sep 2019 13:54:01 +0000 (UTC)
+Message-ID: <55dc19fcc44b2e658b71f68206306c8310335564.camel@redhat.com>
+Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+In-Reply-To: <20190924112155.rxeyksetgqmer3pg@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+         <20190911165729.11178-4-swood@redhat.com>
+         <20190917075943.qsaakyent4dxjkq4@linutronix.de>
+         <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
+         <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
+         <20190923175233.yub32stn3xcwkaml@linutronix.de>
+         <20190924112155.rxeyksetgqmer3pg@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Tue, 24 Sep 2019 08:53:43 -0500
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 24 Sep 2019 13:54:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 2019-09-24 at 13:21 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-23 19:52:33 [+0200], To Scott Wood wrote:
+> 
+> I made dis:
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 885a195dfbe02..25afa2bb1a2cf 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -308,7 +308,9 @@ void pin_current_cpu(void)
+>  	preempt_lazy_enable();
+>  	preempt_enable();
+>  
+> +	sleeping_lock_inc();
+>  	__read_rt_lock(cpuhp_pin);
+> +	sleeping_lock_dec();
+>  
+>  	preempt_disable();
+>  	preempt_lazy_disable();
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index e1bdd7f9be054..63a6420d01053 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7388,6 +7388,7 @@ void migrate_enable(void)
+>  
+>  		WARN_ON(smp_processor_id() != task_cpu(p));
+>  		if (!cpumask_test_cpu(task_cpu(p), &p->cpus_mask)) {
+> +			struct task_struct *self = current;
+>  			const struct cpumask *cpu_valid_mask =
+> cpu_active_mask;
+>  			struct migration_arg arg;
+>  			unsigned int dest_cpu;
+> @@ -7405,7 +7406,21 @@ void migrate_enable(void)
+>  			unpin_current_cpu();
+>  			preempt_lazy_enable();
+>  			preempt_enable();
+> +			rt_invol_sleep_inc();
+> +
+> +			raw_spin_lock_irq(&self->pi_lock);
+> +			self->saved_state = self->state;
+> +			__set_current_state_no_track(TASK_RUNNING);
+> +			raw_spin_unlock_irq(&self->pi_lock);
+> +
+>  			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
+> +
+> +			raw_spin_lock_irq(&self->pi_lock);
+> +			__set_current_state_no_track(self->saved_state);
+> +			self->saved_state = TASK_RUNNING;
+> +			raw_spin_unlock_irq(&self->pi_lock);
+> +
+> +			rt_invol_sleep_dec();
+>  			return;
+>  		}
+>  	}
+> 
+> I think we need to preserve the current state, otherwise we will lose
+> anything != TASK_RUNNING here. So the spin_lock() would preserve it
+> while waiting but the migrate_enable() will lose it if it needs to
+> change the CPU at the end.
+> I will try to prepare all commits for the next release before I release
+> so you can have a look first and yell if needed.
 
-On 30/07/2019 12.34, Peter Ujfalusi wrote:
-> Changes since v1
-> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
-> - Added support for j721e
-> - Based on 5.3-rc2
-> - dropped ti_sci API patch for RM management as it is already upstream
-> - dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
-> - Added Rob's Reviewed-by to ringacc DT binding document patch
-> - DT bindings changes:
->  - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
->    TR channels.
->  - Support for j721e
-> - Fix bug in of_node_put() handling in xlate function
+As I pointed out in the "[PATCH RT 6/8] sched: migrate_enable: Set state to
+TASK_RUNNING" discussion, we can get here inside the rtmutex code (e.g. from
+debug_rt_mutex_print_deadlock) where saved_state is already holding
+something -- plus, the waker won't have WF_LOCK_SLEEPER and therefore
+saved_state will get cleared anyway.
 
-I have addressed locally all the comments given for v2 so far. Is there
-anything else I need to change for v3?
+-Scott
 
-Regards,
-- Péter
 
-> 
-> Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
-> - Based on linux-next (20190506) which now have the ti_sci interrupt support
-> - The series can be applied and the UDMA via DMAengine API will be functional
-> - Included in the series: ti_sci Resource management API, cppi5 header and
->   driver for the ring accelerator.
-> - The DMAengine core patches have been updated as per the review comments for
->   earlier submittion.
-> - The DMAengine driver patch is artificially split up to 6 smaller patches
-> 
-> The k3-udma driver implements the Data Movement Architecture described in
-> AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
-> j721e TRM (http://www.ti.com/lit/pdf/spruil1)
-> 
-> This DMA architecture is a big departure from 'traditional' architecture where
-> we had either EDMA or sDMA as system DMA.
-> 
-> Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
-> or USB (am335x) while other peripherals were serviced by EDMA.
-> 
-> In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
-> SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
-> 
-> The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
-> and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
-> TR mode (similar to EDMA descriptor).
-> The data movement is done within a PSI-L fabric, peripherals (including the
-> UDMA-P) are not addressed by their I/O register as with traditional DMAs but
-> with their PSI-L thread ID.
-> 
-> In AM65x/j721e we have two main type of peripherals:
-> Legacy: McASP, McSPI, UART, etc.
->  to provide connectivity they are serviced by PDMA (Peripheral DMA)
->  PDMA threads are locked to service a given peripheral, for example PSI-L thread
->  0x4400/0xc400 is to service McASP0 rx/tx.
->  The PDMa configuration can be done via the UDMA Real Time Peer registers.
-> Native: Networking, security accelerator
->  these peripherals have native support for PSI-L.
-> 
-> To be able to use the DMA the following generic steps need to be taken:
-> - configure a DMA channel (tchan for TX, rchan for RX)
->  - channel mode: Packet or TR mode
->  - for memcpy a tchan and rchan pair is used.
->  - for packet mode RX we also need to configure a receive flow to configure the
->    packet receiption
-> - the source and destination threads must be paired
-> - at minimum one pair of rings need to be configured:
->  - tx: transfer ring and transfer completion ring
->  - rx: free descriptor ring and receive ring
-> - two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
->  - If the channel is in packet mode or configured to memcpy then we only need
->    one interrupt from the ring, events from UDMAP is not used.
-> 
-> When the channel setup is completed we only interract with the rings:
-> - TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
->   the UDMA-P
-> - RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
->   the r_ring.
-> 
-> Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
-> case in previous DMAs we need to report the amount of data held in these FIFOs
-> to clients (delay calculation for ALSA, UART FIFO flush support).
-> 
-> Metadata support:
-> DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
-> series: https://lkml.org/lkml/2019/6/28/20
-> SA2UL is using the metadata DMAengine API.
-> 
-> Note on the last patch:
-> In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
-> anymore and the DMAengine API currently missing support for the features we
-> would need to support networking, things like
-> - support for receive descriptor 'classification'
->  - we need to support several receive queues for a channel.
->  - the queues are used for packet priority handling for example, but they can be
->    used to have pools of descriptors for different sizes.
-> - out of order completion of descriptors on a channel
->  - when we have several queues to handle different priority packets the
->    descriptors will be completed 'out-of-order'
-> - NAPI type of operation (polling instead of interrupt driven transfer)
->  - without this we can not sustain gigabit speeds and we need to support NAPI
->  - not to limit this to networking, but other high performance operations
-> 
-> It is my intention to work on these to be able to remove the 'glue' layer and
-> switch to DMAengine API - or have an API aside of DMAengine to have generic way
-> to support networking, but given how controversial and not trivial these changes
-> are we need something to support networking.
-> 
-> The series (+DT patch to enabled UDMA/PDMA on AM65x) on top of 5.3-rc2 is
-> available:
-> https://github.com/omap-audio/linux-audio.git peter/udma/series_v2-5.3-rc2
-> 
-> Regards,
-> Peter
-> ---
-> Grygorii Strashko (3):
->   bindings: soc: ti: add documentation for k3 ringacc
->   soc: ti: k3: add navss ringacc driver
->   dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
-> 
-> Peter Ujfalusi (11):
->   dmaengine: doc: Add sections for per descriptor metadata support
->   dmaengine: Add metadata_ops for dma_async_tx_descriptor
->   dmaengine: Add support for reporting DMA cached data amount
->   dmaengine: ti: Add cppi5 header for UDMA
->   dt-bindings: dma: ti: Add document for K3 UDMA
->   dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
->     func
->   dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
->     and filter_fn
->   dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
->     chan_resources
->   dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
->     1
->   dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
->     2
->   dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
-> 
->  .../devicetree/bindings/dma/ti/k3-udma.txt    |  170 +
->  .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
->  Documentation/driver-api/dmaengine/client.rst |   75 +
->  .../driver-api/dmaengine/provider.rst         |   46 +
->  drivers/dma/dmaengine.c                       |   73 +
->  drivers/dma/dmaengine.h                       |    8 +
->  drivers/dma/ti/Kconfig                        |   22 +
->  drivers/dma/ti/Makefile                       |    2 +
->  drivers/dma/ti/k3-udma-glue.c                 | 1039 +++++
->  drivers/dma/ti/k3-udma-private.c              |  124 +
->  drivers/dma/ti/k3-udma.c                      | 3479 +++++++++++++++++
->  drivers/dma/ti/k3-udma.h                      |  160 +
->  drivers/soc/ti/Kconfig                        |   17 +
->  drivers/soc/ti/Makefile                       |    1 +
->  drivers/soc/ti/k3-ringacc.c                   | 1191 ++++++
->  include/dt-bindings/dma/k3-udma.h             |   10 +
->  include/linux/dma/k3-udma-glue.h              |  125 +
->  include/linux/dma/ti-cppi5.h                  |  996 +++++
->  include/linux/dmaengine.h                     |  110 +
->  include/linux/soc/ti/k3-ringacc.h             |  262 ++
->  20 files changed, 7969 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
->  create mode 100644 drivers/dma/ti/k3-udma-glue.c
->  create mode 100644 drivers/dma/ti/k3-udma-private.c
->  create mode 100644 drivers/dma/ti/k3-udma.c
->  create mode 100644 drivers/dma/ti/k3-udma.h
->  create mode 100644 drivers/soc/ti/k3-ringacc.c
->  create mode 100644 include/dt-bindings/dma/k3-udma.h
->  create mode 100644 include/linux/dma/k3-udma-glue.h
->  create mode 100644 include/linux/dma/ti-cppi5.h
->  create mode 100644 include/linux/soc/ti/k3-ringacc.h
-> 
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
