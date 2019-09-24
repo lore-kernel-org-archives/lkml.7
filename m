@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85EDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617B4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8A520673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203BC217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344252;
-	bh=c/3eVmy+tc8mTD9hs64Cm6vfp43ZcUUAsBwfB3rTaF4=;
+	s=default; t=1569344259;
+	bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KCM0vMT0ceWfilmZei2UiY2LrrwkaBbSd89mBjQGLDddi3DLT5jnxYMKHQDsJVJpU
-	 QVOvW6Oabw4JAOivQqexPvHsdqfF0BXlMdq+1CfvNk8fXkxPqOyMkuJwDKmX1aHnT1
-	 iDPgfGSaiAdLO3PONWoCARRdaTNzBZFkRnXsPr4g=
+	b=m1av5a4kBeaTOuFazsKsYhhr78/WPlpyS1Dh2LhLYqjdn3JDNr5LzODJTHxSHGPm3
+	 HERGtgep7Cku3ScP4SuNHbV4vn40racmssuphp01K8IrVmjo+LLD5/Gt3rmTcy8bZv
+	 9YM28M21MeJ03Vrhk4VQcQHi0B+Dq9VbLXoQkoX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411037AbfIXQ5b (ORCPT
+        id S2411043AbfIXQ5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410138AbfIXQsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:43 -0400
+        id S1730534AbfIXQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 101E221906;
-        Tue, 24 Sep 2019 16:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07D1921906;
+        Tue, 24 Sep 2019 16:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343722;
-        bh=c/3eVmy+tc8mTD9hs64Cm6vfp43ZcUUAsBwfB3rTaF4=;
+        s=default; t=1569343718;
+        bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpzDOy5tx3f7YIApEUK747pmKx2pNxshkaLhcPTaQj+K4+nyTbM7wQQkTKo/EGKUb
-         F1NKa47HpkBz/7rfip+GFK+CyPKxWmHpJjSVeujUy4yAf/wivVI/ERpxl/lst7gzpM
-         DQXKBA74pygeG59mTjIJuO+99MhQ1rMgt6ZQdm+g=
+        b=qJyM9dlizzdeHcpXDziW2bNnh3ZhrqPlZZ2sNOo4OXpl6ZnqetLfXwak0VxXLo2tp
+         iNBsRi/YwWaf4OS9HOrP3YghgkJ97q7modAPZaCjljpbxejupSD3mk87TEeSYBiv8J
+         EayYa+2+ai8K8Crpn2ne6vQoi/agJaL7GOIKCdBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        =?UTF-8?q?G=C3=B6ran=20Uddeborg?= <goeran@uddeborg.se>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 68/70] drm: fix module name in edid_firmware log message
-Date:   Tue, 24 Sep 2019 12:45:47 -0400
-Message-Id: <20190924164549.27058-68-sashal@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 65/70] clk: sprd: add missing kfree
+Date:   Tue, 24 Sep 2019 12:45:44 -0400
+Message-Id: <20190924164549.27058-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-[ Upstream commit ade925995b172f1d7410d1c665b2f47c5e99bef0 ]
+[ Upstream commit 5e75ea9c67433a065b0e8595ad3c91c7c0ca0d2d ]
 
-The module is drm_kms_helper, not drm_kms_firmware.
+The number of config registers for different pll clocks probably are not
+same, so we have to use malloc, and should free the memory before return.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204549
-Reported-by: Göran Uddeborg <goeran@uddeborg.se>
-Fixes: ac6c35a4d8c7 ("drm: add backwards compatibility support for drm_kms_helper.edid_firmware")
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190821094312.5514-1-jani.nikula@intel.com
+Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Link: https://lkml.kernel.org/r/20190905103009.27166-1-zhang.lyra@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_kms_helper_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/sprd/pll.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_kms_helper_common.c b/drivers/gpu/drm/drm_kms_helper_common.c
-index 9c5ae825c5078..69917ecd4af67 100644
---- a/drivers/gpu/drm/drm_kms_helper_common.c
-+++ b/drivers/gpu/drm/drm_kms_helper_common.c
-@@ -39,7 +39,7 @@ MODULE_LICENSE("GPL and additional rights");
- /* Backward compatibility for drm_kms_helper.edid_firmware */
- static int edid_firmware_set(const char *val, const struct kernel_param *kp)
- {
--	DRM_NOTE("drm_kms_firmware.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
-+	DRM_NOTE("drm_kms_helper.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+index 36b4402bf09e3..640270f51aa56 100644
+--- a/drivers/clk/sprd/pll.c
++++ b/drivers/clk/sprd/pll.c
+@@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
+ 					 k2 + refin * nint * CLK_PLL_1M;
+ 	}
  
- 	return __drm_set_edid_firmware_path(val);
++	kfree(cfg);
+ 	return rate;
  }
+ 
+@@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
+ 	if (!ret)
+ 		udelay(pll->udelay);
+ 
++	kfree(cfg);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
