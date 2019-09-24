@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18857C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB705C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E232921971
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812B521906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343725;
-	bh=6A2J0Sovo7K25g67n+DgoXjOaF/bFbMsDKsHLCMcda8=;
+	s=default; t=1569343727;
+	bh=9JDnUe+bzR1K2h89N2eGq+vFz+UQRtG1DOZSfGbpTE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Js6JsazGY++I69IErMo+T6eHYp2Px2E8iZi9Sru1DWzZM1b7aWmKppg9BLNqLhXKg
-	 nbDWyhl7HKdyN5tek3WslsxNIoy3BXHHsRr6A0pqt5Mw59Tx4giVfJfNFbQDexx1J4
-	 g5t/mUB06CpRg2GWhhRIAODu27Dgv7lxKz+tLK4s=
+	b=hnzsozTdyUmb1qH1RrQDLpOmipn0qj2yqNVO307mmgLgkWlsxV7OeZ4xJtuVy6S0D
+	 ojvyVrXR4RYPR0JiYKpvwM06AVpqfw0r3UtP08a8ZgGX6jJeTp39iap9V6r/VsvxMw
+	 QMv1U1pV9sATzK3NQeUfnmiCkivJkytFJDyz+TUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410141AbfIXQso (ORCPT
+        id S2410145AbfIXQsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40424 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410543AbfIXQsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:41 -0400
+        id S2410550AbfIXQsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38253217D9;
-        Tue, 24 Sep 2019 16:48:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A909A21D6C;
+        Tue, 24 Sep 2019 16:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343720;
-        bh=6A2J0Sovo7K25g67n+DgoXjOaF/bFbMsDKsHLCMcda8=;
+        s=default; t=1569343721;
+        bh=9JDnUe+bzR1K2h89N2eGq+vFz+UQRtG1DOZSfGbpTE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNALtdo4CfiAouAavAB18+s1Jd0OSsg4Dj+MT0EuA/V5/6Ta9GYOKsBTQG3AMmJCg
-         PW9a+OkYZZ6kbYY34q5bIV/MG3ZVBJhpFNF7tp4lvY5XNLE0Y+5MGTIlCKYzQ2OXYG
-         6TJDNZ681DSTmnLhKsC3N+my9+jsCNU/woNgStLY=
+        b=S9RX5HbVNbZhd3Uv61E1JJO8iZsaa/6BATO/aNdju7aicLSzw1oBf6FfH/joA96rR
+         082kAJOipTLQQ5EH+bg93Woo8NATmu1Zb+rFFBpshE9Dzqwum/LsMeFNM9rHv836Ts
+         PUb26lj3Hdm96ziCNNIPBUL4D/NhlkVI6+m2MsV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Jan Palus <jpalus@fastmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 66/70] scsi: core: Reduce memory required for SCSI logging
-Date:   Tue, 24 Sep 2019 12:45:45 -0400
-Message-Id: <20190924164549.27058-66-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 67/70] dma-buf/sw_sync: Synchronize signal vs syncpt free
+Date:   Tue, 24 Sep 2019 12:45:46 -0400
+Message-Id: <20190924164549.27058-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,109 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit dccc96abfb21dc19d69e707c38c8ba439bba7160 ]
+[ Upstream commit d3c6dd1fb30d3853c2012549affe75c930f4a2f9 ]
 
-The data structure used for log messages is so large that it can cause a
-boot failure. Since allocations from that data structure can fail anyway,
-use kmalloc() / kfree() instead of that data structure.
+During release of the syncpt, we remove it from the list of syncpt and
+the tree, but only if it is not already been removed. However, during
+signaling, we first remove the syncpt from the list. So, if we
+concurrently free and signal the syncpt, the free may decide that it is
+not part of the tree and immediately free itself -- meanwhile the
+signaler goes on to use the now freed datastructure.
 
-See also https://bugzilla.kernel.org/show_bug.cgi?id=204119.
-See also commit ded85c193a39 ("scsi: Implement per-cpu logging buffer") # v4.0.
+In particular, we get struck by commit 0e2f733addbf ("dma-buf: make
+dma_fence structure a bit smaller v2") as the cb_list is immediately
+clobbered by the kfree_rcu.
 
-Reported-by: Jan Palus <jpalus@fastmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Jan Palus <jpalus@fastmail.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+v2: Avoid calling into timeline_fence_release() from under the spinlock
+
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111381
+Fixes: d3862e44daa7 ("dma-buf/sw-sync: Fix locking around sync_timeline lists")
+References: 0e2f733addbf ("dma-buf: make dma_fence structure a bit smaller v2")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Gustavo Padovan <gustavo@padovan.org>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: <stable@vger.kernel.org> # v4.14+
+Acked-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190812154247.20508-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_logging.c | 48 +++----------------------------------
- include/scsi/scsi_dbg.h     |  2 --
- 2 files changed, 3 insertions(+), 47 deletions(-)
+ drivers/dma-buf/sw_sync.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/scsi_logging.c b/drivers/scsi/scsi_logging.c
-index 39b8cc4574b49..c6ed0b12e8071 100644
---- a/drivers/scsi/scsi_logging.c
-+++ b/drivers/scsi/scsi_logging.c
-@@ -15,57 +15,15 @@
- #include <scsi/scsi_eh.h>
- #include <scsi/scsi_dbg.h>
- 
--#define SCSI_LOG_SPOOLSIZE 4096
--
--#if (SCSI_LOG_SPOOLSIZE / SCSI_LOG_BUFSIZE) > BITS_PER_LONG
--#warning SCSI logging bitmask too large
--#endif
--
--struct scsi_log_buf {
--	char buffer[SCSI_LOG_SPOOLSIZE];
--	unsigned long map;
--};
--
--static DEFINE_PER_CPU(struct scsi_log_buf, scsi_format_log);
--
- static char *scsi_log_reserve_buffer(size_t *len)
+diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
+index 051f6c2873c7a..6713cfb1995c6 100644
+--- a/drivers/dma-buf/sw_sync.c
++++ b/drivers/dma-buf/sw_sync.c
+@@ -132,17 +132,14 @@ static void timeline_fence_release(struct dma_fence *fence)
  {
--	struct scsi_log_buf *buf;
--	unsigned long map_bits = sizeof(buf->buffer) / SCSI_LOG_BUFSIZE;
--	unsigned long idx = 0;
+ 	struct sync_pt *pt = dma_fence_to_sync_pt(fence);
+ 	struct sync_timeline *parent = dma_fence_parent(fence);
++	unsigned long flags;
+ 
++	spin_lock_irqsave(fence->lock, flags);
+ 	if (!list_empty(&pt->link)) {
+-		unsigned long flags;
 -
--	preempt_disable();
--	buf = this_cpu_ptr(&scsi_format_log);
--	idx = find_first_zero_bit(&buf->map, map_bits);
--	if (likely(idx < map_bits)) {
--		while (test_and_set_bit(idx, &buf->map)) {
--			idx = find_next_zero_bit(&buf->map, map_bits, idx);
--			if (idx >= map_bits)
--				break;
+-		spin_lock_irqsave(fence->lock, flags);
+-		if (!list_empty(&pt->link)) {
+-			list_del(&pt->link);
+-			rb_erase(&pt->node, &parent->pt_tree);
 -		}
--	}
--	if (WARN_ON(idx >= map_bits)) {
--		preempt_enable();
--		return NULL;
--	}
--	*len = SCSI_LOG_BUFSIZE;
--	return buf->buffer + idx * SCSI_LOG_BUFSIZE;
-+	*len = 128;
-+	return kmalloc(*len, GFP_ATOMIC);
- }
+-		spin_unlock_irqrestore(fence->lock, flags);
++		list_del(&pt->link);
++		rb_erase(&pt->node, &parent->pt_tree);
+ 	}
++	spin_unlock_irqrestore(fence->lock, flags);
  
- static void scsi_log_release_buffer(char *bufptr)
- {
--	struct scsi_log_buf *buf;
--	unsigned long idx;
--	int ret;
--
--	buf = this_cpu_ptr(&scsi_format_log);
--	if (bufptr >= buf->buffer &&
--	    bufptr < buf->buffer + SCSI_LOG_SPOOLSIZE) {
--		idx = (bufptr - buf->buffer) / SCSI_LOG_BUFSIZE;
--		ret = test_and_clear_bit(idx, &buf->map);
--		WARN_ON(!ret);
--	}
--	preempt_enable();
-+	kfree(bufptr);
- }
- 
- static inline const char *scmd_name(const struct scsi_cmnd *scmd)
-diff --git a/include/scsi/scsi_dbg.h b/include/scsi/scsi_dbg.h
-index e03bd9d41fa8f..7b196d2346264 100644
---- a/include/scsi/scsi_dbg.h
-+++ b/include/scsi/scsi_dbg.h
-@@ -6,8 +6,6 @@ struct scsi_cmnd;
- struct scsi_device;
- struct scsi_sense_hdr;
- 
--#define SCSI_LOG_BUFSIZE 128
--
- extern void scsi_print_command(struct scsi_cmnd *);
- extern size_t __scsi_format_command(char *, size_t,
- 				   const unsigned char *, size_t);
+ 	sync_timeline_put(parent);
+ 	dma_fence_free(fence);
+@@ -265,7 +262,8 @@ static struct sync_pt *sync_pt_create(struct sync_timeline *obj,
+ 				p = &parent->rb_left;
+ 			} else {
+ 				if (dma_fence_get_rcu(&other->base)) {
+-					dma_fence_put(&pt->base);
++					sync_timeline_put(obj);
++					kfree(pt);
+ 					pt = other;
+ 					goto unlock;
+ 				}
 -- 
 2.20.1
 
