@@ -2,67 +2,151 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA9EC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F38C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C4C20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B29821655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569336289;
+	bh=hsYmAgy4HUyqWVE3XYU8otCVEWiUKOZy0obIq0KY9fc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hBslA7RTln/dTKrIjd9QfVHJl9xf6mKbW52NYeg8tbon2XUofWHaHB8dgBl8M2bDe
+	 0UQ74QVLUXgh+t93sM32X1QUOLBOKV+/0jdqD8bCp/XR4o3+ry757A79O552S/g0y8
+	 qT+bR8Yh1DKAO9OH7b+0a1bfHqt/kBC5lnGkRcEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbfIXOoU (ORCPT
+        id S2403775AbfIXOos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:44:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48902 "EHLO mx1.redhat.com"
+        Tue, 24 Sep 2019 10:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfIXOoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:44:20 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726130AbfIXOos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:44:48 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15A7010C0946;
-        Tue, 24 Sep 2019 14:44:20 +0000 (UTC)
-Received: from krava (unknown [10.43.17.52])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E73075C1B2;
-        Tue, 24 Sep 2019 14:44:18 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 16:44:18 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf, stat: Fix free memory access / memory leaks in
- metrics
-Message-ID: <20190924144418.GC21815@krava>
-References: <20190923233339.25326-1-andi@firstfloor.org>
- <20190923233339.25326-3-andi@firstfloor.org>
- <20190924075040.GC26797@krava>
- <20190924140856.GQ8537@tassilo.jf.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7034E20640;
+        Tue, 24 Sep 2019 14:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569336286;
+        bh=hsYmAgy4HUyqWVE3XYU8otCVEWiUKOZy0obIq0KY9fc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fY5Pw4VpEqdzsU4EX8RtSjM9czFmKim+EQIzlwMydEam/t89uAfwiDt8YO2U2ksZv
+         dO9ciKLlwZOpmjdd/0q1ymBadmtBBJnkZMcinczzE9Na8qm5JOtktaAYLGh/aJs5NK
+         H7IErRieGE+4K+Bmsfhggv/a3iRKwn+VlvpVJD3Y=
+Received: by mail-qt1-f180.google.com with SMTP id x5so2434892qtr.7;
+        Tue, 24 Sep 2019 07:44:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAXb8BFjtnD74Ra4l9uSM+0Og4TyliVEnMwzUdPGWzUirCKtThRX
+        KN6qQBFnj3zTGV/Jnf5wl3QJ4PgnLUktYYsjcw==
+X-Google-Smtp-Source: APXvYqzQBwQZq9kQYPNN0Kyc/fhj2qS/SrpDIz9/+J5rKVq0Ej/70VauM4kI1FV1RPFaEgictUsNkC4ch7tW4xPWQz0=
+X-Received: by 2002:ac8:6915:: with SMTP id e21mr3238306qtr.224.1569336285554;
+ Tue, 24 Sep 2019 07:44:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924140856.GQ8537@tassilo.jf.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 24 Sep 2019 14:44:20 +0000 (UTC)
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com> <20190910115037.23539-2-peter.ujfalusi@ti.com>
+ <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com> <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+In-Reply-To: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 24 Sep 2019 09:44:33 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLZ-fNvFcgTorat=TX9Fmexrw3o3iv=Z5hTb3GX6iKgxg@mail.gmail.com>
+Message-ID: <CAL_JsqLZ-fNvFcgTorat=TX9Fmexrw3o3iv=Z5hTb3GX6iKgxg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 07:08:56AM -0700, Andi Kleen wrote:
-> > >  	expr__ctx_init(&pctx);
-> > > +	/* Must be first id entry */
-> > > +	expr__add_id(&pctx, name, avg);
-> > 
-> > hum, shouldn't u instead use strdup(name) instead of name?
-> 
-> The cleanup loop later skips freeing the first entry.
+On Mon, Sep 16, 2019 at 6:21 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+>
+>
+> On 13/09/2019 17.36, Rob Herring wrote:
+> > On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+> >> On systems where multiple DMA controllers available, non Slave (for example
+> >> memcpy operation) users can not be described in DT as there is no device
+> >> involved from the DMA controller's point of view, DMA binding is not usable.
+> >> However in these systems still a peripheral might need to be serviced by or
+> >> it is better to serviced by specific DMA controller.
+> >> When a memcpy is used to/from a memory mapped region for example a DMA in the
+> >> same domain can perform better.
+> >> For generic software modules doing mem 2 mem operations it also matter that
+> >> they will get a channel from a controller which is faster in DDR to DDR mode
+> >> rather then from the first controller happen to be loaded.
+> >>
+> >> This property is inherited, so it may be specified in a device node or in any
+> >> of its parent nodes.
+> >
+> > If a device needs mem2mem dma, I think we should just use the existing
+> > dma binding. The provider will need a way to define cell values which
+> > mean mem2mem.
+>
+> But isn't it going to be an abuse of the binding? Each DMA controller
+> would hack this in different ways, probably using out of range DMA
+> request/trigger number or if they have direction in the binding or some
+> other parameter would be set to something invalid...
 
-aaah, nice ;-)
+What's in the cells is defined by the provider which can define
+whatever they want. We do standardize that in some cases.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+I think we have some cases where we set the channel priority in the
+cells. What if someone wants to do that for mem2mem as well?
 
-thanks,
-jirka
+> > For generic s/w, it should be able to query the dma speed or get a
+> > preferred one IMO. It's not a DT problem.
+> >
+> > We measure memcpy speeds at boot time to select the fastest
+> > implementation for a chip, why not do that for mem2mem DMA?
+>
+> It would make an impact on boot time since the tests would need to be
+> done with a large enough copy to be able to see clearly which one is faster.
+
+Have you measured it? It could be done in parallel and may have little
+to no impact.
+
+> Also we should be able to handle different probing orders:
+> client1 should have mem2mem channel from dma2.
+>
+> - dma1 probes
+> - client1 probes and asks for a mem2mem channel
+> - dma2 probes
+>
+> Here client1 should deffer until dma2 is probed.
+
+Depending on the driver, don't make the decision in probe, but when
+you start using the driver. For example, serial drivers decide on DMA
+or no DMA in open().
+
+> Probably the property should be dma-mem2mem-domain to be more precise on
+> it's purpose and avoid confusion?
+>
+> >
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+> >>  1 file changed, 88 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+> >
+> > Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+>
+> That does not do anything on my system, but git dt-doc-validate running
+> via https://github.com/robherring/yaml-bindings.git.
+
+It should do *something*... Do you have libyaml-dev installed?
+
+BTW, while I still mirror to that repo, use
+https://github.com/devicetree-org/dt-schema instead.
+
+Rob
