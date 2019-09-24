@@ -2,107 +2,121 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DB2C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18247C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E7520673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C9C2190F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NYPkL4TF"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="QFv1USPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392683AbfIXRDl (ORCPT
+        id S2406189AbfIXRF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:03:41 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58740 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403997AbfIXQmR (ORCPT
+        Tue, 24 Sep 2019 13:05:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34215 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfIXRF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgFLK054408;
-        Tue, 24 Sep 2019 11:42:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569343335;
-        bh=iTVrMjr1jpW2jGLDHpDluWhwBeMusQS6Cqz8cCy6Yzo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NYPkL4TFtfvQV/nq+u2xYW7vD8wU2Az7LWpDw1hvnIk/f61qnLDYlraLvOwsm8OQS
-         tsNlA6bwHQT5g2OfKtpMy7I85/H0v2EYiO9bjP/m+rdtJqFUkQVI1b3V43BjpltJBW
-         l3AvgtA2oUYT/RULR5hwMD4aZ2Frx5RSDHGOSa3g=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8OGgFLk079041
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Sep 2019 11:42:15 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
- Sep 2019 11:42:08 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 24 Sep 2019 11:42:14 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCQT073229;
-        Tue, 24 Sep 2019 11:42:14 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Subject: [Patch v3 1/8] media: i2c: ov2659: Fix for image wrap-around in lower resolution
-Date:   Tue, 24 Sep 2019 11:44:07 -0500
-Message-ID: <20190924164414.21897-2-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
-References: <20190924164414.21897-1-bparrot@ti.com>
+        Tue, 24 Sep 2019 13:05:28 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r22so2000865lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PaeMc0t03cIGJW3QCybDKTEg7Rhlae4QY/t/oXRSyF0=;
+        b=QFv1USPh0kNsLjLCn6KDhZ6GOehlhwbx8pj60BxT28JgW2JJ44jJTWI4aSbCVZ1+9x
+         2hKmXsG3n0Nit+HSF3mYHiJrQFCZYU5Ve499Mh9JNJGgh8WI4FggQdw++ycae7dGiYA/
+         NY8tdPd5Lelka6KQay8aA2D1A7cQqQGDeERsv9nP+/dTWoaDccrq879qpoyqKX6kZRRU
+         L0YWSkYOjDI+c5Y+Gq4bpfqpw/XKcyFHOysPAHeawHOxw1TziWokzSMnObU86E5vKgxt
+         76UQ/7F+YB0AlT1ZggGhdG/TnKNvgjCR+g940FQhBJI0WO/AKqsraEuFB9Lca3sGpxCk
+         8EIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PaeMc0t03cIGJW3QCybDKTEg7Rhlae4QY/t/oXRSyF0=;
+        b=Fl4CRX7spdjicyADyBM12SUr/R2RGAqWgjadsqnCS6C9skCUYptYzxng0+pm2NuEIl
+         tGqiiYoFFQ8gtYf4ZurjNOyTveJdEjkm0W0nNulu+20My7UyXIDI2I84C7xAj2RuCSKz
+         FYG0ztreBdk4Y/rgi1gWUyfYMpYzVdERaSk0wW4buM9KfNCQSBrss3QMLIMFEnFiH8R0
+         nj+qn/J3Ej/WD0wAG+3Y6QVjuuDlWC8DZnSKrgCzzJx2odJQgt1pCi7RXK6UVCK7cBiL
+         jw2OXAypwh/bCSCt2eEBv+GRSKeCEf14AvJHOMrtJK7m4tBWL2p32qWIWS9/IOliPN63
+         ZJqw==
+X-Gm-Message-State: APjAAAWasvzc/Owe3KuMX/tXN5lgL6s6vsbx8/mrxUMGH21JenGEEO4J
+        i28z88CPUfXqGkgCR3VDhIJAR3jC0Gd74vjKycdZ
+X-Google-Smtp-Source: APXvYqyN6rw64HRkgk116h9YMOpjw6jDzCAtHpygQSi32MgcWW+ZtK165buWD1NgGcFaWBKPKMI7oh+sxiUsfzQZgIo=
+X-Received: by 2002:a19:6517:: with SMTP id z23mr2345791lfb.31.1569344725960;
+ Tue, 24 Sep 2019 10:05:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190923155041.GA14807@codemonkey.org.uk> <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+ <20190923210021.5vfc2fo4wopennj5@madcap2.tricolour.ca> <CAHC9VhQPvS7mfmeomRLJ+SyXk=tZprSJQ9Ays3qr=+rqd=L16Q@mail.gmail.com>
+ <20190924135046.kkt5hntbjpcampwr@madcap2.tricolour.ca>
+In-Reply-To: <20190924135046.kkt5hntbjpcampwr@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 24 Sep 2019 13:05:14 -0400
+Message-ID: <CAHC9VhTJ53OSpNDLHMMrv65NFv7MK1XQt1zXPwd7nnAPo3rG0Q@mail.gmail.com>
+Subject: Re: ntp audit spew.
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Dave Jones <davej@codemonkey.org.uk>, linux-audit@redhat.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on recently found sensor configuration examples, it was
-discovered that when scaling and binning are used for the lower
-resolutions (i.e. 640x480, 320x240) the read offset has to be
-increased otherwise the image appears to be wrapped around.
+On Tue, Sep 24, 2019 at 9:50 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-09-23 23:01, Paul Moore wrote:
+> > On Mon, Sep 23, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2019-09-23 12:14, Paul Moore wrote:
+> > > > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
+> > > > >
+> > > > > I have some hosts that are constantly spewing audit messages like so:
+> > > > >
+> > > > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
+> > > > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
+> > >
+> > > Odd.  It appears these two above should have the same serial number and
+> > > should be accompanied by a syscall record.  It appears that it has no
+> > > context to update to connect the two records.  Is it possible it is not
+> > > being called in a task context?  If that were the case though, I'd
+> > > expect audit_dummy_context() to return 1...
+> >
+> > Yeah, I'm a little confused with these messages too.  As you pointed
+> > out, the different serial numbers imply that the audit_context is NULL
+> > and if the audit_context is NULL I would have expected it to fail the
+> > audit_dummy_context() check in audit_ntp_log().  I'm looking at this
+> > with tired eyes at the moment, so I'm likely missing something, but I
+> > just don't see it right now ...
+> >
+> > What is even more confusing is that I don't see this issue on my test systems.
+> >
+> > > Checking audit_enabled should not be necessary but might fix the
+> > > problem, but still not explain why we're getting these records.
+> >
+> > I'd like to understand why this is happening before we start changing the code.
+>
+> Absolutely.
+>
+> This looks like a similar issue to the AUDIT_NETFILTER_CFG issue where
+> we get a lone record unconnected to a syscall when one of the netfilter
+> table initialization (ipv4 filter) is linked into the kernel rather than
+> compiled as a module, so it is run in kernel context at boot rather than
+> in user context as a module load later.  This is why I ask if it is
+> being run by a kernel thread rather than a user task, perhaps using a
+> syscall function call internally.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- drivers/media/i2c/ov2659.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't see where in the code that could happen, but I agree that it
+looks like it; maybe I'm just missing a code path somewhere.
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index f4ded0669ff9..17573257097d 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -661,7 +661,7 @@ static struct sensor_register ov2659_vga[] = {
- 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
- 	{ 0x370a, 0x52 },
- 	{ REG_VFIFO_READ_START_H, 0x00 },
--	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_VFIFO_READ_START_L, 0xa0 },
- 	{ REG_ISP_CTRL02, 0x10 },
- 	{ REG_NULL, 0x00 },
- };
-@@ -709,7 +709,7 @@ static  struct sensor_register ov2659_qvga[] = {
- 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
- 	{ 0x370a, 0x52 },
- 	{ REG_VFIFO_READ_START_H, 0x00 },
--	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_VFIFO_READ_START_L, 0xa0 },
- 	{ REG_ISP_CTRL02, 0x10 },
- 	{ REG_NULL, 0x00 },
- };
+Is anyone else seeing these records?  Granted my audit test systems
+are running chrony, not ntp, but the syscalls/behaviors should be
+similar and I can't seem to recreate this.
+
 -- 
-2.17.1
-
+paul moore
+www.paul-moore.com
