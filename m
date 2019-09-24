@@ -2,138 +2,106 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D18C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35568C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90EC207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109E5207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406602AbfIXH4j (ORCPT
+        id S2438779AbfIXIAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:56:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31542 "EHLO mga02.intel.com"
+        Tue, 24 Sep 2019 04:00:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:55296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388712AbfIXH4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:56:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 00:56:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="203324096"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Sep 2019 00:56:36 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iCfgY-0006Vo-QX; Tue, 24 Sep 2019 10:56:34 +0300
-Date:   Tue, 24 Sep 2019 10:56:34 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Subject: [GIT PULL] platform-drivers-x86 for 5.4-2
-Message-ID: <20190924075634.GA25010@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S2406320AbfIXIAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:00:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8E09142F;
+        Tue, 24 Sep 2019 01:00:08 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 02D393F59C;
+        Tue, 24 Sep 2019 01:00:05 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/memremap: Drop unused SECTION_SIZE and SECTION_MASK
+Date:   Tue, 24 Sep 2019 13:30:10 +0530
+Message-Id: <1569312010-31313-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+SECTION_SIZE and SECTION_MASK macros are not getting used anymore. But they
+do conflict with existing definitions on arm64 platform causing following
+warning during build. Lets drop these unused macros.
 
-Second round of PDx86 patches (last minute fixes that better to get in now than
-later), no conflict with current master. The bunch has been boiled few days in
-linux-next.
+mm/memremap.c:16: warning: "SECTION_MASK" redefined
+ #define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
 
-Thanks,
+In file included from ./arch/arm64/include/asm/processor.h:34,
+                 from ./include/linux/mutex.h:19,
+                 from ./include/linux/kernfs.h:12,
+                 from ./include/linux/sysfs.h:16,
+                 from ./include/linux/kobject.h:20,
+                 from ./include/linux/device.h:16,
+                 from mm/memremap.c:3:
+./arch/arm64/include/asm/pgtable-hwdef.h:79: note: this is the location of
+the previous definition
+ #define SECTION_MASK  (~(SECTION_SIZE-1))
 
-With Best Regards,
-Andy Shevchenko
+mm/memremap.c:17: warning: "SECTION_SIZE" redefined
+ #define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
 
-The following changes since commit f690790c9da3122dd7ee1b0d64d97973a7c34135:
+In file included from ./arch/arm64/include/asm/processor.h:34,
+                 from ./include/linux/mutex.h:19,
+                 from ./include/linux/kernfs.h:12,
+                 from ./include/linux/sysfs.h:16,
+                 from ./include/linux/kobject.h:20,
+                 from ./include/linux/device.h:16,
+                 from mm/memremap.c:3:
+./arch/arm64/include/asm/pgtable-hwdef.h:78: note: this is the location of
+the previous definition
+ #define SECTION_SIZE  (_AC(1, UL) << SECTION_SHIFT)
 
-  MAINTAINERS: Switch PDx86 subsystem status to Odd Fixes (2019-09-12 17:36:42 +0300)
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-kernel@vger.kernel.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Build and boot tested on arm64 platform with ZONE_DEVICE enabled. But
+only boot tested on arm64 and some other platforms with allmodconfig.
 
-are available in the Git repository at:
+ mm/memremap.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.4-2
-
-for you to fetch changes up to 24a8d78a9affb63e5ced313ccde6888fe96edc6e:
-
-  platform/x86: i2c-multi-instantiate: Derive the device name from parent (2019-09-20 17:57:07 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.4-2
-
-* Fix compilation error of ASUS WMI driver when CONFIG_ACPI_BATTERY=n.
-* Fix I²C multi-instantiate driver to work with several USB PD devices.
-* Fix boot issue on Siemens SIMATIC IPC277E when PMC critical clock is
-  being disabled.
-* Plenty of fixes to Intel Speed-Select Technology tools.
-
-The following is an automated git shortlog grouped by driver:
-
-asus-wmi:
- -  Make it depend on ACPI battery API
-
-i2c-multi-instantiate:
- -  Derive the device name from parent
-
-pmc_atom:
- -  Add Siemens SIMATIC IPC277E to critclk_systems DMI table
-
-tools/power/x86/intel-speed-select:
- -  Fix perf-profile command output
- -  Extend core-power command set
- -  Fix some debug prints
- -  Format get-assoc information
- -  Allow online/offline based on tdp
- -  Fix high priority core mask over count
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      platform/x86: asus-wmi: Make it depend on ACPI battery API
-
-Heikki Krogerus (1):
-      platform/x86: i2c-multi-instantiate: Derive the device name from parent
-
-Srikanth Krishnakar (1):
-      platform/x86: pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table
-
-Srinivas Pandruvada (5):
-      tools/power/x86/intel-speed-select: Allow online/offline based on tdp
-      tools/power/x86/intel-speed-select: Format get-assoc information
-      tools/power/x86/intel-speed-select: Fix some debug prints
-      tools/power/x86/intel-speed-select: Extend core-power command set
-      tools/power/x86/intel-speed-select: Fix perf-profile command output
-
-Youquan Song (1):
-      tools/power/x86/intel-speed-select: Fix high priority core mask over count
-
- drivers/platform/x86/Kconfig                      |   1 +
- drivers/platform/x86/i2c-multi-instantiate.c      |   2 +-
- drivers/platform/x86/pmc_atom.c                   |   7 ++
- tools/power/x86/intel-speed-select/isst-config.c  | 122 +++++++++++++++++++---
- tools/power/x86/intel-speed-select/isst-core.c    |  25 +++++
- tools/power/x86/intel-speed-select/isst-display.c |  71 +++++++++++++
- tools/power/x86/intel-speed-select/isst.h         |  10 +-
- 7 files changed, 222 insertions(+), 16 deletions(-)
-
+diff --git a/mm/memremap.c b/mm/memremap.c
+index f6c17339cd0d..bf2882bfbf48 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -13,8 +13,6 @@
+ #include <linux/xarray.h>
+ 
+ static DEFINE_XARRAY(pgmap_array);
+-#define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
+-#define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+ 
+ #ifdef CONFIG_DEV_PAGEMAP_OPS
+ DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
