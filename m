@@ -2,142 +2,101 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09509C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1498C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47F32054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A878A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344564;
-	bh=bL9gZIONi5x1sP8K0K9+7JkjNGb4N9JAG6j5LpCsJzM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TaJAfKVc72AuEq30/so3zXweh8iLvJZqKTn6W1SPHe8HJnX6lNLO2SDx32ghc/t2S
-	 a98FH5AxaqNkd7kI7aQE/m6cBPy3KgZLtvRcRzkhHGQZ044buxN6L/jxe7zDtRkQSE
-	 9syktuzRsIDbr/kSgHdsGGWf9uj+iQe6v/2jDxR0=
+	s=default; t=1569344571;
+	bh=hKUJRk7QMuhzcgsjkjUUakju3zdnETRA3LHzs2tBu7E=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=1oR6n90W59/Jw1BPm76qG837X1QqSDiBdEgInb10eP/9gp82xlO3ZV0sP6MpDP0kl
+	 omB5Zuvr03MmCXvAp334NCLqKUoCrf2z9G7Ri174tYrchYjmmFnlCVs1NggADSFMbq
+	 vcbRBUwFvNq2xQcJlDWCRxCriTozOrLulnkr/bx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411053AbfIXRCQ (ORCPT
+        id S1730632AbfIXRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 13:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632846AbfIXQm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726897AbfIXRCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:02:49 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F8F2196E;
-        Tue, 24 Sep 2019 16:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BFE620673;
+        Tue, 24 Sep 2019 17:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343377;
-        bh=bL9gZIONi5x1sP8K0K9+7JkjNGb4N9JAG6j5LpCsJzM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJla8/fBKKwkxkfeKk9ya/fDbTcTX9WFqvOWvvRO3scEUMbnMZickaLmjH0C0qb4+
-         70TK9+YJ8nqMTrG8yAMv1ArcJbTL38BfILCER6xI8YjjB71VtOxlT9roYaVBmYwzhy
-         c38beySeDsF8d3TmgZqjYi7Rf08VNx8WjyX63A74=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 26/87] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Tue, 24 Sep 2019 12:40:42 -0400
-Message-Id: <20190924164144.25591-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
-References: <20190924164144.25591-1-sashal@kernel.org>
+        s=default; t=1569344568;
+        bh=hKUJRk7QMuhzcgsjkjUUakju3zdnETRA3LHzs2tBu7E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F0fcM2yk9NZNZbOS6LAuxm9OivSaXSahX2/DCEbqrSxZOzv4wE9pTUpYs5Q8GDnXT
+         S2NL4KHleHKltdp4qgFeb+e0c0qehI2XxwReFJtHAOQ7bwowJA4Bcq5SNHf38cpF19
+         18iDiiZLLHOj+3HYzBYBZAwrGdPKH3aSDEP/19+E=
+Date:   Tue, 24 Sep 2019 10:02:48 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
+Subject: [GIT PULL] iomap: (far less) new code for 5.4
+Message-ID: <20190924170248.GZ2229799@magnolia>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+Hi Linus,
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+Please pull this series containing all the new iomap code for 5.4.
+After last week's failed pull request attempt, I scuttled everything in
+the branch except for the directio endio api changes, which were
+trivial.  Everything else will simply have to wait for the next cycle.
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+The branch merges cleanly against this morning's HEAD and survived a
+week's worth of xfstests.  The merge was completely straightforward, so
+please let me know if you run into anything weird.
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+--D
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index da5b6723329a9..28693dbcb0c38 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -221,6 +221,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
- 
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
-+
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1007,11 +1010,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1019,8 +1031,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
- 	}
- 	return 0;
- }
-@@ -1198,6 +1211,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
- 
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
- 
- static void shutdown_smi(void *send_info);
--- 
-2.20.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.4-merge-6
+
+for you to fetch changes up to 838c4f3d7515efe9d0e32c846fb5d102b6d8a29d:
+
+  iomap: move the iomap_dio_rw ->end_io callback into a structure (2019-09-19 15:32:45 -0700)
+
+----------------------------------------------------------------
+New code for 5.4:
+- Report both io errors and short io results to the directio endio
+  handler.
+- Allow directio callers to pass an ops structure to iomap_dio_rw.
+
+----------------------------------------------------------------
+Christoph Hellwig (1):
+      iomap: move the iomap_dio_rw ->end_io callback into a structure
+
+Matthew Bobrowski (1):
+      iomap: split size and error for iomap_dio_rw ->end_io
+
+ fs/iomap/direct-io.c  | 24 ++++++++++--------------
+ fs/xfs/xfs_file.c     | 14 ++++++++++----
+ include/linux/iomap.h | 10 +++++++---
+ 3 files changed, 27 insertions(+), 21 deletions(-)
