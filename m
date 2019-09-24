@@ -2,236 +2,140 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB579C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F1AC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F38E207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFB720673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCZk+gzP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJtQ3AAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408783AbfIXCtr (ORCPT
+        id S2408798AbfIXCuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 22:49:47 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42008 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408131AbfIXCtr (ORCPT
+        Mon, 23 Sep 2019 22:50:02 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43379 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408131AbfIXCuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 22:49:47 -0400
-Received: by mail-ua1-f67.google.com with SMTP id r19so67287uap.9;
-        Mon, 23 Sep 2019 19:49:44 -0700 (PDT)
+        Mon, 23 Sep 2019 22:50:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a2so262456pfo.10;
+        Mon, 23 Sep 2019 19:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=7PuLm4XsUDXNvaLPQfZjNtATDNXHns4lSD+JB2YvrXg=;
-        b=OCZk+gzPhiDrThBb7lyzL04h2RrNSVzZSoi5RjUro9w2YUwBQxGcIbZAVFHEe0KH3J
-         m6VpNh3hcdOOFeqVuZ39Lccxgbn5PXpUcGbG/dga+IzCFFerT/sboVV91U8fuv8v5c4w
-         Jclj5ju1Qoung282/OQ5AotzFUSNpCTijp+NhVzL3OwoZoTEa4wWkP1PwteSk7fLiIH5
-         DCx1C1KCqXh9UcSs5ITJlNkrUgvum97lk5Rbm67YanJePw8gxSP7/wdMBMI6+O4v18H+
-         KOLvi59pKaZZc9zWSbhTYKmOE6py5sgJJ1nFQF265aBTRITfAA1U8QQSvbspnJ739VtT
-         fubA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=uaaaLuCGRZnOfdmCLyNq9t4oN/F+9BF6AGKkNBUPoi8=;
+        b=aJtQ3AAgg2ZeEGsckD3yHD0VQG/gnZcwD+Er8eIFqLqUUFtMsC/RCxbtkMJG24GjsR
+         xCmE+CyraZGtls9hscnHyFcUJjKCfpS0CctTbLFzrQfyIYRPCM+absbqzG0OQO164e2+
+         FBQNCWHtiIEksa1eiLNcaX81gTZkQiHfN3+udbI5l91BZK+Zq86Q7yA5gaxelvcJsRIF
+         xsTAjgovZYYlpO9aeJlRzsmR5+HpkizRgyhSe6kC7jdw6vdqXfl19/xvy422Pa5ozs86
+         P3yCXpGiVw3AXDuarmrSdK4W69bvKhtiyMJqxWJJ5+HnYFFjtOGQpoKeA7pS6PFxPQiz
+         DNAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7PuLm4XsUDXNvaLPQfZjNtATDNXHns4lSD+JB2YvrXg=;
-        b=jCO3tk1rN792p6YFP72qbNZKqrboq032XPYcVe7RO/knHGjHaVPnY4mth6OQF6J0jU
-         pPJjQfcq2w1VXUf8eMCgi94JB1eKD3V59g/Xp+eb/SjwtspgirBIabmhzPv6+hcYweEA
-         G609PwPh13Kl3NlRzqgREaTmfGBuXvyrVdjpKgYBPrFP7DUuODTVBEjwZNhEVjXWEKed
-         ev3mjym3dBSOu96gAO7HHbendPPvYniWVsMej3Wn8PRjuQGx3bZIARHJ1YiSaa+LfjwO
-         WwqajjYFkY369z7RgXFCKopf4OodiKVex1xCS0pmbHbhONjQOoxxW9YPjeUcXXBW2pEh
-         tkJg==
-X-Gm-Message-State: APjAAAX7B87MKefQP5f6IJTIc/6q35aTn5PUfx7BiH125lWA4vgAtotG
-        dDlA+cZS8tclyDE7BoOEUA==
-X-Google-Smtp-Source: APXvYqzTvB687KpM3S8YhwWJ+mMNNCef3AyS1H0k+QFA5Y6MhvgYei5A6x54ooZh5Ej+ibWEDJ3PaA==
-X-Received: by 2002:ab0:77cc:: with SMTP id y12mr311990uar.110.1569293384050;
-        Mon, 23 Sep 2019 19:49:44 -0700 (PDT)
-Received: from localhost.localdomain ([2601:901:202:18cc:820:670:dd1:f572])
-        by smtp.gmail.com with ESMTPSA id o16sm46547uar.2.2019.09.23.19.49.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uaaaLuCGRZnOfdmCLyNq9t4oN/F+9BF6AGKkNBUPoi8=;
+        b=jqGypnFc8HeZNY0DhgEiWcbiOd+WFrnGhwU+T9HTOJyR9jHN+DOl1NyXWnU4MYviqf
+         SeVswidlhyeOrXuNZd30XfpN4IGEsKSbZq8v/TqfdwGVrMX60YAwQJzHUfgCyTsClCfy
+         d6Nm/jhdyvEG20v+ZQUJKWs1CnQwthknMwdCYTbe+DkzSwkZFg/bI6OJKkNE8lF3FaHd
+         v852E5R1XsnwxRw2nkC5yKiuuQ2CYoahxHEKxVmdV/aytHffZwe2CsUXvNDi5tHYJucU
+         BBwqIzusHOTi7H6HdRyw7eEOkuEFSwPOd4wV+iibBYUqSkbX6xxpxmXJ4UDm5k8UqM5F
+         YGbA==
+X-Gm-Message-State: APjAAAW4xGo/p1SDQeVgZLDsImrItedtV3AyaT9L/olS9dJcmWw2JMbr
+        MJ4qFjVnMFmBmD/m2XZ6aRw=
+X-Google-Smtp-Source: APXvYqy+STHovVAg2uN+u2fpKlestMnHiVz0Gd0nURyZwMPI2AUYaUSufxF8VKSILdeNFlqCJ2DKiQ==
+X-Received: by 2002:a62:be01:: with SMTP id l1mr714053pff.236.1569293401293;
+        Mon, 23 Sep 2019 19:50:01 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 31sm240901pgr.55.2019.09.23.19.50.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 19:49:43 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] platform/x86: huawei-wmi: Add debugfs support
-Date:   Mon, 23 Sep 2019 22:48:11 -0400
-Message-Id: <20190924024821.497-7-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190924024821.497-1-ayman.bagabas@gmail.com>
-References: <20190924024821.497-1-ayman.bagabas@gmail.com>
+        Mon, 23 Sep 2019 19:50:00 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 19:49:58 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Alex Levin <levinale@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: cherryview: restore Strago DMI workaround for all
+ versions
+Message-ID: <20190924024958.GA229906@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a debugfs interface that can be used to call the WMI management
-interface function if available.
+This is essentially a revert of:
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
+86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
+
+because even with 1.1 versions of BIOS there are some pins that are
+configured as interrupts but not claimed by any driver, and they
+sometimes fire up and result in interrupt storms that cause touchpad
+stop functioning and other issues.
+
+Given that we are unlikely to qualify another firmware version for a
+while it is better to keep the workaround active on all Strago boards.
+
+Reported-by: Alex Levin <levinale@chromium.org>
+Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 97 +++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index d550c63fcba7..6720f78c60c2 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
-@@ -52,10 +53,16 @@ struct quirk_entry {
- 
- static struct quirk_entry *quirks;
- 
-+struct huawei_wmi_debug {
-+	struct dentry *root;
-+	u64 arg;
-+};
-+
- struct huawei_wmi {
- 	bool battery_available;
- 	bool fn_lock_available;
- 
-+	struct huawei_wmi_debug debug;
- 	struct input_dev *idev[2];
- 	struct led_classdev cdev;
- 	struct platform_device *pdev;
-@@ -592,6 +599,94 @@ static void huawei_wmi_fn_lock_exit(struct device *dev)
- 		device_remove_file(dev, &dev_attr_fn_lock_state);
- }
- 
-+/* debugfs */
-+
-+static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
-+		union acpi_object *obj)
-+{
-+	struct huawei_wmi *huawei = m->private;
-+	int i;
-+
-+	switch (obj->type) {
-+	case ACPI_TYPE_INTEGER:
-+		seq_printf(m, "0x%llx", obj->integer.value);
-+		break;
-+	case ACPI_TYPE_STRING:
-+		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
-+		break;
-+	case ACPI_TYPE_BUFFER:
-+		seq_puts(m, "{");
-+		for (i = 0; i < obj->buffer.length; i++) {
-+			seq_printf(m, "0x%02x", obj->buffer.pointer[i]);
-+			if (i < obj->buffer.length - 1)
-+				seq_puts(m, ",");
-+		}
-+		seq_puts(m, "}");
-+		break;
-+	case ACPI_TYPE_PACKAGE:
-+		seq_puts(m, "[");
-+		for (i = 0; i < obj->package.count; i++) {
-+			huawei_wmi_debugfs_call_dump(m, huawei, &obj->package.elements[i]);
-+			if (i < obj->package.count - 1)
-+				seq_puts(m, ",");
-+		}
-+		seq_puts(m, "]");
-+		break;
-+	default:
-+		dev_err(&huawei->pdev->dev, "Unexpected obj type, got %d\n", obj->type);
-+		return;
-+	}
-+}
-+
-+static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
-+{
-+	struct huawei_wmi *huawei = m->private;
-+	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer in;
-+	union acpi_object *obj;
-+	int err;
-+
-+	in.length = sizeof(u64);
-+	in.pointer = &huawei->debug.arg;
-+
-+	err = huawei_wmi_call(&in, &out);
-+	if (err)
-+		return err;
-+
-+	obj = out.pointer;
-+	if (!obj) {
-+		err = -EIO;
-+		goto fail_debugfs_call;
-+	}
-+
-+	huawei_wmi_debugfs_call_dump(m, huawei, obj);
-+
-+fail_debugfs_call:
-+	kfree(out.pointer);
-+	return err;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
-+
-+static void huawei_wmi_debugfs_setup(struct device *dev)
-+{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	huawei->debug.root = debugfs_create_dir("huawei-wmi", NULL);
-+
-+	debugfs_create_x64("arg", 0644, huawei->debug.root,
-+		&huawei->debug.arg);
-+	debugfs_create_file("call", 0400,
-+		huawei->debug.root, huawei, &huawei_wmi_debugfs_call_fops);
-+}
-+
-+static void huawei_wmi_debugfs_exit(struct device *dev)
-+{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	debugfs_remove_recursive(huawei->debug.root);
-+}
-+
- /* Input */
- 
- static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -717,6 +812,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		huawei_wmi_leds_setup(&pdev->dev);
- 		huawei_wmi_fn_lock_setup(&pdev->dev);
- 		huawei_wmi_battery_setup(&pdev->dev);
-+		huawei_wmi_debugfs_setup(&pdev->dev);
- 	}
- 
- 	return 0;
-@@ -734,6 +830,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	}
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		huawei_wmi_debugfs_exit(&pdev->dev);
- 		huawei_wmi_battery_exit(&pdev->dev);
- 		huawei_wmi_fn_lock_exit(&pdev->dev);
- 	}
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 03ec7a5d9d0b..bf049d1bbb87 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1513,7 +1513,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1521,7 +1520,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1529,7 +1527,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{
+@@ -1537,7 +1534,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+ 		},
+ 	},
+ 	{}
 -- 
-2.21.0
+2.23.0.351.gc4317032e6-goog
 
+
+-- 
+Dmitry
