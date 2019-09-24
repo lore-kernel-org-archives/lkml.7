@@ -2,169 +2,131 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62169C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0E3C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305FE20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324E920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNsR1n6r"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BoVWD9Ei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409444AbfIXIV7 (ORCPT
+        id S2394971AbfIXI2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:21:59 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35307 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388712AbfIXIV6 (ORCPT
+        Tue, 24 Sep 2019 04:28:06 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39983 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394923AbfIXI2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:21:58 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m15so1156486qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 01:21:56 -0700 (PDT)
+        Tue, 24 Sep 2019 04:28:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id h144so2353823iof.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 01:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ci3UtgmmPI2D+hhQ9FvWqteo9cX3CkmCCBdHsmACPqo=;
-        b=vNsR1n6rRVSSC2RYXkcQNjX3kfS+ruqOWk6pIOVxQ87lKDcrQa7GmD7Mvcx1pfgCUX
-         PamMoGzRJQMMzB/BF12fgqCWd50O6Ws0ji6xvZz/xVLNC1gWRKaZX6n9Wy2SO8sFfP2s
-         f1RQsSortu68rB+wQ5gBG76IK4OtcMtEzLThGdIjCxy8iGOG+7kJ8eacOY6sT/Sqg0gp
-         BDvU84vwc3GTCKjttizq3tbPiLdNQxbNGzz0vTf48mwbFbANg48d3vqPiMKlvoF35cxC
-         K0+OHOtJ1U9ZL+XLYMvcnL832kQfAFw2tPGOqVmpWa3KipSvMz8xVb28I4FNbjXUQL9u
-         IS4A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rN+CCFgjkVKfpkBu9it69/0SwXM97JRpAOcW4kIpzI4=;
+        b=BoVWD9Ei+4upFvzInWl+wWNqH3L3WMLBfNPHPRYnQWHtbHJmNphgq8YocFrVqAHtRf
+         R6iasukQHA7sVYsd14LhpbF1bLPMqNSx4PjGlM6+BdHreaTsrQbO4POGb59vvQSqHyp7
+         PkYbG0WOwey19zr/4wbS3P12SXf795gVfhBRBt8ybvn2/A55bMAsl2TUE3ek1dfEL1tK
+         oLDqmJQ85s6iD0XldWvWOITuom9MWG2wKWk0WcS5PmB3pbHyQIbFi6hFk4XhWU/bpCct
+         89HbWNrY+euZgQlCzL+Y0/yua1XW/pXosymxcCEKH7psIboyrN7rfZtHw9xpT7vggfQw
+         yGxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ci3UtgmmPI2D+hhQ9FvWqteo9cX3CkmCCBdHsmACPqo=;
-        b=cGb+rnGUyPdRvxsxwyVeqYczGPtFqF+4EqhiKq3y/zDk9nphYhVxH4jElqkXmM3XiP
-         J9ihrljRQCD+KRVd1VNqof1wtwB03GsSbRDsvD2bxG5Dho8YyHUBN3a+DeuVhQzk8+si
-         sErZL39uTkDzmeCETB7GNENfT3oblbpNiFAWowQ3Vps5UUuXSF6UT1YX+TIBRd9LGroI
-         KDS5bYl84lucVNp2BUeoVsZNl0le3oUFxh2igd5f5Pkft0i5ANt7s8D/t9SkZxJby4Q+
-         Bcs0S0jhLaqHRT+C2uEjj4EzNklDYikQyIrdfcyPxxlImh50M3H2VfkEut1hcE39kXXL
-         b51w==
-X-Gm-Message-State: APjAAAX7XIW8GhE3gGCGiW02vXiaITr80cqdp0JZwliCljEF7fTJWab+
-        rvAgCVuvPantrsGA/qLPyHsNwyEdTc6nzY/+ZASNuA==
-X-Google-Smtp-Source: APXvYqzmwVa/X7TedFn9JZy7MTd4eHq774ZQi58RY7qPNyyOFELUyVVpGAYsmT4rIzGJZM83qLnPZdqRouyO/Fa3aiU=
-X-Received: by 2002:ac8:2c50:: with SMTP id e16mr1537807qta.257.1569313315536;
- Tue, 24 Sep 2019 01:21:55 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rN+CCFgjkVKfpkBu9it69/0SwXM97JRpAOcW4kIpzI4=;
+        b=dgZcq1vp1oh1tocvn+KVMAg6Aj7L+8IATm+S14DWYL9aCbwtastuLSi0vrKJ4LIXjc
+         654jeDRXj41qZsBkzuerTACqwuJeRse1r+LLiwFv2Dans8Pru0abY1j6A5hzD8ivp+V4
+         o3y7YxjqIBmxvAPq8aOUYSgWAIFaIjBFsSMVMWZ/hvkSeC8PFOKQiFo6I/B5v/eY8Xtv
+         SggAt9dYSJ1/fCbW6i3D1uDetmIYsIlpQ1DbrcjjNISUOegdn1a3jP2a8uo+lpcvt07H
+         Z9nYTvz4BAjHe8SIGvTMGTj3bGL/kUE1F/SqUj5CKa79g2AopdUnbFEEp8LYAu3UwK+l
+         +2pQ==
+X-Gm-Message-State: APjAAAWhphYF5V8SKuLi352RirwQRqj/gAKjsEuMa1jVwsD3P4kcbPht
+        YnggGSZzjqb/7d8yAvcObLXv8Eed6ctn9g==
+X-Google-Smtp-Source: APXvYqxi662Z4Bn70WGfxOYR9BgahyryS+CkPCnD//1DLNnyE5xB+ZdcX0sUI4SNFIDJbJgCaRINWA==
+X-Received: by 2002:a02:b60f:: with SMTP id h15mr2481697jam.73.1569313683084;
+        Tue, 24 Sep 2019 01:28:03 -0700 (PDT)
+Received: from [172.19.131.113] ([8.46.75.9])
+        by smtp.gmail.com with ESMTPSA id g8sm914450ioc.0.2019.09.24.01.27.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 01:28:02 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+ <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+ <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
+ <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+ <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+Message-ID: <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
+Date:   Tue, 24 Sep 2019 10:27:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <0000000000000814c405931224fc@google.com> <CAHC9VhQGLFWk3zqywgsip9KgTmKNTiwxDG4+BdkDQwNZKJunQg@mail.gmail.com>
-In-Reply-To: <CAHC9VhQGLFWk3zqywgsip9KgTmKNTiwxDG4+BdkDQwNZKJunQg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 24 Sep 2019 10:21:44 +0200
-Message-ID: <CACT4Y+ZqJJS+g=svSJDfd4Jo==kVFbJDCxrfRX2eyBH4hw2+-g@mail.gmail.com>
-Subject: Re: WARNING: locking bug in selinux_netlbl_socket_connect
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     syzbot <syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, selinux@vger.kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 4:14 AM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Sat, Sep 21, 2019 at 11:50 AM syzbot
-> <syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com> wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f97c81dc Merge tag 'armsoc-late' of git://git.kernel.org/p..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=127b709d600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=10283c2b00ab4cd7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=5fa07e4e18e4eb1ccb12
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12996841600000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com
-> >
-> > WARNING: CPU: 0 PID: 10315 at kernel/locking/lockdep.c:840
-> > look_up_lock_class kernel/locking/lockdep.c:840 [inline]
-> > WARNING: CPU: 0 PID: 10315 at kernel/locking/lockdep.c:840
-> > register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 10315 Comm: syz-executor.0 Not tainted 5.3.0+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >   panic+0x2dc/0x755 kernel/panic.c:219
-> >   __warn.cold+0x20/0x4c kernel/panic.c:576
-> >   report_bug+0x263/0x2b0 lib/bug.c:186
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> > RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:840 [inline]
-> > RIP: 0010:register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
-> > Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 aa 10 00 00 4c 3b 7b
-> > 18 44 8b 35 d5 de 55 09 74 0b 48 81 3b a0 65 06 8a 74 02 <0f> 0b 45 85 ed
-> > 0f 84 71 03 00 00 f6 85 70 ff ff ff 01 0f 85 64 03
-> > RSP: 0018:ffff888096777a48 EFLAGS: 00010002
-> > RAX: dffffc0000000000 RBX: ffff888093ff78e0 RCX: 0000000000000000
-> > RDX: 1ffff110127fef1f RSI: 0000000000000000 RDI: ffff888093ff78f8
-> > RBP: ffff888096777b10 R08: 1ffff11012ceef51 R09: ffffffff8aaea0e0
-> > R10: ffffffff8a7753c8 R11: 0000000000000000 R12: ffffffff8a7b5d20
-> > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff884766e0
-> >   __lock_acquire+0xf4/0x4e70 kernel/locking/lockdep.c:3837
-> >   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-> >   __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-> >   _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-> >   spin_lock_bh include/linux/spinlock.h:343 [inline]
-> >   lock_sock_nested+0x41/0x120 net/core/sock.c:2929
-> >   lock_sock include/net/sock.h:1522 [inline]
-> >   selinux_netlbl_socket_connect+0x20/0xc0 security/selinux/netlabel.c:607
-> >   selinux_socket_connect+0x6a/0x90 security/selinux/hooks.c:4745
-> >   security_socket_connect+0x77/0xc0 security/security.c:1958
-> >   __sys_connect+0x19d/0x330 net/socket.c:1824
-> >   __do_sys_connect net/socket.c:1839 [inline]
-> >   __se_sys_connect net/socket.c:1836 [inline]
-> >   __x64_sys_connect+0x73/0xb0 net/socket.c:1836
-> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x459a09
-> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007fc302ec5c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
-> > RDX: 000000000000001c RSI: 0000000020000080 RDI: 0000000000000005
-> > RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc302ec66d4
-> > R13: 00000000004bff42 R14: 00000000004d1eb0 R15: 00000000ffffffff
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
->
-> This doesn't appear to be related to selinux_netlbl_socket_connect();
-> I believe it should be okay to call lock_sock() in that context.
+On 9/24/19 2:02 AM, Jens Axboe wrote:
+> On 9/24/19 1:06 AM, Pavel Begunkov wrote:
+>> On 24/09/2019 02:00, Jens Axboe wrote:
+>>>> I think we can do the same thing, just wrapping the waitqueue in a
+>>>> structure with a count in it, on the stack. Got some flight time
+>>>> coming up later today, let me try and cook up a patch.
+>>>
+>>> Totally untested, and sent out 5 min before departure... But something
+>>> like this.
+>> Hmm, reminds me my first version. Basically that's the same thing but
+>> with macroses inlined. I wanted to make it reusable and self-contained,
+>> though.
+>>
+>> If you don't think it could be useful in other places, sure, we could do
+>> something like that. Is that so?
+> 
+> I totally agree it could be useful in other places. Maybe formalized and
+> used with wake_up_nr() instead of adding a new primitive? Haven't looked
+> into that, I may be talking nonsense.
+> 
+> In any case, I did get a chance to test it and it works for me. Here's
+> the "finished" version, slightly cleaned up and with a comment added
+> for good measure.
 
+Notes:
 
-FTR, this is this warning:
+This version gets the ordering right, you need exclusive waits to get
+fifo ordering on the waitqueue.
 
-static inline struct lock_class *
-look_up_lock_class(const struct lockdep_map *lock, unsigned int subclass)
-{
-....
-                        /*
-                         * Huh! same key, different name? Did someone trample
-                         * on some memory? We're most confused.
-                         */
-                        WARN_ON_ONCE(class->name != lock->name &&
-                                     lock->key != &__lockdep_no_validate__);
+Both versions (yours and mine) suffer from the problem of potentially
+waking too many. I don't think this is a real issue, as generally we
+don't do threaded access to the io_urings. But if you had the following
+tasks wait on the cqring:
 
+[min_events = 32], [min_events = 8], [min_events = 8]
 
-So something fishy happens here (stack overflow again?).
+and we reach the io_cqring_events() == threshold, we'll wake all three.
+I don't see a good solution to this, so I suspect we just live with
+until proven an issue. Both versions are much better than what we have
+now.
+
+-- 
+Jens Axboe
+
