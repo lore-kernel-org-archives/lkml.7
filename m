@@ -2,118 +2,135 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB667C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A43C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9619B20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OFC1szf5"
+	by mail.kernel.org (Postfix) with ESMTP id 6BAA1214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439146AbfIXVwo (ORCPT
+        id S2441348AbfIXVx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:52:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40245 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbfIXVwo (ORCPT
+        Tue, 24 Sep 2019 17:53:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40800 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728183AbfIXVxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:52:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so2111905pfb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 14:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+fhJ9T/vZjSSX05VHp18SVR0XFnj5tZksc8z2VAuz54=;
-        b=OFC1szf5PoQuT5vyg4Il+WGjsj/nKDC3/5I83EXRYroN4p+0LcCQNVXZ1Dczng+l/9
-         mX0OgMcBO2ic+gGiP5KR3IqB8DXh9UeF13m6c15qdDEuA7foGI5jv2h6XOlk7iSwSAww
-         9xyXErYkzTDlxbmY4plb2PXQnB5uWqu/47bX0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+fhJ9T/vZjSSX05VHp18SVR0XFnj5tZksc8z2VAuz54=;
-        b=KomZ5MTpBG2pD3nLB8k02Atmlddt4ccZbpYkFu7rT1NlTymo5J+LVvq0Rz28LIXwxF
-         echRIo4OKbLubOIH+i+sNcLG8mYw0A8FPmjuNqGCtm5rUrSS7ZfLuad6bEYtzT1qgLc5
-         hhZJwaCnsf9EOPdfR8p2B0FOFRXCz+x3Y8/xFNy4i3ao/xQuEuptCdNz0WYi/f0FhmrA
-         stE4U+iMBMwZP2rj4/z3dq6a535F/YNz2GXGr6PUF+4QHpai4gvFFjNSCirCJIJ75jng
-         nRZ2FrX4bA5E5GQIwnQDfw5EapIcXvTAWGbFP9P3rgVuzrc55m4cDPRBCF6/BR17vYkW
-         4DqA==
-X-Gm-Message-State: APjAAAULSIOYuu6u3LyPm9OgAU5n6nRl4DJJHV9yn/qmBVkCktifUhbU
-        q/M3hrUvFBI477Uz33MOEzMcZQ==
-X-Google-Smtp-Source: APXvYqwWBdF0lQs3EbGKhbUaeNBDEuDBk7pm4dNkAF2JHWwebTmEQlp77C87FjqJ6npYTny70kzyBA==
-X-Received: by 2002:a63:a548:: with SMTP id r8mr4828285pgu.401.1569361963764;
-        Tue, 24 Sep 2019 14:52:43 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id q204sm2494493pfc.11.2019.09.24.14.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 24 Sep 2019 14:52:43 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jongpil Jung <jongpil19.jung@samsung.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH v2] Input: atmel_mxt_ts - Disable IRQ across suspend
-Date:   Tue, 24 Sep 2019 14:52:38 -0700
-Message-Id: <20190924215238.184750-1-evgreen@chromium.org>
-X-Mailer: git-send-email 2.21.0
+        Tue, 24 Sep 2019 17:53:25 -0400
+Received: from mon75-17-88-175-211-167.fbx.proxad.net ([88.175.211.167] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCskI-0008Sw-H1; Tue, 24 Sep 2019 21:53:18 +0000
+Date:   Tue, 24 Sep 2019 23:53:17 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Florian Weimer <fw@deneb.enyo.de>, Oleg Nesterov <oleg@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: For review: pidfd_send_signal(2) manual page
+Message-ID: <20190924215316.gxev2anuqffegocw@wittgenstein>
+References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+ <87pnjr9rth.fsf@mid.deneb.enyo.de>
+ <20190923142325.jowzbnwjw7g7si7j@wittgenstein>
+ <90dd38d5-34b3-b72f-8e5a-b51f944f22fb@gmail.com>
+ <20190924195701.7pw2olbviieqsg5q@wittgenstein>
+ <b76adb4c-826b-6493-ba75-a9863066d3b1@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <b76adb4c-826b-6493-ba75-a9863066d3b1@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Across suspend and resume, we are seeing error messages like the following:
+On Tue, Sep 24, 2019 at 11:00:03PM +0200, Michael Kerrisk (man-pages) wrote:
+> Hello Christian,
+> 
+> >>> If you're the parent of the process you can do this without CLONE_PIDFD:
+> >>> pid = fork();
+> >>> pidfd = pidfd_open();
+> >>> ret = pidfd_send_signal(pidfd, 0, NULL, 0);
+> >>> if (ret < 0 && errno == ESRCH)
+> >>> 	/* pidfd refers to another, recycled process */
+> >>
+> >> Although there is still the race between the fork() and the
+> >> pidfd_open(), right?
+> > 
+> > Actually no and my code is even too complex.
+> > If you are the parent, and this is really a sequence that obeys the
+> > ordering pidfd_open() before waiting:
+> > 
+> > pid = fork();
+> > if (pid == 0)
+> > 	exit(EXIT_SUCCESS);
+> > pidfd = pidfd_open(pid, 0);
+> > waitid(pid, ...);
+> > 
+> > Then you are guaranteed that pidfd will refer to pid. No recycling can
+> > happen since the process has not been waited upon yet (That is,
+> 
+> D'oh! Yes, of course. 
+> 
+> > excluding special cases such as where you have a mainloop where a
+> > callback reacts to a SIGCHLD event and waits on the child behind your
+> > back and your next callback in the mainloop calls pidfd_open() while the
+> > pid has been recycled etc.).
+> > A race could only appear in sequences where waiting happens before
+> > pidfd_open():
+> > 
+> > pid = fork();
+> > if (pid == 0)
+> > 	exit(EXIT_SUCCESS);
+> > waitid(pid, ...);
+> > pidfd = pidfd_open(pid, 0);
+> > 
+> > which honestly simply doesn't make any sense. So if you're the parent
+> > and you combine fork() + pidfd_open() correctly things should be fine
+> > without even having to verify via pidfd_send_signal() (I missed that in
+> > my first mail.).
+> 
+> Thanks for the additional detail.
 
-atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
-atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
+You're very welcome.
 
-This occurs because the driver leaves its IRQ enabled. Upon resume, there
-is an IRQ pending, but the interrupt is serviced before both the driver and
-the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
+> 
+> I added the following to the pidfd_open() page, to
+> prevent people making the same thinko as me:
+> 
+>        The following code sequence can be used to obtain a file  descrip‐
+>        tor for the child of fork(2):
+> 
+>            pid = fork();
+>            if (pid > 0) {     /* If parent */
+>                pidfd = pidfd_open(pid, 0);
+>                ...
+>            }
+> 
+>        Even  if  the  child process has already terminated by the time of
+>        the pidfd_open() call, the returned file descriptor is  guaranteed
+>        to refer to the child because the parent has not yet waited on the
+>        child (and therefore, the child's ID has not been recycled).
 
-Disable the IRQ in suspend, and re-enable it on resume. If there are cases
-where the driver enters suspend with interrupts disabled, that's a bug we
-should fix separately.
+Thanks! I'm fine with the example. The code illustrates the basics. If
+you want to go overboard, you can mention my callback example and put my
+SIG_IGN code snippet from my earlier mails (cf. [1] and [2]) in there.
+But imho, that'll complicate the manpage and I'm not sure it's worth it.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+Thanks!
+Christian
 
-Changes in v2:
- - Enable and disable unconditionally (Dmitry)
-
- drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 24c4b691b1c9..a58092488679 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3155,6 +3155,7 @@ static int __maybe_unused mxt_suspend(struct device *dev)
- 		mxt_stop(data);
- 
- 	mutex_unlock(&input_dev->mutex);
-+	disable_irq(data->irq);
- 
- 	return 0;
- }
-@@ -3174,6 +3175,7 @@ static int __maybe_unused mxt_resume(struct device *dev)
- 		mxt_start(data);
- 
- 	mutex_unlock(&input_dev->mutex);
-+	enable_irq(data->irq);
- 
- 	return 0;
- }
--- 
-2.21.0
-
+/* References */
+[1]: https://lore.kernel.org/r/20190924195701.7pw2olbviieqsg5q@wittgenstein
+[2]: https://lore.kernel.org/r/20190924200735.2dvqhan7ynnmfc7s@wittgenstein
