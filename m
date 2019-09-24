@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38326C4360C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6C5C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7F0222D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8392054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344145;
-	bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
+	s=default; t=1569344146;
+	bh=j8Ts51ouzUORb/g+SI+XF3GofZDMGyDqpfF2SFwJASg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yh+YHrYY59L+marc3KobzamYkpHb69Rtx5pNhN+knfT6cGS0ZDWpGsEcC4+MH0DcK
-	 ue9DOkFW39kAn62Soenwzw/GQrh2F3RIxnVMr1w4FDtkEB5PoGMJZM+yaJvPLYyDvy
-	 KHw5aaEBdhOdEtirVOzstZ8kzO082eUYbwKSYf0U=
+	b=DZxrWT6pChBCV1F0JQ05oFi/g+TN5A/JV1xA6NQkkawZJhUoyYneQaXCYLML+4yXa
+	 3NKAeTNXvPJxQ/FCofglZVjekS+umYJvUALlua6sNaTcwwHSQgOR5c4uB6lq8cnI6O
+	 V0pQodR1LzSW5LHmEEG/B99kocYYQTTzvW7NFl/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410769AbfIXQua (ORCPT
+        id S2389719AbfIXQu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410716AbfIXQuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:15 -0400
+        id S2410713AbfIXQuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BDE221D82;
-        Tue, 24 Sep 2019 16:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 158C721971;
+        Tue, 24 Sep 2019 16:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343814;
-        bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
+        s=default; t=1569343813;
+        bh=j8Ts51ouzUORb/g+SI+XF3GofZDMGyDqpfF2SFwJASg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR554ori/7xMiBb/O0K56qbvd+kK/9sBwok56zG9ks4DqB4PFSE0aALIFz2YceDkB
-         6xDWuFe6yiVin9ql+I019v9nBwGPDJoNMJZNj7qUB2YOz8/nXaAUrIPNpFnNTc7FZ1
-         3iqTmuCXhWTWrHgwPNP4U7REmfsVLiyDXie2AFDo=
+        b=mcfK9cVBU3hU5drkUWzVgKfQ0Fh8FZ5Ljo7xp4dj9ImUkmjSGZxVMR3FhTmlAd0B0
+         AGmDLxXuEC0Os2ynn2YlpQGg5li7YWx557A6djRY4MfyqSCu9FWEnO7QLPJbTojH4U
+         KXheBX/GtAuXJPud7+M+7/hemi810dP7V9C68g+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Otto Meier <gf435@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 42/50] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
-Date:   Tue, 24 Sep 2019 12:48:39 -0400
-Message-Id: <20190924164847.27780-42-sashal@kernel.org>
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 41/50] powerpc/pseries: correctly track irq state in default idle
+Date:   Tue, 24 Sep 2019 12:48:38 -0400
+Message-Id: <20190924164847.27780-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -60,61 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Otto Meier <gf435@gmx.net>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-Hi i tried to use the uart_C of the the odroid-c2.
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-I enabled it in the dts file. During boot it crashed when the
-the sdcard slot is addressed.
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-After long search in the net i found this:
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
 
-After changing the pin definitions accordingly erverything works.
-Uart_c is functioning and sdcard ist working.
-
-Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
-Signed-off-by: Otto Meier <gf435@gmx.net>
-Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 4edeb4cae72aa..c4c70dc57dbee 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -198,8 +198,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index ba1791fd3234d..67f49159ea708 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -325,6 +325,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by ceding processor to hypervisor
+ 	 */
  
- static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
- static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
--static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
--static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
-+static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
-+static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
++	if (!prep_irq_for_idle())
++		return;
++
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
- static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
- static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
-@@ -445,10 +445,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GROUP(pwm_f_x,		3,	18),
- 
- 	/* Bank Y */
--	GROUP(uart_cts_c,	1,	19),
--	GROUP(uart_rts_c,	1,	18),
--	GROUP(uart_tx_c,	1,	17),
--	GROUP(uart_rx_c,	1,	16),
-+	GROUP(uart_cts_c,	1,	17),
-+	GROUP(uart_rts_c,	1,	16),
-+	GROUP(uart_tx_c,	1,	19),
-+	GROUP(uart_rx_c,	1,	18),
- 	GROUP(pwm_a_y,		1,	21),
- 	GROUP(pwm_f_y,		1,	20),
- 	GROUP(i2s_out_ch23_y,	1,	5),
 -- 
 2.20.1
 
