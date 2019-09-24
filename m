@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB01C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070D8C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86BC2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A3C21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344526;
-	bh=h0E9bDafxlOExbxHUClj/mummCyEFJaSyMZs4q0U54w=;
+	s=default; t=1569344531;
+	bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jxqfyf8rKrGspZtWQAOyqXNFPo6dvih5HJyavNrAkF7kx88ZBAROYmAUTEKWS7Hep
-	 QwXzRIOupn1OMvxCC5RIoq7wILuwBs0WNTqEoUuEgDZEVYZelaogOG+yi0Jmr62JpB
-	 lcBX7Y5xfK9C/Hw7uvW/8G2eXh/U19G1xbEL7RaA=
+	b=T8skuWy80SxujphcXGBMocZVPLWwb/PYqmnZIMPIyRhSpfXNxx80FoiINxkQig8NE
+	 +sHf5jH2qrgyc7jA421mcdZe5oSMZdbGlPt9X/swXCa5FVIq2LCA87w1POMv2zYr84
+	 fsvT/H5jmGYdfqweTlZHyfDESzYnAp9vfAIKm+Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632864AbfIXQnA (ORCPT
+        id S1732155AbfIXRCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 13:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441469AbfIXQmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:42 -0400
+        id S2632862AbfIXQnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:43:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ECCD217F4;
-        Tue, 24 Sep 2019 16:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B206221783;
+        Tue, 24 Sep 2019 16:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343362;
-        bh=h0E9bDafxlOExbxHUClj/mummCyEFJaSyMZs4q0U54w=;
+        s=default; t=1569343380;
+        bh=PnbnIcgZjtEdYqUlBBBWYErDr6FSx8IYXnn0vmGA5PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDUJmgAJ401XnnIXCWz5lvOJrHXI9DnSL0Jy0JthsGNyC7cl2crrJwaK51Mv2qe7u
-         7r02JvsOXt8tzcFTCzCRQzpvazE1wPBN/XdJaSgAQ7/qLVJs8IhIU9K1F+Sb6G/UlR
-         Rh9bE3mie+qb3F6fpgewYoYhPJ454gjyH1ArFY+A=
+        b=ribl/6x0LQ4jIgg2QXveUXUxegQrT1S2hwPNeHr8OV2M6QrtddKHldNP0UOT3fOQJ
+         rYlGwZUxlxiuiRfS75KylF5nTngrhbQAVHAFfMwKj9C1aMSfJdyT0C7az9aM91HUCL
+         TUWIlhN083ZIeL+/jLdhEw/qlkzeC0cba4JfI8I0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Shirish S <shirish.s@amd.com>, Sasha Levin <sashal@kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 19/87] drm/amdgpu: Fix hard hang for S/G display BOs.
-Date:   Tue, 24 Sep 2019 12:40:35 -0400
-Message-Id: <20190924164144.25591-19-sashal@kernel.org>
+Cc:     Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 29/87] clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
+Date:   Tue, 24 Sep 2019 12:40:45 -0400
+Message-Id: <20190924164144.25591-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,73 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit e4c4073b0139d055d43a9568690fc560aab4fa5c ]
+[ Upstream commit 720099603d1f62e37b789366d7e89824b009ca28 ]
 
-HW requires for caching to be unset for scanout BO
-mappings when the BO placement is in GTT memory.
-Usually the flag to unset is passed from user mode
-but for FB mode this was missing.
+The MMC2 clock slices are currently not defined in V3s CCU driver, which
+makes MMC2 not working.
 
-v2:
-Keep all BO placement logic in amdgpu_display_supported_domains
+Fix this issue.
 
-Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Tested-by: Shirish S <shirish.s@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c  | 7 +++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 3 ++-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-index eb3569b46c1e1..430c56f9544a1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-@@ -139,14 +139,14 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
- 						  fb_tiled);
- 	domain = amdgpu_display_supported_domains(adev);
--
- 	height = ALIGN(mode_cmd->height, 8);
- 	size = mode_cmd->pitches[0] * height;
- 	aligned_size = ALIGN(size, PAGE_SIZE);
- 	ret = amdgpu_gem_object_create(adev, aligned_size, 0, domain,
- 				       AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
--				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS |
--				       AMDGPU_GEM_CREATE_VRAM_CLEARED,
-+				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS     |
-+				       AMDGPU_GEM_CREATE_VRAM_CLEARED 	     |
-+				       AMDGPU_GEM_CREATE_CPU_GTT_USWC,
- 				       ttm_bo_type_kernel, NULL, &gobj);
- 	if (ret) {
- 		pr_err("failed to allocate framebuffer (%d)\n", aligned_size);
-@@ -168,7 +168,6 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 			dev_err(adev->dev, "FB failed to set tiling flags\n");
- 	}
- 
--
- 	ret = amdgpu_bo_pin(abo, domain);
- 	if (ret) {
- 		amdgpu_bo_unreserve(abo);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-index 939f8305511b8..fb291366d5ade 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
-@@ -747,7 +747,8 @@ int amdgpu_mode_dumb_create(struct drm_file *file_priv,
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct drm_gem_object *gobj;
- 	uint32_t handle;
--	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
-+	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
-+		    AMDGPU_GEM_CREATE_CPU_GTT_USWC;
- 	u32 domain;
- 	int r;
- 
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index 9b3939fc7faa6..5ca4d34b4094f 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -502,6 +502,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
+ 		[CLK_MMC1]		= &mmc1_clk.common.hw,
+ 		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
+ 		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
++		[CLK_MMC2]		= &mmc2_clk.common.hw,
++		[CLK_MMC2_SAMPLE]	= &mmc2_sample_clk.common.hw,
++		[CLK_MMC2_OUTPUT]	= &mmc2_output_clk.common.hw,
+ 		[CLK_CE]		= &ce_clk.common.hw,
+ 		[CLK_SPI0]		= &spi0_clk.common.hw,
+ 		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
 -- 
 2.20.1
 
