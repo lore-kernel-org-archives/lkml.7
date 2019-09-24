@@ -2,213 +2,168 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653A2C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 05:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88994C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F687217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 05:56:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="dq7/C3es";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="yitYC8fs"
+	by mail.kernel.org (Postfix) with ESMTP id 5C47D21850
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409132AbfIXF44 (ORCPT
+        id S2438580AbfIXGBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 01:56:56 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:55050 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407957AbfIXF44 (ORCPT
+        Tue, 24 Sep 2019 02:01:51 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:44392 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387676AbfIXGBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 01:56:56 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8O5q3Cf005689;
-        Mon, 23 Sep 2019 22:56:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=X/UFUgGlJSnJ7VZ/c/9TW0G19h38aWqNZIqWJUeJUtM=;
- b=dq7/C3esbqCXsVAE/YV+xZV+Rh08eZLig7snIfO12xo+JqTOJCBk5U4rLKY76hHVzJfY
- AyTFl6TFBKF4mOOcMbewiLM9k9Lvb4LpeGsg8nUx7hNzVFJyENim6GQIMG6XLb8asNMF
- qW7z76rjsKZlCO43U5xU9s6hzZnQoinQmeZBuxv+j2370qDlpWIH52/2tzrxICtT8sHG
- WkWYMtAYxj7oVYqh1JCboYTtkiHCOvumJ/LkpFBqHJRfJAQBQXpUVSdNsgZJNad45t+Y
- J5ZKycaJPc5pCn7EYncjMA5TbWcE4xgvU3E/KLodb9v5B98glBRk8/93GwHCu7tZSBH9 AA== 
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2050.outbound.protection.outlook.com [104.47.41.50])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2v5ge09tyt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Sep 2019 22:56:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lGZWWvCEXVCQ6tOl4Nb2mgJDSJ/yKgLFaxY6y3BX7k1OJCnh2SPLJ+PnuC98ZxpuhZ5pASnRTlAnowq2DsSAXDFj/T6BjDvcb9Tcjp/pMuaD1T7kwfSvlYm5T5FMkKjwIdbJBh5zphuv4hL47xjlwjvlX27syQe/AtCzeA0UKtIyclhNn3RXgK4o4lfuB8drLP720c9ei3YBXpEybFhCvZD4gOLYFsAEQE9RLULPOulfjP6oPQQIBfY+taHQvioNnJrK1EiqUZGgu6tnUIpsqD1G+GZ1g00Y8vB8pxWs1tmBrETkyUJOpPtsb/gev2doN+6AZjAxGII94l5F8OTX+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X/UFUgGlJSnJ7VZ/c/9TW0G19h38aWqNZIqWJUeJUtM=;
- b=AOAips/VSE5I5zEKS+gmFrqINt33aavHJIMXSnEcH/B86BqHdjhK+fA7quOQv0+L11+qG4IoUFIX6si7zwTxJPcHWdxWhZUZyQBEphhW87RDVI/xSFaqXPRa354aKhB7fKN/KduE/qjfYSITcxYyhE+Ti3nxb5viW+PxC8nyPIoAM2BSmrm66J3YRjRU8yc0OLZJGy+pcyGLh0dUbGEp9V8S7/wCvCZHqBwH9s+ndajzcMuVutK+l1Hte3v+eP+gzePEDlzJs+6CRgBLBPWo9x8knKhZ8TRVKloPvGLWfzfpqNzLIijKFpiW9AntyWZIP1Qyt8t2l9aui9m6D8YsIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 64.207.220.243) smtp.rcpttodomain=gmail.com smtp.mailfrom=cadence.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X/UFUgGlJSnJ7VZ/c/9TW0G19h38aWqNZIqWJUeJUtM=;
- b=yitYC8fsi/vxpbKRDwc3r0EmyYCsSzPoebp8vBGnbC8d9p3iZY+Y8SVZ940CVq2MY45t9WcDrdhICfepyx2hA7Mj14EnbuMIMsprUrg8/nuY1tT+chnZw9N3FIzsgh5DGjCkddfA0zadCEF2yWPugquMqs0nPHteQFqMxwyfgSw=
-Received: from MN2PR07CA0009.namprd07.prod.outlook.com (2603:10b6:208:1a0::19)
- by MWHPR0701MB3674.namprd07.prod.outlook.com (2603:10b6:301:7e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.26; Tue, 24 Sep
- 2019 05:56:08 +0000
-Received: from DM3NAM05FT064.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e51::205) by MN2PR07CA0009.outlook.office365.com
- (2603:10b6:208:1a0::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
- Transport; Tue, 24 Sep 2019 05:56:08 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 64.207.220.243 as permitted sender)
-Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
- DM3NAM05FT064.mail.protection.outlook.com (10.152.98.188) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15 via Frontend Transport; Tue, 24 Sep 2019 05:56:08 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id x8O5txht021140
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 22:56:01 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Tue, 24 Sep 2019 07:55:59 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 24 Sep 2019 07:55:59 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x8O5txDL006343;
-        Tue, 24 Sep 2019 06:55:59 +0100
-Received: (from piotrs@localhost)
-        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x8O5tshM006146;
-        Tue, 24 Sep 2019 06:55:54 +0100
-From:   Piotr Sroka <piotrs@cadence.com>
-CC:     Piotr Sroka <piotrs@cadence.com>, <stable@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2] mtd: rawnand: Change calculating of position page containing BBM
-Date:   Tue, 24 Sep 2019 06:54:31 +0100
-Message-ID: <20190924055439.4212-1-piotrs@cadence.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 24 Sep 2019 02:01:50 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 23 Sep 2019 23:01:49 -0700
+IronPort-SDR: vK8/umuqEFWQ0rVpu8YljNLdhgZhlREppBCK6oa9v8SfwR/Yqrd4zgLnSdn3qmSqVHcpa/DTXO
+ 28cWDdISNOk2Zf4u7n1H0n6LVqh925nFmAYtMI87L7XJIvRULzLGAj47/bQ6Nwuu9Z0cSkWOKv
+ BBZb50Jd9ywj76lKOWzUwRMdu9QXoWE9CZe+tylWw9x9gYIHZ90xYBfwQ4SrybweTYE80awzCE
+ N/YXlPpRCMIiGVtd7UZgy9dOCqkrzah/2JIb4QcknMQ6sFtgLcZmzuYkF2l/wa1+dj62JxbV3o
+ 1bm1e3VVIq6U5IWXU4RgirZZ
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 23 Sep 2019 23:01:49 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 4A1FB467E; Mon, 23 Sep 2019 23:01:49 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 23:01:49 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel-team@android.com, Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
+Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
+Message-ID: <20190924060149.GB12462@codeaurora.org>
+References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
+ <20190916182524.5ebby6pbsbkuahci@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(4636009)(396003)(136003)(376002)(39860400002)(346002)(199004)(189003)(36092001)(2906002)(70206006)(87636003)(305945005)(1671002)(86362001)(5660300002)(478600001)(70586007)(7416002)(1076003)(42186006)(36756003)(316002)(51416003)(36906005)(16586007)(50466002)(48376002)(47776003)(54906003)(109986005)(6666004)(356004)(426003)(186003)(126002)(50226002)(486006)(4326008)(81166006)(8936002)(81156014)(8676002)(26005)(476003)(336012)(2616005)(266003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR0701MB3674;H:wcmailrelayl01.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:unused.mynethost.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ad6be0f6-c7d8-41b6-223d-08d740b3e50a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328);SRVR:MWHPR0701MB3674;
-X-MS-TrafficTypeDiagnostic: MWHPR0701MB3674:
-X-Microsoft-Antispam-PRVS: <MWHPR0701MB3674F904BF4AF3A2D512580EDD840@MWHPR0701MB3674.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0170DAF08C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: a85PWJr7fp3mHZ6JFNTRTi6znb+Q0ctMovNPnU5DWy6bBRaFMNL1d+yh1mvQlnwCK8ZKrfQTch2wG1lArNDPWqdrHdv0X42lLNLJBwzTcgDrZt883s7oJxlqMrCYYGnBz5Dg0kNEoOvVQPMIWjZOtoJnF5jpjvaVW/rAz2X3zHp6JhjBZ+cjhvuT6GKCfaRBfY7gwqTR7pfNay+KGmvFmdgC0KShi1B4o7AO0qWQDZrgN6ApwsMtQcNoH2/h+NcHRt7sXqk3C1Y6GugggAy8wkBLFcUsNcRgWh8dvic4QcoP6k1tTQdrh2NDtskgvw4ECtOtz00pFdXRiaNJRrFhlAFAtlYGUaNA6TSNKXBFwjQeANgouCaGVyJwVF2lS7DzRXVJIku8rYU1VD20IxrtrIATFm/upETQq9zYg2P/994=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2019 05:56:08.0823
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad6be0f6-c7d8-41b6-223d-08d740b3e50a
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0701MB3674
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-24_03:2019-09-23,2019-09-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
- suspectscore=2 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909240059
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190916182524.5ebby6pbsbkuahci@pengutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change calculating of position page containing BBM
+On Mon, Sep 16, 2019 at 08:25:24PM +0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
+> > From: Fenglin Wu <fenglinw@codeaurora.org>
+> > 
+> > Normally, PWM channel has fixed output until software request to change
+> > its settings. There are some PWM devices which their outputs could be
+> > changed autonomously according to a predefined pattern programmed in
+> > hardware. Add pwm_output_type enum type to identify these two different
+> > PWM types and add relevant helper functions to set and get PWM output
+> > types and pattern.
+> 
+> I have problems to understand what your modulated mode does even after
+> reading your commit log and the patch.
 
-If none of BBM flags are set then function nand_bbm_get_next_page 
-reports EINVAL. It causes that BBM is not read at all during scanning
-factory bad blocks. The result is that the BBT table is build without 
-checking factory BBM at all. For Micron flash memories none of these 
-flags are set if page size is different than 2048 bytes.
+Hi Uwe,
 
-Address this regression by:
-- adding NAND_BBM_FIRSTPAGE chip flag without any condition. It solves
-  issue only for Micron devices.
-- changing the nand_bbm_get_next_page_function. It will return 0 
-  if no of BBM flag is set and page parameter is 0. After that modification
-  way of discovering factory bad blocks will work similar as in kernel 
-  version 5.1.
+I have posted a reply to Thierry's email in which I provide some
+background and details about this patch for your review. Hopefully that
+clarifies things - I can provide some more clarifications if necessary.
 
-Cc: stable@vger.kernel.org
-Fixes: f90da7818b14 (mtd: rawnand: Support bad block markers in first, second or last page)
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
-Changes for v2:
-- add fix for micron nand driver
-- add fixes and stable tags
----
- drivers/mtd/nand/raw/nand_base.c   | 8 ++++++--
- drivers/mtd/nand/raw/nand_micron.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> Also you should note here what is the intended usage and add support for
+> it for at least one (preferably more) drivers to make this actually
+> usable.
 
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index 5c2c30a7dffa..f64e3b6605c6 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -292,12 +292,16 @@ int nand_bbm_get_next_page(struct nand_chip *chip, int page)
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	int last_page = ((mtd->erasesize - mtd->writesize) >>
- 			 chip->page_shift) & chip->pagemask;
-+	unsigned int bbm_flags = NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE
-+		| NAND_BBM_LASTPAGE;
- 
-+	if (page == 0 && !(chip->options & bbm_flags))
-+		return 0;
- 	if (page == 0 && chip->options & NAND_BBM_FIRSTPAGE)
- 		return 0;
--	else if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
-+	if (page <= 1 && chip->options & NAND_BBM_SECONDPAGE)
- 		return 1;
--	else if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
-+	if (page <= last_page && chip->options & NAND_BBM_LASTPAGE)
- 		return last_page;
- 
- 	return -EINVAL;
-diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
-index 1622d3145587..913f42854563 100644
---- a/drivers/mtd/nand/raw/nand_micron.c
-+++ b/drivers/mtd/nand/raw/nand_micron.c
-@@ -438,8 +438,10 @@ static int micron_nand_init(struct nand_chip *chip)
- 	if (ret)
- 		goto err_free_manuf_data;
- 
-+	chip->options |= NAND_BBM_FIRSTPAGE;
-+
- 	if (mtd->writesize == 2048)
--		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
-+		chip->options |= NAND_BBM_SECONDPAGE;
- 
- 	ondie = micron_supports_on_die_ecc(chip);
- 
--- 
-2.15.0
+The PWM_OUTPUT_MODULATED mode is useful for PWM peripherals like
+Qualcomm's Light Pulse Generator (LPG) that can output a duty-cycle
+pattern in hardware as well as output a fixed duty-cycle signal. All
+this mode really does is to provide a way for drivers to carry out some
+actions for the "pattern" mode of operation that are not required (or
+relevant) for the "fixed" mode of operation.
 
+> 
+> > Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
+> 
+> In Linux we don't use these. You're making it easier to apply your patch
+> if you drop the change-id lines.
+
+Sorry, forgot to strip these before sending out the patch.
+
+> 
+> > diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+> > index 2389b86..ab703f2 100644
+> > --- a/drivers/pwm/sysfs.c
+> > +++ b/drivers/pwm/sysfs.c
+> > @@ -215,11 +215,60 @@ static ssize_t capture_show(struct device *child,
+> >  	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
+> >  }
+> >  
+> > +static ssize_t output_type_show(struct device *child,
+> > +			     struct device_attribute *attr,
+> > +			     char *buf)
+> > +{
+> > +	const struct pwm_device *pwm = child_to_pwm_device(child);
+> > +	const char *output_type = "unknown";
+> > +	struct pwm_state state;
+> > +
+> > +	pwm_get_state(pwm, &state);
+> > +	switch (state.output_type) {
+> > +	case PWM_OUTPUT_FIXED:
+> > +		output_type = "fixed";
+> > +		break;
+> > +	case PWM_OUTPUT_MODULATED:
+> > +		output_type = "modulated";
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return snprintf(buf, PAGE_SIZE, "%s\n", output_type);
+> > +}
+> > +
+> > +static ssize_t output_type_store(struct device *child,
+> > +			      struct device_attribute *attr,
+> > +			      const char *buf, size_t size)
+> > +{
+> > +	struct pwm_export *export = child_to_pwm_export(child);
+> > +	struct pwm_device *pwm = export->pwm;
+> > +	struct pwm_state state;
+> > +	int ret = -EINVAL;
+> > +
+> > +	mutex_lock(&export->lock);
+> > +	pwm_get_state(pwm, &state);
+> > +	if (sysfs_streq(buf, "fixed"))
+> > +		state.output_type = PWM_OUTPUT_FIXED;
+> > +	else if (sysfs_streq(buf, "modulated"))
+> > +		state.output_type = PWM_OUTPUT_MODULATED;
+> > +	else
+> > +		goto unlock;
+> > +
+> > +	ret = pwm_apply_state(pwm, &state);
+> > +unlock:
+> > +	mutex_unlock(&export->lock);
+> > +
+> > +	return ret ? : size;
+> > +}
+> 
+> So in sysfs you cannot set a pattern. Doesn't that mean this makes using
+> modulated mode hardly useful?
+
+The pattern has to be set through the devicetree and not sysfs. Will
+change the output type sysfs parameter to read-only.
+
+> 
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
