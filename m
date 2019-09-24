@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FD3C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D4C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC1920673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352E22146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344443;
-	bh=jiqWDvjr3y286qK70hFFRbHs5tN2gQs8Lk1YAW0uoAc=;
+	s=default; t=1569344446;
+	bh=n4EK9lFlhG+7vx2FsuKOoovwxv61xtY/g7zcyr254u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRX01aE+gtc0GjbysKoXM00esavw/lA4sxb6+mHuTIVmZyrC1/sT6TPmcKl8vrb3h
-	 SD3WyoxpncMBBepbLo+56/Cv3OI4duZtyg38LRCErsTlF6OstNoEJLL935OgcNaW92
-	 uLhqptPSq9uk0m+HdizaowZIIt521Y0VnUDFiy9Q=
+	b=lwTS2ucidzjJ5EIhoDtiK8BGMBFNQKKtWgdD0DjwjNbJ6fka3CDsv2dKIw5mooYTo
+	 yxY21Hzqt5zG5gw48CS+sKqtUHEs2fHAj2pzsCRuZm2GNSkAlKhurxwMHRmDoFQ7yn
+	 sBQffT2XG92R3j/9INFXpjk2t5t8YdxgiHxU30Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409921AbfIXQoy (ORCPT
+        id S2409910AbfIXQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34242 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409906AbfIXQov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:44:51 -0400
+        id S2409888AbfIXQoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642E121783;
-        Tue, 24 Sep 2019 16:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21DD821783;
+        Tue, 24 Sep 2019 16:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343490;
-        bh=jiqWDvjr3y286qK70hFFRbHs5tN2gQs8Lk1YAW0uoAc=;
+        s=default; t=1569343485;
+        bh=n4EK9lFlhG+7vx2FsuKOoovwxv61xtY/g7zcyr254u0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsEOQKdFzwVJSICizMtaVDuLgOCoUUeF0DScwHCmvD7Q4U39ygbc30pa5qJGWzbxN
-         uv9bzOf3ZRARzZD+V8QusOCo4fyF9jJMM7GwsPntnbpcVVuPVCQQE4ZeOeRIxF3uQj
-         gTEnR7vorAsLGiHkcGyYMeq8gK4YbZUMRfJHGRnw=
+        b=P99RJLA7s4vN848YhkadZaZS/c19xKH9mf4MoPS3H4ze4TCMc+Co/JthdHn1WeyF2
+         PCn9wFRU62DWYUHE5NM69sPlqHbsm9LQUsmStOhXhcWawD5URkYwprxvWbXKodeORI
+         YaZw8yv9FmGhN2/B+GYzg8Ge8wEfEZeJ7bvVEPJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.3 68/87] powerpc/eeh: Clean up EEH PEs after recovery finishes
-Date:   Tue, 24 Sep 2019 12:41:24 -0400
-Message-Id: <20190924164144.25591-68-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>, Ken Wang <Qingqing.Wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 65/87] drm/amdgpu/si: fix ASIC tests
+Date:   Tue, 24 Sep 2019 12:41:21 -0400
+Message-Id: <20190924164144.25591-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,177 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 799abe283e5103d48e079149579b4f167c95ea0e ]
+[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
 
-When the last device in an eeh_pe is removed the eeh_pe structure itself
-(and any empty parents) are freed since they are no longer needed. This
-results in a crash when a hotplug driver is involved since the following
-may occur:
+Comparing adev->family with CHIP constants is not correct.
+adev->family can only be compared with AMDGPU_FAMILY constants and
+adev->asic_type is the struct member to compare with CHIP constants.
+They are separate identification spaces.
 
-1. Device is suprise removed.
-2. Driver performs an MMIO, which fails and queues and eeh_event.
-3. Hotplug driver receives a hotplug interrupt and removes any
-   pci_devs that were under the slot.
-4. pci_dev is torn down and the eeh_pe is freed.
-5. The EEH event handler thread processes the eeh_event and crashes
-   since the eeh_pe pointer in the eeh_event structure is no
-   longer valid.
-
-Crashing is generally considered poor form. Instead of doing that use
-the fact PEs are marked as EEH_PE_INVALID to keep them around until the
-end of the recovery cycle, at which point we can safely prune any empty
-PEs.
-
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190903101605.2890-2-oohall@gmail.com
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+Cc: Ken Wang <Qingqing.Wang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_driver.c | 36 ++++++++++++++++++++++++++++++--
- arch/powerpc/kernel/eeh_event.c  |  8 +++++++
- arch/powerpc/kernel/eeh_pe.c     | 23 +++++++++++++++++++-
- 3 files changed, 64 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 1fbe541856f5e..fe0c32fb9f96f 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -744,6 +744,33 @@ static int eeh_reset_device(struct eeh_pe *pe, struct pci_bus *bus,
-  */
- #define MAX_WAIT_FOR_RECOVERY 300
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 4d74453f3cfbd..602397016b641 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1881,7 +1881,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
  
-+
-+/* Walks the PE tree after processing an event to remove any stale PEs.
-+ *
-+ * NB: This needs to be recursive to ensure the leaf PEs get removed
-+ * before their parents do. Although this is possible to do recursively
-+ * we don't since this is easier to read and we need to garantee
-+ * the leaf nodes will be handled first.
-+ */
-+static void eeh_pe_cleanup(struct eeh_pe *pe)
-+{
-+	struct eeh_pe *child_pe, *tmp;
-+
-+	list_for_each_entry_safe(child_pe, tmp, &pe->child_list, child)
-+		eeh_pe_cleanup(child_pe);
-+
-+	if (pe->state & EEH_PE_KEEP)
-+		return;
-+
-+	if (!(pe->state & EEH_PE_INVALID))
-+		return;
-+
-+	if (list_empty(&pe->edevs) && list_empty(&pe->child_list)) {
-+		list_del(&pe->child);
-+		kfree(pe);
-+	}
-+}
-+
- /**
-  * eeh_handle_normal_event - Handle EEH events on a specific PE
-  * @pe: EEH PE - which should not be used after we return, as it may
-@@ -782,8 +809,6 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 		return;
- 	}
+-			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
++			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
+ 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
+ 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
+ 				if (orig != data)
+@@ -1930,14 +1930,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
  
--	eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
--
- 	eeh_pe_update_time_stamp(pe);
- 	pe->freeze_count++;
- 	if (pe->freeze_count > eeh_max_freezes) {
-@@ -973,6 +998,12 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
- 			return;
- 		}
- 	}
-+
-+	/*
-+	 * Clean up any PEs without devices. While marked as EEH_PE_RECOVERYING
-+	 * we don't want to modify the PE tree structure so we do it here.
-+	 */
-+	eeh_pe_cleanup(pe);
- 	eeh_pe_state_clear(pe, EEH_PE_RECOVERING, true);
- }
+ 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
  
-@@ -1045,6 +1076,7 @@ void eeh_handle_special_event(void)
- 		 */
- 		if (rc == EEH_NEXT_ERR_FROZEN_PE ||
- 		    rc == EEH_NEXT_ERR_FENCED_PHB) {
-+			eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
- 			eeh_handle_normal_event(pe);
- 		} else {
- 			pci_lock_rescan_remove();
-diff --git a/arch/powerpc/kernel/eeh_event.c b/arch/powerpc/kernel/eeh_event.c
-index 64cfbe41174b2..e36653e5f76b3 100644
---- a/arch/powerpc/kernel/eeh_event.c
-+++ b/arch/powerpc/kernel/eeh_event.c
-@@ -121,6 +121,14 @@ int __eeh_send_failure_event(struct eeh_pe *pe)
- 	}
- 	event->pe = pe;
- 
-+	/*
-+	 * Mark the PE as recovering before inserting it in the queue.
-+	 * This prevents the PE from being free()ed by a hotplug driver
-+	 * while the PE is sitting in the event queue.
-+	 */
-+	if (pe)
-+		eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
-+
- 	/* We may or may not be called in an interrupt context */
- 	spin_lock_irqsave(&eeh_eventlist_lock, flags);
- 	list_add(&event->list, &eeh_eventlist);
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 854cef7b18f4d..f0813d50e0b1c 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -491,6 +491,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
- {
- 	struct eeh_pe *pe, *parent, *child;
-+	bool keep, recover;
- 	int cnt;
- 	struct pci_dn *pdn = eeh_dev_to_pdn(edev);
- 
-@@ -516,10 +517,21 @@ int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
- 	 */
- 	while (1) {
- 		parent = pe->parent;
-+
-+		/* PHB PEs should never be removed */
- 		if (pe->type & EEH_PE_PHB)
- 			break;
- 
--		if (!(pe->state & EEH_PE_KEEP)) {
-+		/*
-+		 * XXX: KEEP is set while resetting a PE. I don't think it's
-+		 * ever set without RECOVERING also being set. I could
-+		 * be wrong though so catch that with a WARN.
-+		 */
-+		keep = !!(pe->state & EEH_PE_KEEP);
-+		recover = !!(pe->state & EEH_PE_RECOVERING);
-+		WARN_ON(keep && !recover);
-+
-+		if (!keep && !recover) {
- 			if (list_empty(&pe->edevs) &&
- 			    list_empty(&pe->child_list)) {
- 				list_del(&pe->child);
-@@ -528,6 +540,15 @@ int eeh_rmv_from_parent_pe(struct eeh_dev *edev)
- 				break;
- 			}
- 		} else {
-+			/*
-+			 * Mark the PE as invalid. At the end of the recovery
-+			 * process any invalid PEs will be garbage collected.
-+			 *
-+			 * We need to delay the free()ing of them since we can
-+			 * remove edev's while traversing the PE tree which
-+			 * might trigger the removal of a PE and we can't
-+			 * deal with that (yet).
-+			 */
- 			if (list_empty(&pe->edevs)) {
- 				cnt = 0;
- 				list_for_each_entry(child, &pe->child_list, child) {
+ 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
