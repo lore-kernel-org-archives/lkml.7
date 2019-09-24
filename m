@@ -2,107 +2,82 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA16C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEAFC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBE0217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569326650;
-	bh=Bi158SFtp+WLqXdnHUUCjzspp2068u5mA9BIfppnvEU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4NdeyJyfeuKW3pnl3H9dfUjxe74mVkstEAxoYmhj3UTsucU822jPXIJk8dSBwdwH
-	 skqUyeFD7XbJwdmR5w7GYrOjvklfr2WNcP3Bp9CzW/swIWVIssbxxG3TJAphLNvMtl
-	 tz9VPKmCeSjFp7J9vUvLY772HNIvczD/HBktH9pU=
+	by mail.kernel.org (Postfix) with ESMTP id 71E0E2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbfIXMEJ (ORCPT
+        id S1729940AbfIXMHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:04:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53074 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfIXMEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:04:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Vfv7lYGujNr5uIH96XHMW+speXHOn/ZhV2QhILuvvL4=; b=WqWNV2OPbJkX162VFcnXZoxXuJ
-        4fQboUoApvGr8FEB/i9cVsSe8aPfZ6sJUfxINZTHg9ui9Lpg9EmKmpc0XtBeX9SDdb7g7g3Lfqisc
-        t3AQHmoTNEjkctbWmy7bKvAcs1jLQwBvIAheeSnEx+CHKUbFKPCW5lwJLH7HA2Avw2C13i5squc7b
-        rsYRR2AosLwIarw2DlfouXh5cdH/QGakfBS0gQbmTZRwiGA1hr+s8c6eH3tWy8kEcwNUmgR2GSnt9
-        OwDyrIebS0SjMVv9a8Tss3UZ1lzrY1mLpRSmhS9abkeNLA9urznvgM6EsgmUTbtI7sYqS7lV1yPg9
-        kxxppJlA==;
-Received: from 177.96.206.173.dynamic.adsl.gvt.net.br ([177.96.206.173] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCjY2-0005Nf-Fs; Tue, 24 Sep 2019 12:04:03 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.2)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1iCjY0-0000z3-2d; Tue, 24 Sep 2019 09:04:00 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v2] media: v4l2-fwnode: fix location of acpi/dsd documentation
-Date:   Tue, 24 Sep 2019 09:03:56 -0300
-Message-Id: <1da96f12303328833d4f4064bc127337770bc4a7.1569326471.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190924105038.GH9467@paasikivi.fi.intel.com>
-References: <20190924105038.GH9467@paasikivi.fi.intel.com>
+        Tue, 24 Sep 2019 08:07:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8170 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729485AbfIXMHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:07:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 05:07:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
+   d="scan'208";a="272612668"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 24 Sep 2019 05:07:36 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iCjbS-0001Uh-SC; Tue, 24 Sep 2019 15:07:34 +0300
+Date:   Tue, 24 Sep 2019 15:07:34 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org, nv@vosn.de,
+        Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH] ACPICA: Introduce acpi_load_table_with_index()
+Message-ID: <20190924120734.GT2680@smile.fi.intel.com>
+References: <6851700.HULMXZj6Ep@kreacher>
+ <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This got moved to the firmware-guide.
+On Mon, Sep 23, 2019 at 11:47:01AM +0200, Nikolaus Voss wrote:
+> For unloading an ACPI table, it is necessary to provide the
+> index of the table. The method intended for dynamically
+> loading or hotplug addition of tables, acpi_load_table(),
+> does not provide this information, so a new function
+> acpi_load_table_with_index() with the same functionality,
+> but an optional pointer to the loaded table index is introduced.
+> 
+> The new function is used in the acpi_configfs driver to save the
+> index of the newly loaded table in order to unload it later.
 
-Fixes: f2dde1ed0f28 ("Documentation: ACPI: move dsd/graph.txt to firmware-guide/acpi and convert to reST")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
+I'll test it later, though couple of remarks:
+- would it make sense to provide a counter part helper for unloading? Now it
+  looks a bit inconsistent in configfs when we use acpi_load_*() vs.
+  acpi_tb_*() in remove.
+- please, include Ferry into Cc (as done in this mail)
 
-v2: 
-
-- Also replace *.txt -> *.rst. I opted to place the full file names there, as this allows
-  ./scripts/documentation-file-ref-check to check if those files gets renamed. It
-  also helps if some Sphinx would later convert those to hyperlinks (with was
-  already discussed at linux-doc ML, although not implemented yet).
-
- drivers/media/v4l2-core/v4l2-fwnode.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 3bd1888787eb..9387dcba8b59 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -819,8 +819,10 @@ static int v4l2_fwnode_reference_parse(struct device *dev,
-  *
-  * THIS EXAMPLE EXISTS MERELY TO DOCUMENT THIS FUNCTION. DO NOT USE IT AS A
-  * REFERENCE IN HOW ACPI TABLES SHOULD BE WRITTEN!! See documentation under
-- * Documentation/acpi/dsd instead and especially graph.txt,
-- * data-node-references.txt and leds.txt .
-+ * Documentation/firmware-guide/acpi/dsd instead and especially
-+ * Documentation/firmware-guide/acpi/dsd/graph.rst,
-+ * Documentation/firmware-guide/acpi/dsd/data-node-references.rst and
-+ * Documentation/firmware-guide/acpi/dsd/leds.rst.
-  *
-  *	Scope (\_SB.PCI0.I2C2)
-  *	{
 -- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
 
 
