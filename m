@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D131BC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B73F20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9382B20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344403;
-	bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
+	s=default; t=1569344408;
+	bh=RG54gPf8RJBC3CZTe5FkLegpYlLjZnCyXCk/BtTrOEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJomB6z4shG35fbWG+34GHUAXIMmb/EAZPxChhVgmVKDcCjFUHO+PorZllJO/QdIT
-	 0tA1Of6fUR4feR6Agz2pnf1kbKHS3QFD3XuIVkeBU8TNIIRPYc8lQgiV+HbYr6tQ/V
-	 x7OJl70Oki/+I0J5cXY4YgmvGE8Nq23S4XR/gXRg=
+	b=F4z6tQLEfHV1KNvifj8r6qsAsJ4+o9qS5UD54G2bEYAsmFzc5KyfReWhb15C9Kpx8
+	 l7T04/ljk3AWVvF5gxcuQH+Wyw7VBb9WEZhDIhuKey+0vB/crgXQ1lBN7AitMj4jbi
+	 7qQCPptY6tgD9FKlkTdkOfYsmuAn+4zipReeistw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407566AbfIXRAC (ORCPT
+        id S2410070AbfIXQqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37128 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410315AbfIXQq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:29 -0400
+        id S2410058AbfIXQp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:45:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 184EE21D7C;
-        Tue, 24 Sep 2019 16:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014CA20673;
+        Tue, 24 Sep 2019 16:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343588;
-        bh=f4rcsN3ybGO/sVNQMSjrifM4UThQhI6TFoiqf0tlzng=;
+        s=default; t=1569343556;
+        bh=RG54gPf8RJBC3CZTe5FkLegpYlLjZnCyXCk/BtTrOEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEloijtNQjAUF1mJFjdmr1I4PTbYPbfjKxM+SRwevc+M9UgpjAU0cuhBI6GkdnlIS
-         h8EOWADlB6+JRk0dxqs4kYOqIKm40fGQ593EU6MIu1jPltyphyOLCf1WsHgTZfpdpU
-         wbbo3iVZckUrMwEQ0PQMNfHPuuwBU4NavYlJjW6Y=
+        b=guiLNyHjuF87NIFgqi15V5UkptY1yUqFpG2zh89NQWy4K3cKP6AsimZPrFVnlRRvq
+         XcmNUNsYMDWcIEBOMHDg3sWoYWIZ5GL/h3+AZ4hdaEuMNizt9iI//HeK7KuYu40R3G
+         RNSNz27fEhU98nF4X0hQwxXgWiWkAPzvFWVcazG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 16/70] clk: imx8mq: Mark AHB clock as critical
-Date:   Tue, 24 Sep 2019 12:44:55 -0400
-Message-Id: <20190924164549.27058-16-sashal@kernel.org>
+Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 03/70] drm/bridge: adv7511: Attach to DSI host at probe time
+Date:   Tue, 24 Sep 2019 12:44:42 -0400
+Message-Id: <20190924164549.27058-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,46 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+From: Matt Redfearn <matt.redfearn@thinci.com>
 
-[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
+[ Upstream commit 83f35bc3a852f1c3892c7474998c5cec707c7ba3 ]
 
-Initially, the TMU_ROOT clock was marked as critical, which automatically
-made the AHB clock to stay always on. Since the TMU_ROOT clock is not
-marked as critical anymore, following commit:
+In contrast to all of the DSI panel drivers in drivers/gpu/drm/panel
+which attach to the DSI host via mipi_dsi_attach() at probe time, the
+ADV7533 bridge device does not. Instead it defers this to the point that
+the upstream device connects to its bridge via drm_bridge_attach().
+The generic Synopsys MIPI DSI host driver does not register it's own
+drm_bridge until the MIPI DSI has attached. But it does not call
+drm_bridge_attach() on the downstream device until the upstream device
+has attached. This leads to a chicken and the egg failure and the DRM
+pipeline does not complete.
+Since all other mipi_dsi_device drivers call mipi_dsi_attach() in
+probe(), make the adv7533 mipi_dsi_device do the same. This ensures that
+the Synopsys MIPI DSI host registers it's bridge such that it is
+available for the upstream device to connect to.
 
-"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
-
-all the clocks that derive from ipg_root clock (and implicitly ahb clock)
-would also have to enable, along with their own gate, the AHB clock.
-
-But considering that AHB is actually a bus that has to be always on, we mark
-it as critical in the clock provider driver and then all the clocks that
-derive from it can be controlled through the dedicated per IP gate which
-follows after the ipg_root clock.
-
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190627151740.2277-1-matt.redfearn@thinci.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx8mq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index daf1841b2adb0..f29025c99c53b 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -396,7 +396,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 0e3e868850d55..018f39e0e3754 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -874,9 +874,6 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
+ 				 &adv7511_connector_helper_funcs);
+ 	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
  
- 	/* AHB */
--	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
-+	/* AHB clock is used by the AHB bus therefore marked as critical */
-+	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
- 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
+-	if (adv->type == ADV7533)
+-		ret = adv7533_attach_dsi(adv);
+-
+ 	if (adv->i2c_main->irq)
+ 		regmap_write(adv->regmap, ADV7511_REG_INT_ENABLE(0),
+ 			     ADV7511_INT0_HPD);
+@@ -1222,8 +1219,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+ 	drm_bridge_add(&adv7511->bridge);
  
- 	/* IPG */
+ 	adv7511_audio_init(dev, adv7511);
++
++	if (adv7511->type == ADV7533) {
++		ret = adv7533_attach_dsi(adv7511);
++		if (ret)
++			goto err_remove_bridge;
++	}
++
+ 	return 0;
+ 
++err_remove_bridge:
++	drm_bridge_remove(&adv7511->bridge);
+ err_unregister_cec:
+ 	i2c_unregister_device(adv7511->i2c_cec);
+ 	if (adv7511->cec_clk)
 -- 
 2.20.1
 
