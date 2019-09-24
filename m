@@ -2,131 +2,115 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A19C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978EBC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D7920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708F320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440553AbfIXGjb (ORCPT
+        id S2440564AbfIXGnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:39:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46543 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389156AbfIXGja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:39:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCeTu-0000ja-Ta; Tue, 24 Sep 2019 08:39:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iCeTu-00055Q-5i; Tue, 24 Sep 2019 08:39:26 +0200
-Date:   Tue, 24 Sep 2019 08:39:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
-Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
-Message-ID: <20190924063926.vb3cxcdybv33owpg@pengutronix.de>
-References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
- <20190916140146.GC7488@ulmo>
- <20190924054343.GA12462@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190924054343.GA12462@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 24 Sep 2019 02:43:06 -0400
+Received: from mga02.intel.com ([134.134.136.20]:25186 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394281AbfIXGnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 02:43:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 23:43:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
+   d="scan'208";a="203306293"
+Received: from gvt.bj.intel.com ([10.238.158.180])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2019 23:43:02 -0700
+From:   Tina Zhang <tina.zhang@intel.com>
+To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
+        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
+        alex.williamson@redhat.com, yi.l.liu@intel.com
+Subject: [PATCH v6 0/6] Deliver vGPU display refresh event to userspace
+Date:   Tue, 24 Sep 2019 14:41:37 +0800
+Message-Id: <20190924064143.9282-1-tina.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:43:43PM -0700, Guru Das Srinagesh wrote:
-> On Mon, Sep 16, 2019 at 04:01:46PM +0200, Thierry Reding wrote:
-> > On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
-> > > From: Fenglin Wu <fenglinw@codeaurora.org>
-> > > 
-> > > Normally, PWM channel has fixed output until software request to change
-> > > its settings. There are some PWM devices which their outputs could be
-> > > changed autonomously according to a predefined pattern programmed in
-> > > hardware. Add pwm_output_type enum type to identify these two different
-> > > PWM types and add relevant helper functions to set and get PWM output
-> > > types and pattern.
-> > > 
-> > > Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
-> > > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/pwm/core.c  | 26 ++++++++++++++++++++
-> > >  drivers/pwm/sysfs.c | 50 ++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pwm.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 146 insertions(+)
-> > 
-> > This doesn't seem right to me. Are you describing a PWM pin that's
-> > actually driven in GPIO mode? We usually configure that using pinctrl.
-> > 
-> > Thierry
-> 
-> Sorry, let me clarify.
-> 
-> Some Qualcomm PMICs have a PWM block called the Light Pulse Generator (LPG).
-> This block allows for the generation of a HW-controlled PWM "pattern", i.e. a
-> sequential altering of duty cycle, in addition to the normal PWM "fixed" duty
-> cycle operation, which is what the framework does currently. This pattern is
-> user-configurable in the form of a look-up table in the devicetree. The LPG's
-> registers have to be configured with the data in the look up table in order to
-> start the generation of the pattern. An example of a pattern is the "breath"
-> pattern, which simply ramps up the duty cycle and then ramps it down.
+This series sends the vGPU display refresh events to user land. A vGPU
+display IRQ is proposed to notify user space with all the display
+updates events.  With this IRQ supported by vendor driver, user space
+can stop the display update timer and fully depend on getting the
+notification if an update is needed.
 
-I'll try to describe it in my words to check if I got it right: So the
-mode you want to add needs a sequence of PWM states and the hardware is
-expected to apply them in turn, each for a configurable count of
-periods. If I understand this right, this is expected to be cyclic?
+How does gvt-g provide the vGPU display refresh IRQ covering all the
+display update events?
 
-> This "pattern" mode is what has been defined as PWM_OUTPUT_MODULATED in this
-> patch. I see that the use of the term "modulated" is misleading - a more
-> accurate term would be PWM_OUTPUT_PATTERN perhaps.
+Instead of delivering page flip events only or vblank events only, we
+choose to combine two of them, i.e. post display refresh event at
+vblanks and skip some of them when no page flip happens. Vblanks as
+upper bound are safe and skipping no-page-flip vblanks guarantees both
+trivial performance impacts and good user experience without screen
+tearing. Plus, we have the mask/unmask mechansim providing user space
+flexibility to switch between event-notified refresh and classic
+timer-based refresh.
 
-Not sure "pattern" is better. 
+In addition, there are some cases that guest app only uses one
+framebuffer for both drawing and display. In such case, guest OS won't
+do the plane page flip when the framebuffer is updated, thus the user
+land won't be notified about the updated framebuffer. Hence, in single
+framebuffer case, we apply a heuristic to determine whether it is the
+case or not. If it is, notify user land when each vblank event
+triggers.
 
-The PWM on the newer imx SoCs (using the imx27 driver) has a FIFO with
-length 4 that allows to program changing settings. Only the duty cycle
-can be modified and as repeat count only 1, 2, 4 and 8 are available. I
-assume the FIFO can be fed by the dma engine.
+v6:
+- Add more description to VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ and
+  VFIO_IRQ_INFO_CAP_DISPLAY. (Alex & Gerd)
+- Irq capability index starts from 1
+v5:
+- Introduce a vGPU display irq cap which can notify user space with
+  both primary and cursor plane update events through one eventfd. (Gerd & Alex)
+v4:
+- Deliver page flip event and single framebuffer refresh event bounded 
+by display vblanks. (Kechen)
+v3:
+- Deliver display vblank event instead of page flip event. (Zhenyu)
+v2:
+- Use VFIO irq chain to get eventfds from userspace instead of adding
+a new ABI. (Alex)
+v1:
+- https://patchwork.kernel.org/cover/10962341/
 
-Note I only know this feature from reading the reference manual and
-never used it.
+Kechen Lu (2):
+  drm/i915/gvt: Deliver async primary plane page flip events at vblank
+  drm/i915/gvt: Add cursor plane reg update trap emulation handler
 
-> This patch merely adds framework support to differentiate between the "fixed"
-> and "pattern" modes of operation. Actions such as configuring the LPG with the
-> devicetree pattern and setting it up for generating the pattern are performed
-> in the driver only if the output type is read as "pattern" and not otherwise.
+Tina Zhang (4):
+  vfio: Define device specific irq type capability
+  vfio: Introduce vGPU display irq type
+  drm/i915/gvt: Register vGPU display event irq
+  drm/i915/gvt: Deliver vGPU refresh event to userspace
 
-Up to now I'm not convinced that this extension is a good one that can
-be supported by several PWM implementations. I'd say we should collect
-first some details about different implementations and what these could
-implement to get a picture what kind of API is sensible.
-
-Best regards
-Uwe
+ drivers/gpu/drm/i915/gvt/cmd_parser.c |   6 +-
+ drivers/gpu/drm/i915/gvt/display.c    |  47 +++++-
+ drivers/gpu/drm/i915/gvt/display.h    |   3 +
+ drivers/gpu/drm/i915/gvt/gvt.h        |   7 +
+ drivers/gpu/drm/i915/gvt/handlers.c   |  32 +++-
+ drivers/gpu/drm/i915/gvt/hypercall.h  |   1 +
+ drivers/gpu/drm/i915/gvt/interrupt.c  |   7 +
+ drivers/gpu/drm/i915/gvt/interrupt.h  |   3 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c      | 230 +++++++++++++++++++++++++-
+ drivers/gpu/drm/i915/gvt/mpt.h        |  17 ++
+ include/uapi/linux/vfio.h             |  57 ++++++-
+ 11 files changed, 391 insertions(+), 19 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
+
