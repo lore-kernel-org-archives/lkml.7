@@ -6,88 +6,95 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD4DC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CA4C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65934214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F411214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502861AbfIXHif (ORCPT
+        id S2502930AbfIXHjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:38:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38148 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388489AbfIXHif (ORCPT
+        Tue, 24 Sep 2019 03:39:51 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41414 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2438384AbfIXHjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:38:35 -0400
-Received: from [185.81.136.22] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iCfOv-0004Up-Tc; Tue, 24 Sep 2019 07:38:22 +0000
-Date:   Tue, 24 Sep 2019 09:38:18 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: For review: pidfd_open(2) manual page
-Message-ID: <20190924073817.zb7vr5he4wbibl7j@wittgenstein>
-References: <90399dee-53d8-a82c-3871-9ec8f94601ce@gmail.com>
- <87tv939td6.fsf@mid.deneb.enyo.de>
- <63566f1f-667d-50ca-ae85-784924d09af4@gmail.com>
- <874l12924w.fsf@mid.deneb.enyo.de>
+        Tue, 24 Sep 2019 03:39:51 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A37D343D63A;
+        Tue, 24 Sep 2019 17:39:41 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iCfQC-0000C1-Fo; Tue, 24 Sep 2019 17:39:40 +1000
+Date:   Tue, 24 Sep 2019 17:39:40 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+Message-ID: <20190924073940.GM6636@dread.disaster.area>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874l12924w.fsf@mid.deneb.enyo.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=7-415B0cAAAA:8 a=wSS0DcxVZBN270Py4OYA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:41:19PM +0200, Florian Weimer wrote:
-> * Michael Kerrisk:
+On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
+> On 23/09/2019 17.52, Tejun Heo wrote:
+> > Hello, Konstantin.
+> > 
+> > On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
+> > > With vm.dirty_write_behind 1 or 2 files are written even faster and
+> > 
+> > Is the faster speed reproducible?  I don't quite understand why this
+> > would be.
 > 
-> >>>        static
-> >>>        int pidfd_open(pid_t pid, unsigned int flags)
-> >>>        {
-> >>>            return syscall(__NR_pidfd_open, pid, flags);
-> >>>        }
-> >> 
-> >> Please call this function something else (not pidfd_open), so that the
-> >> example continues to work if glibc provides the system call wrapper.
-> >
-> > I figured that if the syscall does get added to glibc, then I would
-> > modify the example. In the meantime, this does seem the most natural
-> > way of doing things, since the example then uses the real syscall
-> > name as it would be used if there were a wrapper function.
-> 
-> The problem is that programs do this as well, so they fail to build
-> once they are built on a newer glibc version.
-> 
-> > But, this leads to the question: what do you think the likelihood
-> > is that this system call will land in glibc?
-> 
-> Quite likely.  It's easy enough to document, there are no P&C issues,
-> and it doesn't need any new types.
+> Writing to disk simply starts earlier.
 
-My previous mail probably didn't make it so here it is again: I think
-especially with the recently established glibc consensus to provide
-wrappers for all new system calls (with some sensible exceptions) I'd
-expect this to be the case.
+Stupid question: how is this any different to simply winding down
+our dirty writeback and throttling thresholds like so:
 
-> 
-> pidfd_send_signal is slightly more difficult because we probably need
-> to add rt_sigqueueinfo first, for consistency.
+# echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
 
-Oh, huh. Somehow I thought we already provide that.
+to start background writeback when there's 100MB of dirty pages in
+memory, and then:
 
-Christian
+# echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
+
+So that writers are directly throttled at 200MB of dirty pages in
+memory?
+
+This effectively gives us global writebehind behaviour with a
+100-200MB cache write burst for initial writes.
+
+ANd, really such strict writebehind behaviour is going to cause all
+sorts of unintended problesm with filesystems because there will be
+adverse interactions with delayed allocation. We need a substantial
+amount of dirty data to be cached for writeback for fragmentation
+minimisation algorithms to be able to do their job....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
