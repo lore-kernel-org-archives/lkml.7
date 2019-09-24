@@ -2,374 +2,174 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC95C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F55C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C99D214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96CB20820
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cYW+eVxd"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Je2EIT27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503831AbfIXBOR (ORCPT
+        id S2503844AbfIXBPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 21:14:17 -0400
-Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:60484
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Mon, 23 Sep 2019 21:15:07 -0400
+Received: from mail-eopbgr800092.outbound.protection.outlook.com ([40.107.80.92]:22448
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2503817AbfIXBOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 21:14:15 -0400
+        id S2392489AbfIXBPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 21:15:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cpg7tXdhn30cDDIBqTep5DKIl7xFPn9y+frV6bf6eJojp8phYy42992gMvGFVN+jVklhQ29v1xqwHLJOHnPEM4aCkma57AiFELot3kRIQh+B/QuKk36kBQDw52HLt51CRf74iV4YULEBRmvbMIoaKHKfhmARpBXQOSvXfs6zou2zXOoJpliHnXnDBSxPCrz0Cp3swir/HdZhX/I77MFh6zC3VphuYq9DFIs0DkEuIj+LoI1aG8oaEnKNYyC4ZFuMRDAhfYIoAdn6GtGQuvhjieLTal2a25tlGKhD9iYbKWsfpec7up+dMvK7LnfeH1+fcO7cQHi/j8URWB/Hct0olQ==
+ b=HwcmIFV/G679OXGXXo6yRdaAHCa5AHNYHyArV6rD238q9MMfYfsGrH3Wy/4LmN/F7q9A+NDCk5x4CbxiYRuFsoNBWJpPqqQ7ZRTOaiONIkhWgyd9e0DXYx/kNRSvGEQlfBtrTeGMsAiAfUDfTiwHD4bR9gyezP4bOOWODtTAopfrLjnCMZT5O2y4SlpTrQKVaxB4PjNy4QyNW/yaDBWR1v6ZXNZtOuTa2ctCUmlo+KYP88WHyp0A3oaXC95p1pmZAs16S6/jnxx2MFQR6BtQ7afZxZl+XaKvY6ukyXVJYeXQJdVV0xqVp63+fs/phBPNlBNo9mp9TcQbVTuf+T9zuQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V8XjT9o7r7Sq2ULh2xbE9P2eEy0U/Sz1Vn7STkldcMo=;
- b=MtJmleP59cXKJm4c8qLAuE80KlbX2IsxTrOZvZKhCLXeRWSuN7b3KmqeKRZ0NEYbBRvf0Qk1jcXS8KBqdu5YVZoHPUSTHGQQ2NLygql1Fvtl/QXe1bpkrkgBC6aZGrUQVZoTGpzace+sDb7+OMF3fP6nfkXK3vhD4BKhsVLv72qP9/9iW78yyexKmQJY6BbcjcPLC/2DpqoIcXKoRqyeijDAaL+D8p4ehRKw6XzXbLEsKWwLMR2FgwNUDzoUg7MUO/vXRxUdohw7RVa+0KAJOoHeQuRwhhO6PJmz0QhJP7Kog6EzlAc/x6jsSVIxEYEVvYfZjovk3btnKyU4esY3BQ==
+ bh=+NMbgId/Qg39Oqk8AGufYIZLQAftnBTQL3CqLfWr97g=;
+ b=TK5IOT+sg/dlnAOISVtJoofiETM7SMfUtNuOoaz0m89A9A/YZKG/bFTF8GZieBjd0+867bU5vAk3DY4ens4ZN8k/K8Ir4f3yue5fYqBOjLARvGqI2uJ2vkChPftPXN5xf2tlkFcS8C7l7phUx75Qn5a/YyheODe+2nncI78wqNqKbzIp8CRm6iWNE2DBmJOXdGLzghi36yQr4gTDOuS5UEafRtoNVIlV2Pgz2+gcZT+fMsjCclliM5cS+zWMHrwqDZLFuxXQyIzlmOLX2/x+Lk5PxTPMP0I25Qhqu6sB+WO7c2AyDUidAntpTexvTjWnyAFQJslG90JtCL10Z95OQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V8XjT9o7r7Sq2ULh2xbE9P2eEy0U/Sz1Vn7STkldcMo=;
- b=cYW+eVxdWwjg6nI6y678xkrk1u7KVHjq4CqlzHA5z6ZZhzzUq2OvG5lEeZXC299a2B/DYHmwVt5zqpvY2/hdn9+k4CuFMlw9YnDB68asXmgweTa6o6TI1hjRmZcMVGQE/u5/sVjveEJIc9j5zuZhHmv/E3gVzc0VuzfwlL6FaoM=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5396.eurprd04.prod.outlook.com (20.178.113.213) with Microsoft SMTP
+ bh=+NMbgId/Qg39Oqk8AGufYIZLQAftnBTQL3CqLfWr97g=;
+ b=Je2EIT27i9XqMHaoGZOvMoIiox4j+qSIhINuYRLYVXLiQiCOvMqWmwXN4O4b1m1luTNmbRPav/33023HfESJCFSpPd2o9DPjbtA6MCCF4mMudJcDl+YLb3IYmlTvg+NP2DQSDV9bmdQoG/2myRRCHezJf7Rae58ygFLbO52bxl0=
+Received: from CY4PR21MB0741.namprd21.prod.outlook.com (10.173.189.7) by
+ CY4PR21MB0824.namprd21.prod.outlook.com (10.173.192.10) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 01:14:11 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::6ca2:ec08:2b37:8ab8]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::6ca2:ec08:2b37:8ab8%6]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 01:14:11 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V8 2/2] mailbox: introduce ARM SMC based mailbox
-Thread-Topic: [PATCH V8 2/2] mailbox: introduce ARM SMC based mailbox
-Thread-Index: AQHVcnVfRZj6+kc000W2JZMWqMWPIQ==
-Date:   Tue, 24 Sep 2019 01:14:11 +0000
-Message-ID: <1569287538-10854-3-git-send-email-peng.fan@nxp.com>
-References: <1569287538-10854-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1569287538-10854-1-git-send-email-peng.fan@nxp.com>
+ 15.20.2327.4; Tue, 24 Sep 2019 01:14:24 +0000
+Received: from CY4PR21MB0741.namprd21.prod.outlook.com
+ ([fe80::c8f4:597b:9f3a:9fd]) by CY4PR21MB0741.namprd21.prod.outlook.com
+ ([fe80::c8f4:597b:9f3a:9fd%2]) with mapi id 15.20.2327.004; Tue, 24 Sep 2019
+ 01:14:23 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Long Li <longli@microsoft.com>, Sasha Levin <sashal@kernel.org>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v4] storvsc: setup 1:1 mapping between hardware queue and
+ CPU queue
+Thread-Topic: [Patch v4] storvsc: setup 1:1 mapping between hardware queue and
+ CPU queue
+Thread-Index: AQHVZNfzh3iwmMSVZkCYZWyrh5uiJ6cfE/gAgAAXvICAGvUAAA==
+Date:   Tue, 24 Sep 2019 01:14:23 +0000
+Message-ID: <CY4PR21MB0741F09608817762DC2CB954CE840@CY4PR21MB0741.namprd21.prod.outlook.com>
+References: <1567790660-48142-1-git-send-email-longli@linuxonhyperv.com>
+ <20190906200820.GE1528@sasha-vm>
+ <CY4PR21MB0741A256EEF9D8DBAF50ED03CEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
+In-Reply-To: <CY4PR21MB0741A256EEF9D8DBAF50ED03CEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0P153CA0001.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:18::13) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:a:ede4:db5c:c6fe:798]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5da7d46-5600-4fb1-74d1-08d7408c81ba
+x-ms-office365-filtering-correlation-id: 5b65a1d9-1585-47a5-8120-08d7408c8956
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5396;
-x-ms-traffictypediagnostic: AM0PR04MB5396:|AM0PR04MB5396:
-x-ms-exchange-purlcount: 1
+x-ms-traffictypediagnostic: CY4PR21MB0824:|CY4PR21MB0824:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5396F71AC8E5AECD96A6F4D588840@AM0PR04MB5396.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <CY4PR21MB0824AA3A4BE1E3DA82EF96B6CE840@CY4PR21MB0824.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(189003)(199004)(66066001)(6436002)(36756003)(478600001)(2201001)(316002)(14454004)(966005)(305945005)(66946007)(26005)(86362001)(71200400001)(66446008)(64756008)(66476007)(71190400001)(6116002)(3846002)(256004)(99286004)(6306002)(386003)(66556008)(486006)(6512007)(186003)(76176011)(6486002)(2501003)(6506007)(2906002)(4326008)(446003)(2616005)(102836004)(8676002)(54906003)(11346002)(110136005)(8936002)(52116002)(81166006)(50226002)(5660300002)(81156014)(44832011)(15650500001)(7736002)(25786009)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5396;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(199004)(54534003)(189003)(6116002)(478600001)(305945005)(229853002)(6506007)(8936002)(25786009)(14454004)(86362001)(9686003)(55016002)(22452003)(2906002)(2501003)(256004)(66556008)(1511001)(81166006)(66476007)(64756008)(5660300002)(81156014)(66446008)(186003)(316002)(8676002)(10290500003)(66946007)(10090500001)(76176011)(99286004)(76116006)(4326008)(110136005)(8990500004)(71190400001)(6436002)(46003)(71200400001)(33656002)(102836004)(54906003)(7696005)(476003)(446003)(11346002)(6246003)(486006)(74316002)(52536014)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0824;H:CY4PR21MB0741.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RZZ86Sw9vutuD9gkPChhtYFWLEWKrgM03zPTuCX3x8h+ou/uoQtCQFPoWkyaE8R29XH9L0h2IabVwXdDCf/gzAlkmpb2ZMAXueyXh2mJsr5Hx/5MwNZWK9paectI4Yl1Per2wImY0jqejoQx2pZVcQpz03XnfNVnx2OmX5iBTmHwhZwmRUB795vOMKicKDCJ5jhrHaGm/Mdvjiq6vuORaYBgGQWmweSTH2tyba7zcI8xv7k1ec323+LGUGEPIsFUJw1uwNLWQBtAdEgsHrzPvE80IOm/i03ho0bYVGiOiCkV+96COL9ORq84CtxXK+PT2xvYgjI61rHTuyRedu45O5QF3DXM1A1us7pY2f19ZBYdu0cPPPWyzYvvqGno6j0pwOv+4l5HokqySARI1Gw0bRTzg/xJ9vC9WcdZJ+vTkOc=
-Content-Type: text/plain; charset="iso-8859-1"
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aKUBe5w0flSHmAHKhAqbOftZtBJ7L5azEKB7N/ppWeQvuuylLP+5g0n6UFmGMsHK5RwvYzqVV9w+BFo/ags4x7MHylCJeBPuMYuv04ucCQZA/kAI0iBmzcI1e1K2Z52K6E6m39jnL5IO9Lcx5LoDQKL8+4YDnRo+Z/B01O5J5335SBWa9zq9Ec36zaz5PSlsv8/c/51DogdeIOrpPXtjYKSb+bg3Acg+6BGoj9o2hVm+/nX16zhU4kgrqXNgI1s6VFNmtpNoSbLEsWFs2Mcf1igUO1S/VBjQPLwAatza7XkJ1VtBSvYiJDOdSDOaEz/xE1GVCOu+FDOS+7v+w6y83yXq0n71Q+KyQSvN/tFNBf1ujUNuSMifhT42WxbkeYLNLbhRi5P/u+wGi8XgeJHf3zhvWSTBYiBBoaNRJ9P3KyA=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5da7d46-5600-4fb1-74d1-08d7408c81ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 01:14:11.5362
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b65a1d9-1585-47a5-8120-08d7408c8956
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 01:14:23.8532
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HsHclts8+yolN1BOhyXDQcUnfrUhFiQmq88+vccClm/90pAhCA168tuBfPPJLfKY3GLNvFETRzQIQBKPJayVkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5396
+X-MS-Exchange-CrossTenant-userprincipalname: MTPK4bAE5buBRLtLmONJTtmlORQ4kn/dv2UTknOwjevsQRkwvByrlexgy9Bdr0pLHUKThhmcSQU8b50EBqdkvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0824
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+>Subject: RE: [Patch v4] storvsc: setup 1:1 mapping between hardware queue
+>and CPU queue
+>
+>>Subject: Re: [Patch v4] storvsc: setup 1:1 mapping between hardware
+>>queue and CPU queue
+>>
+>>On Fri, Sep 06, 2019 at 10:24:20AM -0700, longli@linuxonhyperv.com wrote:
+>>>From: Long Li <longli@microsoft.com>
+>>>
+>>>storvsc doesn't use a dedicated hardware queue for a given CPU queue.
+>>>When issuing I/O, it selects returning CPU (hardware queue)
+>>>dynamically based on vmbus channel usage across all channels.
+>>>
+>>>This patch advertises num_present_cpus() as number of hardware queues.
+>>>This will have upper layer setup 1:1 mapping between hardware queue
+>>>and CPU queue and avoid unnecessary locking when issuing I/O.
+>>>
+>>>Signed-off-by: Long Li <longli@microsoft.com>
 
-This mailbox driver implements a mailbox which signals transmitted data
-via an ARM smc (secure monitor call) instruction. The mailbox receiver
-is implemented in firmware and can synchronously return data when it
-returns execution to the non-secure world again.
-An asynchronous receive path is not implemented.
-This allows the usage of a mailbox to trigger firmware actions on SoCs
-which either don't have a separate management processor or on which such
-a core is not available. A user of this mailbox could be the SCP
-interface.
+Hi Martin,
 
-Modified from Andre Przywara's v2 patch
-https://lore.kernel.org/patchwork/patch/812999/
+I have addressed all comments on this patch. Can you merge it to SCSI?
 
-Cc: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/mailbox/Kconfig                |   7 ++
- drivers/mailbox/Makefile               |   2 +
- drivers/mailbox/arm-smc-mailbox.c      | 168 +++++++++++++++++++++++++++++=
-++++
- include/linux/mailbox/arm-smccc-mbox.h |  22 +++++
- 4 files changed, 199 insertions(+)
- create mode 100644 drivers/mailbox/arm-smc-mailbox.c
- create mode 100644 include/linux/mailbox/arm-smccc-mbox.h
+If there is anything else I need to change, please let me know.
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ab4eb750bbdd..7707ee26251a 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -16,6 +16,13 @@ config ARM_MHU
- 	  The controller has 3 mailbox channels, the last of which can be
- 	  used in Secure mode only.
-=20
-+config ARM_SMC_MBOX
-+	tristate "Generic ARM smc mailbox"
-+	depends on OF && HAVE_ARM_SMCCC
-+	help
-+	  Generic mailbox driver which uses ARM smc calls to call into
-+	  firmware for triggering mailboxes.
-+
- config IMX_MBOX
- 	tristate "i.MX Mailbox"
- 	depends on ARCH_MXC || COMPILE_TEST
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c22fad6f696b..93918a84c91b 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
-=20
- obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
-=20
-+obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
-+
- obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
-=20
- obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D armada-37xx-rwtm-mailbox.o
-diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-ma=
-ilbox.c
-new file mode 100644
-index 000000000000..664c8b4a0ed0
---- /dev/null
-+++ b/drivers/mailbox/arm-smc-mailbox.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2016,2017 ARM Ltd.
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/interrupt.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/mailbox/arm-smccc-mbox.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+struct arm_smc_chan_data {
-+	unsigned int function_id;
-+};
-+
-+typedef unsigned long (smc_mbox_fn)(unsigned int, unsigned long,
-+				    unsigned long, unsigned long,
-+				    unsigned long, unsigned long,
-+				    unsigned long);
-+static smc_mbox_fn *invoke_smc_mbox_fn;
-+
-+static int arm_smc_send_data(struct mbox_chan *link, void *data)
-+{
-+	struct arm_smc_chan_data *chan_data =3D link->con_priv;
-+	struct arm_smccc_mbox_cmd *cmd =3D data;
-+	unsigned long ret;
-+	u32 function_id;
-+
-+	function_id =3D chan_data->function_id;
-+	if (!function_id)
-+		function_id =3D cmd->function_id;
-+
-+	if (ARM_SMCCC_IS_64(function_id)) {
-+		ret =3D invoke_smc_mbox_fn(function_id, cmd->args_smccc64[0],
-+					 cmd->args_smccc64[1],
-+					 cmd->args_smccc64[2],
-+					 cmd->args_smccc64[3],
-+					 cmd->args_smccc64[4],
-+					 cmd->args_smccc64[5]);
-+	} else {
-+		ret =3D invoke_smc_mbox_fn(function_id, cmd->args_smccc32[0],
-+					 cmd->args_smccc32[1],
-+					 cmd->args_smccc32[2],
-+					 cmd->args_smccc32[3],
-+					 cmd->args_smccc32[4],
-+					 cmd->args_smccc32[5]);
-+	}
-+
-+	mbox_chan_received_data(link, (void *)ret);
-+
-+	return 0;
-+}
-+
-+static unsigned long __invoke_fn_hvc(unsigned int function_id,
-+				     unsigned long arg0, unsigned long arg1,
-+				     unsigned long arg2, unsigned long arg3,
-+				     unsigned long arg4, unsigned long arg5)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
-+		      arg5, 0, &res);
-+	return res.a0;
-+}
-+
-+static unsigned long __invoke_fn_smc(unsigned int function_id,
-+				     unsigned long arg0, unsigned long arg1,
-+				     unsigned long arg2, unsigned long arg3,
-+				     unsigned long arg4, unsigned long arg5)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
-+		      arg5, 0, &res);
-+	return res.a0;
-+}
-+
-+static const struct mbox_chan_ops arm_smc_mbox_chan_ops =3D {
-+	.send_data	=3D arm_smc_send_data,
-+};
-+
-+static struct mbox_chan *
-+arm_smc_mbox_of_xlate(struct mbox_controller *mbox,
-+		      const struct of_phandle_args *sp)
-+{
-+	return mbox->chans;
-+}
-+
-+static int arm_smc_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct mbox_controller *mbox;
-+	struct arm_smc_chan_data *chan_data;
-+	int ret;
-+	u32 function_id =3D 0;
-+
-+	if (of_device_is_compatible(dev->of_node, "arm,smc-mbox"))
-+		invoke_smc_mbox_fn =3D __invoke_fn_smc;
-+	else
-+		invoke_smc_mbox_fn =3D __invoke_fn_hvc;
-+
-+	mbox =3D devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->of_xlate =3D arm_smc_mbox_of_xlate;
-+	mbox->num_chans =3D 1;
-+	mbox->chans =3D devm_kzalloc(dev, sizeof(*mbox->chans), GFP_KERNEL);
-+	if (!mbox->chans)
-+		return -ENOMEM;
-+
-+	chan_data =3D devm_kzalloc(dev, sizeof(*chan_data), GFP_KERNEL);
-+	if (!chan_data)
-+		return -ENOMEM;
-+
-+	of_property_read_u32(dev->of_node, "arm,func-id", &function_id);
-+	chan_data->function_id =3D function_id;
-+
-+	mbox->chans->con_priv =3D chan_data;
-+
-+	mbox->txdone_poll =3D false;
-+	mbox->txdone_irq =3D false;
-+	mbox->ops =3D &arm_smc_mbox_chan_ops;
-+	mbox->dev =3D dev;
-+
-+	platform_set_drvdata(pdev, mbox);
-+
-+	ret =3D devm_mbox_controller_register(dev, mbox);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(dev, "ARM SMC mailbox enabled.\n");
-+
-+	return ret;
-+}
-+
-+static int arm_smc_mbox_remove(struct platform_device *pdev)
-+{
-+	struct mbox_controller *mbox =3D platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(mbox);
-+	return 0;
-+}
-+
-+static const struct of_device_id arm_smc_mbox_of_match[] =3D {
-+	{ .compatible =3D "arm,smc-mbox", },
-+	{ .compatible =3D "arm,hvc-mbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
-+
-+static struct platform_driver arm_smc_mbox_driver =3D {
-+	.driver =3D {
-+		.name =3D "arm-smc-mbox",
-+		.of_match_table =3D arm_smc_mbox_of_match,
-+	},
-+	.probe		=3D arm_smc_mbox_probe,
-+	.remove		=3D arm_smc_mbox_remove,
-+};
-+module_platform_driver(arm_smc_mbox_driver);
-+
-+MODULE_AUTHOR("Peng Fan <peng.fan@nxp.com>");
-+MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mailbox/arm-smccc-mbox.h b/include/linux/mailbox=
-/arm-smccc-mbox.h
-new file mode 100644
-index 000000000000..140045644d82
---- /dev/null
-+++ b/include/linux/mailbox/arm-smccc-mbox.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_ARM_SMCCC_MBOX_H_
-+#define _LINUX_ARM_SMCCC_MBOX_H_
-+
-+/**
-+ * struct arm_smccc_mbox_cmd - ARM SMCCC message structure
-+ * @function_id:	function id passed from client, If mbox
-+ *			DT has arm,func-id property, the driver will use
-+ *			that one.
-+ * @args_smccc32/64:	actual usage of registers is up to the protocol
-+ *			(within the SMCCC limits)
-+ */
-+struct arm_smccc_mbox_cmd {
-+	unsigned int function_id;
-+	union {
-+		u32 args_smccc32[6];
-+		u64 args_smccc64[6];
-+	};
-+};
-+
-+#endif /* _LINUX_ARM_SMCCC_MBOX_H_ */
---=20
-2.16.4
+Thanks
 
+Long
+
+
+>>>---
+>>>
+>>>Changes:
+>>>v2: rely on default upper layer function to map queues. (suggested by
+>>>Ming Lei
+>>><tom.leiming@gmail.com>)
+>>>v3: use num_present_cpus() instead of num_online_cpus(). Hyper-v
+>>>doesn't support hot-add CPUs. (suggested by Michael Kelley
+>>><mikelley@microsoft.com>)
+>>>v4: move change logs to after Signed-of-by
+>>>
+>>> drivers/scsi/storvsc_drv.c | 3 +--
+>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>>diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+>>>index b89269120a2d..cf987712041a 100644
+>>>--- a/drivers/scsi/storvsc_drv.c
+>>>+++ b/drivers/scsi/storvsc_drv.c
+>>>@@ -1836,8 +1836,7 @@ static int storvsc_probe(struct hv_device *device,
+>>> 	/*
+>>> 	 * Set the number of HW queues we are supporting.
+>>> 	 */
+>>>-	if (stor_device->num_sc !=3D 0)
+>>>-		host->nr_hw_queues =3D stor_device->num_sc + 1;
+>>>+	host->nr_hw_queues =3D num_present_cpus();
+>>
+>>Just looking at the change notes for v3: why isn't this
+>>num_active_cpus() then? One can still isolate CPUs on hyper-v, no?
+>
+>The isolated CPU can be made online at run time. For example, even
+>maxcpus=3Dx is put on the boot line, individual CPUs can still be made
+>online/offline.
+>
+>>
+>>--
+>>Thanks,
+>>Sasha
