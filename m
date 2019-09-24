@@ -2,98 +2,120 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C75C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89121C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C7A21928
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O8XMN3kd";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O8XMN3kd"
+	by mail.kernel.org (Postfix) with ESMTP id 569C7214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569362375;
+	bh=7EnBQLGJXbJ0krx6sf9eAXMt0SpVcFYHvJ4Ffxc+GEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g0uVpass1k7Z+Fot0ZyVByn+Hwx2PRhFAt97frGvphRW5RhJncOQw8CIbAJDwO777
+	 G7usXJoeG7UZKo5BXREmk1UJ+WTj0h/XHo5CvUYXHSsYd0OovCTqndXOAgWuUEDZHM
+	 iN9LfsnJQAJlBfpO7baDzn32rDENXdh73WvyTmBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633596AbfIXV7b (ORCPT
+        id S2633613AbfIXV7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:59:31 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45924 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387723AbfIXV7b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:59:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B3C5D8EE175;
-        Tue, 24 Sep 2019 14:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1569362370;
-        bh=uW9yHyVMd+iv3gWkWuuWS6RrXxoBB+KwpZEHrxJLrfU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=O8XMN3kdXIPTbxUwCC+yvDgCK6kxoQ1AVgYkJ3sHY0B5I/tYLPbKdY8Zk15WXAxpf
-         nwOM1LWs7pDqIvECsh37FfhhcQF2MB6rU0bgRPJ88mgbZl+QozFGBn/85UNOQgEsRV
-         GpZpqSAngHQDlDv5BxxAWcKCvDenp3nYP/wIPshs=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yKFYae1JZIO6; Tue, 24 Sep 2019 14:59:30 -0700 (PDT)
-Received: from [192.168.101.242] (unknown [24.246.103.29])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 24 Sep 2019 17:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387723AbfIXV7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 17:59:33 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E1F5E8EE12C;
-        Tue, 24 Sep 2019 14:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1569362370;
-        bh=uW9yHyVMd+iv3gWkWuuWS6RrXxoBB+KwpZEHrxJLrfU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=O8XMN3kdXIPTbxUwCC+yvDgCK6kxoQ1AVgYkJ3sHY0B5I/tYLPbKdY8Zk15WXAxpf
-         nwOM1LWs7pDqIvECsh37FfhhcQF2MB6rU0bgRPJ88mgbZl+QozFGBn/85UNOQgEsRV
-         GpZpqSAngHQDlDv5BxxAWcKCvDenp3nYP/wIPshs=
-Message-ID: <1569362368.5364.19.camel@HansenPartnership.com>
-Subject: Re: allow larger than require DMA masks
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Sven Schnelle <svens@stackframe.org>, Helge Deller <deller@gmx.de>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 24 Sep 2019 17:59:28 -0400
-In-Reply-To: <20190924212554.GA31357@lst.de>
-References: <20190215144559.8777-1-hch@lst.de>
-         <20190923211415.GA1875@stackframe.org>
-         <1569286782.3657.29.camel@HansenPartnership.com>
-         <20190924212554.GA31357@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6156D217D7;
+        Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569362372;
+        bh=7EnBQLGJXbJ0krx6sf9eAXMt0SpVcFYHvJ4Ffxc+GEI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZUjBfJ5y+ysHUqZVHvVQV6vmXEF5m5l7X/D3o8MMo6T+fnXCBe1Len91UdIVSmNm8
+         1+IgmCK2yWkyLXKdLfON0wTF2uVY6/Zj+z4CbqBQ8S1mTFhTzxJ4K+kIhlIbeitlp5
+         qXtcO6SJzhSJ74/8s14mN0YBxYms1LJJP0SwTimA=
+Received: by mail-qt1-f179.google.com with SMTP id x4so4100980qtq.8;
+        Tue, 24 Sep 2019 14:59:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAUSipfNLAs0r3iY98Oq51rlrlAyRzY6XaLme2e9ZLFqmU4bXOcs
+        y3XFqQogK86HIUelflV99P3yYhl0p6JxbjmCsw==
+X-Google-Smtp-Source: APXvYqxu7lx2ORNXYuD01RyoAdK8YY//zQYn3oJnMVZaPVMMDgXcioCqkbUXveNdRfpBkQzN/4OY/SjTncH5t1k8eUk=
+X-Received: by 2002:ac8:6982:: with SMTP id o2mr5274643qtq.143.1569362371529;
+ Tue, 24 Sep 2019 14:59:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 24 Sep 2019 16:59:20 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+Message-ID: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-24 at 23:25 +0200, Christoph Hellwig wrote:
-> On Mon, Sep 23, 2019 at 08:59:42PM -0400, James Bottomley wrote:
-> > > 	if (mask > ~0U)
-> > > »     »       return 0;
-> > > 
-> > > Removing the if() makes the DMA mapping work. It's almost
-> > > midnight here, so i won't look into that any further today. Does
-> > > anyone have an opinion on this behaviour? Otherwise i will look a
-> > > bit more into this in the next days.
-> > 
-> > The reason for the if was to kick the device into 32 bit
-> > descriptors, which are usually more efficient, especially with
-> > older dual descriptor format cards like we have on parisc systems.
-> 
-> These days we use the dma_get_required_mask API to query for that.
+On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi All,
+> this series tries to address one of the issues blocking us from
+> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> devices not represented in DT which sit behind a PCI bus fail to get the
+> bus' DMA addressing constraints.
+>
+> This is due to the fact that of_dma_configure() assumes it's receiving a
+> DT node representing the device being configured, as opposed to the PCIe
+> bridge node we currently pass. This causes the code to directly jump
+> into PCI's parent node when checking for 'dma-ranges' and misses
+> whatever was set there.
+>
+> To address this I create a new API in OF - inspired from Robin Murphys
+> original proposal[2] - which accepts a bus DT node as it's input in
+> order to configure a device's DMA constraints. The changes go deep into
+> of/address.c's implementation, as a device being having a DT node
+> assumption was pretty strong.
+>
+> On top of this work, I also cleaned up of_dma_configure() removing its
+> redundant arguments and creating an alternative function for the special cases
+> not applicable to either the above case or the default usage.
+>
+> IMO the resulting functions are more explicit. They will probably
+> surface some hacky usages that can be properly fixed as I show with the
+> DT fixes on the Layerscape platform.
+>
+> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> on a Seattle AMD board.
 
-It looks like sym53c8xx didn't get the memo.  On the other hand, I'm
-fairly certain it should be compiled in addressing mode zero on all
-parisc systems (since all the 64 bit ones have iommus), so I think we
-can take care of this ourselves.
+Humm, I've been working on this issue too. Looks similar though yours
+has a lot more churn and there's some other bugs I've found.
 
-> Svens patch looks right for how we are now using the DMA mask setting
-> API.
+Can you test out this branch[1]. I don't have any h/w needing this,
+but wrote a unittest and tested with modified QEMU.
 
-Agreed.
+Rob
 
-James
-
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
