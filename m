@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C23C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94CCC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F2E20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A9420872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343525;
-	bh=VuxlzBzhQeFjKHVvyyE52Ljx9pPrF9R8j1sj9Gw04SM=;
+	s=default; t=1569343530;
+	bh=vNJVuAcZSGd4JfMJeT1HcCWqm+jXlfUf9xrhXZuLZQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ew7Ona6EU9MRanR9RuxPButaZPZBpg+vdaqmKJetqqB5wVez6zveHeu6zz7dRkOvE
-	 p+XJpXSIr/m5KA8JANiy0kG2af+HP9vXzjeFqWK/x+dyN8IdzvIgco19GI6GCbJXQw
-	 j/KQs+S54xqNgNz0SnNO2JTuPRdK/KXuK4a6G5ew=
+	b=KDb3aYdsPAIvqVBcbB4CZcLysma9Lo7rxzhjRWFf3fec+Xad6/JB8Xv6eOaRYF80S
+	 HClcLCYXp+07F/lHMjRatkZL2jb/UpWR0W+9l+28NTeS3sVy++P2tCJupsbyF+6zi6
+	 Uh/qTON9gznsKA3r85AAcYYgutR7/c8sxpbBPXBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409965AbfIXQpY (ORCPT
+        id S2403904AbfIXQp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35076 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403932AbfIXQpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:45:22 -0400
+        id S2391453AbfIXQp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:45:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A563217D9;
-        Tue, 24 Sep 2019 16:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D7C20872;
+        Tue, 24 Sep 2019 16:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343521;
-        bh=VuxlzBzhQeFjKHVvyyE52Ljx9pPrF9R8j1sj9Gw04SM=;
+        s=default; t=1569343527;
+        bh=vNJVuAcZSGd4JfMJeT1HcCWqm+jXlfUf9xrhXZuLZQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VpXtM/Eb2ULCuG60PwBXRObwH08Oq9hyxkBi5DVEE9D10DJnnUqMsMHld4yOYjvG5
-         1/xx7M1k06GYJVr+o8PGaDdaHodnlfzmu+j6kljV+KVCHUz3QWWF4ANBlGW6MrSCKt
-         f6x6YDv0UHt2oVeVRWlERwjQI+YWQqpvPSDiJbzE=
+        b=2JjFmLxoRe5KEaa0ie6iqXLEP96e1UCQb06KieFOGezO+Bhiry1zpXeAn+ZipIsKv
+         kkTh5i5uUO+sPDXCLlTUbnDVDT0bTXMO2Mf4WOX5PeUy0bqyHnIbTB5CdmTBqDw0pM
+         koVR/22SpvFQPI7ywphHDwr4cGVHTIIfxKaDIb6A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Peng Fan <peng.fan@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 77/87] clk: imx: pll14xx: avoid glitch when set rate
-Date:   Tue, 24 Sep 2019 12:41:33 -0400
-Message-Id: <20190924164144.25591-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 78/87] clk: imx: clk-pll14xx: unbypass PLL by default
+Date:   Tue, 24 Sep 2019 12:41:34 -0400
+Message-Id: <20190924164144.25591-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -62,86 +62,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit dee1bc9c23cd41fe32549c0adbe6cb57cab02282 ]
+[ Upstream commit a9aa8306074d9519dd6e5fdf07240b01bac72e04 ]
 
-According to PLL1443XA and PLL1416X spec,
-"When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
-output unstable clock until lock time passes. PLL1416X/PLL1443XA may
-generate a glitch at FOUT."
+When registering the PLL, unbypass the PLL.
+The PLL has two bypass control bit, BYPASS and EXT_BYPASS.
+we will expose EXT_BYPASS to clk driver for mux usage, and keep
+BYPASS inside pll14xx usage. The PLL has a restriction that
+when M/P change, need to RESET/BYPASS pll to avoid glitch, so
+we could not expose BYPASS.
 
-So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
-In the end of set rate, BYPASS will be cleared.
-
-When prepare clock, also need to take care to avoid glitch. So
-we also follow Spec to set BYPASS before RESETB changed from 0 to 1.
-And add a check if the RESETB is already 0, directly return 0;
+To make it easy for clk driver usage, unbypass PLL which does
+not hurt current function.
 
 Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
 Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lkml.kernel.org/r/1568043491-20680-2-git-send-email-peng.fan@nxp.com
+Link: https://lkml.kernel.org/r/1568043491-20680-3-git-send-email-peng.fan@nxp.com
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-pll14xx.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/clk/imx/clk-pll14xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index b7213023b238f..656f48b002dd3 100644
+index 656f48b002dd3..7a815ec76aa5c 100644
 --- a/drivers/clk/imx/clk-pll14xx.c
 +++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw, unsigned long drate,
- 	tmp &= ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+@@ -368,6 +368,7 @@ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+ 	struct clk_pll14xx *pll;
+ 	struct clk *clk;
+ 	struct clk_init_data init;
++	u32 val;
  
-+	/* Enable BYPASS */
-+	tmp |= BYPASS_MASK;
-+	writel(tmp, pll->base);
-+
- 	div_val = (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -250,6 +254,10 @@ static int clk_pll1443x_set_rate(struct clk_hw *hw, unsigned long drate,
- 	tmp &= ~RST_MASK;
- 	writel_relaxed(tmp, pll->base);
+ 	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+ 	if (!pll)
+@@ -399,6 +400,10 @@ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+ 	pll->rate_table = pll_clk->rate_table;
+ 	pll->rate_count = pll_clk->rate_count;
  
-+	/* Enable BYPASS */
-+	tmp |= BYPASS_MASK;
-+	writel_relaxed(tmp, pll->base);
-+
- 	div_val = (rate->mdiv << MDIV_SHIFT) | (rate->pdiv << PDIV_SHIFT) |
- 		(rate->sdiv << SDIV_SHIFT);
- 	writel_relaxed(div_val, pll->base + 0x4);
-@@ -283,16 +291,28 @@ static int clk_pll14xx_prepare(struct clk_hw *hw)
- {
- 	struct clk_pll14xx *pll = to_clk_pll14xx(hw);
- 	u32 val;
-+	int ret;
- 
- 	/*
- 	 * RESETB = 1 from 0, PLL starts its normal
- 	 * operation after lock time
- 	 */
- 	val = readl_relaxed(pll->base + GNRL_CTL);
-+	if (val & RST_MASK)
-+		return 0;
-+	val |= BYPASS_MASK;
-+	writel_relaxed(val, pll->base + GNRL_CTL);
- 	val |= RST_MASK;
- 	writel_relaxed(val, pll->base + GNRL_CTL);
- 
--	return clk_pll14xx_wait_lock(pll);
-+	ret = clk_pll14xx_wait_lock(pll);
-+	if (ret)
-+		return ret;
-+
++	val = readl_relaxed(pll->base + GNRL_CTL);
 +	val &= ~BYPASS_MASK;
 +	writel_relaxed(val, pll->base + GNRL_CTL);
 +
-+	return 0;
- }
- 
- static int clk_pll14xx_is_prepared(struct clk_hw *hw)
+ 	clk = clk_register(NULL, &pll->hw);
+ 	if (IS_ERR(clk)) {
+ 		pr_err("%s: failed to register pll %s %lu\n",
 -- 
 2.20.1
 
