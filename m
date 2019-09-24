@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7B7C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C7FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3785A2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8631B2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344291;
-	bh=eSh8T2nSPy8y2TgRE1CffHRlokwH0nJvPtRMTdfQcbQ=;
+	s=default; t=1569344294;
+	bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRSPZy+h/qySdCJJIIvBDek11lxpSO39xp5Mk65IHZLDT6tsdkUYejyhn616QWKPN
-	 TOy+FcBNhNqxqKPZcD8uA0iT1PC6RL9m0O90VByn1wQAN3lE3pQDEYhdPOiYa5Oy45
-	 /rvvn7RLLGBzpECzztpVTzQlTwOL4icrm/AZiaQ0=
+	b=OhC9/qpS5d4Aw3xTQ1A0iTL7p6qJRi4ezAFOW9c7cPfLb9tlqD6WUY79EeWFf4IM6
+	 l7OBjrUDqbazbrYaEumFDgV7btomjtbaEWtQEVlEaTzrXaBJUjHAEmLvrwbDuncltH
+	 3JSMX/OXQO5dse8Cv/cY8KOJQHM7LOW/TRgM1grI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393357AbfIXQsR (ORCPT
+        id S2410447AbfIXQsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39838 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392140AbfIXQsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:14 -0400
+        id S2633345AbfIXQsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD17620673;
-        Tue, 24 Sep 2019 16:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B490921906;
+        Tue, 24 Sep 2019 16:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343693;
-        bh=eSh8T2nSPy8y2TgRE1CffHRlokwH0nJvPtRMTdfQcbQ=;
+        s=default; t=1569343682;
+        bh=ufQvx7ZNex7e9L1n3iz0qxl2DPV4jX3rgvJ6+P7qKWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkGFrO9W+o7/vum1LbPJHqItFCAbR1RSeEw0+Si3fXMOZYdwLsQHVeMSsTG/XB51W
-         ZVoFUsTUpp0D/+aCBrD2yGGcuHb0/BtuoRd2y2iFDjruj4lpeRZarujckeZmMwpja3
-         UYrs+jpE/f9AH10M1GEHeQI+rxOmY93iGwlSCKHg=
+        b=CsAV6YJ0eziUwMY8ZKN0mBoYFPzHMrgQVLWSVaTrTkKdyk+Kp30f78C8BG9M6CsmK
+         5RO2yeczRz4WwZFq8L7FxDQCDejEorcJeTn6hx2EIv3X04EOo1b7o8imBwFlQnjADL
+         JnN+oVZwjAQ0nlTRcqcfmgClE3x5OVfNUepuZBMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 57/70] mailbox: mediatek: cmdq: clear the event in cmdq initial flow
-Date:   Tue, 24 Sep 2019 12:45:36 -0400
-Message-Id: <20190924164549.27058-57-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 54/70] clk: qcom: gcc-sdm845: Use floor ops for sdcc clks
+Date:   Tue, 24 Sep 2019 12:45:33 -0400
+Message-Id: <20190924164549.27058-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,86 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 6058f11870b8e6d4f5cc7b591097c00bf69a000d ]
+[ Upstream commit 5e4b7e82d497580bc430576c4c9bce157dd72512 ]
 
-GCE hardware stored event information in own internal sysram,
-if the initial value in those sysram is not zero value
-it will cause a situation that gce can wait the event immediately
-after client ask gce to wait event but not really trigger the
-corresponding hardware.
+Some MMC cards fail to enumerate properly when inserted into an MMC slot
+on sdm845 devices. This is because the clk ops for qcom clks round the
+frequency up to the nearest rate instead of down to the nearest rate.
+For example, the MMC driver requests a frequency of 52MHz from
+clk_set_rate() but the qcom implementation for these clks rounds 52MHz
+up to the next supported frequency of 100MHz. The MMC driver could be
+modified to request clk rate ranges but for now we can fix this in the
+clk driver by changing the rounding policy for this clk to be round down
+instead of round up.
 
-In order to make sure that the wait event function is
-exactly correct, we need to clear the sysram value in
-cmdq initial flow.
-
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
-
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Cc: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lkml.kernel.org/r/20190830195142.103564-1-swboyd@chromium.org
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
- include/linux/mailbox/mtk-cmdq-mailbox.h | 3 +++
- include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/clk/qcom/gcc-sdm845.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 00d5219094e5d..48bba49139523 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -22,6 +22,7 @@
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index 7131dcf9b0603..95be125c3bddf 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -685,7 +685,7 @@ static struct clk_rcg2 gcc_sdcc2_apps_clk_src = {
+ 		.name = "gcc_sdcc2_apps_clk_src",
+ 		.parent_names = gcc_parent_names_10,
+ 		.num_parents = 5,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
  
- #define CMDQ_CURR_IRQ_STATUS		0x10
-+#define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
- #define CMDQ_THR_BASE			0x100
- #define CMDQ_THR_SIZE			0x80
-@@ -104,8 +105,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+@@ -709,7 +709,7 @@ static struct clk_rcg2 gcc_sdcc4_apps_clk_src = {
+ 		.name = "gcc_sdcc4_apps_clk_src",
+ 		.parent_names = gcc_parent_names_0,
+ 		.num_parents = 4,
+-		.ops = &clk_rcg2_ops,
++		.ops = &clk_rcg2_floor_ops,
+ 	},
+ };
  
- static void cmdq_init(struct cmdq *cmdq)
- {
-+	int i;
-+
- 	WARN_ON(clk_enable(cmdq->clock) < 0);
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-+	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-+		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
- 	clk_disable(cmdq->clock);
- }
- 
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index ccb73422c2fa2..e6f54ef6698b1 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -20,6 +20,9 @@
- #define CMDQ_WFE_WAIT			BIT(15)
- #define CMDQ_WFE_WAIT_VALUE		0x1
- 
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT			0x3ff
-+
- /*
-  * CMDQ_CODE_MASK:
-  *   set write mask
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 54ade13a9b157..4e8899972db4d 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -13,9 +13,6 @@
- 
- #define CMDQ_NO_TIMEOUT		0xffffffffu
- 
--/** cmdq event maximum */
--#define CMDQ_MAX_EVENT				0x3ff
--
- struct cmdq_pkt;
- 
- struct cmdq_client {
 -- 
 2.20.1
 
