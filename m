@@ -2,86 +2,99 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38288C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA7C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF6A214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C32E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395078AbfIXIcr (ORCPT
+        id S2439051AbfIXIds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:32:47 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37269 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390364AbfIXIcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:32:47 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id ACC5580BB1; Tue, 24 Sep 2019 10:32:30 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 10:32:44 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        gregkh@linuxfoundation.org, jslaby@suse.com
-Subject: [PATCH] tty_ldisc: simplify tty_ldisc_autoload initialization
-Message-ID: <20190924083244.GA4344@amd>
+        Tue, 24 Sep 2019 04:33:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55514 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390364AbfIXIdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:33:47 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0C7C0307D91F;
+        Tue, 24 Sep 2019 08:33:47 +0000 (UTC)
+Received: from krava (unknown [10.43.17.52])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5F2F960BFB;
+        Tue, 24 Sep 2019 08:33:43 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 10:33:42 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf@vger.kernel.org, songliubraving@fb.com, yhs@fb.com,
+        andriin@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, ast@fb.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH bpf-next 1/5] perf/core: Add PERF_FORMAT_LOST read_format
+Message-ID: <20190924083342.GA21640@krava>
+References: <20190917133056.5545-1-dxu@dxuuu.xyz>
+ <20190917133056.5545-2-dxu@dxuuu.xyz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190917133056.5545-2-dxu@dxuuu.xyz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 24 Sep 2019 08:33:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 06:30:52AM -0700, Daniel Xu wrote:
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+SNIP
 
-We have got existing macro to check for CONFIG option, use it.
+> +	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
+>  };
+>  
+>  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 0463c1151bae..ee08d3ed6299 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1715,6 +1715,9 @@ static void __perf_event_read_size(struct perf_event *event, int nr_siblings)
+>  	if (event->attr.read_format & PERF_FORMAT_ID)
+>  		entry += sizeof(u64);
+>  
+> +	if (event->attr.read_format & PERF_FORMAT_LOST)
+> +		entry += sizeof(u64);
+> +
+>  	if (event->attr.read_format & PERF_FORMAT_GROUP) {
+>  		nr += nr_siblings;
+>  		size += sizeof(u64);
+> @@ -4734,6 +4737,24 @@ u64 perf_event_read_value(struct perf_event *event, u64 *enabled, u64 *running)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_event_read_value);
+>  
+> +static struct pmu perf_kprobe;
+> +static u64 perf_event_lost(struct perf_event *event)
+> +{
+> +	struct ring_buffer *rb;
+> +	u64 lost = 0;
+> +
+> +	rcu_read_lock();
+> +	rb = rcu_dereference(event->rb);
+> +	if (likely(!!rb))
+> +		lost += local_read(&rb->lost);
+> +	rcu_read_unlock();
+> +
+> +	if (event->attr.type == perf_kprobe.type)
+> +		lost += perf_kprobe_missed(event);
 
-Signed-off-by: Pavel Machek <pavel@denx.de>
+not sure what was the peterz's suggestion, but here you are mixing
+ring buffer's lost count with kprobes missed count, seems wrong
 
-diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
-index 4c49f53..ec1f6a4 100644
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -156,12 +156,7 @@ static void put_ldops(struct tty_ldisc_ops *ldops)
-  *		takes tty_ldiscs_lock to guard against ldisc races
-  */
-=20
--#if defined(CONFIG_LDISC_AUTOLOAD)
--	#define INITIAL_AUTOLOAD_STATE	1
--#else
--	#define INITIAL_AUTOLOAD_STATE	0
--#endif
--static int tty_ldisc_autoload =3D INITIAL_AUTOLOAD_STATE;
-+static int tty_ldisc_autoload =3D IS_BUILTIN(CONFIG_LDISC_AUTOLOAD);
-=20
- static struct tty_ldisc *tty_ldisc_get(struct tty_struct *tty, int disc)
- {
+maybe we could add PERF_FORMAT_KPROBE_MISSED
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2J1KwACgkQMOfwapXb+vI0YACfXoK9Yjl7GDLMW2dlzhVvZMIT
-C/4AoIVRYIUCLsDo1GbsrGh2oRPNvlEI
-=qaxy
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
+jirka
