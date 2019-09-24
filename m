@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A991C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF0FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B6E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4463F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfIXSNt (ORCPT
+        id S2441500AbfIXSOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:13:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44010 "EHLO mx1.suse.de"
+        Tue, 24 Sep 2019 14:14:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43988 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439657AbfIXSM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:12:59 -0400
+        id S2388114AbfIXSMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:12:55 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D66E4AE78;
-        Tue, 24 Sep 2019 18:12:56 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id A1202AF03;
+        Tue, 24 Sep 2019 18:12:52 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
@@ -34,9 +35,9 @@ To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
 Cc:     mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com,
         james.quinlan@broadcom.com, wahrenst@gmx.net,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 05/11] of: expose __of_get_dma_parent() to OF subsystem
-Date:   Tue, 24 Sep 2019 20:12:36 +0200
-Message-Id: <20190924181244.7159-6-nsaenzjulienne@suse.de>
+Subject: [PATCH 02/11] of: base: introduce __of_n_*_cells_parent()
+Date:   Tue, 24 Sep 2019 20:12:33 +0200
+Message-Id: <20190924181244.7159-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
 References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
@@ -47,91 +48,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function was only available locally to of/address.c, make it
-available to the OF subsystem.
+Master PCI devices might not appear in the device tree, yet they still
+need to get the underlying cells properties in order to calculate the
+bus DMA constraints. This conflicts with of_n_*_cells() as it's designed
+under the assumption it'll receive a device OF node.
+
+Create __of_n_*_cells_parent() in order to deal with this limitation.
+For now, it'll only be available privately to OF code.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
- drivers/of/address.c    | 18 ------------------
- drivers/of/base.c       | 25 +++++++++++++++++++++++++
- drivers/of/of_private.h |  2 ++
- 3 files changed, 27 insertions(+), 18 deletions(-)
+ drivers/of/base.c       | 44 +++++++++++++++++++++++++++++------------
+ drivers/of/of_private.h |  3 +++
+ 2 files changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index c9eb4ebcc2e9..53666063e938 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -681,24 +681,6 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
- }
- EXPORT_SYMBOL(of_translate_address);
- 
--static struct device_node *__of_get_dma_parent(const struct device_node *np)
--{
--	struct of_phandle_args args;
--	int ret, index;
--
--	index = of_property_match_string(np, "interconnect-names", "dma-mem");
--	if (index < 0)
--		return of_get_parent(np);
--
--	ret = of_parse_phandle_with_args(np, "interconnects",
--					 "#interconnect-cells",
--					 index, &args);
--	if (ret < 0)
--		return of_get_parent(np);
--
--	return of_node_get(args.np);
--}
--
- static u64 of_translate_dma_address_parent(struct device_node *parent,
- 					   const __be32 *in_addr)
- {
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 94f83051910c..ec161e6b5222 100644
+index 1d667eb730e1..94f83051910c 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -716,6 +716,31 @@ struct device_node *of_get_parent(const struct device_node *node)
+@@ -86,34 +86,52 @@ static bool __of_node_is_type(const struct device_node *np, const char *type)
+ 	return np && match && type && !strcmp(match, type);
  }
- EXPORT_SYMBOL(of_get_parent);
  
-+/**
-+ *	__of_get_dma_parent - Get a node's dma parent if any
-+ *	@node:	Node to get dma parent
-+ *
-+ *	Returns a node pointer with refcount incremented, use
-+ *	of_node_put() on it when done.
-+ */
-+struct device_node *__of_get_dma_parent(const struct device_node *np)
+-int of_n_addr_cells(struct device_node *np)
++int __of_n_addr_cells_parent(struct device_node *parent)
+ {
+ 	u32 cells;
+ 
+-	do {
+-		if (np->parent)
+-			np = np->parent;
+-		if (!of_property_read_u32(np, "#address-cells", &cells))
++	while (parent) {
++		if (!of_property_read_u32(parent, "#address-cells", &cells))
+ 			return cells;
+-	} while (np->parent);
++
++		parent = parent->parent;
++	}
++
+ 	/* No #address-cells property for the root node */
+ 	return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ }
++
++int of_n_addr_cells(struct device_node *np)
 +{
-+	struct of_phandle_args args;
-+	int ret, index;
++	if (np->parent)
++		np = np->parent;
 +
-+	index = of_property_match_string(np, "interconnect-names", "dma-mem");
-+	if (index < 0)
-+		return of_get_parent(np);
-+
-+	ret = of_parse_phandle_with_args(np, "interconnects",
-+					 "#interconnect-cells",
-+					 index, &args);
-+	if (ret < 0)
-+		return of_get_parent(np);
-+
-+	return of_node_get(args.np);
++	return __of_n_addr_cells_parent(np);
 +}
+ EXPORT_SYMBOL(of_n_addr_cells);
+ 
+-int of_n_size_cells(struct device_node *np)
++int __of_n_size_cells_parent(struct device_node *parent)
+ {
+ 	u32 cells;
+ 
+-	do {
+-		if (np->parent)
+-			np = np->parent;
+-		if (!of_property_read_u32(np, "#size-cells", &cells))
++	while (parent) {
++		if (!of_property_read_u32(parent, "#size-cells", &cells))
+ 			return cells;
+-	} while (np->parent);
+-	/* No #size-cells property for the root node */
 +
- /**
-  *	of_get_next_parent - Iterate to a node's parent
-  *	@node:	Node to get parent of
++		parent = parent->parent;
++	}
++
++	/* No #address-cells property for the root node */
+ 	return OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
+ }
++
++int of_n_size_cells(struct device_node *np)
++{
++	if (np->parent)
++		np = np->parent;
++
++	return __of_n_size_cells_parent(np);
++}
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
+ #ifdef CONFIG_NUMA
 diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index b528304be244..63bb16cc454c 100644
+index 24786818e32e..b528304be244 100644
 --- a/drivers/of/of_private.h
 +++ b/drivers/of/of_private.h
-@@ -42,6 +42,8 @@ extern struct kset *of_kset;
- int __of_n_addr_cells_parent(struct device_node *parent);
- int __of_n_size_cells_parent(struct device_node *parent);
+@@ -39,6 +39,9 @@ extern struct mutex of_mutex;
+ extern struct list_head aliases_lookup;
+ extern struct kset *of_kset;
  
-+struct device_node *__of_get_dma_parent(const struct device_node *np);
++int __of_n_addr_cells_parent(struct device_node *parent);
++int __of_n_size_cells_parent(struct device_node *parent);
 +
  #if defined(CONFIG_OF_DYNAMIC)
  extern int of_property_notify(int action, struct device_node *np,
