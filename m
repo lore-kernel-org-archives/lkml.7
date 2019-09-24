@@ -2,179 +2,156 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B88DC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67056C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67552146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378292146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569312442;
+	bh=Im7PHHGrX2Z+PkdSUGWeE0IFxKAERkSjh493Ofv0CtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FKPP2X0Af/Uy0AW0lcXJoVAVaBO9We9he/Q3fnUOAY7vLLPz5J49Hnm9U08GrW6xC
+	 VJJY18ScY4IeZPj+TdXBknr3YivwHzIHupGmfa4XAGvj0Q45eeAra+0atwCo64oeTa
+	 K0zK/9ekUy8LhC0R7TJ2F4MwRnlgB6six5+Iii6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504062AbfIXIGW (ORCPT
+        id S2504050AbfIXIHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:06:22 -0400
-Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:50918 "EHLO
-        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2504039AbfIXIGR (ORCPT
+        Tue, 24 Sep 2019 04:07:21 -0400
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:39257 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503934AbfIXIHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:06:17 -0400
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 224B21C3492
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 09:06:14 +0100 (IST)
-Received: (qmail 32284 invoked from network); 24 Sep 2019 08:06:13 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 Sep 2019 08:06:13 -0000
-Date:   Tue, 24 Sep 2019 09:06:08 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
-        qperret@qperret.net, dietmar.eggemann@arm.com,
-        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-        mingo@redhat.com, peterz@infradead.org, bp@suse.de,
-        lenb@kernel.org, rjw@rjwysocki.net
-Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
-Message-ID: <20190924080608.GA3321@techsingularity.net>
-References: <20190909024216.5942-1-ggherdovich@suse.cz>
- <20190909024216.5942-2-ggherdovich@suse.cz>
- <000e01d568b5$87de9be0$979bd3a0$@net>
- <000301d56a76$0022e630$0068b290$@net>
- <1568730313.3329.1.camel@suse.cz>
- <001a01d56ef8$7abb07c0$70311740$@net>
+        Tue, 24 Sep 2019 04:07:21 -0400
+Received: by mail-wm1-f52.google.com with SMTP id v17so941991wml.4;
+        Tue, 24 Sep 2019 01:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vazoaJV8w6hXBuGcHHYiuY1lqVoAb/qasD3kvGZNtoI=;
+        b=uwCe+JBkx/ianOrarr5XVh4sVtM2bN6EOy+rywel/DgCMbKDeRGoYF/Xw3zeBsFpsW
+         DTBS5YcoSYMo0oqgUu/4UvAbDLfXBUIPzxqL04w59l641+pNI3bkxWcr25lW+PXUQUUw
+         qz3gvAq8LVvdl+JvBvycCQn3XEgIK6D4qBX5H6+AdRsw8VhCwyMpjE6PDT3Qb5DfvW1W
+         Qny1dsWGmnuAukL9pDGcUAmAemxjsvfQHnd6z9lqhAkTkBXR1NXaHaYCblYRBkgX4+1y
+         rH79Uzm6qLFpe87ltCEk/8C79pSQ0Nf6hIWtrn0RwjF4lO6WW0CnbY+4w4FqryAwgnKe
+         5mEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vazoaJV8w6hXBuGcHHYiuY1lqVoAb/qasD3kvGZNtoI=;
+        b=OSpLFa+xymHzVpQMHhpt8f5O2dtpCqE7MtvH/aitA5mm7pdPg//HrTvalXoldiHSu3
+         pCbWvYQWYGPK3kHQcJOuN+7LyDq5GuitrE16NBNd87NY2AEDpzB7oEKj4fQR93gMDMye
+         hki3oXZ0uGC38dmDCEW6OuxvqN5DEuB/g3NQVN7XkaXFl5+hlcNHGe80vfzmFtiH+N/+
+         +zE0cYvTJesAgHH4l3Zx4ScRzJK9HtaeQTf3OccJX8QtocfCnCg1+qDy+KIrUM6gGuVt
+         HVN5wolIWEgs0m0VnrzyL6GaWN7gBxnso0mP4ygQfChuY4l/QX61DElyL25HJh+jOGht
+         Os4w==
+X-Gm-Message-State: APjAAAXkmRwDSjlGMwTGc8BgL+QqpcQSijameoDkZkHm9/ZNu/WVEueF
+        iuOqBddKwBbmKOGHfHu2+D0=
+X-Google-Smtp-Source: APXvYqyf1JKKGJC2wktTnx0Kdyy1fK1Sztzy0S3aKXmkFcSCQG/+ODXjdnuIcUAnsJWuuUp6KcUU3g==
+X-Received: by 2002:a7b:c10b:: with SMTP id w11mr1504702wmi.108.1569312437903;
+        Tue, 24 Sep 2019 01:07:17 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d9sm2118700wrf.62.2019.09.24.01.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 01:07:17 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 10:07:15 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Tim.Bird@sony.com
+Cc:     torvalds@linux-foundation.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org, broonie@kernel.org,
+        jarkko.sakkinen@linux.intel.com, anders.roxell@linaro.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
+Message-ID: <20190924080715.GA63699@gmail.com>
+References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
+ <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
+ <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
+ <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
+ <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
+ <20190922112555.GB122003@gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF977BB784@USCULXMSG01.am.sony.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <001a01d56ef8$7abb07c0$70311740$@net>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BB784@USCULXMSG01.am.sony.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 07:42:29AM -0700, Doug Smythies wrote:
-> On 2019.09.17 07:25 Giovanni Gherdovich wrote:
-> >On Wed, 2019-09-11 at 08:28 -0700, Doug Smythies wrote:
-> > [...]
+
+* Tim.Bird@sony.com <Tim.Bird@sony.com> wrote:
+
+> > -----Original Message-----
+> > From: Ingo Molnar on Sunday, September 22, 2019 1:26 AM
+> > 
+> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > 
+> > > On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
+> > > <brendanhiggins@google.com> wrote:
+> > > >
+> > > > Sorry about that. I am surprised that none of the other reviewers
+> > > > brought this up.
+> > >
+> > > I think I'm "special".
+> > >
+> > > There was some other similar change a few years ago, which I
+> > > absolutely hated because of how it broke autocomplete for me. Very few
+> > > other people seemed to react to it.
+> > 
+> > FWIW, I am obsessively sensitive to autocomplete and overall source code
+> > file hieararchy and nomenclature details as well, so it's not just you.
+> > 
+> > Beyond the muscle memory aspect, nonsensical naming and inanely flat file
+> > hierarchies annoy kernel developers and makes it harder for newbies to
+> > understand the kernel source as well.
+> > 
+> > The less clutter, the more organization, the better - and there's very
+> > few valid technical reasons to add any new files or directories to the
+> > top level directory - we should probably *remove* quite a few.
+> > 
+> > For example 'firmware/' was recently moved to drivers/firmware/, and in a
+> > similar fashion about a third of the remaining 22 directories should
+> > probably be moved too:
+> > 
+> >   drwxr-xr-x    arch
+> >   drwxr-xr-x    block
+> >   drwxr-xr-x    certs           # move to build/certs/ dir
+> >   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
+> >   drwxr-xr-x    Documentation
+> >   drwxr-xr-x    drivers
+> >   drwxr-xr-x    fs
+> >   drwxr-xr-x    include
+> >   drwxr-xr-x    init
+> >   drwxr-xr-x    ipc             # move to kernel/ipc/
+> >   drwxr-xr-x    kernel
+> >   drwxr-xr-x    lib
+> >   drwxr-xr-x    LICENSES
+> >   drwxr-xr-x    mm
+> >   drwxr-xr-x    net
+> >   drwxr-xr-x    samples         # move to Documentation/samples/
+> >   drwxr-xr-x    scripts         # move to build/scripts/
 > 
-> >> The problem with the test is its run to run variability, which was from
-> >> all the disk I/O, as far as I could determine. At the time,
-> >> I studied this to death [2], and made a more repeatable test, without
-> >> any disk I/O.
-> >> 
-> >> While the challenges with this work flow have tended to be focused
-> >> on the CPU frequency scaling driver, I have always considered
-> >> the root issue here to be a scheduling issue. Excerpt from my notes
-> >> [2]:
-> >> 
-> >>> The issue is that performance is much much better if the system is
-> >>> forced to use only 1 CPU rather than relying on the defaults where
-> >>> the CPU scheduler decides what to do.
-> >>> The scheduler seems to not realize that the current CPU has just
-> >>> become free, and assigns the new task to a new CPU. Thus the load
-> >>> on any one CPU is so low that it doesn't ramp up the CPU frequency.
-> >>> It would be better if somehow the scheduler knew that the current
-> >>> active CPU was now able to take on the new task, overall resulting
-> >>> on one fully loaded CPU at the highest CPU frequency.
-> >> 
-> >> I do not know if such is practical, and I didn't re-visit the issue.
-> >>
-> >
-> > You're absolutely right, pinning a serialized, fork-intensive workload such as
-> > gitsource gives you as good of a performance as you can get, because it removes
-> > the scheduler out of the picture.
-> >
-> > So one might be tempted to flag this test as non-representative of a
-> > real-world scenario;
+> This one seems like it would break a lot of workflows, and contributor
+> muscle memory and scripts.  get_maintainer.pl and checkpatch.pl
+> are probably in quite a few people's scripts.
 > 
-> Disagree. I consider this test to be very representative of real-world
-> scenarios. However, and I do not know for certain, the relatively high
-> average fork rate of the gitsource "make test" is less common.
-> 
+> Also, I'm not sure '/build' is the right destination for this.  There
+> are a lot more things in there than just build scripts.  If you really
+> want to remove the top level 'scripts', it might be best to put
+> the  scripts from top-level '/scripts' into '/tools/scripts', which is
+> mostly empty now.
 
-I think it's common enough to be interesting. What I would be very cautious
-of is considering this patch in the context of the scheduler decisions
-made for synchronous tasks. By synchronous, I mean any waker/wakee
-pattern where the waker always goes immediately to sleep. In that case,
-it is best for the wakee to use the same CPU as the waker. Unfortunately,
-the kernel has tried numerous times to accurately detect when a waker
-will immediately go to sleep and it has never worked out properly. When
-the sync wakeup hint was strictly obeyed, there were too many cases where
-the waker did not immediately sleep and there was a latency hit for the
-wakee when nearby cores were idle. `perf sched pipe is an excellent example
-of a case where staking the wakee on the same CPU as the waker performs
-excellently but there are too many other realistic workloads where it is
-a sub-optimal decision such as a waker waking multiple wakees before it
-goes to sleep meaning stacking should definitely not happen.
+Agreed - I'll leave it alone for now, because you are right that it's 
+widely used.
 
-Hence, I think this patchset should be considered on its own merits.
-There will always be some guesswork when deciding what factor to use
-to account for turbo but the patch is still better than allowing the
-estimated utilisation to vary depending on the CPU frequency.
+Thanks,
 
-I think the patch is fine and should be merged with the main caveat being
-that some CPU families may need to use a different calculation to account
-for turbo boost which is a per-arch and per-cpu-family decision. What,
-if anything, should change in this patchset before it can be merged? Even
-if there is follow-on work that is necessary then it still looks like a
-reasonable starting point to me. If the waker/wakee stacking problem was
-revisited, it would still be orthogonal to this patch and they would not
-be in conflict.
-
-> > I think your 0.69 and my three values tell the same story: schedutil really
-> > needs to use the frequency invariant formula otherwise it's out of the
-> > race. Enabling scale-invariance gives multple tens of percent point in
-> > advantage.
-> 
-> Agreed. This frequency invariant addition is great. However, if
-> schedutil is "out of the race" without it, as you say, then isn't
-> intel_pstate(passive)/ondemand out of the race also? It performs
-> just as poorly for this test, until very low PIDs per second.
-> 
-
-In the intel_pstate case, there have been hacks carried out of tree
-trying to avoid some of the downsides of it. It also had things like IO
-wait boosting in mainline which was partially to handle the case where
-history was lost and in some cases to avoid problems when the wakup on
-IO completion moved a task to another CPU.
-
-I think it's a fair assessment to say that schedutil suffers if
-frequency invariance is not used regardless of what the other cpufreq
-drivers do.
-
-> >>>> Compare it to the update formula of intel_pstate/powersave:
-> >>> 
-> >>>    freq_next = 1.25 * freq_max * Busy%
-> >>> 
-> >>> where again freq_max is 1C turbo and Busy% is the percentage of time not spent
-> >>> idling (calculated with delta_MPERF / delta_TSC);
-> >> 
-> >> Note that the delta_MPERF / delta_TSC method includes idle state 0 and the old
-> >> method of utilization does not (at least not last time I investigated, which was
-> >> awhile ago (and I can not find my notes)).
-> >
-> > I think that depends on whether or not TSC stops at idle. As understand from
-> > the Intel Software Developer manual (SDM) a TSC that stops at idle is called
-> > "invariant TSC", and makes delta_MPERF / delta_TSC interesting. Otherwise the
-> > two counters behaves exactly the same and the ratio is always 1, modulo the
-> > delays in actually reading the two values. But all I know comes from
-> > turbostat's man page and the SDM, so don't quote me on that :)
-> 
-> I was only talking about idle state 0 (polling), where TSC does not stop.
-> 
-> By the way, I have now done some tests with this patch set and multi-threaded
-> stuff. Nothing to report, it all looks great.
-> 
-> [1] http://www.smythies.com/~doug/linux/single-threaded/gg-pidps2.png
-> 
-
-Is that an acked-by?
-
-Thanks.
-
--- 
-Mel Gorman
-SUSE Labs
+	Ingo
