@@ -2,180 +2,160 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E29CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D2C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124672146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62097207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="seXQRnG4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y143tXX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407858AbfIXRre (ORCPT
+        id S2407993AbfIXRsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:47:34 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:43610 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407478AbfIXRrd (ORCPT
+        Tue, 24 Sep 2019 13:48:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407478AbfIXRsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:47:33 -0400
-Received: by mail-qt1-f201.google.com with SMTP id j5so2836870qtn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=DBG/wFyung5W8UWO8gFujad4LCgDfce9k3vKq6AZOHc=;
-        b=seXQRnG46I6Ci9HSw67oM4f9WU5RkjmQX2F1eTZvaF10NZJKm/ILV0ZrtVikdF+Sl/
-         sgcA8DGRARP+NC27ixqtahqQ0TrX25UIlrcGpQs+2UU0fZx/OfPejIjIWx60N/VQw8pA
-         e6XQMVBYmrhl/IdQnJ/tnYp0/5QdvCbanCSHTfeiKlV8eqmTujwDoJyjjFzHm1blLi+t
-         msRPBmg70+21BGQqQWSLUWVo2HCcjgEJGsFkj9eqJZAFg95KvDAUA/DbgOzTiEpwFmr8
-         q378DkEh/bKx4RYUt6EgDvf68S88RRjlndPnuornArPd7L1ZTGixqCCQwb94iO4mGkve
-         hfeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=DBG/wFyung5W8UWO8gFujad4LCgDfce9k3vKq6AZOHc=;
-        b=UUGKLzOH5huzFFppvYBcOGrujVnVI/IhZjkFns06+u3eicBGyy3GnULnDQRZBEk5u5
-         BXqOXbcZhLAcXRSsC3AnuFtj2xArqt0ozOFnjNivX0lPLIDLOkQcShYitVNaiUNF6f2l
-         Kp95OHBd6puzmoidatz6FjROHzDbDocmuxUUvdxoROpYVcZmn3M/uvo9vGApdJ39y1fB
-         de2FG0YiwOZNAX5fK8NQXxIixMuiwWRm4EA4vjkrvK/r5cseMAVKT/jovu+bKEu2qQIK
-         dg+cs0q74Cf2kKSNYYPSmO69wM9YaD/8GASRevyh6teVqsnySpqLlrOed7vWwbgXOooV
-         vIFA==
-X-Gm-Message-State: APjAAAWMirltaGvURAPYA6buiOxpSxFfSM8B9qdhIB6lcUv4OnENlIxK
-        w2LtsUtsDU90x2pB7rOashx2PDILijykRUi8kqs=
-X-Google-Smtp-Source: APXvYqxqiZGW0UgAYDRxKRJCktP8tpY/Jew2d6NDW6FIJf4VUr2P6v9BiY4203WhfvWsdVfDNVdf5kMzk37Yk2qyDcc=
-X-Received: by 2002:ae9:f404:: with SMTP id y4mr3717758qkl.225.1569347252597;
- Tue, 24 Sep 2019 10:47:32 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 10:47:28 -0700
-In-Reply-To: <CAKwvOd=GVdHhsdHOMpuhEKkWMssW37keqX5c59+6fiEgLs+Q1g@mail.gmail.com>
-Message-Id: <20190924174728.201464-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAKwvOd=GVdHhsdHOMpuhEKkWMssW37keqX5c59+6fiEgLs+Q1g@mail.gmail.com>
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH v2] hwmon: (applesmc) fix UB and udelay overflow
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     linux@roeck-us.net
-Cc:     clang-built-linux@googlegroups.com, jdelvare@suse.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "=?UTF-8?q?Tomasz=20Pawe=C5=82=20Gajc?=" <tpgxyz@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 13:48:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=O0nfraiEUV4+QwMHxI+w0Nqu6sGkpxkc5IfF1hY76dw=; b=Y143tXX9kDfyXXoQ1ev6DHsff
+        v66sqrTzaimx4sYNL42VqpTPYVELDY9PC3OIJccapnXjzE2EA3Ye9vx5A1fk0lip0vP9VTh9/V1Z9
+        RiX97vLtrfObCCGA65q35ZdjGiFzU8rSdRxvGKDJleXJgK96RycEITOlNgFePt+EjgIz+ZkfREFFl
+        s7or14br+DOWQt3F2qHMNWyI4srGBY7pJVGJcmpVp+O+rYuEP0WNTu29JcVdOLTbiRv8UOL88H4x1
+        nQSVEvCjhu8opzz9vWZsF59/DJrk7uoduthG3Aar32FWrOEaiUEv/40agGW2CYS+kCKmo4kumewtx
+        nNGCKAEfQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCov3-0002iQ-PN; Tue, 24 Sep 2019 17:48:09 +0000
+Date:   Tue, 24 Sep 2019 10:48:09 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: drop mmap_sem before calling balance_dirty_pages()
+ in write fault
+Message-ID: <20190924174809.GH1855@bombadil.infradead.org>
+References: <20190924171518.26682-1-hannes@cmpxchg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924171518.26682-1-hannes@cmpxchg.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following 2 issues in the driver:
-1. Left shifting a signed integer is undefined behavior. Unsigned
-   integral types should be used for bitwise operations.
-2. The delay scales from 0x0010 to 0x20000 by powers of 2, but udelay
-   will result in a linkage failure when given a constant that's greater
-   than 20000 (0x4E20). Agressive loop unrolling can fully unroll the
-   loop, resulting in later iterations overflowing the call to udelay.
+On Tue, Sep 24, 2019 at 01:15:18PM -0400, Johannes Weiner wrote:
+> +static int fault_dirty_shared_page(struct vm_fault *vmf)
 
-2 is fixed via splitting the loop in two, iterating the first up to the
-point where udelay would overflow, then switching to mdelay, as
-suggested in Documentation/timers/timers-howto.rst.
+vm_fault_t, shirley?
 
-Reported-by: Tomasz Pawe=C5=82 Gajc <tpgxyz@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/678
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* The first loop in send_byte() needs to break out on the same condition
-  now. Technically, the loop condition could even be removed. The diff
-  looks funny because of the duplicated logic between existing and newly
-  added for loops.
+> @@ -2239,16 +2241,36 @@ static void fault_dirty_shared_page(struct vm_area_struct *vma,
+>  	mapping = page_rmapping(page);
+>  	unlock_page(page);
+>  
+> +	if (!page_mkwrite)
+> +		file_update_time(vma->vm_file);
+> +
+> +	/*
+> +	 * Throttle page dirtying rate down to writeback speed.
+> +	 *
+> +	 * mapping may be NULL here because some device drivers do not
+> +	 * set page.mapping but still dirty their pages
+> +	 *
+> +	 * Drop the mmap_sem before waiting on IO, if we can. The file
+> +	 * is pinning the mapping, as per above.
+> +	 */
+>  	if ((dirtied || page_mkwrite) && mapping) {
+> -		/*
+> -		 * Some device drivers do not set page.mapping
+> -		 * but still dirty their pages
+> -		 */
+> +		struct file *fpin = NULL;
+> +
+> +		if ((vmf->flags &
+> +		     (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
+> +		    FAULT_FLAG_ALLOW_RETRY) {
+> +			fpin = get_file(vma->vm_file);
+> +			up_read(&vma->vm_mm->mmap_sem);
+> +			ret = VM_FAULT_RETRY;
+> +		}
+> +
+>  		balance_dirty_pages_ratelimited(mapping);
+> +
+> +		if (fpin)
+> +			fput(fpin);
+>  	}
+>  
+> -	if (!page_mkwrite)
+> -		file_update_time(vma->vm_file);
+> +	return ret;
+>  }
 
- drivers/hwmon/applesmc.c | 35 +++++++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+I'm not a fan of moving file_update_time() to _before_ the
+balance_dirty_pages call.  Also, this is now the third place that needs
+maybe_unlock_mmap_for_io, see
+https://lore.kernel.org/linux-mm/20190917120852.x6x3aypwvh573kfa@box/
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 183ff3d25129..c76adb504dff 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -46,6 +46,7 @@
- #define APPLESMC_MIN_WAIT	0x0010
- #define APPLESMC_RETRY_WAIT	0x0100
- #define APPLESMC_MAX_WAIT	0x20000
-+#define APPLESMC_UDELAY_MAX	20000
-=20
- #define APPLESMC_READ_CMD	0x10
- #define APPLESMC_WRITE_CMD	0x11
-@@ -157,14 +158,23 @@ static struct workqueue_struct *applesmc_led_wq;
- static int wait_read(void)
- {
- 	u8 status;
--	int us;
--	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+	unsigned int us;
+How about:
+
++	struct file *fpin = NULL;
+
+ 	if ((dirtied || page_mkwrite) && mapping) {
+		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+ 		balance_dirty_pages_ratelimited(mapping);
+	}
 +
-+	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_UDELAY_MAX; us <<=3D 1) {
- 		udelay(us);
- 		status =3D inb(APPLESMC_CMD_PORT);
- 		/* read: wait for smc to settle */
- 		if (status & 0x01)
- 			return 0;
- 	}
-+	/* switch to mdelay for longer sleeps */
-+	for (; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+		mdelay(us);
-+		status =3D inb(APPLESMC_CMD_PORT);
-+		/* read: wait for smc to settle */
-+		if (status & 0x01)
-+			return 0;
++	if (fpin) {
++		file_update_time(fpin);
++		fput(fpin);
++		return VM_FAULT_RETRY;
 +	}
-=20
- 	pr_warn("wait_read() fail: 0x%02x\n", status);
- 	return -EIO;
-@@ -177,10 +187,10 @@ static int wait_read(void)
- static int send_byte(u8 cmd, u16 port)
- {
- 	u8 status;
--	int us;
-+	unsigned int us;
-=20
- 	outb(cmd, port);
--	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_UDELAY_MAX; us <<=3D 1) {
- 		udelay(us);
- 		status =3D inb(APPLESMC_CMD_PORT);
- 		/* write: wait for smc to settle */
-@@ -190,6 +200,23 @@ static int send_byte(u8 cmd, u16 port)
- 		if (status & 0x04)
- 			return 0;
- 		/* timeout: give up */
-+		if (us << 1 =3D=3D APPLESMC_UDELAY_MAX)
-+			break;
-+		/* busy: long wait and resend */
-+		udelay(APPLESMC_RETRY_WAIT);
-+		outb(cmd, port);
-+	}
-+	/* switch to mdelay for longer sleeps */
-+	for (; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+		mdelay(us);
-+		status =3D inb(APPLESMC_CMD_PORT);
-+		/* write: wait for smc to settle */
-+		if (status & 0x02)
-+			continue;
-+		/* ready: cmd accepted, return */
-+		if (status & 0x04)
-+			return 0;
-+		/* timeout: give up */
- 		if (us << 1 =3D=3D APPLESMC_MAX_WAIT)
- 			break;
- 		/* busy: long wait and resend */
---=20
-2.23.0.351.gc4317032e6-goog
 
+ 	if (!page_mkwrite)
+ 		file_update_time(vma->vm_file);
++	return 0;
+ }
+
+>  /*
+> @@ -2491,6 +2513,7 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
+>  	__releases(vmf->ptl)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> +	int ret = VM_FAULT_WRITE;
+
+vm_fault_t again.
+
+> @@ -3576,7 +3599,6 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
+>  static vm_fault_t do_fault(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> -	struct mm_struct *vm_mm = vma->vm_mm;
+>  	vm_fault_t ret;
+>  
+>  	/*
+> @@ -3617,7 +3639,12 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
+>  
+>  	/* preallocated pagetable is unused: free it */
+>  	if (vmf->prealloc_pte) {
+> -		pte_free(vm_mm, vmf->prealloc_pte);
+> +		/*
+> +		 * XXX: Accessing vma->vm_mm now is not safe. The page
+> +		 * fault handler may have dropped the mmap_sem a long
+> +		 * time ago. Only s390 derefs that parameter.
+> +		 */
+> +		pte_free(vma->vm_mm, vmf->prealloc_pte);
+
+I'm confused.  This code looks like it was safe before (as it was caching
+vma->vm_mm in a local variable), and now you've made it unsafe ... ?
