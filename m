@@ -2,129 +2,157 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AA2C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A46C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DA220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECE0214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHpJEebm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TH0vkSga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442023AbfIXWF4 (ORCPT
+        id S2410606AbfIXWYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 18:05:56 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41811 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387542AbfIXWF4 (ORCPT
+        Tue, 24 Sep 2019 18:24:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35260 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387532AbfIXWYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 18:05:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id r26so8312583ioh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l11MQ+lA+OctjrXx4RVwP5DBxpG6bC0YG4oKg9f4dBc=;
-        b=OHpJEebmt1koUbYUVd8ncvkV9ubqcGE7mtrWdS/c65uTLTqMphgV1caO7X4bPYYKIS
-         f2A1vBtXhAq4sSHqbYEsgWREsC+eh4cYwwTEko1y7I7X/X9C4L8m4dCj+zCTdOxu9MOg
-         z5WkbHoGkzNQt8S2Q64sRCVabMMZma3bVBqeaF42X5606EK03hy9wD8wUWFfVDAynwHT
-         uwO8mqrqQQf35Jvi1RCtJfHzvYKK7r9TA7FXAzl0n7GcIlFhdV79K6W1FD8TJI8Eg9Qg
-         Yotfk/n/C9BcCVCmd4G154js4Mko5Fpka3nFphpRFSKO/u9a7PBsYWEjQM5TA36D+vq8
-         F5bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l11MQ+lA+OctjrXx4RVwP5DBxpG6bC0YG4oKg9f4dBc=;
-        b=t0+Agnrs7CdPe6g2cj52sUfeW6+6zKeVdK7+uA0hBT5OCnTLltFkO05vf52IaoB4jK
-         hGfTr0gX9fM2GPSIU+l/hGjC8kgpV9g0jspYcC0KyeiSsBTSEPd2caffWJsJQ9CJjt5s
-         sHOQYerNgbssGbcGDYWpAqnxVyRrU+65tVvbF9x5jDENkjOZLVS3RIDDjd8wNTN2Jnmz
-         84sQNcqsdCpJVYYDvEMQO3+fBVHDGqhiQxJaZypB0wX44FpB2w2MDWKN6zrMl6sKKNTj
-         4hhikrSTh8q9/65Wjka9ZVVAGtu8mPWONmUehfhwbI0sBUyRtQcfX1wJ8wRRvkbOeG+o
-         cUjA==
-X-Gm-Message-State: APjAAAX5MsdeRoRMAi0MK7H8bZZHehT6LpOhJs7wZTbgE209B2k+fHIr
-        LVOk6mRo/331CTKqsOHAPzSxAA==
-X-Google-Smtp-Source: APXvYqy0q9UE81FUZmx9HjZuQrw+R0WHHAHqbnuLQUlSW8gIKlKykk3AQTIV+navbqB0cIVqup0GjQ==
-X-Received: by 2002:a02:683:: with SMTP id 125mr1373599jav.132.1569362755310;
-        Tue, 24 Sep 2019 15:05:55 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id v3sm5236863ioh.51.2019.09.24.15.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 15:05:54 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 16:05:50 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hugh Dickins <hughd@google.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Tue, 24 Sep 2019 18:24:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OLxmTP104494;
+        Tue, 24 Sep 2019 22:23:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=WCg8CK8lWdtRYaIcgzqcnsusbOJTcVFGgkO6t2EG+yM=;
+ b=TH0vkSgaVbdxJ4htA7j/eU4CoH5fDJ6p+VtmqQ4waz0NODS3hQDMUA4w1mRJSmm1uzMw
+ /Ugg2Z6l5c87eWnHiNiA0ZLk+VUyvRh8IzdHKJ5Be+wk/sYp3KZ9INQKYknE7lpoymDj
+ jEFg8CzdInss05LIgC81XalDPsg3dD432VNBULeKRHnYqiQi0/t6CfFSgm9bwT3q8iZl
+ PUYFAbDoDmo/6RthhD2XWmJzFhEEzwPcTDqqc+wKOYPflaS2wNvmX8kkgy0u+EOovCdC
+ lIvZJB7nHlngQJ7Q9/MRCYWpPwM/r5oLsN1+FRR3gj9tK/VsU5AteBT8SKlSwRhM2cfm Ow== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2v5cgr111h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 22:23:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OLxWpG053203;
+        Tue, 24 Sep 2019 22:21:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2v6yvptu7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 22:21:12 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8OML5SN017569;
+        Tue, 24 Sep 2019 22:21:06 GMT
+Received: from localhost (/10.159.232.132)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 24 Sep 2019 15:21:05 -0700
+Date:   Tue, 24 Sep 2019 15:21:03 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, dsterba@suse.cz,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Lance Roy <ldr709@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Aaron Lu <ziqian.lzq@antfin.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: don't expose page to fast gup prematurely
-Message-ID: <20190924220550.GA123810@google.com>
-References: <20190514230751.GA70050@google.com>
- <20190914070518.112954-1-yuzhao@google.com>
- <20190924112316.324l7gqpdzhpiliq@box>
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190924222103.GB2229799@magnolia>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+ <20190923171710.GN2751@twin.jikos.cz>
+ <20190923175146.GT2229799@magnolia>
+ <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
+ <20190924215353.GG16973@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190924112316.324l7gqpdzhpiliq@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190924215353.GG16973@dread.disaster.area>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909240178
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909240178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 02:23:16PM +0300, Kirill A. Shutemov wrote:
-> On Sat, Sep 14, 2019 at 01:05:18AM -0600, Yu Zhao wrote:
-> > We don't want to expose page to fast gup running on a remote CPU
-> > before all local non-atomic ops on page flags are visible first.
+On Wed, Sep 25, 2019 at 07:53:53AM +1000, Dave Chinner wrote:
+> On Tue, Sep 24, 2019 at 11:19:29PM +0200, Vlastimil Babka wrote:
+> > On 9/23/19 7:51 PM, Darrick J. Wong wrote:
+> > > On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
+> > >> On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
+> > >>> So if anyone thinks this is a good idea, please express it (preferably
+> > >>> in a formal way such as Acked-by), otherwise it seems the patch will be
+> > >>> dropped (due to a private NACK, apparently).
+> > > 
+> > > Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
+> > > privilege of gutting a patch via private NAK without any of that open
+> > > development discussion incovenience. <grumble>
+> > > 
+> > > As far as XFS is concerned I merged Dave's series that checks the
+> > > alignment of io memory allocations and falls back to vmalloc if the
+> > > alignment won't work, because I got tired of scrolling past the endless
+> > > discussion and bug reports and inaction spanning months.
 > > 
-> > For anon page that isn't in swap cache, we need to make sure all
-> > prior non-atomic ops, especially __SetPageSwapBacked() in
-> > page_add_new_anon_rmap(), are order before set_pte_at() to prevent
-> > the following race:
-> > 
-> > 	CPU 1				CPU1
-> > set_pte_at()			get_user_pages_fast()
-> > page_add_new_anon_rmap()		gup_pte_range()
-> > 	__SetPageSwapBacked()			SetPageReferenced()
+> > I think it's a big fail of kmalloc API that you have to do that, and
+> > especially with vmalloc, which has the overhead of setting up page
+> > tables, and it's a waste for allocation requests smaller than page size.
+> > I wish we could have nice things.
 > 
-> Is there a particular codepath that has what you listed for CPU?
-> After quick look, I only saw that we page_add_new_anon_rmap() called
-> before set_pte_at().
+> I don't think the problem here is the code. The problem here is that
+> we have a dysfunctional development community and there are no
+> processes we can follow to ensure architectural problems in core
+> subsystems are addressed in a timely manner...
+> 
+> And this criticism isn't just of the mm/ here - this alignment
+> problem is exacerbated by exactly the same issue on the block layer
+> side. i.e. the block layer and drivers have -zero- bounds checking
+> to catch these sorts of things and the block layer maintainer will
+> not accept patches for runtime checks that would catch these issues
+> and make them instantly visible to us.
+> 
+> These are not code problems: we can fix the problems with code (and
+> I have done so to demonstrate "this is how we do what you say is
+> impossible").  The problem here is people in positions of
+> control/power are repeatedly demonstrating an inability to
+> compromise to reach a solution that works for everyone.
+> 
+> It's far better for us just to work around bullshit like this in XFS
+> now, then when the core subsystems get they act together years down
+> the track we can remove the workaround from XFS. Users don't care
+> how we fix the problem, they just want it fixed. If that means we
+> have to route around dysfunctional developer groups, then we'll just
+> have to do that....
 
-I think so. One in do_swap_page() and another in unuse_pte(). Both
-are on KSM paths. Am I referencing a stale copy of the source?
+Seconded.
+
+--D
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
