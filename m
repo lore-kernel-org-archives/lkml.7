@@ -2,284 +2,138 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF22C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601ABC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9226C20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3642A20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569339146;
+	bh=ashIkEiX50BSTycIVxwvZ5leJxHFDURay6EmrQC0vGc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bpByY6s9qzDn2zk0wLRYuo6vhEZjhrS4wu9p1gmFhKzqoQBRnrkMN6LRCI2zQpFil
+	 dHZmpABCR1dy2BuPXiGjrxLM1zdIX7ZdhnBVIhx5D84CaU5o4POdbj2/XIwnn41dxt
+	 7R/B9EH25tkniA9qHhbzqRLYvxJG1m0llzqmn65k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389674AbfIXPao (ORCPT
+        id S2389729AbfIXPcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:30:44 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47824 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389524AbfIXPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:30:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 08:30:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
-   d="scan'208";a="195727916"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Sep 2019 08:30:42 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH] KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i) enumeration
-Date:   Tue, 24 Sep 2019 23:32:50 +0800
-Message-Id: <20190924153250.20315-1-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
+        Tue, 24 Sep 2019 11:32:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37907 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732178AbfIXPcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:32:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id b20so2354630ljj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yTXFMWN7uG8HeKP04hBknHMX7DjCzdXpjR3u5gYPGyo=;
+        b=csnyqQhYOP+PrKHw6U6DXiICj2iJbqP0xhK/YsgX0NJ8CDm3M7BkvgPR21n8zf2Xoj
+         bqRF7cHq2x5ioxRBkz1SMK/+9emYk9lSfnjFcL8FaOaKAL3lr7ybZnVeWLcdBnTKP94a
+         XXbMWg7yvpKrqMnmGzh46esRmL0KRGQX8wTMY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yTXFMWN7uG8HeKP04hBknHMX7DjCzdXpjR3u5gYPGyo=;
+        b=Fb6GBm3zET31xFta3Z66e0l4XI5eK9vH7qUkcFVBypj1Q+vJRrQGUhpkKmHvRN1Ai9
+         c/T4BG+Mge+rhh+8iYuxpjL7T/GFQubM1GhpkOVRCnEdXBMk7oOAwxBuxDcWiYserlC0
+         3g3KCaax2J6GFecVKK53u0oAsJ8TCSR/xYWC6NyCAp+TqUEkTvgTeLG8bewFnYhNZPKk
+         tdQ51y2Uw2D9A+SSgeNq7y/KLpDgEm00IpvF9uMZ09NwBbrfo0iFDwbGbBk6V092OFz5
+         WhZcD47LNMCdw0xXoHrMxBtCgjTxc+ROH9Wa4Ggtjc4bJYWPm6IBBMnjAAYjJpQOelea
+         pWLw==
+X-Gm-Message-State: APjAAAU0MU54sk6ydcaBOELYcdPSCz/BwkjE2FJShj0nHplyKLz9yby4
+        8lR43DKVB2cMSo0UxygcYqWn+2aTuJI=
+X-Google-Smtp-Source: APXvYqxam6EjdoEFbpROkxNLfyr9Fe36Mpyo4xsQWnOiDe5O7wvN/m8Wcit3DwM+h8jqvtaT7enItg==
+X-Received: by 2002:a2e:9748:: with SMTP id f8mr2477698ljj.167.1569339142271;
+        Tue, 24 Sep 2019 08:32:22 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id c26sm587475ljj.45.2019.09.24.08.32.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 08:32:21 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 7so2357158ljw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:20 -0700 (PDT)
+X-Received: by 2002:a2e:2c02:: with SMTP id s2mr2495973ljs.156.1569339140581;
+ Tue, 24 Sep 2019 08:32:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190921231022.kawfomtmka737arq@pburton-laptop>
+ <CAHk-=wjmJbF3p9vZTW2nbeD4LkG-JZV+uqv8BnxzojJ5SZsLjw@mail.gmail.com>
+ <20190923180728.flp6jx4jc2bh7cys@pburton-laptop> <CAHk-=wiC_B8R6th+83vKwGT1H-8vtFrmMg+1mK_P8n3VeWAWRg@mail.gmail.com>
+ <14580.1569328815@warthog.procyon.org.uk>
+In-Reply-To: <14580.1569328815@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 24 Sep 2019 08:32:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi4g0NgX9BLiTCqFYuM3H2AuhY+uCYfauOegz8OV2HjjA@mail.gmail.com>
+Message-ID: <CAHk-=wi4g0NgX9BLiTCqFYuM3H2AuhY+uCYfauOegz8OV2HjjA@mail.gmail.com>
+Subject: Re: [GIT PULL] MIPS changes
+To:     David Howells <dhowells@redhat.com>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The control bits in IA32_XSS MSR are being used for new features,
-but current CPUID(0xd,i) enumeration code doesn't support them, so
-fix existing code first.
+On Tue, Sep 24, 2019 at 5:40 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> > In honesty, I actually do have one warning in my tree:
+> >
+> >   samples/vfs/test-statx.c:24:15: warning: =E2=80=98struct foo=E2=80=99=
+ declared
+> > inside parameter list
+>
+> Were there any note lines from the compiler associated with this?  The wa=
+rning
+> message can't actually be taking place on this line.
 
-The supervisor states in IA32_XSS haven't been used in public
-KVM code, so set KVM_SUPPORTED_XSS to 0 now, anyone who's developing
-IA32_XSS related feature may expand the macro to add the CPUID support,
-otherwise, CPUID(0xd,i>1) always reports 0 of the subleaf to guest.
+That's the only thing that gcc says. I agree that it's not where the
+problem occurs, but the gcc warning system tries to avoid warning
+inside system header files, so it seems to have logic tracing it back
+to the user.
 
-Extracted old code into a new filter and keep it same flavor as others.
+But I have system header files that look like this:
 
-This patch passed selftest on a few Intel platforms.
+  /* Fill *BUF with information about PATH in DIRFD.  */
+  int statx (int __dirfd, const char *__restrict __path, int __flags,
+             unsigned int __mask, struct statx *__restrict __buf)
+    __THROW __nonnull ((2, 5));
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/cpuid.c            | 94 +++++++++++++++++++++------------
- arch/x86/kvm/svm.c              |  7 +++
- arch/x86/kvm/vmx/vmx.c          |  6 +++
- arch/x86/kvm/x86.h              |  7 +++
- 5 files changed, 82 insertions(+), 33 deletions(-)
+and I think that's the one that triggers.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 74e88e5edd9c..d018df8c5f32 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1209,6 +1209,7 @@ struct kvm_x86_ops {
- 	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
- 
- 	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
-+	u64 (*supported_xss)(void);
- };
- 
- struct kvm_arch_async_pf {
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 22c2720cd948..9d282fec0a62 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -62,6 +62,11 @@ u64 kvm_supported_xcr0(void)
- 	return xcr0;
- }
- 
-+u64 kvm_supported_xss(void)
-+{
-+	return KVM_SUPPORTED_XSS & kvm_x86_ops->supported_xss();
-+}
-+
- #define F(x) bit(X86_FEATURE_##x)
- 
- int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-@@ -414,6 +419,50 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 	}
- }
- 
-+static inline void do_cpuid_0xd_mask(struct kvm_cpuid_entry2 *entry, int index)
-+{
-+	unsigned int f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
-+	/* cpuid 0xD.1.eax */
-+	const u32 kvm_cpuid_D_1_eax_x86_features =
-+		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | f_xsaves;
-+	u64 u_supported = kvm_supported_xcr0();
-+	u64 s_supported = kvm_supported_xss();
-+	u64 supported;
-+
-+	switch (index) {
-+	case 0:
-+		entry->eax &= u_supported;
-+		entry->ebx = xstate_required_size(u_supported, false);
-+		entry->ecx = entry->ebx;
-+		entry->edx = 0;
-+		break;
-+	case 1:
-+		supported = u_supported | s_supported;
-+		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
-+		cpuid_mask(&entry->eax, CPUID_D_1_EAX);
-+		entry->ebx = 0;
-+		entry->edx = 0;
-+		entry->ecx &= s_supported;
-+		if (entry->eax & (F(XSAVES) | F(XSAVEC)))
-+			entry->ebx = xstate_required_size(supported, true);
-+
-+		break;
-+	default:
-+		supported = (entry->ecx & 1) ? s_supported : u_supported;
-+		if (!(supported & ((u64)1 << index))) {
-+			entry->eax = 0;
-+			entry->ebx = 0;
-+			entry->ecx = 0;
-+			entry->edx = 0;
-+			return;
-+		}
-+		if (entry->ecx)
-+			entry->ebx = 0;
-+		entry->edx = 0;
-+		break;
-+	}
-+}
-+
- static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 				  int *nent, int maxnent)
- {
-@@ -428,7 +477,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 	unsigned f_lm = 0;
- #endif
- 	unsigned f_rdtscp = kvm_x86_ops->rdtscp_supported() ? F(RDTSCP) : 0;
--	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
- 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
- 
- 	/* cpuid 1.edx */
-@@ -482,10 +530,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
- 		F(PMM) | F(PMM_EN);
- 
--	/* cpuid 0xD.1.eax */
--	const u32 kvm_cpuid_D_1_eax_x86_features =
--		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | f_xsaves;
--
- 	/* all calls to cpuid_count() should be made on the same cpu */
- 	get_cpu();
- 
-@@ -622,38 +666,22 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		break;
- 	}
- 	case 0xd: {
--		int idx, i;
--		u64 supported = kvm_supported_xcr0();
--
--		entry->eax &= supported;
--		entry->ebx = xstate_required_size(supported, false);
--		entry->ecx = entry->ebx;
--		entry->edx &= supported >> 32;
--		if (!supported)
--			break;
-+		int i, idx;
- 
--		for (idx = 1, i = 1; idx < 64; ++idx) {
--			u64 mask = ((u64)1 << idx);
-+		do_cpuid_0xd_mask(&entry[0], 0);
-+		for (i = 1, idx = 1; idx < 64; ++idx) {
- 			if (*nent >= maxnent)
- 				goto out;
--
- 			do_host_cpuid(&entry[i], function, idx);
--			if (idx == 1) {
--				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
--				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
--				entry[i].ebx = 0;
--				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
--					entry[i].ebx =
--						xstate_required_size(supported,
--								     true);
--			} else {
--				if (entry[i].eax == 0 || !(supported & mask))
--					continue;
--				if (WARN_ON_ONCE(entry[i].ecx & 1))
--					continue;
--			}
--			entry[i].ecx = 0;
--			entry[i].edx = 0;
-+			if (entry[i].eax == 0 && entry[i].ebx == 0 &&
-+			    entry[i].ecx == 0 && entry[i].edx == 0)
-+				continue;
-+
-+			do_cpuid_0xd_mask(&entry[i], idx);
-+			if (entry[i].eax == 0 && entry[i].ebx == 0 &&
-+			    entry[i].ecx == 0 && entry[i].edx == 0)
-+				continue;
-+
- 			++*nent;
- 			++i;
- 		}
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index e0368076a1ef..be967bf9a81d 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7193,6 +7193,11 @@ static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
- 	return false;
- }
- 
-+static u64 svm_supported_xss(void)
-+{
-+	return 0;
-+}
-+
- static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.cpu_has_kvm_support = has_svm,
- 	.disabled_by_bios = is_disabled,
-@@ -7329,6 +7334,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.nested_get_evmcs_version = NULL,
- 
- 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
-+
-+	.supported_xss = svm_supported_xss,
- };
- 
- static int __init svm_init(void)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c6f6b05004d9..a84198cff397 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1651,6 +1651,11 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
- 	return !(val & ~valid_bits);
- }
- 
-+static inline u64 vmx_supported_xss(void)
-+{
-+	return host_xss;
-+}
-+
- static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
- {
- 	switch (msr->index) {
-@@ -7799,6 +7804,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.nested_enable_evmcs = NULL,
- 	.nested_get_evmcs_version = NULL,
- 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
-+	.supported_xss = vmx_supported_xss,
- };
- 
- static void vmx_cleanup_l1d_flush(void)
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 6594020c0691..fbffabad0370 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -293,6 +293,13 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
- 				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
- 				| XFEATURE_MASK_PKRU)
-+
-+/*
-+ * Right now, no XSS states are used on x86 platform,
-+ * expand the macro for new features.
-+ */
-+#define KVM_SUPPORTED_XSS	(0)
-+
- extern u64 host_xcr0;
- 
- extern u64 kvm_supported_xcr0(void);
--- 
-2.17.2
+You must have hit *something* similar too, since the only reason for that
 
+  #define statx foo
+  #define statx_timestamp foo_timestamp
+  #include <sys/stat.h>
+  #undef statx
+  #undef statx_timestamp
+
+is that you're playing games with the kernel 'statx' clashing with
+user 'statx' use.
+
+And what I think happens is that you had the <sys/types.h> include
+*without* that #define, so the 'struct statx' got declared there, and
+then in <sys/stat.h> it gets used, but it gets used as 'struct foo',
+so now the compiler complains (properly) that you're using this
+undeclared 'struct foo' in the function declaration, and because of
+namespace rules it's not the same thing as then a later 'struct foo'
+would be.
+
+              Linus
+
+              Linus
