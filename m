@@ -2,209 +2,143 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9F0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B53AC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644F920640
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0756B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TEbQNYRo"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sSx8Qs6h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408983AbfIXD24 (ORCPT
+        id S2408994AbfIXDau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 23:28:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42212 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408847AbfIXD2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 23:28:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n14so175530wrw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 20:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BOntdqNAzJq09OHpR8y1tYGj1Bvw6Q9JNvhQORlIsxk=;
-        b=TEbQNYRoY0DL6fKSICuqMJZuH9R7sIv7XrMy4vxuBCFoYXnZbGMgGvkTL57hdXsv0S
-         Im4MJJCNVtZ2dFPcG24aCiO6P7LOhI4bzGu4LbXQMIlNKnPs+cJV1AdDA4wPdFhfiv8X
-         38TDwVx4TisO3PeTlr3ij0yjhtd7F9llsr0bI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BOntdqNAzJq09OHpR8y1tYGj1Bvw6Q9JNvhQORlIsxk=;
-        b=Nz7mLli0862EpE8kqw/+V84+zOLPcZXNv9XuTnMK8yTvgT747mJxoj8E3jGvBSwrGX
-         KUR5O01PIPhoCgtkblZ6xw23EEQG0XdtOAQcL1TUePjAHwtlzKy0PSBPLpDnq4n3gk/A
-         P/I6h5Totwzbgcddzq6rf0dvBipOz4siFs0lL7ctqgacf2XUIJxr1Ee4dTI9rfcIG9wo
-         umjW1hiVn8RSTuwTvbk0+2AbhZ3QpBVWDYm6R9sE+RdG01XgfLH/0F2e13UmTsthGePB
-         LE845JIh0kNG97cVqTeY1w+PqLVY1jt56XrualzJLZfJT/L8i/07oVn26lLLrsMjGWBr
-         aX+A==
-X-Gm-Message-State: APjAAAX6Cqit8GfuOfh0RvLEFg0G5sdX9XU1NxJ3eq3IYn/evx+16daB
-        4qag+fDsrZ/01IVNpWAMZo4o2k+ViiPNJOjMeVRqyA==
-X-Google-Smtp-Source: APXvYqxzxn9kQfZkcW3T0wqOc99Kw0KeUVqqryo2jeSxJpN5gkQ+J1QilZA+ndh4MuioxkMybO2BNrUv6568LouoFOE=
-X-Received: by 2002:adf:ce86:: with SMTP id r6mr425937wrn.57.1569295731092;
- Mon, 23 Sep 2019 20:28:51 -0700 (PDT)
+        Mon, 23 Sep 2019 23:30:50 -0400
+Received: from mail-eopbgr40082.outbound.protection.outlook.com ([40.107.4.82]:30993
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2408868AbfIXDat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 23:30:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UWQhWtuDnA3/tUhQimTJLpXjdP7hAwH67Cb3wtRvBBol7ip8yB29/aUNA1V/5MInbmxMsZY9VdYoTRRA347ZTVVQfzzbKR/XgWNroFW4fZqEweI9F4wpS7T+yey+pXY9PItnmHhjzS6Tbieiq3ATvwVe9w5Z9PC4nbHjrdOQHwt4E9sU++eFPHZQGFXMg+4D3K6ZH7LsffPrvwsEC7l9qFmvMLJmJ8e6FCvyX+m3zDWrKDzbhv5qJTNiReN1P7fmcfWue/Z4Vx0S2VBIkG++qgw4sEDHw4aAQs9AEhB3mHDLwZyc1hnVXUnEnYDgZkEbmfHkyUntqMsanDzhh90guw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HC5aFZ+AVUf42ydCGK5iw4GtFLL81FSS5O97BdvKyYY=;
+ b=iIaPQZ1GopXjn/6domrt+MQkVBKvjLT8eZxDHuFstuuS0XBR/b0cd28INU3iu8hdmcmBILrmLAz6/Zz9hNeeqPMHXgkgYB1mQFL/HWzbrhuXNNmUeUGIFAmVj1E/plcKihedHm1GwANAMqT3Y3k6CG1n5LAV61NO0Sd/RZQAEv5yZMmTDS9/J41xQ/SHJNb7ncnX21NW7LrcPZjX6rj8KZmW0Pp0nea4KSQmKdtrhKpeGnImsZIPdiS+mbnQjCPZosuTSZEiS48rK6juBEfAkeK/acsbU13U0zXoGNrU5sCH6WaZJSL9zLvN0ZQMERoHjJPeYYwAcMbsimOCGMNh4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HC5aFZ+AVUf42ydCGK5iw4GtFLL81FSS5O97BdvKyYY=;
+ b=sSx8Qs6hiyUyf+z8ckuS58GQ4wSCc1UPq0Jg1cIZSwk6Fn1WwSBuwhh5PF7Uvb4syGL4xZw4Ol7lRi9HOUVPtTCMZJgWFBvSNmsyRpE+jDQk8rEsMiZ7chKqu5nPkiNsx2vOZPb6qruuoXFm4n1t1FGyvXi2HXNCZC3x9Q1iUWY=
+Received: from VI1PR04MB4158.eurprd04.prod.outlook.com (52.133.15.33) by
+ VI1PR04MB4734.eurprd04.prod.outlook.com (20.177.48.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Tue, 24 Sep 2019 03:30:06 +0000
+Received: from VI1PR04MB4158.eurprd04.prod.outlook.com
+ ([fe80::fddc:d4ac:5cb9:e1c6]) by VI1PR04MB4158.eurprd04.prod.outlook.com
+ ([fe80::fddc:d4ac:5cb9:e1c6%6]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
+ 03:30:06 +0000
+From:   Yinbo Zhu <yinbo.zhu@nxp.com>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
+ layerscape
+Thread-Topic: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
+ layerscape
+Thread-Index: AQHVcogKKVIHkmsOA0qi72Us7K9FWKc6KxDQ
+Date:   Tue, 24 Sep 2019 03:30:06 +0000
+Message-ID: <VI1PR04MB4158004466B191173A34B4C9E9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
+References: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yinbo.zhu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c380c85-39d3-4e96-6dfa-08d7409f7e77
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4734;
+x-ms-traffictypediagnostic: VI1PR04MB4734:|VI1PR04MB4734:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4734B17CCED5B858B5FA9661E9840@VI1PR04MB4734.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0170DAF08C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(13464003)(64756008)(76176011)(66446008)(66556008)(25786009)(446003)(3846002)(8676002)(11346002)(54906003)(76116006)(6246003)(7736002)(305945005)(33656002)(52536014)(4326008)(81156014)(81166006)(66946007)(9686003)(66476007)(8936002)(110136005)(476003)(53546011)(486006)(186003)(71190400001)(6506007)(102836004)(2906002)(71200400001)(7696005)(316002)(478600001)(66066001)(74316002)(229853002)(99286004)(5660300002)(14454004)(14444005)(44832011)(6436002)(55016002)(86362001)(256004)(26005)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4734;H:VI1PR04MB4158.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RB6t52t6/eINHI95APCGLGZNwZ0J8MGTwgvAVBa0XOY8JpuRMdfIrydlYQsq+VRTGGHh9CqDbkH1bzTQUGu4kBXsvclK+My7jssVOtdCn3grWwgvmT9CC8Bz1H0P2Nl2coyGG6oq4I1Bb2tR5UhLpO/Tm+0lce2o5ylolCucsdVsalRS9lTVBxuM5ovtG7q+BR7jHYcuf6rk9LUDd3/BntVPC+Jv50lW5E0e5CWexutBntCDM7b4m8fIaZjJocSTnIjwSAs54m8MLzLxYNupi2A67iqZlBl8TXWMODqMAybjzURrRFU8tJckyUZ43/GXK3LPOqR6ZBq0ptNvg0dTGqP/GqRn2dYir4+82ZFInzIgvB60pu2JOCrWjiDOVzFmy/paF+XpJJ9YWncH7MVmowke050N9VkcgC+4XuA8DfQ=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190906035813.24046-1-abhishek.shah@broadcom.com>
- <20190906083816.GD9720@e119886-lin.cambridge.arm.com> <CAKUFe6ZuRGJSmLdXqTWJzX-nE_Vh4yEQF_-rf+BWFrD_r4BRaQ@mail.gmail.com>
- <20190906100114.GE9720@e119886-lin.cambridge.arm.com> <CAKUFe6aHGM0qHXcwopVfv_6+ALA=zmtBzSwNUO6qg8OEG-h_Ww@mail.gmail.com>
-In-Reply-To: <CAKUFe6aHGM0qHXcwopVfv_6+ALA=zmtBzSwNUO6qg8OEG-h_Ww@mail.gmail.com>
-From:   Abhishek Shah <abhishek.shah@broadcom.com>
-Date:   Tue, 24 Sep 2019 08:58:40 +0530
-Message-ID: <CAKUFe6Zoo9r9tw-33VXjECX-iP=PNYJgxBb5LaOQrZ9-Tr+J6A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: iproc: Invalidate PAXB address mapping before
- programming it
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c380c85-39d3-4e96-6dfa-08d7409f7e77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 03:30:06.0769
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JkDIxwNLFFBjir1vpedtEtGEEXMwg47BGeu0h4Zkb26L/je881c4Cx1/KzT1NebGt+C8Ow38f+k8IoatS5wn2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4734
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn/Lorenzo,
-
-Can you please help review this patch?
-
-
-Regards,
-Abhishek
-
-
-On Fri, Sep 6, 2019 at 7:41 PM Abhishek Shah <abhishek.shah@broadcom.com> wrote:
->
-> Hi Andrew,
->
->
-> On Fri, Sep 6, 2019 at 3:31 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> >
-> > On Fri, Sep 06, 2019 at 02:55:19PM +0530, Abhishek Shah wrote:
-> > > Hi Andrew,
-> > >
-> > > Thanks for the review. Please see my response inline:
-> > >
-> > > On Fri, Sep 6, 2019 at 2:08 PM Andrew Murray <andrew.murray@arm.com> wrote:
-> > > >
-> > > > On Fri, Sep 06, 2019 at 09:28:13AM +0530, Abhishek Shah wrote:
-> > > > > Invalidate PAXB inbound/outbound address mapping each time before
-> > > > > programming it. This is helpful for the cases where we need to
-> > > > > reprogram inbound/outbound address mapping without resetting PAXB.
-> > > > > kexec kernel is one such example.
-> > > >
-> > > > Why is this approach better than resetting the PAXB (I assume that's
-> > > > the PCI controller IP)? Wouldn't resetting the PAXB address this issue,
-> > > > and ensure that no other configuration is left behind?
-> > > >
-> > > We normally reset PAXB in the firmware(ATF). But for cases like kexec
-> > > kernel boot,
-> > > we do not execute any firmware code and directly boot into kernel.
-> > >
-> > > We could have done PAXB reset in the driver itself as you have suggested here.
-> > > But note that this detail could vary for each SoC, because these
-> > > registers are not part
-> > > of PAXB register space itself, rather exists in a register space responsible for
-> > > controlling power to various wrappers in PCIe IP. Normally, this kind
-> > > of SoC specific
-> > > details are handled in firmware itself, we don't bring them to driver level.
-> >
-> > OK understood.
-> >
-> > >
-> > > > Or is this related to earlier boot stages loading firmware for the emulated
-> > > > downstream endpoints (ep_is_internal)?
-> > > >
-> > > > Finally, in the case where ep_is_internal do you need to disable anything
-> > > > prior to invalidating the mappings?
-> > > >
-> > > No, ep_is_internal  is indicator for PAXC IP. It does not have
-> > > mappings as in PAXB.
-> >
-> > I think I meant !ep_is_internal. I.e. is there possibility of inbound traffic
-> > prior to invalidating the mappings. I'd assume not, but that's an assumption.
-> >
-> No, EP devices are not even enumerated yet.
->
-> > Either way:
-> >
-> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> >
-> > >
-> > >
-> > > Regards,
-> > > Abhishek
-> > > > >
-> > > > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > > > > Reviewed-by: Vikram Mysore Prakash <vikram.prakash@broadcom.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/pcie-iproc.c | 28 ++++++++++++++++++++++++++++
-> > > > >  1 file changed, 28 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > > > index e3ca46497470..99a9521ba7ab 100644
-> > > > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > > > @@ -1245,6 +1245,32 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
-> > > > >       return ret;
-> > > > >  }
-> > > > >
-> > > > > +static void iproc_pcie_invalidate_mapping(struct iproc_pcie *pcie)
-> > > > > +{
-> > > > > +     struct iproc_pcie_ib *ib = &pcie->ib;
-> > > > > +     struct iproc_pcie_ob *ob = &pcie->ob;
-> > > > > +     int idx;
-> > > > > +
-> > > > > +     if (pcie->ep_is_internal)
-> > > > > +             return;
-> > > > > +
-> > > > > +     if (pcie->need_ob_cfg) {
-> > > > > +             /* iterate through all OARR mapping regions */
-> > > > > +             for (idx = ob->nr_windows - 1; idx >= 0; idx--) {
-> > > > > +                     iproc_pcie_write_reg(pcie,
-> > > > > +                                          MAP_REG(IPROC_PCIE_OARR0, idx), 0);
-> > > > > +             }
-> > > > > +     }
-> > > > > +
-> > > > > +     if (pcie->need_ib_cfg) {
-> > > > > +             /* iterate through all IARR mapping regions */
-> > > > > +             for (idx = 0; idx < ib->nr_regions; idx++) {
-> > > > > +                     iproc_pcie_write_reg(pcie,
-> > > > > +                                          MAP_REG(IPROC_PCIE_IARR0, idx), 0);
-> > > > > +             }
-> > > > > +     }
-> > > > > +}
-> > > > > +
-> > > > >  static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
-> > > > >                              struct device_node *msi_node,
-> > > > >                              u64 *msi_addr)
-> > > > > @@ -1517,6 +1543,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
-> > > > >       iproc_pcie_perst_ctrl(pcie, true);
-> > > > >       iproc_pcie_perst_ctrl(pcie, false);
-> > > > >
-> > > > > +     iproc_pcie_invalidate_mapping(pcie);
-> > > > > +
-> > > > >       if (pcie->need_ob_cfg) {
-> > > > >               ret = iproc_pcie_map_ranges(pcie, res);
-> > > > >               if (ret) {
-> > > >
-> > > > The code changes look good to me.
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Andrew Murray
-> > > >
-> > > > > --
-> > > > > 2.17.1
-> > > > >
+SGksDQoNCkNoYW5nZSBpbiB2MjoNCgkJCQltb3ZlIHRoZSBvdGcgcHJvcGVydHkgZnJvbSBkdHNp
+IHRvIGR0cy4NCg0KUmVnYXJkcywNCllpbmJvIFpodS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCkZyb206IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+IA0KU2VudDogMjAxOcTq
+OdTCMjTI1SAxMToyOQ0KVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBM
+aSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47
+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQpDYzogWWluYm8gWmh1IDx5aW5i
+by56aHVAbnhwLmNvbT47IFhpYW9ibyBYaWUgPHhpYW9iby54aWVAbnhwLmNvbT47IEppYWZlaSBQ
+YW4gPGppYWZlaS5wYW5AbnhwLmNvbT47IFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+OyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggdjJd
+IHVzYjogZHdjMzogZW5hYmxlIG90ZyBtb2RlIGZvciBkd2MzIHVzYiBpcCBvbiBsYXllcnNjYXBl
+DQoNCmxheWVyc2NhcGUgb3RnIGZ1bmN0aW9uIHNob3VsZCBiZSBzdXBwb3J0ZWQgSE5QIFNSUCBh
+bmQgQURQIHByb3RvY29sIGFjY3JvaW5nIHRvIHJtIGRvYywgYnV0IGR3YzMgY29kZSBub3QgcmVh
+bGl6ZSBpdCBhbmQgdXNlIGlkIHBpbiB0byBkZXRlY3Qgd2hvIGlzIGhvc3Qgb3IgZGV2aWNlKDAg
+aXMgaG9zdCAxIGlzIGRldmljZSkgdGhpcyBwYXRjaCBpcyB0byBlbmFibGUgT1RHIG1vZGUgb24g
+bHMxMDI4YXJkYiBsczEwODhhcmRiIGFuZCBsczEwNDZhcmRiIGluIGR0cw0KDQpTaWduZWQtb2Zm
+LWJ5OiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cyB8IDEgKw0KIDMgZmlsZXMg
+Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KaW5kZXggOWZiOTExMy4uMDc2Y2FjNiAxMDA2
+NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
+dHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
+dHMNCkBAIC0xNzEsMyArMTcxLDcgQEANCiAmc2F0YSB7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
+Ow0KKw0KKyZ1c2IxIHsNCisJZHJfbW9kZSA9ICJvdGciOw0KK307DQpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLXJkYi5kdHMNCmluZGV4IDZhNjUxNGQu
+LjBjNzQyYmUgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS1yZGIuZHRzDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS1yZGIuZHRzDQpAQCAtMTIyLDYgKzEyMiwxMCBAQA0KIAl9Ow0KIH07DQogDQorJnVz
+YjEgew0KKwlkcl9tb2RlID0gIm90ZyI7DQorfTsNCisNCiAjaW5jbHVkZSAiZnNsLWxzMTA0Ni1w
+b3N0LmR0c2kiDQogDQogJmZtYW4wIHsNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cw0KaW5kZXggOGU5MjVkZi4uOTBiMTk4OSAxMDA2NDQN
+Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
+CisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
+CkBAIC05NSw1ICs5NSw2IEBADQogfTsNCiANCiAmdXNiMSB7DQorCWRyX21vZGUgPSAib3RnIjsN
+CiAJc3RhdHVzID0gIm9rYXkiOw0KIH07DQotLQ0KMi45LjUNCg0K
