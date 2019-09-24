@@ -2,173 +2,120 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C09C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02D4C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC1A20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F1A21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633495AbfIXVxk convert rfc822-to-8bit (ORCPT
+        id S2633593AbfIXVyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:53:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33767 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbfIXVxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:53:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 14:53:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="364139355"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga005.jf.intel.com with ESMTP; 24 Sep 2019 14:53:38 -0700
-Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 24 Sep 2019 14:53:38 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
- ORSMSX114.amr.corp.intel.com ([169.254.8.55]) with mapi id 14.03.0439.000;
- Tue, 24 Sep 2019 14:53:37 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     "Hall, Christopher S" <christopher.s.hall@intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Richard Cochran <richardcochran@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Index: AQHVaGiJVAygg13ZgEaRBcEK9JTjfKc7SaLQgACGwQD//6LxwA==
-Date:   Tue, 24 Sep 2019 21:53:37 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB58968D3795@ORSMSX121.amr.corp.intel.com>
-References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
- <20190911061622.774006-2-felipe.balbi@linux.intel.com>
- <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
- <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
-In-Reply-To: <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmUxYjIwMWItZTAwMi00NGQ4LTg0M2MtYWFlMDhiZTRkOWIzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTDl3bG1FXC9uNXkxXC80eGlpeDd1QUxGKytyRVlkcW40allxdTVEUTVENTh6WGdhRktcL21cL1hWNHZvTGh2QVlOcTEifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 24 Sep 2019 17:54:04 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42653 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728183AbfIXVyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 17:54:03 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1A2C543EFAD;
+        Wed, 25 Sep 2019 07:53:55 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iCskr-0005bn-N3; Wed, 25 Sep 2019 07:53:53 +1000
+Date:   Wed, 25 Sep 2019 07:53:53 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>, dsterba@suse.cz,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190924215353.GG16973@dread.disaster.area>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+ <20190923171710.GN2751@twin.jikos.cz>
+ <20190923175146.GT2229799@magnolia>
+ <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=7-415B0cAAAA:8 a=8DDTXLWI6Pjby6uLqAQA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Hall, Christopher S
-> Sent: Tuesday, September 24, 2019 1:24 PM
-> To: Keller, Jacob E <jacob.e.keller@intel.com>; Felipe Balbi
-> <felipe.balbi@linux.intel.com>; Richard Cochran <richardcochran@gmail.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
+On Tue, Sep 24, 2019 at 11:19:29PM +0200, Vlastimil Babka wrote:
+> On 9/23/19 7:51 PM, Darrick J. Wong wrote:
+> > On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
+> >> On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
+> >>> So if anyone thinks this is a good idea, please express it (preferably
+> >>> in a formal way such as Acked-by), otherwise it seems the patch will be
+> >>> dropped (due to a private NACK, apparently).
+> > 
+> > Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
+> > privilege of gutting a patch via private NAK without any of that open
+> > development discussion incovenience. <grumble>
+> > 
+> > As far as XFS is concerned I merged Dave's series that checks the
+> > alignment of io memory allocations and falls back to vmalloc if the
+> > alignment won't work, because I got tired of scrolling past the endless
+> > discussion and bug reports and inaction spanning months.
 > 
-> > -----Original Message-----
-> > From: Keller, Jacob E
-> > Sent: Tuesday, September 24, 2019 12:23 PM
-> > To: Felipe Balbi <felipe.balbi@linux.intel.com>; Richard Cochran
-> > <richardcochran@gmail.com>
-> > Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
-> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org]
-> > On
-> > > Behalf Of Felipe Balbi
-> > > Sent: Tuesday, September 10, 2019 11:16 PM
-> > > To: Richard Cochran <richardcochran@gmail.com>
-> > > Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
-> > netdev@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; Felipe Balbi
-> > <felipe.balbi@linux.intel.com>
-> > > Subject: [PATCH v4 2/2] PTP: add support for one-shot output
-> > >
-> > > Some controllers allow for a one-shot output pulse, in contrast to
-> > > periodic output. Now that we have extensible versions of our IOCTLs, we
-> > > can finally make use of the 'flags' field to pass a bit telling driver
-> > > that if we want one-shot pulse output.
-> > >
-> > > Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-> > > ---
-> > >
-> > > Changes since v3:
-> > > 	- Remove bogus bitwise negation
-> > >
-> > > Changes since v2:
-> > > 	- Add _PEROUT_ to bit macro
-> > >
-> > > Changes since v1:
-> > > 	- remove comment from .flags field
-> > >
-> > >  include/uapi/linux/ptp_clock.h | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/include/uapi/linux/ptp_clock.h
-> > b/include/uapi/linux/ptp_clock.h
-> > > index 9a0af3511b68..f16301015949 100644
-> > > --- a/include/uapi/linux/ptp_clock.h
-> > > +++ b/include/uapi/linux/ptp_clock.h
-> > > @@ -38,8 +38,8 @@
-> > >  /*
-> > >   * Bits of the ptp_perout_request.flags field:
-> > >   */
-> > > -#define PTP_PEROUT_VALID_FLAGS (0)
-> > > -
-> > > +#define PTP_PEROUT_ONE_SHOT (1<<0)
-> > > +#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
-> > >  /*
-> > >   * struct ptp_clock_time - represents a time value
-> > >   *
-> > > @@ -77,7 +77,7 @@ struct ptp_perout_request {
-> > >  	struct ptp_clock_time start;  /* Absolute start time. */
-> > >  	struct ptp_clock_time period; /* Desired period, zero means disable.
-> > */
-> > >  	unsigned int index;           /* Which channel to configure. */
-> > > -	unsigned int flags;           /* Reserved for future use. */
-> > > +	unsigned int flags;
-> > >  	unsigned int rsv[4];          /* Reserved for future use. */
-> > >  };
-> > >
-> > > --
-> > > 2.23.0
-> >
-> > Hi Felipe,
-> >
-> > Do you have any examples for how you envision using this? I don't see any
-> > drivers or other code on the list for doing so.
-> >
-> > Additionally, it seems weird because we do not have support for specifying
-> > the pulse width. I guess you leave that up to driver choice?
-> >
-> > Thanks,
-> > Jake
-> 
+> I think it's a big fail of kmalloc API that you have to do that, and
+> especially with vmalloc, which has the overhead of setting up page
+> tables, and it's a waste for allocation requests smaller than page size.
+> I wish we could have nice things.
 
-Also a quick note/question:
+I don't think the problem here is the code. The problem here is that
+we have a dysfunctional development community and there are no
+processes we can follow to ensure architectural problems in core
+subsystems are addressed in a timely manner...
 
-Is there a spot where flags are explicitly checked and rejected? I don't see any driver which would reject this as "not an acceptable configuration".
+And this criticism isn't just of the mm/ here - this alignment
+problem is exacerbated by exactly the same issue on the block layer
+side. i.e. the block layer and drivers have -zero- bounds checking
+to catch these sorts of things and the block layer maintainer will
+not accept patches for runtime checks that would catch these issues
+and make them instantly visible to us.
 
-I.e. if a function calls the PEROUT_REQUEST2 ioctl, they will pass the flag through, and drivers today don't seem to bother checking flags at all.
+These are not code problems: we can fix the problems with code (and
+I have done so to demonstrate "this is how we do what you say is
+impossible").  The problem here is people in positions of
+control/power are repeatedly demonstrating an inability to
+compromise to reach a solution that works for everyone.
 
-I think we also need a patch so that all drivers are updated to reject non-zero flags, ensuring that they do not attempt to configure a request incorrectly.
+It's far better for us just to work around bullshit like this in XFS
+now, then when the core subsystems get they act together years down
+the track we can remove the workaround from XFS. Users don't care
+how we fix the problem, they just want it fixed. If that means we
+have to route around dysfunctional developer groups, then we'll just
+have to do that....
 
-Thanks,
-Jake
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
