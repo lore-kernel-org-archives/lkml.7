@@ -2,115 +2,321 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B9AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFA8C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0372A214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3670F214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EU4LTSeT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="098imhfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395148AbfIXJSS (ORCPT
+        id S2504143AbfIXJUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:18:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43950 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfIXJSR (ORCPT
+        Tue, 24 Sep 2019 05:20:53 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36497 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405138AbfIXJUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:18:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YSjhyC1lKRB8fubVQEKHM7jmo9vsi65UYntnwYqseFQ=; b=EU4LTSeTtqxV9VDJrpZZt3ruH
-        RnUeZYjlATkQ+o+C5+ROiZN27BBCfJWvlJpGuODkYxVTtV62XtX5u+/TfEtKgPtYuC1803wzuLpmo
-        2NRs9TVIz3ep1Zn+JQmSdFozMjFEhHRxbvq6pJ8YgKJQi1fnRNB5AVgendjVY4EWEXJowjIdPUNCR
-        WZaGzFSLI4kXTXE7qfdf1cSuSQDZmjTppV6oJ3/si42aaiLKltB1HLzzHaiUrFMFRHaV79PqFrXdK
-        IIp4fjZa25loT69yYYRij/2g28K/hwTv9jO6JUBcBR5pKvlor6U9wf3iG2lizQwQog4BTjN5YHPBa
-        CXn6Y9B3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCgwi-0007gZ-I9; Tue, 24 Sep 2019 09:17:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 61313305E35;
-        Tue, 24 Sep 2019 11:16:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E73F720D80D41; Tue, 24 Sep 2019 11:17:14 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 11:17:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
- <20190923151519.GE2369@hirez.programming.kicks-ass.net>
- <20190923152856.GB17206@dhcp22.suse.cz>
- <20190923154852.GG2369@hirez.programming.kicks-ass.net>
- <20190923165235.GD17206@dhcp22.suse.cz>
- <20190923203410.GI2369@hirez.programming.kicks-ass.net>
- <20190924074751.GB23050@dhcp22.suse.cz>
+        Tue, 24 Sep 2019 05:20:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k20so1011331oih.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 02:20:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=t63WI6jnEVUeiSnM61KUP9eWloPNpDRUCDwDuMDDoVg=;
+        b=098imhfXUnWyUFSKUmzK25160O/img3eT5gYzMnSulDsq5DpyYfnq0WE8Mzkwnk/SB
+         b6UE1jvvMPLEeShXakMQBKcKxtkD4r+cdYynG1yrLvpikA9s/3EZqeMYL4nmVn1xoCDK
+         1KX3ZlcR6pFUIAfqJ8cS8yftBxxG4vuxF3jFfG8pQX89VdmfTaAtGnnVhvmSD8uAUcJC
+         dHSzZtbuoNY4r/a41bQXNNhs8gPGBj4XdZObMZvN8C0iVHBWuQm+DpBdGWuyq+QyPi1Z
+         gAdt92wruxr4QXqO0gkH/gT5lOJqjsHqQ3EFkFtvAky7b/8zK0q8awCRfq54nOefPTdm
+         AXWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=t63WI6jnEVUeiSnM61KUP9eWloPNpDRUCDwDuMDDoVg=;
+        b=EclBwcKn5ryPGeLd8oA7QQxeM8qTyJQTNuMto7chz1Ud27qcTSmS0QG153MrvPUDze
+         RpAtQdAyCrmyS1swj9adfk7wOhwuaGvEUugdva/qE4ncZe23770hwvQIFUGueobnARo0
+         YI0h8xjXxgPWInE8FF4Uux862uhnzIS9N0qQqwv4nVMP0e4Cvyd4aA4+TGgjKPPDha0A
+         jsWX2ghTa8l7BuGq6kdylRK0V901dudfIwKTotqlbwhPpSq2/xJom8SAXKeS2uwZOlTF
+         UbC8f8XjkFHe70d9Iv49KsyGQfqY+KnujEpb0SjmH+uMMVwlpniqAiMe9VxJolcHU3k8
+         wDhA==
+X-Gm-Message-State: APjAAAXFWiscrrLOmAwcun/l1ju283y3HbxMAXhkMvTwsbtqMXOtnF/v
+        PadpuYnbUWI2HTL+lK4PhiKHcMVNAFCrxXXytqc+tuq0
+X-Google-Smtp-Source: APXvYqxVUXxEwWWRw3DeXIcBvN1WnJ5y+L/y+uMjcWYYPzubyms6LUqyOC5Htl5jD2a2NgXsY2NXGHxWaA10vo2/74s=
+X-Received: by 2002:aca:4406:: with SMTP id r6mr1269018oia.175.1569316849530;
+ Tue, 24 Sep 2019 02:20:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924074751.GB23050@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190923175211.2060-1-brgl@bgdev.pl> <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 24 Sep 2019 11:20:38 +0200
+Message-ID: <CAMpxmJUffRsAw9sMr2KqgqSp+houehBdpaSSG2UweYyUo5hNRw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 09:47:51AM +0200, Michal Hocko wrote:
-> On Mon 23-09-19 22:34:10, Peter Zijlstra wrote:
-> > On Mon, Sep 23, 2019 at 06:52:35PM +0200, Michal Hocko wrote:
+pon., 23 wrz 2019 o 22:38 Rob Herring <robh+dt@kernel.org> napisa=C5=82(a):
+>
+> On Mon, Sep 23, 2019 at 12:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Convert the binding document for at24 EEPROMs from txt to yaml. The
+> > compatible property uses a regex pattern to address all the possible
+> > combinations of "vendor,model" strings.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../devicetree/bindings/eeprom/at24.txt       |  90 +--------------
+> >  .../devicetree/bindings/eeprom/at24.yaml      | 107 ++++++++++++++++++
+> >  MAINTAINERS                                   |   2 +-
+> >  3 files changed, 109 insertions(+), 90 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+>
 > [...]
-> > > I even the
-> > > ACPI standard is considering this optional. Yunsheng Lin has referred to
-> > > the specific part of the standard in one of the earlier discussions.
-> > > Trying to guess the node affinity is worse than providing all CPUs IMHO.
-> > 
-> > I'm saying the ACPI standard is wrong.
-> 
-> Even if you were right on this the reality is that a HW is likely to
-> follow that standard and we cannot rule out NUMA_NO_NODE being
-> specified. As of now we would access beyond the defined array and that
-> is clearly a bug.
+>
+> > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Docum=
+entation/devicetree/bindings/eeprom/at24.yaml
+> > new file mode 100644
+> > index 000000000000..28c8b068c8a1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > @@ -0,0 +1,107 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright 2019 BayLibre SAS
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: I2C EEPROMs compatible with Atmel's AT24
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > +
+> > +properties:
+> > +  compatible:
+>
+> Did you run this thru 'make dt_bindings_check' and is dt-schema up to
+> date? I don't think it will pass and if it does I want to fix that.
+>
 
-Right, because the device node is wrong, so we fix _that_!
+I couldn't get the dt_binding_check target to work, but I ran it
+through dt-doc-validate directly until it didn't complain.
 
-> Let's assume that this is really a bug for a moment. What are you going
-> to do about that? BUG_ON? I do not really see any solution besides to either
-> provide something sensible or BUG_ON. If you are worried about a
-> conditional then this should be pretty easy to solve by starting the
-> array at -1 index and associate it with the online cpu mask.
+> > +    additionalItems: true
+>
+> We pretty much never allow this.
+>
+> > +    maxItems: 2
+>
+> This applies to arrays...
+>
+> > +    pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),=
+24(c|cs|mac)[0-9]+$"
+>
+> And this to strings which is non-sense. What you want is something like t=
+his:
+>
+> minItems: 1
+> maxItems: 2
+> items:
+>   - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(=
+c|cs|mac)[0-9]+$"
+>   - pattern: "^atmel,24(c|cs|mac)[0-9]+$"
+>
+> This would allow 'atmel' twice, but entries have to be unique already.
+> It doesn't enforce the part numbers matching though. For that, you'd
+> need either a bunch of these under a oneOf instead:
+>
+> items:
+>   - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c=
+00$"
+>   - const: atmel,24c00
+>
+> Or just add this to the above with an 'allOf':
+>
+> items:
+>   pattern: "(c00|c01|mac402|...)$"
+>
 
-The same thing I proposed earlier; force the device node to 0 (or any
-other convenient random valid value) and issue a FW_BUG message to the
-console.
+I'm lost here - what do you mean add this to the above with an
+'allOf'? I can't really imagine an example for that.
 
+> Note the lack of '-' under items. That means the schema applies to all en=
+tries.
+>
+> > +    oneOf:
+> > +      - const: nxp,se97b
+> > +      - const: renesas,r1ex24002
+> > +      - const: renesas,r1ex24016
+> > +      - const: renesas,r1ex24128
+> > +      - const: rohm,br24t01
+>
+> For this part, you probably want:
+>
+> oneOf:
+>   - items:
+>       - const: nxp,se97b
+>       - const: atmel,24c02
+>   - items:
+>       ...
+>
+> And for the spd cases...
+>
+> > +    contains:
+> > +      enum:
+>
+> allOf:
+>   - oneOf:
+>       # all the above stuff
+>   - contains:
+>       enum:
+>
+
+I'm not sure I follow the entire thing. I'll try to prepare a v2 but I
+don't really expect it to be right already.
+
+> > +        - atmel,24c00
+> > +        - atmel,24c01
+> > +        - atmel,24cs01
+> > +        - atmel,24c02
+> > +        - atmel,24cs02
+> > +        - atmel,24mac402
+> > +        - atmel,24mac602
+> > +        - atmel,spd
+> > +        - atmel,24c04
+> > +        - atmel,24cs04
+> > +        - atmel,24c08
+> > +        - atmel,24cs08
+> > +        - atmel,24c16
+> > +        - atmel,24cs16
+> > +        - atmel,24c32
+> > +        - atmel,24cs32
+> > +        - atmel,24c64
+> > +        - atmel,24cs64
+> > +        - atmel,24c128
+> > +        - atmel,24c256
+> > +        - atmel,24c512
+> > +        - atmel,24c1024
+> > +        - atmel,24c2048
+> > +
+> > +  reg:
+> > +    description:
+> > +      The I2C slave address of the EEPROM.
+> > +    maxItems: 1
+> > +
+> > +  pagesize:
+> > +    description:
+> > +      The length of the pagesize for writing. Please consult the
+> > +      manual of your device, that value varies a lot. A wrong value
+> > +      may result in data loss! If not specified, a safety value of
+> > +      '1' is used which will be very slow.
+> > +    type: integer
+>
+> Other than boolean, you need to reference a type in types.yaml.
+>
+> Does it really vary too much to list out possible values?
+>
+
+Nobody is using anything other than 1, 8, 16, 32 and 64, so I guess we
+can limit ourselves to those for now.
+
+> > +
+> > +  read-only:
+> > +    description:
+> > +      This parameterless property disables writes to the eeprom.
+> > +    type: boolean
+> > +
+> > +  size:
+> > +    description:
+> > +      Total eeprom size in bytes.
+> > +    type: integer
+> > +
+> > +  no-read-rollover:
+> > +    description:
+> > +      This parameterless property indicates that the multi-address
+> > +      eeprom does not automatically roll over reads to the next slave
+> > +      address. Please consult the manual of your device.
+> > +    type: boolean
+> > +
+> > +  wp-gpios:
+> > +    description:
+> > +      GPIO to which the write-protect pin of the chip is connected.
+> > +    maxItems: 1
+> > +
+> > +  address-width:
+> > +    description:
+> > +      Number of address bits (one of 8, 16).
+>
+> Sounds like a constraint...
+
+Right.
+
+>
+> > +    type: integer
+> > +
+> > +  num-addresses:
+> > +    description:
+> > +      Total number of i2c slave addresses this device takes.
+>
+> 2^32 addresses okay?
+>
+
+Nope, I'll fix it.
+
+Thanks for the review!
+
+Bart
+
+> > +    type: integer
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    eeprom@52 {
+> > +        compatible =3D "microchip,24c32", "atmel,24c32";
+> > +        reg =3D <0x52>;
+> > +        pagesize =3D <32>;
+> > +        wp-gpios =3D <&gpio1 3 0>;
+> > +        num-addresses =3D <8>;
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index a400af0501c9..3c7ced686966 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2698,7 +2698,7 @@ M:        Bartosz Golaszewski <bgolaszewski@bayli=
+bre.com>
+> >  L:     linux-i2c@vger.kernel.org
+> >  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.gi=
+t
+> >  S:     Maintained
+> > -F:     Documentation/devicetree/bindings/eeprom/at24.txt
+> > +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
+> >  F:     drivers/misc/eeprom/at24.c
+> >
+> >  ATA OVER ETHERNET (AOE) DRIVER
+> > --
+> > 2.23.0
+> >
