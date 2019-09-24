@@ -2,107 +2,82 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88C4C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F0C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBFF214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ah4V2Y1C"
+	by mail.kernel.org (Postfix) with ESMTP id BE7CC20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfIXP2u (ORCPT
+        id S2389469AbfIXP3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:28:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55546 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfIXP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:28:50 -0400
-Received: from zn.tnic (p200300EC2F0DB700DCC45CFC64A01FDA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:b700:dcc4:5cfc:64a0:1fda])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 12EB71EC03F6;
-        Tue, 24 Sep 2019 17:28:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569338929;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LtNkIhYtzZ/fSLb+hlvCu4hqnbeOcZTKSutkYY729Ow=;
-        b=Ah4V2Y1C6XT9qdCd+m8NCyjExYvexZndou3aLdHN7V/0brF96jTFulJDoLBLoRwWje+OJn
-        LebFupY5YsOtDeCDRT3nMt2x/T2X7SZoXWBXEqYKJOMjzQ0a+f6NbCxN/Ikr+korubwnXj
-        5pnhx05KO0HF0zkOXtSs6LvQgbLSpLk=
-Date:   Tue, 24 Sep 2019 17:28:48 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Kai Huang <kai.huang@linux.intel.com>
-Subject: Re: [PATCH v22 01/24] x86/cpufeatures: x86/msr: Add Intel SGX
- hardware bits
-Message-ID: <20190924152848.GF19317@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-2-jarkko.sakkinen@linux.intel.com>
+        Tue, 24 Sep 2019 11:29:16 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:52912 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfIXP3Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:29:16 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iCmkc-00068z-BI; Tue, 24 Sep 2019 09:29:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iCmkb-0003bd-K5; Tue, 24 Sep 2019 09:29:14 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20190922115247.GA2679387@kroah.com>
+        <20190923200818.GA116090@gmail.com> <20190924113135.GA82089@gmail.com>
+Date:   Tue, 24 Sep 2019 10:28:45 -0500
+In-Reply-To: <20190924113135.GA82089@gmail.com> (Ingo Molnar's message of
+        "Tue, 24 Sep 2019 13:31:35 +0200")
+Message-ID: <874l11u30y.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190903142655.21943-2-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1iCmkb-0003bd-K5;;;mid=<874l11u30y.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+mve6moSKjF+aBwF5knbG1Diii4/8YKDM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [Tree, v2] De-clutter the top level directory, move ipc/ => kernel/ipc/, samples/ => Documentation/samples/ and sound/ => drivers/sound/
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 05:26:32PM +0300, Jarkko Sakkinen wrote:
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 998c2cc08363..c5582e766121 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -222,12 +222,22 @@
->  #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
->  #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
->  
-> -/* Virtualization flags: Linux defined, word 8 */
-> -#define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
-> -#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
-> -#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
-> -#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
-> -#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
-> +/*
-> + * Scattered Intel features: Linux defined, word 8.
-> + *
-> + * Note that the bit location of the SGX features is meaningful as KVM expects
-> + * the Linux defined bit to match the Intel defined bit, e.g. X86_FEATURE_SGX1
-> + * must remain at bit 0, SGX2 at bit 1, etc...
+Ingo Molnar <mingo@kernel.org> writes:
 
-Eww, no.
+>  - Split it into finer grained steps (3 instead of 2 patches per 
+>    movement), for easier review and bisection testing:
+>
+>      toplevel: Move ipc/ to kernel/ipc/: move the files
+>      toplevel: Move ipc/ to kernel/ipc/: adjust the build system
+>      toplevel: Move ipc/ to kernel/ipc/: adjust comments and documentation
 
-> + */
-> +#define X86_FEATURE_SGX1		( 8*32+ 0) /* SGX1 leaf functions */
-> +#define X86_FEATURE_SGX2		( 8*32+ 1) /* SGX2 leaf functions */
-> +/* Bits [0:7] are reserved for SGX */
+Can we not mess with ipc/ please.
 
-That leaf has "Bits 31 - 07: Reserved." So what happens if they start
-adding more bits there? We shoosh the other defines even further into
-the word?
+I know that will mess with my muscle memory and I don't see the point.
+Especially as long as it is named ipc and not sysvipc.
 
-Talk to your hw guys, if the plan is to leave those bits for other
-feature flags, then let's allocate a new capability word for F12_EAX.
+A half cleanup really looks worse than a real cleanup.
 
-Thx.
+SysV IPC really is a side car on the kernel and on unix in general
+and having the directory structure reflect that seems completely sensible.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Eric
