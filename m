@@ -2,342 +2,327 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB61FC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB41C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B4F21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2860221D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343630;
-	bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02GYpCJshANDoIkyfPNMgnQkz9J+dF8TA3Bqq5wJce9HWS/KATLtc+XP6kGdG91kq
-	 bS/OpODriCShkoMT14vYP0saFYGnXuUjR2WcS2Uz3LHoZPL8+G3tjVwgG6Id1JYZsq
-	 ZDTCTFRwUnwC3NUZrPQ5UJGVry85ZBSeqBAX+Xac=
+	s=default; t=1569343637;
+	bh=/Nn0ee1vIpZtGu03HDJGPvp+c1GDt/VLNIq0Exm+K5o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=dVebarblFKD7YroaQ7PCpZIdUSWKBLwZgE+WTc6zKgWe5wgJqkeIYD3Wtnqvjid6F
+	 CKztwN82db+NeU76pgY4seUqFx1WnTCH6HDJXMdpoqL6edsm17YpBGhg+H8+vxbzEx
+	 mesebl9ZMlcff5FkYWTfru+jaIGxqA8x4zul7znE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410309AbfIXQrK (ORCPT
+        id S2410349AbfIXQrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38062 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:33846 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbfIXQrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:03 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A73B21D6C;
-        Tue, 24 Sep 2019 16:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343622;
-        bh=vw8QC3vuvRyhhmM7FsufE5EY78S4mly+jhmZczP11nw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLp4lJhWRHW07vopYWLnSx8oUmJmB6wReH8Uxs/i5gVreLqprlokktpbPlFJ5nMW+
-         Dde47oTWF6RrjFfiF8+VuP2+5KaTz58Ldva60d6Rl3/EmOPkX+3jAJmgQGEjCF12/u
-         MWjWrGg0I+BUqOzaVT5xqyJMISzpKtZWQIhG5mvI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 31/70] clk: zx296718: Don't reference clk_init_data after registration
-Date:   Tue, 24 Sep 2019 12:45:10 -0400
-Message-Id: <20190924164549.27058-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
-References: <20190924164549.27058-1-sashal@kernel.org>
+        id S2410306AbfIXQrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D508142F;
+        Tue, 24 Sep 2019 09:47:09 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C387A3F694;
+        Tue, 24 Sep 2019 09:47:07 -0700 (PDT)
+Subject: Re: [PATCH 2/4] irqchip: Add Aspeed SCU interrupt controller
+To:     Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com,
+        robh+dt@kernel.org, jason@lakedaemon.net, tglx@linutronix.de
+References: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
+ <1569341672-27632-3-git-send-email-eajames@linux.ibm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <3e866ea1-ee45-8067-09db-422d6c843fca@kernel.org>
+Date:   Tue, 24 Sep 2019 17:47:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1569341672-27632-3-git-send-email-eajames@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+Eddie,
 
-[ Upstream commit 1a4549c150e27dbc3aea762e879a88209df6d1a5 ]
+On 24/09/2019 17:14, Eddie James wrote:
+> The Aspeed SOCs provide some interrupts through the System Control
+> Unit registers. Add an interrupt controller that provides these
+> interrupts to the system.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  MAINTAINERS                         |   1 +
+>  drivers/irqchip/Makefile            |   2 +-
+>  drivers/irqchip/irq-aspeed-scu-ic.c | 199 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 201 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4a1687b..f3f6c3d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2655,6 +2655,7 @@ M:	Eddie James <eajames@linux.ibm.com>
+>  L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+> +F:	drivers/irqchip/irq-aspeed-scu-ic.c
+>  F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+>  
+>  ASPEED VIDEO ENGINE DRIVER
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index cc7c439..fce6b1d 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -86,7 +86,7 @@ obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
+>  obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+>  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+> -obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
+> +obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o irq-aspeed-scu-ic.o
+>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
+>  obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
+> diff --git a/drivers/irqchip/irq-aspeed-scu-ic.c b/drivers/irqchip/irq-aspeed-scu-ic.c
+> new file mode 100644
+> index 0000000..a23802d
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-aspeed-scu-ic.c
+> @@ -0,0 +1,199 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Aspeed AST24XX, AST25XX, and AST26XX SCU Interrupt Controller
+> + * Copyright 2019 IBM Corporation
+> + *
+> + * Eddie James <eajames@linux.ibm.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/io.h>
+> +
+> +#define ASPEED_SCU_IC_SHIFT		0
+> +#define ASPEED_SCU_IC_ENABLE		GENMASK(6, ASPEED_SCU_IC_SHIFT)
+> +#define ASPEED_SCU_IC_NUM_IRQS		7
+> +#define ASPEED_SCU_IC_STATUS_SHIFT	16
+> +
+> +#define ASPEED_AST2600_SCU_IC0_SHIFT	0
+> +#define ASPEED_AST2600_SCU_IC0_ENABLE	\
+> +	GENMASK(5, ASPEED_AST2600_SCU_IC0_SHIFT)
+> +#define ASPEED_AST2600_SCU_IC0_NUM_IRQS	6
+> +
+> +#define ASPEED_AST2600_SCU_IC1_SHIFT	4
+> +#define ASPEED_AST2600_SCU_IC1_ENABLE	\
+> +	GENMASK(5, ASPEED_AST2600_SCU_IC1_SHIFT)
+> +#define ASPEED_AST2600_SCU_IC1_NUM_IRQS	2
+> +
+> +struct aspeed_scu_ic {
+> +	unsigned long irq_enable;
+> +	unsigned long irq_shift;
+> +	unsigned int num_irqs;
+> +	void __iomem *regs;
+> +	struct irq_domain *irq_domain;
+> +};
+> +
+> +static void aspeed_scu_ic_irq_handler(struct irq_desc *desc)
+> +{
+> +	unsigned int irq;
+> +	unsigned long bit;
+> +	unsigned long enabled;
+> +	unsigned long max;
+> +	unsigned long status;
+> +	struct aspeed_scu_ic *scu_ic = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	status = readl(scu_ic->regs);
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+You may want to be easy on the interconnect and turn these readl/writel
+into their relaxed version. This will remove a number of unnecessary
+barriers.
 
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190815160020.183334-3-sboyd@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clk/zte/clk-zx296718.c | 109 +++++++++++++++------------------
- 1 file changed, 49 insertions(+), 60 deletions(-)
+> +	enabled = status & scu_ic->irq_enable;
+> +	status = (status >> ASPEED_SCU_IC_STATUS_SHIFT) & enabled;
 
-diff --git a/drivers/clk/zte/clk-zx296718.c b/drivers/clk/zte/clk-zx296718.c
-index fd6c347bec6a7..dd7045bc48c15 100644
---- a/drivers/clk/zte/clk-zx296718.c
-+++ b/drivers/clk/zte/clk-zx296718.c
-@@ -564,6 +564,7 @@ static int __init top_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -573,11 +574,10 @@ static int __init top_clocks_init(struct device_node *np)
- 
- 	for (i = 0; i < ARRAY_SIZE(zx296718_pll_clk); i++) {
- 		zx296718_pll_clk[i].reg_base += (uintptr_t)reg_base;
-+		name = zx296718_pll_clk[i].hw.init->name;
- 		ret = clk_hw_register(NULL, &zx296718_pll_clk[i].hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				zx296718_pll_clk[i].hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_ffactor_clk); i++) {
-@@ -585,11 +585,10 @@ static int __init top_clocks_init(struct device_node *np)
- 			top_hw_onecell_data.hws[top_ffactor_clk[i].id] =
- 					&top_ffactor_clk[i].factor.hw;
- 
-+		name = top_ffactor_clk[i].factor.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_ffactor_clk[i].factor.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_ffactor_clk[i].factor.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_mux_clk); i++) {
-@@ -598,11 +597,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_mux_clk[i].mux.hw;
- 
- 		top_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = top_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_gate_clk); i++) {
-@@ -611,11 +609,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_gate_clk[i].gate.hw;
- 
- 		top_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = top_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(top_div_clk); i++) {
-@@ -624,11 +621,10 @@ static int __init top_clocks_init(struct device_node *np)
- 					&top_div_clk[i].div.hw;
- 
- 		top_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = top_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &top_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("top clk %s init error!\n",
--				top_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("top clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -754,6 +750,7 @@ static int __init lsp0_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -767,11 +764,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_mux_clk[i].mux.hw;
- 
- 		lsp0_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = lsp0_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp0_gate_clk); i++) {
-@@ -780,11 +776,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_gate_clk[i].gate.hw;
- 
- 		lsp0_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = lsp0_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp0_div_clk); i++) {
-@@ -793,11 +788,10 @@ static int __init lsp0_clocks_init(struct device_node *np)
- 					&lsp0_div_clk[i].div.hw;
- 
- 		lsp0_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = lsp0_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp0_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("lsp0 clk %s init error!\n",
--				lsp0_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp0 clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -862,6 +856,7 @@ static int __init lsp1_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -875,11 +870,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp0_mux_clk[i].mux.hw;
- 
- 		lsp1_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = lsp1_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp1_gate_clk); i++) {
-@@ -888,11 +882,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp1_gate_clk[i].gate.hw;
- 
- 		lsp1_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = lsp1_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lsp1_div_clk); i++) {
-@@ -901,11 +894,10 @@ static int __init lsp1_clocks_init(struct device_node *np)
- 					&lsp1_div_clk[i].div.hw;
- 
- 		lsp1_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = lsp1_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &lsp1_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("lsp1 clk %s init error!\n",
--				lsp1_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("lsp1 clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-@@ -979,6 +971,7 @@ static int __init audio_clocks_init(struct device_node *np)
- {
- 	void __iomem *reg_base;
- 	int i, ret;
-+	const char *name;
- 
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
-@@ -992,11 +985,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_mux_clk[i].mux.hw;
- 
- 		audio_mux_clk[i].mux.reg += (uintptr_t)reg_base;
-+		name = audio_mux_clk[i].mux.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_mux_clk[i].mux.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_mux_clk[i].mux.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_adiv_clk); i++) {
-@@ -1005,11 +997,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_adiv_clk[i].hw;
- 
- 		audio_adiv_clk[i].reg_base += (uintptr_t)reg_base;
-+		name = audio_adiv_clk[i].hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_adiv_clk[i].hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_adiv_clk[i].hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_div_clk); i++) {
-@@ -1018,11 +1009,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_div_clk[i].div.hw;
- 
- 		audio_div_clk[i].div.reg += (uintptr_t)reg_base;
-+		name = audio_div_clk[i].div.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_div_clk[i].div.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_div_clk[i].div.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(audio_gate_clk); i++) {
-@@ -1031,11 +1021,10 @@ static int __init audio_clocks_init(struct device_node *np)
- 					&audio_gate_clk[i].gate.hw;
- 
- 		audio_gate_clk[i].gate.reg += (uintptr_t)reg_base;
-+		name = audio_gate_clk[i].gate.hw.init->name;
- 		ret = clk_hw_register(NULL, &audio_gate_clk[i].gate.hw);
--		if (ret) {
--			pr_warn("audio clk %s init error!\n",
--				audio_gate_clk[i].gate.hw.init->name);
--		}
-+		if (ret)
-+			pr_warn("audio clk %s init error!\n", name);
- 	}
- 
- 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+This masking looks weird. Does it mean that the status register is split
+in half, with the two half serving different purposes? This requires
+some documentation...
+
+> +
+> +	bit = scu_ic->irq_shift;
+> +	max = scu_ic->num_irqs + bit;
+> +
+> +	for_each_set_bit_from(bit, &status, max) {
+> +		irq = irq_find_mapping(scu_ic->irq_domain,
+> +				       bit - scu_ic->irq_shift);
+> +		generic_handle_irq(irq);
+> +
+> +		writel(enabled | BIT(bit + ASPEED_SCU_IC_STATUS_SHIFT),
+> +		       scu_ic->regs);
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void aspeed_scu_ic_irq_mask(struct irq_data *data)
+> +{
+> +	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
+> +	unsigned long bit = BIT(data->hwirq + scu_ic->irq_shift);
+> +	unsigned long reg = readl(scu_ic->regs);
+> +
+> +	writel((reg & ~bit) & scu_ic->irq_enable, scu_ic->regs);
+
+What if you have another CPU masking or unmasking another interrupt at
+the same time? These RMW operations need to be protected.
+
+> +}
+> +
+> +static void aspeed_scu_ic_irq_unmask(struct irq_data *data)
+> +{
+> +	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
+> +	unsigned long bit = BIT(data->hwirq + scu_ic->irq_shift);
+> +	unsigned long reg = readl(scu_ic->regs);
+> +
+> +	writel((reg | bit) & scu_ic->irq_enable, scu_ic->regs);
+> +}
+> +
+> +struct irq_chip aspeed_scu_ic_chip = {
+> +	.name		= "aspeed-scu-ic",
+> +	.irq_mask	= aspeed_scu_ic_irq_mask,
+> +	.irq_unmask	= aspeed_scu_ic_irq_unmask,
+
+In an SMP system, you may want to provide an affinity callback returning
+-EINVAL.
+
+> +};
+> +
+> +static int aspeed_scu_ic_map(struct irq_domain *domain, unsigned int irq,
+> +			     irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &aspeed_scu_ic_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops aspeed_scu_ic_domain_ops = {
+> +	.map = aspeed_scu_ic_map,
+> +};
+> +
+> +static int aspeed_scu_ic_of_init_common(struct aspeed_scu_ic *scu_ic,
+> +					struct device_node *node)
+> +{
+> +	int irq;
+> +	int rc = 0;
+> +
+> +	scu_ic->regs = of_iomap(node, 0);
+> +	if (!scu_ic->regs) {
+> +		rc = -ENOMEM;
+> +		goto err_free;
+> +	}
+> +
+> +	irq = irq_of_parse_and_map(node, 0);
+> +	if (irq < 0) {
+> +		rc = irq;
+> +		goto err_iounmap;
+> +	}
+> +
+> +	scu_ic->irq_domain = irq_domain_add_linear(node, scu_ic->num_irqs,
+> +						   &aspeed_scu_ic_domain_ops,
+> +						   scu_ic);
+> +	if (!scu_ic->irq_domain) {
+> +		rc = -ENOMEM;
+> +		goto err_iounmap;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(irq, aspeed_scu_ic_irq_handler,
+> +					 scu_ic);
+> +
+> +	return 0;
+> +
+> +err_iounmap:
+> +	iounmap(scu_ic->regs);
+> +
+> +err_free:
+> +	kfree(scu_ic);
+> +
+> +	return rc;
+> +}
+> +
+> +static int __init aspeed_scu_ic_of_init(struct device_node *node,
+> +					struct device_node *parent)
+> +{
+> +	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
+> +
+> +	if (!scu_ic)
+> +		return -ENOMEM;
+> +
+> +	scu_ic->irq_enable = ASPEED_SCU_IC_ENABLE;
+> +	scu_ic->irq_shift = ASPEED_SCU_IC_SHIFT;
+> +	scu_ic->num_irqs = ASPEED_SCU_IC_NUM_IRQS;
+> +
+> +	return aspeed_scu_ic_of_init_common(scu_ic, node);
+> +}
+> +
+> +static int __init aspeed_ast2600_scu_ic0_of_init(struct device_node *node,
+> +						 struct device_node *parent)
+> +{
+> +	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
+> +
+> +	if (!scu_ic)
+> +		return -ENOMEM;
+> +
+> +	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC0_ENABLE;
+> +	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC0_SHIFT;
+> +	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC0_NUM_IRQS;
+> +
+> +	return aspeed_scu_ic_of_init_common(scu_ic, node);
+> +}
+> +
+> +static int __init aspeed_ast2600_scu_ic1_of_init(struct device_node *node,
+> +						 struct device_node *parent)
+> +{
+> +	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
+> +
+> +	if (!scu_ic)
+> +		return -ENOMEM;
+> +
+> +	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC1_ENABLE;
+> +	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC1_SHIFT;
+> +	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC1_NUM_IRQS;
+> +
+> +	return aspeed_scu_ic_of_init_common(scu_ic, node);
+> +}
+> +
+> +IRQCHIP_DECLARE(ast2400_scu_ic, "aspeed,ast2400-scu-ic", aspeed_scu_ic_of_init);
+> +IRQCHIP_DECLARE(ast2500_scu_ic, "aspeed,ast2500-scu-ic", aspeed_scu_ic_of_init);
+> +IRQCHIP_DECLARE(ast2600_scu_ic0, "aspeed,ast2600-scu-ic0",
+> +		aspeed_ast2600_scu_ic0_of_init);
+> +IRQCHIP_DECLARE(ast2600_scu_ic1, "aspeed,ast2600-scu-ic1",
+> +		aspeed_ast2600_scu_ic1_of_init);
+> 
+
+This otherwise looks nice and clean.
+
+	M.
 -- 
-2.20.1
-
+Jazz is not dead, it just smells funny...
