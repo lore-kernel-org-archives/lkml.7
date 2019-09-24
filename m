@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB254C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F22C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7CB21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167EE217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343384;
-	bh=KMI7eC5xuJg87PJdl1pUzpnIv2cuQPx4iF38ZF5IDYU=;
+	s=default; t=1569343386;
+	bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=suhrMj1iUZ2J86H/eNhcnZOBbZAkSu6FmIQpde3H5/4UJ15bkF2/viBmKTxzfeOoa
-	 JB0OMsTkY2bWpe4EwVB6IderqTBT/tJB5xSYfLPtZuFNG/rskKLfAcgAhkfslRSLdT
-	 6iBlNrRIs65IXg9ie1bvtJAWfv9qtjuC0d8TUdzU=
+	b=I3CCcx/qe0bqmKYzlDOjEKkQPnCzK3Q7F3lZx5oPmW0z5Mb/Ei1FGfCV+omEbND+c
+	 D+qIU5dE3GoPXNTIqrVrXQeen5A6jLjHDEe3tjd3dhgi+Z3RHO9RfZkZYx9j4Lanr9
+	 58EWFJWONY8yB1X8IapOTs+VwyLekZ0c3KYzJv/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632888AbfIXQnD (ORCPT
+        id S2632899AbfIXQnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505068AbfIXQms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:48 -0400
+        id S2632832AbfIXQmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75BB021848;
-        Tue, 24 Sep 2019 16:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAB8217F4;
+        Tue, 24 Sep 2019 16:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343367;
-        bh=KMI7eC5xuJg87PJdl1pUzpnIv2cuQPx4iF38ZF5IDYU=;
+        s=default; t=1569343373;
+        bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFJxD66ivz5eGyFvW6gT7OsQyWpJUkyNcZ4g4bBOyd2zLIdu1dcYOKU5XtDcpqAh4
-         hQ6USHPEaJrAPhxfUast1pdcKCFpyVRFTCK6xCr01J/dAr48uj7CpsMB1gjhPlHcl8
-         zi7/PDzWmC78q4DAn/KiOg+2vykdmQwpdRRqYPjk=
+        b=bOyujpE5OlSTGdyyGZIPNx9trc16i4cXk4EptUmrKwLqXpGCVwPWZhdMTa+MONZwz
+         kkQ50GLBHNkJ9SNYFTDUmECMw7BEJYbEz4v4o1jWiwkOReDPIBqSWhyInV5CvLuLIi
+         hRrBuwzvpYbhJ12vPtSTC+RyWY7JVTNqiUcrlgNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 22/87] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
-Date:   Tue, 24 Sep 2019 12:40:38 -0400
-Message-Id: <20190924164144.25591-22-sashal@kernel.org>
+Cc:     Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 23/87] clk: imx8mq: Mark AHB clock as critical
+Date:   Tue, 24 Sep 2019 12:40:39 -0400
+Message-Id: <20190924164144.25591-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,43 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Abel Vesa <abel.vesa@nxp.com>
 
-[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
+[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
 
-In radeon_connector_set_property(), there is an if statement on line 743
-to check whether connector->encoder is NULL:
-    if (connector->encoder)
+Initially, the TMU_ROOT clock was marked as critical, which automatically
+made the AHB clock to stay always on. Since the TMU_ROOT clock is not
+marked as critical anymore, following commit:
 
-When connector->encoder is NULL, it is used on line 755:
-    if (connector->encoder->crtc)
+"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
 
-Thus, a possible null-pointer dereference may occur.
+all the clocks that derive from ipg_root clock (and implicitly ahb clock)
+would also have to enable, along with their own gate, the AHB clock.
 
-To fix this bug, connector->encoder is checked before being used.
+But considering that AHB is actually a bus that has to be always on, we mark
+it as critical in the clock provider driver and then all the clocks that
+derive from it can be controlled through the dedicated per IP gate which
+follows after the ipg_root clock.
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index c60d1a44d22a2..b684cd719612b 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -752,7 +752,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index d407a07e7e6dd..e07c69afc3594 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -406,7 +406,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
  
- 		radeon_encoder->output_csc = val;
+ 	/* AHB */
+-	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
++	/* AHB clock is used by the AHB bus therefore marked as critical */
++	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+ 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
  
--		if (connector->encoder->crtc) {
-+		if (connector->encoder && connector->encoder->crtc) {
- 			struct drm_crtc *crtc  = connector->encoder->crtc;
- 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 
+ 	/* IPG */
 -- 
 2.20.1
 
