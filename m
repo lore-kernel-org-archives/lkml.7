@@ -2,202 +2,258 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35753C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED03C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26252064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gmGKxRcs"
+	by mail.kernel.org (Postfix) with ESMTP id 2C40E2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408740AbfIXDX7 (ORCPT
+        id S2408900AbfIXD1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 23:23:59 -0400
-Received: from mail-eopbgr30040.outbound.protection.outlook.com ([40.107.3.40]:37030
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394621AbfIXDX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 23:23:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BaOK/pfn5WMateuB4W8ADTT7otX+J2FREiphYNhiJRPGc/QYgWUEFJhdXIJxWZTD1CrYPbn7x7JV4H3Mb3X6WO8vBgJYgYAN5BWCq/E5evf/phRacBGv2wlz8AJgDWdwTabFPbP/ZTUGUDuA5G/cbFaXT9+wNB/RZ7F0sBCG8EfP9HgoWvDKpr0GZBf1YUA2oQRq09X6TrMNUHQyfopacfAO9skNtakEU7vsX4IOp6SEE82g8WcgRTA3TzbpbQP248hMHYk0qhuvP0RE+rTUeEjCyROW3NRJm8ffuBjByJWuth7u4i7DwJkASu5f2KajayE0l9gb7e7eXLlsBMA/hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PDOkap794uzwx9brTUvVXJ6oeO0I1t42s4rN4C2Nuzg=;
- b=ZUbxG/OBbSSZHiKXBiJhPNtGDTaPlaRb5JaqoqfqODQJljY0oEGMs7iM3ofjnhnJ59afehFVo1sNmjN+b/77KAbETk+unywULzQwL4uLaOkD539F0zwYoHyGc50ay6c+c+Sq60kvF4An2i2MRejuykfGqfTdSeqlszSXgkpqR2j2pZwDIGqGOLH6OITo1se+oE+4+x/ipinRGwsAQdzfLC5mn+k+g5lyCAVSAt0ac44h31u8/LdT7inb4wZ2Ha2ktteyXIMhQw73+eCmrei4/nuY5KgBuGUIKytIXw188PaO/aqQYEzL2qjOwQcAUrcv4MD9bRaccyldI9OxLDxmJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PDOkap794uzwx9brTUvVXJ6oeO0I1t42s4rN4C2Nuzg=;
- b=gmGKxRcslq3+bdbB98HxGtSMBW85EJI/86vuK99ai/MKlpUUiUzH7VnrjLSfcCfTvepkrDPt9EP0rWLlu1TG35WcbCU+viP14N/CimsXDR0Pjw3jMWGT0B60OVtGeqntLwXbhX+mvePtehVvGZc+D0ntSi5QU0+c6MNhD4dtOcU=
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.240.82) by
- DB8PR04MB7097.eurprd04.prod.outlook.com (52.135.62.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 03:23:52 +0000
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::906f:1414:8cb:f7ee]) by DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::906f:1414:8cb:f7ee%2]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 03:23:52 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] usb: hub add filter for device with specific VID&PID
-Thread-Topic: [PATCH] usb: hub add filter for device with specific VID&PID
-Thread-Index: AQHVcfycJPrHn/IcK0qf/xic1GWPZ6c5GiAAgAEI5+A=
-Date:   Tue, 24 Sep 2019 03:23:52 +0000
-Message-ID: <DB8PR04MB682649CA98B0704FAF037A40F1840@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20190923105102.37413-1-ran.wang_1@nxp.com>
- <20190923110712.GA2796979@kroah.com>
-In-Reply-To: <20190923110712.GA2796979@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9bff4d26-f463-4111-e937-08d7409e9fe9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7097;
-x-ms-traffictypediagnostic: DB8PR04MB7097:
-x-microsoft-antispam-prvs: <DB8PR04MB70975DE133DEC5F843544D3FF1840@DB8PR04MB7097.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(199004)(189003)(71200400001)(6436002)(52536014)(55016002)(316002)(86362001)(478600001)(26005)(14454004)(229853002)(66476007)(74316002)(66946007)(66066001)(64756008)(66446008)(71190400001)(3846002)(76116006)(7736002)(305945005)(6116002)(14444005)(256004)(5024004)(53546011)(486006)(66556008)(9686003)(186003)(76176011)(11346002)(33656002)(99286004)(2906002)(6506007)(4326008)(8676002)(7696005)(102836004)(6916009)(54906003)(6246003)(81166006)(81156014)(25786009)(446003)(476003)(5660300002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7097;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: J9/tWFYXbPYjRGVYw51Zs9Ociec4VIZnZW55tKLkKBs114gOF+PQXyihQXrYHOmYTOgK3heR/ccS+JAJEA8bHTxiiRlJ4+6VFVIf7SExkS5aBPNOWa+RUptxH5QmfK+kt8rptPMrT4tXNtBrjJ3dszkBTjawmu+TN8GwMWRwZzJ5D0c7fsiGff64Xq9N4SmF72pdOhN3AcqQYz8hNlpRkLTOayjOf+c0Thj5NJkvc2rRJu1dIo7Q5a17GxIHf9/vKRERBo7xgpcTLmsYqux98+rov2UkzT3qen4wUqlk9tMpgoJLvmCrRh5jQxaWer/Mtt1Z2ZOq8TpvfRHThb3P6EOFU4GJg3fyn0xBfwNdG9n/QH5nDDkiA23VUUj5WMKZO0V1VTeXlL88umzj2o+W85MsZ75Zc3VSW6V+s/wNr78=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-7"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bff4d26-f463-4111-e937-08d7409e9fe9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 03:23:52.6790
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1BXMyfEy37DFBqBUcXSbWp4OJ+j7nOZiNM7ki/NVNoZ41Q7tT0xlSyrDJl3P7vMGKMqLbJNFkKEZAPR50oycQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7097
+        Mon, 23 Sep 2019 23:27:15 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60430 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394624AbfIXD1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 23:27:14 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E8D00200019;
+        Tue, 24 Sep 2019 05:27:11 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E7F832000B6;
+        Tue, 24 Sep 2019 05:27:07 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EA7D4402E4;
+        Tue, 24 Sep 2019 11:27:02 +0800 (SGT)
+From:   Yuantian Tang <andy.tang@nxp.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, anson.huang@nxp.com
+Cc:     daniel.lezcano@linaro.org, leoyang.li@nxp.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] thermal: qoriq: add thermal monitor unit version 2 support
+Date:   Tue, 24 Sep 2019 11:16:40 +0800
+Message-Id: <20190924031640.3159-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Thermal Monitor Unit v2 is introduced on new Layscape SoC.
+Compared to v1, TMUv2 has a little different register layout
+and digital output is fairly linear.
 
-On Monday, September 23, 2019 19:07, Greg Kroah-Hartman wrote:
->=20
-> On Mon, Sep 23, 2019 at 06:51:02PM +0800, Ran Wang wrote:
-> > USB 2.0 Embedded Host PET Automated Test (CH6) 6.7.23 A-UUT
-> > "Unsupported Device" Message require to stop enumerating device with
-> > VID=3D0x1a0a PID=3D0x0201 and pop message to declare this device is not
-> supported.
->=20
-> Why is this a requirement?
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v2:
+	- refine the code: remove redundant variable, rename variable etc.
 
-This comes from <USB On-The-Go and Embedded Host Automated Compliance Plan
-for the On-The-Go& Embedded Host Supplement Revision2.0>
+ drivers/thermal/qoriq_thermal.c | 121 +++++++++++++++++++++++++-------
+ 1 file changed, 97 insertions(+), 24 deletions(-)
 
-Below is related description I quote from it:
-6.7.23 A-UUT "Unsupported Device" Message
-Purpose: This test verifies that an A-UUT produces a device non-supported e=
-rror message
-	when a device it doesn't recognize, and does not support HNP, connects to =
-it.
-Applies to: All Targeted Hosts
-Description: Get VBUS turned on, and connect to the A-UUT. Get enumerated a=
-nd respond
-	as an unknown device not supporting HNP. Check that a suitable error messa=
-ge is generated.
-Pass Criteria: Message "Unsupported Device"or similar is displayed on UUT
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 7b364933bfb1..43617e53554b 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -12,7 +12,16 @@
+ 
+ #include "thermal_core.h"
+ 
+-#define SITES_MAX	16
++#define SITES_MAX		16
++#define TMR_DISABLE		0x0
++#define TMR_ME			0x80000000
++#define TMR_ALPF		0x0c000000
++#define TMR_ALPF_V2		0x03000000
++#define TMTMIR_DEFAULT	0x0000000f
++#define TIER_DISABLE	0x0
++#define TEUMR0_V2		0x51009c00
++#define TMU_VER1		0x1
++#define TMU_VER2		0x2
+ 
+ /*
+  * QorIQ TMU Registers
+@@ -23,17 +32,55 @@ struct qoriq_tmu_site_regs {
+ 	u8 res0[0x8];
+ };
+ 
+-struct qoriq_tmu_regs {
++struct qoriq_tmu_regs_v2 {
++	u32 tmr;		/* Mode Register */
++	u32 tsr;		/* Status Register */
++	u32 tmsr;		/* monitor site register */
++	u32 tmtmir;		/* Temperature measurement interval Register */
++	u8 res0[0x10];
++	u32 tier;		/* Interrupt Enable Register */
++	u32 tidr;		/* Interrupt Detect Register */
++	u8 res1[0x8];
++	u32 tiiscr;		/* interrupt immediate site capture register */
++	u32 tiascr;		/* interrupt average site capture register */
++	u32 ticscr;		/* Interrupt Critical Site Capture Register */
++	u32 res2;
++	u32 tmhtcr;		/* monitor high temperature capture register */
++	u32 tmltcr;		/* monitor low temperature capture register */
++	u32 tmrtrcr;	/* monitor rising temperature rate capture register */
++	u32 tmftrcr;	/* monitor falling temperature rate capture register */
++	u32 tmhtitr;	/* High Temperature Immediate Threshold */
++	u32 tmhtatr;	/* High Temperature Average Threshold */
++	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
++	u32 res3;
++	u32 tmltitr;	/* monitor low temperature immediate threshold */
++	u32 tmltatr;	/* monitor low temperature average threshold register */
++	u32 tmltactr;	/* monitor low temperature average critical threshold */
++	u32 res4;
++	u32 tmrtrctr;	/* monitor rising temperature rate critical threshold */
++	u32 tmftrctr;	/* monitor falling temperature rate critical threshold*/
++	u8 res5[0x8];
++	u32 ttcfgr;	/* Temperature Configuration Register */
++	u32 tscfgr;	/* Sensor Configuration Register */
++	u8 res6[0x78];
++	struct qoriq_tmu_site_regs site[SITES_MAX];
++	u8 res7[0x9f8];
++	u32 ipbrr0;		/* IP Block Revision Register 0 */
++	u32 ipbrr1;		/* IP Block Revision Register 1 */
++	u8 res8[0x300];
++	u32 teumr0;
++	u32 teumr1;
++	u32 teumr2;
++	u32 res9;
++	u32 ttrcr[4];	/* Temperature Range Control Register */
++};
++
++struct qoriq_tmu_regs_v1 {
+ 	u32 tmr;		/* Mode Register */
+-#define TMR_DISABLE	0x0
+-#define TMR_ME		0x80000000
+-#define TMR_ALPF	0x0c000000
+ 	u32 tsr;		/* Status Register */
+ 	u32 tmtmir;		/* Temperature measurement interval Register */
+-#define TMTMIR_DEFAULT	0x0000000f
+ 	u8 res0[0x14];
+ 	u32 tier;		/* Interrupt Enable Register */
+-#define TIER_DISABLE	0x0
+ 	u32 tidr;		/* Interrupt Detect Register */
+ 	u32 tiscr;		/* Interrupt Site Capture Register */
+ 	u32 ticscr;		/* Interrupt Critical Site Capture Register */
+@@ -53,10 +100,7 @@ struct qoriq_tmu_regs {
+ 	u32 ipbrr0;		/* IP Block Revision Register 0 */
+ 	u32 ipbrr1;		/* IP Block Revision Register 1 */
+ 	u8 res6[0x310];
+-	u32 ttr0cr;		/* Temperature Range 0 Control Register */
+-	u32 ttr1cr;		/* Temperature Range 1 Control Register */
+-	u32 ttr2cr;		/* Temperature Range 2 Control Register */
+-	u32 ttr3cr;		/* Temperature Range 3 Control Register */
++	u32 ttrcr[4];		/* Temperature Range Control Register */
+ };
+ 
+ struct qoriq_tmu_data;
+@@ -71,7 +115,9 @@ struct qoriq_sensor {
+ };
+ 
+ struct qoriq_tmu_data {
+-	struct qoriq_tmu_regs __iomem *regs;
++	int ver;
++	struct qoriq_tmu_regs_v1 __iomem *regs;
++	struct qoriq_tmu_regs_v2 __iomem *regs_v2;
+ 	bool little_endian;
+ 	struct qoriq_sensor	*sensor[SITES_MAX];
+ };
+@@ -130,12 +176,23 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
+ 				return PTR_ERR(qdata->sensor[id]->tzd);
+ 		}
+ 
+-		sites |= 0x1 << (15 - id);
++		if (qdata->ver == TMU_VER1)
++			sites |= 0x1 << (15 - id);
++		else
++			sites |= 0x1 << id;
+ 	}
+ 
+ 	/* Enable monitoring */
+-	if (sites != 0)
+-		tmu_write(qdata, sites | TMR_ME | TMR_ALPF, &qdata->regs->tmr);
++	if (sites != 0) {
++		if (qdata->ver == TMU_VER1) {
++			tmu_write(qdata, sites | TMR_ME | TMR_ALPF,
++					&qdata->regs->tmr);
++		} else {
++			tmu_write(qdata, sites, &qdata->regs_v2->tmsr);
++			tmu_write(qdata, TMR_ME | TMR_ALPF_V2,
++					&qdata->regs_v2->tmr);
++		}
++	}
+ 
+ 	return 0;
+ }
+@@ -148,16 +205,20 @@ static int qoriq_tmu_calibration(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
+ 
+-	if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
+-		dev_err(&pdev->dev, "missing calibration range.\n");
+-		return -ENODEV;
++	len = of_property_count_u32_elems(np, "fsl,tmu-range");
++	if (len < 0 || len > 4) {
++		dev_err(&pdev->dev, "invalid range data.\n");
++		return len;
++	}
++
++	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
++	if (val != 0) {
++		dev_err(&pdev->dev, "failed to read range data.\n");
++		return val;
+ 	}
+ 
+-	/* Init temperature range registers */
+-	tmu_write(data, range[0], &data->regs->ttr0cr);
+-	tmu_write(data, range[1], &data->regs->ttr1cr);
+-	tmu_write(data, range[2], &data->regs->ttr2cr);
+-	tmu_write(data, range[3], &data->regs->ttr3cr);
++	for (i = 0; i < len; i++)
++		tmu_write(data, range[i], &data->regs->ttrcr[i]);
+ 
+ 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
+ 	if (calibration == NULL || len % 8) {
+@@ -181,7 +242,12 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ 	tmu_write(data, TIER_DISABLE, &data->regs->tier);
+ 
+ 	/* Set update_interval */
+-	tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
++	if (data->ver == TMU_VER1) {
++		tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
++	} else {
++		tmu_write(data, TMTMIR_DEFAULT, &data->regs_v2->tmtmir);
++		tmu_write(data, TEUMR0_V2, &data->regs_v2->teumr0);
++	}
+ 
+ 	/* Disable monitoring */
+ 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
+@@ -190,6 +256,7 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ static int qoriq_tmu_probe(struct platform_device *pdev)
+ {
+ 	int ret;
++	u32 ver;
+ 	struct qoriq_tmu_data *data;
+ 	struct device_node *np = pdev->dev.of_node;
+ 
+@@ -209,6 +276,12 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 		goto err_iomap;
+ 	}
+ 
++	/* version register offset at: 0xbf8 on both v1 and v2 */
++	ver = tmu_read(data, &data->regs->ipbrr0);
++	data->ver = (ver >> 8) & 0xff;
++	if (data->ver == TMU_VER2)
++		data->regs_v2 = (void __iomem *)data->regs;
++
+ 	qoriq_tmu_init_device(data);	/* TMU initialization */
+ 
+ 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
+-- 
+2.17.1
 
-6.7.23.1 Test Procedure
-1. Start with cable still attached, PET applying 10=ECF capacitance and 10k=
-=D9 pull-down
-    resistance between VBUS and ground, data lines not pulled up.
-2. Get VBUS turned on, using the method described in Section6.7.1.
-3. Wait for almost TB_SVLD_BCON max (1s - 0.1s =3D 0.9s) from VBUS reaching=
- VOTG_SESS_VLD max.
-4. Connect PET using D+ pull-up.
-5. Allow A-UUT to enumerate PET, responding with a VID / PID combination no=
-t on the TPL
-    of the UUT and also with the OTG descriptor stating that it does not su=
-pport HNP.
-6. Start 30s timer when Device Descriptor is read.
-7. Display Message "Click OK if 'Unsupported Device' indication displayed o=
-n UUT".
-8. If operator clicks OK before 30s timer expires, then UUT passes test.
-9. If 30selapses first, then UUT fails test.
-10. PET disconnects by removing any termination on the data lines, but leav=
-es a capacitance of
-    10=ECF and a pull-down resistance of 10k=D9 connected across VBUS.
-11. Wait 2s to allow disconnection to be detected.
-End of Test.
-
-> And why those specific vid/pid values?  What do they refer to?
-
-For step 5, we got the VID / PID number from USB IF certified lab(Allion.in=
-c at Taiwang). Looks like
-this is a reserved ID pair and will not be allocated to any vendor for thei=
-r products. So it's hence used for this
-case test (like saying: you should be able to pop a not-support message for=
- this reserved VID&PID).
-=20
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> >  drivers/usb/core/hub.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c index
-> > bbcfa63..3cda0da 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -4982,6 +4982,18 @@ static void hub_port_connect(struct usb_hub *hub=
-,
-> int port1, u16 portstatus,
-> >  		if (status < 0)
-> >  			goto loop;
-> >
-> > +		 /* USB 2.0 Embedded Host PET Automated Test (CH6)
-> > +		 * 6.7.23 A-UUT "Unsupported Device" Message
-> > +		 * require to filter out below device when enumeration
-> > +		 */
->=20
-> Nit, can you align your comment lines, to match the other multi-line comm=
-ents
-> in this file?  Otherwise it starts to look bad over time.
-
-Yes, will update.
-
->=20
->=20
-> > +		if ((udev->descriptor.idVendor =3D=3D 0x1a0a)
-> > +		 && (udev->descriptor.idProduct =3D=3D 0x0201)) {
->=20
-> Are you sure you don't have to convert this value into cpu endian before
-> checking it?
-
-Thanks for pointing out, how about this:
-	if ((le16_to_cpu(udev->descriptor.idVendor) =3D=3D 0x1a0a)
-	 && (le16_to_cpu(udev->descriptor.idProduct) =3D=3D 0x0201)) {
-
-Regards,
-Ran
