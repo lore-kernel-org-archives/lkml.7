@@ -2,157 +2,355 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23550C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09886C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88752168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Pa7yE3iU"
+	by mail.kernel.org (Postfix) with ESMTP id B54F421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569326609;
+	bh=FVXD0EQ8IlB715/pO2lsW/M4CnnPoY9GcJoAlb/ACJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UbGX5IrM/ziQntM0S6i9A2qNd2/BucRs8rnaPCI6gAOV2v0zIj+1YEwnFMFUnlMhY
+	 V9/dG/Cjyiv+S4Ek2OkCAQqGKDqe7mEYBb7gn6V/rDE1W1eqmUCL9xEKZR1luUyuQ+
+	 oriBaTbn61y4bLCI5EJUbFBb9SjVOnNBte1/expo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504829AbfIXMDO (ORCPT
+        id S2440913AbfIXMD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:03:14 -0400
-Received: from mail-eopbgr750059.outbound.protection.outlook.com ([40.107.75.59]:14723
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726923AbfIXMDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:03:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GMXiJtACir+PWVc4iPFyg61NwlVd2DnfQqWDZywH8A19KZe3sJiDuu/VuFtmDqyPdxxPSoWJfsskfsBIBKbXuaRfGkMRGMtVO4SkbUQKRfM7SSPBMy+IuoLz8kEIEdVtYr4Eqfv2kt0xx/VBK3BdfIrQCvNawzhE78WPtos2rPrZtawwerVlcrlF3fjfBprO0bJrGH9UJRCkp4SMefSmGB2drGU0J2ZKjLX8CsGmqSCfokC8tGNstPAmGEvqhjd2Rnfu4l34Gs3h+OzDkjr7Pv5L1d+ovejoM6zXU+16hy9yA7s8RRw4tkfme0VYU67gmiCArHEclqLSSIPbXCeOXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zLbPwhrP6VZzzI+PA7ItVdyZa/XmHzD6/saHV/V4oxA=;
- b=F/NfpIM35EoNDmXkriOoXQPsM1BDmDrjAZQbT1W6I7041Ls5k8+545kooYDBTj8akkTuw0ZopzCotTF9pg042RSvmGXaQ47Nz5KTt/KBOsaD6c0kIdOTWINNZoCbgq1knNWpZeiXQXpDdgKRWuvHaUwsA9fS6aDxx3owZ1MgJ8DHuqJ8EPcGYEx5Pc2MMuKLC/XWKtr+k+3FL5mH12PywYQXLRqCR8jATLj3PIcMOAPUmqdULOQUBsA6TqMr/yIyc1XBkZF26BXpmucGBNmJOt3snLU5t7COCls0zgJhI7vec09s0Ibcj8PV9+N89we+86KkZcPOo9yjvSLwTQgJxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zLbPwhrP6VZzzI+PA7ItVdyZa/XmHzD6/saHV/V4oxA=;
- b=Pa7yE3iU2/ksjkLPeCZsMjK1uBHxmXo/xWTz3rszXuhvUz8tI6FOL8EBXpaQNg/CeTNZ9dM9QGbyd/f/PYsAxZnwv18BXff2e7V16DYiFA7B7lj5680KAcTKMLSTgYulGhIlrSXsoKb1sTiz3Mu3VNT+YlhyNHja3fQFhrrsXQM=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1417.namprd12.prod.outlook.com (10.168.236.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Tue, 24 Sep 2019 12:03:09 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 12:03:09 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     =?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0gKFZNd2FyZSk=?= 
-        <thomas_os@shipmail.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: TTM huge page-faults WAS: Re: [RFC PATCH 1/2] x86: Don't let
- pgprot_modify() change the page encryption bit
-Thread-Topic: TTM huge page-faults WAS: Re: [RFC PATCH 1/2] x86: Don't let
- pgprot_modify() change the page encryption bit
-Thread-Index: AQHVY9W/NbX8l5jE2EqdnkeqDdb24qcdIPeAgAAShQCAAADnAIAH6LoAgAA2koCAAOVxgIAAEXGAgABB0YCAABGEAIAUOneA
-Date:   Tue, 24 Sep 2019 12:03:09 +0000
-Message-ID: <a4fad2e1-c64d-a237-c07a-f480fe1a3351@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org>
- <10185AAF-BFB8-4193-A20B-B97794FB7E2F@amacapital.net>
- <92171412-eed7-40e9-2554-adb358e65767@shipmail.org>
- <d6da6e46-d283-9efc-52cb-9f2a6b0b7188@amd.com>
- <cace2653-447f-bcdc-2714-142d9dc85787@shipmail.org>
- <ea486b68-7751-e51f-5a59-7e1f145820f4@amd.com>
- <46a21ca5-a395-e644-9eed-77ea26fc871e@shipmail.org>
-In-Reply-To: <46a21ca5-a395-e644-9eed-77ea26fc871e@shipmail.org>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: PR0P264CA0118.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:19::34) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 76803cd5-8a72-4b4e-6700-08d740e72a89
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1417;
-x-ms-traffictypediagnostic: DM5PR12MB1417:
-x-microsoft-antispam-prvs: <DM5PR12MB141789C331944F9F93F7DD2783840@DM5PR12MB1417.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(396003)(366004)(199004)(189003)(51444003)(6116002)(14454004)(6246003)(25786009)(478600001)(486006)(58126008)(14444005)(65806001)(186003)(446003)(65956001)(31686004)(31696002)(66556008)(66446008)(81166006)(11346002)(64756008)(8676002)(256004)(2616005)(316002)(66476007)(66946007)(6916009)(54906003)(476003)(102836004)(8936002)(81156014)(71200400001)(46003)(71190400001)(76176011)(386003)(229853002)(6512007)(53546011)(6506007)(86362001)(7736002)(66574012)(52116002)(6486002)(99286004)(2906002)(4326008)(6436002)(5660300002)(36756003)(305945005)(14583001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1417;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lqRlDSAaMrDJfLWNch4jGCh1ZKSYti4pV4uRvQVIoqW13XBhZbyIydu0b2vgmtbbxjBh94UGgwySZgR0epjKMmZmehZ91gFocv0aG4DKjKRIRxpiRkFIFhWk+NVsJcYVQXOFgOvg1K8ZrIOYxsukCMryzbJpD04PpNW4gxH+xL54+JU4HbZ0fw3Y82+u1qPnB14tBv+rHjrz765Ms6dGNlMEi68DY98S6J+zYMyyAMZOmxv0N/FUadNAytBsKVL5GJnSHvQsvjcNHQnc6Fmd3HSo2LJdDs3PH3ILjANjGRUbjGxIqCxYQzYHs8rV/basY7i2woFRr1dky5fzyZJltL4DU4aSF7MS0eUsYyXRxhkpsP94BxsEgsANV7JnZC0sxTQZ90V8vFjnZRtbWL4wdGthFFmDxxH6SS8WsuRGWv8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <07F22D1394BF424F82E36F80465161B0@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 24 Sep 2019 08:03:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50659 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439102AbfIXMD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:03:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 5so1975334wmg.0;
+        Tue, 24 Sep 2019 05:03:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sjo+Lrj1qTUgmSuAuE79qD+nBwV4Q3y5awIkpd/H5wg=;
+        b=Giah2ejId29lTxWALXaHZOxeGzs2PIkylL61a2OL/6zyXrzfPBDcePvjRI1WNIj2zH
+         fdiG3nw8MnXDHnnf6H7I66nTjfCzi6ba5s+YKGIcVRUcPAyexym3WuMsU+fLMpBAYOYr
+         NXO3LwLvLSq+oSbBW+c3i/oX3DDJbNTDpY+j7SoCTpoOfX3P3c9cRw7qWfLaJP/5OgL8
+         0dbi3xV9k3GjWojICazZlArb3CkaE7Zt0lBBg3CbRmrRYv4XdbMWulWFMuvbQoYAukuz
+         OJjxVwD8vQ1OHaUOe3Q8cWxoHJM3XSVKTvdGw+/xw2jerxuL+9aJsjzAhejp7eBi5CZu
+         IhHA==
+X-Gm-Message-State: APjAAAWouL1vXQtmYziD8ZwVbHpQSVNvo4KvQ3LwLu8LQvcfG4EAs7pI
+        7SdrgSS000OnFrTxBliUpiU=
+X-Google-Smtp-Source: APXvYqxZUbaQ37Q13q+S246AZAj41v5+UhfcJZ+9QSSa+hiONfo7LI4ynD8TRc4Sr2xXkpcP4vHssQ==
+X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr2504729wmg.174.1569326605171;
+        Tue, 24 Sep 2019 05:03:25 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id y186sm3279338wmb.41.2019.09.24.05.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 05:03:23 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 14:03:20 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH v4] dt-bindings: sound: Convert Samsung I2S controller to
+ dt-schema
+Message-ID: <20190924120320.GB9218@pi3>
+References: <CGME20190924115601eucas1p13b27b09fcd22bb3961fa2491380c40eb@eucas1p1.samsung.com>
+ <20190924115553.25982-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76803cd5-8a72-4b4e-6700-08d740e72a89
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 12:03:09.3834
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6/Xz3GzRn4xFbZlyt6PYcZ+tbnE51DqpU1h+9nioGjmlxrpfWEpAe3k56tB103/u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1417
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190924115553.25982-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMTEuMDkuMTkgdW0gMTc6MDggc2NocmllYiBUaG9tYXMgSGVsbHN0csO2bSAoVk13YXJlKToN
-Cj4gT24gOS8xMS8xOSA0OjA2IFBNLCBLb2VuaWcsIENocmlzdGlhbiB3cm90ZToNCj4+IEFtIDEx
-LjA5LjE5IHVtIDEyOjEwIHNjaHJpZWIgVGhvbWFzIEhlbGxzdHLDtm0gKFZNd2FyZSk6DQo+PiBb
-U05JUF0NCj4+Pj4+IFRoZSBwcm9ibGVtIHNlZW4gaW4gVFRNIGlzIHRoYXQgd2Ugd2FudCB0byBi
-ZSBhYmxlIHRvIGNoYW5nZSB0aGUNCj4+Pj4+IHZtX3BhZ2VfcHJvdCBmcm9tIHRoZSBmYXVsdCBo
-YW5kbGVyLCBidXQgaXQncyBwcm9ibGVtYXRpYyBzaW5jZSB3ZQ0KPj4+Pj4gaGF2ZSB0aGUgbW1h
-cF9zZW0gdHlwaWNhbGx5IG9ubHkgaW4gcmVhZCBtb2RlLiBIZW5jZSB0aGUgZmFrZSB2bWENCj4+
-Pj4+IGhhY2suIEZyb20gd2hhdCBJIGNhbiB0ZWxsIGl0J3MgcmVhc29uYWJseSB3ZWxsLWJlaGF2
-ZWQsIHNpbmNlDQo+Pj4+PiBwdGVfbW9kaWZ5KCkgc2tpcHMgdGhlIGJpdHMgVFRNIHVwZGF0ZXMs
-IHNvIG1wcm90ZWN0KCkgYW5kIG1yZW1hcCgpDQo+Pj4+PiB3b3JrcyBPSy4gSSB0aGluayBzcGxp
-dF9odWdlX3BtZCBtYXkgcnVuIGludG8gdHJvdWJsZSwgYnV0IHdlIGRvbid0DQo+Pj4+PiBzdXBw
-b3J0IGl0ICh5ZXQpIHdpdGggVFRNLg0KPj4+PiBBaCEgSSBhY3R1YWxseSByYW4gaW50byB0aGlz
-IHdoaWxlIGltcGxlbWVudGluZyBodWdlIHBhZ2Ugc3VwcG9ydCBmb3INCj4+Pj4gVFRNIGFuZCBu
-ZXZlciBmaWd1cmVkIG91dCB3aHkgdGhhdCBkb2Vzbid0IHdvcmsuIERyb3BwZWQgQ1BVIGh1Z2Ug
-cGFnZQ0KPj4+PiBzdXBwb3J0IGJlY2F1c2Ugb2YgdGhpcy4NCj4+PiBCeSBpbmNpZGVudCwgSSBn
-b3Qgc2xpZ2h0bHkgc2lkZXRyYWNrZWQgdGhlIG90aGVyIGRheSBhbmQgc3RhcnRlZA0KPj4+IGxv
-b2tpbmcgYXQgdGhpcyBhcyB3ZWxsLiBHb3QgdG8gdGhlIHBvaW50IHdoZXJlIEkgZmlndXJlZCBv
-dXQgYWxsIHRoZQ0KPj4+IGhhaXJ5IGFsaWdubWVudCBpc3N1ZXMgYW5kIGFjdHVhbGx5IGdvdCBo
-dWdlX2ZhdWx0KCkgY2FsbHMsIGJ1dCBuZXZlcg0KPj4+IGltcGxlbWVudGVkIHRoZSBoYW5kbGVy
-LiBJIHRoaW5rIHRoYXQncyBkZWZpbml0ZWx5IHNvbWV0aGluZyB3b3J0aA0KPj4+IGhhdmluZy4g
-Tm90IHN1cmUgaXQgd2lsbCB3b3JrIGZvciBJTyBtZW1vcnksIHRob3VnaCwgKHNwbGl0X2h1Z2Vf
-cG1kDQo+Pj4gd2lsbCBqdXN0IHNraXAgbm9uLXBhZ2UtYmFja2VkIG1lbW9yeSkgYnV0IGlmIHdl
-IG9ubHkgc3VwcG9ydA0KPj4+IFZNX1NIQVJFRCAobm9uIENPVykgdm1hcyB0aGVyZSdzIG5vIHJl
-YXNvbiB0byBzcGxpdCB0aGUgaHVnZSBwbWRzDQo+Pj4gYW55d2F5LiBEZWZpbml0ZWx5IHNvbWV0
-aGluZyB3ZSBzaG91bGQgaGF2ZSBJTU8uDQo+PiBXZWxsIG91ciBwcmltYXJ5IHVzZSBjYXNlIHdv
-dWxkIGJlIElPIG1lbW9yeSwgY2F1c2Ugc3lzdGVtIG1lbW9yeSBpcw0KPj4gb25seSBvcHRpb25h
-bGx5IGFsbG9jYXRlIGFzIGh1Z2UgcGFnZSBidXQgd2UgbmVhcmx5IGFsd2F5cyBhbGxvY2F0ZSBW
-UkFNDQo+PiBpbiBjaHVua3Mgb2YgYXQgbGVhc3QgMk1CIGJlY2F1c2Ugd2Ugb3RoZXJ3aXNlIGdl
-dCBhIGh1Z2UgcGVyZm9ybWFuY2UNCj4+IHBlbmFsdHkuDQo+DQo+IEJ1dCB0aGF0IHN5c3RlbSBt
-ZW1vcnkgb3B0aW9uIGlzIG9uIGJ5IGRlZmF1bHQsIHJpZ2h0PyBJbiBhbnkgY2FzZSwgYSANCj4g
-cmVxdWVzdCBmb3IgYSBodWdlX2ZhdWx0DQo+IHdvdWxkIHByb2JhYmx5IG5lZWQgdG8gY2hlY2sg
-dGhhdCB0aGVyZSBpcyBhY3R1YWxseSBhbiB1bmRlcmx5aW5nIA0KPiBodWdlX3BhZ2UgYW5kIG90
-aGVyd2lzZSBmYWxsYmFjayB0byBvcmRpbmFyeSBmYXVsdHMuDQo+DQo+IEFub3RoZXIgcmVxdWly
-ZW1lbnQgd291bGQgYmUgZm9yIElPIG1lbW9yeSBhbGxvY2F0aW9ucyB0byBiZSANCj4gUE1EX1BB
-R0VfU0laRSBhbGlnbmVkIGluIHRoZSBtYXBwYWJsZSBhcGVydHVyZSwgdG8gYXZvaWQgZmFsbGJh
-Y2tzIHRvIA0KPiBvcmRpbmFyeSBmYXVsdHMuIFByb2JhYmx5IGluY3JlYXNpbmcgZnJhZ21lbnRh
-dGlvbiBzb21ld2hhdC4gKFNlZW1zIA0KPiBsaWtlIHBtZCBlbnRyaWVzIGNhbiBvbmx5IHBvaW50
-IHRvIFBNRF9QQUdFX1NJWkUgYWxpZ25lZCBwaHlzaWNhbCANCj4gYWRkcmVzc2VzKSBXb3VsZCB0
-aGF0IHdvcmsgZm9yIHlvdT8NCg0KWWVhaCwgd2UgZG8gaXQgdGhpcyB3YXkgYW55d2F5Lg0KDQpS
-ZWdhcmRzLA0KQ2hyaXN0aWFuLg0K
+On Tue, Sep 24, 2019 at 01:55:53PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+> 
+> Convert Samsung I2S controller to newer dt-schema format.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v4:
+> - Removed description of i2s device nodes' clocks from
+> 'clocks' property.
+> - Added 'clock-output-names' property.
+> - Added description of clock names.
+> - Added '#clock-cells' property to required properties
+> - Description of the provided clocks moved to samsung-i2s.h
+> in separate patch
+> 
+> Best regards,
+> Maciej Falkowski
+> ---
+>  .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
+>  .../bindings/sound/samsung-i2s.yaml           | 136 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 84 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> deleted file mode 100644
+> index a88cb00fa096..000000000000
+> --- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> +++ /dev/null
+> @@ -1,84 +0,0 @@
+> -* Samsung I2S controller
+> -
+> -Required SoC Specific Properties:
+> -
+> -- compatible : should be one of the following.
+> -   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> -   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+> -     secondary fifo, s/w reset control and internal mux for root clk src.
+> -   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+> -     playback, stereo channel capture, secondary fifo using internal
+> -     or external dma, s/w reset control, internal mux for root clk src
+> -     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> -     is to allow transfer of multiple channel audio data on single data line.
+> -   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
+> -     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+> -     with only external dma and more no.of root clk sampling frequencies.
+> -   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> -     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+> -     slightly modified bit offsets.
+> -
+> -- reg: physical base address of the controller and length of memory mapped
+> -  region.
+> -- dmas: list of DMA controller phandle and DMA request line ordered pairs.
+> -- dma-names: identifier string for each DMA request line in the dmas property.
+> -  These strings correspond 1:1 with the ordered pairs in dmas.
+> -- clocks: Handle to iis clock and RCLK source clk.
+> -- clock-names:
+> -  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
+> -  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
+> -  "i2s_opclk1" as shown in the example below.
+> -  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
+> -  be "iis" and "i2s_opclk0".
+> -  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
+> -  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
+> -  doesn't have any such mux.
+> -- #clock-cells: should be 1, this property must be present if the I2S device
+> -  is a clock provider in terms of the common clock bindings, described in
+> -  ../clock/clock-bindings.txt.
+> -- clock-output-names (deprecated): from the common clock bindings, names of
+> -  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
+> -  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
+> -
+> -There are following clocks available at the I2S device nodes:
+> - CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
+> - CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
+> -		    IISPSR register),
+> - CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
+> -		    IISMOD register).
+> -
+> -Refer to the SoC datasheet for availability of the above clocks.
+> -The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
+> -in the IIS Multi Audio Interface.
+> -
+> -Note: Old DTs may not have the #clock-cells property and then not use the I2S
+> -node as a clock supplier.
+> -
+> -Optional SoC Specific Properties:
+> -
+> -- samsung,idma-addr: Internal DMA register base address of the audio
+> -  sub system(used in secondary sound source).
+> -- pinctrl-0: Should specify pin control groups used for this controller.
+> -- pinctrl-names: Should contain only one value - "default".
+> -- #sound-dai-cells: should be 1.
+> -
+> -
+> -Example:
+> -
+> -i2s0: i2s@3830000 {
+> -	compatible = "samsung,s5pv210-i2s";
+> -	reg = <0x03830000 0x100>;
+> -	dmas = <&pdma0 10
+> -		&pdma0 9
+> -		&pdma0 8>;
+> -	dma-names = "tx", "rx", "tx-sec";
+> -	clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> -		<&clock_audss EXYNOS_I2S_BUS>,
+> -		<&clock_audss EXYNOS_SCLK_I2S>;
+> -	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> -	#clock-cells = <1>;
+> -	samsung,idma-addr = <0x03000000>;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&i2s0_bus>;
+> -	#sound-dai-cells = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> new file mode 100644
+> index 000000000000..7d2750c26f11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> @@ -0,0 +1,136 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC I2S controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> +
+> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+> +      secondary fifo, s/w reset control and internal mux for root clk src.
+> +
+> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+> +      playback, stereo channel capture, secondary fifo using internal
+> +      or external dma, s/w reset control, internal mux for root clk src
+> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> +      is to allow transfer of multiple channel audio data on single data line.
+> +
+> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
+> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+> +      with only external dma and more no.of root clk sampling frequencies.
+> +
+> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+> +      slightly modified bit offsets.
+> +    enum:
+> +      - samsung,s3c6410-i2s
+> +      - samsung,s5pv210-i2s
+> +      - samsung,exynos5420-i2s
+> +      - samsung,exynos7-i2s
+> +      - samsung,exynos7-i2s1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +  dma-names:
+> +    oneOf:
+> +      - items:
+> +          - const: tx
+> +          - const: rx
+> +      - items:
+> +          - const: tx
+> +          - const: rx
+> +          - const: tx-sec
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: iis
+> +      - items: # for i2s0
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +          - const: i2s_opclk1
+> +      - items: # for i2s1 and i2s2
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +    description: |
+> +      "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources
+> +      of the root clk. i2s0 has internal mux to select the source
+> +      of root clk and i2s1 and i2s2 doesn't have any such mux.
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  clock-output-names: # deprecated
+
+Instead:
+  deprecated: true
+
+> +    oneOf:
+> +      - items: # for i2s0
+> +          - const: i2s_cdclk0
+> +      - items: # for i2s1
+> +          - const: i2s_cdclk1
+> +      - items: # for i2s2
+> +          - const: i2s_cdclk2
+> +    description: Names of the CDCLK I2S output clocks.
+> +
+> +  samsung,idma-addr:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Internal DMA register base address of the audio
+> +      sub system(used in secondary sound source).
+> +
+> +  pinctrl-0:
+> +    description: Should specify pin control groups used for this controller.
+> +
+> +  pinctrl-names:
+> +    const: default
+> +
+> +  "#sound-dai-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dmas
+> +  - dma-names
+> +  - clocks
+> +  - clock-names
+> +  - "#clock-cells"
+
+Before, this was not a required property, except when registering a
+clock provider. Are you 100% sure it we need to register clock provider
+on every SoC?
+
+For example, Exynos3250 does not do it... others also might.
+
+Best regards,
+Krzysztof
+
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/exynos-audss-clk.h>
+> +
+> +    i2s0: i2s@3830000 {
+> +        compatible = "samsung,s5pv210-i2s";
+> +        reg = <0x03830000 0x100>;
+> +        dmas = <&pdma0 10>,
+> +                <&pdma0 9>,
+> +                <&pdma0 8>;
+> +        dma-names = "tx", "rx", "tx-sec";
+> +        clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> +                <&clock_audss EXYNOS_I2S_BUS>,
+> +                <&clock_audss EXYNOS_SCLK_I2S>;
+> +        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +        #clock-cells = <1>;
+> +        samsung,idma-addr = <0x03000000>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&i2s0_bus>;
+> +        #sound-dai-cells = <1>;
+> +    };
+> +
+> -- 
+> 2.17.1
+> 
+> 
+> 
