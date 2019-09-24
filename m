@@ -6,61 +6,75 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D571AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D821C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B208B214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B15F20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438738AbfIXQFq (ORCPT
+        id S2439157AbfIXQF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:05:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16778 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391013AbfIXQFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:05:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 09:05:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
-   d="scan'208";a="340126790"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga004.jf.intel.com with ESMTP; 24 Sep 2019 09:05:45 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 07164301AF5; Tue, 24 Sep 2019 09:05:45 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 09:05:44 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf, evlist: Fix access of freed id arrays
-Message-ID: <20190924160544.GR8537@tassilo.jf.intel.com>
-References: <20190923233339.25326-1-andi@firstfloor.org>
- <20190924074401.GA26797@krava>
+        Tue, 24 Sep 2019 12:05:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34736 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438777AbfIXQF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:05:58 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iCnK6-0006K0-L0; Tue, 24 Sep 2019 18:05:54 +0200
+Date:   Tue, 24 Sep 2019 18:05:54 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
+Message-ID: <20190924160554.5esplbmnzm4q4tew@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-4-swood@redhat.com>
+ <20190917075943.qsaakyent4dxjkq4@linutronix.de>
+ <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
+ <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
+ <20190923175233.yub32stn3xcwkaml@linutronix.de>
+ <20190924112155.rxeyksetgqmer3pg@linutronix.de>
+ <55dc19fcc44b2e658b71f68206306c8310335564.camel@redhat.com>
+ <20190924152514.enzeuoo5a6o3mgqu@linutronix.de>
+ <1a2234884e55e5ee6df5f32f828a99c1b248933f.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190924074401.GA26797@krava>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1a2234884e55e5ee6df5f32f828a99c1b248933f.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> id/sample_id arrays are not created when evsel is open but
-> we free it at close
-> 
-> for now this fix seems correct to me.. we are moving id/sample_id
-> arrays under libperf, I'll make a note to check on close and reopen
-> of evsel and add some tests for that
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+On 2019-09-24 10:47:36 [-0500], Scott Wood wrote:
+> When the stop machine finishes it will do a wake_up_process() via
+> complete().  Since this does not pass WF_LOCK_SLEEPER, saved_state will be
+> cleared, and you'll have TASK_RUNNING when you get to other_func() and
+> schedule(), regardless of whether CPU1 sends wake_up() -- so this change
+> doesn't actually accomplish anything.
 
-It looks like there are still some bogus closes in such a case, at least valgrind
-complains about some close(-1). But these should be harmless, so I guess
-we can leave them for now.
+True, I completely missed that part.
 
--Andi
+> While as noted in the other thread I don't think these spurious wakeups are
+> a huge problem, we could avoid them by doing stop_one_cpu_nowait() and then
+> schedule() without messing with task state.  Since we're stopping our own
+> cpu, it should be guaranteed that the stopper has finished by the time we
+> exit schedule().
+
+I remember loosing a state can be a problem. Lets say it is not "just"
+TASK_UNINTERRUPTIBLE -> TASK_RUNNING which sounds harmless but it is
+__TASK_TRACED and you lose it as part of unlocking siglock.
+
+> -Scott
+
+Sebastian
