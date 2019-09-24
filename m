@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A90C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C84C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090EA21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E271217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343746;
-	bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
+	s=default; t=1569343755;
+	bh=j20aodNB6H+UN3uqmUZyleqFIstFjxvzp7Enj8fdVcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrXCtiyQFJmbEFTpCVPQ7mlhDHV984lGWuGTQC9M3aoGH5V4es19WSuwPDmLWLMqx
-	 ivtE66pxrf+UPMLS8s3it0HTtVt0vkbEkuM+uFLe5g0FvHxPVfTwl8tNYSpNdfNqoy
-	 AZHH/txwkowWNfGV1SeRTu0Ecnc4Zw8GdQu9dwEU=
+	b=UskXcrq+dBrsC1yk8Q6Hp4+0Dw1Mdrw0PPNViMsK7oz9jDawaFwB/tfFxLcIMtRtw
+	 KHl2Ewu3riLphreHdbhcYJ9u4L1Xg1DGCynUAsggN3FDAC3hWdIitH0joxldfOcDGC
+	 klO0um90H3nUpXlYPmDi7OLDbO/eJD10Bwis6ACI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410226AbfIXQtF (ORCPT
+        id S2410291AbfIXQtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbfIXQtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:49:00 -0400
+        id S2410235AbfIXQtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:49:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D6621D6C;
-        Tue, 24 Sep 2019 16:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44848222CC;
+        Tue, 24 Sep 2019 16:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343739;
-        bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
+        s=default; t=1569343746;
+        bh=j20aodNB6H+UN3uqmUZyleqFIstFjxvzp7Enj8fdVcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IzzkdU3lj5Cg/oeGtyJelqOEtBkGmZ0JErFKFyqyTvbPePWiYw2YUFJ9f34WtdS1N
-         jvXFeA5G9AYKVmA9Dk2V41rqbbKnV5VCSrzexJs6zEf7T/MTky/UGaiI9tnzI5kTNO
-         LjW9z8ru++WkJzzRcHfMB4P9hqC1G3DiZpumwVyQ=
+        b=dJMhGL+DXZisMClaAC5U5sCMupNa43thPCtaQoljeu4qprmaZB+GGlQ7m01WsdH+5
+         KLlOWhYsQJmxhA0MsBduti8Il6VIoqb6/R3KrR5CKT5j1LZS5mNHmXz2M+yuLU4Cvl
+         jMaR5RPG9IMfq/9Lv0lGb4cxhxv+CWgb/afqZM4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 07/50] drm/panel: check failure cases in the probe func
-Date:   Tue, 24 Sep 2019 12:48:04 -0400
-Message-Id: <20190924164847.27780-7-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/50] ipmi_si: Only schedule continuously in the thread in maintenance mode
+Date:   Tue, 24 Sep 2019 12:48:09 -0400
+Message-Id: <20190924164847.27780-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -60,66 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
+[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
 
-The following function calls may fail and return NULL, so the null check
-is added.
-of_graph_get_next_endpoint
-of_graph_get_remote_port_parent
-of_graph_get_remote_port
+ipmi_thread() uses back-to-back schedule() to poll for command
+completion which, on some machines, can push up CPU consumption and
+heavily tax the scheduler locks leading to noticeable overall
+performance degradation.
 
-Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
-leaking endpoint.
+This was originally added so firmware updates through IPMI would
+complete in a timely manner.  But we can't kill the scheduler
+locks for that one use case.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
+Instead, only run schedule() continuously in maintenance mode,
+where firmware updates should run.
+
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 2c9c9722734f5..9a2cb8aeab3a4 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -400,7 +400,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index 75e5006f395a5..006d765256782 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -221,6 +221,9 @@ struct smi_info {
+ 	 */
+ 	bool irq_enable_broken;
  
- 	/* Look up the DSI host.  It needs to probe before we do. */
- 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!endpoint)
-+		return -ENODEV;
++	/* Is the driver in maintenance mode? */
++	bool in_maintenance_mode;
 +
- 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
-+	if (!dsi_host_node)
-+		goto error;
-+
- 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
- 	of_node_put(dsi_host_node);
- 	if (!host) {
-@@ -409,6 +415,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 	/*
+ 	 * Did we get an attention that we did not handle?
+ 	 */
+@@ -1013,11 +1016,20 @@ static int ipmi_thread(void *data)
+ 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
+ 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
+ 						  &busy_until);
+-		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
++		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
+ 			; /* do nothing */
+-		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+-			schedule();
+-		else if (smi_result == SI_SM_IDLE) {
++		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
++			/*
++			 * In maintenance mode we run as fast as
++			 * possible to allow firmware updates to
++			 * complete as fast as possible, but normally
++			 * don't bang on the scheduler.
++			 */
++			if (smi_info->in_maintenance_mode)
++				schedule();
++			else
++				usleep_range(100, 200);
++		} else if (smi_result == SI_SM_IDLE) {
+ 			if (atomic_read(&smi_info->need_watch)) {
+ 				schedule_timeout_interruptible(100);
+ 			} else {
+@@ -1025,8 +1037,9 @@ static int ipmi_thread(void *data)
+ 				__set_current_state(TASK_INTERRUPTIBLE);
+ 				schedule();
+ 			}
+-		} else
++		} else {
+ 			schedule_timeout_interruptible(1);
++		}
  	}
- 
- 	info.node = of_graph_get_remote_port(endpoint);
-+	if (!info.node)
-+		goto error;
-+
- 	of_node_put(endpoint);
- 
- 	ts->dsi = mipi_dsi_device_register_full(host, &info);
-@@ -429,6 +438,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 		return ret;
- 
  	return 0;
-+
-+error:
-+	of_node_put(endpoint);
-+	return -ENODEV;
+ }
+@@ -1201,6 +1214,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ 
+ 	if (!enable)
+ 		atomic_set(&smi_info->req_events, 0);
++	smi_info->in_maintenance_mode = enable;
  }
  
- static int rpi_touchscreen_remove(struct i2c_client *i2c)
+ static void shutdown_smi(void *send_info);
 -- 
 2.20.1
 
