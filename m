@@ -2,98 +2,215 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB62C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA90C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485322146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569364713;
-	bh=9SBeTOSbULmiFqoG4YjKk9u2jWvbRynHaxfnaPUXVWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1QumsSTfDv9e9JW6xLdhY35BBwj12oy968h+mpCsuJADXW5S9Fg1XBIITvyaR2rsG
-	 mSAnJYqkVELFP9YNM3VXuhJz5fOjrIHt0ahn6atLidGIRTrPokojcr+0R3+vWRS95m
-	 V2BGJTLkucBdPcwgOunbwAO3Fban5p1q29yNnj64=
+	by mail.kernel.org (Postfix) with ESMTP id 0680D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyFd6NKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410833AbfIXWic (ORCPT
+        id S2411074AbfIXWmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 18:38:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45412 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389629AbfIXWic (ORCPT
+        Tue, 24 Sep 2019 18:42:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34428 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410594AbfIXWmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 18:38:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r134so2627780lff.12
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:38:30 -0700 (PDT)
+        Tue, 24 Sep 2019 18:42:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 83so3180137oii.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=90Q+eXMjNvFFuPrMWBbl3/f3JdViBcTYUczXFgEA6fY=;
-        b=M0dmwTrsklIGws4kec6f2o+YuDHRLxHqB8mnf+ZjLpSHn2z41biSEEnbbQ4ulG2QKl
-         zgjM8Sxa8KzwBByQmS1aUcgWEJJ8vr0fJiZS2v/v9Q8VGNBsvrDWW6dVSylnAo6i1hA5
-         d5GqmmE2XYq6jDFMbF8B0/1swDJifG9Vi/p9Q=
+        bh=tLGshlxIGKhLcXUM0uB8QvsR7iqHi3kS/y0xfRKm0lM=;
+        b=lyFd6NKLnJffQTtK5uJBQQ7012wiEa8kfPQp3MvPsNG1KoPM+uZ5DOeXAsSVsHhhYl
+         9PhbUGy760gbP3AbAI0haHWUjXeqJuV1Ff6KFLenze+pOgXpQNk/UUV6EMPzIh6GiERb
+         hkPoXs3KywobQJyS6dJIKtYbMWX+dcH1Z9IqG+y7mMINZC/6+WIH/ikyRo5vCTeBGtMw
+         +z5T43aRRTA4BWjxL/E1O6WpxSwYPEa0ucXaZC+shiZ3dJlTMl4CE/iJfpZYB6WvXsEA
+         dzUlZYOtCRyM+9PG+UnhpzsvSPW1o0SPzIAUOOhO0g+8rLEeXQY32mKBSxJefjDb4Fqr
+         01+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=90Q+eXMjNvFFuPrMWBbl3/f3JdViBcTYUczXFgEA6fY=;
-        b=CDKbrDpjsN3ZAUvayJXikpBUYhM3r4aFi850v4OR9PUpolXHxMy7E3b30H6xnBO+oJ
-         ldVYVnFZImI4zHQfbAzzRnaMyymDmoNLpOvMGaLwlBWrWt4Pvo0q80YI4mOXsgyo/42W
-         ajQDNOOpkoYu2T6or9mo7qFMevUkPW4La8NPSc5WE1USbjc70+u8/TWrTm9TLbn4eH//
-         Ezgjn45wNEpkqyl4NndYlyh+Oyl03nfm1jPmEoYmvW+yX+gLRQ6YAl30BS7sCsbg8W3V
-         dKK1jUU9T/4Z9qOSip1DyolzBYLE62zGv5hG5ofvZjF6A3RuVF5djO7KTqdlky3RFfMG
-         d+Fg==
-X-Gm-Message-State: APjAAAXtqD4Bn1r7/m5L2hHYxoMJqxT/7frtJZU2B3uzGiFR0/ltaVEH
-        i1Nl+Gixw2GlCAeOoODCDTuRBhrX4OA=
-X-Google-Smtp-Source: APXvYqzYoYBY3/Kj72L5w4KgDpy2VP8xH1LuOCswnK9upAAR9uTNqUs1jzVw+gIT5M++TYdxbkHxYQ==
-X-Received: by 2002:ac2:48af:: with SMTP id u15mr3441886lfg.75.1569364709288;
-        Tue, 24 Sep 2019 15:38:29 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id g3sm789485ljj.59.2019.09.24.15.38.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id u3so2629430lfl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr3298645lfh.29.1569364706199;
- Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
+        bh=tLGshlxIGKhLcXUM0uB8QvsR7iqHi3kS/y0xfRKm0lM=;
+        b=RYXK9TZKolbmT1mpGyOIS5XeVsrNiUbvEFiAigaGkM6SbARTjqs0+9pB2l2p3Ejpma
+         7q/358xCbLs/IYKlfJCTIXkyCsXmWperSFv38ppJY25vaC4dAS03i59Enx5HhOPE6GcC
+         femIGOH6ccCi+dtISM6Ugv+9uFREEWjH5/HquoD+r4Li49VqVbLjAF+jrxZLJ/1Z13a0
+         CKiQqwqBmDqX5AJnVVj0kiKtYHqCvDhb5PO0zyXJIc0E/zgddxqb+hgQtBnGuekhus6o
+         oa37XB4xJQmHbco1bWzoIS7dNeyxjzWxmE65rTQQXV9Mn1pqdhp5ZQN7L7p8UzyYDGKB
+         yVgA==
+X-Gm-Message-State: APjAAAV9YLMxxxzBdue5AhsD7J2YV3b/HgAkkf/Zciy/YAxgYTaW9oqp
+        ulBBy+/eEuIa4bZDN9uu/NM/ppvUeapAEOuhqoFI7Q==
+X-Google-Smtp-Source: APXvYqxZVGBQ9fz0kE/sF2k3P1ldR0v+pdangCAO2sUHr3CUBMWxeLaBd7YBg+8LTTLq4F/kNZH0k88J0CYWN/h5nSs=
+X-Received: by 2002:aca:3954:: with SMTP id g81mr2235308oia.65.1569364937133;
+ Tue, 24 Sep 2019 15:42:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190923223612.gJ-_DTlay%akpm@linux-foundation.org> <20190924074744.GA23050@dhcp22.suse.cz>
-In-Reply-To: <20190924074744.GA23050@dhcp22.suse.cz>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Sep 2019 15:38:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiTDTXMco-_LF2Wf5J7awz3BenB1JrkqJM3mPMr7y951Q@mail.gmail.com>
-Message-ID: <CAHk-=wiTDTXMco-_LF2Wf5J7awz3BenB1JrkqJM3mPMr7y951Q@mail.gmail.com>
-Subject: Re: [patch 066/134] mm/memory_hotplug.c: add a bounds check to check_hotplug_memory_range()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
+ <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
+In-Reply-To: <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Tue, 24 Sep 2019 15:42:06 -0700
+Message-ID: <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>, Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        alastair@d-silva.org, Qian Cai <cai@lca.pw>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>, ira.weiny@intel.com,
-        Jason Gunthorpe <jgg@ziepe.ca>, logang@deltatee.com,
-        mm-commits@vger.kernel.org, osalvador@suse.com,
-        pasha.tatashin@soleen.com, Wei Yang <richard.weiyang@gmail.com>
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+On Mon, Sep 23, 2019 at 2:27 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
 >
-> Isn't this rushed a bit? I've had a review feedback just yesterday
-> http://lkml.kernel.org/r/20190923122513.GO6016@dhcp22.suse.cz and had
-> some concerns.
+> On 9/23/19 12:18 PM, Mina Almasry wrote:
+> > On Mon, Sep 23, 2019 at 10:47 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >>
+> >> On 9/19/19 3:24 PM, Mina Almasry wrote:
+> >>> Patch series implements hugetlb_cgroup reservation usage and limits, which
+> >>> track hugetlb reservations rather than hugetlb memory faulted in. Details of
+> >>> the approach is 1/7.
+> >>
+> >> Thanks for your continued efforts Mina.
+> >>
+> >
+> > And thanks for your reviews so far.
+> >
+> >> One thing that has bothered me with this approach from the beginning is that
+> >> hugetlb reservations are related to, but somewhat distinct from hugetlb
+> >> allocations.  The original (existing) huegtlb cgroup implementation does not
+> >> take reservations into account.  This is an issue you are trying to address
+> >> by adding a cgroup support for hugetlb reservations.  However, this new
+> >> reservation cgroup ignores hugetlb allocations at fault time.
+> >>
+> >> I 'think' the whole purpose of any hugetlb cgroup is to manage the allocation
+> >> of hugetlb pages.  Both the existing cgroup code and the reservation approach
+> >> have what I think are some serious flaws.  Consider a system with 100 hugetlb
+> >> pages available.  A sysadmin, has two groups A and B and wants to limit hugetlb
+> >> usage to 50 pages each.
+> >>
+> >> With the existing implementation, a task in group A could create a mmap of
+> >> 100 pages in size and reserve all 100 pages.  Since the pages are 'reserved',
+> >> nobody in group B can allocate ANY huge pages.  This is true even though
+> >> no pages have been allocated in A (or B).
+> >>
+> >> With the reservation implementation, a task in group A could use MAP_NORESERVE
+> >> and allocate all 100 pages without taking any reservations.
+> >>
+> >> As mentioned in your documentation, it would be possible to use both the
+> >> existing (allocation) and new reservation cgroups together.  Perhaps if both
+> >> are setup for the 50/50 split things would work a little better.
+> >>
+> >> However, instead of creating a new reservation crgoup how about adding
+> >> reservation support to the existing allocation cgroup support.  One could
+> >> even argue that a reservation is an allocation as it sets aside huge pages
+> >> that can only be used for a specific purpose.  Here is something that
+> >> may work.
+> >>
+> >> Starting with the existing allocation cgroup.
+> >> - When hugetlb pages are reserved, the cgroup of the task making the
+> >>   reservations is charged.  Tracking for the charged cgroup is done in the
+> >>   reservation map in the same way proposed by this patch set.
+> >> - At page fault time,
+> >>   - If a reservation already exists for that specific area do not charge the
+> >>     faulting task.  No tracking in page, just the reservation map.
+> >>   - If no reservation exists, charge the group of the faulting task.  Tracking
+> >>     of this information is in the page itself as implemented today.
+> >> - When the hugetlb object is removed, compare the reservation map with any
+> >>   allocated pages.  If cgroup tracking information exists in page, uncharge
+> >>   that group.  Otherwise, unharge the group (if any) in the reservation map.
+> >>
+> >> One of the advantages of a separate reservation cgroup is that the existing
+> >> code is unmodified.  Combining the two provides a more complete/accurate
+> >> solution IMO.  But, it has the potential to break existing users.
+> >>
+> >> I really would like to get feedback from anyone that knows how the existing
+> >> hugetlb cgroup controller may be used today.  Comments from Aneesh would
+> >> be very welcome to know if reservations were considered in development of the
+> >> existing code.
+> >> --
+> >
+> > FWIW, I'm aware of the interaction with NORESERVE and my thoughts are:
+> >
+> > AFAICT, the 2 counter approach we have here is strictly superior to
+> > the 1 upgraded counter approach. Consider these points:
+> >
+> > - From what I can tell so far, everything you can do with the 1
+> > counter approach, you can do with the two counter approach by setting
+> > both limit_in_bytes and reservation_limit_in_bytes to the limit value.
+> > That will limit both reservations and at fault allocations.
+> >
+> > - The 2 counter approach preserves existing usage of hugetlb cgroups,
+> > so no need to muck around with reverting the feature some time from
+> > now because of broken users. No existing users of hugetlb cgroups need
+> > to worry about the effect of this on their usage.
+> >
+> > - Users that use hugetlb memory strictly through reservations can use
+> > only reservation_limit_in_bytes and enjoy cgroup limits that never
+> > SIGBUS the application. This is our usage for example.
+> >
+> > - The 2 counter approach provides more info to the sysadmin. The
+> > sysadmin knows exactly how much reserved bytes there are via
+> > reservation_usage_in_bytes, and how much actually in use bytes there
+> > are via usage_in_bytes. They can even detect NORESERVE usage if
+> > usage_in_bytes > reservation_usage_in_bytes. failcnt shows failed
+> > reservations *and* failed allocations at fault, etc. All around better
+> > debuggability when things go wrong. I think this is particularly
+> > troubling for the 1 upgraded counter approach. That counter's
+> > usage_in_bytes doesn't tell you if the usage came from reservations or
+> > allocations at fault time.
+> >
+> > - Honestly, I think the 2 counter approach is easier to document and
+> > understand by the userspace? 1 counter that vaguely tracks both the
+> > reservations and usage and decides whether or not to charge at fault
+> > time seems hard to understand what really happened after something
+> > goes wrong. 1 counter that tracks reservations and 1 counter that
+> > tracks actual usage seem much simpler to digest, and provide better
+> > visibility to what the cgroup is doing as I mentioned above.
+> >
+> > I think it may be better if I keep the 2 counter approach but
+> > thoroughly document the interaction between the existing counters and
+> > NORESERVE. What do you think?
+>
+> I personally prefer the one counter approach only for the reason that it
+> exposes less information about hugetlb reservations.  I was not around
+> for the introduction of hugetlb reservations, but I have fixed several
+> issues having to do with reservations.  IMO, reservations should be hidden
+> from users as much as possible.  Others may disagree.
+>
+> I really hope that Aneesh will comment.  He added the existing hugetlb
+> cgroup code.  I was not involved in that effort, but it looks like there
+> might have been some thought given to reservations in early versions of
+> that code.  It would be interesting to get his perspective.
+>
+> Changes included in patch 4 (disable region_add file_region coalescing)
+> would be needed in a one counter approach as well, so I do plan to
+> review those changes.
 
-Ok dropped.
+OK, FWIW, the 1 counter approach should be sufficient for us, so I'm
+not really opposed. David, maybe chime in if you see a problem here?
+From the perspective of hiding reservations from the user as much as
+possible, it is an improvement.
 
-That means I need to drop "mm/memremap.c: add a bounds check in
-devm_memremap_pages()" too, which depends on it.
+I'm only wary about changing the behavior of the current and having
+that regress applications. I'm hoping you and Aneesh can shed light on
+this.
 
-           Linus
+> --
+> Mike Kravetz
