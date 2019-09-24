@@ -2,55 +2,54 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8D7C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1127C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43144214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B477F2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344546;
-	bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
+	s=default; t=1569344549;
+	bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwZV+efXCfj0+vN81AlQhyLX2EC/RHdRsKaJjXX33+SctR8n8gDhvbVJSG/lbPkRN
-	 ZU1Uffv5wqRuSEeexrMvGR1/kVtpGlIAXZMmcIAcqhxyqp1bjJN4It8PFUpHaPvPsR
-	 eeTUXYipYPdbP3AL7cRi0pmM8YsoYnxxM79CJcpw=
+	b=Ee3o2z7fECYKZFxzkeo272jPrPnMM4AjUdijFJ+uDTlBiCLsiqRDP1aGLAXaWUFLZ
+	 gXjXkpBheZPT4ZpL+T3ZFJivFdcayD/McyC/ZoyJlzEekMwCePPGuUaxFMF5ErMMKd
+	 8QFDKtZPafLfzXHdEPr0dqj98Ap5q1WdXZy1BadU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438855AbfIXRCZ (ORCPT
+        id S2439017AbfIXRC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 13:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632839AbfIXQmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:55 -0400
+        id S2391830AbfIXQoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A4921D7C;
-        Tue, 24 Sep 2019 16:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 836E420872;
+        Tue, 24 Sep 2019 16:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343374;
-        bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
+        s=default; t=1569343441;
+        bh=QEzS84l9KQQJCNWHSl88ZGBwPCWjjxkz8jzDybGM6bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PidovqNm5s+w0fwzzyCyuzKZ6mVysu3j7Ka6jh3HoI6KEs2LmtiqzBMDN7msk7ZjY
-         couvC094OK92Dvl6RcOqoajwLuN/5h5R+pU0cvpMfp6w4Li2yYPreHmW7rOjwZBHrg
-         J9fXaEZEE9L4XXZIPUyQNZwrItE21Cvwcuh55j5M=
+        b=Lg4eoKIGkblfjDyFOHQipst1rzXjtu/I/QJKmc4n+isuLf68mHQYcYRUAlODCXvlT
+         8MfcsL6rTE7kTgfu/HfnfTTwelC3FqSHkXymXiioz6zhzij4uMt/xC+kqZ7ff4p6cD
+         WigQ73K+jlZMQovpkPNY5W2DHpmYE5uV4BkHBmDQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Joel Savitz <jsavitz@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.3 24/87] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Date:   Tue, 24 Sep 2019 12:40:40 -0400
-Message-Id: <20190924164144.25591-24-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 50/87] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Tue, 24 Sep 2019 12:41:06 -0400
+Message-Id: <20190924164144.25591-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -63,85 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
+[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
 
-When building with -Wsometimes-uninitialized, clang warns:
+pmx_writel uses writel which inserts write barrier before the
+register write.
 
-drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-used uninitialized whenever 'for' loop exits because its condition is
-false [-Wsometimes-uninitialized]
-        for (j = 0; j < entries; j++) {
-                    ^~~~~~~~~~~
-drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-here
-        if (fndit)
-            ^~~~~
-drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-it is always true
-        for (j = 0; j < entries; j++) {
-                    ^~~~~~~~~~~
-drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-'fndit' to silence this warning
-        int j, fndit;
-                    ^
-                     = 0
+This patch has fix to replace writel with writel_relaxed followed
+by a readback and memory barrier to ensure write operation is
+completed for successful pinctrl change.
 
-fndit is only used to gate a sprintf call, which can be moved into the
-loop to simplify the code and eliminate the local variable, which will
-fix this warning.
-
-Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Joel Savitz <jsavitz@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://github.com/ClangBuiltLinux/linux/issues/504
-Link: https://lore.kernel.org/r/20190603221157.58502-1-natechancellor@gmail.com
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index bcd5d357ca238..c3899ee1db995 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 	struct of_drc_info drc;
- 	const __be32 *value;
- 	char cell_drc_name[MAX_DRC_NAME_LEN];
--	int j, fndit;
-+	int j;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 186ef98e7b2b8..f1b523beec5b3 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
  
- 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
- 	if (info == NULL)
-@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
+ {
+-	writel(val, pmx->regs[bank] + reg);
++	writel_relaxed(val, pmx->regs[bank] + reg);
++	/* make sure pinmux register write completed */
++	pmx_readl(pmx, bank, reg);
+ }
  
- 		/* Should now know end of current entry */
- 
--		if (my_index > drc.last_drc_index)
--			continue;
--
--		fndit = 1;
--		break;
-+		/* Found it */
-+		if (my_index <= drc.last_drc_index) {
-+			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-+				my_index);
-+			break;
-+		}
- 	}
--	/* Found it */
--
--	if (fndit)
--		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
--			my_index);
- 
- 	if (((drc_name == NULL) ||
- 	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+ static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
 -- 
 2.20.1
 
