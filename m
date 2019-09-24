@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0D8C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEF1C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321EF21D7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ADB21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343373;
-	bh=TcQJWdjIDXDwAH8RWD2Ob2jmrYxZ0FEDUkeX5eqwNmI=;
+	s=default; t=1569343375;
+	bh=5VSvU6HBfPNZEb5WDAIzTm+/cX7N3Y3hY73y1TIdwtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTAzWN5DkFY6+duOLhqdyY5tE41pseSGrnN0latMjMZ8ZY92Jqho9V9rnx7cYn/1q
-	 Hf93TO3bxFTtEuPz8imxlpn/5pDCXiTkJlVn34S/7SkkTwKDcfV1BRy9k+k2lwzSii
-	 ugH9kLnieWxzAZihYVPcY0l1CZtssVtYsTbGh8IA=
+	b=XOSUnYXX2F1hFi+EmBV0ozbjqjxjKbldm8ybDei2c4AKOKnhaak4pSo740UZjyYzV
+	 tTEQD95GlWf0klg+JI/+24/hjE8+paVfBgg7+HH/2cSfz/nx5g+ge53gMKx8FHpLl9
+	 D6twL96xEiMpQIu6g3ap3ZBerrpFlTze0sMy0IZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632827AbfIXQmv (ORCPT
+        id S2632838AbfIXQmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409812AbfIXQme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:34 -0400
+        id S2409817AbfIXQmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C00621A4C;
-        Tue, 24 Sep 2019 16:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A624217F4;
+        Tue, 24 Sep 2019 16:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343353;
-        bh=TcQJWdjIDXDwAH8RWD2Ob2jmrYxZ0FEDUkeX5eqwNmI=;
+        s=default; t=1569343354;
+        bh=5VSvU6HBfPNZEb5WDAIzTm+/cX7N3Y3hY73y1TIdwtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pR1jm0eE1lGb78KPToUeU5jJALvhv/HxRGMf9sS5Mq1q4HF2+UqvgKmD8KcEJASHR
-         iX8RHAgVlv/mOSbnSMiaXv556SffGTytTkd44urUaIwBOtPe+GwXlXwQYxVKx4cn8W
-         F30ikVSziWafwAHzYQ6zbrUHuIzm7sEoBiCXzl0g=
+        b=NyQZK9PwXmAfrSU+ydPTncQ37B5xU4U3qnpgdZT4+u22n1JnZ/GaMTDtV7jyyJINO
+         b+yZm91WdcAhnWcBMZ2LrTjJ/WX4NofROFaO7b79FoGLLx0dLqhs/7SkTjHZoJtKcW
+         TujeKxsyMRRNJWuxxXz3a4G0H9dHtKpTT+Vuaf3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olivier Moysan <olivier.moysan@st.com>, Jyri Sarha <jsarha@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 16/87] drm/bridge: sii902x: fix missing reference to mclk clock
-Date:   Tue, 24 Sep 2019 12:40:32 -0400
-Message-Id: <20190924164144.25591-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 17/87] drm/panel: check failure cases in the probe func
+Date:   Tue, 24 Sep 2019 12:40:33 -0400
+Message-Id: <20190924164144.25591-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,36 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 365d28c92f8cd3d3860f8dd057a8c136e24b3698 ]
+[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
 
-Add devm_clk_get call to retrieve reference to master clock.
+The following function calls may fail and return NULL, so the null check
+is added.
+of_graph_get_next_endpoint
+of_graph_get_remote_port_parent
+of_graph_get_remote_port
 
-Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
+Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
+leaking endpoint.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Andrzej Hajda <a.hajda@samsung.com
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1563811560-29589-2-git-send-email-olivier.moysan@st.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sii902x.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index dd7aa466b2805..36acc256e67e3 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -750,6 +750,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
- 		sii902x->audio.i2s_fifo_sequence[i] |= audio_fifo_id[i] |
- 			i2s_lane_id[lanes[i]] |	SII902X_TPI_I2S_FIFO_ENABLE;
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index 28c0620dfe0f9..b5b14aa059ea7 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -399,7 +399,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
  
-+	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
- 	if (IS_ERR(sii902x->audio.mclk)) {
- 		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
- 			__func__, PTR_ERR(sii902x->audio.mclk));
+ 	/* Look up the DSI host.  It needs to probe before we do. */
+ 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
++	if (!endpoint)
++		return -ENODEV;
++
+ 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
++	if (!dsi_host_node)
++		goto error;
++
+ 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
+ 	of_node_put(dsi_host_node);
+ 	if (!host) {
+@@ -408,6 +414,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	info.node = of_graph_get_remote_port(endpoint);
++	if (!info.node)
++		goto error;
++
+ 	of_node_put(endpoint);
+ 
+ 	ts->dsi = mipi_dsi_device_register_full(host, &info);
+@@ -428,6 +437,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 		return ret;
+ 
+ 	return 0;
++
++error:
++	of_node_put(endpoint);
++	return -ENODEV;
+ }
+ 
+ static int rpi_touchscreen_remove(struct i2c_client *i2c)
 -- 
 2.20.1
 
