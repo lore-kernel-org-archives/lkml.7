@@ -2,130 +2,203 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F94DC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB2DC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3447207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB35214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NF01syVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501951AbfIXTX2 convert rfc822-to-8bit (ORCPT
+        id S2409869AbfIXT0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:23:28 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11584 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407325AbfIXTX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:23:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 12:23:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="201006599"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 12:23:26 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
- ORSMSX102.amr.corp.intel.com ([169.254.3.63]) with mapi id 14.03.0439.000;
- Tue, 24 Sep 2019 12:23:26 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Richard Cochran <richardcochran@gmail.com>
-CC:     "Hall, Christopher S" <christopher.s.hall@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Index: AQHVaGiJVAygg13ZgEaRBcEK9JTjfKc7SaLQ
-Date:   Tue, 24 Sep 2019 19:23:26 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
-References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
- <20190911061622.774006-2-felipe.balbi@linux.intel.com>
-In-Reply-To: <20190911061622.774006-2-felipe.balbi@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzBiMDY1MDEtNGJhZi00NDg3LThmN2MtOTMzZGViYTZhYmZhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUGJZdkpiMHJIU3lXTmx5dTZSRlByRHVsMzRja1RLWU1mNXhvQnROcnd0V2hvajBcL1pxN0NTQnlTeENoYkt2UGQifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 24 Sep 2019 15:26:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43057 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406462AbfIXT0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 15:26:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q17so3274380wrx.10;
+        Tue, 24 Sep 2019 12:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wTMeJkg3LNJ8wC/vELiPnwfSnHuBqzYusKgEEqBqFiI=;
+        b=NF01syVrCaAQvNLEXUrP4SMki5Y5JI29BnMNFJ5DqbN9/E1Mzclg+NWq4NQSyfnP96
+         xdh4zbYd/3W/DXadW1wJj3GdT9TKHKJw5KqBvTD8VP2tkDtHA3b5gDm19B4yVgBnrUG1
+         HOh3f1EEoGlN1+k0D+LkQqve4lmXcJB6112pHNQ7Zfn1HMYHSzaaY1o7dfaxffC04lR3
+         crPXVe34t6wHSM0WfhfCIceQLerum9ebnyW7noOD5BbvUhsfJUU/X7qYEvpZU1VJWiYa
+         7RNHgojuvXmYsDz9UZswbFNXkHlJApYiSaJ45bzaDc2ZneTsEt6UFoadAJKcOy4DXRMP
+         CkHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wTMeJkg3LNJ8wC/vELiPnwfSnHuBqzYusKgEEqBqFiI=;
+        b=ILx5q2V8lBCPekGwQkahxMpjYvMcccQo0hitsNyaBAR6C4ElFL/gv2HaYrgor4X27K
+         ndNWtwL2+La2VqbyfyivDY6uxGPpDmVGRKHUGdLWFpuY2LugoeNal6/KtQcdwlhSLtf7
+         pM3s8vfkdgkjZHIJcs+0hVn+OdwqP2QjdxjaTeO6v2IYBueRwwMkBHrteYQ5llBVXh/G
+         LvBia0flimJH4/lsJayQ8F94hKUsuGLQh85a5ASNwHBQoOxpyRtNBsX3QvbRe4igVxsY
+         pwscmbpaRm0Wrs4pWAUYDkAPg2JlmJR/xAuPoLLn6tfunUVgVgU4f5KoOSjHfGGGhWCP
+         td5g==
+X-Gm-Message-State: APjAAAUwAy/tLRWVm7iNEqA2ACnba0awbSaZDEGUhhVGjtqxS0g1v8/+
+        GbS909TQwUZZZIE5VlslWf4=
+X-Google-Smtp-Source: APXvYqyRPEOl55nM1W8rkCanbWtr+okUpeCujZiLu31Wx+XdyzkbeQDdQCe4rtvJBkhP0FF56UEWAg==
+X-Received: by 2002:a5d:4708:: with SMTP id y8mr2694992wrq.318.1569353189493;
+        Tue, 24 Sep 2019 12:26:29 -0700 (PDT)
+Received: from [192.168.1.19] (bfw157.neoplus.adsl.tpnet.pl. [83.28.60.157])
+        by smtp.gmail.com with ESMTPSA id b144sm1302083wmb.3.2019.09.24.12.26.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 12:26:28 -0700 (PDT)
+Subject: Re: [PATCH] leds: tlc591xx: update the maximum brightness
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, dmurphy@ti.com
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+References: <20190923100250.22326-1-jjhiblot@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
+ GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
+ X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
+ 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
+ RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
+ l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
+ V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
+ c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
+ B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
+ lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
+ Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
+ AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
+ EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
+ pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
+ wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
+ TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
+ IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
+ 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
+ mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
+ lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
+ +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
+ AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
+ wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
+ PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
+ uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
+ hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
+ A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
+ /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
+ gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
+ KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
+ UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
+ IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
+ FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
+ 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
+ 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
+ wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
+ tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
+ EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
+ p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
+ M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
+ lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
+ qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
+ FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
+ PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
+Message-ID: <91864098-a6e8-e275-4b07-e4bb15469f78@gmail.com>
+Date:   Tue, 24 Sep 2019 21:26:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20190923100250.22326-1-jjhiblot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jean,
 
+Thank you for the patch.
 
-> -----Original Message-----
-> From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org] On
-> Behalf Of Felipe Balbi
-> Sent: Tuesday, September 10, 2019 11:16 PM
-> To: Richard Cochran <richardcochran@gmail.com>
-> Cc: Hall, Christopher S <christopher.s.hall@intel.com>; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Felipe Balbi <felipe.balbi@linux.intel.com>
-> Subject: [PATCH v4 2/2] PTP: add support for one-shot output
+On 9/23/19 12:02 PM, Jean-Jacques Hiblot wrote:
+> The TLC chips actually offer 257 levels:
+> - 0: led OFF
+> - 1-255: Led dimmed is using a PWM. The duty cycle range from 0.4% to 99.6%
+> - 256: led fully ON
 > 
-> Some controllers allow for a one-shot output pulse, in contrast to
-> periodic output. Now that we have extensible versions of our IOCTLs, we
-> can finally make use of the 'flags' field to pass a bit telling driver
-> that if we want one-shot pulse output.
-> 
-> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 > ---
+>  drivers/leds/leds-tlc591xx.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> Changes since v3:
-> 	- Remove bogus bitwise negation
+> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+> index 8eadb673dc2e..a8911ebd30e5 100644
+> --- a/drivers/leds/leds-tlc591xx.c
+> +++ b/drivers/leds/leds-tlc591xx.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/slab.h>
+>  
+>  #define TLC591XX_MAX_LEDS	16
+> +#define TLC591XX_MAX_BRIGHTNESS	256
+>  
+>  #define TLC591XX_REG_MODE1	0x00
+>  #define MODE1_RESPON_ADDR_MASK	0xF0
+> @@ -112,11 +113,11 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
+>  	struct tlc591xx_priv *priv = led->priv;
+>  	int err;
+>  
+> -	switch (brightness) {
+> +	switch ((int)brightness) {
+>  	case 0:
+>  		err = tlc591xx_set_ledout(priv, led, LEDOUT_OFF);
+>  		break;
+> -	case LED_FULL:
+> +	case TLC591XX_MAX_BRIGHTNESS:
+>  		err = tlc591xx_set_ledout(priv, led, LEDOUT_ON);
+>  		break;
+>  	default:
+> @@ -209,7 +210,7 @@ tlc591xx_probe(struct i2c_client *client,
+>  		led->priv = priv;
+>  		led->led_no = reg;
+>  		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
+> -		led->ldev.max_brightness = LED_FULL;
+> +		led->ldev.max_brightness = TLC591XX_MAX_BRIGHTNESS;
+>  		err = devm_led_classdev_register_ext(dev, &led->ldev,
+>  						     &init_data);
+>  		if (err < 0) {
 > 
-> Changes since v2:
-> 	- Add _PEROUT_ to bit macro
-> 
-> Changes since v1:
-> 	- remove comment from .flags field
-> 
->  include/uapi/linux/ptp_clock.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
-> index 9a0af3511b68..f16301015949 100644
-> --- a/include/uapi/linux/ptp_clock.h
-> +++ b/include/uapi/linux/ptp_clock.h
-> @@ -38,8 +38,8 @@
->  /*
->   * Bits of the ptp_perout_request.flags field:
->   */
-> -#define PTP_PEROUT_VALID_FLAGS (0)
-> -
-> +#define PTP_PEROUT_ONE_SHOT (1<<0)
-> +#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
->  /*
->   * struct ptp_clock_time - represents a time value
->   *
-> @@ -77,7 +77,7 @@ struct ptp_perout_request {
->  	struct ptp_clock_time start;  /* Absolute start time. */
->  	struct ptp_clock_time period; /* Desired period, zero means disable. */
->  	unsigned int index;           /* Which channel to configure. */
-> -	unsigned int flags;           /* Reserved for future use. */
-> +	unsigned int flags;
->  	unsigned int rsv[4];          /* Reserved for future use. */
->  };
-> 
-> --
-> 2.23.0
 
-Hi Felipe,
+Added tag:
 
-Do you have any examples for how you envision using this? I don't see any drivers or other code on the list for doing so.
+Fixes: e370d010a5fe ("leds: tlc591xx: Driver for the TI 8/16 Channel i2c
+LED driver")
 
-Additionally, it seems weird because we do not have support for specifying the pulse width. I guess you leave that up to driver choice?
+and applied to the for-5.5 branch.
 
-Thanks,
-Jake
+It is also a good habit to cc the author of the driver.
+
+Cc Andrew.
+
+-- 
+Best regards,
+Jacek Anaszewski
