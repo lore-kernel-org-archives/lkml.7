@@ -2,100 +2,120 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1668C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749CEC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44972146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3742064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hl0BXNRR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZiSRj4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440515AbfIXGSJ (ORCPT
+        id S2409047AbfIXGS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:18:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35672 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387676AbfIXGSJ (ORCPT
+        Tue, 24 Sep 2019 02:18:59 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:40349 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405843AbfIXGS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:18:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O6Dq64032934;
-        Tue, 24 Sep 2019 06:17:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=hiSslqM7TGflYLLAXweDSTEdhwpxT+KQg4juxYzl38k=;
- b=Hl0BXNRRKIdOjjClw3QwDb/aE+KaFBAVF43XDp9f0uS8VhNIsuJ3GFFmnR4ebulOf1i0
- e6RLtqvOXwywXJuDvz2AQz2+JJrADcn7ia28HDRff5hZvbenub2ehknDyhefToHyTYW4
- ugcBeKGXPjMLKYNX6ac0LIlaphfP8dsxiGHGF8jXk6YgRm5YHmhW9F+z+Q26X+AgWgII
- NTW4Ga9bMxqQUKt92ZT68asvHlZa4hmb3gf8y16RVTMixLi+dsdNHSSqQ9pNp1MjpgRG
- Z2QOKdvzEQusLN6mU3VETTXOaJWOVUhEbgIfYaaH+ROgNeXReTMRyVFYFjHkY+SvZxjM Ww== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2v5btpuq04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 06:17:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O6DRdN030994;
-        Tue, 24 Sep 2019 06:17:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2v6yvr07ex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 06:17:58 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8O6HwY8003871;
-        Tue, 24 Sep 2019 06:17:58 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Sep 2019 23:17:57 -0700
-Date:   Tue, 24 Sep 2019 09:17:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
-        gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8188eu: remove dead code in do-while
- conditional step
-Message-ID: <20190924061748.GA27389@kadam>
-References: <20190923194806.25347-1-connor.kuehl@canonical.com>
- <c2ce3fb0-6407-982a-a3f2-172cef17f2a6@lwfinger.net>
+        Tue, 24 Sep 2019 02:18:59 -0400
+Received: by mail-pg1-f173.google.com with SMTP id w10so672681pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 23:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Y7XhwP7BTb1U4UXbbt1qOe8OPB80ewv8WxysEAqyaE=;
+        b=oZiSRj4NPaQvtDu8F26chZOKBNycK+TOQ2YfdhyI1+5cDeaqgMdZT9UBubc+rPCSI7
+         qjYROEY972Ly9gZvRXPTq3C7nz+SZapgkyrTu5m8SBpWxHaIfpy7hqs5rQBvLdZJIKkP
+         5i5hTv0crIXXD48bBiGctdjCUkDaNxd+x1WumxhjPfo+oYmcZsZdgPqQFNX5HcxAVmwM
+         yKKJRmUUBfyJRy3mGZ4zMbTwL9F6St5sfMIEJ0nHnt5fZJgwtCkUYeuiJhfyl59dlaaA
+         Ai6vfr8vzfM0mK0FUIGo54T6qH8RRZCTrYhgQMf2pqKo0niv56XDtfgLWb2zSl0POyiI
+         9i4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Y7XhwP7BTb1U4UXbbt1qOe8OPB80ewv8WxysEAqyaE=;
+        b=Qq8GjSseXisUG33iWPKuSvOrEb0Zybt7o/2ohoEx5jFkgseOTkluIZSIuKRCnTBkvw
+         R8NLfWKr/eqPOzGktR1uZK43c6cj6FXatnyKC/naakzb/3MlsR8AhSAietQpguyFH8GI
+         waGzqgmOdap2+jxGqtBLNRdvgmtb1pDwa5NofFbnA/dTs0V3GflsM336As6DGlxJE5P9
+         MVaEkC60QAc46/8mWavheO3wzKn7P93S7/chE2/Zpy6Oi0n/10aLuzYqdSINc+3Z3271
+         oPY5Et2HiEbXPCS5sdff59PwcLdbKNBdAD7dRV/O7ZcI3JYW/Qg/TAI8fZywTKFY6e9+
+         S3OQ==
+X-Gm-Message-State: APjAAAU3jHgGVuFCv/iXKHbdb5isPPOfqT3IkJzIdxPJGmbv8MidedCy
+        eYsvczE4EGB7UkwgzHTeH1I=
+X-Google-Smtp-Source: APXvYqx2PLsdxB7ytTRN7DcH/ZOPiAdWk2Z3o3C70naLKUaJXN8w2lzdHE45X7WdeBScG1xAGQB3iw==
+X-Received: by 2002:a17:90a:be13:: with SMTP id a19mr1124055pjs.55.1569305937093;
+        Mon, 23 Sep 2019 23:18:57 -0700 (PDT)
+Received: from Gentoo ([103.231.90.170])
+        by smtp.gmail.com with ESMTPSA id r30sm699117pfl.42.2019.09.23.23.18.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Sep 2019 23:18:56 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 11:48:45 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     LinuxKernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: Ben sent 132 patches and Sasa sent 203 patches..woohooo!
+Message-ID: <20190924061843.GC29856@Gentoo>
+References: <20190924053003.GA29856@Gentoo>
+ <20190924055202.GB26202@1wt.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
 Content-Disposition: inline
-In-Reply-To: <c2ce3fb0-6407-982a-a3f2-172cef17f2a6@lwfinger.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=957
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909240063
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909240063
+In-Reply-To: <20190924055202.GB26202@1wt.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 03:38:39PM -0500, Larry Finger wrote:
-> This patch is correct; however, the do..while loop will always be executed
 
-s/correct/harmless/.
+--Bu8it7iiRSEf40bY
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-> once, thus you could remove the loop and the loop variable bcmd_down.
-> 
-> @greg: If you would prefer a two-step process, then this one is OK.
+On 07:52 Tue 24 Sep 2019, Willy Tarreau wrote:
+>On Tue, Sep 24, 2019 at 11:00:06AM +0530, Bhaskar Chowdhury wrote:
+>> Is this kind of heaving patching done before?? I can't recollect.
+>
+>Yes it's being done, and quite frankly Bhaskar, this e-mail as well as
+>all your other automated ones ("thanks a bunch") after each and every
+>release do not bring any value and only add noise, particularly when
+>developers are directly CCed. You should avoid this because you're
+>training developers to systematically ignore your messages and the day
+>you have a real question or issue to report, nobody will notice nor
+>respond.
+>
+>Just my two cents,
+>Willy
 
-It has to be done in one step.
+I will take your suggestion Willy. Thanks for the heads up.
 
-regards,
-dan carpenter
+Thanks,
+Bhaskar
 
+--Bu8it7iiRSEf40bY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2JtUMACgkQsjqdtxFL
+KRXSAAf9HxZXBcLimPQr/RqXvdp6NSvS8G+7Ry6Zb2h1uooo6liNfrbBQKtq83kE
+jU5pchhWDrl/V0C3dIrXyTJWT1I/luQw9XU2pvNTjSJr0dX/zdIWDe4SfV6sBWg0
+9XPLKPIZDU0IhgZUprFRP5475jh+83Txti6bGWcLylgw2jlZJ/51iT5a4UwugYZ7
+nNTtQqbOGm/s+H2uHuXJpLQPN9lKYlnp/SQuiljGds2Yq1W3pu+OANHPSyZM6wmH
+Q+pEYRROlx2sHQe8rEIKa9NNUt2CYAPSpNAMLOqzIFT/UDcCue9jFrhdymahQK+W
+N2PRcdjTRTJ9ah1yb+yOdSE6/ThEiA==
+=Vtgj
+-----END PGP SIGNATURE-----
+
+--Bu8it7iiRSEf40bY--
