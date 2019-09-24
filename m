@@ -2,134 +2,138 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF7AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91459207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569345624;
-	bh=5CX8cWEh52M6eXKtDcxHy91sCi4jxF17tAgZFQmi99U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dgfYQ0ZWnZ+KQtTISzqRT2+3CbmOZV4p3Ncg0BG0ps49x6FjqXgZBmVcnS/CqgGXL
-	 yJhq5272+okD1I1u42Y9f1gbgj4BhzIrmbv6Z3FZlhbVQ05Z72NrdvzkzuJNAIj/Gl
-	 o2ci/dGqff4cSsYiZbME40k+dipXbEUZs+gACXgE=
+	by mail.kernel.org (Postfix) with ESMTP id 78B33207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="V0acmw1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407341AbfIXRUY (ORCPT
+        id S2407748AbfIXRXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407128AbfIXRUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:20:23 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55EBB21655
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 17:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569345622;
-        bh=5CX8cWEh52M6eXKtDcxHy91sCi4jxF17tAgZFQmi99U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HtIH7+DTaMfgDuFZZm2Q5aAdDqDincUCdHqcGVKO582dP9uJyMi4Wq916IUqI/qmS
-         7f+DJAiql//0jbozXJbDs4mc5enc2OeDfKojA5aLwdnvnuSOC3lRl863t1Uow4dWPW
-         8u5tZl8kH38BVl7F/UM8KUjJoKQWXSymCFbe1e2c=
-Received: by mail-wm1-f54.google.com with SMTP id y135so2076467wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:20:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAUW48FnXMQlCcUckTtyH2I5R3zG0wJiI5TxbJF9SZy/MJ8kxYXL
-        YYxOPlDnsoh/fVq10kAuCuNx2UYAcGSydnbQfmnU1g==
-X-Google-Smtp-Source: APXvYqwgvpCgffx4sTD+nFnvIO2e9YCvIvNIqALEckl6CKy6QshFAP/F5Rr8p9fBeqJUvbt5mLvZaUoi/7foIbqrxMA=
-X-Received: by 2002:a1c:6143:: with SMTP id v64mr1278559wmb.79.1569345620772;
- Tue, 24 Sep 2019 10:20:20 -0700 (PDT)
+        Tue, 24 Sep 2019 13:23:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42791 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407047AbfIXRXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:23:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so2841574wrw.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zojDqhIDCVa616KN7v7PXKcR+n3TBwC2cffseILAS8Y=;
+        b=V0acmw1iJ5RBkC5LpIbyw+IvcVgmzKokEwS7utek9s8pSqnOYmD545QAUQGVet8zNs
+         6g+6V8Fds7Z2wu0dO4BufUP+UOAGIL5yk4vrfRXCNmXsuyHxPP8WbCyx5R3z53xAty0z
+         E/A+HJ2vV6CvIFmfp9xG8Cc/0FAt/2AGAr2dM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zojDqhIDCVa616KN7v7PXKcR+n3TBwC2cffseILAS8Y=;
+        b=E6PBQepfTAq18bjVqUaSft+SsdQAmrlYeMxHFiF4/dRwcEaSTmDZjDOa/KdZrH/IXJ
+         8jImbacfnIvExuEh3AOuLqOEl0PbGpNBkFesJ5wZd4Wblru88uP7aHPhBrd/PNGM/3sJ
+         eXyBBgtXnbfzvLNiMh85h+vwEtThJf108twQMg/AtgLUEJDWDNdflMe2s36ErkJT4t3v
+         lWXrvtbb9w7XqkzrJjS5fFIQRnB/38jNwzC/ac5TONqCpMjlxvLh5l7IEYKvQUw5QJs2
+         hT9RBdx1xzw9UyEh4ctIAiMiVdTrE6FWe7s8gUwp7Dbvn9P2hlciL6fa9p4u7dMerDe8
+         nPWA==
+X-Gm-Message-State: APjAAAUPqL2CqhU0rVYWjo3R0stPvrB3t5qvN19oW3iMLHrw10RMd3nE
+        1ZZK7Z3vLxtrPwQEepAVj7awkxH50m2jrD1c
+X-Google-Smtp-Source: APXvYqzr1eNgy01G5ZmPie1GWfVJKyFXlGRTrtigOTJblOF8z3EvSnaXA/4EHakD7hQmv1T23Zruag==
+X-Received: by 2002:a5d:6951:: with SMTP id r17mr3365604wrw.208.1569345798765;
+        Tue, 24 Sep 2019 10:23:18 -0700 (PDT)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id o12sm4269440wrm.23.2019.09.24.10.23.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 10:23:18 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190830125626.GC2870@ninjato>
+ <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+ <20190831094940.GA1138@kunai>
+ <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
+ <20190904213745.GG23608@ninjato>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
+Date:   Tue, 24 Sep 2019 10:23:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com> <20190914134136.GG9560@linux.intel.com>
- <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com> <20190916052349.GA4556@linux.intel.com>
-In-Reply-To: <20190916052349.GA4556@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 24 Sep 2019 10:20:09 -0700
-X-Gmail-Original-Message-ID: <CALCETrWDLX68Vi4=9Dicq9ATmJ5mv36bzrc02heNYaHaBeWumQ@mail.gmail.com>
-Message-ID: <CALCETrWDLX68Vi4=9Dicq9ATmJ5mv36bzrc02heNYaHaBeWumQ@mail.gmail.com>
-Subject: Re: [PATCH v22 00/24] Intel SGX foundations
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        nhorman@redhat.com, npmccallum@redhat.com,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190904213745.GG23608@ninjato>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 15, 2019, at 10:24 PM, Jarkko Sakkinen <jarkko.sakkinen@linux.inte=
-l.com> wrote:
->
-> =EF=BB=BFOn Sat, Sep 14, 2019 at 08:32:38AM -0700, Dave Hansen wrote:
->>>> On 9/14/19 6:41 AM, Jarkko Sakkinen wrote:
->>>> The proposed LSM hooks give the granularity to make yes/no decision
->>>> based on the
->>>> * The origin of the source of the source for the enclave.
->>>> * The requested permissions for the added or mapped peage.
->>>> The hooks to do these checks are provided for mmap() and EADD
->>>> operations.
->>>> With just file permissions you can still limit mmap() by having a
->>>> privileged process to build the enclaves and pass the file descriptor
->>>> to the enclave user who can mmap() the enclave within the constraints
->>>> set by the enclave pages (their permissions refine the roof that you
->>>> can mmap() any memory range within an enclave).
->> The LSM hooks are presumably fixing a problem that these patches
->> introduce.  What's that problem?
->
-> I've seen the claims that one would have to degrade one's LSM policy but
-> I don't think that is true.
->
-> With just UNIX permissions you have probably have to restrict the access
-> to /dev/sgx/enclave to control who can build enclaves. The processes who
-> do not have this privilege can mmap() the enclave once they get the file
-> descriptor through forking or SCM_RIGHTS.
+Hi Wolfram,
 
-As the person who originally raised the issue, I feel like I should
-rehash the issue:
+On 9/4/19 2:37 PM, Wolfram Sang wrote:
+> 
+>> I think you are right that the controller does not seem to support
+>> additional I2C features in addition to SMBUS.
+>>
+>> However, my concern of switching to the smbus_xfer API is:
+>>
+>> 1) Some customers might have used I2C_RDWR based API from i2cdev. Changing
+>> from master_xfer to smbus_xfer may break the existing applications that are
+>> already developed.
+> 
+> Well, given that you add new quirks in the original patch here, you are
+> kind of breaking it already. Most transfers which are not SMBus-alike
+> transfers would now be rejected. For SMBus-alike transfers which are
+> sent via I2C_RDWR (which is ugly), I have to think about it.
+> 
+>> 2) The sound subsystem I2C regmap based implementation seems to be using
+>> i2c_ based API instead of smbus_ based API. Does this mean this will also
+>> break most of the audio codec drivers with I2C regmap API based usage?
+> 
+> I don't think so. If you check regmap_get_i2c_bus() then it checks the
+> adapter functionality and chooses the best transfer option then. I may
+> be missing something but I would wonder if the sound system does
+> something special and different.
+> 
 
-Right now, using SELinux or probably other LSMs, it's straightforward
-to prevent programs from having any executable pages whose contents
-doesn't come from an approved (e.g. appropriately labeled) source.
-With /dev/sgx/enclave, at least as initially designed, a process that
-can open /dev/sgx/enclave can execute whatever bytes they want by
-sticking them into an enclave.  I fully expect that people will want
-to combine these things: have unprivileged users run only
-admin-approved code but *also* allow unprivileged users to run
-enclaves.
+We did more investigation on this.
 
-> *If anything*, I would rather investigate possibility to use keyring for
-> enclave signer's public keys or perhaps having extended attribute for
-> the signer (SHA256) in the enclave file that could be compared during
-> the EINIT.
+First of all, like you said, there's no concern on regmap based API, the 
+smbus_xfer only based approach should just work.
 
-The latter is very much like the labeled-enclave-file thing we talked about=
-.
+Secondly, for most i2ctools like i2cget, i2cset, i2cdump, there's no 
+concern either, given that they already use I2C_SMBUS based IOCTL.
 
->
-> I think either can be considered post-upstreaming.
+However, for i2ctransfer or any customer applications that use I2C_RDWR 
+IOCTL, i2c_transfer (master_xfer) is the only supported function. And we 
+can confirm we do have at least one customer using i2ctransfer for 
+EEPROM access on their system, e.g.,  i2ctransfer 1 w2@0x50 0x00 0x00 r64.
 
-Indeed, as long as the overall API is actually compatible with these
-types of restrictions.
+In my opinion, it's probably better to continue to support master_xfer 
+in our driver (with obvious limitations), in order to allow i2ctransfer 
+(or any apps that use I2C RDWR) to continue to work.
+
+What do you think?
+
+Regards,
+
+Ray
