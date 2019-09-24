@@ -2,128 +2,169 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E012C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62169C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E381214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305FE20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNsR1n6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394927AbfIXIVr (ORCPT
+        id S2409444AbfIXIV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:21:47 -0400
-Received: from mga14.intel.com ([192.55.52.115]:40717 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388712AbfIXIVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:21:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 01:21:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="193379870"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 24 Sep 2019 01:21:44 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iCg4t-0006p5-At; Tue, 24 Sep 2019 11:21:43 +0300
-Date:   Tue, 24 Sep 2019 11:21:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Levin <levinale@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: cherryview: restore Strago DMI workaround for
- all versions
-Message-ID: <20190924082143.GS2680@smile.fi.intel.com>
-References: <20190924024958.GA229906@dtor-ws>
+        Tue, 24 Sep 2019 04:21:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35307 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388712AbfIXIV6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:21:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so1156486qtq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 01:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ci3UtgmmPI2D+hhQ9FvWqteo9cX3CkmCCBdHsmACPqo=;
+        b=vNsR1n6rRVSSC2RYXkcQNjX3kfS+ruqOWk6pIOVxQ87lKDcrQa7GmD7Mvcx1pfgCUX
+         PamMoGzRJQMMzB/BF12fgqCWd50O6Ws0ji6xvZz/xVLNC1gWRKaZX6n9Wy2SO8sFfP2s
+         f1RQsSortu68rB+wQ5gBG76IK4OtcMtEzLThGdIjCxy8iGOG+7kJ8eacOY6sT/Sqg0gp
+         BDvU84vwc3GTCKjttizq3tbPiLdNQxbNGzz0vTf48mwbFbANg48d3vqPiMKlvoF35cxC
+         K0+OHOtJ1U9ZL+XLYMvcnL832kQfAFw2tPGOqVmpWa3KipSvMz8xVb28I4FNbjXUQL9u
+         IS4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ci3UtgmmPI2D+hhQ9FvWqteo9cX3CkmCCBdHsmACPqo=;
+        b=cGb+rnGUyPdRvxsxwyVeqYczGPtFqF+4EqhiKq3y/zDk9nphYhVxH4jElqkXmM3XiP
+         J9ihrljRQCD+KRVd1VNqof1wtwB03GsSbRDsvD2bxG5Dho8YyHUBN3a+DeuVhQzk8+si
+         sErZL39uTkDzmeCETB7GNENfT3oblbpNiFAWowQ3Vps5UUuXSF6UT1YX+TIBRd9LGroI
+         KDS5bYl84lucVNp2BUeoVsZNl0le3oUFxh2igd5f5Pkft0i5ANt7s8D/t9SkZxJby4Q+
+         Bcs0S0jhLaqHRT+C2uEjj4EzNklDYikQyIrdfcyPxxlImh50M3H2VfkEut1hcE39kXXL
+         b51w==
+X-Gm-Message-State: APjAAAX7XIW8GhE3gGCGiW02vXiaITr80cqdp0JZwliCljEF7fTJWab+
+        rvAgCVuvPantrsGA/qLPyHsNwyEdTc6nzY/+ZASNuA==
+X-Google-Smtp-Source: APXvYqzmwVa/X7TedFn9JZy7MTd4eHq774ZQi58RY7qPNyyOFELUyVVpGAYsmT4rIzGJZM83qLnPZdqRouyO/Fa3aiU=
+X-Received: by 2002:ac8:2c50:: with SMTP id e16mr1537807qta.257.1569313315536;
+ Tue, 24 Sep 2019 01:21:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924024958.GA229906@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000000814c405931224fc@google.com> <CAHC9VhQGLFWk3zqywgsip9KgTmKNTiwxDG4+BdkDQwNZKJunQg@mail.gmail.com>
+In-Reply-To: <CAHC9VhQGLFWk3zqywgsip9KgTmKNTiwxDG4+BdkDQwNZKJunQg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 24 Sep 2019 10:21:44 +0200
+Message-ID: <CACT4Y+ZqJJS+g=svSJDfd4Jo==kVFbJDCxrfRX2eyBH4hw2+-g@mail.gmail.com>
+Subject: Re: WARNING: locking bug in selinux_netlbl_socket_connect
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     syzbot <syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, selinux@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 07:49:58PM -0700, Dmitry Torokhov wrote:
-> This is essentially a revert of:
-> 
-> e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
-> 86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
-> 
-> because even with 1.1 versions of BIOS there are some pins that are
-> configured as interrupts but not claimed by any driver, and they
-> sometimes fire up and result in interrupt storms that cause touchpad
-> stop functioning and other issues.
-> 
-> Given that we are unlikely to qualify another firmware version for a
-> while it is better to keep the workaround active on all Strago boards.
+On Tue, Sep 24, 2019 at 4:14 AM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Sat, Sep 21, 2019 at 11:50 AM syzbot
+> <syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com> wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    f97c81dc Merge tag 'armsoc-late' of git://git.kernel.org/p..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=127b709d600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=10283c2b00ab4cd7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=5fa07e4e18e4eb1ccb12
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12996841600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+5fa07e4e18e4eb1ccb12@syzkaller.appspotmail.com
+> >
+> > WARNING: CPU: 0 PID: 10315 at kernel/locking/lockdep.c:840
+> > look_up_lock_class kernel/locking/lockdep.c:840 [inline]
+> > WARNING: CPU: 0 PID: 10315 at kernel/locking/lockdep.c:840
+> > register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 10315 Comm: syz-executor.0 Not tainted 5.3.0+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >   panic+0x2dc/0x755 kernel/panic.c:219
+> >   __warn.cold+0x20/0x4c kernel/panic.c:576
+> >   report_bug+0x263/0x2b0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+> > RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:840 [inline]
+> > RIP: 0010:register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
+> > Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 aa 10 00 00 4c 3b 7b
+> > 18 44 8b 35 d5 de 55 09 74 0b 48 81 3b a0 65 06 8a 74 02 <0f> 0b 45 85 ed
+> > 0f 84 71 03 00 00 f6 85 70 ff ff ff 01 0f 85 64 03
+> > RSP: 0018:ffff888096777a48 EFLAGS: 00010002
+> > RAX: dffffc0000000000 RBX: ffff888093ff78e0 RCX: 0000000000000000
+> > RDX: 1ffff110127fef1f RSI: 0000000000000000 RDI: ffff888093ff78f8
+> > RBP: ffff888096777b10 R08: 1ffff11012ceef51 R09: ffffffff8aaea0e0
+> > R10: ffffffff8a7753c8 R11: 0000000000000000 R12: ffffffff8a7b5d20
+> > R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff884766e0
+> >   __lock_acquire+0xf4/0x4e70 kernel/locking/lockdep.c:3837
+> >   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+> >   __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+> >   _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+> >   spin_lock_bh include/linux/spinlock.h:343 [inline]
+> >   lock_sock_nested+0x41/0x120 net/core/sock.c:2929
+> >   lock_sock include/net/sock.h:1522 [inline]
+> >   selinux_netlbl_socket_connect+0x20/0xc0 security/selinux/netlabel.c:607
+> >   selinux_socket_connect+0x6a/0x90 security/selinux/hooks.c:4745
+> >   security_socket_connect+0x77/0xc0 security/security.c:1958
+> >   __sys_connect+0x19d/0x330 net/socket.c:1824
+> >   __do_sys_connect net/socket.c:1839 [inline]
+> >   __se_sys_connect net/socket.c:1836 [inline]
+> >   __x64_sys_connect+0x73/0xb0 net/socket.c:1836
+> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x459a09
+> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007fc302ec5c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
+> > RDX: 000000000000001c RSI: 0000000020000080 RDI: 0000000000000005
+> > RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc302ec66d4
+> > R13: 00000000004bff42 R14: 00000000004d1eb0 R15: 00000000ffffffff
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+>
+> This doesn't appear to be related to selinux_netlbl_socket_connect();
+> I believe it should be okay to call lock_sock() in that context.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> 
-> Reported-by: Alex Levin <levinale@chromium.org>
-> Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-> index 03ec7a5d9d0b..bf049d1bbb87 100644
-> --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-> +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-> @@ -1513,7 +1513,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
->  			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
-> -			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
->  		},
->  	},
->  	{
-> @@ -1521,7 +1520,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
-> -			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
->  		},
->  	},
->  	{
-> @@ -1529,7 +1527,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
-> -			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
->  		},
->  	},
->  	{
-> @@ -1537,7 +1534,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
-> -			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
->  		},
->  	},
->  	{}
-> -- 
-> 2.23.0.351.gc4317032e6-goog
-> 
-> 
-> -- 
-> Dmitry
+FTR, this is this warning:
 
--- 
-With Best Regards,
-Andy Shevchenko
+static inline struct lock_class *
+look_up_lock_class(const struct lockdep_map *lock, unsigned int subclass)
+{
+....
+                        /*
+                         * Huh! same key, different name? Did someone trample
+                         * on some memory? We're most confused.
+                         */
+                        WARN_ON_ONCE(class->name != lock->name &&
+                                     lock->key != &__lockdep_no_validate__);
 
 
+So something fishy happens here (stack overflow again?).
