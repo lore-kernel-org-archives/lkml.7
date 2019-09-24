@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F22C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9EDC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167EE217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E4021841
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343386;
-	bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
+	s=default; t=1569343391;
+	bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I3CCcx/qe0bqmKYzlDOjEKkQPnCzK3Q7F3lZx5oPmW0z5Mb/Ei1FGfCV+omEbND+c
-	 D+qIU5dE3GoPXNTIqrVrXQeen5A6jLjHDEe3tjd3dhgi+Z3RHO9RfZkZYx9j4Lanr9
-	 58EWFJWONY8yB1X8IapOTs+VwyLekZ0c3KYzJv/M=
+	b=kQsx9JKMv8Dxy636s+pDWmThFEtpOyTg0zUeUuJvzc0fwyghRTw4N2yDgLFV32EU9
+	 hDVMAhG/sU7yGclx0zUxf1RLOdhrCy7YenxFcA2unHC1Vohz3B72Mi5GG+jha72sxS
+	 ElQ0BCPBkcdx/CHgF1fmiKIJlCi2E6V5O476PtBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632899AbfIXQnF (ORCPT
+        id S2632921AbfIXQnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59452 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632832AbfIXQmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:53 -0400
+        id S2632858AbfIXQnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:43:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAB8217F4;
-        Tue, 24 Sep 2019 16:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C22217F4;
+        Tue, 24 Sep 2019 16:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343373;
-        bh=WluHTX10qG7RAA57oEeBHSjMqLz0IzntlDMWX8RpLdQ=;
+        s=default; t=1569343379;
+        bh=UAfTYj9dSSWlNwqhJHR1m9xmDES6sax0XfOL7/szap8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOyujpE5OlSTGdyyGZIPNx9trc16i4cXk4EptUmrKwLqXpGCVwPWZhdMTa+MONZwz
-         kkQ50GLBHNkJ9SNYFTDUmECMw7BEJYbEz4v4o1jWiwkOReDPIBqSWhyInV5CvLuLIi
-         hRrBuwzvpYbhJ12vPtSTC+RyWY7JVTNqiUcrlgNs=
+        b=Rz8+Cy1l3KFTmxEVra0N74tNBOIF52eryfCGmlyuczNKcCrad866ILHWJJ3HR+8ca
+         Rd5RJsm0ikNs2XLQmZzl7Lzn9cRXX7kmixtoErKDMYPLgcF/S/dutEOjGVgMyCb4oL
+         4vCf9/x5BBB2U5enwugwrSAAx4upu9OtFRWVKVv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/87] clk: imx8mq: Mark AHB clock as critical
-Date:   Tue, 24 Sep 2019 12:40:39 -0400
-Message-Id: <20190924164144.25591-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 28/87] clk: ingenic/jz4740: Fix "pll half" divider not read/written properly
+Date:   Tue, 24 Sep 2019 12:40:44 -0400
+Message-Id: <20190924164144.25591-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,46 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 9b9c60bed562c3718ae324a86f3f30a4ff983cf8 ]
+[ Upstream commit 568b9de48d80bcf1a92e2c4fa67651abbb8ebfe2 ]
 
-Initially, the TMU_ROOT clock was marked as critical, which automatically
-made the AHB clock to stay always on. Since the TMU_ROOT clock is not
-marked as critical anymore, following commit:
+The code was setting the bit 21 of the CPCCR register to use a divider
+of 2 for the "pll half" clock, and clearing the bit to use a divider
+of 1.
 
-"clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT"
+This is the opposite of how this register field works: a cleared bit
+means that the /2 divider is used, and a set bit means that the divider
+is 1.
 
-all the clocks that derive from ipg_root clock (and implicitly ahb clock)
-would also have to enable, along with their own gate, the AHB clock.
+Restore the correct behaviour using the newly introduced .div_table
+field.
 
-But considering that AHB is actually a bus that has to be always on, we mark
-it as critical in the clock provider driver and then all the clocks that
-derive from it can be controlled through the dedicated per IP gate which
-follows after the ipg_root clock.
-
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Tested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lkml.kernel.org/r/20190701113606.4130-1-paul@crapouillou.net
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx8mq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/ingenic/jz4740-cgu.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index d407a07e7e6dd..e07c69afc3594 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -406,7 +406,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 4c0a20949c2c2..9b27d75d9485c 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -53,6 +53,10 @@ static const u8 jz4740_cgu_cpccr_div_table[] = {
+ 	1, 2, 3, 4, 6, 8, 12, 16, 24, 32,
+ };
  
- 	/* AHB */
--	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
-+	/* AHB clock is used by the AHB bus therefore marked as critical */
-+	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
- 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
++static const u8 jz4740_cgu_pll_half_div_table[] = {
++	2, 1,
++};
++
+ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
  
- 	/* IPG */
+ 	/* External clocks */
+@@ -86,7 +90,10 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+ 	[JZ4740_CLK_PLL_HALF] = {
+ 		"pll half", CGU_CLK_DIV,
+ 		.parents = { JZ4740_CLK_PLL, -1, -1, -1 },
+-		.div = { CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1 },
++		.div = {
++			CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1,
++			jz4740_cgu_pll_half_div_table,
++		},
+ 	},
+ 
+ 	[JZ4740_CLK_CCLK] = {
 -- 
 2.20.1
 
