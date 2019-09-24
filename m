@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9654CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDCDC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0FE21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DC72196E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343459;
-	bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
+	s=default; t=1569343463;
+	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BG/k259zoHsp497UO9zdmH/V4VexKwAwuVZOCHHlYQiXxYD/BI/Pi5qVCIhubloI6
-	 9GmPt4M84G2lIXhaVlAQaTfFd+Q5PFkS4ANv15WmguIoQHOj4LuHQ0k83HH0VKNFNm
-	 Y3d3B8mzXxaojJ7UJmfR52k/VM/CzY9sFQhb4M4k=
+	b=QODZNCvwFN7f66Z/l/eviocnXQcHuq4eWJR4lNg1g9pZ8KnhQCclJuGRjuF8Yk5HL
+	 k/KjRsJFttogtP+Ois4UTzdw7wCNzQwZHTFq/gwIXDKx1bVJix6qsYQKrR8Q1ghR6Y
+	 dyymaujV+tFTXIutHSEEypcAgT2mKhaNUos6vgMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390484AbfIXQoS (ORCPT
+        id S2633146AbfIXQoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404399AbfIXQoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:44:15 -0400
+        id S2633139AbfIXQoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F8820872;
-        Tue, 24 Sep 2019 16:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C06C20872;
+        Tue, 24 Sep 2019 16:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343454;
-        bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
+        s=default; t=1569343458;
+        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQOZl3RI9XjgJ9FrBdsLL+M5xwR+4uTBLdj1l6vfefsqNdo2nWDFludllxijVyvAL
-         ELX7O3RHvqht397FShpkotvM/V20Ovpr/k4U7WlbMhENtu22wcUd4to+adcWjPNIP9
-         0PJLLejNtv7e6KTHUg80oCaPzy74Kkr1a06VaOr0=
+        b=vbM+UvpiqtXQiei5uXyVCRdqpc1uG2ZQEYhQ3xaOP4nvGGSkLlSI/y1HHhXp1ZODV
+         sBOLT9wsqGildo7+m0QQUgTwkN7asRBKTbdqlSi6NpdJYvBeDg06f6lwyeXRPJVCXI
+         fWGXkdsEdVJXJXaLEFgBlJzz7g/WDCtoP9Xe4LjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+Cc:     Mark Menzynski <mmenzyns@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 54/87] drm/nouveau/kms/tu102-: disable input lut when input is already FP16
-Date:   Tue, 24 Sep 2019 12:41:10 -0400
-Message-Id: <20190924164144.25591-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 55/87] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
+Date:   Tue, 24 Sep 2019 12:41:11 -0400
+Message-Id: <20190924164144.25591-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -58,38 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Mark Menzynski <mmenzyns@redhat.com>
 
-[ Upstream commit 1e339ab2ac3c769c1b06b9fb7d532f8495ebc56d ]
+[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
 
-On Turing, an input LUT is required to transform inputs in fixed-point
-formats to FP16 for the internal display pipe.  We provide an identity
-mapping whenever a window is enabled for this reason.
+Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
 
-HW has error checks to ensure when the input is already FP16, that the
-input LUT is also disabled.
+When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
 
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/wndw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-index 283ff690350ea..50303ec194bbc 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-@@ -320,7 +320,9 @@ nv50_wndw_atomic_check_lut(struct nv50_wndw *wndw,
- 		asyh->wndw.olut &= ~BIT(wndw->id);
- 	}
- 
--	if (!ilut && wndw->func->ilut_identity) {
-+	if (!ilut && wndw->func->ilut_identity &&
-+	    asyw->state.fb->format->format != DRM_FORMAT_XBGR16161616F &&
-+	    asyw->state.fb->format->format != DRM_FORMAT_ABGR16161616F) {
- 		static struct drm_property_blob dummy = {};
- 		ilut = &dummy;
- 	}
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+index 7143ea4611aa3..33a9fb5ac5585 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
+ 		info->min     = min(info->base,
+ 				    info->base + info->step * info->vidmask);
+ 		info->max     = nvbios_rd32(bios, volt + 0x0e);
++		if (!info->max)
++			info->max = max(info->base, info->base + info->step * info->vidmask);
+ 		break;
+ 	case 0x50:
+ 		info->min     = nvbios_rd32(bios, volt + 0x0a);
 -- 
 2.20.1
 
