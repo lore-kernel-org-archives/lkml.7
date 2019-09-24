@@ -2,316 +2,138 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31264C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686AEC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0566207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RwO1zwKX"
+	by mail.kernel.org (Postfix) with ESMTP id 3EDEE21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569336530;
+	bh=9jfKsFh+2Di0mpQIz6AMJh4zWidjQFnXzBAegAepz0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yZs+H7bi8EZXIFHJg7ytUh605+o1qXeissYQ26SOTf/VU/kdKWIJAG+8Xdbn/Xkkf
+	 hQJcn00NgTbOJZjEjDMCT70sDkpzhMJ/xzPplIVNkHRgKXVpU4S9SLf3qZHIM/BQoe
+	 C7fJZsIyvg8CVXl4DcmlEKbORNC6DH/Dq92qxtaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409664AbfIXOr6 (ORCPT
+        id S2409722AbfIXOst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:47:58 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34910 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfIXOr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:47:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OElpj4035406;
-        Tue, 24 Sep 2019 09:47:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569336471;
-        bh=TXLiWsgLS6zqBq6pXxzlutr7tMcfrndBxh5tD9dOtac=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RwO1zwKXB3pLKh8yo4Koq2/OakQIiCYvtV51uQV0IRM2OnaYVAZG+MXUnx13Yh8YW
-         JujdqS/mzMCKL3ge2uYAlMMRqfraStheA+eyZlEQpsegaeiJV5bqR3Bi/VH+LzNLxR
-         8yQxnNHgTk4QGt3qOP11QgjEYdriZCofElsFTO8U=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OElptx106281;
-        Tue, 24 Sep 2019 09:47:51 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
- Sep 2019 09:47:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 24 Sep 2019 09:47:51 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OElogq013583;
-        Tue, 24 Sep 2019 09:47:51 -0500
-Subject: Re: [PATCH v8 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-8-dmurphy@ti.com>
- <73a95bac-7433-5b06-5701-c742307aa004@gmail.com>
- <ba92d95a-9f2c-6b37-74d3-4e3a87ad28bf@ti.com>
- <6788e600-460a-7846-04d0-480268e674a1@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5c1091b6-788e-79b2-a6ac-911401b58ed3@ti.com>
-Date:   Tue, 24 Sep 2019 09:52:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 10:48:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726130AbfIXOst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:48:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A7792AC84;
+        Tue, 24 Sep 2019 14:48:46 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 16:48:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+Message-ID: <20190924144846.GA23050@dhcp22.suse.cz>
+References: <20190924143615.19628-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <6788e600-460a-7846-04d0-480268e674a1@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924143615.19628-1-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+On Tue 24-09-19 16:36:15, David Hildenbrand wrote:
+> Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
+> rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
+> introduced to fix a potential deadlock between get_online_mems() and
+> get_online_cpus() - the memory and cpu hotplug lock. The root issue was
+> that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
+>     The reason is that memory hotplug takes the memory hotplug lock and
+>     then calls stop_machine() which calls get_online_cpus().  That's the
+>     reverse lock order to get_online_cpus(); get_online_mems(); in
+>     mm/slub_common.c
+> 
+> So memory hotplug never really required any cpu lock itself, only
+> stop_machine() and lru_add_drain_all() required it. Back then,
+> stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
+> as the cpu hotplug lock was now obtained in the caller.
+> 
+> Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
+> all_zonelists"), the stop_machine_cpuslocked() call is gone.
+> build_all_zonelists() does no longer require the cpu lock and does no
+> longer make use of stop_machine().
+> 
+> Since commit 9852a7212324 ("mm: drop hotplug lock from
+> lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
+> locking because we do rely on per-cpu kworkers being shut down before our
+> page_alloc_cpu_dead callback is executed on the offlined cpu.". The
+> lru_add_drain_all_cpuslocked() variant was removed.
+> 
+> So there is nothing left that requires the cpu hotplug lock. The memory
+> hotplug lock and the device hotplug lock are sufficient.
 
-On 9/23/19 4:42 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/23/19 5:28 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 9/21/19 10:13 AM, Jacek Anaszewski wrote:
->>> Dan,
->>>
->>> On 9/20/19 7:41 PM, Dan Murphy wrote:
->>>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
->>>> LP5018, LP5012 and LP5009 RGB LED device driver.  The
->>>> LP5036/30/24/18/12/9
->>>> can control RGB LEDs individually or as part of a control bank group.
->>>> These devices have the ability to adjust the mixing control for the RGB
->>>> LEDs to obtain different colors independent of the overall brightness of
->>>> the LED grouping.
->>>>
->>>> Datasheet:
->>>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
->>>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>    .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
->>>>    1 file changed, 148 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> new file mode 100644
->>>> index 000000000000..9d05f43042e0
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> @@ -0,0 +1,148 @@
->>>> +* Texas Instruments - LP5009/12/18/24/30/36 RGB LED driver
->>>> +
->>>> +The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB
->>>> LEDs into
->>>> +a LED group or control them individually.
->>>> +
->>>> +The difference in these RGB LED drivers is the number of supported
->>>> RGB modules.
->>>> +
->>>> +Required parent properties:
->>>> +    - compatible:
->>>> +        "ti,lp5009"
->>>> +        "ti,lp5012"
->>>> +        "ti,lp5018"
->>>> +        "ti,lp5024"
->>>> +        "ti,lp5030"
->>>> +        "ti,lp5036"
->>>> +    - reg :  I2C slave address
->>>> +        lp5009/12 - 0x28
->>>> +        lp5018/24 - 0x28
->>>> +        lp5030/36 - 0x30
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +
->>>> +Optional parent properties:
->>>> +    - enable-gpios : gpio pin to enable/disable the device.
->>>> +    - vled-supply : LED supply
->>>> +
->>>> +Required child properties:
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +    - reg : This is the LED module number.
->>>> +    - color : see Documentation/devicetree/bindings/leds/common.txt
->>>> +    - function : see Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +Required child properties only is LED modules will be banked:
->>>> +    - ti,led-bank : This property denotes the LED module numbers
->>>> that will
->>>> +            be controlled as a single RGB cluster.  Each LED module
->>>> +            number will be controlled by a single LED class instance.
->>>> +            There can only be one instance of the ti,led-bank
->>>> +            property for each device node.
->>>> +
->>>> +Required grandchildren properties:
->>>> +    - reg : A single entry denoting the LED module that controls
->>>> +        the RGB cluster.
->>>> +    - color : see
->>>> Documentation/devicetree/bindings/leds/leds-multicolor.txt
->>>> +    - led-sources : see
->>>> Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +The LED outputs associated with the LED modules are defined in Table
->>>> 1 of the
->>>> +corresponding data sheets.
->>> We must enclose this information here.
->> That will make this doc pretty messy especially with the LP5036 entries.
->>
->> I would have to do ascii art to make it understandable and basically
->> there is not a delta in the lesser devices in the outputs
->>
->> I don't see value in reproducing this data sheet contents in the
->> dt-bindings.
-> IMO DT bindings should be self-contained. We cannot assume that
-> user will always have Internet access.
->
->> For example (LP5012) and then for the LP5036 multiply this by 3
->>
->> Table 1.
->>
->> Bank Number and LED Number Assignment
->> OUT NUMBER BANK NUMBER  RGB LED MODULE NUMBER
->> OUT0                    Bank A
->> OUT1                    Bank B                        LED0
->> OUT2                    Bank C
->>
->> OUT3                    Bank A
->> OUT4                    Bank B                        LED1
->> OUT5                    Bank C
->>
->> OUT6                    Bank A
->> OUT7                    Bank B                        LED2
->> OUT8                    Bank C
->>
->> OUT9 (LP5012 only) Bank A
->> OUT10 (LP5012 only) Bank B                  LED3
->> OUT11 (LP5012 only) Bank C
->
-> I'd say it is required. But let's wait for DT guys' opinion.
->
-Do you have an opinion on whether we need to publish in the DT the 
-output to module map?
+I would love to see this happen. The biggest offenders should be gone. 
+I really hated how those two locks have been conflated which likely
+resulted in some undocumented/unintended dependencies. So for now, I
+cannot really tell you whether the patch is correct. It would really
+require a lot of testing. I am not sure this is reasonably reviewable.
 
-This is the last item I have to fix before submitting v9.
+So please add some testing results (ideally cpu hotplug racing a lot
+with the memory hotplug). Then I would be willing to give this a try
+and see. First by keeping it in linux-next for a release or two and then
+eyes closed, fingers crossed and go to the wild. Do we have a tag for
+that Dared-by maybe?
 
-Dan
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> RFC -> v1:
+> - Reword and add more details why the cpu hotplug lock was needed here
+>   in the first place, and why we no longer require it.
+> 
+> ---
+>  mm/memory_hotplug.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c3e9aed6023f..5fa30f3010e1 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -88,14 +88,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
+>  
+>  void mem_hotplug_begin(void)
+>  {
+> -	cpus_read_lock();
+>  	percpu_down_write(&mem_hotplug_lock);
+>  }
+>  
+>  void mem_hotplug_done(void)
+>  {
+>  	percpu_up_write(&mem_hotplug_lock);
+> -	cpus_read_unlock();
+>  }
+>  
+>  u64 max_mem_size = U64_MAX;
+> -- 
+> 2.21.0
 
-
->>>> +
->>>> +LP5009 - 2 Total RGB cluster LED outputs 0-1
->> This should be 3 total not 2
->>
->> Dan
->>
->>>> +LP5012 - 4 Total RGB cluster LED outputs 0-3
->>>> +LP5018 - 6 Total RGB cluster LED outputs 0-5
->>>> +LP5024 - 8 Total RGB cluster LED outputs 0-7
->>>> +LP5030 - 10 Total RGB cluster LED outputs 0-9
->>>> +LP5036 - 12 Total RGB cluster LED outputs 0-11
->>>> +
->>>> +Optional child properties:
->>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
->>>> +    - linux,default-trigger :
->>>> +       see Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +Examples:
->>>> +led-controller@29 {
->>>> +    #address-cells = <1>;
->>>> +    #size-cells = <0>;
->>>> +    compatible = "ti,lp5024";
->>>> +    reg = <0x29>;
->>>> +    enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>>> +    vled-supply = <&vmmcsd_fixed>;
->>>> +
->>>> +    multi-led@1 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <1>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_STATUS;
->>>> +
->>>> +        led@3 {
->>>> +            reg = <3>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +        };
->>>> +
->>>> +        led@4 {
->>>> +            reg = <4>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +        };
->>>> +
->>>> +        led@5 {
->>>> +            reg = <5>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +        };
->>>> +    };
->>>> +
->>>> +    multi-led@2 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <2>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_STANDBY;
->>>> +        ti,led-bank = <2 3 5>;
->>>> +
->>>> +        led@6 {
->>>> +            reg = <0x6>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +            led-sources = <6 9 15>;
->>>> +        };
->>>> +
->>>> +        led@7 {
->>>> +            reg = <0x7>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +            led-sources = <7 10 16>;
->>>> +        };
->>>> +
->>>> +        led@8 {
->>>> +            reg = <0x8>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +            led-sources = <8 11 17>;
->>>> +        };
->>>> +    };
->>>> +
->>>> +    multi-led@4 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <4>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_ACTIVITY;
->>>> +
->>>> +        led@12 {
->>>> +            reg = <12>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +        };
->>>> +
->>>> +        led@13 {
->>>> +            reg = <13>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +        };
->>>> +
->>>> +        led@14 {
->>>> +            reg = <14>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +        };
->>>> +    };
->>>> +};
->>>> +
->>>> +For more product information please see the link below:
->>>> +http://www.ti.com/lit/ds/symlink/lp5012.pdf
->>>> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>> +http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>>>
+-- 
+Michal Hocko
+SUSE Labs
