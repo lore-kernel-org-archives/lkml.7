@@ -2,89 +2,153 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B94C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE010C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D2D20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BC52146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sqMOR+nE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409679AbfIXNzo (ORCPT
+        id S2409690AbfIXNz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:55:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53374 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409666AbfIXNzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:55:42 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3FD68859FB
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:55:42 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id z8so604116wrs.14
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 06:55:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OsafvY49lv+IdkcQBZiY+1pyMhsITwm284eCfBsvG3Q=;
-        b=m00t2uTPLRNJXCJCdM1mABBqwRrPnyNXe2vuBMt8wdZ/GVqSFl4Aq9Id/opLvWujZi
-         CYWDU+qH5oMP9mBr9LxQmyV2RzLbs6QG5NfmTC3Qon5Y5OqrLWlA9VRqHAOsDXD9x+tu
-         jOVeYFxKQ9b8xMhE+SY3119OF1pop82uwKNzUIl0mCxeMecvBaK6dk6x87/GFJ2XrL58
-         RqkzeHGN10CUy2fcZtSV3ZwRlGiHSfBMdShqj5SVrbQmvAUaITf1zpduFUf7fAPutGVa
-         J3j+oB78Y9ShAkm6ro4Z68iHonui8tiqLoIt9PdCNOg5xejfCcGqqAQVL+IRpOmaWqu5
-         NFfQ==
-X-Gm-Message-State: APjAAAXn3PaJvJvs3eWJSZnYI1GS+DRdDGOYSH6JthYNPnw2QL78LX+B
-        0UzRjzc411A5tfl0IkE243WKeHqo6jTVGSxnrGsvGFl74Ic7LD3nbxaw9zW1lZ47QIG+CVOjAOS
-        kREiJVXPW889CT9U+y+sR7KLD
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2412465wrx.156.1569333340906;
-        Tue, 24 Sep 2019 06:55:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwg4Zkq5DqRbVkfGA29BmZtf2KR4d9hVorp2wEdWQ5fXNb3WiB0tDW4Xw1GTkf7h7ZkJFH54w==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2412442wrx.156.1569333340651;
-        Tue, 24 Sep 2019 06:55:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id s1sm4225070wrg.80.2019.09.24.06.55.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2019 06:55:39 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: X86: Fix userspace set broken combinations of
- CPUID and CR4
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
-References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
- <1568708186-20260-2-git-send-email-wanpengli@tencent.com>
- <20190917173258.GB2876@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d0c35f21-b262-2c4e-9109-4ab803487705@redhat.com>
-Date:   Tue, 24 Sep 2019 15:55:38 +0200
+        Tue, 24 Sep 2019 09:55:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56312 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfIXNz6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:55:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ODtsne021248;
+        Tue, 24 Sep 2019 08:55:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569333354;
+        bh=btPV7Sjr/rnEMgxUyHIr3zvLMVUcIGMOqQpe2lo8C08=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=sqMOR+nEhYtaIHN8ZfAV27zmxddiIyaiO0QpWO6GjUVM0wBZSfWsRC2fTa82Vf+Vr
+         vS95zY2N8mqIZx38raNe+Paijr6lj3LnbIOd+dNgTf0Y7JZoRZAwDSFwjDua1SO3Ot
+         feBPb/3xi09jUCp19BYAa1ablBcjoeb/HTXMuZnM=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ODtsP8124713
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Sep 2019 08:55:54 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
+ Sep 2019 08:55:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 24 Sep 2019 08:55:46 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ODtp6I124895;
+        Tue, 24 Sep 2019 08:55:52 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+ <20190910115037.23539-2-peter.ujfalusi@ti.com>
+ <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
+ <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+Message-ID: <ed0de4d9-961a-3dcc-5865-d54b298ac309@ti.com>
+Date:   Tue, 24 Sep 2019 16:56:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190917173258.GB2876@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/09/19 19:32, Sean Christopherson wrote:
+
+
+On 16/09/2019 14.21, Peter Ujfalusi wrote:
 > 
-> Paolo, can you provide an "official" ruling on how KVM_SET_SREGS should
-> interact with reserved bits?  It's not at all clear from the git history
-> if skipping the checks was intentional or an oversight.
+> 
+> On 13/09/2019 17.36, Rob Herring wrote:
+>> On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+>>> On systems where multiple DMA controllers available, non Slave (for example
+>>> memcpy operation) users can not be described in DT as there is no device
+>>> involved from the DMA controller's point of view, DMA binding is not usable.
+>>> However in these systems still a peripheral might need to be serviced by or
+>>> it is better to serviced by specific DMA controller.
+>>> When a memcpy is used to/from a memory mapped region for example a DMA in the
+>>> same domain can perform better.
+>>> For generic software modules doing mem 2 mem operations it also matter that
+>>> they will get a channel from a controller which is faster in DDR to DDR mode
+>>> rather then from the first controller happen to be loaded.
+>>>
+>>> This property is inherited, so it may be specified in a device node or in any
+>>> of its parent nodes.
+>>
+>> If a device needs mem2mem dma, I think we should just use the existing 
+>> dma binding. The provider will need a way to define cell values which 
+>> mean mem2mem.
+> 
+> But isn't it going to be an abuse of the binding? Each DMA controller
+> would hack this in different ways, probably using out of range DMA
+> request/trigger number or if they have direction in the binding or some
+> other parameter would be set to something invalid...
+> 
+>> For generic s/w, it should be able to query the dma speed or get a 
+>> preferred one IMO. It's not a DT problem.
+>>
+>> We measure memcpy speeds at boot time to select the fastest 
+>> implementation for a chip, why not do that for mem2mem DMA?
+> 
+> It would make an impact on boot time since the tests would need to be
+> done with a large enough copy to be able to see clearly which one is faster.
+> 
+> Also we should be able to handle different probing orders:
+> client1 should have mem2mem channel from dma2.
+> 
+> - dma1 probes
+> - client1 probes and asks for a mem2mem channel
+> - dma2 probes
+> 
+> Here client1 should deffer until dma2 is probed.
+> 
+> Probably the property should be dma-mem2mem-domain to be more precise on
+> it's purpose and avoid confusion?
 
-It's okay to make it fail as long as KVM already checks the value of the
-reserved bits on vmexit.  If not, some care might be required.
+Is it OK if I go with dma-mem2mem-domain or dma-mem2mem-controller for
+v2, but keeping the logic and approach intact?
 
-Paolo
+Regards,
+- Péter
+
+> 
+>>
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+>>>  1 file changed, 88 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+>>
+>> Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+> 
+> That does not do anything on my system, but git dt-doc-validate running
+> via https://github.com/robherring/yaml-bindings.git.
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
