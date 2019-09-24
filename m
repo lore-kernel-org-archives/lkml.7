@@ -2,155 +2,210 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E235C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D822EC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F4D2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRMMpwxR"
+	by mail.kernel.org (Postfix) with ESMTP id AA5502146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504518AbfIXLCy (ORCPT
+        id S2504535AbfIXLFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:02:54 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33092 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389414AbfIXLCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:02:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b9so1451329wrs.0;
-        Tue, 24 Sep 2019 04:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=39oBHhyT5LUKl72KBXNwxMjpwohyaM3Lf/IBs+S5VfM=;
-        b=KRMMpwxRTvDUSCbPtoBKXH1+SEQMejphNnTSPDh7MUKKjN95H/di8OjcMIIvnvd5b7
-         fLgJlJOJigGHVjPuhwDmBfJXqfko76wHPyWsNedgJgSzoUjcaT6yipBayzPjK8+ViiZn
-         1SBl35K4GsWDH131gnW/edR54ZK1Wx3VuJmYXL+JZYU3zXe21XkZY4qY1fCRNbO/3Fai
-         4LtVUXscWzHj8gfACXdKKX0rBBUFx143d9MuD9DCCslYnyGrhQ45ifTXRq6/QC9Z6iup
-         4DuIuTGEAUCZBXKq2v3M8pt3A5GIJCAjEcb91AMqxJS3EcOTXe/EVpyvL+dbXEuYYi5Y
-         cx3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=39oBHhyT5LUKl72KBXNwxMjpwohyaM3Lf/IBs+S5VfM=;
-        b=Nq8m/jI31z/zt4MTkFLu7S0YGFwRpX3rS8qA/CQvl7z2KUOcaSJ87Ip6tdH7evlboI
-         oOOAFiI9ZEK4fecMmUMw02GikTFeutA52VANRCyIF10I9TFWAoj5XjmEnfIYOdANa5P3
-         Fm3x7AKakGTneqqT6jAzpsvxyQTvrCaQ1jep2mma1PJ6D6TKrs/KTN3waqiOXhXzdVxv
-         VwruskBZvSoMnrbHUNBiJlWms+rPObIJntQJZZtzlaKsClx+e7/P5yhcu4K+XcZCfk8G
-         7FzcvNDFC3dBUP525YFFN8FlcW1n0UEtbLuy07jChu2D2aF1WhJArM9J5Hv9rcHkagEY
-         WMQA==
-X-Gm-Message-State: APjAAAUFpeO3ESlgcY/FYotJRaUOPqtKpgd1TxIOZPXlGwuCjEp5Xs7n
-        ePgL66oDv6W2vVP0qqzCocI=
-X-Google-Smtp-Source: APXvYqyiabsF55sMwAHaoHbBYJyTJizQtfzpgpeT7+A/Pub6tNlghPfdwkrq6m06iZXyCjmzNOBpzg==
-X-Received: by 2002:a5d:6242:: with SMTP id m2mr1795532wrv.261.1569322971287;
-        Tue, 24 Sep 2019 04:02:51 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id e6sm1733774wrp.91.2019.09.24.04.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 04:02:49 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 13:02:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] pwm: pwm-mxs: use devm_platform_ioremap_resource()
- to simplify code
-Message-ID: <20190924110248.GF14924@ulmo>
-References: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cz6wLo+OExbGG7q/"
-Content-Disposition: inline
-In-Reply-To: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 24 Sep 2019 07:05:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46564 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504522AbfIXLFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:05:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 04:05:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
+   d="scan'208";a="190989099"
+Received: from pktinlab.iind.intel.com ([10.66.253.121])
+  by orsmga003.jf.intel.com with ESMTP; 24 Sep 2019 04:04:59 -0700
+From:   Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+To:     pankaj.bharadiya@gmail.com, andriy.shevchenko@linux.intel.com,
+        kernel-hardening@lists.openwall.com, keescook@chromium.org,
+        akpm@linux-foundation.org, mayhs11saini@gmail.com,
+        linux-kernel@vger.kernel.org
+Cc:     pankaj.laxminarayan.bharadiya@intel.com
+Subject: [PATCH 0/5] Add and use sizeof_member macro to bring uniformity
+Date:   Tue, 24 Sep 2019 16:28:34 +0530
+Message-Id: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This topic has been discussed on the kernel hardening mailing list [1]
+few months back. Thanks to Shyam for initiating work on this.
 
---cz6wLo+OExbGG7q/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Its been concluded on how the patch series should be but there was
+no further progress and this work is still pending (Pardon me if I 
+missed something here).
 
-On Tue, Sep 24, 2019 at 05:42:48PM +0800, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> 	- This is a resend version of patch: https://patchwork.kernel.org/patch/=
-11048365/
-> ---
->  drivers/pwm/pwm-mxs.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+At present, we have 3 different macros which serve the same purpose
+of finding the size of a member of a structure:
+  - SIZEOF_FIELD
+  - FIELD_SIZEOF
+  - sizeof_field
 
-When you do resend patches, please make sure to include an Reviewed-by
-or Acked-by tags that you get.
+To bring uniformity in entire kernel source tree, this patch series -
+  - adds the new sizeof_member macro
+  - does scripted replacement of above 3 macros where used with newly
+    introduced sizeof_member macro
+  - removes definitions of SIZEOF_FIELD, FIELD_SIZEOF, sizeof_field
 
-In this case that's not necessary since I had already applied the other
-patch.
+This series aims to fix the issue based on given comments in [1].
 
-Thierry
+[1] Link: https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
 
->=20
-> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-> index 04c0f6b..b14376b 100644
-> --- a/drivers/pwm/pwm-mxs.c
-> +++ b/drivers/pwm/pwm-mxs.c
-> @@ -126,15 +126,13 @@ static int mxs_pwm_probe(struct platform_device *pd=
-ev)
->  {
->  	struct device_node *np =3D pdev->dev.of_node;
->  	struct mxs_pwm_chip *mxs;
-> -	struct resource *res;
->  	int ret;
-> =20
->  	mxs =3D devm_kzalloc(&pdev->dev, sizeof(*mxs), GFP_KERNEL);
->  	if (!mxs)
->  		return -ENOMEM;
-> =20
-> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	mxs->base =3D devm_ioremap_resource(&pdev->dev, res);
-> +	mxs->base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(mxs->base))
->  		return PTR_ERR(mxs->base);
-> =20
-> --=20
-> 2.7.4
->=20
+Pankaj Bharadiya (5):
+  linux/kernel.h: Add sizeof_member macro
+  treewide: Use sizeof_member macro
+  MIPS: OCTEON: use sizeof_member macro instead of SIZEOF_FIELD
+  linux/kernel.h: Remove FIELD_SIZEOF macro
+  stddef.h: Remove sizeof_field macro
 
---cz6wLo+OExbGG7q/
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/process/coding-style.rst        |   2 +-
+ .../it_IT/process/coding-style.rst            |   2 +-
+ .../zh_CN/process/coding-style.rst            |   2 +-
+ arch/arc/kernel/unwind.c                      |   6 +-
+ arch/arm64/include/asm/processor.h            |  10 +-
+ .../cavium-octeon/executive/cvmx-bootmem.c    |   9 +-
+ arch/powerpc/net/bpf_jit32.h                  |   4 +-
+ arch/powerpc/net/bpf_jit_comp.c               |  16 +-
+ arch/sparc/net/bpf_jit_comp_32.c              |   8 +-
+ arch/x86/kernel/fpu/xstate.c                  |   2 +-
+ block/blk-core.c                              |   4 +-
+ crypto/adiantum.c                             |   4 +-
+ drivers/firmware/efi/efi.c                    |   2 +-
+ drivers/gpu/drm/i915/gvt/scheduler.c          |   2 +-
+ drivers/infiniband/hw/hfi1/sdma.c             |   2 +-
+ drivers/infiniband/hw/hfi1/verbs.h            |   4 +-
+ .../ulp/opa_vnic/opa_vnic_ethtool.c           |   2 +-
+ drivers/input/keyboard/applespi.c             |   2 +-
+ drivers/md/raid5-ppl.c                        |   2 +-
+ drivers/media/platform/omap3isp/isppreview.c  |  24 +--
+ drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  |   4 +-
+ .../ethernet/cavium/liquidio/octeon_console.c |  16 +-
+ .../net/ethernet/emulex/benet/be_ethtool.c    |   2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_tm.c |   2 +-
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c |   8 +-
+ .../net/ethernet/intel/fm10k/fm10k_ethtool.c  |   2 +-
+ .../net/ethernet/intel/i40e/i40e_ethtool.c    |   2 +-
+ .../net/ethernet/intel/i40e/i40e_lan_hmc.c    |   2 +-
+ .../net/ethernet/intel/iavf/iavf_ethtool.c    |   2 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |  10 +-
+ .../net/ethernet/intel/ice/ice_lan_tx_rx.h    |   2 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c  |   4 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c  |   4 +-
+ .../net/ethernet/intel/ixgb/ixgb_ethtool.c    |   4 +-
+ drivers/net/ethernet/intel/ixgbevf/ethtool.c  |   4 +-
+ drivers/net/ethernet/marvell/mv643xx_eth.c    |   4 +-
+ .../net/ethernet/mellanox/mlx4/en_ethtool.c   |   2 +-
+ .../ethernet/mellanox/mlx5/core/fpga/ipsec.c  |   6 +-
+ .../net/ethernet/mellanox/mlx5/core/fs_core.c |   4 +-
+ .../ethernet/mellanox/mlxsw/spectrum_fid.c    |   4 +-
+ .../ethernet/mellanox/mlxsw/spectrum_ptp.c    |   2 +-
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c  |  10 +-
+ drivers/net/ethernet/netronome/nfp/bpf/main.c |   2 +-
+ .../net/ethernet/netronome/nfp/bpf/offload.c  |   2 +-
+ .../net/ethernet/netronome/nfp/flower/main.h  |   2 +-
+ .../oki-semi/pch_gbe/pch_gbe_ethtool.c        |   2 +-
+ drivers/net/ethernet/qlogic/qede/qede.h       |   2 +-
+ .../ethernet/qlogic/qlcnic/qlcnic_ethtool.c   |   2 +-
+ .../net/ethernet/qlogic/qlge/qlge_ethtool.c   |   2 +-
+ .../ethernet/samsung/sxgbe/sxgbe_ethtool.c    |   2 +-
+ .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   4 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c        |   6 +-
+ drivers/net/ethernet/ti/netcp_ethss.c         |  32 ++--
+ drivers/net/fjes/fjes_ethtool.c               |   2 +-
+ drivers/net/geneve.c                          |   2 +-
+ drivers/net/hyperv/netvsc_drv.c               |   2 +-
+ drivers/net/usb/sierra_net.c                  |   2 +-
+ drivers/net/usb/usbnet.c                      |   2 +-
+ drivers/net/vxlan.c                           |   4 +-
+ .../net/wireless/marvell/libertas/debugfs.c   |   2 +-
+ drivers/net/wireless/marvell/mwifiex/util.h   |   4 +-
+ drivers/s390/net/qeth_core_mpc.h              |  10 +-
+ drivers/scsi/aacraid/aachba.c                 |   4 +-
+ drivers/scsi/be2iscsi/be_cmds.h               |   2 +-
+ drivers/scsi/cxgbi/libcxgbi.c                 |   2 +-
+ drivers/scsi/smartpqi/smartpqi_init.c         |   6 +-
+ .../staging/media/davinci_vpfe/dm365_ipipe.c  |  36 ++---
+ drivers/target/iscsi/cxgbit/cxgbit_main.c     |   2 +-
+ drivers/usb/atm/usbatm.c                      |   2 +-
+ drivers/usb/gadget/function/f_fs.c            |   2 +-
+ fs/befs/linuxvfs.c                            |   2 +-
+ fs/ext2/super.c                               |   2 +-
+ fs/ext4/super.c                               |   2 +-
+ fs/freevxfs/vxfs_super.c                      |   2 +-
+ fs/orangefs/super.c                           |   2 +-
+ fs/ufs/super.c                                |   2 +-
+ include/linux/filter.h                        |  12 +-
+ include/linux/kernel.h                        |  12 +-
+ include/linux/kvm_host.h                      |   2 +-
+ include/linux/phy_led_triggers.h              |   2 +-
+ include/linux/slab.h                          |   2 +-
+ include/linux/stddef.h                        |  10 +-
+ include/net/garp.h                            |   2 +-
+ include/net/ip_tunnels.h                      |   6 +-
+ include/net/mrp.h                             |   2 +-
+ include/net/netfilter/nf_conntrack_helper.h   |   2 +-
+ include/net/netfilter/nf_tables_core.h        |   2 +-
+ include/net/sock.h                            |   2 +-
+ ipc/util.c                                    |   2 +-
+ kernel/bpf/cgroup.c                           |   2 +-
+ kernel/bpf/local_storage.c                    |   4 +-
+ kernel/fork.c                                 |   2 +-
+ kernel/signal.c                               |  12 +-
+ kernel/utsname.c                              |   2 +-
+ net/802/mrp.c                                 |   6 +-
+ net/batman-adv/main.c                         |   2 +-
+ net/bpf/test_run.c                            |   4 +-
+ net/bridge/br.c                               |   2 +-
+ net/caif/caif_socket.c                        |   2 +-
+ net/core/dev.c                                |   2 +-
+ net/core/filter.c                             | 140 +++++++++---------
+ net/core/flow_dissector.c                     |  10 +-
+ net/core/skbuff.c                             |   2 +-
+ net/core/xdp.c                                |   4 +-
+ net/dccp/proto.c                              |   2 +-
+ net/ipv4/ip_gre.c                             |   4 +-
+ net/ipv4/ip_vti.c                             |   4 +-
+ net/ipv4/raw.c                                |   2 +-
+ net/ipv4/tcp.c                                |   2 +-
+ net/ipv6/ip6_gre.c                            |   4 +-
+ net/ipv6/raw.c                                |   2 +-
+ net/iucv/af_iucv.c                            |   2 +-
+ net/netfilter/nf_tables_api.c                 |   4 +-
+ net/netfilter/nfnetlink_cthelper.c            |   2 +-
+ net/netfilter/nft_ct.c                        |  12 +-
+ net/netfilter/nft_masq.c                      |   2 +-
+ net/netfilter/nft_nat.c                       |   6 +-
+ net/netfilter/nft_redir.c                     |   2 +-
+ net/netfilter/nft_tproxy.c                    |   4 +-
+ net/netfilter/xt_RATEEST.c                    |   2 +-
+ net/netlink/af_netlink.c                      |   2 +-
+ net/openvswitch/datapath.c                    |   2 +-
+ net/openvswitch/flow.h                        |   4 +-
+ net/rxrpc/af_rxrpc.c                          |   2 +-
+ net/sched/act_ct.c                            |   4 +-
+ net/sched/cls_flower.c                        |   2 +-
+ net/sctp/socket.c                             |   4 +-
+ net/unix/af_unix.c                            |   2 +-
+ security/integrity/ima/ima_policy.c           |   4 +-
+ sound/soc/codecs/hdmi-codec.c                 |   2 +-
+ virt/kvm/kvm_main.c                           |   2 +-
+ 131 files changed, 345 insertions(+), 360 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.17.1
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2J99gACgkQ3SOs138+
-s6GQAhAArhAUpmU0pjAl8qc9eLxwkVNYkfxSagID+AR2KE1BW29cp1kDA5Mkg2/s
-dy4eDAwIjvNSh0l8rlFrUmZ2Mxa5kOkHwEcfnHxNf6sps28wd2TseR0oIs/Nka4p
-F8PDHqh7ukLOuJpLCt4H2oC2BkmXLq18w7fneryX8TMfg/KgrOqLDyuUIxUP7OzW
-HKfgz6u1IfDH6U/1ehn601t6MJBNjenqFIJsiEVqUbynIBRqE4Ss7+QAxGQ2jrAu
-A4NnolWe05xJjLeRqXGmD71fkHZHjyyN1sRggpsOOXCWkqcAZP0/wWq25PI055jv
-eFZ/WjvqMfEVXCvxqR1iLmr/cgIsCpTrW8kzbyVbIjcWaw6fQtKdPOnEx0TQIC4v
-GgDmVIMnjxhG82CSr9LBQ1hpQL6hDQJKltYSkQPZ8WwO2ISY0xmjCcvm1+FMG2ak
-QjROGJw7JGoKQ46sD5/iYlEnGaEQTqVKCsTwb8kWGbQswKMxMmdd9cBImxTJxrua
-ta2PsGUDKC18XSbw+bzh4EDJ1wYr4kOca2rWYbO9ubKXTsEkM4iiDIN9zrEhbmIH
-L+CIlM03DnQq++a3DQsTS3/XpLAHVynaID9sa7nzcadb0ex6Twno+WP7weo/xySH
-Q6S0fwoqdI8yJgN2SMmI/xePpnp7CDmRJ0pmXRx1GbJnfbsZbrI=
-=h/nA
------END PGP SIGNATURE-----
-
---cz6wLo+OExbGG7q/--
