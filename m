@@ -2,84 +2,139 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B52CC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40FBC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2CE2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48232146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504616AbfIXLGJ (ORCPT
+        id S2438760AbfIXLHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:06:09 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:41327 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438614AbfIXLGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:06:05 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46cyzb4d3Mz1rfM8;
-        Tue, 24 Sep 2019 13:06:03 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46cyzb4FWcz1qqkG;
-        Tue, 24 Sep 2019 13:06:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id mHzmAoV-eGzN; Tue, 24 Sep 2019 13:06:02 +0200 (CEST)
-X-Auth-Info: D8eW+ivcXXiwUT+UPKNeTEAMLUuwXA7932l9M2UwFfw=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 24 Sep 2019 13:06:02 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        krzk@kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH 1/2] spi: Add call to spi_slave_abort() function when spidev driver is released
-Date:   Tue, 24 Sep 2019 13:05:46 +0200
-Message-Id: <20190924110547.14770-2-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190924110547.14770-1-lukma@denx.de>
-References: <20190924110547.14770-1-lukma@denx.de>
+        Tue, 24 Sep 2019 07:07:44 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35638 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2394981AbfIXLHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:07:43 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D77FEB6C3883268478B0;
+        Tue, 24 Sep 2019 19:07:40 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 19:07:37 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <f1362dbb-ad31-51a8-2b06-16c9d928b876@huawei.com>
+ <20190924092551.GK2369@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <c816abbe-155b-504b-cef1-6413f7cdd20c@huawei.com>
+Date:   Tue, 24 Sep 2019 19:07:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190924092551.GK2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+On 2019/9/24 17:25, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 09:29:50AM +0800, Yunsheng Lin wrote:
+>> On 2019/9/24 4:34, Peter Zijlstra wrote:
+> 
+>>> I'm saying the ACPI standard is wrong. Explain to me how it is
+>>> physically possible to have a device without NUMA affinity in a NUMA
+>>> system?
+>>>
+>>>  1) The fundamental interconnect is not uniform.
+>>>  2) The device needs to actually be somewhere.
+>>>
+>>
+>> From what I can see, NUMA_NO_NODE may make sense in the below case:
+>>
+>> 1) Theoretically, there would be a device that can access all the memory
+>> uniformly and can be accessed by all cpus uniformly even in a NUMA system.
+>> Suppose we have two nodes, and the device just sit in the middle of the
+>> interconnect between the two nodes.
+>>
+>> Even we define a third node solely for the device, we may need to look at
+>> the node distance to decide the device can be accessed uniformly.
+>>
+>> Or we can decide that the device can be accessed uniformly by setting
+>> it's node to NUMA_NO_NODE.
+> 
+> This is indeed a theoretical case; it doesn't scale. The moment you're
+> adding multiple sockets or even board interconnects this all goes out
+> the window.
+> 
+> And in this case, forcing the device to either node is fine.
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+Not really.
+For packet sending and receiving, the buffer memory may be allocated
+dynamically. Node of tx buffer memory is mainly based on the cpu
+that is sending sending, node of rx buffer memory is mainly based on
+the cpu the interrupt handler of the device is running on, and the
+device' interrupt affinity is mainly based on node id of the device.
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
+We can bind the processes that are using the device to both nodes
+in order to utilize memory on both nodes for packet sending.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- drivers/spi/spidev.c | 1 +
- 1 file changed, 1 insertion(+)
+But for packet receiving, the node1 may not be used becuase the node
+id of device is forced to node 0, which is the default way to bind
+the interrupt to the cpu of the same node.
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 255786f2e844..fe9ea7e55e5b 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -627,6 +627,7 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+	spi_slave_abort(spidev->spi);
- 	mutex_unlock(&device_list_lock);
- 
- 	return 0;
--- 
-2.20.1
+If node_to_cpumask_map() returns all usable cpus when the device's node
+id is NUMA_NO_NODE, then interrupt can be binded to the cpus on both nodes.
+
+> 
+>> 2) For many virtual deivces, such as tun or loopback netdevice, they
+>> are also accessed uniformly by all cpus.
+> 
+> Not true; the virtual device will sit in memory local to some node.
+> 
+> And as with physical devices, you probably want at least one (virtual)
+> queue per node.
+
+There may be similar handling as above for virtual device too.
+
+> 
+> 
+> .
+> 
 
