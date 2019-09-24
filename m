@@ -2,85 +2,82 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1728C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9EAC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B79D214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569335026;
-	bh=FrA87LWEkHFpDtzfvS/j9/FYFebkYs8YTEUFzDOSYtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AJVaG3Tzi2JutnTe9K2leohBE0BEP6YhQg9wsxpZxZM7itZe6sMBRvoWtJIA1l3Ai
-	 LCK5/F9sglEtyrurpe56ANNo+PZAXR6OUArNW36vkpG4ptB0rGW3MjWz3jxXWGy9oS
-	 W8OUDRzK0j9saVytwuQnH/I67XyOZ1WVkQq3eLSo=
+	by mail.kernel.org (Postfix) with ESMTP id 0337A21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437062AbfIXOXp (ORCPT
+        id S2437189AbfIXOYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:23:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37518 "EHLO mx1.suse.de"
+        Tue, 24 Sep 2019 10:24:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37886 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389459AbfIXOXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:23:45 -0400
+        id S2389030AbfIXOYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:24:40 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5AB60AC84;
-        Tue, 24 Sep 2019 14:23:43 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 16:23:42 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        linux-mm@kvack.org, vbabka@suse.cz, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, linux-arm-kernel@lists.infradead.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v10 0/6] mm / virtio: Provide support for unused page
- reporting
-Message-ID: <20190924142342.GX23050@dhcp22.suse.cz>
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+        by mx1.suse.de (Postfix) with ESMTP id 32F38AE2D;
+        Tue, 24 Sep 2019 14:24:39 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 16:24:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        SergeySenozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LinusTorvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        PraritBhargava <prarit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: printk meeting at LPC
+Message-ID: <20190924142438.fjicbolo2xmgn4t7@pathway.suse.cz>
+References: <20190918012546.GA12090@jagdpanzerIV>
+ <20190917220849.17a1226a@oasis.local.home>
+ <20190918023654.GB15380@jagdpanzerIV>
+ <20190918051933.GA220683@jagdpanzerIV>
+ <87h85anj85.fsf@linutronix.de>
+ <20190918081012.GB37041@jagdpanzerIV>
+ <20190918081012.GB37041@jagdpanzerIV>
+ <877e66nfdz.fsf@linutronix.de>
+ <20190918164155.ymyuro6u442fa22j@pathway.suse.cz>
+ <20190918124801.04fe999d@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918175109.23474.67039.stgit@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190918124801.04fe999d@gandalf.local.home>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18-09-19 10:52:25, Alexander Duyck wrote:
-[...]
-> In order to try and keep the time needed to find a non-reported page to
-> a minimum we maintain a "reported_boundary" pointer. This pointer is used
-> by the get_unreported_pages iterator to determine at what point it should
-> resume searching for non-reported pages. In order to guarantee pages do
-> not get past the scan I have modified add_to_free_list_tail so that it
-> will not insert pages behind the reported_boundary.
+On Wed 2019-09-18 12:48:01, Steven Rostedt wrote:
+> On Wed, 18 Sep 2019 18:41:55 +0200
+> Petr Mladek <pmladek@suse.com> wrote:
 > 
-> If another process needs to perform a massive manipulation of the free
-> list, such as compaction, it can either reset a given individual boundary
-> which will push the boundary back to the list_head, or it can clear the
-> bit indicating the zone is actively processing which will result in the
-> reporting process resetting all of the boundaries for a given zone.
+> > Regarding SysRq. I could imagine introducing another SysRq that
+> > would just call panic(). I mean that it would try to flush the
+> > logs and reboot in the most safe way.
+> 
+> You mean sysrq-c ?
 
-Is this any different from the previous version? The last review
-feedback (both from me and Mel) was that we are not happy to have an
-externally imposed constrains on how the page allocator is supposed to
-maintain its free lists.
+Sysrq-c is confusing because the NULL pointer dereference is reported.
+I meant a completely new sysrq that would just call panic() without
+an artificial noise.
 
-If this is really the only way to go forward then I would like to hear
-very convincing arguments about other approaches not being feasible.
-There are none in this cover letter unfortunately. This will be really a
-hard sell without them.
--- 
-Michal Hocko
-SUSE Labs
+Hmm, sysrq is already using most of the keys. sysrq-c might be good enough
+after all.
+
+Best Regards,
+Petr
