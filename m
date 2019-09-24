@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06720C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183A3C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EAC2089F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED89F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408623AbfIXC3l (ORCPT
+        id S2408638AbfIXC3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 22:29:41 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57776 "EHLO inva021.nxp.com"
+        Mon, 23 Sep 2019 22:29:44 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38994 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408585AbfIXC3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 22:29:38 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 962532003A0;
-        Tue, 24 Sep 2019 04:29:35 +0200 (CEST)
+        id S2408585AbfIXC3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 22:29:43 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 584611A0A13;
+        Tue, 24 Sep 2019 04:29:41 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D1D11200186;
-        Tue, 24 Sep 2019 04:29:27 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F4941A0390;
+        Tue, 24 Sep 2019 04:29:33 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 03EE7402EE;
-        Tue, 24 Sep 2019 10:29:15 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DAD03402ED;
+        Tue, 24 Sep 2019 10:29:20 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v4 02/11] PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
-Date:   Tue, 24 Sep 2019 10:18:40 +0800
-Message-Id: <20190924021849.3185-3-xiaowei.bao@nxp.com>
+Subject: [PATCH v4 05/11] dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a and ls2088a
+Date:   Tue, 24 Sep 2019 10:18:43 +0800
+Message-Id: <20190924021849.3185-6-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190924021849.3185-1-xiaowei.bao@nxp.com>
 References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
@@ -49,84 +49,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the doorbell mode of MSI-X in DWC EP driver.
+Add compatible strings for ls1088a and ls2088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
 v2:
- - Remove the macro of no used.
-v3:
  - No change.
+v3:
+ - Use one valid combination of compatible strings.
 v4:
- - Modify the commit message.
+ - Add the comma between the two compatible.
 
- drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h    | 12 ++++++++++++
- 2 files changed, 26 insertions(+)
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index eb851c2..55b23ce 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -449,6 +449,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	return 0;
- }
- 
-+int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
-+				       u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	u32 msg_data;
-+
-+	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
-+		   (interrupt_num - 1);
-+
-+	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
-+
-+	return 0;
-+}
-+
- int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			      u16 interrupt_num)
- {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 6aca0bb..56789be 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -88,6 +88,9 @@
- #define PCIE_MISC_CONTROL_1_OFF		0x8BC
- #define PCIE_DBI_RO_WR_EN		BIT(0)
- 
-+#define PCIE_MSIX_DOORBELL		0x948
-+#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
-+
- #define PCIE_PL_CHK_REG_CONTROL_STATUS			0xB20
- #define PCIE_PL_CHK_REG_CHK_REG_START			BIT(0)
- #define PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS		BIT(1)
-@@ -419,6 +422,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			     u8 interrupt_num);
- int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			     u16 interrupt_num);
-+int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
-+				       u16 interrupt_num);
- void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
- #else
- static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-@@ -451,6 +456,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	return 0;
- }
- 
-+static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep,
-+						     u8 func_no,
-+						     u16 interrupt_num)
-+{
-+	return 0;
-+}
-+
- static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- {
- }
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..3717e3d 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -23,6 +23,8 @@ Required properties:
+         "fsl,ls1012a-pcie"
+   EP mode:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
 -- 
 2.9.5
 
