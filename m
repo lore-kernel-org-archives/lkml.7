@@ -2,95 +2,143 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDF7C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F413C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C72820673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569311282;
-	bh=Q0dx1bFxaf2xHgxN4/UXveMRnOufT7B40M+lU3oaCI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d2k0VhwfTzDpqUfhrTXX9zFeNLGCxer1SCNfDKRTqDqlaeujvjD0eOYOfAxLgJPyX
-	 vCUCdhvN9gU7M1Lc8GpYWoHqSrH3z9Rh9bDkaTJ6IlDOcEFENiMmpgVZrMiLNcTzwL
-	 HP66jrFn4UQLDiNytDF28q3kXPNCXUSnUaAuB7oY=
+	by mail.kernel.org (Postfix) with ESMTP id EDBBC214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438807AbfIXHsB (ORCPT
+        id S2394710AbfIXHun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:48:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52168 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389597AbfIXHsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:48:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C8B0CAFA5;
-        Tue, 24 Sep 2019 07:47:56 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 09:47:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190924074751.GB23050@dhcp22.suse.cz>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
- <20190923151519.GE2369@hirez.programming.kicks-ass.net>
- <20190923152856.GB17206@dhcp22.suse.cz>
- <20190923154852.GG2369@hirez.programming.kicks-ass.net>
- <20190923165235.GD17206@dhcp22.suse.cz>
- <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+        Tue, 24 Sep 2019 03:50:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39562 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391780AbfIXHum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:50:42 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 588C8C049D59;
+        Tue, 24 Sep 2019 07:50:42 +0000 (UTC)
+Received: from krava (unknown [10.43.17.52])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 343E1196AE;
+        Tue, 24 Sep 2019 07:50:41 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 09:50:40 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 3/3] perf, stat: Fix free memory access / memory leaks in
+ metrics
+Message-ID: <20190924075040.GC26797@krava>
+References: <20190923233339.25326-1-andi@firstfloor.org>
+ <20190923233339.25326-3-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190923233339.25326-3-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 24 Sep 2019 07:50:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23-09-19 22:34:10, Peter Zijlstra wrote:
-> On Mon, Sep 23, 2019 at 06:52:35PM +0200, Michal Hocko wrote:
-[...]
-> > I even the
-> > ACPI standard is considering this optional. Yunsheng Lin has referred to
-> > the specific part of the standard in one of the earlier discussions.
-> > Trying to guess the node affinity is worse than providing all CPUs IMHO.
+On Mon, Sep 23, 2019 at 04:33:39PM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> I'm saying the ACPI standard is wrong.
+> Make sure to not free the name passed in by the caller, but free
+> all the allocated ids when parsing expressions.
+> 
+> The loop at the end knows that the first entry shouldn't be freed,
+> so make sure the caller name is the first entry.
+> 
+> Fixes
+> 
+> % perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
+> 
+> valgrind:
+>      1.009943231 ==21527== Invalid read of size 1
+> ==21527==    at 0x483CB74: strcmp (vg_replace_strmem.c:849)
+> ==21527==    by 0x582CF8: collect_all_aliases (stat-display.c:554)
+> ==21527==    by 0x582EB3: collect_data (stat-display.c:577)
+> ==21527==    by 0x583A32: print_counter_aggr (stat-display.c:806)
+> ==21527==    by 0x584FAD: perf_evlist__print_counters (stat-display.c:1200)
+> ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
+> ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
+> ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
+> ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+> ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+> ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+> ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
+> ==21527==  Address 0x12826cd0 is 0 bytes inside a block of size 25 free'd
+> ==21527==    at 0x4839A0C: free (vg_replace_malloc.c:540)
+> ==21527==    by 0x627041: __zfree (zalloc.c:13)
+> ==21527==    by 0x57F66A: generic_metric (stat-shadow.c:814)
+> ==21527==    by 0x580B21: perf_stat__print_shadow_stats (stat-shadow.c:1057)
+> ==21527==    by 0x58418E: print_metric_headers (stat-display.c:943)
+> ==21527==    by 0x5844BC: print_interval (stat-display.c:1004)
+> ==21527==    by 0x584DEB: perf_evlist__print_counters (stat-display.c:1172)
+> ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
+> ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
+> ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
+> ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+> ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+> ==21527==  Block was alloc'd at
+> ==21527==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+> ==21527==    by 0x51677DE: strdup (in /usr/lib64/libc-2.29.so)
+> ==21527==    by 0x506457: parse_events_name (parse-events.c:1754)
+> ==21527==    by 0x5550BB: parse_events_parse (parse-events.y:214)
+> ==21527==    by 0x50694D: parse_events__scanner (parse-events.c:1887)
+> ==21527==    by 0x506AEF: parse_events (parse-events.c:1927)
+> ==21527==    by 0x521D8B: metricgroup__parse_groups (metricgroup.c:527)
+> ==21527==    by 0x45156F: parse_metric_groups (builtin-stat.c:721)
+> ==21527==    by 0x6228A9: get_value (parse-options.c:243)
+> ==21527==    by 0x62363F: parse_short_opt (parse-options.c:348)
+> ==21527==    by 0x62363F: parse_options_step (parse-options.c:536)
+> ==21527==    by 0x62363F: parse_options_subcommand (parse-options.c:651)
+> ==21527==    by 0x453C1D: cmd_stat (builtin-stat.c:1718)
+> ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+> 
+> and also a leak report.
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 70c87fdb2a43..2c41d47f6f83 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -738,6 +738,8 @@ static void generic_metric(struct perf_stat_config *config,
+>  	char *n, *pn;
+>  
+>  	expr__ctx_init(&pctx);
+> +	/* Must be first id entry */
+> +	expr__add_id(&pctx, name, avg);
 
-Even if you were right on this the reality is that a HW is likely to
-follow that standard and we cannot rule out NUMA_NO_NODE being
-specified. As of now we would access beyond the defined array and that
-is clearly a bug.
+hum, shouldn't u instead use strdup(name) instead of name?
 
-Let's assume that this is really a bug for a moment. What are you going
-to do about that? BUG_ON? I do not really see any solution besides to either
-provide something sensible or BUG_ON. If you are worried about a
-conditional then this should be pretty easy to solve by starting the
-array at -1 index and associate it with the online cpu mask.
--- 
-Michal Hocko
-SUSE Labs
+jirka
+
+>  	for (i = 0; metric_events[i]; i++) {
+>  		struct saved_value *v;
+>  		struct stats *stats;
+> @@ -776,8 +778,6 @@ static void generic_metric(struct perf_stat_config *config,
+>  			expr__add_id(&pctx, n, avg_stats(stats)*scale);
+>  	}
+>  
+> -	expr__add_id(&pctx, name, avg);
+> -
+>  	if (!metric_events[i]) {
+>  		const char *p = metric_expr;
+>  
+> -- 
+> 2.21.0
+> 
