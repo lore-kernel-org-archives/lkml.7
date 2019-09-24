@@ -2,263 +2,172 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB31C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91391C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0454421655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Vbus0KPg"
+	by mail.kernel.org (Postfix) with ESMTP id 6011821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbfIXPD1 (ORCPT
+        id S1731347AbfIXPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:03:27 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34554 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbfIXPD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:03:26 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 3so2533922qta.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YsMeuyoMleb9QtVsaOT25mI20JAueG4RElFK0Rnm9yE=;
-        b=Vbus0KPgjf7ASZHaDu1c+Lei8f2AaozrpsjDyCbIhsTQJfxrJASuBdfqZJ6kn7BgGL
-         oCpYOlxoeHh7bT/ZxUzPgPjHkgHQNqZkQUoGNRaEbVG65uD4pSK2++OxeO/wiklRBhBg
-         t1wFpcGsmK16qm3bLtCxRFe4/M+3UlQU+SBr8jVPYKNNfRY394u5gXUO9BdqQBk/e5L1
-         E4jdykk9Xrad94zISEVAdu6DMVq3c79WGSVLdRsITv0MDdGRNDu7qpBdg9o9U4o+cANQ
-         PJJjm1qZIvyEUmyOa+pG9gNG7/1YUP4G4BPTD+Y6pYSXpekMUY+KxcqcI5jThAgTB1+p
-         9qjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YsMeuyoMleb9QtVsaOT25mI20JAueG4RElFK0Rnm9yE=;
-        b=Jao+v5gh+sm2aF/Ga4BNVVRw8/6FPQAfSmyJN4ajskLo2eYvfCf+63of6NUoPDlQzh
-         t0YlV5j4Gzec0VjMHA2bT7JDI9mWkD1r1cizIYwVgm9lxfgXZO4aonmZlE4BoDABFN9a
-         VNd8q0GDkv07MfWNVqilzbz62RKf5fpaKwzNu8lBv7YTDwf/4p8bsKjEXZ3V9iCK40QT
-         xzVk2IaZI+ZKITpQBB7kvXhHljyXRNDGB+hfVlCOlpc289KQKoqXmTcDW+PEQP6EAKGB
-         LfL1LDjDJG6cZlQ+6xBzRC2P1BbJ4mzgp2hx44o0qvHsU01xOyBf+u7662cR7BCS2W4k
-         1DyA==
-X-Gm-Message-State: APjAAAXj6fRfm8p8bEc72eul931g8+Sg3u+CNMmsK4j2mhKIpsTObii6
-        Vn86Q86L8KnCkUUvezDZz4M5jwSMTrg=
-X-Google-Smtp-Source: APXvYqzxIxph97ZiUsFZUjd8SrGbTm+lU1/+SYyTCtgIbt5Pqbs40pvTONiAwb7S+/oHN6ow094PHw==
-X-Received: by 2002:ac8:7587:: with SMTP id s7mr3328024qtq.288.1569337404243;
-        Tue, 24 Sep 2019 08:03:24 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id s17sm946702qkg.79.2019.09.24.08.03.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 08:03:23 -0700 (PDT)
-Message-ID: <1569337401.5576.217.camel@lca.pw>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-From:   Qian Cai <cai@lca.pw>
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+        Tue, 24 Sep 2019 11:11:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46326 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727382AbfIXPLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:11:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 69AFDAFF2;
+        Tue, 24 Sep 2019 15:11:00 +0000 (UTC)
+Subject: Re: [PATCH v2 2/4] mm, page_owner: record page owner for each subpage
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
 Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Date:   Tue, 24 Sep 2019 11:03:21 -0400
-In-Reply-To: <20190924143615.19628-1-david@redhat.com>
-References: <20190924143615.19628-1-david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20190820131828.22684-1-vbabka@suse.cz>
+ <20190820131828.22684-3-vbabka@suse.cz> <20190924113135.2ekb7bmil3rxge6w@box>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ee93f01a-9f34-d237-9a34-33314f4298bc@suse.cz>
+Date:   Tue, 24 Sep 2019 17:10:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20190924113135.2ekb7bmil3rxge6w@box>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-24 at 16:36 +0200, David Hildenbrand wrote:
-> Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
-> rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
-> introduced to fix a potential deadlock between get_online_mems() and
-> get_online_cpus() - the memory and cpu hotplug lock. The root issue was
-> that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
->     The reason is that memory hotplug takes the memory hotplug lock and
->     then calls stop_machine() which calls get_online_cpus().  That's the
->     reverse lock order to get_online_cpus(); get_online_mems(); in
->     mm/slub_common.c
+On 9/24/19 1:31 PM, Kirill A. Shutemov wrote:
+> On Tue, Aug 20, 2019 at 03:18:26PM +0200, Vlastimil Babka wrote:
+>> Currently, page owner info is only recorded for the first page of a high-order
+>> allocation, and copied to tail pages in the event of a split page. With the
+>> plan to keep previous owner info after freeing the page, it would be benefical
+>> to record page owner for each subpage upon allocation. This increases the
+>> overhead for high orders, but that should be acceptable for a debugging option.
+>>
+>> The order stored for each subpage is the order of the whole allocation. This
+>> makes it possible to calculate the "head" pfn and to recognize "tail" pages
+>> (quoted because not all high-order allocations are compound pages with true
+>> head and tail pages). When reading the page_owner debugfs file, keep skipping
+>> the "tail" pages so that stats gathered by existing scripts don't get inflated.
+>>
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> ---
+>>  mm/page_owner.c | 40 ++++++++++++++++++++++++++++------------
+>>  1 file changed, 28 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/mm/page_owner.c b/mm/page_owner.c
+>> index addcbb2ae4e4..813fcb70547b 100644
+>> --- a/mm/page_owner.c
+>> +++ b/mm/page_owner.c
+>> @@ -154,18 +154,23 @@ static noinline depot_stack_handle_t save_stack(gfp_t flags)
+>>  	return handle;
+>>  }
+>>  
+>> -static inline void __set_page_owner_handle(struct page_ext *page_ext,
+>> -	depot_stack_handle_t handle, unsigned int order, gfp_t gfp_mask)
+>> +static inline void __set_page_owner_handle(struct page *page,
+>> +	struct page_ext *page_ext, depot_stack_handle_t handle,
+>> +	unsigned int order, gfp_t gfp_mask)
+>>  {
+>>  	struct page_owner *page_owner;
+>> +	int i;
+>>  
+>> -	page_owner = get_page_owner(page_ext);
+>> -	page_owner->handle = handle;
+>> -	page_owner->order = order;
+>> -	page_owner->gfp_mask = gfp_mask;
+>> -	page_owner->last_migrate_reason = -1;
+>> +	for (i = 0; i < (1 << order); i++) {
+>> +		page_owner = get_page_owner(page_ext);
+>> +		page_owner->handle = handle;
+>> +		page_owner->order = order;
+>> +		page_owner->gfp_mask = gfp_mask;
+>> +		page_owner->last_migrate_reason = -1;
+>> +		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
+>>  
+>> -	__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
+>> +		page_ext = lookup_page_ext(page + i);
 > 
-> So memory hotplug never really required any cpu lock itself, only
-> stop_machine() and lru_add_drain_all() required it. Back then,
-> stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
-> as the cpu hotplug lock was now obtained in the caller.
-> 
-> Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
-> all_zonelists"), the stop_machine_cpuslocked() call is gone.
-> build_all_zonelists() does no longer require the cpu lock and does no
-> longer make use of stop_machine().
-> 
-> Since commit 9852a7212324 ("mm: drop hotplug lock from
-> lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
-> locking because we do rely on per-cpu kworkers being shut down before our
-> page_alloc_cpu_dead callback is executed on the offlined cpu.". The
-> lru_add_drain_all_cpuslocked() variant was removed.
-> 
-> So there is nothing left that requires the cpu hotplug lock. The memory
-> hotplug lock and the device hotplug lock are sufficient.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> RFC -> v1:
-> - Reword and add more details why the cpu hotplug lock was needed here
->   in the first place, and why we no longer require it.
-> 
-> ---
->  mm/memory_hotplug.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c3e9aed6023f..5fa30f3010e1 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -88,14 +88,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
->  
->  void mem_hotplug_begin(void)
->  {
-> -	cpus_read_lock();
->  	percpu_down_write(&mem_hotplug_lock);
->  }
->  
->  void mem_hotplug_done(void)
->  {
->  	percpu_up_write(&mem_hotplug_lock);
-> -	cpus_read_unlock();
->  }
->  
->  u64 max_mem_size = U64_MAX;
+> Isn't it off-by-one? You are calculating page_ext for the next page,
+> right?
 
-While at it, it might be a good time to rethink the whole locking over there, as
-it right now read files under /sys/kernel/slab/ could trigger a possible
-deadlock anyway.
+You're right, thanks!
 
-[  442.258806][ T5224] WARNING: possible circular locking dependency detected
-[  442.265678][ T5224] 5.3.0-rc7-mm1+ #6 Tainted: G             L   
-[  442.271766][ T5224] ------------------------------------------------------
-[  442.278635][ T5224] cat/5224 is trying to acquire lock:
-[  442.283857][ T5224] ffff900012ac3120 (mem_hotplug_lock.rw_sem){++++}, at:
-show_slab_objects+0x94/0x3a8
-[  442.293189][ T5224] 
-[  442.293189][ T5224] but task is already holding lock:
-[  442.300404][ T5224] b8ff009693eee398 (kn->count#45){++++}, at:
-kernfs_seq_start+0x44/0xf0
-[  442.308587][ T5224] 
-[  442.308587][ T5224] which lock already depends on the new lock.
-[  442.308587][ T5224] 
-[  442.318841][ T5224] 
-[  442.318841][ T5224] the existing dependency chain (in reverse order) is:
-[  442.327705][ T5224] 
-[  442.327705][ T5224] -> #2 (kn->count#45){++++}:
-[  442.334413][ T5224]        lock_acquire+0x31c/0x360
-[  442.339286][ T5224]        __kernfs_remove+0x290/0x490
-[  442.344428][ T5224]        kernfs_remove+0x30/0x44
-[  442.349224][ T5224]        sysfs_remove_dir+0x70/0x88
-[  442.354276][ T5224]        kobject_del+0x50/0xb0
-[  442.358890][ T5224]        sysfs_slab_unlink+0x2c/0x38
-[  442.364025][ T5224]        shutdown_cache+0xa0/0xf0
-[  442.368898][ T5224]        kmemcg_cache_shutdown_fn+0x1c/0x34
-[  442.374640][ T5224]        kmemcg_workfn+0x44/0x64
-[  442.379428][ T5224]        process_one_work+0x4f4/0x950
-[  442.384649][ T5224]        worker_thread+0x390/0x4bc
-[  442.389610][ T5224]        kthread+0x1cc/0x1e8
-[  442.394052][ T5224]        ret_from_fork+0x10/0x18
-[  442.398835][ T5224] 
-[  442.398835][ T5224] -> #1 (slab_mutex){+.+.}:
-[  442.405365][ T5224]        lock_acquire+0x31c/0x360
-[  442.410240][ T5224]        __mutex_lock_common+0x16c/0xf78
-[  442.415722][ T5224]        mutex_lock_nested+0x40/0x50
-[  442.420855][ T5224]        memcg_create_kmem_cache+0x38/0x16c
-[  442.426598][ T5224]        memcg_kmem_cache_create_func+0x3c/0x70
-[  442.432687][ T5224]        process_one_work+0x4f4/0x950
-[  442.437908][ T5224]        worker_thread+0x390/0x4bc
-[  442.442868][ T5224]        kthread+0x1cc/0x1e8
-[  442.447307][ T5224]        ret_from_fork+0x10/0x18
-[  442.452090][ T5224] 
-[  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
-[  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
-[  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
-[  442.469930][ T5224]        lock_acquire+0x31c/0x360
-[  442.474803][ T5224]        get_online_mems+0x54/0x150
-[  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
-[  442.485072][ T5224]        total_objects_show+0x28/0x34
-[  442.490292][ T5224]        slab_attr_show+0x38/0x54
-[  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
-[  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
-[  442.505433][ T5224]        seq_read+0x30c/0x8a8
-[  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
-[  442.515007][ T5224]        __vfs_read+0x88/0x20c
-[  442.519620][ T5224]        vfs_read+0xd8/0x10c
-[  442.524060][ T5224]        ksys_read+0xb0/0x120
-[  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
-[  442.533634][ T5224]        el0_svc_handler+0x170/0x240
-[  442.538768][ T5224]        el0_svc+0x8/0xc
-[  442.542858][ T5224] 
-[  442.542858][ T5224] other info that might help us debug this:
-[  442.542858][ T5224] 
-[  442.552936][ T5224] Chain exists of:
-[  442.552936][ T5224]   mem_hotplug_lock.rw_sem --> slab_mutex --> kn->count#45
-[  442.552936][ T5224] 
-[  442.565803][ T5224]  Possible unsafe locking scenario:
-[  442.565803][ T5224] 
-[  442.573105][ T5224]        CPU0                    CPU1
-[  442.578322][ T5224]        ----                    ----
-[  442.583539][ T5224]   lock(kn->count#45);
-[  442.587545][ T5224]                                lock(slab_mutex);
-[  442.593898][ T5224]                                lock(kn->count#45);
-[  442.600433][ T5224]   lock(mem_hotplug_lock.rw_sem);
-[  442.605393][ T5224] 
-[  442.605393][ T5224]  *** DEADLOCK ***
-[  442.605393][ T5224] 
-[  442.613390][ T5224] 3 locks held by cat/5224:
-[  442.617740][ T5224]  #0: 9eff00095b14b2a0 (&p->lock){+.+.}, at:
-seq_read+0x4c/0x8a8
-[  442.625399][ T5224]  #1: 0eff008997041480 (&of->mutex){+.+.}, at:
-kernfs_seq_start+0x34/0xf0
-[  442.633842][ T5224]  #2: b8ff009693eee398 (kn->count#45){++++}, at:
-kernfs_seq_start+0x44/0xf0
-[  442.642477][ T5224] 
-[  442.642477][ T5224] stack backtrace:
-[  442.648221][ T5224] CPU: 117 PID: 5224 Comm: cat Tainted:
-G             L    5.3.0-rc7-mm1+ #6
-[  442.656826][ T5224] Hardware name: HPE Apollo
-70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-[  442.667253][ T5224] Call trace:
-[  442.670391][ T5224]  dump_backtrace+0x0/0x248
-[  442.674743][ T5224]  show_stack+0x20/0x2c
-[  442.678750][ T5224]  dump_stack+0xd0/0x140
-[  442.682841][ T5224]  print_circular_bug+0x368/0x380
-[  442.687715][ T5224]  check_noncircular+0x248/0x250
-[  442.692501][ T5224]  validate_chain+0xd10/0x2bcc
-[  442.697115][ T5224]  __lock_acquire+0x7f4/0xb8c
-[  442.701641][ T5224]  lock_acquire+0x31c/0x360
-[  442.705993][ T5224]  get_online_mems+0x54/0x150
-[  442.710519][ T5224]  show_slab_objects+0x94/0x3a8
-[  442.715219][ T5224]  total_objects_show+0x28/0x34
-[  442.719918][ T5224]  slab_attr_show+0x38/0x54
-[  442.724271][ T5224]  sysfs_kf_seq_show+0x198/0x2d4
-[  442.729056][ T5224]  kernfs_seq_show+0xa4/0xcc
-[  442.733494][ T5224]  seq_read+0x30c/0x8a8
-[  442.737498][ T5224]  kernfs_fop_read+0xa8/0x314
-[  442.742025][ T5224]  __vfs_read+0x88/0x20c
-[  442.746118][ T5224]  vfs_read+0xd8/0x10c
-[  442.750036][ T5224]  ksys_read+0xb0/0x120
-[  442.754042][ T5224]  __arm64_sys_read+0x54/0x88
-[  442.758569][ T5224]  el0_svc_handler+0x170/0x240
-[  442.763180][ T5224]  el0_svc+0x8/0xc
+> And cant we just do page_ext++ here instead?
+
+Unfortunately no, as that implies sizeof(page_ext), which only declares
+unsigned long flags; and the rest is runtime-determined.
+Perhaps I could add a wrapper named e.g. page_ext_next() that would use
+get_entry_size() internally and hide the necessary casts to void * and back?
