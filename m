@@ -2,236 +2,319 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7E3C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 23:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2353DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 23:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1C1217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 23:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569366746;
-	bh=+j5AnNwQqbgf/RjmaOj47PhlrItx9j7FWIaZz17xSJk=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=S8eU9aNHFDZlcOANdVaoijYd5e4OZDz5kdOzYSs3x7glIoB8HgrLluhwxoj9W+Dqv
-	 pCU6uJrDuiVxosDggQY7RgDOjWuC9VE0S5Q4vfkBneNsb0vGa1AFRtock8+qGYXcVW
-	 i5haCMnC4N12hw2eGhlRQk9+IVi4E9oazhrO/+j0=
+	by mail.kernel.org (Postfix) with ESMTP id D2C712146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 23:22:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TR1Mb6os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411085AbfIXXMZ (ORCPT
+        id S2411191AbfIXXWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 19:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389437AbfIXXMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 19:12:25 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9012C207FD;
-        Tue, 24 Sep 2019 23:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569366743;
-        bh=+j5AnNwQqbgf/RjmaOj47PhlrItx9j7FWIaZz17xSJk=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=gH92DrEndcCCHU6/4MPa6jo3NtGaa0u6iNz3U6tb/8zo5SH7Nob3dwlKOkhSyzZzi
-         xl0loW0SfMexj9nNqeKL+9BK7JyvK9IaxjatCtf5c1xUm492fCGe6H2XwmlhxrCJg3
-         Y1ea2aiR/GKHMN9nu5jHURN4wlEJGNE6G/RBOQho=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 24 Sep 2019 19:22:41 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44305 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389437AbfIXXWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 19:22:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u40so4297282qth.11;
+        Tue, 24 Sep 2019 16:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=92QCBfq+PYEEOGn/i5MKdYP4+4zuR2w7mTVjlEHeqc8=;
+        b=TR1Mb6os52IRCBhD1TB77gsvFjoco0ePFSXHzPcLJ5T/FqqT0YFN2MozusNg2H9oKP
+         XwZx7pa31xFMkRuTuwNW6PYdwV+o8KP5uWpPMrb8lxjORPnKAdS3IjmJuSOrqXUzo/na
+         QbZH45E2mszUeYeIpURxQpsdhM4ZlvJJ/DClJOAxXYlGAc6tMUqDzRgfuXssDuWbbNJv
+         63cb3EBWvIn8FdnCPC7mARUTcqp/1gXqCmONc8kXNINxVXHTaYNhE+U1U7rL6o2KZtuc
+         rpTr91ng9hFLsnG8Bbcwq7NhrFDBtIm1KOpFii9ZbfeqQZxRv9jDqPrgGdBG+wl/KD3a
+         FGqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=92QCBfq+PYEEOGn/i5MKdYP4+4zuR2w7mTVjlEHeqc8=;
+        b=EgxONOiMNngRNGjQNZjEdpK0HMmWGbH710sgnHRe6SufCDJO0cjK72yQmNgn2PC7X2
+         2yg/LbdcDVWDB/l53kE4wHfzNDHKQibEFAwDSfckw+Pan2chb4DRHxbzcNimguujvy8v
+         awDnMxOM6o+awKF9d+uJQgdyOPxsu8q1SF7VLHw+ip06A7EEWFL4HmcUPoBfmt+jMQc9
+         rZDdj/VUCu0zOxxpleZh7DgRb13TkkRVqyAzUcLnBrj5eqx/v9FsFklriVZmGDVa6YwT
+         am8vLf0lpDT0NMZ9zMYCUJW+LXAo+HfePjmEAarjBjEHN+wOuAuIe6uEjbsU9O25TiND
+         QxFw==
+X-Gm-Message-State: APjAAAUdtnpOV0J95cYKvFF6gmnMquJoWk6BfSQ6St47zip61TdMY2mT
+        T4YKjNNNmWtq1mGZ5Xi+GsBBAGhF+z7GiQ==
+X-Google-Smtp-Source: APXvYqxTsbDE0I07Fj8M03z1XcS5wm6SapMVLtd+lVdeGRqZnqAKt/eYH8B8PZvTP1GLBXfdbT9cbw==
+X-Received: by 2002:ac8:425a:: with SMTP id r26mr5411870qtm.332.1569367359071;
+        Tue, 24 Sep 2019 16:22:39 -0700 (PDT)
+Received: from taquaral.ic.unicamp.br (wifi-177-220-84-117.wifi.ic.unicamp.br. [177.220.84.117])
+        by smtp.gmail.com with ESMTPSA id j25sm1539492qkk.93.2019.09.24.16.22.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 16:22:38 -0700 (PDT)
+From:   Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+To:     lkcamp@lists.libreplanetbr.org, mchehab@kernel.org,
+        helen.koike@collabora.com, skhan@linuxfoundation.org,
+        hverkuil-cisco@xs4all.nl, andrealmeid@collabora.com,
+        laispc19@gmail.com, arthurmoraeslago@gmail.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] media: vimc: Implement debayer control for mean window size
+Date:   Tue, 24 Sep 2019 20:21:27 -0300
+Message-Id: <20190924232127.30570-1-arthurmoraeslago@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Tue, 24 Sep 2019 16:12:22 -0700
-Message-Id: <20190924231223.9012C207FD@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-09-23 01:01:11)
-> Hi Stephen,
->=20
-> Thanks for your comments.
->=20
-> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-09-18 02:50:18)
-> >> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc71=
-80.c
-> >> new file mode 100644
-> >> index 000000000000..d47865d5408f
-> >> --- /dev/null
-> >> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> >> @@ -0,0 +1,2515 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >> + */
-> >> +
-> >> +#include <linux/err.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/regmap.h>
-> >=20
-> > include clk-provider.h
-> >=20
->=20
-> will add this header.
-> Currently the <drivers/clk/qcom/clk-regmap.h> already includes it.
+Add mean window size parameter for debayer filter as a control in
+vimc-debayer.
 
-Yes but it should be included in any clk-provider drivers too.
+vimc-debayer was patched to allow changing mean windows parameter
+of the filter without needing to reload the driver. The parameter
+can now be set using a v4l2-ctl control(mean_window_size).
 
-> >> +
-> >> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
-> >> +static struct clk_branch gcc_disp_ahb_clk =3D {
-> >> +       .halt_reg =3D 0xb00c,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0xb00c,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0xb00c,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_disp_ahb_clk",
-> >> +                       .flags =3D CLK_IS_CRITICAL,
-> >=20
-> > Does this assume the display is left enabled out of the bootloader? Why
-> > is this critical to system operation? Maybe it is really
-> > CLK_IGNORE_UNUSED?
-> >=20
->=20
-> This clock is not kept enabled by bootloader. But leaving this ON for=20
-> clients on config noc.
+Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
+Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
+Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+---
+Changes in V3:
+ - Renamed debayer control
+ - Fixed typo in documentation
+ - Freed control handler in vimc_deb_release
 
-Please see below comment for the other critical clk with no parent.
+This commit is based on Shuah Khan's patch series 171283
+("Collapse vimc single monolithic driver").
 
->=20
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-[...]
-> >> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
-> >> +       .halt_reg =3D 0x77094,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0x77094,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x77094,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
-> >> +                       .parent_data =3D &(const struct clk_parent_dat=
-a){
-> >> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_src.c=
-lkr.hw,
-> >> +                       },
-> >> +                       .num_parents =3D 1,
-> >> +                       .flags =3D CLK_SET_RATE_PARENT,
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
-> >> +       .halt_reg =3D 0x7701c,
-> >> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >=20
-> > Again, nobody has fixed the UFS driver to not need to do this halt skip
-> > check for these clks? It's been over a year.
-> >=20
->=20
-> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot=20
-> configuration and thus during the late initcall of clk_disable there=20
-> could be warnings of "clock stuck ON" in the dmesg. That is the reason=20
-> also to use the BRANCH_HALT_SKIP flag.
+Thanks.
+---
+ Documentation/media/v4l-drivers/vimc.rst   | 10 +--
+ drivers/media/platform/vimc/vimc-common.h  |  1 +
+ drivers/media/platform/vimc/vimc-debayer.c | 89 +++++++++++++++++++---
+ 3 files changed, 79 insertions(+), 21 deletions(-)
 
-Oh that's bad. Why do the clks stay on when we try to turn them off?
-
->=20
-> I would also check internally for the UFS driver fix you are referring he=
-re.
-
-Sure. I keep asking but nothing is done :(
-
->=20
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x7701c,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-[...]
-> >> +
-> >> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
-> >> +       .halt_reg =3D 0xf058,
-> >> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >=20
-> > Why does this need halt_skip?
->=20
-> This is required as the source is external PHY, so we want to not check=20
-> for HALT.
-
-This doesn't really answer my question. If the source is an external phy
-then it should be listed as a clock in the DT binding and the parent
-should be specified here. Unless something doesn't work because of that?
-
->=20
-> >=20
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0xf058,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
-> >> +       .halt_reg =3D 0x6a004,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0x6a004,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x6a004,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
-> >=20
-> > There's no parent though... So I guess this means it keeps it enabled
-> > implicitly in hardware?
-> >=20
->=20
-> These are not left enabled, but want to leave them enabled for clients=20
-> on config NOC.
-
-Sure. It just doesn't make sense to create clk structures and expose
-them in the kernel when we just want to turn the bits on and leave them
-on forever. Why not just do some register writes in probe for this
-driver? Doesn't that work just as well and use less memory?
+diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
+index a582af0509ee..28646c76dad5 100644
+--- a/Documentation/media/v4l-drivers/vimc.rst
++++ b/Documentation/media/v4l-drivers/vimc.rst
+@@ -80,9 +80,7 @@ vimc-capture:
+         Module options
+ ---------------
+ 
+-Vimc has a few module parameters to configure the driver.
+-
+-        param=value
++Vimc has a module parameter to configure the driver.
+ 
+ * ``sca_mult=<unsigned int>``
+ 
+@@ -91,12 +89,6 @@ Vimc has a few module parameters to configure the driver.
+         original one. Currently, only supports scaling up (the default value
+         is 3).
+ 
+-* ``deb_mean_win_size=<unsigned int>``
+-
+-        Window size to calculate the mean. Note: the window size needs to be an
+-        odd number, as the main pixel stays in the center of the window,
+-        otherwise the next odd number is considered (the default value is 3).
+-
+ Source code documentation
+ -------------------------
+ 
+diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+index 236412ad7548..3a5102ddf794 100644
+--- a/drivers/media/platform/vimc/vimc-common.h
++++ b/drivers/media/platform/vimc/vimc-common.h
+@@ -19,6 +19,7 @@
+ #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
+ #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+ #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
++#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+ 
+ #define VIMC_FRAME_MAX_WIDTH 4096
+ #define VIMC_FRAME_MAX_HEIGHT 2160
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+index 37f3767db469..f1fa7aa023a3 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -11,17 +11,12 @@
+ #include <linux/platform_device.h>
+ #include <linux/vmalloc.h>
+ #include <linux/v4l2-mediabus.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-event.h>
+ #include <media/v4l2-subdev.h>
+ 
+ #include "vimc-common.h"
+ 
+-static unsigned int deb_mean_win_size = 3;
+-module_param(deb_mean_win_size, uint, 0000);
+-MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
+-	"NOTE: the window size needs to be an odd number, as the main pixel "
+-	"stays in the center of the window, otherwise the next odd number "
+-	"is considered");
+-
+ enum vimc_deb_rgb_colors {
+ 	VIMC_DEB_RED = 0,
+ 	VIMC_DEB_GREEN = 1,
+@@ -46,6 +41,8 @@ struct vimc_deb_device {
+ 	u8 *src_frame;
+ 	const struct vimc_deb_pix_map *sink_pix_map;
+ 	unsigned int sink_bpp;
++	unsigned int mean_win_size;
++	struct v4l2_ctrl_handler hdl;
+ };
+ 
+ static const struct v4l2_mbus_framefmt sink_fmt_default = {
+@@ -346,11 +343,18 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 	return 0;
+ }
+ 
++static const struct v4l2_subdev_core_ops vimc_deb_core_ops = {
++	.log_status = v4l2_ctrl_subdev_log_status,
++	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
++};
++
+ static const struct v4l2_subdev_video_ops vimc_deb_video_ops = {
+ 	.s_stream = vimc_deb_s_stream,
+ };
+ 
+ static const struct v4l2_subdev_ops vimc_deb_ops = {
++	.core = &vimc_deb_core_ops,
+ 	.pad = &vimc_deb_pad_ops,
+ 	.video = &vimc_deb_video_ops,
+ };
+@@ -384,7 +388,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
+ 	 * the top left corner of the mean window (considering the current
+ 	 * pixel as the center)
+ 	 */
+-	seek = deb_mean_win_size / 2;
++	seek = vdeb->mean_win_size / 2;
+ 
+ 	/* Sum the values of the colors in the mean window */
+ 
+@@ -471,14 +475,41 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
+ 		}
+ 
+ 	return vdeb->src_frame;
++}
++
++static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
++					    unsigned int mean_win_size)
++{
++	if (vdeb->mean_win_size == mean_win_size)
++		return;
++	vdeb->mean_win_size = mean_win_size;
++}
+ 
++static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct vimc_deb_device *vdeb =
++		container_of(ctrl->handler, struct vimc_deb_device, hdl);
++
++	switch (ctrl->id) {
++	case VIMC_CID_MEAN_WIN_SIZE:
++		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
+ }
+ 
++static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
++	.s_ctrl = vimc_deb_s_ctrl,
++};
++
+ static void vimc_deb_release(struct v4l2_subdev *sd)
+ {
+ 	struct vimc_deb_device *vdeb =
+ 				container_of(sd, struct vimc_deb_device, sd);
+ 
++	v4l2_ctrl_handler_free(&vdeb->hdl);
+ 	vimc_pads_cleanup(vdeb->ved.pads);
+ 	kfree(vdeb);
+ }
+@@ -495,6 +526,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
+ 	vimc_ent_sd_unregister(ved, &vdeb->sd);
+ }
+ 
++static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
++	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
++	.id = VIMC_CID_VIMC_CLASS,
++	.name = "VIMC Controls",
++	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
++};
++
++static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
++	.ops = &vimc_deb_ctrl_ops,
++	.id = VIMC_CID_MEAN_WIN_SIZE,
++	.name = "Debayer Mean Window Size",
++	.type = V4L2_CTRL_TYPE_INTEGER,
++	.min = 1,
++	.max = 25,
++	.step = 2,
++	.def = 3,
++};
++
+ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+ 				     const char *vcfg_name)
+ {
+@@ -507,6 +556,16 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+ 	if (!vdeb)
+ 		return NULL;
+ 
++	/* Create controls: */
++	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
++	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
++	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
++	vdeb->sd.ctrl_handler = &vdeb->hdl;
++	if (vdeb->hdl.error) {
++		ret = vdeb->hdl.error;
++		goto err_free_vdeb;
++	}
++
+ 	/* Initialize ved and sd */
+ 	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
+ 				   vcfg_name,
+@@ -514,13 +573,12 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+ 				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
+ 				   MEDIA_PAD_FL_SOURCE},
+ 				   &vimc_deb_int_ops, &vimc_deb_ops);
+-	if (ret) {
+-		kfree(vdeb);
+-		return NULL;
+-	}
++	if (ret)
++		goto err_free_hdl;
+ 
+ 	vdeb->ved.process_frame = vimc_deb_process_frame;
+ 	vdeb->dev = &vimc->pdev.dev;
++	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
+ 
+ 	/* Initialize the frame format */
+ 	vdeb->sink_fmt = sink_fmt_default;
+@@ -534,4 +592,11 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+ 	vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
+ 
+ 	return &vdeb->ved;
++
++err_free_hdl:
++	v4l2_ctrl_handler_free(&vdeb->hdl);
++err_free_vdeb:
++	kfree(vdeb);
++
++	return NULL;
+ }
+-- 
+2.23.0
 
