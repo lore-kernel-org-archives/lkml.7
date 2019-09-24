@@ -4,155 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A46C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEC5C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECE0214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A015214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TH0vkSga"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bC4zjM/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410606AbfIXWYD (ORCPT
+        id S2442027AbfIXWYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 18:24:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35260 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387532AbfIXWYC (ORCPT
+        Tue, 24 Sep 2019 18:24:08 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55694 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410649AbfIXWYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 18:24:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OLxmTP104494;
-        Tue, 24 Sep 2019 22:23:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=WCg8CK8lWdtRYaIcgzqcnsusbOJTcVFGgkO6t2EG+yM=;
- b=TH0vkSgaVbdxJ4htA7j/eU4CoH5fDJ6p+VtmqQ4waz0NODS3hQDMUA4w1mRJSmm1uzMw
- /Ugg2Z6l5c87eWnHiNiA0ZLk+VUyvRh8IzdHKJ5Be+wk/sYp3KZ9INQKYknE7lpoymDj
- jEFg8CzdInss05LIgC81XalDPsg3dD432VNBULeKRHnYqiQi0/t6CfFSgm9bwT3q8iZl
- PUYFAbDoDmo/6RthhD2XWmJzFhEEzwPcTDqqc+wKOYPflaS2wNvmX8kkgy0u+EOovCdC
- lIvZJB7nHlngQJ7Q9/MRCYWpPwM/r5oLsN1+FRR3gj9tK/VsU5AteBT8SKlSwRhM2cfm Ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2v5cgr111h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 22:23:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8OLxWpG053203;
-        Tue, 24 Sep 2019 22:21:13 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2v6yvptu7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 22:21:12 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8OML5SN017569;
-        Tue, 24 Sep 2019 22:21:06 GMT
-Received: from localhost (/10.159.232.132)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Sep 2019 15:21:05 -0700
-Date:   Tue, 24 Sep 2019 15:21:03 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, dsterba@suse.cz,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-Message-ID: <20190924222103.GB2229799@magnolia>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
- <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
- <20190923171710.GN2751@twin.jikos.cz>
- <20190923175146.GT2229799@magnolia>
- <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
- <20190924215353.GG16973@dread.disaster.area>
+        Tue, 24 Sep 2019 18:24:07 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a6so2110786wma.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xfRFVkwkZkzLU7wLRDGsHMd8P8PHN/2mWFJxcO4s7yQ=;
+        b=bC4zjM/qQley88yoN1EN4Khq52YC1EVZnPVnorS8QVonyQije6SNxXsss+W1BCmGm9
+         QW8mDw4yWhAVxFZkbCH+fGd1m2Sv8k5TBQC277KT/58VgiPO3scryeuWGQ7YPbkQ4lFk
+         1PlP+6vLAbi2aDsCK51nH+idhJcdxrYGYdjIw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xfRFVkwkZkzLU7wLRDGsHMd8P8PHN/2mWFJxcO4s7yQ=;
+        b=A5MO6wrUZZJ1wjp1jnua3ylGlGNEYevpd2pEpeNC2Ctynr34O/VfN+lXDwnTJOZG4w
+         DXR2yN2+cCHFAtVVuFkuCUbZpE/aNnLbyxhodTZL2ajP6gXGvSQacuetPUQ872/Agn3i
+         /v9kJtQPF/WzjBpoGxAjH5+43rs7cqhmD3up9YKhGtxj+ogCRyov6sd70tKf6lksRG9+
+         1rwjuXDQSANJyqabcj//lMvfm0M+LxyW7c8LEXj5IoJkdr79VAaFKbN0gqcatjVxTWAa
+         SN8ZvcuTdFNSh8i5ZP11P8OvyzJZFO2AZff+I9cQhDWouTh+8oAMeR/FigflvsiW3EgV
+         2InQ==
+X-Gm-Message-State: APjAAAVHsVF6cu7X/SuczCADJAOSrBw0jRuegNGOY18cStDTq0bLymn0
+        TwgnEtCkX/hvhSESbyPicsuwuQ==
+X-Google-Smtp-Source: APXvYqygBR89fKBdCAQmPjpAqiV1ouU4IH0prxfGmTO/KT1bW4/bbP1SDFUrQEK1nfCjt9ckb/vW8g==
+X-Received: by 2002:a1c:7509:: with SMTP id o9mr2944752wmc.21.1569363843889;
+        Tue, 24 Sep 2019 15:24:03 -0700 (PDT)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 94sm1749646wrk.92.2019.09.24.15.23.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 15:24:02 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190830125626.GC2870@ninjato>
+ <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+ <20190831094940.GA1138@kunai>
+ <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
+ <20190904213745.GG23608@ninjato>
+ <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
+ <20190924185757.GA1538@kunai>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <e00520d8-5367-83a5-9c17-d2d8b0c983c3@broadcom.com>
+Date:   Tue, 24 Sep 2019 15:23:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924215353.GG16973@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909240178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909240178
+In-Reply-To: <20190924185757.GA1538@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 07:53:53AM +1000, Dave Chinner wrote:
-> On Tue, Sep 24, 2019 at 11:19:29PM +0200, Vlastimil Babka wrote:
-> > On 9/23/19 7:51 PM, Darrick J. Wong wrote:
-> > > On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
-> > >> On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
-> > >>> So if anyone thinks this is a good idea, please express it (preferably
-> > >>> in a formal way such as Acked-by), otherwise it seems the patch will be
-> > >>> dropped (due to a private NACK, apparently).
-> > > 
-> > > Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
-> > > privilege of gutting a patch via private NAK without any of that open
-> > > development discussion incovenience. <grumble>
-> > > 
-> > > As far as XFS is concerned I merged Dave's series that checks the
-> > > alignment of io memory allocations and falls back to vmalloc if the
-> > > alignment won't work, because I got tired of scrolling past the endless
-> > > discussion and bug reports and inaction spanning months.
-> > 
-> > I think it's a big fail of kmalloc API that you have to do that, and
-> > especially with vmalloc, which has the overhead of setting up page
-> > tables, and it's a waste for allocation requests smaller than page size.
-> > I wish we could have nice things.
-> 
-> I don't think the problem here is the code. The problem here is that
-> we have a dysfunctional development community and there are no
-> processes we can follow to ensure architectural problems in core
-> subsystems are addressed in a timely manner...
-> 
-> And this criticism isn't just of the mm/ here - this alignment
-> problem is exacerbated by exactly the same issue on the block layer
-> side. i.e. the block layer and drivers have -zero- bounds checking
-> to catch these sorts of things and the block layer maintainer will
-> not accept patches for runtime checks that would catch these issues
-> and make them instantly visible to us.
-> 
-> These are not code problems: we can fix the problems with code (and
-> I have done so to demonstrate "this is how we do what you say is
-> impossible").  The problem here is people in positions of
-> control/power are repeatedly demonstrating an inability to
-> compromise to reach a solution that works for everyone.
-> 
-> It's far better for us just to work around bullshit like this in XFS
-> now, then when the core subsystems get they act together years down
-> the track we can remove the workaround from XFS. Users don't care
-> how we fix the problem, they just want it fixed. If that means we
-> have to route around dysfunctional developer groups, then we'll just
-> have to do that....
 
-Seconded.
 
---D
-
-> Cheers,
+On 9/24/19 11:57 AM, Wolfram Sang wrote:
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+>> In my opinion, it's probably better to continue to support master_xfer in
+>> our driver (with obvious limitations), in order to allow i2ctransfer (or any
+>> apps that use I2C RDWR) to continue to work.
+>>
+>> What do you think?
+> 
+> Yes, don't break it for users. We should have paid more attention to it
+> in the beginning. But, while not ideal, it is not such a big deal to
+> keep it like this.
+> 
+> Thanks for your investigations!
+> 
+
+Thanks, Wolfram.
+
+Let's please continue with the review process on the current patch then?
+
+Note the patch was already internally reviewed by me.
+
+Please help to review it and let us know if there's any change that 
+needs to be made?
+
+Regards,
+
+Ray
