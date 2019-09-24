@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C7C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CDEC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E35B2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D6620882
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408677AbfIXC3v (ORCPT
+        id S2408611AbfIXC3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 22:29:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57874 "EHLO inva021.nxp.com"
+        Mon, 23 Sep 2019 22:29:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38828 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408639AbfIXC3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 22:29:48 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24CBA200186;
-        Tue, 24 Sep 2019 04:29:46 +0200 (CEST)
+        id S2406127AbfIXC3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 22:29:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2EADC1A0A01;
+        Tue, 24 Sep 2019 04:29:36 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 54545200386;
-        Tue, 24 Sep 2019 04:29:38 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6B1521A09F9;
+        Tue, 24 Sep 2019 04:29:28 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D001B402B4;
-        Tue, 24 Sep 2019 10:29:25 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D3964030F;
+        Tue, 24 Sep 2019 10:29:17 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v4 08/11] PCI: layerscape: Modify the MSIX to the doorbell mode
-Date:   Tue, 24 Sep 2019 10:18:46 +0800
-Message-Id: <20190924021849.3185-9-xiaowei.bao@nxp.com>
+Subject: [PATCH v4 03/11] PCI: designware-ep: Move the function of getting MSI capability forward
+Date:   Tue, 24 Sep 2019 10:18:41 +0800
+Message-Id: <20190924021849.3185-4-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190924021849.3185-1-xiaowei.bao@nxp.com>
 References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
@@ -49,40 +49,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dw_pcie_ep_raise_msix_irq was never called in the exisitng driver
-before, because the ls1046a platform don't support the MSIX feature
-and msix_capable was always set to false.
-Now that add the ls1088a platform with MSIX support, but the existing
-dw_pcie_ep_raise_msix_irq doesn't work, so use the doorbell method to
-support the MSIX feature.
+Move the function of getting MSI capability to the front of init
+function, because the init function of the EP platform driver will use
+the return value by the function of getting MSI capability.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
-v2: 
- - No change
+v2:
+ - No change.
 v3:
- - Modify the commit message make it clearly.
-v4: 
- - No change
+ - No change.
+v4:
+ - No change.
 
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 1e07287..5f0cb99 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -79,7 +79,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	case PCI_EPC_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	case PCI_EPC_IRQ_MSIX:
--		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-+							  interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
- 		return -EINVAL;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 55b23ce..c3bc7bd 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -624,6 +624,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	if (ret < 0)
+ 		epc->max_functions = 1;
+ 
++	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
++
++	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
++
+ 	if (ep->ops->ep_init)
+ 		ep->ops->ep_init(ep);
+ 
+@@ -640,9 +644,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+ 		return -ENOMEM;
+ 	}
+-	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+-
+-	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+ 
+ 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+ 	if (offset) {
 -- 
 2.9.5
 
