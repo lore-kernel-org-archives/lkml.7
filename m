@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB7DC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C64C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170DE21D7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687B0222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344031;
-	bh=yXB39dAJ0OPDeSOHA2m2wMUfQ/NcOLpxgJl/vscunP4=;
+	s=default; t=1569344032;
+	bh=P5yrhEzdFdo0qVfMiA38Ip22G1j0H8ar9SlOTwIHjD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afBpdzy0MChbdiGlvgjQMfnRgfMqDDGCB4IuoIAnpvD5/g73KDiyYGU4/o1h5ZHaY
-	 uRtI4fOljAyRO+akbYpqxtrfSNGJWq6OmwmlubOihnKtGGA6R2zHsKRmhBJ2oY51k2
-	 LVNVdDbIDYNH8Sl/1YG/5EOwLNmaEFxxFFGtp5Lw=
+	b=HVOgYG7ZHlhu038EXPSA8+602wfz7ERwHNoRWs/pXEXhPvYhd/zZJyNmMxG/6qe+Y
+	 44+RskhGe4dncCRuSI+ZHJzUxZNr9DnavLe6C9gTGV4NvgKH5hYJmTInsm8//h9LTH
+	 eivtpVxVuC3emVvfy2HYTyr8iIKLMVfd+tozGvsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441692AbfIXQwf (ORCPT
+        id S2410918AbfIXQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441581AbfIXQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:52:04 -0400
+        id S2441689AbfIXQwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:52:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D197C217D9;
-        Tue, 24 Sep 2019 16:52:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A0921D7A;
+        Tue, 24 Sep 2019 16:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343923;
-        bh=yXB39dAJ0OPDeSOHA2m2wMUfQ/NcOLpxgJl/vscunP4=;
+        s=default; t=1569343954;
+        bh=P5yrhEzdFdo0qVfMiA38Ip22G1j0H8ar9SlOTwIHjD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LPdlXmLltWQYp8x9ZtbW26zxgvdWZxw+na1IusIzSGnol1RT298qCS81ZHGIniKmr
-         g6O2/17FB8llHIWtMaCvN1vefbJf9tLA1bSIevSWHf1GgkSSgwZyXtI96FYF7AC1lU
-         I9agNqpJCp+9x3mV7bVu+P4hgqlZ69GDO9PB4hy0=
+        b=GGSWaGbvL7igcFJGvDhPJOVJSBCRmWgQU1hMIev6GKlqHmC8dkTSDU2Y0FJzrX+UM
+         Yh3cGwDNdjfrQlaqTSN0jzJ0RQhsp04ywNVp+GC3JQz2f/0eeVaPqKiEyddqFFOery
+         DmA6DT2zCP/E5LO4AOVOcXhVSJAC1KDsQEPI5LMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 15/19] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Tue, 24 Sep 2019 12:51:26 -0400
-Message-Id: <20190924165130.28625-15-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/14] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date:   Tue, 24 Sep 2019 12:52:07 -0400
+Message-Id: <20190924165214.28857-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
-References: <20190924165130.28625-1-sashal@kernel.org>
+In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
+References: <20190924165214.28857-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+pmx_writel uses writel which inserts write barrier before the
+register write.
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
+This patch has fix to replace writel with writel_relaxed followed
+by a readback and memory barrier to ensure write operation is
+completed for successful pinctrl change.
 
-Restore the CFAR to the saved value before running the late handler.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/pinctrl-tegra.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 92474227262b4..0c8b966e80702 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -467,6 +467,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	RFI_TO_USER_OR_KERNEL
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	b	machine_check_pSeries
+diff --git a/drivers/pinctrl/pinctrl-tegra.c b/drivers/pinctrl/pinctrl-tegra.c
+index 0fd7fd2b0f72c..a30e967d75c2a 100644
+--- a/drivers/pinctrl/pinctrl-tegra.c
++++ b/drivers/pinctrl/pinctrl-tegra.c
+@@ -52,7 +52,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
  
+ static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
+ {
+-	writel(val, pmx->regs[bank] + reg);
++	writel_relaxed(val, pmx->regs[bank] + reg);
++	/* make sure pinmux register write completed */
++	pmx_readl(pmx, bank, reg);
+ }
+ 
+ static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
 -- 
 2.20.1
 
