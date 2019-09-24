@@ -2,56 +2,54 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8CEC4360C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7F0C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167C2222D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39F2222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343938;
-	bh=rrI29aVED5YRGj5/zZGCVu7KrelVkMFejMQpJYStOqc=;
+	s=default; t=1569343941;
+	bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHCpwkpWZ580GpRYVRT6cM7QcIJj0EcI8TVtprAWp4SELrGxTfqXQOGv8KFdfzCdR
-	 nvZ+jM5uX9WPZRX1McVYzSsMGbVISA42Um8aGTe2PPnanXY5RT15pP2bYlla4cnHB8
-	 rYT/O77idHuODt7MEoxPoxUIG3iVte9rrokmGQdM=
+	b=m3D+8glsjEgZ2SIDHTwDCHUaZ4IEGqLOR8TRHkDuT0AUQQmJaopElwrIaBxjXSakz
+	 EivnmJ3WXvMPWF1N4BgS1sNZj4jEHd/kin+dHSszlWVx737ynSDjPqeO++zZ8Xjrwr
+	 0oo33u8/eySmmOF94Hoy+4gLBBZPHYwd8RzLCo/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405254AbfIXQu7 (ORCPT
+        id S2410900AbfIXQwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43810 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441489AbfIXQuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:46 -0400
+        id S2411177AbfIXQvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E423721D6C;
-        Tue, 24 Sep 2019 16:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25DDA2054F;
+        Tue, 24 Sep 2019 16:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343845;
-        bh=rrI29aVED5YRGj5/zZGCVu7KrelVkMFejMQpJYStOqc=;
+        s=default; t=1569343909;
+        bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9cx33M0ZQgiiy/jpG4EhC7mGYLF+yijfJUvje6mS/f2dJlnGfmAoxOgRBdL08MSj
-         CFG+28+Rt4i7LO/z7qLE538x9BGwz5qR/tHdlOVk25pR95VJ71j5SYbXx35Dz4UZfo
-         DoAhIggX4LhlMR3OOma0bj+Jnpz4geqVxfm3O0ac=
+        b=NgboSkUK7c4DIlzON9W7zo6UG13SDp8wmzTLE7fS5MJf5jRQ22RAfuXxgpS50XHC3
+         frs305sLSDxDen5Rj9fph9I15ZyZsS7INHA4strlhKz7imyO773+hOhmE4x+Ge2b4k
+         aKWudrs9BiyCnbipeZ2FgOGlGyJMd2Key4Ey9os8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/28] clk: qoriq: Fix -Wunused-const-variable
-Date:   Tue, 24 Sep 2019 12:50:12 -0400
-Message-Id: <20190924165031.28292-9-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 10/19] powerpc/futex: Fix warning: 'oldval' may be used uninitialized in this function
+Date:   Tue, 24 Sep 2019 12:51:21 -0400
+Message-Id: <20190924165130.28625-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
-References: <20190924165031.28292-1-sashal@kernel.org>
+In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
+References: <20190924165130.28625-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,47 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
+[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
 
-drivers/clk/clk-qoriq.c:138:38: warning: unused variable
-'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp1
+We see warnings such as:
+  kernel/futex.c: In function 'do_futex':
+  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+     return oldval == cmparg;
+                   ^
+  kernel/futex.c:1651:6: note: 'oldval' was declared here
+    int oldval, ret;
+        ^
 
-drivers/clk/clk-qoriq.c:146:38: warning: unused variable
-'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp2
+This is because arch_futex_atomic_op_inuser() only sets *oval if ret
+is 0 and GCC doesn't see that it will only use it when ret is 0.
 
-In the definition of the p5020 chip, the p2041 chip's info was used
-instead.  The p5020 and p2041 chips have different info. This is most
-likely a typo.
+Anyway, the non-zero ret path is an error path that won't suffer from
+setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
+it will have no impact.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/525
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: reword change log slightly]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/futex.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index b0ea753b8709d..1a292519d84f2 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -610,7 +610,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
- 		.guts_compat = "fsl,qoriq-device-config-1.0",
- 		.init_periph = p5020_init_periph,
- 		.cmux_groups = {
--			&p2041_cmux_grp1, &p2041_cmux_grp2
-+			&p5020_cmux_grp1, &p5020_cmux_grp2
- 		},
- 		.cmux_to_group = {
- 			0, 1, -1
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index f4c7467f74655..b73ab8a7ebc3f 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -60,8 +60,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
+ 
+ 	pagefault_enable();
+ 
+-	if (!ret)
+-		*oval = oldval;
++	*oval = oldval;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
