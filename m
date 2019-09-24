@@ -2,180 +2,137 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41DDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6265C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9F120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F5120872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503743AbfIXHoC (ORCPT
+        id S2503773AbfIXHoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:44:02 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41223 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2502975AbfIXHoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:44:01 -0400
-X-UUID: 65df32135bd14d68ac172bc9a400ee4d-20190924
-X-UUID: 65df32135bd14d68ac172bc9a400ee4d-20190924
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1091215643; Tue, 24 Sep 2019 15:43:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 24 Sep 2019 15:43:52 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 24 Sep 2019 15:43:52 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v3 3/5] media: platform: Rename jpeg dec file name
-Date:   Tue, 24 Sep 2019 15:43:03 +0800
-Message-ID: <20190924074303.22713-4-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190924074303.22713-1-xia.jiang@mediatek.com>
-References: <20190924074303.22713-1-xia.jiang@mediatek.com>
+        Tue, 24 Sep 2019 03:44:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34766 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502975AbfIXHoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:44:04 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D3E53308FB9D;
+        Tue, 24 Sep 2019 07:44:03 +0000 (UTC)
+Received: from krava (unknown [10.43.17.52])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A62AE5D9CA;
+        Tue, 24 Sep 2019 07:44:02 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 09:44:01 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 1/3] perf, evlist: Fix access of freed id arrays
+Message-ID: <20190924074401.GA26797@krava>
+References: <20190923233339.25326-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923233339.25326-1-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 24 Sep 2019 07:44:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the files which are for decode feature. This is preparing
-path since the jpeg enc patch will be added later.
+On Mon, Sep 23, 2019 at 04:33:37PM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> I'm not fully sure if this is the correct fix, but without this
+> I get crashes on more complex perf stat metric usages. The problem
+> is that part of the state gets freed when a weak group fails,
+> but then is later still used. Just don't free the ids, we're
+> going to reuse them anyways on the weak group retry.
+> 
+> For example:
+> 
+> % perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
+> 
+> crashes and gives in valgrind:
+> 
+> =21527== Invalid write of size 8
+> ==21527==    at 0x4EE582: hlist_add_head (list.h:644)
+> ==21527==    by 0x4EFD3C: perf_evlist__id_hash (evlist.c:477)
+> ==21527==    by 0x4EFD99: perf_evlist__id_add (evlist.c:483)
+> ==21527==    by 0x4EFF15: perf_evlist__id_add_fd (evlist.c:524)
+> ==21527==    by 0x4FC693: store_evsel_ids (evsel.c:2969)
+> ==21527==    by 0x4FC76C: perf_evsel__store_ids (evsel.c:2986)
+> ==21527==    by 0x450DA7: __run_perf_stat (builtin-stat.c:519)
+> ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+> ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+> ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+> ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
+> ==21527==    by 0x4D5931: run_argv (perf.c:406)
+> ==21527==  Address 0x12e3f008 is 104 bytes inside a block of size 2,056 free'd
+> ==21527==    at 0x4839A0C: free (vg_replace_malloc.c:540)
+> ==21527==    by 0x627139: xyarray__delete (xyarray.c:32)
+> ==21527==    by 0x4F6BE4: perf_evsel__free_id (evsel.c:1253)
+> ==21527==    by 0x4FA11F: evsel__close (evsel.c:1994)
+> ==21527==    by 0x4F30A3: perf_evlist__reset_weak_group (evlist.c:1783)
+> ==21527==    by 0x450B47: __run_perf_stat (builtin-stat.c:466)
+> ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+> ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+> ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+> ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
+> ==21527==    by 0x4D5931: run_argv (perf.c:406)
+> ==21527==    by 0x4D5CAE: main (perf.c:531)
+> ==21527==  Block was alloc'd at
+> ==21527==    at 0x483AB1A: calloc (vg_replace_malloc.c:762)
+> ==21527==    by 0x627024: zalloc (zalloc.c:8)
+> ==21527==    by 0x627088: xyarray__new (xyarray.c:10)
+> ==21527==    by 0x4F6B20: perf_evsel__alloc_id (evsel.c:1237)
+> ==21527==    by 0x4FC74E: perf_evsel__store_ids (evsel.c:2983)
+> ==21527==    by 0x450DA7: __run_perf_stat (builtin-stat.c:519)
+> ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+> ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+> ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+> ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
+> ==21527==    by 0x4D5931: run_argv (perf.c:406)
+> ==21527==    by 0x4D5CAE: main (perf.c:531)
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/util/evlist.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 095924aa186b..765303553041 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1780,7 +1780,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+>  			is_open = false;
+>  		if (c2->leader == leader) {
+>  			if (is_open)
+> -				evsel__close(c2);
+> +				perf_evsel__close(&evsel->core);
 
-Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
----
-v3: no changes
+id/sample_id arrays are not created when evsel is open but
+we free it at close
 
-v2: no changes
----
- drivers/media/platform/mtk-jpeg/Makefile                      | 2 +-
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c               | 4 ++--
- .../platform/mtk-jpeg/{mtk_jpeg_hw.c => mtk_jpeg_dec_hw.c}    | 2 +-
- .../platform/mtk-jpeg/{mtk_jpeg_hw.h => mtk_jpeg_dec_hw.h}    | 2 +-
- .../mtk-jpeg/{mtk_jpeg_parse.c => mtk_jpeg_dec_parse.c}       | 2 +-
- .../mtk-jpeg/{mtk_jpeg_parse.h => mtk_jpeg_dec_parse.h}       | 2 +-
- .../platform/mtk-jpeg/{mtk_jpeg_reg.h => mtk_jpeg_dec_reg.h}  | 0
- 7 files changed, 7 insertions(+), 7 deletions(-)
- rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_hw.c => mtk_jpeg_dec_hw.c} (99%)
- rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_hw.h => mtk_jpeg_dec_hw.h} (98%)
- rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_parse.c => mtk_jpeg_dec_parse.c} (98%)
- rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_parse.h => mtk_jpeg_dec_parse.h} (92%)
- rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_reg.h => mtk_jpeg_dec_reg.h} (100%)
+for now this fix seems correct to me.. we are moving id/sample_id
+arrays under libperf, I'll make a note to check on close and reopen
+of evsel and add some tests for that
 
-diff --git a/drivers/media/platform/mtk-jpeg/Makefile b/drivers/media/platform/mtk-jpeg/Makefile
-index 92a4fc046bfe..48516dcf96e6 100644
---- a/drivers/media/platform/mtk-jpeg/Makefile
-+++ b/drivers/media/platform/mtk-jpeg/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
--mtk_jpeg-objs := mtk_jpeg_core.o mtk_jpeg_hw.o mtk_jpeg_parse.o
-+mtk_jpeg-objs := mtk_jpeg_core.o mtk_jpeg_dec_hw.o mtk_jpeg_dec_parse.o
- obj-$(CONFIG_VIDEO_MEDIATEK_JPEG) += mtk_jpeg.o
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-index ee802fc3bcdf..5f0990fce8ef 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-@@ -23,9 +23,9 @@
- #include <media/videobuf2-dma-contig.h>
- #include <soc/mediatek/smi.h>
- 
--#include "mtk_jpeg_hw.h"
-+#include "mtk_jpeg_dec_hw.h"
- #include "mtk_jpeg_core.h"
--#include "mtk_jpeg_parse.h"
-+#include "mtk_jpeg_dec_parse.h"
- 
- static struct mtk_jpeg_fmt mtk_jpeg_formats[] = {
- 	{
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.c
-similarity index 99%
-rename from drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
-rename to drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.c
-index ddf0dfa78e20..922dbe421fae 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.c
-@@ -9,7 +9,7 @@
- #include <linux/kernel.h>
- #include <media/videobuf2-core.h>
- 
--#include "mtk_jpeg_hw.h"
-+#include "mtk_jpeg_dec_hw.h"
- 
- #define MTK_JPEG_DUNUM_MASK(val)	(((val) - 1) & 0x3)
- 
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h
-similarity index 98%
-rename from drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
-rename to drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h
-index 9c6584eaad99..a37be1a48415 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h
-@@ -11,7 +11,7 @@
- #include <media/videobuf2-core.h>
- 
- #include "mtk_jpeg_core.h"
--#include "mtk_jpeg_reg.h"
-+#include "mtk_jpeg_dec_reg.h"
- 
- enum {
- 	MTK_JPEG_DEC_RESULT_EOF_DONE		= 0,
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.c
-similarity index 98%
-rename from drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
-rename to drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.c
-index f862d38f3af7..b95c45791c29 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.c
-@@ -8,7 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/videodev2.h>
- 
--#include "mtk_jpeg_parse.h"
-+#include "mtk_jpeg_dec_parse.h"
- 
- #define TEM	0x01
- #define SOF0	0xc0
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.h
-similarity index 92%
-rename from drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
-rename to drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.h
-index 0a48eeabaff2..2918f15811f8 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_parse.h
-@@ -8,7 +8,7 @@
- #ifndef _MTK_JPEG_PARSE_H
- #define _MTK_JPEG_PARSE_H
- 
--#include "mtk_jpeg_hw.h"
-+#include "mtk_jpeg_dec_hw.h"
- 
- bool mtk_jpeg_parse(struct mtk_jpeg_dec_param *param, u8 *src_addr_va,
- 		    u32 src_size);
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_reg.h
-similarity index 100%
-rename from drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
-rename to drivers/media/platform/mtk-jpeg/mtk_jpeg_dec_reg.h
--- 
-2.18.0
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
+thanks,
+jirka
+
+>  			c2->leader = c2;
+>  			c2->core.nr_members = 0;
+>  		}
+> -- 
+> 2.21.0
+> 
