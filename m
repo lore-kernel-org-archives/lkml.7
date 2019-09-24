@@ -2,95 +2,337 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204D5C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE6C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF4320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HSIvtQQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 8456220872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441455AbfIXQZX (ORCPT
+        id S2632811AbfIXQ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:25:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35760 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfIXQZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:25:21 -0400
-Received: from zn.tnic (p200300EC2F0DB700CDA5DCD899733FA6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:b700:cda5:dcd8:9973:3fa6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3D1B81EC03F6;
-        Tue, 24 Sep 2019 18:25:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569342320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=b2LZ0wWlgO+SsWzDsfhzM2/OLOuJ6ofaRtuo/MAkItE=;
-        b=HSIvtQQ8QtlfDTUZ1lXGgEpP4uObig8a8o5vNVpZuxDgCrYOkA1oKovzROG6lDbDexMVHx
-        V0JzkBt+uqAoh9sH+QVQn2OwuCiEaHWHftv/Gu1clX5/H7nVNVLUZ6A4AAulf/jxb4rGPx
-        SG1dfKLqUdApVDyvuscCD7U63ZgXEfA=
-Date:   Tue, 24 Sep 2019 18:25:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, Kai Huang <kai.huang@linux.intel.com>
-Subject: Re: [PATCH v22 01/24] x86/cpufeatures: x86/msr: Add Intel SGX
- hardware bits
-Message-ID: <20190924162520.GJ19317@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-2-jarkko.sakkinen@linux.intel.com>
- <20190924152848.GF19317@zn.tnic>
- <20190924161150.GA16218@linux.intel.com>
+        Tue, 24 Sep 2019 12:26:58 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:34300 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389193AbfIXQ05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:26:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TdKFhhy_1569342404;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TdKFhhy_1569342404)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 25 Sep 2019 00:26:47 +0800
+Subject: Re: + mm-thp-extract-split_queue_-into-a-struct.patch added to -mm
+ tree
+To:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     mm-commits@vger.kernel.org, vdavydov.dev@gmail.com,
+        shakeelb@google.com, rientjes@google.com, ktkhai@virtuozzo.com,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        hannes@cmpxchg.org, cai@lca.pw
+References: <20190923220902.-_eJc%akpm@linux-foundation.org>
+ <20190924135608.GW23050@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <1d13fbe3-2a25-3b31-64a5-50d511c201f4@linux.alibaba.com>
+Date:   Tue, 24 Sep 2019 09:26:37 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190924161150.GA16218@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190924135608.GW23050@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 09:11:50AM -0700, Sean Christopherson wrote:
-> With respect to more SGX feature flags, the original changelog even
-> stated "with more expected in the not-too-distant future".
 
-That means nothing, you know that, right? :)
 
-There's a big difference between expectation and it actually happening
-and besides, the longterm plan with all those feature words which are
-scattered, is to propagate them to proper ->x86_capability[] words once
-the number of feature bits used is gradually growing.
+On 9/24/19 6:56 AM, Michal Hocko wrote:
+> Do we really need this if deferred list is going to be shrunk more
+> pro-actively as discussed already - I am sorry I do not have a link handy
+> but in short the deferred list would be drained from a kworker context
+> more pro-actively rather than wait for the memory pressure to happen.
 
-Also,...
+ From our experience I really didn't see the current waiting for memory 
+pressure approach is a problem, it does work well and is still a good 
+compromise. And, I'm supposed we all agree the side effect incurred by 
+the more proactive kworker approach is definitely a concern (i.e. may 
+waste cpu cycles, break isolation, etc) according to our discussion.
 
-> I'm not arguing that this isn't ugly, just want to make it clear that
-> we're not wantonly throwing junk into the kernel.  I'm all for a dedicated
-> SGX word, it makes our lives easier.
+And we do have other much simpler ways to shrink THPs more proactively, 
+for example, waking up kswapd more aggressively via tuning 
+watermark_scale_factor, and/or do shrinking harder, etc.
 
-... you didn't do the first-8-bits-need-to-match-the-CPUID-leaf for KVM
-thing then, you're doing now. Which would make word 8 half-hard-coded
-and the other half Linux-defined.
+Even though we have to drain THPs more proactively by whatever means in 
+the future, I'd prefer it is memcg aware as well.
 
-Which makes a separate leaf look much better now. :)
+BTW, we already had these patches running in our production environment 
+for a while, they did resolve the problem we met very well.
 
-Thx.
+>
+> On Mon 23-09-19 15:09:02, Andrew Morton wrote:
+>> ------------------------------------------------------
+>> From: Yang Shi <yang.shi@linux.alibaba.com>
+>> Subject: mm: thp: extract split_queue_* into a struct
+>>
+>> Patch series "Make deferred split shrinker memcg aware", v6.
+>>
+>> Currently THP deferred split shrinker is not memcg aware, this may cause
+>> premature OOM with some configuration.  For example the below test would
+>> run into premature OOM easily:
+>>
+>> $ cgcreate -g memory:thp
+>> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+>> $ cgexec -g memory:thp transhuge-stress 4000
+>>
+>> transhuge-stress comes from kernel selftest.
+>>
+>> It is easy to hit OOM, but there are still a lot THP on the deferred split
+>> queue, memcg direct reclaim can't touch them since the deferred split
+>> shrinker is not memcg aware.
+>>
+>> Convert deferred split shrinker memcg aware by introducing per memcg
+>> deferred split queue.  The THP should be on either per node or per memcg
+>> deferred split queue if it belongs to a memcg.  When the page is
+>> immigrated to the other memcg, it will be immigrated to the target memcg's
+>> deferred split queue too.
+>>
+>> Reuse the second tail page's deferred_list for per memcg list since the
+>> same THP can't be on multiple deferred split queues.
+>>
+>> Make deferred split shrinker not depend on memcg kmem since it is not
+>> slab.  It doesn't make sense to not shrink THP even though memcg kmem is
+>> disabled.
+>>
+>> With the above change the test demonstrated above doesn't trigger OOM even
+>> though with cgroup.memory=nokmem.
+>>
+>>
+>> This patch (of 4):
+>>
+>> Put split_queue, split_queue_lock and split_queue_len into a struct in
+>> order to reduce code duplication when we convert deferred_split to memcg
+>> aware in the later patches.
+>>
+>> Link: http://lkml.kernel.org/r/1565144277-36240-2-git-send-email-yang.shi@linux.alibaba.com
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Cc: Qian Cai <cai@lca.pw>
+>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>> ---
+>>
+>>   include/linux/mmzone.h |   12 +++++++---
+>>   mm/huge_memory.c       |   45 +++++++++++++++++++++------------------
+>>   mm/page_alloc.c        |    8 ++++--
+>>   3 files changed, 39 insertions(+), 26 deletions(-)
+>>
+>> --- a/include/linux/mmzone.h~mm-thp-extract-split_queue_-into-a-struct
+>> +++ a/include/linux/mmzone.h
+>> @@ -679,6 +679,14 @@ struct zonelist {
+>>   extern struct page *mem_map;
+>>   #endif
+>>   
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +struct deferred_split {
+>> +	spinlock_t split_queue_lock;
+>> +	struct list_head split_queue;
+>> +	unsigned long split_queue_len;
+>> +};
+>> +#endif
+>> +
+>>   /*
+>>    * On NUMA machines, each NUMA node would have a pg_data_t to describe
+>>    * it's memory layout. On UMA machines there is a single pglist_data which
+>> @@ -758,9 +766,7 @@ typedef struct pglist_data {
+>>   #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+>>   
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -	spinlock_t split_queue_lock;
+>> -	struct list_head split_queue;
+>> -	unsigned long split_queue_len;
+>> +	struct deferred_split deferred_split_queue;
+>>   #endif
+>>   
+>>   	/* Fields commonly accessed by the page reclaim scanner */
+>> --- a/mm/huge_memory.c~mm-thp-extract-split_queue_-into-a-struct
+>> +++ a/mm/huge_memory.c
+>> @@ -2691,6 +2691,7 @@ int split_huge_page_to_list(struct page
+>>   {
+>>   	struct page *head = compound_head(page);
+>>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
+>> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>>   	struct anon_vma *anon_vma = NULL;
+>>   	struct address_space *mapping = NULL;
+>>   	int count, mapcount, extra_pins, ret;
+>> @@ -2777,17 +2778,17 @@ int split_huge_page_to_list(struct page
+>>   	}
+>>   
+>>   	/* Prevent deferred_split_scan() touching ->_refcount */
+>> -	spin_lock(&pgdata->split_queue_lock);
+>> +	spin_lock(&ds_queue->split_queue_lock);
+>>   	count = page_count(head);
+>>   	mapcount = total_mapcount(head);
+>>   	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+>>   		if (!list_empty(page_deferred_list(head))) {
+>> -			pgdata->split_queue_len--;
+>> +			ds_queue->split_queue_len--;
+>>   			list_del(page_deferred_list(head));
+>>   		}
+>>   		if (mapping)
+>>   			__dec_node_page_state(page, NR_SHMEM_THPS);
+>> -		spin_unlock(&pgdata->split_queue_lock);
+>> +		spin_unlock(&ds_queue->split_queue_lock);
+>>   		__split_huge_page(page, list, end, flags);
+>>   		if (PageSwapCache(head)) {
+>>   			swp_entry_t entry = { .val = page_private(head) };
+>> @@ -2804,7 +2805,7 @@ int split_huge_page_to_list(struct page
+>>   			dump_page(page, "total_mapcount(head) > 0");
+>>   			BUG();
+>>   		}
+>> -		spin_unlock(&pgdata->split_queue_lock);
+>> +		spin_unlock(&ds_queue->split_queue_lock);
+>>   fail:		if (mapping)
+>>   			xa_unlock(&mapping->i_pages);
+>>   		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
+>> @@ -2827,52 +2828,56 @@ out:
+>>   void free_transhuge_page(struct page *page)
+>>   {
+>>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
+>> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>>   	unsigned long flags;
+>>   
+>> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>>   	if (!list_empty(page_deferred_list(page))) {
+>> -		pgdata->split_queue_len--;
+>> +		ds_queue->split_queue_len--;
+>>   		list_del(page_deferred_list(page));
+>>   	}
+>> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+>> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>>   	free_compound_page(page);
+>>   }
+>>   
+>>   void deferred_split_huge_page(struct page *page)
+>>   {
+>>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
+>> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>>   	unsigned long flags;
+>>   
+>>   	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+>>   
+>> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>>   	if (list_empty(page_deferred_list(page))) {
+>>   		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
+>> -		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
+>> -		pgdata->split_queue_len++;
+>> +		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
+>> +		ds_queue->split_queue_len++;
+>>   	}
+>> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+>> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>>   }
+>>   
+>>   static unsigned long deferred_split_count(struct shrinker *shrink,
+>>   		struct shrink_control *sc)
+>>   {
+>>   	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+>> -	return READ_ONCE(pgdata->split_queue_len);
+>> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>> +	return READ_ONCE(ds_queue->split_queue_len);
+>>   }
+>>   
+>>   static unsigned long deferred_split_scan(struct shrinker *shrink,
+>>   		struct shrink_control *sc)
+>>   {
+>>   	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+>> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>>   	unsigned long flags;
+>>   	LIST_HEAD(list), *pos, *next;
+>>   	struct page *page;
+>>   	int split = 0;
+>>   
+>> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>>   	/* Take pin on all head pages to avoid freeing them under us */
+>> -	list_for_each_safe(pos, next, &pgdata->split_queue) {
+>> +	list_for_each_safe(pos, next, &ds_queue->split_queue) {
+>>   		page = list_entry((void *)pos, struct page, mapping);
+>>   		page = compound_head(page);
+>>   		if (get_page_unless_zero(page)) {
+>> @@ -2880,12 +2885,12 @@ static unsigned long deferred_split_scan
+>>   		} else {
+>>   			/* We lost race with put_compound_page() */
+>>   			list_del_init(page_deferred_list(page));
+>> -			pgdata->split_queue_len--;
+>> +			ds_queue->split_queue_len--;
+>>   		}
+>>   		if (!--sc->nr_to_scan)
+>>   			break;
+>>   	}
+>> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+>> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>>   
+>>   	list_for_each_safe(pos, next, &list) {
+>>   		page = list_entry((void *)pos, struct page, mapping);
+>> @@ -2899,15 +2904,15 @@ next:
+>>   		put_page(page);
+>>   	}
+>>   
+>> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>> -	list_splice_tail(&list, &pgdata->split_queue);
+>> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+>> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>> +	list_splice_tail(&list, &ds_queue->split_queue);
+>> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>>   
+>>   	/*
+>>   	 * Stop shrinker if we didn't split any page, but the queue is empty.
+>>   	 * This can happen if pages were freed under us.
+>>   	 */
+>> -	if (!split && list_empty(&pgdata->split_queue))
+>> +	if (!split && list_empty(&ds_queue->split_queue))
+>>   		return SHRINK_STOP;
+>>   	return split;
+>>   }
+>> --- a/mm/page_alloc.c~mm-thp-extract-split_queue_-into-a-struct
+>> +++ a/mm/page_alloc.c
+>> @@ -6646,9 +6646,11 @@ static unsigned long __init calc_memmap_
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>   static void pgdat_init_split_queue(struct pglist_data *pgdat)
+>>   {
+>> -	spin_lock_init(&pgdat->split_queue_lock);
+>> -	INIT_LIST_HEAD(&pgdat->split_queue);
+>> -	pgdat->split_queue_len = 0;
+>> +	struct deferred_split *ds_queue = &pgdat->deferred_split_queue;
+>> +
+>> +	spin_lock_init(&ds_queue->split_queue_lock);
+>> +	INIT_LIST_HEAD(&ds_queue->split_queue);
+>> +	ds_queue->split_queue_len = 0;
+>>   }
+>>   #else
+>>   static void pgdat_init_split_queue(struct pglist_data *pgdat) {}
+>> _
+>>
+>> Patches currently in -mm which might be from yang.shi@linux.alibaba.com are
+>>
+>> mmthp-add-read-only-thp-support-for-non-shmem-fs.patch
+>> mm-thp-extract-split_queue_-into-a-struct.patch
+>> mm-move-mem_cgroup_uncharge-out-of-__page_cache_release.patch
+>> mm-shrinker-make-shrinker-not-depend-on-memcg-kmem.patch
+>> mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-v6.patch
+>> mm-thp-make-deferred-split-shrinker-memcg-aware.patch
+>> mm-thp-make-deferred-split-shrinker-memcg-aware-v6.patch
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
