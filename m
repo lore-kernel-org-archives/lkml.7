@@ -2,131 +2,141 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C836C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74B2C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572B32146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DEE21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="ga2DmRzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438916AbfIXLtT (ORCPT
+        id S2440862AbfIXLvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:49:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29194 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2395140AbfIXLtT (ORCPT
+        Tue, 24 Sep 2019 07:51:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38544 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440846AbfIXLvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:49:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8OBlUJC119863
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 07:49:17 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v7jbt0n2u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 07:49:17 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 24 Sep 2019 12:49:15 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Sep 2019 12:49:13 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8OBnCO442729716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 11:49:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23103AE045;
-        Tue, 24 Sep 2019 11:49:12 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6A6CAE058;
-        Tue, 24 Sep 2019 11:49:10 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.122.211.244])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Sep 2019 11:49:10 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: [PATCH] tracing/probe: Fix same probe event argument matching
-Date:   Tue, 24 Sep 2019 17:19:06 +0530
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19092411-0020-0000-0000-00000370F8E9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092411-0021-0000-0000-000021C6B947
-Message-Id: <20190924114906.14038-1-srikar@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909240120
+        Tue, 24 Sep 2019 07:51:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id l21so1549307edr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 04:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/6kM5ATWnIRmId0RwOcRfnLcpIWKP734aWDaVWhsGUo=;
+        b=ga2DmRzWY94J19ywTXc7aJlINJ/KRYQ8PGtndpIW2otrRhhwz0vdOk+0aZyvFf12zM
+         XpRveudYGeGkFKJSHG8HcySuK12YIGpCUEC2wkOTV45q1k8LT1ifI5j18tohQF7m/PA+
+         6K8RlpcUkVPR9/+LLhQ4mzvuJBoUuyuUhlcKKiXhgp+n7PTRkv6s71hrNtmrwMJbpl7m
+         e1KH2/aooSfrmq/GY1oql/dqAZBTTajifnl7uEJSb86NOqby7WFhLm7p3odLbtelzM4m
+         ZVwvJJ/+RmqA5b79C+mbE04M3aieJOA2xjgY+3pjxmiSzVw2GC4lYm0cvsm1rZytvgPU
+         ruog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/6kM5ATWnIRmId0RwOcRfnLcpIWKP734aWDaVWhsGUo=;
+        b=XYz6IoTB9zJEhXOtrzlWFB981fd8gNt42Yh/QahARccuPzxTXIhm1wDhTgJC31VtaA
+         DCt3dNaCghAp+/DrTJwYkZ8YOyrr8ujjeafA3QokyXEzxOctumyLybFTaB8y79jwLkGY
+         YJ8wdiOVFjF8EAkc0n8+q5uatLAx+1epDZM814Jsoo96JoVmf9a2mI3VPvsBULfzrqlT
+         74q9RiEQja3FeytvGmm5HZ+jBpKBLXdEAiI2jjgvM91I/KrF0V/7QKPsi6Hc6tN4Jf9p
+         SMI1x0PScz57PdOqmfqOuhbSUqiMszThoBrY1mrCMnbWJzMLNR85be7y8mR3SRuYi4/r
+         1BtA==
+X-Gm-Message-State: APjAAAVGGo9T+96UTuOh8z+36YUURYd0azIpBfKQETfAtEU9OcDoWjbN
+        JzVFXCGslox89/ePDsA78J1+qw==
+X-Google-Smtp-Source: APXvYqxJMR8XXzMM+ktrv2ws01Rr8qKWI/iP6Q9Wd6fsMeCMuUxQBVCNuUcjqBIbwcds2k2WtfZxLA==
+X-Received: by 2002:a50:9fe5:: with SMTP id c92mr2202655edf.280.1569325860692;
+        Tue, 24 Sep 2019 04:51:00 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r18sm319556edx.94.2019.09.24.04.50.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 04:51:00 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 60C621022A6; Tue, 24 Sep 2019 14:51:01 +0300 (+03)
+Date:   Tue, 24 Sep 2019 14:51:01 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 0/2] mm/debug: Add tests for architecture exported
+ page table helpers
+Message-ID: <20190924115101.p6y7vpbtgmj5qjku@box>
+References: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit fe60b0ce8e73 ("tracing/probe: Reject exactly same probe event")
-tries to reject a event which matches an already existing probe.
+On Fri, Sep 20, 2019 at 12:03:21PM +0530, Anshuman Khandual wrote:
+> This series adds a test validation for architecture exported page table
+> helpers. Patch in the series adds basic transformation tests at various
+> levels of the page table. Before that it exports gigantic page allocation
+> function from HugeTLB.
+> 
+> This test was originally suggested by Catalin during arm64 THP migration
+> RFC discussion earlier. Going forward it can include more specific tests
+> with respect to various generic MM functions like THP, HugeTLB etc and
+> platform specific tests.
+> 
+> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+> 
+> Testing:
+> 
+> Successfully build and boot tested on both arm64 and x86 platforms without
+> any test failing. Only build tested on some other platforms. Build failed
+> on some platforms (known) in pud_clear_tests() as there were no available
+> __pgd() definitions.
+> 
+> - ARM32
+> - IA64
 
-However it currently continues to match arguments and rejects adding a
-probe even when the arguments don't match. Fix this by only rejecting a
-probe if and only if all the arguments match.
+Hm. Grep shows __pgd() definitions for both of them. Is it for specific
+config?
 
-Fixes: fe60b0ce8e73 ("tracing/probe: Reject exactly same probe event")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
- kernel/trace/trace_kprobe.c | 5 +++--
- kernel/trace/trace_uprobe.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index a6697e28ddda..402dc3ce88d3 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -549,10 +549,11 @@ static bool trace_kprobe_has_same_kprobe(struct trace_kprobe *orig,
- 		for (i = 0; i < orig->tp.nr_args; i++) {
- 			if (strcmp(orig->tp.args[i].comm,
- 				   comp->tp.args[i].comm))
--				continue;
-+				break;
- 		}
- 
--		return true;
-+		if (i == orig->tp.nr_args)
-+			return true;
- 	}
- 
- 	return false;
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 34dd6d0016a3..dd884341f5c5 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -431,10 +431,11 @@ static bool trace_uprobe_has_same_uprobe(struct trace_uprobe *orig,
- 		for (i = 0; i < orig->tp.nr_args; i++) {
- 			if (strcmp(orig->tp.args[i].comm,
- 				   comp->tp.args[i].comm))
--				continue;
-+				break;
- 		}
- 
--		return true;
-+		if (i == orig->tp.nr_args)
-+			return true;
- 	}
- 
- 	return false;
 -- 
-2.18.1
-
+ Kirill A. Shutemov
