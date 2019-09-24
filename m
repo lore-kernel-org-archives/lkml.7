@@ -2,108 +2,196 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D805C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0EAC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F280C214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:43:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bgwn3WTm"
+	by mail.kernel.org (Postfix) with ESMTP id 1A23B214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569325467;
+	bh=FNHOdKquX3IFa5mBM1mglazG55LFJ9TtI25PBKHKeaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TvbPFARhEyeBBeJ0tG+a2TeYF7PUejuTBkjpaHmRIwHnrKPUrgHaCF1J07NeEAYyu
+	 qFUhuPbsDkHMKP8G+vcxa86kElwNGeAgzttuQlnW24TbPy6uII0WyclELvMFuAc2xP
+	 MiKL0YCXnhIaFXZ+eNoFcaQJUHWWhUznJsv1ABkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504757AbfIXLnK (ORCPT
+        id S2504766AbfIXLo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:43:10 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48382 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfIXLnJ (ORCPT
+        Tue, 24 Sep 2019 07:44:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51926 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfIXLo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:43:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/g8501+xXPx9KBW91ZExYmZcRElzY2bnL/DarT6l+8M=; b=Bgwn3WTm0Lnrg1//d4BerjSWo
-        pVdHxf41TMDMWPLe0SRTGe45Qh+3KOt+d/rjiQ68qbhxGc+V0OinUYo9Ftq8x9LM1mcezWmyDWCdT
-        0YlyN89b6LqQs/uTUzoAhrkDekSAfbOG+y9lUuwHkKJOTyUFgXD3xoyQYPcO3Jj3QjwaItur8s8RC
-        tr2Dn/XVev/7ANYQoVCUVpwrM3+fE0O+xKUSGnC9yJWKxhg+tB9NRfFFBl8jDg8hfVavSrCIcDCwe
-        Px4xdxsdBRC8OUaYdTOUv8kmfcjeFhoA03EyvdBgE1v1wbkg/NUzTTQJ30P5YgKpRUnsNGEqbxEEO
-        g5ubY8j8w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCjDh-00086A-Kl; Tue, 24 Sep 2019 11:43:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD830305E42;
-        Tue, 24 Sep 2019 13:42:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 648D829E510E7; Tue, 24 Sep 2019 13:43:00 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 13:43:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-Message-ID: <20190924114300.GM2332@hirez.programming.kicks-ass.net>
-References: <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <20190924094942.GN2349@hirez.programming.kicks-ass.net>
- <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
- <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
- <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
+        Tue, 24 Sep 2019 07:44:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so1900817wme.1;
+        Tue, 24 Sep 2019 04:44:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FfE5HSIoy4bnw4tW0uvOE8G/Ux5CpKN6T9ph37iVZUY=;
+        b=SmipKaBSMwrNl+MDWdtvDyxMlym+1q/mQ8pzTtrjMLJGQEo52eDglwHoMpkHrJQ8Jj
+         ogkX7aX/fA3A/28hHxiB/ronYz/r+mik4NBfK1vlO9KgR2Umo1Pdk+UG3ttWPJisVKG9
+         0iEh+7vimqQ5GjpISCvYTJhLjXRjYLyZ+4bKvQoPTISqQ6Q9eVfsppQbCGneJ7C1YAeL
+         UGpMpkTWIrs0m+boCv83xhceLAGUWEq1ooIMgXACGEBcLA7kdu+owkQ/qtIUJtyIynCm
+         oW34s3bOqU1fXqRP6cxH5cHBaWGL+1Ny/xuxpXeZ0YOoQIh29OUb4SZdwuiyd4l6FpCT
+         zhNQ==
+X-Gm-Message-State: APjAAAWkOwdIgf4aLHUJ/SzmelIbn8Dbs0ljenr9yfkwX4eIS6S31xhv
+        WFK0wHA2JIEriRtAcg4cWl9rOSpi
+X-Google-Smtp-Source: APXvYqzqFOsxB9TPB1cUrC0y7KpPMr4n+t9n/heL8MaG21Cbit3fJZ68Rk7z/b8D+BiiSUudc86+2g==
+X-Received: by 2002:a05:600c:2311:: with SMTP id 17mr2302023wmo.39.1569325463690;
+        Tue, 24 Sep 2019 04:44:23 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id b184sm2319180wmg.47.2019.09.24.04.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 04:44:22 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 13:44:18 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH] dt-bindings: gpu: Convert Samsung 2D Graphics
+ Accelerator to dt-schema
+Message-ID: <20190924114418.GA9157@pi3>
+References: <CGME20190924113225eucas1p131429c7f7e0d520693b89bb2a7d9e211@eucas1p1.samsung.com>
+ <20190924113159.24873-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190924113159.24873-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 02:11:29PM +0300, Pavel Begunkov wrote:
+On Tue, Sep 24, 2019 at 01:31:59PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+> 
+> Convert Samsung 2D Graphics Accelerator to newer dt-schema format
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../devicetree/bindings/gpu/samsung-g2d.txt   | 27 ----------
+>  .../devicetree/bindings/gpu/samsung-g2d.yaml  | 53 +++++++++++++++++++
+>  2 files changed, 53 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> deleted file mode 100644
+> index 1e7959332dbc..000000000000
+> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -* Samsung 2D Graphics Accelerator
+> -
+> -Required properties:
+> -  - compatible : value should be one among the following:
+> -	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210 SoC
+> -	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
+> -	(c) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
+> -
+> -  - reg : Physical base address of the IP registers and length of memory
+> -	  mapped region.
+> -
+> -  - interrupts : G2D interrupt number to the CPU.
+> -  - clocks : from common clock binding: handle to G2D clocks.
+> -  - clock-names : names of clocks listed in clocks property, in the same
+> -		  order, depending on SoC type:
+> -		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
+> -		    "sclk_fimg2d"
+> -		  - for Exynos5250 SoC: "fimg2d".
+> -
+> -Example:
+> -	g2d@12800000 {
+> -		compatible = "samsung,s5pv210-g2d";
+> -		reg = <0x12800000 0x1000>;
+> -		interrupts = <0 89 0>;
+> -		clocks = <&clock 177>, <&clock 277>;
+> -		clock-names = "sclk_fimg2d", "fimg2d";
+> -	};
+>ss diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
+> new file mode 100644
+> index 000000000000..bb0a4bf168cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/samsung-g2d.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC 2D Graphics Accelerator
+> +
+> +maintainers:
+> +  - Inki Dae <inki.dae@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,s5pv210-g2d    # in S5PV210 & Exynos4210 SoC
+> +      - samsung,exynos4212-g2d # in Exynos4x12 SoCs
+> +      - samsung,exynos5250-g2d
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items: # for Exynos5250 SoC
+> +          - const: fimg2d
+> +      - items: # for S5PV210 and Exynos4 based SoCs
+> +          - const: sclk_fimg2d
+> +          - const: fimg2d
 
-> @@ -2717,15 +2757,18 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
->  			return ret;
->  	}
->  
-> +	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
-> +	prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
-> +	do {
-> +		if (io_should_wake(&iowq))
-> +			break;
-> +		schedule();
-> +		if (signal_pending(current))
-> +			break;
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +	} while (1);
-> +	finish_wait(&ctx->wait, &iowq.wq);
+Just like in previous conversions ("dt-bindings: gpu: Convert Samsung
+Image Scaler to dt-schem") - you need to add here proper if-else
+constraints.
 
-It it likely OK, but for paranoia, I'd prefer this form:
 
-	for (;;) {
-		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
-		if (io_should_wake(&iowq))
-			break;
-		schedule();
-		if (signal_pending(current))
-			break;
-	}
-	finish_wait(&ctx->wait, &iowq.wq);
+Best regards,
+Krzysztof
 
-The thing is, if we ever succeed with io_wake_function() (that CPU
-observes io_should_wake()), but when waking here, we do not observe
-is_wake_function() and go sleep again, we might never wake up if we
-don't put ourselves back on the wait-list again.
 
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples
+> +  - |
+> +    g2d@12800000 {
+> +        compatible = "samsung,s5pv210-g2d";
+> +        reg = <0x12800000 0x1000>;
+> +        interrupts = <0 89 0>;
+> +        clocks = <&clock 177>, <&clock 277>;
+> +        clock-names = "sclk_fimg2d", "fimg2d";
+> +    };
+> +
+> -- 
+> 2.17.1
+> 
+> 
+> 
