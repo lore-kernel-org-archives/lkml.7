@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF6AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2782AC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97F62054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4BA2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344313;
-	bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
+	s=default; t=1569344319;
+	bh=2n/Df1WVmgoy0vgbYlwsWecg+mwB5LQ52yY6MOGpQcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGbi95F4wHGzSC9Kr8m63Qz7ruwXrKWj1EBt/N4dNy3Nn58N4vYDdbjGFiytw+PQe
-	 b3qEDaLQuxpIDhqaaP5pWnk8+CWKqveDc6jJOT/D7U4V/M2IK682BcegW7R0wVCm4J
-	 7bFt30zMgogvKqqcl0UpR4ZSM7VWhZUSbMv6KTRU=
+	b=g87mSh2iOZpi5ACYk4cYz4BgjNqLqwZui7yzpcWG0QlLGBvroVPMC1w/r9bfQ+p3r
+	 sKQRZkjOsTO3FfkxCqgnEPuDsB0jKWvXVWDTjUijMQ+4n9GErMFTsbE9m/5EvVgzGK
+	 VITuUMGhrKEI0UGC+HEciFgXbQyE7IAvnsmWWbF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407083AbfIXQ6Y (ORCPT
+        id S2633336AbfIXQsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410628AbfIXQtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:49:49 -0400
+        id S2633314AbfIXQr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5427221971;
-        Tue, 24 Sep 2019 16:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B45B20673;
+        Tue, 24 Sep 2019 16:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343789;
-        bh=5PN5gHuZThoRxTF4pnmnlVuDVJAKrvmI1Q8ep/YnmwI=;
+        s=default; t=1569343676;
+        bh=2n/Df1WVmgoy0vgbYlwsWecg+mwB5LQ52yY6MOGpQcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnByi90U/5meoa2sq7WCqETuJH2FBWc0ZiJqyeX+fDiIOth9pupYjVRgPDQbKyoC2
-         f34yCOjIGq5Xfa0tTP/PPg7w0AI9aan+xGsLU5Yr7wSgUoBilExk21Lshv7iJ4zM0U
-         zJhIVAdbNlhpXc/bT7II1a2e+xoawyeZurmwhUJA=
+        b=mFsQ2xpQVPeHRY2xtuVd3zMb6Ws5rnFw9Puy0IuxLbgejGqjL6IbPmwIyU8QfIPzV
+         kAO0ETES2OAlsXEUIQanlV5CFXJwyqY663fVMUWdDzCZCl+WTpEdYaYgS6peN4FuvU
+         GzXQVeF2cdUwyzBxv992NEJK9Ezsndy73RJyYtNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     hexin <hexin.op@gmail.com>, hexin <hexin15@baidu.com>,
-        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/50] vfio_pci: Restore original state on release
-Date:   Tue, 24 Sep 2019 12:48:27 -0400
-Message-Id: <20190924164847.27780-30-sashal@kernel.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jeff Layton <jlayton@kernel.org>, anton@enomsg.org,
+        ccross@android.com, tony.luck@intel.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 51/70] pstore: fs superblock limits
+Date:   Tue, 24 Sep 2019 12:45:30 -0400
+Message-Id: <20190924164549.27058-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
-References: <20190924164847.27780-1-sashal@kernel.org>
+In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
+References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,58 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: hexin <hexin.op@gmail.com>
+From: Deepa Dinamani <deepa.kernel@gmail.com>
 
-[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
+[ Upstream commit 83b8a3fbe3aa82ac3c253b698ae6a9be2dbdd5e0 ]
 
-vfio_pci_enable() saves the device's initial configuration information
-with the intent that it is restored in vfio_pci_disable().  However,
-the commit referenced in Fixes: below replaced the call to
-__pci_reset_function_locked(), which is not wrapped in a state save
-and restore, with pci_try_reset_function(), which overwrites the
-restored device state with the current state before applying it to the
-device.  Reinstate use of __pci_reset_function_locked() to return to
-the desired behavior.
+Leaving granularity at 1ns because it is dependent on the specific
+attached backing pstore module. ramoops has microsecond resolution.
 
-Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
-Signed-off-by: hexin <hexin15@baidu.com>
-Signed-off-by: Liu Qi <liuqi16@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fix the readback of ramoops fractional timestamp microseconds,
+which has incorrectly been reporting the value as nanoseconds.
+
+Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore").
+
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jeff Layton <jlayton@kernel.org>
+Cc: anton@enomsg.org
+Cc: ccross@android.com
+Cc: keescook@chromium.org
+Cc: tony.luck@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ fs/pstore/ram.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 6cf00d9f512b7..a92c2868d9021 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -373,11 +373,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
- 
- 	/*
--	 * Try to reset the device.  The success of this is dependent on
--	 * being able to lock the device, which is not always possible.
-+	 * Try to get the locks ourselves to prevent a deadlock. The
-+	 * success of this is dependent on being able to lock the device,
-+	 * which is not always possible.
-+	 * We can not use the "try" reset interface here, which will
-+	 * overwrite the previously restored configuration information.
- 	 */
--	if (vdev->reset_works && !pci_try_reset_function(pdev))
--		vdev->needs_reset = false;
-+	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
-+		if (device_trylock(&pdev->dev)) {
-+			if (!__pci_reset_function_locked(pdev))
-+				vdev->needs_reset = false;
-+			device_unlock(&pdev->dev);
-+		}
-+		pci_cfg_access_unlock(pdev);
-+	}
- 
- 	pci_restore_state(pdev);
- out:
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 5b77098944151..db9f67d34af37 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -144,6 +144,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
+ 	if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu-%c\n%n",
+ 		   (time64_t *)&time->tv_sec, &time->tv_nsec, &data_type,
+ 		   &header_length) == 3) {
++		time->tv_nsec *= 1000;
+ 		if (data_type == 'C')
+ 			*compressed = true;
+ 		else
+@@ -151,6 +152,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
+ 	} else if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu\n%n",
+ 			  (time64_t *)&time->tv_sec, &time->tv_nsec,
+ 			  &header_length) == 2) {
++		time->tv_nsec *= 1000;
+ 		*compressed = false;
+ 	} else {
+ 		time->tv_sec = 0;
 -- 
 2.20.1
 
