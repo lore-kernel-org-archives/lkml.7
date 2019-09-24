@@ -2,136 +2,209 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED30C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400B1C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750FC2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A7B21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XgWGhZQQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SL7nl0vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437624AbfIXPwc (ORCPT
+        id S2437812AbfIXPwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:52:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58816 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390621AbfIXPwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:52:32 -0400
-Received: from zn.tnic (p200300EC2F0DB700DCC45CFC64A01FDA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:b700:dcc4:5cfc:64a0:1fda])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 23C671EC03F6;
-        Tue, 24 Sep 2019 17:52:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569340351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=l3jFh3vc0yWIg+y9vM+gn/zUH4p7Zpw4IM2PNranPm4=;
-        b=XgWGhZQQV+Iw40yB7ykRGEOcn5mBvdNHEHu1yGH6Z1ofug0Xpe+I5u1CCnTkehCHOUpiuM
-        WeaAILMu94hybPkqnrkI0njXNca6PZqpk6hyprFWUTG+GAPhSf0frPvOOCcpIJcx3PAhPY
-        Ptye33yvUKfABQoDAYgTULUlIo8jSp8=
-Date:   Tue, 24 Sep 2019 17:52:32 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Haim Cohen <haim.cohen@intel.com>
-Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
- Control hardware bits
-Message-ID: <20190924155232.GG19317@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
+        Tue, 24 Sep 2019 11:52:35 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42560 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390624AbfIXPwd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:52:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uMRpyMWNwJKJpnxqT6YsZkEtepZFeyzBpvTiDie8B1U=; b=SL7nl0vhym8w2ntt4lOTF8EIZ
+        7lXGyEXmwwuTutRwU+thNstMMLoWA90wZo+Et5Mz2dSjtpkrDvK2CcsOLH/EOFIT9wy7HXPjtfBds
+        ZQQAm8ndFpuCDNj2iLUswNzCtWOHL4QuSvq2AI7v74FNirop5a34IC5A0NfukWcyp+2fApJNwDDbv
+        8VFdiDElJqOeX9NxVWrggo0iHrOObLDqIt+ZtUoPwhq+FaKCOu+s0R6ULK8ilvAhCZVUfh39xdJjZ
+        R5fgbY+tEid44gduh7Xk710exO9IVilCgknT99AufgYMaBzjUGd2POCtUV+o335BbVFNR/CBXAGM4
+        f1e2pq69w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47694)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iCn74-0002kh-Vk; Tue, 24 Sep 2019 16:52:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iCn71-0001Np-Pk; Tue, 24 Sep 2019 16:52:23 +0100
+Date:   Tue, 24 Sep 2019 16:52:23 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org,
+        leoyang.li@nxp.com, Minghuan.Lian@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, bhelgaas@google.com,
+        andrew.murray@arm.com, kishon@ti.com, shawnguo@kernel.org,
+        mingkai.hu@nxp.com
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20190924155223.GX25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190924141847.GW25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20190924141847.GW25745@shell.armlinux.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 05:26:33PM +0300, Jarkko Sakkinen wrote:
-> From: Kai Huang <kai.huang@linux.intel.com>
+On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> > EP driver of NXP Layerscape platform.
+> > 
+> > This patch set depends on:
+> > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> > 
+> > Xiaowei Bao (6):
+> >   PCI: mobiveil: Add the EP driver support
+> >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+> >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+> >   PCI: mobiveil: Add workaround for unsupported request error
+> >   arm64: dts: lx2160a: Add PCIe EP node
+> >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+> >     support
+> > 
+> >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+> >  MAINTAINERS                                        |   3 +
+> >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+> >  drivers/misc/pci_endpoint_test.c                   |   2 +
+> >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+> >  drivers/pci/controller/mobiveil/Makefile           |   2 +
+> >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+> >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+> >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+> >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+> >  10 files changed, 1009 insertions(+), 12 deletions(-)
+> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
 > 
-> Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
-> Launch Control.
+> Hi,
 > 
-> Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
-> SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
-> called enclaves, are always signed. All enclaves signed with the public key
-> are unconditionally allowed to initialize. [1]
+> I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
+> window" and your patch set to 5.3, which seems to be able to detect the
+> PCIe card I have plugged in:
 > 
-> Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
-> whether the formentioned MSRs are writable or not. If the bit is off, the
-> public key MSRs are read-only for the OS.
+> layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
+> layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
+> layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [bus 00-ff]
+> pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
+> [0x40000000-0x7fffffff])
+> pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
+> pci 0000:00:00.0: enabling Extended Tags
+> pci 0000:00:00.0: supports D1 D2
+> pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+> pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
+> pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
+> pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
+> pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
+> pci 0000:00:00.0: up support 3 enabled 0
+> pci 0000:00:00.0: dn support 1 enabled 0
+> pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
+> pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
+> pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
+> pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
+> pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
+> pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
+> pcieport 0000:00:00.0: init_service_irqs: -19
 > 
-> If the MSRs are read-only, the platform must provide a launch enclave (LE).
-> LE can create cryptographic tokens for other enclaves that they can pass
-> together with their signature to the ENCLS(EINIT) opcode, which is used
-> to initialize enclaves.
+> However, a bit later in the kernel boot, I get:
 > 
-> Linux is unlikely to support the locked configuration because it takes away
-> the control of the launch decisions from the kernel.
-
-Right, who has control over FEATURE_CONTROL_SGX_LE_WR? Can the
-kernel set it and put another hash in there or there will be locked
-configurations where setting that bit will trap?
-
-I don't want to leave anything in the hands of the BIOS controlling
-whether the platform can set its own key because BIOS is known to f*ck
-it up almost every time. And so I'd like for us to be able to fix up
-things without depending on the mood of some OEM vendor's BIOS fixing
-desire.
-
-> [1] Intel SDM: 38.1.4 Intel SGX Launch Control Configuration
+> SError Interrupt on CPU1, code 0xbf000002 -- SError
+> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> pstate: 60400085 (nZCv daIf +PAN -UAO)
+> pc : pci_generic_config_read+0xb0/0xc0
+> lr : pci_generic_config_read+0x1c/0xc0
+> sp : ffffff8010f9baf0
+> x29: ffffff8010f9baf0 x28: ffffff8010d620a0
+> x27: ffffff8010d79000 x26: ffffff8010d62000
+> x25: ffffff8010cb06d4 x24: 0000000000000000
+> x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
+> x21: 0000000000000000 x20: ffffffe2eda11800
+> x19: ffffff8010f62158 x18: ffffff8010bdede0
+> x17: ffffff8010bdede8 x16: ffffff8010b96970
+> x15: ffffffffffffffff x14: ffffffffff000000
+> x13: ffffffffffffffff x12: 0000000000000030
+> x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+> x9 : 2dff716475687163 x8 : ffffffffffffffff
+> x7 : fefefefefefefefe x6 : 0000000000000000
+> x5 : 0000000000000000 x4 : ffffff8010f9bb6c
+> x3 : 0000000000000001 x2 : 0000000000000003
+> x1 : 0000000000000000 x0 : 0000000000000000
+> Kernel panic - not syncing: Asynchronous SError Interrupt
+> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> Call trace:
+>  dump_backtrace+0x0/0x120
+>  show_stack+0x14/0x1c
+>  dump_stack+0x9c/0xc0
+>  panic+0x148/0x34c
+>  print_tainted+0x0/0xa8
+>  arm64_serror_panic+0x74/0x80
+>  do_serror+0x8c/0x13c
+>  el1_error+0xbc/0x160
+>  pci_generic_config_read+0xb0/0xc0
+>  pci_bus_read_config_byte+0x64/0x90
+>  pci_read_config_byte+0x40/0x48
+>  pci_assign_irq+0x34/0xc8
+>  pci_device_probe+0x28/0x148
+>  really_probe+0x1c4/0x2d0
+>  driver_probe_device+0x58/0xfc
+>  device_driver_attach+0x68/0x70
+>  __driver_attach+0x94/0xdc
+>  bus_for_each_dev+0x50/0xa0
+>  driver_attach+0x20/0x28
+>  bus_add_driver+0x14c/0x200
+>  driver_register+0x6c/0x124
+>  __pci_register_driver+0x48/0x50
+>  mlx4_init+0x154/0x180
+>  do_one_initcall+0x30/0x250
+>  kernel_init_freeable+0x23c/0x32c
+>  kernel_init+0x10/0xfc
+>  ret_from_fork+0x10/0x18
+> SMP: stopping secondary CPUs
+> Kernel Offset: disabled
+> CPU features: 0x0002,21006008
+> Memory Limit: none
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Haim Cohen <haim.cohen@intel.com>
-> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> and there it dies.  Any ideas?
 
-This time checkpatch is right:
+The failing access seems to be:
 
-WARNING: Missing Signed-off-by: line by nominal patch author 'Kai Huang <kai.huang@linux.intel.com>'
+        pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
 
-And looking at the SOB chain, sounds like people need to make up their
-mind about authorship...
+for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
+card, it doesn't implement this register (just a guess), and aborts
+the PCI transaction, which is presumably triggering the above SError.
 
-> ---
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  arch/x86/include/asm/msr-index.h   | 7 +++++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index c5582e766121..ca82226e25ec 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -355,6 +355,7 @@
->  #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
->  #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
->  #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
-> +#define X86_FEATURE_SGX_LC		(16*32+30) /* Software Guard Extensions Launch Control */
-
-Amazing. SGX feature bits are spread around at least three CPUID leafs:
-
-7_EBX, 7_ECX, 12_EAX. Maybe there's a 4th somewhere because hey... :-\
+Note that I've used this card with the Macchiatobin (Armada 8040)
+without issue.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
