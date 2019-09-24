@@ -2,229 +2,138 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40850C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFDAC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1121B2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569338041;
-	bh=njnZUbW5nCHZlpdfKWu4f74vj7J2zRd+CgAgJGCk7uU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o3B9HN0cZVK0lI28Gg1O3Q+G5s9/Q3gFmRfDZZC09DANXmPK7fum8FQmrgODjHd6w
-	 UwIz6Gj/NnxzUAW1OTmXMiimkSYKeol2UjxxFa2ozvchPSHtSF91pI9TUzgWUVmYHb
-	 cQAxuzXEWGeBYVtI6KDGXoOhQhXijHDqBlhMiNbs=
+	by mail.kernel.org (Postfix) with ESMTP id C83382168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbfIXPOA (ORCPT
+        id S1731508AbfIXPPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:14:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33281 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfIXPN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:13:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so2405012wrs.0;
-        Tue, 24 Sep 2019 08:13:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=coBOjUYllsgCSM3XkBr7tQiqGi8Er2n8uVoWjDntFHI=;
-        b=RqMg7RjT7HKjb9msaYlh2zU7H/kbSpoUJdZtM/m8yFAhBJtHAdboUihcm4LYnD7Gto
-         9exf6FL8drdxu8cyC2mdZ+ZqJ+O9stQAveKrdRPbHGKvAKES+yZ0pM3BDYz0NMaX8LXa
-         wcCER6KW9aEe44CCrhhVlX/khGRqbq5QKUViY5p81VF8bHoVUMgmRfndNOMAfaylFchc
-         r82kfCKyxDZbpAy0GymBKIvqMolwQLPADTh05aTjJBUon/pSCieg9ZkVzuOwX43NHl6V
-         8R79kolE94PxA4UdxCwvK1HNjnrNNAwhSqv/NfUJ+pUYlrEdzqWjCUxR0ojmToINWdp/
-         QOeQ==
-X-Gm-Message-State: APjAAAWgQPW+AvwgcdZg6Vyy7klw4PJBSbT8qfZsa8S1dl/gxGJ65Fk8
-        US3IuW1kgbuJbJpgvndvnb8=
-X-Google-Smtp-Source: APXvYqwYAhT1KP4wwPFsQJ6D3DukTCnqvH+HD/vm3yBh0jAByvQCpK8OR6geDKG8e7OCSpW73nEaAA==
-X-Received: by 2002:adf:f303:: with SMTP id i3mr2742770wro.242.1569338036499;
-        Tue, 24 Sep 2019 08:13:56 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id x2sm3070208wrn.81.2019.09.24.08.13.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 08:13:55 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 17:13:51 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Maciej Falkowski <m.falkowski@samsung.com>
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung 2D Graphics
- Accelerator to dt-schema
-Message-ID: <20190924151351.GC9218@pi3>
-References: <CGME20190924134628eucas1p1586ca3285dac6b5d5cd1026ea78c436e@eucas1p1.samsung.com>
- <20190924134614.13371-1-m.szyprowski@samsung.com>
+        Tue, 24 Sep 2019 11:15:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52758 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731450AbfIXPPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:15:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60905AB6D;
+        Tue, 24 Sep 2019 15:15:02 +0000 (UTC)
+Subject: Re: [PATCH v2 4/4] mm, page_owner, debug_pagealloc: save and dump
+ freeing stack trace
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20190820131828.22684-1-vbabka@suse.cz>
+ <20190820131828.22684-5-vbabka@suse.cz> <20190924114242.q6rtv5h6xswxigim@box>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7098e036-c955-4ccb-6bce-fedf82ad0b1b@suse.cz>
+Date:   Tue, 24 Sep 2019 17:15:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
+In-Reply-To: <20190924114242.q6rtv5h6xswxigim@box>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190924134614.13371-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 03:46:14PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
+On 9/24/19 1:42 PM, Kirill A. Shutemov wrote:
+>> --- a/mm/page_owner.c
+>> +++ b/mm/page_owner.c
+>> @@ -24,6 +24,9 @@ struct page_owner {
+>>  	short last_migrate_reason;
+>>  	gfp_t gfp_mask;
+>>  	depot_stack_handle_t handle;
+>> +#ifdef CONFIG_DEBUG_PAGEALLOC
+>> +	depot_stack_handle_t free_handle;
+>> +#endif
 > 
-> Convert Samsung 2D Graphics Accelerator to newer dt-schema format
-> 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - Added if-then statements for 'clocks' and 'clock-names'
-> properties.
-> 
-> Best regards,
-> Maciej Falkowski
-> ---
->  .../devicetree/bindings/gpu/samsung-g2d.txt   | 27 -------
->  .../devicetree/bindings/gpu/samsung-g2d.yaml  | 76 +++++++++++++++++++
->  2 files changed, 76 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> deleted file mode 100644
-> index 1e7959332dbc..000000000000
-> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -* Samsung 2D Graphics Accelerator
-> -
-> -Required properties:
-> -  - compatible : value should be one among the following:
-> -	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210 SoC
-> -	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
-> -	(c) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
-> -
-> -  - reg : Physical base address of the IP registers and length of memory
-> -	  mapped region.
-> -
-> -  - interrupts : G2D interrupt number to the CPU.
-> -  - clocks : from common clock binding: handle to G2D clocks.
-> -  - clock-names : names of clocks listed in clocks property, in the same
-> -		  order, depending on SoC type:
-> -		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
-> -		    "sclk_fimg2d"
-> -		  - for Exynos5250 SoC: "fimg2d".
-> -
-> -Example:
-> -	g2d@12800000 {
-> -		compatible = "samsung,s5pv210-g2d";
-> -		reg = <0x12800000 0x1000>;
-> -		interrupts = <0 89 0>;
-> -		clocks = <&clock 177>, <&clock 277>;
-> -		clock-names = "sclk_fimg2d", "fimg2d";
-> -	};
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-> new file mode 100644
-> index 000000000000..5e05e8ccc83f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/samsung-g2d.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC 2D Graphics Accelerator
-> +
-> +maintainers:
-> +  - Inki Dae <inki.dae@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - samsung,s5pv210-g2d    # in S5PV210 & Exynos4210 SoC
-> +      - samsung,exynos4212-g2d # in Exynos4x12 SoCs
-> +      - samsung,exynos5250-g2d
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
+> I think it's possible to add space for the second stack handle at runtime:
+> adjust page_owner_ops->size inside the ->need().
 
-I think it is worth to leave the clocks and clock-names here (could be
-empty or with min/max values for number of items). This makes it easy to
-find the properties by humans.
+Uh that would complicate the code needlessly? The extra memory overhead
+isn't that much for a scenario that's already a debugging one
+(page_owner), I was more concerned about the cpu overhead, thus the
+static key.
 
-Midgard bindings could be used as example.
+> The second stack might be
+> useful beyond CONFIG_DEBUG_PAGEALLOC. We probably should not tie these
+> features.
 
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: samsung,exynos5250-g2d
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: fimg2d clock
-> +        clock-names:
-> +          items:
-> +            - const: fimg2d
-> +
-> +  - if:
+Yeah I generalized it later, as KASAN guys wanted the same thing:
 
-else:
+https://lore.kernel.org/linux-arm-kernel/d98bf550-367d-0744-025a-52307248ec82@suse.cz/
 
-Best regards,
-Krzysztof
-
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - samsung,s5pv210-g2d
-> +              - samsung,exynos4212-g2d
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: sclk_fimg2d clock
-> +            - description: fimg2d clock
-> +        clock-names:
-> +          items:
-> +            - const: sclk_fimg2d
-> +            - const: fimg2d
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    g2d@12800000 {
-> +        compatible = "samsung,s5pv210-g2d";
-> +        reg = <0x12800000 0x1000>;
-> +        interrupts = <0 89 0>;
-> +        clocks = <&clock 177>, <&clock 277>;
-> +        clock-names = "sclk_fimg2d", "fimg2d";
-> +    };
-> +
-> -- 
-> 2.17.1
-> 
-> 
-> 
+Perhaps as it's still mmotm I can squash it here.
