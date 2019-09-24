@@ -2,144 +2,197 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0187EC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64361C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48BB214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A13E21850
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MBoRit0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441272AbfIXOTJ (ORCPT
+        id S2441288AbfIXOTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:19:09 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35872 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395526AbfIXOTJ (ORCPT
+        Tue, 24 Sep 2019 10:19:15 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41446 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395526AbfIXOTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:19:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id g126so3347203iof.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 07:19:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=4WCI/8Wqn0NEN6qtZrVOjHXS2Epttr/1ag+Os3By8oI=;
-        b=YHB+v6oi58W9KxL89VBZY+7yO1lOhTxZVkQd1TMRBwnzau5HwNn1IuMSS8Hm9QbuFL
-         bMAOdVA0wPq4MXoWGU5lblguqSM7yXZ0qDPgc9OQTV6pDCbVoeqLUdBVhw1em3zxNjwb
-         JDdpnJs6psRyDmKP5Xpk58jXq+VDZS8nu/s3jafkeK5dpWCZCpnVhT7mKgL1sP2te7Ci
-         SpyeVKunYxsXB6ftN+PnCF1WE3OngHfupiFx4ipIJDgyWEeq/4g9hvbaYy6lD+u1yLxe
-         9KKAVlVEV8zLSi7FxLz+77B1xotCWyyoAp7uJuTZZBUTeUswlHubfFviU0pc7oQ6YHie
-         sRSA==
-X-Gm-Message-State: APjAAAV1xVTYbNOFa1A3kznEE/EX4Uwur6H1N/YCZMbu+MYRG8UeY/HP
-        xX6k2UUXO6L787swJs72vPVTlkhX4GNH4avIB28tgawgIiiH
-X-Google-Smtp-Source: APXvYqxZErJq8RgrHmQGUjIaf/b6OTC2jg8vElKXW7W12Jkd0R6WuMAunvOfzS3k8XX0fSys/sEII5d+/0roGa/NSaD4EqAB0iqo
+        Tue, 24 Sep 2019 10:19:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nqgSCGmIm+IUwS3ERfhTDAE0sOJMUSKY9CXB5clg1ac=; b=MBoRit0WI62gppHlFbszCPg/7
+        2Vmhi99ihMp4LrvbXQwg5L4JsF3rPJnybeLFMlRtCJL8ZMwajAhQgtKdOY61KWZDIxB8LMN4fR5qZ
+        A9STURyZYndU2WWVvjVyBh+UvHp1poRRNZTXB3vHbwvWbpvMtgm/hIXvJ91sZlPXT/MlrzaKqIaK2
+        tvzkk2pQKZU0TtLTV0qd+6ILY6045cgAV248wGVfZm0NFj6PIVAHjMCBIIdi7bnw/vrOG1U1uOtom
+        sbn6vVaiJmRpfC0jSxNjn2SjC5O6c5ZQ4GQaivP7dW86C3vwZ1hZMyycc+rFVBL7EI5N2xeqt5TvO
+        mewYAokGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47668)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iCleU-0002L8-IP; Tue, 24 Sep 2019 15:18:50 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iCleR-0001Jk-Nw; Tue, 24 Sep 2019 15:18:47 +0100
+Date:   Tue, 24 Sep 2019 15:18:47 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
+        andrew.murray@arm.com, mingkai.hu@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20190924141847.GW25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5003:: with SMTP id e3mr3797485iob.208.1569334748047;
- Tue, 24 Sep 2019 07:19:08 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 07:19:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000030f35305934d3804@google.com>
-Subject: general protection fault in open_rio
-From:   syzbot <syzbot+dbd38fbb686a9681143a@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> EP driver of NXP Layerscape platform.
+> 
+> This patch set depends on:
+> https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> 
+> Xiaowei Bao (6):
+>   PCI: mobiveil: Add the EP driver support
+>   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+>   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+>   PCI: mobiveil: Add workaround for unsupported request error
+>   arm64: dts: lx2160a: Add PCIe EP node
+>   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+>     support
+> 
+>  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+>  MAINTAINERS                                        |   3 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+>  drivers/misc/pci_endpoint_test.c                   |   2 +
+>  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+>  drivers/pci/controller/mobiveil/Makefile           |   2 +
+>  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+>  10 files changed, 1009 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
 
-syzbot found the following crash on:
+Hi,
 
-HEAD commit:    d9e63adc usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1602b303600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f4fa60e981ee8e6a
-dashboard link: https://syzkaller.appspot.com/bug?extid=dbd38fbb686a9681143a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
+window" and your patch set to 5.3, which seems to be able to detect the
+PCIe card I have plugged in:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
+layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
+layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
+[0x40000000-0x7fffffff])
+pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
+pci 0000:00:00.0: enabling Extended Tags
+pci 0000:00:00.0: supports D1 D2
+pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
+pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
+pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
+pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
+pci 0000:00:00.0: up support 3 enabled 0
+pci 0000:00:00.0: dn support 1 enabled 0
+pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
+pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
+pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
+pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
+pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
+pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
+pcieport 0000:00:00.0: init_service_irqs: -19
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+dbd38fbb686a9681143a@syzkaller.appspotmail.com
+However, a bit later in the kernel boot, I get:
 
-usb 4-1: Rio opened.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 1 PID: 6898 Comm: syz-executor.1 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:dev_name include/linux/device.h:1342 [inline]
-RIP: 0010:__dev_printk+0x3a/0x203 drivers/base/core.c:3335
-Code: 89 f5 53 e8 0f 01 d0 fe 48 85 ed 0f 84 bc 01 00 00 e8 01 01 d0 fe 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 32 e7 f6 fe 4c 8b 7d 50 4d 85 ff 75 27 e8 d4
-RSP: 0018:ffff8881cf697830 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffed1039ed2f0d RCX: ffffc900012d0000
-RDX: 000000000000001e RSI: ffffffff826e3b9f RDI: 00000000000000f0
-RBP: 00000000000000a0 R08: ffff8881cf37c800 R09: fffffbfff0e98bf9
-R10: ffff8881cf697960 R11: ffffffff874c5fc7 R12: ffffffff85f2e160
-R13: ffff8881cf697888 R14: ffff8881ca024528 R15: ffff8881ca024528
-FS:  00007f175b8c8700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30627000 CR3: 00000001cbb1f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  _dev_info+0xd7/0x109 drivers/base/core.c:3381
-  open_rio drivers/usb/misc/rio500.c:75 [inline]
-  open_rio+0xaa/0xc0 drivers/usb/misc/rio500.c:59
-  usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3408 [inline]
-  path_openat+0x1430/0x3f50 fs/namei.c:3525
-  do_filp_open+0x1a1/0x280 fs/namei.c:3555
-  do_sys_open+0x3c0/0x580 fs/open.c:1089
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4138f1
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007f175b8c77a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004138f1
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00007f175b8c77d0
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 000000000000000f
-R10: 0000000000000064 R11: 0000000000000293 R12: 00007f175b8c86d4
-R13: 00000000004c8d40 R14: 00000000004dfe48 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 2b1b73a1ede24824 ]---
-RIP: 0010:dev_name include/linux/device.h:1342 [inline]
-RIP: 0010:__dev_printk+0x3a/0x203 drivers/base/core.c:3335
-Code: 89 f5 53 e8 0f 01 d0 fe 48 85 ed 0f 84 bc 01 00 00 e8 01 01 d0 fe 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 32 e7 f6 fe 4c 8b 7d 50 4d 85 ff 75 27 e8 d4
-RSP: 0018:ffff8881cf697830 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffed1039ed2f0d RCX: ffffc900012d0000
-RDX: 000000000000001e RSI: ffffffff826e3b9f RDI: 00000000000000f0
-RBP: 00000000000000a0 R08: ffff8881cf37c800 R09: fffffbfff0e98bf9
-R10: ffff8881cf697960 R11: ffffffff874c5fc7 R12: ffffffff85f2e160
-R13: ffff8881cf697888 R14: ffff8881ca024528 R15: ffff8881ca024528
-FS:  00007f175b8c8700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30627000 CR3: 00000001cbb1f000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+SError Interrupt on CPU1, code 0xbf000002 -- SError
+CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+pstate: 60400085 (nZCv daIf +PAN -UAO)
+pc : pci_generic_config_read+0xb0/0xc0
+lr : pci_generic_config_read+0x1c/0xc0
+sp : ffffff8010f9baf0
+x29: ffffff8010f9baf0 x28: ffffff8010d620a0
+x27: ffffff8010d79000 x26: ffffff8010d62000
+x25: ffffff8010cb06d4 x24: 0000000000000000
+x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
+x21: 0000000000000000 x20: ffffffe2eda11800
+x19: ffffff8010f62158 x18: ffffff8010bdede0
+x17: ffffff8010bdede8 x16: ffffff8010b96970
+x15: ffffffffffffffff x14: ffffffffff000000
+x13: ffffffffffffffff x12: 0000000000000030
+x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+x9 : 2dff716475687163 x8 : ffffffffffffffff
+x7 : fefefefefefefefe x6 : 0000000000000000
+x5 : 0000000000000000 x4 : ffffff8010f9bb6c
+x3 : 0000000000000001 x2 : 0000000000000003
+x1 : 0000000000000000 x0 : 0000000000000000
+Kernel panic - not syncing: Asynchronous SError Interrupt
+CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+Call trace:
+ dump_backtrace+0x0/0x120
+ show_stack+0x14/0x1c
+ dump_stack+0x9c/0xc0
+ panic+0x148/0x34c
+ print_tainted+0x0/0xa8
+ arm64_serror_panic+0x74/0x80
+ do_serror+0x8c/0x13c
+ el1_error+0xbc/0x160
+ pci_generic_config_read+0xb0/0xc0
+ pci_bus_read_config_byte+0x64/0x90
+ pci_read_config_byte+0x40/0x48
+ pci_assign_irq+0x34/0xc8
+ pci_device_probe+0x28/0x148
+ really_probe+0x1c4/0x2d0
+ driver_probe_device+0x58/0xfc
+ device_driver_attach+0x68/0x70
+ __driver_attach+0x94/0xdc
+ bus_for_each_dev+0x50/0xa0
+ driver_attach+0x20/0x28
+ bus_add_driver+0x14c/0x200
+ driver_register+0x6c/0x124
+ __pci_register_driver+0x48/0x50
+ mlx4_init+0x154/0x180
+ do_one_initcall+0x30/0x250
+ kernel_init_freeable+0x23c/0x32c
+ kernel_init+0x10/0xfc
+ ret_from_fork+0x10/0x18
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,21006008
+Memory Limit: none
 
+and there it dies.  Any ideas?
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Thanks.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
