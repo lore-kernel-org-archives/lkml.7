@@ -2,104 +2,113 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9015CC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22997C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF262168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34BF214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jW0lrNqJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCee7g6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394261AbfIXTc4 (ORCPT
+        id S2436597AbfIXTdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:32:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50500 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388207AbfIXTcz (ORCPT
+        Tue, 24 Sep 2019 15:33:15 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:43576 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfIXTdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:32:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1569353572; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KlcrFKHqRHEWTZwgwOrmjPoSAcprqpYblaKBY9ljXVE=;
-        b=jW0lrNqJ9kfs3VLCQGkvbq0bjx2lK5xC4x7irzyPUAKayRIgQdwstRK5YwCHoHCVh/yN22
-        KzC25U3qxCJg6MTPZyi2E1r2I3kSKh/DarsAfhK7LNaJjRqTvGGBkCeOJ6FAh6ZIiMtNSJ
-        TBC49rH918ZFJ0rEjFkUaLSDhZbwB0o=
-Date:   Tue, 24 Sep 2019 21:32:32 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] dmaengine: jz4780: Use devm_platform_ioremap_resource()
- in jz4780_dma_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>
-Message-Id: <1569353552.1911.0@crapouillou.net>
-In-Reply-To: <5dd19f28-349a-4957-ea3a-6aebbd7c97e2@web.de>
-References: <5dd19f28-349a-4957-ea3a-6aebbd7c97e2@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 15:33:14 -0400
+Received: by mail-pg1-f202.google.com with SMTP id 6so1944727pgi.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 12:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=OrZSsFgz8YSYCzyY3m6MisHwmEHZxndakULq4rIEpuc=;
+        b=JCee7g6OG9+4bweqR5aGATiwCA3e/cWEATDyxZar3AWX+mfuet8p4InLbwToRYS1fY
+         D73O6sap0Cc1+YXgtQW63ytieUYaFWsd+uDb2lQZUI5OTKRk8HqTLa+J+raA5NYB4u9e
+         5fVPdS0GVbuykzouDvQYecqhhyj3UErHMVYoh7f8uymGRiYEq+VW2k19OXwyLU4Aqo+0
+         9YF3F7H8XtGQjtTyxTu+5n6Rw70qE2Lda5ib6J6Jfsi6nqV+ZjjPy8N2Zprtml9brWz5
+         Ihs2h8NYnZQPaCRMP6fgfhnXeNkF7Zr3zIgQXSPCs/GYvuLbTskd4+U+ryYJH5cMyikq
+         F4fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=OrZSsFgz8YSYCzyY3m6MisHwmEHZxndakULq4rIEpuc=;
+        b=qA9bMcRiJEkdlZ1523UaR30z3qFLKyasZA0gWG2aKvQ1GYpm4bT2ecVREq3Baz+aNi
+         lhgiUYD4jwBzO3exoh06PNhTzc++Qi3ybvj4AB8/DoRQIX+jYgGn/9XNX5pZzO41O85g
+         dDw8m/nl8i4sFIRjg6IzjrnBYSG5dXkAxZIMEV85TkMgFkmZwpRiJ5zMRYTx1t13cZAX
+         3DR2Zj83A9jaOVxcroF3XoOyIKJIzUfp0U5Mw0ugH+qWHkfudN47dV/8PAyrsZDckRQf
+         G1ZVCmEShRX+68xCqbZQrb4XUfJGK6Y2dkI/nCVakOcXHVyT+dPzbTawN8VlkNiRNB4o
+         U7Xg==
+X-Gm-Message-State: APjAAAVU0yiz28iWt5P+BlBAO9+PAWNca4oAJo+GmynCFOaz2Lj7hMYH
+        3B3BnENVirY0Mnso5Cfp7KRBIcZXp26fXAk1YzA=
+X-Google-Smtp-Source: APXvYqwNScNpb9+1laHqvEtbkhw1hVHkR7r8t1bRUL1yfCnQpIZIhzfB4ycyD15NvFn/sqjGOeLEEeXv9dfbFrgV/iw=
+X-Received: by 2002:a63:6c81:: with SMTP id h123mr4758455pgc.132.1569353593673;
+ Tue, 24 Sep 2019 12:33:13 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 12:33:08 -0700
+In-Reply-To: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
+Message-Id: <20190924193310.132104-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
+Subject: [PATCH v2] x86, realmode: explicitly set entry via command line
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Tri Vo <trong@android.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>,
+        George Rimar <grimar@accesssoftek.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+Linking with ld.lld via $ make LD=ld.lld produces the warning:
+ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
 
+Linking with ld.bfd shows the default entry is 0x1000:
+$ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
+  Entry point address:               0x1000
 
-Le dim. 22 sept. 2019 =E0 11:25, Markus Elfring <Markus.Elfring@web.de>=20
-a =E9crit :
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sun, 22 Sep 2019 11:18:27 +0200
->=20
-> Simplify this function implementation a bit by using
-> a known wrapper function.
->=20
-> This issue was detected by using the Coccinelle software.
->=20
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+While ld.lld is being pedantic, just set the entry point explicitly,
+instead of depending on the implicit default.
 
-Looks good to me.
+Link: https://github.com/ClangBuiltLinux/linux/issues/216
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V1 -> V2:
+* Use command line flag, rather than linker script, as ld.bfd produces a
+  syntax error for `ENTRY(0x1000)` but is happy with `-e 0x1000`
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+ arch/x86/realmode/rm/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> ---
->  drivers/dma/dma-jz4780.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->=20
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index cafb1cc065bb..f42b3ef8e036 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -858,13 +858,7 @@ static int jz4780_dma_probe(struct=20
-> platform_device *pdev)
->  	jzdma->soc_data =3D soc_data;
->  	platform_set_drvdata(pdev, jzdma);
->=20
-> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		dev_err(dev, "failed to get I/O memory\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	jzdma->chn_base =3D devm_ioremap_resource(dev, res);
-> +	jzdma->chn_base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(jzdma->chn_base))
->  		return PTR_ERR(jzdma->chn_base);
->=20
-> --
-> 2.23.0
->=20
-
-=
+diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
+index f60501a384f9..338a00c5257f 100644
+--- a/arch/x86/realmode/rm/Makefile
++++ b/arch/x86/realmode/rm/Makefile
+@@ -46,7 +46,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+ targets += realmode.lds
+ $(obj)/realmode.lds: $(obj)/pasyms.h
+ 
+-LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
++LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -e 0x1000 -T
+ CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
+ 
+ targets += realmode.elf
+-- 
+2.23.0.351.gc4317032e6-goog
 
