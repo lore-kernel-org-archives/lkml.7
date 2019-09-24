@@ -2,242 +2,206 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1B2C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBE8C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60D921783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759C3207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ml5iZMVD";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ml5iZMVD"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Nz+nPJZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438865AbfIXIBN (ORCPT
+        id S2409391AbfIXICx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:01:13 -0400
-Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:17024
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405186AbfIXIBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:01:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=432SZBl+XgNRowFEJpvuppz3A/j8ZcamL456V3bwWEE=;
- b=Ml5iZMVDZPxpeMG4PwAMZeC5oP8T0GktvNMruvTgW4ls+BRDdOiaebV2UXH1l9LegkpyS9bb/YZ/1NXAjV1aLz++pVfSXrp1/1jKSmDG1FoMOFgqc9yW/a4ZUxa0C4XpY/UGT5wnHQjmdAUgoml72qY+90ECjYA6RmxaoQXaVdg=
-Received: from VI1PR08CA0118.eurprd08.prod.outlook.com (2603:10a6:800:d4::20)
- by AM0PR08MB4451.eurprd08.prod.outlook.com (2603:10a6:208:142::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Tue, 24 Sep
- 2019 08:01:05 +0000
-Received: from VE1EUR03FT030.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::206) by VI1PR08CA0118.outlook.office365.com
- (2603:10a6:800:d4::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
- Transport; Tue, 24 Sep 2019 08:01:05 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT030.mail.protection.outlook.com (10.152.18.66) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20 via Frontend Transport; Tue, 24 Sep 2019 08:01:03 +0000
-Received: ("Tessian outbound 968ab6b62146:v31"); Tue, 24 Sep 2019 08:00:58 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 43709aea24852b2a
-X-CR-MTA-TID: 64aa7808
-Received: from 5795323429b6.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.0.55])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D03866E2-2541-4477-A523-3DBB1954CFBA.1;
-        Tue, 24 Sep 2019 08:00:53 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2055.outbound.protection.outlook.com [104.47.0.55])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5795323429b6.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Tue, 24 Sep 2019 08:00:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k48E04jdjUIqICSRAhcpPVAC2A6VvOvk3Etuptg5BpK0r2kGgpoHyk8fRUXQEefa2ZOZFAtwVbtzOpODd2ABofit3hEDxjYTVJOHDkWvIEAwb+1z9WO/f8dgsj5dC17JJEUzxvX1Zf6XhxP1XVaHqqI9R6rlCHvcZyD22PMxT0b3WhhvqZSfgFNtXp1VjSLgtA03tlJuis8s7EPryZIhT3+xJC6Yr9U5yJVty/1L/FQ1EpAS9WQADKndcG9Em1ch51c1c3fW/kq+Q1C6F6xLjdD3yDXspdt6c/VmDK8VT2M5c43/5NvsS926ZFNLlz8pT9m8VooMnrDposliWA6GkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=432SZBl+XgNRowFEJpvuppz3A/j8ZcamL456V3bwWEE=;
- b=MyMcZOF6faL/3kO0L0z3snuGJwKR3W0bb21wJBMLVUVRLUCIbSLvWasscX9EDgtdIsq1+y17cZ0KlPy3lzVGO1IZqWvPJ6qDPLYmI23TMGamBBINoDwNGSY5NM5NuaOPfARKfjVjG1LTFk4Kc48zTY4CChZ0nhXTPCrA88+ppUxaDaDd80ytTmb8WfKCswvyEC5IIsxPmwXjpTW6NWnoYv+8ljunSMIktzudF124/LXO3aR/6OCRP8v6yyt4o10Iab1uHTQfQZRsv+MH5PMdlGkUEij+Rijj5lD+t1MISW0qsGy86fhb9Wk9P8/5R93oMlFwmYCwsgjSgYg3REEIfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=432SZBl+XgNRowFEJpvuppz3A/j8ZcamL456V3bwWEE=;
- b=Ml5iZMVDZPxpeMG4PwAMZeC5oP8T0GktvNMruvTgW4ls+BRDdOiaebV2UXH1l9LegkpyS9bb/YZ/1NXAjV1aLz++pVfSXrp1/1jKSmDG1FoMOFgqc9yW/a4ZUxa0C4XpY/UGT5wnHQjmdAUgoml72qY+90ECjYA6RmxaoQXaVdg=
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
- VI1PR08MB3342.eurprd08.prod.outlook.com (52.134.31.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 08:00:50 +0000
-Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::d09e:254b:4d3b:456b]) by VI1PR08MB5488.eurprd08.prod.outlook.com
- ([fe80::d09e:254b:4d3b:456b%3]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 08:00:49 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH v2 2/2] drm/komeda: Adds layer horizontal input size
- limitation check for D71
-Thread-Topic: [PATCH v2 2/2] drm/komeda: Adds layer horizontal input size
- limitation check for D71
-Thread-Index: AQHVcq4tpEcv3GJQ1Eqd/4hiDuATxQ==
-Date:   Tue, 24 Sep 2019 08:00:49 +0000
-Message-ID: <20190924080022.19250-3-lowry.li@arm.com>
-References: <20190924080022.19250-1-lowry.li@arm.com>
-In-Reply-To: <20190924080022.19250-1-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR01CA0022.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::34) To VI1PR08MB5488.eurprd08.prod.outlook.com
- (2603:10a6:803:137::22)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 1f6708f8-fcfb-4b66-73e0-08d740c558e5
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3342;
-X-MS-TrafficTypeDiagnostic: VI1PR08MB3342:|VI1PR08MB3342:|AM0PR08MB4451:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR08MB44513366F451C4710DFECF8E9F840@AM0PR08MB4451.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:4941;OLM:4941;
-x-forefront-prvs: 0170DAF08C
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(189003)(199004)(6116002)(66066001)(1076003)(81166006)(305945005)(71190400001)(14444005)(186003)(71200400001)(2906002)(25786009)(66946007)(52116002)(6512007)(446003)(8676002)(478600001)(64756008)(66556008)(11346002)(316002)(7736002)(386003)(6506007)(476003)(54906003)(2616005)(36756003)(6486002)(76176011)(486006)(66446008)(86362001)(110136005)(5660300002)(66476007)(14454004)(50226002)(6636002)(55236004)(81156014)(3846002)(8936002)(4326008)(2201001)(102836004)(26005)(99286004)(6436002)(256004)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3342;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: LGXSt/yIp7pcZUvNuKFxRz/srddymqUfYDNiKMCdsqJbPguqeOcHJZqo6LT5LgOFQTSC/Ty5tqxoLlsyS6HAm2Bz0AzTpR8OYyOJSIagYSShocHkdT8z8y1rXJMi/q75aqPe3H3LdSGgaPlF6QQFUbHS1deZ3TbQ6Ar+Eu3VbV9AU7YHqALH8CbD2WzvqaylHkIvcl67Y5macLPUC8RB7DfxsQru/tZm9INWdFBzy1dzPjCUp3gIJ5KwNAm4cLDYPg8zV0fDW4QvUiJynIIqjqhn0HTaDjcWxyrxlNt2qHhpTXJhylJKjn9+4JiLruaBu/OZM+sfuXBJaAgEOJTv4dx/xRguxJzhmSgKIRhv0pNz/0f5cTK8soN0f6deFMEY+JlGL3+frIjqvbBoWQOj+9D93o6R9zf7ysEgnxXy62s=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 04:02:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34092 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409293AbfIXICw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:02:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id q1so2256966ion.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 01:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XlIpObiXn0pGhAIkyW27MYi03pXVmO2CJBBWixP9Me0=;
+        b=Nz+nPJZvOg62qPOPDhEOsJMRJQoL2XQgBHHlrnN9+BpxsHlPCHNo1iGM9YC3V1qlN8
+         sB/WhtHSxQWK+I1d3xe9nY6vUIPU8rc67xoER270JGjBpZiMVNhRd0vJgBQB4tuXFZJ5
+         gin0/eYkj35DuDCKMOkQD0uHe2eAObajZj2EYG670ieSyo927HKf2iVp8QHSfOuXbhoa
+         /pNzJzg1cgETOJ/uGTD+3Xx4rxK1xKWJ6gHg1q+8YFIprj07ZxJ5ZtS3VBYcaLldQDZr
+         Bvg1Gbjs30F77ptP9bjalM7eh77tIXnY9HVv+Q7bVHME5u8Hbc3gE9DyxYAWdr+s3Osb
+         QGZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XlIpObiXn0pGhAIkyW27MYi03pXVmO2CJBBWixP9Me0=;
+        b=gpRhMb/Ujw+j9NdBpSUxoeGGb5xM1IkeeT6Yi3gFTBqeE04/Gv3YdpI1XQffhIwOxV
+         c7/gYkBs2ay5wZFV6s/ckNDeIwxLCPhAOLbPuEbhCAnZeSL/fapQHqguBjf1DDEogWiK
+         3xbTse50Un0LaHLmGIUFu6IcEnku22bQPc4kyde2kGaAi3e8FPGawG7krTs4tQhRRD2c
+         9wBT4xYmuJSMFpH2nrlpctUhAxKhisHctMPdFbQc0CIOQUk6W5Fdjlu6jUWtLCcNk0l5
+         evblzf8dCQZ8rCmEHoGPNR8v9JsKSuzEMSGdQX4Bv9tyLwYL7H5XAJcyeEr1418zHYPS
+         LnwA==
+X-Gm-Message-State: APjAAAVV+9hw6OrP4tCkt2lpFvMuJcccR2TTEQWG5r/ynj8VgZP7EO9H
+        YuAWlmx6Deupt0TAeibcuNWS/nhsqcqnZA==
+X-Google-Smtp-Source: APXvYqxu9as56XBJs/27/izI40JyfUFGUn6Ir1RHkmlGUc0zo/EsnkuXfTbp3nlBXlY4kBWh8BBqSw==
+X-Received: by 2002:a02:65cd:: with SMTP id u196mr2368567jab.3.1569312170512;
+        Tue, 24 Sep 2019 01:02:50 -0700 (PDT)
+Received: from [172.19.131.113] ([8.46.75.9])
+        by smtp.gmail.com with ESMTPSA id t16sm970403iol.12.2019.09.24.01.02.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 01:02:48 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1569139018.git.asml.silence@gmail.com>
+ <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+ <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+ <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
+ <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+Date:   Tue, 24 Sep 2019 10:02:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3342
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT030.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(189003)(199004)(2201001)(478600001)(66066001)(3846002)(186003)(356004)(6116002)(2906002)(11346002)(102836004)(4326008)(26005)(336012)(446003)(126002)(2616005)(486006)(14454004)(386003)(6506007)(25786009)(23756003)(47776003)(36756003)(99286004)(2501003)(76176011)(70586007)(70206006)(1076003)(7736002)(76130400001)(6486002)(63350400001)(476003)(316002)(110136005)(26826003)(54906003)(81166006)(14444005)(36906005)(8746002)(8936002)(50226002)(305945005)(6512007)(86362001)(8676002)(6636002)(81156014)(5660300002)(22756006)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB4451;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 8d72181d-ab46-4505-75e0-08d740c5504a
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR08MB4451;
-NoDisclaimer: True
-X-Forefront-PRVS: 0170DAF08C
-X-Microsoft-Antispam-Message-Info: c5IuokTgWczRJ+bmI/kPOr8eYjAicKYQ6s8jdm//RDGTac2wlhb31WhYwhM28V3sLfLQ1OEP/qRsNn02L8rUzzHWLgAG0ZGy1/SYpMVOMWneLyIyTb6jNN6V2HV5sSGH9xFjeMpaZNN+RRw8cM3gtzdNJ6JEiFEKL61p4iY+d8s7Jy+x/RO1aeEgRg1Affbg93n+TCWGSAf3qUQpUertjAjmBz97ECqYlzP6vePYpAO0ILGam1FrIbSIPbBG9QMA3ZmW81sQFXlfXUXjnA5dcmzKqOrdyPux7/h/B/w+u3U3zL6KYTLqH4Z/mHNAESMBJERc9/eVEFUVYsi6jCCWzciNghBr2P6Za/yefyUC8wtQXR+tf26DO6FRLPJfNcP+GF6r1ZwS9knHC13cIGs8xu7XffkMKggljAlYJXIbvbw=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2019 08:01:03.9321
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f6708f8-fcfb-4b66-73e0-08d740c558e5
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4451
+In-Reply-To: <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+On 9/24/19 1:06 AM, Pavel Begunkov wrote:
+> On 24/09/2019 02:00, Jens Axboe wrote:
+>>> I think we can do the same thing, just wrapping the waitqueue in a
+>>> structure with a count in it, on the stack. Got some flight time
+>>> coming up later today, let me try and cook up a patch.
+>>
+>> Totally untested, and sent out 5 min before departure... But something
+>> like this.
+> Hmm, reminds me my first version. Basically that's the same thing but
+> with macroses inlined. I wanted to make it reusable and self-contained,
+> though.
+> 
+> If you don't think it could be useful in other places, sure, we could do
+> something like that. Is that so?
 
-Adds maximum line size check according to the AFBC decoder limitation
-and special Line size limitation(2046) for format: YUV420_10BIT and X0L2.
+I totally agree it could be useful in other places. Maybe formalized and
+used with wake_up_nr() instead of adding a new primitive? Haven't looked
+into that, I may be talking nonsense.
 
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
----
- .../arm/display/komeda/d71/d71_component.c    | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+In any case, I did get a chance to test it and it works for me. Here's
+the "finished" version, slightly cleaned up and with a comment added
+for good measure.
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drive=
-rs/gpu/drm/arm/display/komeda/d71/d71_component.c
-index 357837b9d6ed..6740b8422f11 100644
---- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-+++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-@@ -349,7 +349,56 @@ static void d71_layer_dump(struct komeda_component *c,=
- struct seq_file *sf)
- 	seq_printf(sf, "%sAD_V_CROP:\t\t0x%X\n", prefix, v[2]);
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ca7570aca430..14fae454cf75 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2768,6 +2768,42 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ 	return submit;
  }
-=20
-+static int d71_layer_validate(struct komeda_component *c,
-+			      struct komeda_component_state *state)
+ 
++struct io_wait_queue {
++	struct wait_queue_entry wq;
++	struct io_ring_ctx *ctx;
++	struct task_struct *task;
++	unsigned to_wait;
++	unsigned nr_timeouts;
++};
++
++static inline bool io_should_wake(struct io_wait_queue *iowq)
 +{
-+	struct komeda_layer_state *st =3D to_layer_st(state);
-+	struct komeda_layer *layer =3D to_layer(c);
-+	struct drm_plane_state *plane_st;
-+	struct drm_framebuffer *fb;
-+	u32 fourcc, line_sz, max_line_sz;
++	struct io_ring_ctx *ctx = iowq->ctx;
 +
-+	plane_st =3D drm_atomic_get_new_plane_state(state->obj.state,
-+						  state->plane);
-+	fb =3D plane_st->fb;
-+	fourcc =3D fb->format->format;
-+
-+	if (drm_rotation_90_or_270(st->rot))
-+		line_sz =3D st->vsize - st->afbc_crop_t - st->afbc_crop_b;
-+	else
-+		line_sz =3D st->hsize - st->afbc_crop_l - st->afbc_crop_r;
-+
-+	if (fb->modifier) {
-+		if ((fb->modifier & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) =3D=3D
-+			AFBC_FORMAT_MOD_BLOCK_SIZE_32x8)
-+			max_line_sz =3D layer->line_sz;
-+		else
-+			max_line_sz =3D layer->line_sz / 2;
-+
-+		if (line_sz > max_line_sz) {
-+			DRM_DEBUG_ATOMIC("afbc request line_sz: %d exceed the max afbc line_sz:=
- %d.\n",
-+					 line_sz, max_line_sz);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (fourcc =3D=3D DRM_FORMAT_YUV420_10BIT && line_sz > 2046 && (st->afbc_=
-crop_l % 4)) {
-+		DRM_DEBUG_ATOMIC("YUV420_10BIT input_hsize: %d exceed the max size 2046.=
-\n",
-+				 line_sz);
-+		return -EINVAL;
-+	}
-+
-+	if (fourcc =3D=3D DRM_FORMAT_X0L2 && line_sz > 2046 && (st->addr[0] % 16)=
-) {
-+		DRM_DEBUG_ATOMIC("X0L2 input_hsize: %d exceed the max size 2046.\n",
-+				 line_sz);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	/*
++	 * Wake up if we have enough events, or if a timeout occured since we
++	 * started waiting. For timeouts, we always want to return to userspace,
++	 * regardless of event count.
++	 */
++	return io_cqring_events(ctx->rings) >= iowq->to_wait ||
++			atomic_read(&ctx->cq_timeouts) != iowq->nr_timeouts;
 +}
 +
- static const struct komeda_component_funcs d71_layer_funcs =3D {
-+	.validate	=3D d71_layer_validate,
- 	.update		=3D d71_layer_update,
- 	.disable	=3D d71_layer_disable,
- 	.dump_register	=3D d71_layer_dump,
---=20
-2.17.1
++static int io_wake_function(struct wait_queue_entry *curr, unsigned int mode,
++			    int wake_flags, void *key)
++{
++	struct io_wait_queue *iowq = container_of(curr, struct io_wait_queue,
++							wq);
++
++	if (io_should_wake(iowq)) {
++		list_del_init(&curr->entry);
++		wake_up_process(iowq->task);
++		return 1;
++	}
++
++	return -1;
++}
++
+ /*
+  * Wait until events become available, if we don't already have some. The
+  * application must reap them itself, as they reside on the shared cq ring.
+@@ -2775,8 +2811,16 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			  const sigset_t __user *sig, size_t sigsz)
+ {
++	struct io_wait_queue iowq = {
++		.wq = {
++			.func	= io_wake_function,
++			.entry	= LIST_HEAD_INIT(iowq.wq.entry),
++		},
++		.task		= current,
++		.ctx		= ctx,
++		.to_wait	= min_events,
++	};
+ 	struct io_rings *rings = ctx->rings;
+-	unsigned nr_timeouts;
+ 	int ret;
+ 
+ 	if (io_cqring_events(rings) >= min_events)
+@@ -2795,15 +2839,16 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			return ret;
+ 	}
+ 
+-	nr_timeouts = atomic_read(&ctx->cq_timeouts);
+-	/*
+-	 * Return if we have enough events, or if a timeout occured since
+-	 * we started waiting. For timeouts, we always want to return to
+-	 * userspace.
+-	 */
+-	ret = wait_event_interruptible(ctx->wait,
+-				io_cqring_events(rings) >= min_events ||
+-				atomic_read(&ctx->cq_timeouts) != nr_timeouts);
++	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
++	prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
++	do {
++		if (io_should_wake(&iowq))
++			break;
++		schedule();
++		set_current_state(TASK_INTERRUPTIBLE);
++	} while (1);
++	finish_wait(&ctx->wait, &iowq.wq);
++
+ 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
+ 	if (ret == -ERESTARTSYS)
+ 		ret = -EINTR;
+
+-- 
+Jens Axboe
 
