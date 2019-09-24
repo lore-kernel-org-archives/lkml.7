@@ -2,154 +2,141 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF3C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDD7C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2DA2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3F9214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxfgl/v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504932AbfIXMcJ (ORCPT
+        id S2504946AbfIXMdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:32:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9286 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504919AbfIXMcI (ORCPT
+        Tue, 24 Sep 2019 08:33:37 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43428 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504934AbfIXMdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:32:08 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8OCMh8K139995
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:07 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v7huw3re0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:07 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 24 Sep 2019 13:32:04 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Sep 2019 13:31:54 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8OCVrqt49414322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 12:31:53 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32A1FA4060;
-        Tue, 24 Sep 2019 12:31:53 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E2E9A4062;
-        Tue, 24 Sep 2019 12:31:49 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.153])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 24 Sep 2019 12:31:49 +0000 (GMT)
-Date:   Tue, 24 Sep 2019 15:31:47 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 0/2] mm/debug: Add tests for architecture exported
- page table helpers
-References: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
- <20190924115101.p6y7vpbtgmj5qjku@box>
+        Tue, 24 Sep 2019 08:33:37 -0400
+Received: by mail-yw1-f68.google.com with SMTP id q7so546888ywe.10;
+        Tue, 24 Sep 2019 05:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ppbf0GjjcLCC8+XESr5CsIazd9/C/wSsIdEq9i6snq4=;
+        b=Gxfgl/v4Uz0X74siTnjFjyr0iu6alwIFn6sFgnibTtA/y00I09UtrBXQqVuxSPAAor
+         6P6/Eyo09MTd/fkNYYHU9ysIwD8de4ApJ+lnI/grQTddv/QdepQlP9hj/4x6uHHKfcO1
+         6Uc6q7tQBNvHpLZyawiTfdJmnO+5lcSmM4CImvE9eFhy44FwvAPAAGMfRL6hAPjamELT
+         M7Me9a8cPDYieczoUyjHJtNfDCgfcOWfrBHgP2ozqMQUIPFlFsRh1BkmWwhRGscySk+g
+         54vuiFbxERIbj5JX+I2X7nshpf9fRthyIYviXDjIBgpBPMBORC3kLL3FumiHzEyGqPji
+         WU3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ppbf0GjjcLCC8+XESr5CsIazd9/C/wSsIdEq9i6snq4=;
+        b=PUXXFcarnb/uc5fUMvZXWMiCO1PVxRM6Lr8zHp1EXIMrSahWFO+JENiLTo3yNy3tGs
+         QBJePl0T7DvmVkjD12A8ZbxXyR0gnvwmcXR61EVI2MTlisPZZQRKBx2dYyUfrfBpD+8M
+         KAzbx1ejA/D07iYQVdGllSVAGkPXHC8425d5o5/qFDnHARUbZLUcHHbQPSnwN4WfP9oJ
+         ImC5PIt01LGR5RwrpXz77f66TRZBMln/6eKGu2o6thpoepZCBpfBmSvKuyXaPJnDfSZZ
+         DU86ebFNL8dbSK9y7COsx75O08K5MFdUoB+6gt4usYwbVMGvXS4fY38O1q4c9ntTGPFw
+         wbwA==
+X-Gm-Message-State: APjAAAX0lOLQRFHaujHKEPI/XQZH8cwWOLmr8XQlcza4gtvTxlL6CQJv
+        0CbEJ/od7ohK82gbCkYRXPMkPftoLFCwO9pdBbw=
+X-Google-Smtp-Source: APXvYqwjG4q9GRUGk57wxOKNpD3JAGN1fkZ7dn1XUtgSFXZm3+d80AM/mL1e1HBSMlyQytPBPr6yEqklsqU8peyXgOA=
+X-Received: by 2002:a81:7743:: with SMTP id s64mr1652106ywc.183.1569328416165;
+ Tue, 24 Sep 2019 05:33:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924115101.p6y7vpbtgmj5qjku@box>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19092412-0012-0000-0000-0000034FFF16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092412-0013-0000-0000-0000218A8EF4
-Message-Id: <20190924123146.GC5202@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909240125
+References: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 Sep 2019 15:33:25 +0300
+Message-ID: <CAOQ4uxhL_EZZ_ktv8RYpn-q2nDrA2v7kjv+b99a5ZKg3tmEQ8A@mail.gmail.com>
+Subject: Re: [PATCH xfstests] overlay: Enable character device to be the base
+ fs partition
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>,
+        David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
+        Eric Biggers <ebiggers@google.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 02:51:01PM +0300, Kirill A. Shutemov wrote:
-> On Fri, Sep 20, 2019 at 12:03:21PM +0530, Anshuman Khandual wrote:
-> > This series adds a test validation for architecture exported page table
-> > helpers. Patch in the series adds basic transformation tests at various
-> > levels of the page table. Before that it exports gigantic page allocation
-> > function from HugeTLB.
-> > 
-> > This test was originally suggested by Catalin during arm64 THP migration
-> > RFC discussion earlier. Going forward it can include more specific tests
-> > with respect to various generic MM functions like THP, HugeTLB etc and
-> > platform specific tests.
-> > 
-> > https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-> > 
-> > Testing:
-> > 
-> > Successfully build and boot tested on both arm64 and x86 platforms without
-> > any test failing. Only build tested on some other platforms. Build failed
-> > on some platforms (known) in pud_clear_tests() as there were no available
-> > __pgd() definitions.
-> > 
-> > - ARM32
-> > - IA64
-> 
-> Hm. Grep shows __pgd() definitions for both of them. Is it for specific
-> config?
- 
-For ARM32 it's defined only for 3-lelel page tables, i.e with LPAE on.
-For IA64 it's defined for !STRICT_MM_TYPECHECKS which is even not a config
-option, but a define in arch/ia64/include/asm/page.h
- 
-> -- 
->  Kirill A. Shutemov
+On Tue, Sep 24, 2019 at 12:34 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>
+> When running overlay tests using character devices as base fs partitions,
+> all overlay usecase results become 'notrun'. Function
+> '_overay_config_override' (common/config) detects that the current base
+> fs partition is not a block device and will set FSTYP to base fs. The
+> overlay usecase will check the current FSTYP, and if it is not 'overlay'
+> or 'generic', it will skip the execution.
+>
+> For example, using UBIFS as base fs skips all overlay usecases:
+>
+>   FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+>   MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+>
+>   overlay/001   [not run] not suitable for this filesystem type: ubifs
+>   overlay/002   [not run] not suitable for this filesystem type: ubifs
+>   overlay/003   [not run] not suitable for this filesystem type: ubifs
+>   ...
+>
+> When checking that the base fs partition is a block/character device,
+> FSTYP is overwritten as 'overlay'. This patch allows the base fs
+> partition to be a character device that can also execute overlay
+> usecases (such as ubifs).
+>
+> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> ---
+>  common/config | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/common/config b/common/config
+> index 4c86a49..a22acdb 100644
+> --- a/common/config
+> +++ b/common/config
+> @@ -550,7 +550,7 @@ _overlay_config_override()
+>         #    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+>         #    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+>         #    overlayfs base and mount dirs inside base fs mount.
+> -       [ -b "$TEST_DEV" ] || return 0
+> +       [ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+>
+>         # Config file may specify base fs type, but we obay -overlay flag
+>         [ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+> @@ -570,7 +570,7 @@ _overlay_config_override()
+>         export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+>         export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+>
+> -       [ -b "$SCRATCH_DEV" ] || return 0
+> +       [ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+>
+>         # Store original base fs vars
+>         export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+> --
+> 2.7.4
+>
 
--- 
-Sincerely yours,
-Mike.
+Looks fine.
 
+One nit: there is a message in _require_scratch_shutdown():
+_notrun "$SCRATCH_DEV is not a block device"
+for when $OVL_BASE_SCRATCH_DEV is not defined.
+
+Could probably use a better describing error anyway.
+
+Thanks,
+Amir.
