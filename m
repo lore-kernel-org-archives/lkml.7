@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB72FC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AF3C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D1E2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F203521BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343912;
-	bh=on4MoXKLcBAAwcvGInINaSXEOabjhNW79FFPggjuvbA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibp+zPtYmHAXZu85pWiwZGjnQPBtYDGLI722AYPZsXbgCYmyNR3A+zDqj2tqY5WDe
-	 VPAjarMs62pMNbLEuY0SNS/i5c8TrBOvA0XnmpeX03eFUdVcWheqD3e0vYVnxIvwD/
-	 W3s0MipDQJRPtEDFaWQd1l9giEb/sF0jiBMmudQg=
+	s=default; t=1569343918;
+	bh=WvrT+YqFB9XJFBgglofhWHy2h/WI6wolVdh3GnWYFJo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=z2y2AcOOivoi4y4LK9jk1Jj7fjENTmPJq/UMSyeOR4/JccCGopEbnwojmfk/OI4Dv
+	 CoLLRSBLI728ryqerTjgIoNFlYOag73TtyQp27viyEmbYzztxYe7VHUuMgaqP7Lmed
+	 ZKS6azeW+f5XhgcpEiFBwQ/K+UeWTiAUFqAbiDjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411178AbfIXQvu (ORCPT
+        id S2441566AbfIXQv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410919AbfIXQv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:27 -0400
+        id S2411053AbfIXQvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9805521D71;
-        Tue, 24 Sep 2019 16:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AD53217D9;
+        Tue, 24 Sep 2019 16:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343886;
-        bh=on4MoXKLcBAAwcvGInINaSXEOabjhNW79FFPggjuvbA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x84IAwEVWa+2DpqL5PmK+HYCqFIXDI1BbyTY0J2M6hmmWCZk0v6rRz5akWB579Ygf
-         w9KVDQnEr5SUwCq7ZTGqOf2mKjhgHPbPf767/LJXfTniAGt7135MDZD5gYERgTxTSr
-         nJb3rbaz5lA3Ue11onKLSXA6rHoPQBtUaIorGA4c=
+        s=default; t=1569343892;
+        bh=WvrT+YqFB9XJFBgglofhWHy2h/WI6wolVdh3GnWYFJo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gvT11bcNB7afyAixKctZAYSTjXSoplc9yrbYGx0arhfF5cv4pYEz2/STuvLXqB5ny
+         k91uwEbnZ5Hd0qs1owsJykmC8cgvACEcVDMCNi0IFAfIZH8Z4oiPgdKGBnUUgG4cgw
+         aM0YywjnxnTK4kHRMJ1/sDHtgUOlumgxPamjuc6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/28] clk: at91: select parent if main oscillator or bypass is enabled
-Date:   Tue, 24 Sep 2019 12:50:29 -0400
-Message-Id: <20190924165031.28292-26-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/19] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Tue, 24 Sep 2019 12:51:12 -0400
+Message-Id: <20190924165130.28625-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
-References: <20190924165031.28292-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,71 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 69a6bcde7fd3fe6f3268ce26f31d9d9378384c98 ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-Selecting the right parent for the main clock is done using only
-main oscillator enabled bit.
-In case we have this oscillator bypassed by an external signal (no driving
-on the XOUT line), we still use external clock, but with BYPASS bit set.
-So, in this case we must select the same parent as before.
-Create a macro that will select the right parent considering both bits from
-the MOR register.
-Use this macro when looking for the right parent.
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1568042692-11784-2-git-send-email-eugen.hristev@microchip.com
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-main.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index c813c27f2e58c..2f97a843d6d6b 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -27,6 +27,10 @@
- 
- #define MOR_KEY_MASK		(0xff << 16)
- 
-+#define clk_main_parent_select(s)	(((s) & \
-+					(AT91_PMC_MOSCEN | \
-+					AT91_PMC_OSCBYPASS)) ? 1 : 0)
-+
- struct clk_main_osc {
- 	struct clk_hw hw;
- 	struct regmap *regmap;
-@@ -119,7 +123,7 @@ static int clk_main_osc_is_prepared(struct clk_hw *hw)
- 
- 	regmap_read(regmap, AT91_PMC_SR, &status);
- 
--	return (status & AT91_PMC_MOSCS) && (tmp & AT91_PMC_MOSCEN);
-+	return (status & AT91_PMC_MOSCS) && clk_main_parent_select(tmp);
- }
- 
- static const struct clk_ops main_osc_ops = {
-@@ -530,7 +534,7 @@ static u8 clk_sam9x5_main_get_parent(struct clk_hw *hw)
- 
- 	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
- 
--	return status & AT91_PMC_MOSCEN ? 1 : 0;
-+	return clk_main_parent_select(status);
- }
- 
- static const struct clk_ops sam9x5_main_ops = {
-@@ -572,7 +576,7 @@ at91_clk_register_sam9x5_main(struct regmap *regmap,
- 	clkmain->hw.init = &init;
- 	clkmain->regmap = regmap;
- 	regmap_read(clkmain->regmap, AT91_CKGR_MOR, &status);
--	clkmain->parent = status & AT91_PMC_MOSCEN ? 1 : 0;
-+	clkmain->parent = clk_main_parent_select(status);
- 
- 	hw = &clkmain->hw;
- 	ret = clk_hw_register(NULL, &clkmain->hw);
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index 80993a8734e08..8b6f8fac92e89 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -300,7 +300,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
