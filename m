@@ -2,259 +2,115 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47889C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D9BC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113C920673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754DF20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QKUGJD6k";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VHb6ytHq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvgNB75X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439506AbfIXR2v (ORCPT
+        id S2501950AbfIXRbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:28:51 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34902 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729883AbfIXR2v (ORCPT
+        Tue, 24 Sep 2019 13:31:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33707 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730774AbfIXRbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:28:51 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A685C6137D; Tue, 24 Sep 2019 17:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569346129;
-        bh=m5nRpCCGsAeJVX0FTjg6i2xbJTPmx0BJPve6hoE/kIo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QKUGJD6khFRs5aD7ZiXRqG6r6wNlfHC0AyTatEZ2EqNtvpGWeeTFP9HyZBxk5qpQN
-         eRkuETyaNkqJTa5msPsutmeM9Y7o88VVCAOktjhyJHymg+BWcJDS/ii7hSMVjo7j63
-         aQE5L2KHMzyvsIBAeRtB5+fXc+6wa8COArEgBI3s=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B673E61214;
-        Tue, 24 Sep 2019 17:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569346128;
-        bh=m5nRpCCGsAeJVX0FTjg6i2xbJTPmx0BJPve6hoE/kIo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VHb6ytHqFfkvnGh/XX/YQdEQJVoueT4RPiEaoUqqv9J98u2ecMdvNsEHCwLqIRDxI
-         UKFLZtrB3AYTpj6ZBNBsHx+SUztKyBuVksO/2cMZivUfKKY2gzX1G2MeLZOfhCsRDK
-         lRW+5dSlmv7JpdOr4fyEKLTi+5I5QFIqbWuTIXNA=
+        Tue, 24 Sep 2019 13:31:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r17so2104608wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=LL8ftQ0d2EQqhK1mSpuOYEUw7ofHsHcjJlXF2qrplCw=;
+        b=DvgNB75XuqGGblo1ms9oDqpoBCZoTPlZr1rH7g56HqFDY+Gzsyp5DwLqYJnwzhUvF7
+         Tbv6ld+xq53tIzVOCYlGyDrLZR1COb5YM/cdqupRGOoVKhAhG00mkFrrCp/A4gOC9rrx
+         kOMsbNnMB8MjIhLYrc6grddJmohEZihZwvfI10mnCk71t7YSB9ROVDvWjZu0fFkaqw2N
+         BuVSITikLaj+Gv/ERTU2P6ZJJsiZqD9cE6H03Yy65PHgBDEqBkjLWVuOWhh1QhwrkdSw
+         eNFUO2P6nsWgY/gbnokrzfaXg5qXnb4ecFZncIUBsU1QzDJi3XcuDaLd2Jqa1ufgqkl2
+         FdbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=LL8ftQ0d2EQqhK1mSpuOYEUw7ofHsHcjJlXF2qrplCw=;
+        b=E2915zgnVRZBBp1vKF/0WdDI7e75P/ZiH/ptRdx2t9qVBBaSnZ187MI55JggoluGof
+         3+fKST2GMD0wgNqB8xJPGIvVoamNVAjfuZB1T4XTIIDRj5JlpuESgoxO4G7bNQleK34I
+         vHAFrqXs8jWKChz7o8n7/nx/BRwpQRODJ05Rk1o90JsT0HLLbyUnlVJWEGa0lgiTsiDv
+         Mv400sOwDnJVJ3XC9fH7aUO1/Gb0IGLwtLr19O06q9YAPA+AJXEyLPe1XilYl0RcUt2y
+         dNALf+umxQkB28o53ioiDA2IpCI2up/Sy2SehLNkJPNAYBcDQXvxlgGX1hLfV92Hk18q
+         Jo/A==
+X-Gm-Message-State: APjAAAU3z2Ew+7ND6eupi5sWOaN+shY5EgQ6bai3NLvAZcamM9B34a1s
+        3notmjtkGu4VrE/7+toX344so9DWJ0SrMAiF5GQ=
+X-Google-Smtp-Source: APXvYqxthEBNTtbpdPxhMlEv0yP/Mgg3wzFie/YO5Ei3cWHpB/XsyeSXNGOHLhbvk7R6/HiC09HcBNAQEjVE3Ae7Og0=
+X-Received: by 2002:a1c:3281:: with SMTP id y123mr1297282wmy.118.1569346271157;
+ Tue, 24 Sep 2019 10:31:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Sep 2019 10:28:48 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm/meson: fix max mode_config height/width
-In-Reply-To: <5dbd6337-7e08-f3f7-6d4a-d6bcaddfd3be@baylibre.com>
-References: <1538642563-22465-1-git-send-email-narmstrong@baylibre.com>
- <20181004100958.GI31561@phenom.ffwll.local>
- <0ef7fa13-ce77-f8a5-f5f3-6568be3d6145@baylibre.com>
- <CAKMK7uHxiDF3z19cMBb0o2o4Ev0DFJkhMR7Ny6U2776Ry4oc=A@mail.gmail.com>
- <8e980de4-5a52-8f3d-fba2-734617e40d1b@baylibre.com>
- <CAKMK7uE71OeOdDPb+5-cs9bByD-unYPxBV_R1t+4A0Nb4H6CAw@mail.gmail.com>
- <5dbd6337-7e08-f3f7-6d4a-d6bcaddfd3be@baylibre.com>
-Message-ID: <91cd8a2aebefd4ea3e9bcee5a4ef796a@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <20190923222403.22956-1-ndesaulniers@google.com>
+In-Reply-To: <20190923222403.22956-1-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 24 Sep 2019 19:30:59 +0200
+Message-ID: <CA+icZUX-2W9S1tnRgSmqAWUFqfv=kUqZFxo=+H-M1Kfj0pA6ag@mail.gmail.com>
+Subject: Re: [PATCH] x86, realmode: explicitly set ENTRY in linker script
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviving this thread from the context of the below conversion:
+On Tue, Sep 24, 2019 at 12:24 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> Linking with ld.lld via $ make LD=ld.lld produces the warning:
+> ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
+>
+> Linking with ld.bfd shows the default entry is 0x1000:
+> $ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
+>   Entry point address:               0x1000
+>
+> While ld.lld is being pedantic, just set the entry point explicitly,
+> instead of depending on the implicit default.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/216
 
-https://lore.kernel.org/linux-arm-msm/db26145b-3f64-a334-f698-76f972332881@baylibre.com/T/#u
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com> (seen on my first
+steps when linking with LLD on x86-64)
 
-On 2018-10-05 01:19, Neil Armstrong wrote:
-> On 05/10/2018 09:58, Daniel Vetter wrote:
->> On Fri, Oct 5, 2018 at 9:39 AM Neil Armstrong 
->> <narmstrong@baylibre.com> wrote:
->>> 
-> 
-> [...]
-> 
->>> OK, won't this be enough ?
->>> --- a/include/drm/drm_mode_config.h
->>> +++ b/include/drm/drm_mode_config.h
->>> @@ -333,6 +333,8 @@ struct drm_mode_config_funcs {
->>>   * @min_height: minimum fb pixel height on this device
->>>   * @max_width: maximum fb pixel width on this device
->>>   * @max_height: maximum fb pixel height on this device
->>> + * @max_fb_width: maximum fb buffer width if differs from max_width
->>> + * @max_fb_height: maximum fb buffer height if differs from 
->>> max_height
->>>   * @funcs: core driver provided mode setting functions
->>>   * @fb_base: base address of the framebuffer
->>>   * @poll_enabled: track polling support for this device
->>> @@ -508,6 +510,7 @@ struct drm_mode_config {
->>> 
->>>         int min_width, min_height;
->>>         int max_width, max_height;
->>> +       int max_fb_width, max_fb_height;
->>>         const struct drm_mode_config_funcs *funcs;
->>>         resource_size_t fb_base;
->>> 
->>> --- a/drivers/gpu/drm/drm_framebuffer.c
->>> +++ b/drivers/gpu/drm/drm_framebuffer.c
->>> @@ -283,14 +283,20 @@ drm_internal_framebuffer_create(struct 
->>> drm_device *dev,
->>>                 return ERR_PTR(-EINVAL);
->>>         }
->>> 
->>> -       if ((config->min_width > r->width) || (r->width > 
->>> config->max_width)) {
->>> +       if ((config->min_width > r->width) ||
->>> +           (!config->max_fb_width && r->width > config->max_width) 
->>> ||
->>> +           (config->max_fb_width && r->width > 
->>> config->max_fb_width)) {
->>>                 DRM_DEBUG_KMS("bad framebuffer width %d, should be >= 
->>> %d && <= %d\n",
->>> -                         r->width, config->min_width, 
->>> config->max_width);
->>> +                         r->width, config->min_width, 
->>> config->max_fb_width ?
->>> +                         config->max_fb_width : config->max_width);
->>>                 return ERR_PTR(-EINVAL);
->>>         }
->>> -       if ((config->min_height > r->height) || (r->height > 
->>> config->max_height)) {
->>> +       if ((config->min_height > r->height) ||
->>> +           (!config->max_fb_height && r->height > 
->>> config->max_height) ||
->>> +           (config->max_fb_height && r->height > 
->>> config->max_fb_height)) {
->>>                 DRM_DEBUG_KMS("bad framebuffer height %d, should be 
->>> >= %d && <= %d\n",
->>> -                         r->height, config->min_height, 
->>> config->max_height);
->>> +                         r->height, config->min_height, 
->>> config->max_fb_height ?
->>> +                         config->max_fb_height : 
->>> config->max_height);
->>>                 return ERR_PTR(-EINVAL);
->>>         }
->>> 
->>> and in the driver :
->>> 
->>> +       drm->mode_config.max_width = 4096;
->>> +       drm->mode_config.max_height = 3840;
->>> +       drm->mode_config.max_fb_width = 16384;
->>> +       drm->mode_config.max_fb_height = 8192;
->>> 
->>> With this I leave the mode filtering intact.
->> 
->> Not enough. See
->> https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#c.drm_connector_helper_funcs
->> and scroll down to mode_valid. You need to filter modes both in the
->> detect paths, and the atomic_check paths.
->> 
->> Detect is explicitly filtered out, but atomic_check was only
->> implicitly filtered, through the max fb size checks. Ok, you could
->> light up a mode that's bigger than max fb, but in practice, no
->> userspace ever did that.
-
-Daniel, MSM and few other vendor hardware have upscale blocks where the 
-driver can expose fb sizes smaller than
-the mode resolution and use h/w upscaling to fill the screen. This would 
-optimize the fetch bandwidth.
-
-But with your code we're missing crucial
->> validation now, and userspace could fall over that. What I think we
->> need is to add mode filter against mode_config.max_width/height in
->> drm_atomic_helper_check_modeset(). Probably best to stuff that into
->> the mode_valid() function.
-> 
-Agreed! Since the above patch from Niel is taking care of cases where 
-max/min fb values
-are not set, by checking against the original max/min values, can we 
-separate out this
-core change from the driver level mode_valid changes? If Niel couldn't 
-find the time, I can
-repost the above change.
-
-Thanks and Regards,
-Jeykumar S.
-
-> Ok I understood now, thanks for pointer, I'll try to add this.
-> 
-> Neil
-> 
->> 
->> Cheers, Daniel
->>> 
->>> Neil
->>> 
->>> 
->>>> -Daniel
->>>> 
->>>>> 
->>>>> Neil
->>>>> 
->>>>>> 
->>>>>> Bunch of igt to make sure we're not missing anything would be 
->>>>>> sweet on
->>>>>> top, e.g. e.g. trying to set a mode over the limit and making sure 
->>>>>> it
->>>>>> fails.
->>>>>> 
->>>>>> Cheers, Daniel
->>>>>> 
->>>>>>> ---
->>>>>>>  drivers/gpu/drm/meson/meson_drv.c | 4 ++--
->>>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>> 
->>>>>>> diff --git a/drivers/gpu/drm/meson/meson_drv.c 
->>>>>>> b/drivers/gpu/drm/meson/meson_drv.c
->>>>>>> index d344312..2e29968 100644
->>>>>>> --- a/drivers/gpu/drm/meson/meson_drv.c
->>>>>>> +++ b/drivers/gpu/drm/meson/meson_drv.c
->>>>>>> @@ -243,8 +243,8 @@ static int meson_drv_bind_master(struct 
->>>>>>> device *dev, bool has_components)
->>>>>>>              goto free_drm;
->>>>>>> 
->>>>>>>      drm_mode_config_init(drm);
->>>>>>> -    drm->mode_config.max_width = 3840;
->>>>>>> -    drm->mode_config.max_height = 2160;
->>>>>>> +    drm->mode_config.max_width = 16384;
->>>>>>> +    drm->mode_config.max_height = 8192;
->>>>>>>      drm->mode_config.funcs = &meson_mode_config_funcs;
->>>>>>> 
->>>>>>>      /* Hardware Initialization */
->>>>>>> --
->>>>>>> 2.7.4
->>>>>>> 
->>>>>>> _______________________________________________
->>>>>>> dri-devel mailing list
->>>>>>> dri-devel@lists.freedesktop.org
->>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>>>> 
->>>>> 
->>>>> _______________________________________________
->>>>> dri-devel mailing list
->>>>> dri-devel@lists.freedesktop.org
->>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>> 
->>>> 
->>>> 
->>> 
->> 
->> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Jeykumar S
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  arch/x86/realmode/rm/realmode.lds.S | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
+> index 3bb980800c58..2034f5f79bff 100644
+> --- a/arch/x86/realmode/rm/realmode.lds.S
+> +++ b/arch/x86/realmode/rm/realmode.lds.S
+> @@ -11,6 +11,7 @@
+>
+>  OUTPUT_FORMAT("elf32-i386")
+>  OUTPUT_ARCH(i386)
+> +ENTRY(0x1000)
+>
+>  SECTIONS
+>  {
+> --
+> 2.23.0.351.gc4317032e6-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190923222403.22956-1-ndesaulniers%40google.com.
