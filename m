@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2602AC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0C9C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C4321906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3079820673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343662;
-	bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
+	s=default; t=1569343667;
+	bh=2Qwsm8loPfoLwUa6cnWbCON9/e9C/jsrHa0Bssbv39I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ARtkZDAJoLyD4a7GPIAXZZDsLxEfrs1QecKR+NVzYeKY+kkDO+j3VuZQp4GU0ShUH
-	 K6Izb2ISewbekCtiTInNPOLRbxjNLyh4ZTeL5oiJf4YLvM5HElJi2N7LAUHpGQfd+E
-	 bi7mgMMH6et3Qfecv64MHtsJFm6dRCxglRTo6vhw=
+	b=ValKjy4K+wRxHmPoJjR1ZiErv4A8txwADidh505SQtAqjTveBURgtBf4vmdrqFl0s
+	 CZIrIIMJTLkXhnIpLbrj73yLnEgW31ARGpImPQBpoAu4UYt2dphWnMjRROdxKn7Qbg
+	 1PSsbEhQmlM4TOUJzunV89wBWP5vzuzCuq087IHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfIXQrk (ORCPT
+        id S2633307AbfIXQrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38880 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389135AbfIXQre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:34 -0400
+        id S1729107AbfIXQrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A60E217D9;
-        Tue, 24 Sep 2019 16:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E60321906;
+        Tue, 24 Sep 2019 16:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343653;
-        bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
+        s=default; t=1569343658;
+        bh=2Qwsm8loPfoLwUa6cnWbCON9/e9C/jsrHa0Bssbv39I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHWXS9pVp/fINJFumqi+jY8lOpKH6fWKexY1DEFzYo99h0opjcaNWtMNNgplpt5RT
-         tzrVcw+x/EbGTF72W0aRa0FyjOgMOWqzKIEc6mV6045y6kkmlD2vOkFElwkIqAipxk
-         eR7T11LIyPtbt9VG3/NBZMJZfL8c2uCuYqJU0VFE=
+        b=XXl9LYAHCVvKnxGhjRBr+3hjIr/QpL3XFMRRLXkHUR4qAvZBvTuWx/UICtEfJvYYv
+         ZUgsAlHGFuwPHnneVytEFStsYXp3d6nKdBQ7Fbq4vVFqM+jL42qxua8C+pWH9siXOo
+         fZikWQRtK/KTQCOzEtc9+5x+WaWft2Wl1CdOe/aQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 42/70] drm/nouveau/kms/tu102-: disable input lut when input is already FP16
-Date:   Tue, 24 Sep 2019 12:45:21 -0400
-Message-Id: <20190924164549.27058-42-sashal@kernel.org>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 44/70] pinctrl: amd: disable spurious-firing GPIO IRQs
+Date:   Tue, 24 Sep 2019 12:45:23 -0400
+Message-Id: <20190924164549.27058-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -58,38 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Daniel Drake <drake@endlessm.com>
 
-[ Upstream commit 1e339ab2ac3c769c1b06b9fb7d532f8495ebc56d ]
+[ Upstream commit d21b8adbd475dba19ac2086d3306327b4a297418 ]
 
-On Turing, an input LUT is required to transform inputs in fixed-point
-formats to FP16 for the internal display pipe.  We provide an identity
-mapping whenever a window is enabled for this reason.
+When cold-booting Asus X434DA, GPIO 7 is found to be already configured
+as an interrupt, and the GPIO level is found to be in a state that
+causes the interrupt to fire.
 
-HW has error checks to ensure when the input is already FP16, that the
-input LUT is also disabled.
+As soon as pinctrl-amd probes, this interrupt fires and invokes
+amd_gpio_irq_handler(). The IRQ is acked, but no GPIO-IRQ handler was
+invoked, so the GPIO level being unchanged just causes another interrupt
+to fire again immediately after.
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+This results in an interrupt storm causing this platform to hang
+during boot, right after pinctrl-amd is probed.
+
+Detect this situation and disable the GPIO interrupt when this happens.
+This enables the affected platform to boot as normal. GPIO 7 actually is
+the I2C touchpad interrupt line, and later on, i2c-multitouch loads and
+re-enables this interrupt when it is ready to handle it.
+
+Instead of this approach, I considered disabling all GPIO interrupts at
+probe time, however that seems a little risky, and I also confirmed that
+Windows does not seem to have this behaviour: the same 41 GPIO IRQs are
+enabled under both Linux and Windows, which is a far larger collection
+than the GPIOs referenced by the DSDT on this platform.
+
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20190814090540.7152-1-drake@endlessm.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/wndw.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-amd.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-index 283ff690350ea..50303ec194bbc 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-@@ -320,7 +320,9 @@ nv50_wndw_atomic_check_lut(struct nv50_wndw *wndw,
- 		asyh->wndw.olut &= ~BIT(wndw->id);
- 	}
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 9b9c61e3f0652..977792654e017 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -565,15 +565,25 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 			    !(regval & BIT(INTERRUPT_MASK_OFF)))
+ 				continue;
+ 			irq = irq_find_mapping(gc->irq.domain, irqnr + i);
+-			generic_handle_irq(irq);
++			if (irq != 0)
++				generic_handle_irq(irq);
  
--	if (!ilut && wndw->func->ilut_identity) {
-+	if (!ilut && wndw->func->ilut_identity &&
-+	    asyw->state.fb->format->format != DRM_FORMAT_XBGR16161616F &&
-+	    asyw->state.fb->format->format != DRM_FORMAT_ABGR16161616F) {
- 		static struct drm_property_blob dummy = {};
- 		ilut = &dummy;
- 	}
+ 			/* Clear interrupt.
+ 			 * We must read the pin register again, in case the
+ 			 * value was changed while executing
+ 			 * generic_handle_irq() above.
++			 * If we didn't find a mapping for the interrupt,
++			 * disable it in order to avoid a system hang caused
++			 * by an interrupt storm.
+ 			 */
+ 			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 			regval = readl(regs + i);
++			if (irq == 0) {
++				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
++				dev_dbg(&gpio_dev->pdev->dev,
++					"Disabling spurious GPIO IRQ %d\n",
++					irqnr + i);
++			}
+ 			writel(regval, regs + i);
+ 			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 			ret = IRQ_HANDLED;
 -- 
 2.20.1
 
