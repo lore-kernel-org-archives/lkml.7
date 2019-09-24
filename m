@@ -2,448 +2,267 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F780C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0056CC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484AC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85A620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404168AbfIXQbd (ORCPT
+        id S2389660AbfIXQdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:31:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45036 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfIXQbd (ORCPT
+        Tue, 24 Sep 2019 12:33:14 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:20946 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388583AbfIXQdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:31:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 5CCDD28BB6B
-Message-ID: <f2225cfe4b68691e3307d9717e3fb70ee7815f09.camel@collabora.com>
-Subject: Re: [PATCH v2] media: vimc: Enable set resolution at the scaler src
- pad
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     Pedro Terra <pirate@terraco.de>, helen.koike@collabora.com,
-        mchehab@kernel.org, skhan@linuxfoundation.org,
-        hverkuil-cisco@xs4all.nl, andrealmeid@collabora.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Gabriel Francisco Mandaji <gfmandaji@gmail.com>,
-        dafna3 <dafna3@gmail.com>
-Date:   Tue, 24 Sep 2019 19:31:24 +0300
-In-Reply-To: <20190915213550.6967-1-pirate@terraco.de>
-References: <20190915213550.6967-1-pirate@terraco.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 24 Sep 2019 12:33:13 -0400
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8OGLFif017394;
+        Tue, 24 Sep 2019 16:32:39 GMT
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2v7kskucdp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Sep 2019 16:32:38 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id E48254F;
+        Tue, 24 Sep 2019 16:32:37 +0000 (UTC)
+Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id B50194B;
+        Tue, 24 Sep 2019 16:32:36 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 11:32:36 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     hpa@zytor.com
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Juergen Gross <jgross@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com, mike.travis@hpe.com,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 1/2] x86/boot/64: Make level2_kernel_pgt pages invalid
+ outside kernel area.
+Message-ID: <20190924163236.GA8138@swahl-linux>
+References: <cover.1569004922.git.steve.wahl@hpe.com>
+ <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
+ <75F03666-AB27-4C72-B3FF-67B1C7BE8575@zytor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75F03666-AB27-4C72-B3FF-67B1C7BE8575@zytor.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-24_07:2019-09-23,2019-09-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxscore=0 mlxlogscore=999 malwarescore=0 suspectscore=1 phishscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909240148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Sep 23, 2019 at 11:49:44AM -0700, hpa@zytor.com wrote:
+> On September 23, 2019 11:15:20 AM PDT, Steve Wahl <steve.wahl@hpe.com> wrote:
+> >Our hardware (UV aka Superdome Flex) has address ranges marked
+> >reserved by the BIOS. Access to these ranges is caught as an error,
+> >causing the BIOS to halt the system.
+> >
+> >Initial page tables mapped a large range of physical addresses that
+> >were not checked against the list of BIOS reserved addresses, and
+> >sometimes included reserved addresses in part of the mapped range.
+> >Including the reserved range in the map allowed processor speculative
+> >accesses to the reserved range, triggering a BIOS halt.
+> >
+> >Used early in booting, the page table level2_kernel_pgt addresses 1
+> >GiB divided into 2 MiB pages, and it was set up to linearly map a full
+> >1 GiB of physical addresses that included the physical address range
+> >of the kernel image, as chosen by KASLR.  But this also included a
+> >large range of unused addresses on either side of the kernel image.
+> >And unlike the kernel image's physical address range, this extra
+> >mapped space was not checked against the BIOS tables of usable RAM
+> >addresses.  So there were times when the addresses chosen by KASLR
+> >would result in processor accessible mappings of BIOS reserved
+> >physical addresses.
+> >
+> >The kernel code did not directly access any of this extra mapped
+> >space, but having it mapped allowed the processor to issue speculative
+> >accesses into reserved memory, causing system halts.
+> >
+> >This was encountered somewhat rarely on a normal system boot, and much
+> >more often when starting the crash kernel if "crashkernel=512M,high"
+> >was specified on the command line (this heavily restricts the physical
+> >address of the crash kernel, in our case usually within 1 GiB of
+> >reserved space).
+> >
+> >The solution is to invalidate the pages of this table outside the
+> >kernel image's space before the page table is activated.  This patch
+> >has been validated to fix this problem on our hardware.
+> >
+> >Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> >Cc: stable@vger.kernel.org
+> >---
+> >Changes since v1:
+> >  * Added comment.
+> >  * Reworked changelog text.
+> >
+> > arch/x86/kernel/head64.c | 18 ++++++++++++++++--
+> > 1 file changed, 16 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> >index 29ffa495bd1c..ee9d0e3e0c46 100644
+> >--- a/arch/x86/kernel/head64.c
+> >+++ b/arch/x86/kernel/head64.c
+> >@@ -222,13 +222,27 @@ unsigned long __head __startup_64(unsigned long
+> >physaddr,
+> > 	 * we might write invalid pmds, when the kernel is relocated
+> > 	 * cleanup_highmap() fixes this up along with the mappings
+> > 	 * beyond _end.
+> >+	 *
+> >+	 * Only the region occupied by the kernel image has so far
+> >+	 * been checked against the table of usable memory regions
+> >+	 * provided by the firmware, so invalidate pages outside that
+> >+	 * region.  A page table entry that maps to a reserved area of
+> >+	 * memory would allow processor speculation into that area,
+> >+	 * and on some hardware (particularly the UV platform) even
+> >+	 * speculative access to some reserved areas is caught as an
+> >+	 * error, causing the BIOS to halt the system.
+> > 	 */
+> > 
+> > 	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
+> >-	for (i = 0; i < PTRS_PER_PMD; i++) {
+> >+	for (i = 0; i < pmd_index((unsigned long)_text); i++)
+> >+		pmd[i] &= ~_PAGE_PRESENT;
+> >+
+> >+	for (; i <= pmd_index((unsigned long)_end); i++)
+> > 		if (pmd[i] & _PAGE_PRESENT)
+> > 			pmd[i] += load_delta;
+> >-	}
+> >+
+> >+	for (; i < PTRS_PER_PMD; i++)
+> >+		pmd[i] &= ~_PAGE_PRESENT;
+> > 
+> > 	/*
+> > 	 * Fixup phys_base - remove the memory encryption mask to obtain
+> 
+> What does your MTRR setup look like, and what memory map do you
+> present, in exact detail?
 
-On Sun, 2019-09-15 at 18:35 -0300, Pedro Terra wrote:
-> Modify the scaler subdevice to accept setting the resolution of the source
-> pad (previously the source resolution would always be 3 times the sink for
-> both dimensions). Now any resolution can be set at src (even smaller ones)
-> and the sink video will be scaled to match it.
-> 
-> Test example: With the vimc module up (using the default vimc topology)
-> media-ctl -d /dev/media0 -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
-> media-ctl -d /dev/media0 -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
-> media-ctl -d /dev/media0 -V '"Scaler":0[fmt:SBGGR8_1X8/640x480]'
-> media-ctl -d /dev/media0 -V '"Scaler":1[fmt:SBGGR8_1X8/300x700]'
-> v4l2-ctl -d /dev/video2 -v width=300,height=700
-> v4l2-ctl -d /dev/video0 -v pixelformat=BA81
-> v4l2-ctl --stream-mmap --stream-count=10 -d /dev/video2 \
-> 	--stream-to=test.raw
-> ffplay -loglevel warning -v info -f rawvideo -pixel_format rgb24 \
-> 	-video_size "300x700" test.raw
-> 
-> Co-developed-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-> Co-developed-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
-> Signed-off-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
-> Signed-off-by: Pedro "pirate" Terra <pirate@terraco.de>
-> 
-> ---
-> 
-> Changes in V2:
-> * Patch was not sent to media list mail for some reason (even though it
-> was on the Cc list), trying again.
-maybe it was not plain text?
+We set the MTRR default to writeback cacheable, and then use variable
+MTRRs to mark certain parts of the address map as uncacheable.  The
+uncacheable regions are at the top of the address map (AEP mailboxes,
+PCIe config segments other than segment zero, MMRs, 64-bit MMIO) and
+from 2GB to 4GB.  There are also uncacheable ranges below 1MB
+controlled by the fixed MTRRs.
 
-> * Updating documentation.
-> 
-> Hello! This patch depends on the series:
-> "Collapse vimc into single monolithic driver" V3
-> This code is the result of friends getting together with too much
-> coffee, sugar and beer trying to get started with some kernel coding.
-welcome!
+Details from the e820 map:
 
-> Please, don't go easy on us! s2
-> 
-> Running
-> /usr/local/bin/v4l2-compliance -m /dev/media0
-> Gave the following result:
-> v4l2-compliance SHA: b393a5408383b7341883857dfda78537f2f85ef6, 64 bits
-> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
-> ---
->  Documentation/media/v4l-drivers/vimc.rst  |  15 +-
->  drivers/media/platform/vimc/vimc-scaler.c | 217 +++++++---------------
->  2 files changed, 77 insertions(+), 155 deletions(-)
-> 
-> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-> index a582af0509ee..c28c635d965c 100644
-> --- a/Documentation/media/v4l-drivers/vimc.rst
-> +++ b/Documentation/media/v4l-drivers/vimc.rst
-> @@ -61,9 +61,11 @@ vimc-debayer:
->  	* 1 Pad source
->  
->  vimc-scaler:
-> -	Scale up the image by a factor of 3. E.g.: a 640x480 image becomes a
-> -        1920x1440 image. (this value can be configured, see at
-> -        `Module options`_).
-> +	Re-size the image to meet the source pad resolution. E.g.: if the sync pad
-> +is configured to 360x480 and the source to 1280x720, the image will be stretched
-> +to fit the source resolution. Works for any resolution within the vimc
-> +limitations (even shrinking the image if necessary).
-> +
->  	Exposes:
->  
->  	* 1 Pad sink
-> @@ -84,13 +86,6 @@ Vimc has a few module parameters to configure the driver.
-this should now change to "Vimc has one module parameter to configure the driver."
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000005efff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000005f000-0x000000000005ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000060000-0x000000000009ffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000072c4dfff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000072c4e000-0x0000000073a2ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000073a30000-0x000000007445ffff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000074460000-0x000000007599ffff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x00000000759a0000-0x0000000075aecfff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000075aed000-0x0000000075aedfff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000075aee000-0x0000000075b09fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000075b0a000-0x0000000075d49fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000075d4a000-0x0000000079201fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000079202000-0x0000000079202fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000079203000-0x000000007bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007c000000-0x000000008fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000f8000000-0x00000000fbffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fe000000-0x00000000fe010fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x0000002f7fffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000002f80000000-0x000000303fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x0000003040000000-0x0000005f7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000005f7c000000-0x000000603fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x0000006040000000-0x0000008f7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000008f7c000000-0x000000903fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x0000009040000000-0x000000bf7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000bf7c000000-0x000000c03fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x000000c040000000-0x000000ef7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000ef7c000000-0x000000f03fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x000000f040000000-0x0000011f7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000011f7c000000-0x000001203fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x0000012040000000-0x0000014f7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000014f7c000000-0x000001503fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x0000015040000000-0x0000017f7bffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000017f7c000000-0x000001803fffffff] reserved *
+[    0.000000] BIOS-e820: [mem 0x00000fff00000000-0x00000fff0fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff10000000-0x00000fff1fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff20000000-0x00000fff2fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff30000000-0x00000fff3fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff40000000-0x00000fff4fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff50000000-0x00000fff5fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff60000000-0x00000fff6fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fff70000000-0x00000fff7fefffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffa0000000-0x00000fffa2ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffa4000000-0x00000fffa6ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffa8000000-0x00000fffaaffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffac000000-0x00000fffaeffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffb0000000-0x00000fffb2ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffb4000000-0x00000fffb6ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffb8000000-0x00000fffbaffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000fffbc000000-0x00000fffbeffffff] reserved
 
->  
->          param=value
-This line can actually be removed.
+I've added asterisks after the entries that represent the reserved
+areas that weren't being respected.  This map is from a relatively
+small system.  The number of these reserved areas and their size vary
+based on the number of NUMA nodes and, if I remember correctly, the
+amount of memory in each node as well.
 
->  
-> -* ``sca_mult=<unsigned int>``
-> -
-> -        Image size multiplier factor to be used to multiply both width and
-> -        height, so the image size will be ``sca_mult^2`` bigger than the
-> -        original one. Currently, only supports scaling up (the default value
-> -        is 3).
-> -
->  * ``deb_mean_win_size=<unsigned int>``
->  
->          Window size to calculate the mean. Note: the window size needs to be an
-> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> index 05db5070e268..1e398124a651 100644
-> --- a/drivers/media/platform/vimc/vimc-scaler.c
-> +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> @@ -12,25 +12,24 @@
->  
->  #include "vimc-common.h"
->  
-> -static unsigned int sca_mult = 3;
-> -module_param(sca_mult, uint, 0000);
-> -MODULE_PARM_DESC(sca_mult, " the image size multiplier");
-> +/* Pad identifier */
-> +enum sca_pad {
-> +	SCA_SINK = 0,
-> +	SCA_SRC = 1,
-> +	SCA_COUNT = 2
-> +};
->  
-> -#define IS_SINK(pad)	(!pad)
-> -#define IS_SRC(pad)	(pad)
-> -#define MAX_ZOOM	8
-> +/* Default scaling factor for both width and height  */
-> +#define SRC_SCALING_DEFAULT 3
->  
->  struct vimc_sca_device {
->  	struct vimc_ent_device ved;
->  	struct v4l2_subdev sd;
->  	struct device *dev;
-> -	/* NOTE: the source fmt is the same as the sink
-> -	 * with the width and hight multiplied by mult
-> -	 */
-> -	struct v4l2_mbus_framefmt sink_fmt;
-> +	/* Frame format for both sink and src pad */
-> +	struct v4l2_mbus_framefmt fmt[SCA_COUNT];
->  	/* Values calculated when the stream starts */
->  	u8 *src_frame;
-> -	unsigned int src_line_size;
->  	unsigned int bpp;
->  };
->  
-> @@ -54,8 +53,8 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
->  	for (i = 1; i < sd->entity.num_pads; i++) {
->  		mf = v4l2_subdev_get_try_format(sd, cfg, i);
->  		*mf = sink_fmt_default;
-> -		mf->width = mf->width * sca_mult;
-> -		mf->height = mf->height * sca_mult;
-> +		mf->width = mf->width * SRC_SCALING_DEFAULT;
-> +		mf->height = mf->height * SRC_SCALING_DEFAULT;
->  	}
->  
->  	return 0;
-> @@ -92,14 +91,8 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->  
->  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
->  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
-> -
-> -	if (IS_SINK(fse->pad)) {
-> -		fse->max_width = VIMC_FRAME_MAX_WIDTH;
-> -		fse->max_height = VIMC_FRAME_MAX_HEIGHT;
-> -	} else {
-> -		fse->max_width = VIMC_FRAME_MAX_WIDTH * MAX_ZOOM;
-> -		fse->max_height = VIMC_FRAME_MAX_HEIGHT * MAX_ZOOM;
-> -	}
-> +	fse->max_width = VIMC_FRAME_MAX_WIDTH;
-> +	fse->max_height = VIMC_FRAME_MAX_HEIGHT;
->  
->  	return 0;
->  }
-> @@ -111,82 +104,64 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
->  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
->  
->  	/* Get the current sink format */
-> -	format->format = (format->which == V4L2_SUBDEV_FORMAT_TRY) ?
-> -			 *v4l2_subdev_get_try_format(sd, cfg, 0) :
-> -			 vsca->sink_fmt;
-> -
-> -	/* Scale the frame size for the source pad */
-> -	if (IS_SRC(format->pad)) {
-> -		format->format.width = vsca->sink_fmt.width * sca_mult;
-> -		format->format.height = vsca->sink_fmt.height * sca_mult;
-> -	}
-> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY)
-> +		format->format = *v4l2_subdev_get_try_format(sd, cfg,
-> +							     format->pad);
-> +	else
-> +		format->format = vsca->fmt[format->pad];
->  
->  	return 0;
->  }
->  
-> -static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
-> +static void vimc_sca_adjust_fmt(struct v4l2_mbus_framefmt *fmt[], __u32 pad)
->  {
-> -	const struct vimc_pix_map *vpix;
-> +	if (pad == SCA_SINK) {
-> +		const struct vimc_pix_map *vpix;
->  
-> -	/* Only accept code in the pix map table in non bayer format */
-> -	vpix = vimc_pix_map_by_code(fmt->code);
-> -	if (!vpix || vpix->bayer)
-> -		fmt->code = sink_fmt_default.code;
-> +		/* Only accept code in the pix map table in non bayer format */
-> +		vpix = vimc_pix_map_by_code(fmt[SCA_SINK]->code);
-> +		if (!vpix || vpix->bayer)
-> +			fmt[SCA_SINK]->code = sink_fmt_default.code;
-> +		if (fmt[SCA_SINK]->field == V4L2_FIELD_ANY)
-> +			fmt[SCA_SINK]->field = sink_fmt_default.field;
-> +
-> +		vimc_colorimetry_clamp(fmt[SCA_SINK]);
-> +	}
->  
-> -	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
-> +	fmt[pad]->width = clamp_t(u32, fmt[pad]->width, VIMC_FRAME_MIN_WIDTH,
->  			     VIMC_FRAME_MAX_WIDTH) & ~1;
-> -	fmt->height = clamp_t(u32, fmt->height, VIMC_FRAME_MIN_HEIGHT,
-> +	fmt[pad]->height = clamp_t(u32, fmt[pad]->height, VIMC_FRAME_MIN_HEIGHT,
->  			      VIMC_FRAME_MAX_HEIGHT) & ~1;
->  
-> -	if (fmt->field == V4L2_FIELD_ANY)
-> -		fmt->field = sink_fmt_default.field;
-> -
-> -	vimc_colorimetry_clamp(fmt);
-> +	/* Assure src pad attributes besides dimensions are the same as sink */
-> +	fmt[SCA_SRC]->code = fmt[SCA_SINK]->code;
-> +	fmt[SCA_SRC]->field = fmt[SCA_SINK]->field;
-> +	fmt[SCA_SRC]->colorspace = fmt[SCA_SINK]->colorspace;
->  }
->  
->  static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
->  			    struct v4l2_subdev_pad_config *cfg,
-> -			    struct v4l2_subdev_format *fmt)
-> +			    struct v4l2_subdev_format *format)
->  {
->  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> -	struct v4l2_mbus_framefmt *sink_fmt;
-> +	struct v4l2_mbus_framefmt *fmt[SCA_COUNT];
->  
-> -	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> +	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
->  		/* Do not change the format while stream is on */
->  		if (vsca->src_frame)
->  			return -EBUSY;
->  
-> -		sink_fmt = &vsca->sink_fmt;
-> +		fmt[SCA_SINK] = &vsca->fmt[SCA_SINK];
-> +		fmt[SCA_SRC] = &vsca->fmt[SCA_SRC];
->  	} else {
-> -		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +		fmt[SCA_SINK] = v4l2_subdev_get_try_format(sd, cfg, SCA_SINK);
-> +		fmt[SCA_SRC] = v4l2_subdev_get_try_format(sd, cfg, SCA_SRC);
->  	}
->  
-> -	/*
-> -	 * Do not change the format of the source pad,
-> -	 * it is propagated from the sink
-> -	 */
-> -	if (IS_SRC(fmt->pad)) {
-> -		fmt->format = *sink_fmt;
-> -		fmt->format.width = sink_fmt->width * sca_mult;
-> -		fmt->format.height = sink_fmt->height * sca_mult;
-> -	} else {
-> -		/* Set the new format in the sink pad */
-> -		vimc_sca_adjust_sink_fmt(&fmt->format);
-> -
-> -		dev_dbg(vsca->dev, "%s: sink format update: "
-> -			"old:%dx%d (0x%x, %d, %d, %d, %d) "
-> -			"new:%dx%d (0x%x, %d, %d, %d, %d)\n", vsca->sd.name,
-> -			/* old */
-> -			sink_fmt->width, sink_fmt->height, sink_fmt->code,
-> -			sink_fmt->colorspace, sink_fmt->quantization,
-> -			sink_fmt->xfer_func, sink_fmt->ycbcr_enc,
-> -			/* new */
-> -			fmt->format.width, fmt->format.height, fmt->format.code,
-> -			fmt->format.colorspace,	fmt->format.quantization,
-> -			fmt->format.xfer_func, fmt->format.ycbcr_enc);
-> -
-> -		*sink_fmt = fmt->format;
-> -	}
-> +	*fmt[format->pad] = format->format;
-> +	vimc_sca_adjust_fmt(fmt, format->pad);
-> +
-> +	format->format = *fmt[format->pad];
->  
->  	return 0;
->  }
-> @@ -211,16 +186,12 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  			return 0;
->  
->  		/* Save the bytes per pixel of the sink */
-> -		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
-> +		vpix = vimc_pix_map_by_code(vsca->fmt[SCA_SINK].code);
->  		vsca->bpp = vpix->bpp;
->  
-> -		/* Calculate the width in bytes of the src frame */
-> -		vsca->src_line_size = vsca->sink_fmt.width *
-> -				      sca_mult * vsca->bpp;
-> -
->  		/* Calculate the frame size of the source pad */
-> -		frame_size = vsca->src_line_size * vsca->sink_fmt.height *
-> -			     sca_mult;
-> +		frame_size = vsca->fmt[SCA_SRC].width
-> +			     * vsca->fmt[SCA_SRC].height * vsca->bpp;
->  
->  		/* Allocate the frame buffer. Use vmalloc to be able to
->  		 * allocate a large amount of memory
-> @@ -249,73 +220,26 @@ static const struct v4l2_subdev_ops vimc_sca_ops = {
->  	.video = &vimc_sca_video_ops,
->  };
->  
-> -static void vimc_sca_fill_pix(u8 *const ptr,
-> -			      const u8 *const pixel,
-> -			      const unsigned int bpp)
-> -{
-> -	unsigned int i;
-> -
-> -	/* copy the pixel to the pointer */
-> -	for (i = 0; i < bpp; i++)
-> -		ptr[i] = pixel[i];
-> -}
-> -
-> -static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
-> -			       const unsigned int lin, const unsigned int col,
-> -			       const u8 *const sink_frame)
-> -{
-> -	unsigned int i, j, index;
-> -	const u8 *pixel;
-> -
-> -	/* Point to the pixel value in position (lin, col) in the sink frame */
-> -	index = VIMC_FRAME_INDEX(lin, col,
-> -				 vsca->sink_fmt.width,
-> -				 vsca->bpp);
-> -	pixel = &sink_frame[index];
-> -
-> -	dev_dbg(vsca->dev,
-> -		"sca: %s: --- scale_pix sink pos %dx%d, index %d ---\n",
-> -		vsca->sd.name, lin, col, index);
-> -
-> -	/* point to the place we are going to put the first pixel
-> -	 * in the scaled src frame
-> -	 */
-> -	index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
-> -				 vsca->sink_fmt.width * sca_mult, vsca->bpp);
-> -
-> -	dev_dbg(vsca->dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
-> -		vsca->sd.name, lin * sca_mult, col * sca_mult, index);
-> -
-> -	/* Repeat this pixel mult times */
-> -	for (i = 0; i < sca_mult; i++) {
-> -		/* Iterate through each beginning of a
-> -		 * pixel repetition in a line
-> -		 */
-> -		for (j = 0; j < sca_mult * vsca->bpp; j += vsca->bpp) {
-> -			dev_dbg(vsca->dev,
-> -				"sca: %s: sca: scale_pix src pos %d\n",
-> -				vsca->sd.name, index + j);
-> -
-> -			/* copy the pixel to the position index + j */
-> -			vimc_sca_fill_pix(&vsca->src_frame[index + j],
-> -					  pixel, vsca->bpp);
-> -		}
-> -
-> -		/* move the index to the next line */
-> -		index += vsca->src_line_size;
-> -	}
-> -}
-> -
->  static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
->  				    const u8 *const sink_frame)
->  {
-> -	unsigned int i, j;
-> -
-> -	/* Scale each pixel from the original sink frame */
-> -	/* TODO: implement scale down, only scale up is supported for now */
-> -	for (i = 0; i < vsca->sink_fmt.height; i++)
-> -		for (j = 0; j < vsca->sink_fmt.width; j++)
-> -			vimc_sca_scale_pix(vsca, i, j, sink_frame);
-> +	unsigned int lin, col, bpp_i, index;
-> +	struct v4l2_mbus_framefmt const *fmt = vsca->fmt;
-> +	u8 *walker = vsca->src_frame;
-> +
-> +	/* Set each pixel at the src_frame to its sink_frame equivalent */
-> +	for (lin = 0; lin < fmt[SCA_SRC].height; lin++) {
-> +		for (col = 0; col < fmt[SCA_SRC].width; col++) {
-> +			index = VIMC_FRAME_INDEX((lin * fmt[SCA_SINK].height)
-> +						 / fmt[SCA_SRC].height,
-> +						 (col * fmt[SCA_SINK].width)
-> +						 / fmt[SCA_SRC].width,
-> +						 fmt[SCA_SINK].width,
-> +						 vsca->bpp);
-> +			for (bpp_i = 0; bpp_i < vsca->bpp; bpp_i++)
-> +				*(walker++) = sink_frame[index + bpp_i];
-> +		}
-> +	}
->  }
->  
->  static void *vimc_sca_process_frame(struct vimc_ent_device *ved,
-> @@ -382,7 +306,10 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
->  	vsca->dev = &vimc->pdev.dev;
->  
->  	/* Initialize the frame format */
-> -	vsca->sink_fmt = sink_fmt_default;
-> +	vsca->fmt[SCA_SINK] = sink_fmt_default;
-> +	vsca->fmt[SCA_SRC] = sink_fmt_default;
-> +	vsca->fmt[SCA_SRC].width *= SRC_SCALING_DEFAULT;
-> +	vsca->fmt[SCA_SRC].height *= SRC_SCALING_DEFAULT;
->  
->  	return &vsca->ved;
->  }
+> The BIOS is normally expected to mark the relevant ranges as UC in
+> the MTRRs (that is the remaining, legitimate usage of MTRRs.)
 
+The MTRRs do not scale for this purpose; there are not enough of them
+left over to handle a reserved area for each of the NUMA nodes in a
+fully configured system.  Also, the pieces we reserve do not usually
+follow the alignment requirements of the MTRRs, so using them would
+require tossing out a good deal of usable memory.
+
+> I'm somewhat sceptical that chopping off potentially several
+> megabytes is a good thing.
+
+I think you may be misreading what the patches do.  They do not change
+any allocation of memory, only (1) reduce the valid area of the page
+tables used for early mapping of the kernel image down to the
+addresses actually occupied by the kernel image (to the granularity of
+2MB PMD pages, anyway), and (2) ensure that KASLR doesn't place the
+kernel image where the last 2MB page used to map it would also cross a
+reserved space boundary (and therefore include some BIOS reserved space
+in the mapped region).
+
+If I missed something and I am actually chopping off a bunch of
+memory, please let me know.
+
+Later refinement of the page tables set up in early boot has not
+changed.
+
+> We also have the memory type interfaces which can be used to map
+> these as UC in the page tables.
+
+Those are set up much later, this problem is very early in booting. As
+far as I have seen, all of the later code that sets up memory respects
+the EFI and/or E820 tables the BIOS passes in.  This early boot code
+did not, and left a small window where the reserved addresses get
+mapped and cause problems.
+
+--> Steve Wahl
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
