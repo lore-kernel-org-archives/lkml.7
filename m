@@ -2,155 +2,273 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF09C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B9CC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A8821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3B420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="RwAr5QCF"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="eWQlVzar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731824AbfIXPQ4 (ORCPT
+        id S1731984AbfIXPT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:16:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42989 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731440AbfIXPQz (ORCPT
+        Tue, 24 Sep 2019 11:19:56 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:36660 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730625AbfIXPT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:16:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y91so2190892ede.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bijUKP9uPxouhGcd1htXTfvDLPDNF2aF59LJ8pKbGVw=;
-        b=RwAr5QCFNuqjuBy75MwEOPtlduLb8CpVBSMDCwFghHcPVcvL8pujx/O6FmjBSO6Cld
-         4Vir9A55d3m/02fGYrTT30yNRDejCIS/GX2MaI/Hpgr1yuhXnIzJ9lbWA6YmpMu+Ssh6
-         +3UrM4y3uwpc/Fuh52w3WOAxql427aic7/Su4igir/ot9V2Irz/HP6m45geigtNyqPvE
-         UTUOcIAD8yVeu5+SMEVeQ+GBWjreDSi3yaZjMLUQ4AWDYlECZQu7HwZ47IRXsRStyuul
-         I3kQbSPl6lQLuK4p2AQu1M7ygHgLC/do+Rw0BALPBr+L3KziJDWvIBq+gVHOOZhfZswB
-         cAjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bijUKP9uPxouhGcd1htXTfvDLPDNF2aF59LJ8pKbGVw=;
-        b=XIASHgJx/5d4wIf2MXyxmwHU9KQsp1SZ2joKK/apOWyqod7XFJjWnGuindpWdvewSf
-         huIDtJZ6DrBwrCGQ+MKMny/rycdvi4U6oqwkQYOifzBlNMu49oza+B+BlKpgFWr2ICju
-         XcVj3exvX/mqnRwykZWAklOEcvetKc8kPXVWyaWTwoFkj4w4jSBbJAJKTVv9I+Q6KMYw
-         qRAFQk4uxQGRCpotDzQWYC9CURhI+Nzh1NCT+7M6YSiEnyJUqsuhxSI2AC3df9NU2d5L
-         CLDEHv6kmFuCOEt6beo6HieskJz3SC1mceMpkor1ubQAODGV1yW2RNixbg4FcMuIIVZh
-         0kUg==
-X-Gm-Message-State: APjAAAVuqAheqw4MyPorybACyGKLgoa6090Qx96pSbJSv7RA93+Rc4PT
-        +Vl2ZXZEwyVBegplFo/hot5L0g==
-X-Google-Smtp-Source: APXvYqzQcMhs5X+f3hlVnseFIl/P8nstkjyohZ+qybVIWqBtACSnnwdlq/O6aEoTRP2ZHbeRHAJBxw==
-X-Received: by 2002:a17:906:c4b:: with SMTP id t11mr2963153ejf.131.1569338213558;
-        Tue, 24 Sep 2019 08:16:53 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y25sm239403eju.39.2019.09.24.08.16.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 08:16:53 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id AA0201022AB; Tue, 24 Sep 2019 18:16:52 +0300 (+03)
-Date:   Tue, 24 Sep 2019 18:16:52 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 2/4] mm, page_owner: record page owner for each subpage
-Message-ID: <20190924151652.bjtjgj7brflrgcuv@box>
-References: <20190820131828.22684-1-vbabka@suse.cz>
- <20190820131828.22684-3-vbabka@suse.cz>
- <20190924113135.2ekb7bmil3rxge6w@box>
- <ee93f01a-9f34-d237-9a34-33314f4298bc@suse.cz>
+        Tue, 24 Sep 2019 11:19:56 -0400
+Received: from pps.filterd (m0050102.ppops.net [127.0.0.1])
+        by m0050102.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x8OF2gTJ016836;
+        Tue, 24 Sep 2019 16:19:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=drrf1XCcXo2C5mt8s0EMYYXCqCvQIskExQ4xVtVhJps=;
+ b=eWQlVzarkiOvV9cd3QrJY42mVvvzPomenUrWgGY/+KeJY+G/lq0GalMHYSLVApv3BMOf
+ oxo2avcP9RRPfsi++d7EtZ6wD6HrXaegLEOb+m9s7E84kja7JsseY0+s57mABmC++1bU
+ eX6w8W7cum3uedcREwun7n0ZZnQGxLDU0wdLbB7+Sr2qa+9OWi6/FsAWMDI4J6581CMy
+ qCkn3WYv81L2r0jtAlR9qf+mlvnfOqcVDMJCeo+NAsButss86tmWTtktorAuXHYSHjfA
+ mA2bwf9ss0tQaIDsYBauzjY5Na02HtjcdwnHCyeTsPOM/pn1Wcq94KfqPBHTZ5c7gECP Qw== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by m0050102.ppops.net-00190b01. with ESMTP id 2v73qpbt6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Sep 2019 16:19:39 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x8OFBXwT023961;
+        Tue, 24 Sep 2019 11:19:39 -0400
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2v73vpbv43-1;
+        Tue, 24 Sep 2019 11:19:38 -0400
+Received: from [172.29.170.83] (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
+        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 817E81FC6C;
+        Tue, 24 Sep 2019 15:19:38 +0000 (GMT)
+Subject: Re: [PATCH RESEND v2] fs/epoll: Remove unnecessary wakeups of nested
+ epoll that in ET mode
+To:     Heiher <r@hev.cc>
+Cc:     linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Eric Wong <e@80x24.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190919092413.11141-1-r@hev.cc>
+ <4379abe0-9f81-21b6-11ae-6eb3db79eeff@akamai.com>
+ <5042e1e0-f49a-74c8-61f8-6903288110ac@akamai.com>
+ <CAHirt9i42K37J9n8smaudJyigRAiiDhzZBuW+gbyLXHVq98yqQ@mail.gmail.com>
+From:   Jason Baron <jbaron@akamai.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
+ 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
+ JeQ7iQ==
+Message-ID: <92a54917-0cdf-89ce-1fb1-f913156a1e0d@akamai.com>
+Date:   Tue, 24 Sep 2019 11:18:46 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee93f01a-9f34-d237-9a34-33314f4298bc@suse.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAHirt9i42K37J9n8smaudJyigRAiiDhzZBuW+gbyLXHVq98yqQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909240145
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-24_06:2019-09-23,2019-09-24 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ impostorscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909240145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:10:59PM +0200, Vlastimil Babka wrote:
-> On 9/24/19 1:31 PM, Kirill A. Shutemov wrote:
-> > On Tue, Aug 20, 2019 at 03:18:26PM +0200, Vlastimil Babka wrote:
-> >> Currently, page owner info is only recorded for the first page of a high-order
-> >> allocation, and copied to tail pages in the event of a split page. With the
-> >> plan to keep previous owner info after freeing the page, it would be benefical
-> >> to record page owner for each subpage upon allocation. This increases the
-> >> overhead for high orders, but that should be acceptable for a debugging option.
-> >>
-> >> The order stored for each subpage is the order of the whole allocation. This
-> >> makes it possible to calculate the "head" pfn and to recognize "tail" pages
-> >> (quoted because not all high-order allocations are compound pages with true
-> >> head and tail pages). When reading the page_owner debugfs file, keep skipping
-> >> the "tail" pages so that stats gathered by existing scripts don't get inflated.
-> >>
-> >> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> >> ---
-> >>  mm/page_owner.c | 40 ++++++++++++++++++++++++++++------------
-> >>  1 file changed, 28 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/mm/page_owner.c b/mm/page_owner.c
-> >> index addcbb2ae4e4..813fcb70547b 100644
-> >> --- a/mm/page_owner.c
-> >> +++ b/mm/page_owner.c
-> >> @@ -154,18 +154,23 @@ static noinline depot_stack_handle_t save_stack(gfp_t flags)
-> >>  	return handle;
-> >>  }
-> >>  
-> >> -static inline void __set_page_owner_handle(struct page_ext *page_ext,
-> >> -	depot_stack_handle_t handle, unsigned int order, gfp_t gfp_mask)
-> >> +static inline void __set_page_owner_handle(struct page *page,
-> >> +	struct page_ext *page_ext, depot_stack_handle_t handle,
-> >> +	unsigned int order, gfp_t gfp_mask)
-> >>  {
-> >>  	struct page_owner *page_owner;
-> >> +	int i;
-> >>  
-> >> -	page_owner = get_page_owner(page_ext);
-> >> -	page_owner->handle = handle;
-> >> -	page_owner->order = order;
-> >> -	page_owner->gfp_mask = gfp_mask;
-> >> -	page_owner->last_migrate_reason = -1;
-> >> +	for (i = 0; i < (1 << order); i++) {
-> >> +		page_owner = get_page_owner(page_ext);
-> >> +		page_owner->handle = handle;
-> >> +		page_owner->order = order;
-> >> +		page_owner->gfp_mask = gfp_mask;
-> >> +		page_owner->last_migrate_reason = -1;
-> >> +		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
-> >>  
-> >> -	__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
-> >> +		page_ext = lookup_page_ext(page + i);
-> > 
-> > Isn't it off-by-one? You are calculating page_ext for the next page,
-> > right?
-> 
-> You're right, thanks!
-> 
-> > And cant we just do page_ext++ here instead?
-> 
-> Unfortunately no, as that implies sizeof(page_ext), which only declares
-> unsigned long flags; and the rest is runtime-determined.
-> Perhaps I could add a wrapper named e.g. page_ext_next() that would use
-> get_entry_size() internally and hide the necessary casts to void * and back?
 
-Yeah, it looks less costly than calling lookup_page_ext() on each
-iteration. And looks like it can be inlined if we make 'extra_mem' visible
-(under different name) outside page_ext.c.
 
--- 
- Kirill A. Shutemov
+On 9/24/19 10:06 AM, Heiher wrote:
+> Hi,
+> 
+> On Mon, Sep 23, 2019 at 11:34 PM Jason Baron <jbaron@akamai.com> wrote:
+>>
+>>
+>>
+>> On 9/20/19 12:00 PM, Jason Baron wrote:
+>>> On 9/19/19 5:24 AM, hev wrote:
+>>>> From: Heiher <r@hev.cc>
+>>>>
+>>>> Take the case where we have:
+>>>>
+>>>>         t0
+>>>>          | (ew)
+>>>>         e0
+>>>>          | (et)
+>>>>         e1
+>>>>          | (lt)
+>>>>         s0
+>>>>
+>>>> t0: thread 0
+>>>> e0: epoll fd 0
+>>>> e1: epoll fd 1
+>>>> s0: socket fd 0
+>>>> ew: epoll_wait
+>>>> et: edge-trigger
+>>>> lt: level-trigger
+>>>>
+>>>> When s0 fires an event, e1 catches the event, and then e0 catches an event from
+>>>> e1. After this, There is a thread t0 do epoll_wait() many times on e0, it should
+>>>> only get one event in total, because e1 is a dded to e0 in edge-triggered mode.
+>>>>
+>>>> This patch only allows the wakeup(&ep->poll_wait) in ep_scan_ready_list under
+>>>> two conditions:
+>>>>
+>>>>  1. depth == 0.
+
+
+What is the point of this condition again? I was thinking we only need
+to do #2.
+
+>>>>  2. There have event is added to ep->ovflist during processing.
+>>>>
+>>>> Test code:
+>>>>  #include <unistd.h>
+>>>>  #include <sys/epoll.h>
+>>>>  #include <sys/socket.h>
+>>>>
+>>>>  int main(int argc, char *argv[])
+>>>>  {
+>>>>      int sfd[2];
+>>>>      int efd[2];
+>>>>      struct epoll_event e;
+>>>>
+>>>>      if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+>>>>              goto out;
+>>>>
+>>>>      efd[0] = epoll_create(1);
+>>>>      if (efd[0] < 0)
+>>>>              goto out;
+>>>>
+>>>>      efd[1] = epoll_create(1);
+>>>>      if (efd[1] < 0)
+>>>>              goto out;
+>>>>
+>>>>      e.events = EPOLLIN;
+>>>>      if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
+>>>>              goto out;
+>>>>
+>>>>      e.events = EPOLLIN | EPOLLET;
+>>>>      if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
+>>>>              goto out;
+>>>>
+>>>>      if (write(sfd[1], "w", 1) != 1)
+>>>>              goto out;
+>>>>
+>>>>      if (epoll_wait(efd[0], &e, 1, 0) != 1)
+>>>>              goto out;
+>>>>
+>>>>      if (epoll_wait(efd[0], &e, 1, 0) != 0)
+>>>>              goto out;
+>>>>
+>>>>      close(efd[0]);
+>>>>      close(efd[1]);
+>>>>      close(sfd[0]);
+>>>>      close(sfd[1]);
+>>>>
+>>>>      return 0;
+>>>>
+>>>>  out:
+>>>>      return -1;
+>>>>  }
+>>>>
+>>>> More tests:
+>>>>  https://github.com/heiher/epoll-wakeup
+>>>>
+>>>> Cc: Al Viro <viro@ZenIV.linux.org.uk>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Davide Libenzi <davidel@xmailserver.org>
+>>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>>>> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+>>>> Cc: Eric Wong <e@80x24.org>
+>>>> Cc: Jason Baron <jbaron@akamai.com>
+>>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>>> Cc: Roman Penyaev <rpenyaev@suse.de>
+>>>> Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: linux-fsdevel@vger.kernel.org
+>>>> Signed-off-by: hev <r@hev.cc>
+>>>> ---
+>>>>  fs/eventpoll.c | 5 ++++-
+>>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>>> index c4159bcc05d9..fa71468dbd51 100644
+>>>> --- a/fs/eventpoll.c
+>>>> +++ b/fs/eventpoll.c
+>>>> @@ -685,6 +685,9 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>>>>      if (!ep_locked)
+>>>>              mutex_lock_nested(&ep->mtx, depth);
+>>>>
+>>>> +    if (!depth || list_empty_careful(&ep->rdllist))
+>>>> +            pwake++;
+>>>> +
+
+This is the check I'm wondering why it's needed?
+
+Thanks,
+
+
+-Jason
+
