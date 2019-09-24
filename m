@@ -2,113 +2,116 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C7CC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5B7C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15518214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569322592;
-	bh=SevG19z4jXcdurU/3SInmv4JNVj2MbSvZ1SNc1d8A/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UY/+YdAPXqtYtHsVPGrS+XRwT8GpH14xT+xMsfzwo1dYjay13JGRHW5sZg7C+QkKC
-	 5zXE8sNIrUjIFRC1wZN8X9MWjv/dEcCR6NSohbKHdRLa6zD4xLdHrki1eHv2u5Xi5D
-	 0JE3ltEfhPOICNxUOHX9rDnqULmL5zyGRANVcmxg=
+	by mail.kernel.org (Postfix) with ESMTP id 34BC7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAqeqQfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409576AbfIXK4b (ORCPT
+        id S2395102AbfIXK5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 06:56:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33782 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438872AbfIXK4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 06:56:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2266CACEC;
-        Tue, 24 Sep 2019 10:56:27 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 12:56:22 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190924105622.GH23050@dhcp22.suse.cz>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
- <20190923151519.GE2369@hirez.programming.kicks-ass.net>
- <20190923152856.GB17206@dhcp22.suse.cz>
- <20190923154852.GG2369@hirez.programming.kicks-ass.net>
- <20190923165235.GD17206@dhcp22.suse.cz>
- <20190923203410.GI2369@hirez.programming.kicks-ass.net>
- <20190924074751.GB23050@dhcp22.suse.cz>
- <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 24 Sep 2019 06:57:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35093 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406623AbfIXK5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 06:57:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so1137585pfw.2;
+        Tue, 24 Sep 2019 03:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qlJPjtqwH4SH4+kSPRq33RCq3tnW7zeL3j/StA+vARE=;
+        b=VAqeqQfs5vp8XcbvrzPXOHLl9wsuwAigfKHOkb7U0V2zK7BxUFOcXaPEps0+4Hf7gY
+         ckR+vHTaPFN58C0YhPLLi9BJ7aGmt3IMSbFVt2MKyt7dA6x3U+RNV6AUydLpOksvcAvV
+         hUiuKjMFRtNToW5jMRJUIEaivWgehDkCd/ftgXNa5VbnK7ZyNy/T8aynJ3N5HhPlzeRg
+         u4mh8XwqP7cnPKP1lTz7zR+pN35/4Y/yBVbmDy5Diphwjrkc3TJhMcsXzwIhTnlquw2C
+         DLF5Y03beyk5FVCSyB3qWWHi3qi1eHBCd4pn55fwCNZzc4lBasIetioc6jONHnuOJ53z
+         7zCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qlJPjtqwH4SH4+kSPRq33RCq3tnW7zeL3j/StA+vARE=;
+        b=Er5qfXvIpVoUqbXDw/dM+JoA2GlHSUZFFY2Gx/NMCH3blPHwnRDHVmpd5dYfQ37T/2
+         msgWNGmQomi6HF1aCNyG0cVB61eqBZKtPrTi/c4V4Fvvki45aMtQwAcdaHdOkkVNhGjc
+         SpaCSkI2m4qrdFTCa27FnBxPNlXlKs2ZYescH8UELCRD3K88LjvLeKz5PGIchLC3Jw/p
+         rRs6X5Q8L6QBWIkSTsYyL8V+XtLkngLiCP42VQSXT9fNkikt7uNBxTQwuP4YnMCejnQv
+         DlPTShRoirz5vxFljksbTtssHcI9JE0nLjhC8OfSntTBWA/jwRfh43iZ4pBncdQTBFJh
+         Y6Eg==
+X-Gm-Message-State: APjAAAXUPZi1bVXSIGA/bxkwrOV+HeTyhjHBUjwCWYDqvmtQ6OiHXRcQ
+        hninxGNpbxKkTWcrSKjDJm8=
+X-Google-Smtp-Source: APXvYqycUMIsr6AV985kDVUj8M6zg9Zv8d9B6Ibt25Nd/KMxcvkkvEp7mqyYzEQ+8DvaQ3ihqSh+8A==
+X-Received: by 2002:a65:5043:: with SMTP id k3mr2559662pgo.406.1569322665098;
+        Tue, 24 Sep 2019 03:57:45 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.110.135])
+        by smtp.gmail.com with ESMTPSA id c125sm1953886pfa.107.2019.09.24.03.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 24 Sep 2019 03:57:44 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hslester96@gmail.com, wsa+renesas@sang-engineering.com,
+        Rishi Gupta <gupt21@gmail.com>
+Subject: [RESEND PATCH v2 0/3] Add driver for veml6030 ambient light sensor
+Date:   Tue, 24 Sep 2019 16:21:55 +0530
+Message-Id: <cover.1569321085.git.gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24-09-19 11:17:14, Peter Zijlstra wrote:
-> On Tue, Sep 24, 2019 at 09:47:51AM +0200, Michal Hocko wrote:
-> > On Mon 23-09-19 22:34:10, Peter Zijlstra wrote:
-> > > On Mon, Sep 23, 2019 at 06:52:35PM +0200, Michal Hocko wrote:
-> > [...]
-> > > > I even the
-> > > > ACPI standard is considering this optional. Yunsheng Lin has referred to
-> > > > the specific part of the standard in one of the earlier discussions.
-> > > > Trying to guess the node affinity is worse than providing all CPUs IMHO.
-> > > 
-> > > I'm saying the ACPI standard is wrong.
-> > 
-> > Even if you were right on this the reality is that a HW is likely to
-> > follow that standard and we cannot rule out NUMA_NO_NODE being
-> > specified. As of now we would access beyond the defined array and that
-> > is clearly a bug.
-> 
-> Right, because the device node is wrong, so we fix _that_!
-> 
-> > Let's assume that this is really a bug for a moment. What are you going
-> > to do about that? BUG_ON? I do not really see any solution besides to either
-> > provide something sensible or BUG_ON. If you are worried about a
-> > conditional then this should be pretty easy to solve by starting the
-> > array at -1 index and associate it with the online cpu mask.
-> 
-> The same thing I proposed earlier; force the device node to 0 (or any
-> other convenient random valid value) and issue a FW_BUG message to the
-> console.
+The veml6030 is an ambient light sensor from vishay and
+is a different hardware from an existing hardware for which
+driver currently exist, therefore this driver submission.
 
-Why would you "fix" anything and how do you know that node 0 is the
-right choice? I have seen setups with node 0 without any memory and
-similar unexpected things.
+* All features; ALS, white channel & power management is
+  supported.
 
-To be honest I really fail to see why to object to a simple semantic
-that NUMA_NO_NODE imply all usable cpus. Could you explain that please?
+* All configurable parameters are supported through standard
+  iio sysfs entries. User space can get valid values of any
+  parameter (xx_available) and then can write to appropriate
+  sysfs entry.
+
+* User space can get ALS & White channel readings through RAW
+  IIO interface.
+
+* IIO events are used to notify application whenever threshold
+  is crossed. This uses IRQ pin of veml6030.
+
+* Some registers in veml6030 are read only. For these registers
+  read callback returns error to user space.
+
+There are 3 patches for this submission:
+[PATCH 1/3] iio: light: add driver for veml6030 ambient light sensor
+[PATCH 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
+[PATCH 3/3] iio: documentation: light: Add veml6030 sysfs documentation
+
+Rishi Gupta (3):
+  iio: light: add driver for veml6030 ambient light sensor
+  dt-bindings: iio: light: add veml6030 ALS bindings
+  iio: documentation: light: Add veml6030 sysfs documentation
+
+ .../ABI/testing/sysfs-bus-iio-light-veml6030       |  49 ++
+ .../devicetree/bindings/iio/light/veml6030.yaml    |  62 ++
+ drivers/iio/light/Kconfig                          |  11 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/veml6030.c                       | 633 +++++++++++++++++++++
+ 5 files changed, 756 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
+ create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
+ create mode 100644 drivers/iio/light/veml6030.c
 
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
