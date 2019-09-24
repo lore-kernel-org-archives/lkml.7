@@ -2,109 +2,76 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF8C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5669CC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D836F214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:29:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="sFEY7awd"
+	by mail.kernel.org (Postfix) with ESMTP id 2A9F12146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504240AbfIXJ3j (ORCPT
+        id S2395143AbfIXJbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:29:39 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:56414 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2504186AbfIXJ3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:29:38 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 157712E0AFF;
-        Tue, 24 Sep 2019 12:29:36 +0300 (MSK)
-Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id QkwcPN4QKg-TZfSidj7;
-        Tue, 24 Sep 2019 12:29:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1569317376; bh=YKkn4HVvP/+S323ny4wtqnadzUN5R/l/3Q2qi4I+C20=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=sFEY7awdEgAKvKAPX0qms5EE4rM19nmu3enZSr/t/63SKXi9HMwNLdgBSZ8KwOqXg
-         D5i6QuSwldSgtTjOcisJ0R2KTibZ+JyE01OrUCapm8OxcESAwyMOAfNoodsokaw2P6
-         cMpXcarS4KylAWkIXppr9gv/FKtG45Hp63c8iOP4=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by vla5-2bf13a090f43.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id xBph0X0UAr-TZIeLosP;
-        Tue, 24 Sep 2019 12:29:35 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <CAHk-=whmCZvYcR10Pe9fEy912fc8xywbiP9mn054Jg_9+0TqCg@mail.gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <f9fdb72f-f0a1-8c28-f287-be6946980160@yandex-team.ru>
-Date:   Tue, 24 Sep 2019 12:29:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 05:31:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2710 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390668AbfIXJbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:31:53 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 434FCCD2BE73B968E31A;
+        Tue, 24 Sep 2019 17:31:50 +0800 (CST)
+Received: from huawei.com (10.175.101.78) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 17:31:46 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <mchehab@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Tue, 24 Sep 2019 17:49:04 +0800
+Message-ID: <1569318544-56235-1-git-send-email-yangyingliang@huawei.com>
+X-Mailer: git-send-email 1.8.3
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whmCZvYcR10Pe9fEy912fc8xywbiP9mn054Jg_9+0TqCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/09/2019 02.05, Linus Torvalds wrote:
-> On Fri, Sep 20, 2019 at 12:35 AM Konstantin Khlebnikov
-> <khlebnikov@yandex-team.ru> wrote:
->>
->> This patch implements write-behind policy which tracks sequential writes
->> and starts background writeback when file have enough dirty pages.
-> 
-> Apart from a spelling error ("contigious"), my only reaction is that
-> I've wanted this for the multi-file writes, not just for single big
-> files.
-> 
-> Yes, single big files may be a simpler and perhaps the "10% effort for
-> 90% of the gain", and thus the right thing to do, but I do wonder if
-> you've looked at simply extending it to cover multiple files when
-> people copy a whole directory (or unpack a tar-file, or similar).
-> 
-> Now, I hear you say "those are so small these days that it doesn't
-> matter". And maybe you're right. But partiocularly for slow media,
-> triggering good streaming write behavior has been a problem in the
-> past.
-> 
-> So I'm wondering whether the "writebehind" state should perhaps be
-> considered be a process state, rather than "struct file" state, and
-> also start triggering for writing smaller files.
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
-It's simple to extend existing state with per-task counter of sequential
-writes to detect patterns like unpacking tarball with small files.
-After reaching some threshold write-behind could flush files in at close.
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-But in this case it's hard to wait previous writes to limit amount of
-requests and pages in writeback for each stream.
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Theoretically we could build chain of inodes for delaying and batching.
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index 1826ff8..4bf85e9 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -504,7 +504,13 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
+ {
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
++
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
++
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
+-- 
+1.8.3
 
-> 
-> Maybe this was already discussed and people decided that the big-file
-> case was so much easier that it wasn't worth worrying about
-> writebehind for multiple files.
-> 
->              Linus
-> 
