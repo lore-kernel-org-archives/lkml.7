@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20CDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F23DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD4D217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BB921971
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343575;
-	bh=n8/k4oZ0PLenkMBuev9BeTxhWUwwjV3am2iTIBr4tZ0=;
+	s=default; t=1569343586;
+	bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWZpSrnTBCS5GEVroBApJRrNx6OaOsN5bCNFmvXXJvgMBcU2BtKcpOTw7PmsxOXJv
-	 Kp2gri0NVb6hSL/+1sjO2XQM0TyATMMgazjHyru8/ql+7QwuCdeDJn2ky+RNDjOMpY
-	 8eA5AIdJLyM3OCTTIXM9jni0HDiYPyG0/lPtcTP0=
+	b=EPYpmb9pbYAR6Fv4ArxROGczW6+m3tF306A/t1ZI9P14AtNoWIfwsfTJCq5NdN+3M
+	 wiXy5BPgDALpCVC260jPEslyHJeVtGdXimYTyBSIHfIgZia2/ZMVjlNL2sZslMCFoo
+	 2hGmNCQqz7WcwTZ5NTuaGfpk3+7JNJF6lfZaIaG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbfIXQqO (ORCPT
+        id S2410108AbfIXQqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410091AbfIXQqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:08 -0400
+        id S1728428AbfIXQqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D92217D9;
-        Tue, 24 Sep 2019 16:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5366F21841;
+        Tue, 24 Sep 2019 16:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343568;
-        bh=n8/k4oZ0PLenkMBuev9BeTxhWUwwjV3am2iTIBr4tZ0=;
+        s=default; t=1569343573;
+        bh=qqZxm8KNU3bkkqJKEYWUqs8sTqIDkTaNn9u3huRE85Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iqq/nA10fu268/9AR3Eru3AlNgGabVJqFX9d6ZzWSVz5Mbv6ukEEbt0Ef9FxYYVhz
-         GKgWN4nQ+13vkSB8F8a40sDF1IHdSosMSRWhPKqm08IsllT7rf7kW9Ni87YGqT7iRx
-         QYirqzvvNtUdCpNaT7zGNQnnLHRHzXgMldaEuKCY=
+        b=bUsQk9/UfwheQ33KEy2tM3Vbh0YYoVHvndjrxdWjQP4q66Edowx9zKqgk9WZyu3t7
+         8phfaoR4mUrGDUG+zCFxFC5MdTWBtmgdsi37RYqCkZBgt1WY3jXHAghUhCux9G/Jf5
+         x6VJRc+bkBbut8kGg/Gz7pxY6tBZPLHpkbncORG8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 08/70] video: ssd1307fb: Start page range at page_offset
-Date:   Tue, 24 Sep 2019 12:44:47 -0400
-Message-Id: <20190924164549.27058-8-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 11/70] drm/panel: check failure cases in the probe func
+Date:   Tue, 24 Sep 2019 12:44:50 -0400
+Message-Id: <20190924164549.27058-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,42 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit afd6d4f5a52c16e1483328ac074abb1cde92c29f ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+The following function calls may fail and return NULL, so the null check
+is added.
+of_graph_get_next_endpoint
+of_graph_get_remote_port_parent
+of_graph_get_remote_port
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+Update: Thanks to Sam Ravnborg, for suggession on the use of goto to avoid
+leaking endpoint.
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190724195534.9303-1-navid.emamdoost@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../gpu/drm/panel/panel-raspberrypi-touchscreen.c   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 021b727e8b5c4..6afd0d3ae5690 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -432,7 +432,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index 2c9c9722734f5..9a2cb8aeab3a4 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -400,7 +400,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 
+ 	/* Look up the DSI host.  It needs to probe before we do. */
+ 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
++	if (!endpoint)
++		return -ENODEV;
++
+ 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
++	if (!dsi_host_node)
++		goto error;
++
+ 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
+ 	of_node_put(dsi_host_node);
+ 	if (!host) {
+@@ -409,6 +415,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	info.node = of_graph_get_remote_port(endpoint);
++	if (!info.node)
++		goto error;
++
+ 	of_node_put(endpoint);
+ 
+ 	ts->dsi = mipi_dsi_device_register_full(host, &info);
+@@ -429,6 +438,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
  		return ret;
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
+ 	return 0;
++
++error:
++	of_node_put(endpoint);
++	return -ENODEV;
+ }
  
+ static int rpi_touchscreen_remove(struct i2c_client *i2c)
 -- 
 2.20.1
 
