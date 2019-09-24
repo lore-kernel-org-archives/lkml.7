@@ -2,116 +2,121 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264DFC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FA921655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E3F2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="hMBfVPo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbfIXI67 (ORCPT
+        id S2395066AbfIXJAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:58:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:55982 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbfIXI67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:58:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73F87142F;
-        Tue, 24 Sep 2019 01:58:58 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF0E23F59C;
-        Tue, 24 Sep 2019 01:58:57 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 09:58:56 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 02/35] irqchip/gic-v3-its: Factor out wait_for_syncr
- primitive
-Message-ID: <20190924085855.GM9720@e119886-lin.cambridge.arm.com>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-3-maz@kernel.org>
+        Tue, 24 Sep 2019 05:00:23 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:41214 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729588AbfIXJAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:00:22 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id CD2CF2E1318;
+        Tue, 24 Sep 2019 12:00:18 +0300 (MSK)
+Received: from sas2-62907d92d1d8.qloud-c.yandex.net (sas2-62907d92d1d8.qloud-c.yandex.net [2a02:6b8:c08:b895:0:640:6290:7d92])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id kRCekL2Kks-0HLSQhvt;
+        Tue, 24 Sep 2019 12:00:18 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1569315618; bh=XWcumQ6LEVVd+nqcjbDRZkT8POGeVs8ZdFkLhiZbTSI=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=hMBfVPo+LVt6lT9a9TMgtbPb13atRa5vC0BbTPaJPzZQEvlN5VYzXH8xP62mYkBVm
+         3bkgWYVMffqI4hoMwA+tbFvjJyemGfPUDhrdVumO9hCFnEtAaeRf8GYdTe59TMEC15
+         0u/G5ED+L8iRCekkV4E5ujHsjZrWLjLibN01StJo=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
+        by sas2-62907d92d1d8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id XQYXi9VcIO-0HH8Sl58;
+        Tue, 24 Sep 2019 12:00:17 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+ <20190924073940.GM6636@dread.disaster.area>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
+Date:   Tue, 24 Sep 2019 12:00:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923182606.32100-3-maz@kernel.org>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190924073940.GM6636@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 07:25:33PM +0100, Marc Zyngier wrote:
-> Waiting for a redistributor to have performed an operation is a
-> common thing to do, and the idiom is already spread around.
-> As we're going to make even more use of this, let's have a primitive
-> that does just that.
+On 24/09/2019 10.39, Dave Chinner wrote:
+> On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
+>> On 23/09/2019 17.52, Tejun Heo wrote:
+>>> Hello, Konstantin.
+>>>
+>>> On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
+>>>> With vm.dirty_write_behind 1 or 2 files are written even faster and
+>>>
+>>> Is the faster speed reproducible?  I don't quite understand why this
+>>> would be.
+>>
+>> Writing to disk simply starts earlier.
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+> Stupid question: how is this any different to simply winding down
+> our dirty writeback and throttling thresholds like so:
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 62e54f1a248b..58cb233cf138 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -1075,6 +1075,12 @@ static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
->  		dsb(ishst);
->  }
->  
-> +static void wait_for_syncr(void __iomem *rdbase)
-> +{
-> +	while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-> +		cpu_relax();
-> +}
-> +
->  static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
->  {
->  	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-> @@ -2757,8 +2763,7 @@ static void its_vpe_db_proxy_move(struct its_vpe *vpe, int from, int to)
->  
->  		rdbase = per_cpu_ptr(gic_rdists->rdist, from)->rd_base;
->  		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_CLRLPIR);
-> -		while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-> -			cpu_relax();
-> +		wait_for_syncr(rdbase);
->  
->  		return;
->  	}
-> @@ -2914,8 +2919,7 @@ static void its_vpe_send_inv(struct irq_data *d)
->  
->  		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
->  		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_INVLPIR);
-> -		while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-> -			cpu_relax();
-> +		wait_for_syncr(rdbase);
->  	} else {
->  		its_vpe_send_cmd(vpe, its_send_inv);
->  	}
-> @@ -2957,8 +2961,7 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
->  			gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_SETLPIR);
->  		} else {
->  			gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_CLRLPIR);
-> -			while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-> -				cpu_relax();
-> +			wait_for_syncr(rdbase);
->  		}
->  	} else {
->  		if (state)
-> -- 
-> 2.20.1
+> # echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
+> 
+> to start background writeback when there's 100MB of dirty pages in
+> memory, and then:
+> 
+> # echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
+> 
+> So that writers are directly throttled at 200MB of dirty pages in
+> memory?
+> 
+> This effectively gives us global writebehind behaviour with a
+> 100-200MB cache write burst for initial writes.
+
+Global limits affect all dirty pages including memory-mapped and
+randomly touched. Write-behind aims only into sequential streams.
+
+> 
+> ANd, really such strict writebehind behaviour is going to cause all
+> sorts of unintended problesm with filesystems because there will be
+> adverse interactions with delayed allocation. We need a substantial
+> amount of dirty data to be cached for writeback for fragmentation
+> minimisation algorithms to be able to do their job....
+
+I think most sequentially written files never change after close.
+Except of knowing final size of huge files (>16Mb in my patch)
+there should be no difference for delayed allocation.
+
+Probably write behind could provide hint about streaming pattern:
+pass something like "MSG_MORE" into writeback call.
+
+> 
+> Cheers,
+> 
+> Dave.
 > 
