@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A563CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E05C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730DE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DCA20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344301;
-	bh=cHqYgbigJfROhlyBdcrTmz1tt2vh7ZpYE1w0/e5Fieg=;
+	s=default; t=1569344302;
+	bh=dV1r5TVToozdpjKjl7WaNviSQc4NOnz8fjIm0uFFHSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCF8G6GGZhejlMDxsx2nFbV0hKGDKDYCXcN6oasosaaTI7vZbpkPl/2lylTzVqoRt
-	 Pu/FBGmiZkTaNmjTeyeWXeaplTTA3jlE4/qSQRKjHEpfwNRA3JtPin4VE+8jXyKuRE
-	 uSizJaQT42b/0L5CKdSbKBT7BiGoXqNCdxzOZric=
+	b=M/JBVOhrjpNHxK4prJizRKgwNrhbtuc9F2pGvobY9uhaoLmBozVLJe7ZvRp7V7VV5
+	 jUfqDqVPZs3X07SsVrOTwt2xDb1FQR5mmVll70r2aHBOgbak+bjtylEfb6QmWvwLCe
+	 CZdUBmTW2qrHMh0b8kxWBDJ/VA47exoPSq89nzsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390596AbfIXQ6U (ORCPT
+        id S2410632AbfIXQtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633339AbfIXQsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:02 -0400
+        id S2390917AbfIXQtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:49:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 974A920673;
-        Tue, 24 Sep 2019 16:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78F60222BF;
+        Tue, 24 Sep 2019 16:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343681;
-        bh=cHqYgbigJfROhlyBdcrTmz1tt2vh7ZpYE1w0/e5Fieg=;
+        s=default; t=1569343786;
+        bh=dV1r5TVToozdpjKjl7WaNviSQc4NOnz8fjIm0uFFHSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkpHemb36Lm+a0IRAaceFOh14/cIQZyYW6DVxMG6De6d617UvjUMNC/bqORSLLdGg
-         C0EJIwQPKdE2mbNWrlp+Fi1C8fE1XKlht9/HhqjTbcTUjUEXZtn1qAxQ5R9+IzzPT/
-         gCEAUjQOBzeFJl4cuCKQ3uWH2c6ZxuMfa+yF4Fjo=
+        b=XfvgEmdxiK8Am407xqvntgqQKvdBRds1YbJn34+BoKFThRnNVmFR3A6ychh6W+ltB
+         mKRfyJPlMyHfQQdD+N1qppwtKKsWR4d9n+dJ8cSj9WzxG2zTPRQ5YkhwedGLL/nP3P
+         4BneyIJi9fNexzZBIa4zyScnF7ot9oYzDa2yK7SQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 53/70] powerpc/imc: Dont create debugfs files for cpu-less nodes
-Date:   Tue, 24 Sep 2019 12:45:32 -0400
-Message-Id: <20190924164549.27058-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 29/50] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
+Date:   Tue, 24 Sep 2019 12:48:26 -0400
+Message-Id: <20190924164847.27780-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
-References: <20190924164549.27058-1-sashal@kernel.org>
+In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
+References: <20190924164847.27780-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,108 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 41ba17f20ea835c489e77bd54e2da73184e22060 ]
+[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
 
-Commit <684d984038aa> ('powerpc/powernv: Add debugfs interface for
-imc-mode and imc') added debugfs interface for the nest imc pmu
-devices to support changing of different ucode modes. Primarily adding
-this capability for debug. But when doing so, the code did not
-consider the case of cpu-less nodes. So when reading the _cmd_ or
-_mode_ file of a cpu-less node will create this crash.
+The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
+use of driver callbacks in drivers that have been bound part way
+through the recovery process. This is necessary to prevent later stage
+handlers from being called when the earlier stage handlers haven't,
+which can be confusing for drivers.
 
-  Faulting instruction address: 0xc0000000000d0d58
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  ...
-  CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-20190627+ #19
-  NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:c0000000000d0d50
-  REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-rc6-next-20190627+)
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:28022822  XER: 00000000
-  CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:40000000 IRQMASK: 0
-  ...
-  NIP imc_mem_get+0x8/0x20
-  LR  simple_attr_read+0x118/0x170
-  Call Trace:
-    simple_attr_read+0x70/0x170 (unreliable)
-    debugfs_attr_read+0x6c/0xb0
-    __vfs_read+0x3c/0x70
-     vfs_read+0xbc/0x1a0
-    ksys_read+0x7c/0x140
-    system_call+0x5c/0x70
+However, the flag is set for all devices that are added after boot
+time and only cleared at the end of the EEH recovery process. This
+results in hot plugged devices erroneously having the flag set during
+the first recovery after they are added (causing their driver's
+handlers to be incorrectly ignored).
 
-Patch fixes the issue with a more robust check for vbase to NULL.
+To remedy this, clear the flag at the beginning of recovery
+processing. The flag is still cleared at the end of recovery
+processing, although it is no longer really necessary.
 
-Before patch, ls output for the debugfs imc directory
+Also clear the flag during eeh_handle_special_event(), for the same
+reasons.
 
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0    imc_cmd_251  imc_cmd_253  imc_cmd_255  imc_mode_0    imc_mode_251  imc_mode_253  imc_mode_255
-  imc_cmd_250  imc_cmd_252  imc_cmd_254  imc_cmd_8    imc_mode_250  imc_mode_252  imc_mode_254  imc_mode_8
-
-After patch, ls output for the debugfs imc directory
-
-  # ls /sys/kernel/debug/powerpc/imc/
-  imc_cmd_0  imc_cmd_8  imc_mode_0  imc_mode_8
-
-Actual bug here is that, we have two loops with potentially different
-loop counts. That is, in imc_get_mem_addr_nest(), loop count is
-obtained from the dt entries. But in case of export_imc_mode_and_cmd(),
-loop was based on for_each_nid() count. Patch fixes the loop count in
-latter based on the struct mem_info. Ideally it would be better to
-have array size in struct imc_pmu.
-
-Fixes: 684d984038aa ('powerpc/powernv: Add debugfs interface for imc-mode and imc')
-Reported-by: Qian Cai <cai@lca.pw>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190827101635.6942-1-maddy@linux.vnet.ibm.com
+Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/opal-imc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 186109bdd41be..e04b20625cb94 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -53,9 +53,9 @@ static void export_imc_mode_and_cmd(struct device_node *node,
- 				    struct imc_pmu *pmu_ptr)
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 67619b4b3f96c..110eba400de7c 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -811,6 +811,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+ 	pr_warn("EEH: This PCI device has failed %d times in the last hour and will be permanently disabled after %d failures.\n",
+ 		pe->freeze_count, eeh_max_freezes);
+ 
++	eeh_for_each_pe(pe, tmp_pe)
++		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
++			edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 	/* Walk the various device drivers attached to this slot through
+ 	 * a reset sequence, giving each an opportunity to do what it needs
+ 	 * to accomplish the reset.  Each child gets a report of the
+@@ -1004,7 +1008,8 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+  */
+ void eeh_handle_special_event(void)
  {
- 	static u64 loc, *imc_mode_addr, *imc_cmd_addr;
--	int chip = 0, nid;
- 	char mode[16], cmd[16];
- 	u32 cb_offset;
-+	struct imc_mem_info *ptr = pmu_ptr->mem_info;
+-	struct eeh_pe *pe, *phb_pe;
++	struct eeh_pe *pe, *phb_pe, *tmp_pe;
++	struct eeh_dev *edev, *tmp_edev;
+ 	struct pci_bus *bus;
+ 	struct pci_controller *hose;
+ 	unsigned long flags;
+@@ -1075,6 +1080,10 @@ void eeh_handle_special_event(void)
+ 				    (phb_pe->state & EEH_PE_RECOVERING))
+ 					continue;
  
- 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
- 
-@@ -69,20 +69,20 @@ static void export_imc_mode_and_cmd(struct device_node *node,
- 	if (of_property_read_u32(node, "cb_offset", &cb_offset))
- 		cb_offset = IMC_CNTL_BLK_OFFSET;
- 
--	for_each_node(nid) {
--		loc = (u64)(pmu_ptr->mem_info[chip].vbase) + cb_offset;
-+	while (ptr->vbase != NULL) {
-+		loc = (u64)(ptr->vbase) + cb_offset;
- 		imc_mode_addr = (u64 *)(loc + IMC_CNTL_BLK_MODE_OFFSET);
--		sprintf(mode, "imc_mode_%d", nid);
-+		sprintf(mode, "imc_mode_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(mode, 0600, imc_debugfs_parent,
- 					    imc_mode_addr))
- 			goto err;
- 
- 		imc_cmd_addr = (u64 *)(loc + IMC_CNTL_BLK_CMD_OFFSET);
--		sprintf(cmd, "imc_cmd_%d", nid);
-+		sprintf(cmd, "imc_cmd_%d", (u32)(ptr->id));
- 		if (!imc_debugfs_create_x64(cmd, 0600, imc_debugfs_parent,
- 					    imc_cmd_addr))
- 			goto err;
--		chip++;
-+		ptr++;
- 	}
- 	return;
- 
++				eeh_for_each_pe(pe, tmp_pe)
++					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
++						edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 				/* Notify all devices to be down */
+ 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS);
+ 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
 -- 
 2.20.1
 
