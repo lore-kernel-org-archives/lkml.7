@@ -6,44 +6,47 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F93DC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CD6C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F382D214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C9420872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391276AbfIXEMS (ORCPT
+        id S2394872AbfIXE3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 00:12:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:52960 "EHLO foss.arm.com"
+        Tue, 24 Sep 2019 00:29:11 -0400
+Received: from mga06.intel.com ([134.134.136.31]:14675 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfIXEMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 00:12:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DE641000;
-        Mon, 23 Sep 2019 21:12:17 -0700 (PDT)
-Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88F293F59C;
-        Mon, 23 Sep 2019 21:12:14 -0700 (PDT)
-Subject: Re: [PATCH] mm/hotplug: Reorder memblock_[free|remove]() calls in
- try_remove_memory()
-To:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
- <20190923105224.GH6016@dhcp22.suse.cz>
- <9b85f517-fee5-650a-4e18-29408ca85804@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ef55498f-a410-bb51-389c-7ac09641c51a@arm.com>
-Date:   Tue, 24 Sep 2019 09:42:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725308AbfIXE3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 00:29:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 21:29:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,542,1559545200"; 
+   d="scan'208";a="200773565"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 23 Sep 2019 21:29:07 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122715.53de79d0@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f94a67e3-58c4-2318-3b7a-86c0fadfca49@linux.intel.com>
+Date:   Tue, 24 Sep 2019 12:27:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <9b85f517-fee5-650a-4e18-29408ca85804@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190923122715.53de79d0@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,67 +54,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
-
-On 09/23/2019 04:24 PM, David Hildenbrand wrote:
-> On 23.09.19 12:52, Michal Hocko wrote:
->> On Mon 16-09-19 11:17:37, Anshuman Khandual wrote:
->>> In add_memory_resource() the memory range to be hot added first gets into
->>> the memblock via memblock_add() before arch_add_memory() is called on it.
->>> Reverse sequence should be followed during memory hot removal which already
->>> is being followed in add_memory_resource() error path. This now ensures
->>> required re-order between memblock_[free|remove]() and arch_remove_memory()
->>> during memory hot-remove.
+On 9/24/19 3:27 AM, Jacob Pan wrote:
+> Hi Baolu,
+> 
+> On Mon, 23 Sep 2019 20:24:50 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> This patchset aims to move IOVA (I/O Virtual Address) translation
+>> to 1st-level page table under scalable mode. The major purpose of
+>> this effort is to make guest IOVA support more efficient.
 >>
->> This changelog is not really easy to follow. First of all please make
->> sure to explain whether there is any actual problem to solve or this is
->> an aesthetic matter. Please think of people reading this changelog in
->> few years and scratching their heads what you were thinking back then...
+>> As Intel VT-d architecture offers caching-mode, guest IOVA (GIOVA)
+>> support is now implemented in a shadow page manner. The device
+>> simulation software, like QEMU, has to figure out GIOVA->GPA mapping
+>> and writes to a shadowed page table, which will be used by pIOMMU.
+>> Each time when mappings are created or destroyed in vIOMMU, the
+>> simulation software will intervene. The change on GIOVA->GPA will be
+>> shadowed to host, and the pIOMMU will be updated via VFIO/IOMMU
+>> interfaces.
+>>
+>>
+>>       .-----------.
+>>       |  vIOMMU   |
+>>       |-----------|                 .--------------------.
+>>       |           |IOTLB flush trap |        QEMU        |
+>>       .-----------. (map/unmap)     |--------------------|
+>>       | GVA->GPA  |---------------->|      .----------.  |
+>>       '-----------'                 |      | GPA->HPA |  |
+>>       |           |                 |      '----------'  |
+>>       '-----------'                 |                    |
+>>                                     |                    |
+>>                                     '--------------------'
+>>                                                  |
+>>              <------------------------------------
+>>              |
+>>              v VFIO/IOMMU API
+>>        .-----------.
+>>        |  pIOMMU   |
+>>        |-----------|
+>>        |           |
+>>        .-----------.
+>>        | GVA->HPA  |
+>>        '-----------'
+>>        |           |
+>>        '-----------'
+>>
+>> In VT-d 3.0, scalable mode is introduced, which offers two level
+>> translation page tables and nested translation mode. Regards to
+>> GIOVA support, it can be simplified by 1) moving the GIOVA support
+>> over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
+>> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
+>> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
+>> dual stage) translation in host. Compared with current shadow GIOVA
+>> support, the new approach is more secure and software is simplified
+>> as we only need to flush the pIOMMU IOTLB and possible device-IOTLB
+>> when an IOVA mapping in vIOMMU is torn down.
+>>
+>>       .-----------.
+>>       |  vIOMMU   |
+>>       |-----------|                 .-----------.
+>>       |           |IOTLB flush trap |   QEMU    |
+>>       .-----------.    (unmap)      |-----------|
+>>       | GVA->GPA  |---------------->|           |
+>>       '-----------'                 '-----------'
+>>       |           |                       |
+>>       '-----------'                       |
+>>             <------------------------------
+>>             |      VFIO/IOMMU
+>>             |  cache invalidation and
+>>             | guest gpd bind interfaces
+>>             v
+> For vSVA, the guest PGD bind interface will mark the PASID as guest
+> PASID and will inject page request into the guest. In FL gIOVA case, I
+> guess we are assuming there is no page fault for GIOVA. I will need to
+> add a flag in the gpgd bind such that any PRS will be auto responded
+> with invalid.
+
+There should be no page fault. The pages should have been pinned.
+
+> 
+> Also, native use of IOVA FL map is not to be supported? i.e. IOMMU API
+> and DMA API for native usage will continue to be SL only?
+
+Yes. There isn't such use case as far as I can see.
+
+Best regards,
+Baolu
+
+>>       .-----------.
+>>       |  pIOMMU   |
+>>       |-----------|
+>>       .-----------.
+>>       | GVA->GPA  |<---First level
+>>       '-----------'
+>>       | GPA->HPA  |<---Scond level
+>>       '-----------'
+>>       '-----------'
+>>
+>> This patch series only aims to achieve the first goal, a.k.a using
+>> first level translation for IOVA mappings in vIOMMU. I am sending
+>> it out for your comments. Any comments, suggestions and concerns are
+>> welcomed.
 >>
 > 
-> I think it would make sense to just draft the current call sequence in
-> the add and the removal path (instead of describing it) - then it
-> becomes obvious why this is a cosmetic change.
-
-Does this look okay ?
-
-mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
-
-Currently during memory hot add procedure, memory gets into memblock before
-calling arch_add_memory() which creates it's linear mapping.
-
-add_memory_resource() {
-        ..................
-        memblock_add_node()
-        ..................
-        arch_add_memory()
-        ..................
-}
-
-But during memory hot remove procedure, removal from memblock happens first
-before it's linear mapping gets teared down with arch_remove_memory() which
-is not coherent. Resource removal should happen in reverse order as they
-were added.
-
-try_remove_memory() {
-        ..................
-        memblock_free()
-        memblock_remove()
-        ..................
-        arch_remove_memory()
-        ..................
-}
-
-This changes the sequence of resource removal including memblock and linear
-mapping tear down during memory hot remove which will now be the reverse
-order in which they were added during memory hot add. The changed removal
-order looks like the following.
-
-try_remove_memory() {
-        ..................
-        arch_remove_memory()
-        ..................
-        memblock_free()
-        memblock_remove()
-        ..................
-}
+> 
+>> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+>> Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+>> Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
+>> Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+>>
+>> Lu Baolu (4):
+>>    iommu/vt-d: Move domain_flush_cache helper into header
+>>    iommu/vt-d: Add first level page table interfaces
+>>    iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+>>    iommu/vt-d: Identify domains using first level page table
+>>
+>>   drivers/iommu/Makefile             |   2 +-
+>>   drivers/iommu/intel-iommu.c        | 142 ++++++++++--
+>>   drivers/iommu/intel-pgtable.c      | 342
+>> +++++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
+>> 31 ++- include/trace/events/intel_iommu.h |  60 +++++
+>>   5 files changed, 553 insertions(+), 24 deletions(-)
+>>   create mode 100644 drivers/iommu/intel-pgtable.c
+>>
+> 
+> [Jacob Pan]
+> 
