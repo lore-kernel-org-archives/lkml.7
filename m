@@ -2,115 +2,163 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E66C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B954FC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83542146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yahCuT4M"
+	by mail.kernel.org (Postfix) with ESMTP id 86AFA21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569327408;
+	bh=SPtlLZ5dDWqCslzcANSB32luVHhiI7mSdlspYMVnyfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gG9OJouZEQSbdHEJF5rKgbOMXYHd9mE19MiUbA3BFlCVWTlphc0STCAd7ce3eXcFA
+	 xoD+xvR2sAksVHFza3uB3TkAh8fWcycef+jUSKm71eSuzN84TjihopiIlsZjXF4qI4
+	 ooO4zVxtLKy2D2h10/2OV8OHnCQkqMAoAfHy6ltY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfIXMP2 (ORCPT
+        id S1730562AbfIXMQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:15:28 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35060 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbfIXMP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:15:27 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m15so1823215qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 05:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=047KnQ6LdhsRxOhyWfYTMxQxy1h5WOedU8au5fznWn8=;
-        b=yahCuT4MwNpleohZaQiHmCHhaUSWw5H4Pr5iiHh5pf13MCXAo/t00Gs9sjgw8G8Ah8
-         oTUWPliQ1GIyrLzFj7zswmCgWB4PQ9lkFE5wNZNW797RInyr0oiCgArJTuQcTK1/UXsN
-         shiys6Jm7JyT+EugqvB62cMPK5VJZBR5OJFJQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=047KnQ6LdhsRxOhyWfYTMxQxy1h5WOedU8au5fznWn8=;
-        b=GXLtVMdwkVrJ2R1TvHsYWhyLAUaSKXiIVPrPuB/pChgXoNpplRjF003a88VOYhhzOG
-         lB0kDuwHgxMlJ3oBlA22tzebd1qtgkXUSVRdNAwEvSku5N8JSiS/Q02F4L2P8ZS0P5uI
-         9HsJ1E51Kc5wXfgoSXAMsHvCxkVB7VVqZ5TpQnKzEmdhOA9HdZBwEUUvlAfVc2eS8SNF
-         51Y7v7TotendWmyuFpSgv3u4POVKhw4sao5qzeHzo/8XwXX35jtoq1XZR1Vv5iW1ERx0
-         2aTaBzUMhXSlo30WVrfSHTXORew3g0Te12lBTQ0CqFoabWTcb8SZ19PX2GBJdJXRywJ0
-         x4Rw==
-X-Gm-Message-State: APjAAAXQTQzuPtHoQ/GlUtqoYV8mGBbZWUHvQwDh8wd631d0ytqnqA+7
-        OiEV0N/jsJkV2sE6/vRSjSDuka2isCTQy+Mj3QEBwQ==
-X-Google-Smtp-Source: APXvYqyETTJ1oHwctWmFtDLNPyuQPTcOlouZPV07tYUkJn46RuzMegsjroBHplGfTeM1+v5oP9ywIUEPuWteuJ6BgGU=
-X-Received: by 2002:ac8:2f81:: with SMTP id l1mr2393360qta.269.1569327326371;
- Tue, 24 Sep 2019 05:15:26 -0700 (PDT)
+        Tue, 24 Sep 2019 08:16:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45420 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726923AbfIXMQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:16:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4609B97F;
+        Tue, 24 Sep 2019 12:16:44 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 14:16:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Matthew Wilcox <willy@infradead.org>, Lin Feng <linf@wangsu.com>,
+        corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        keescook@chromium.org, mchehab+samsung@kernel.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, Omar Sandoval <osandov@fb.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: Is congestion broken?
+Message-ID: <20190924121643.GO23050@dhcp22.suse.cz>
+References: <20190917115824.16990-1-linf@wangsu.com>
+ <20190917120646.GT29434@bombadil.infradead.org>
+ <20190918123342.GF12770@dhcp22.suse.cz>
+ <6ae57d3e-a3f4-a3db-5654-4ec6001941a9@wangsu.com>
+ <20190919034949.GF9880@bombadil.infradead.org>
+ <20190923111900.GH15392@bombadil.infradead.org>
+ <45d8b7a6-8548-65f5-cccf-9f451d4ae3d4@kernel.dk>
+ <20190923194509.GC1855@bombadil.infradead.org>
+ <ce7975cd-6353-3f29-b52c-7a81b1d07caa@kernel.dk>
 MIME-Version: 1.0
-References: <20190924080510.GL20699@kadam>
-In-Reply-To: <20190924080510.GL20699@kadam>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 24 Sep 2019 08:15:12 -0400
-Message-ID: <CAEXW_YQYDom3AwWR1AUSCw5VvFzc6KrBH0KbuTvhkJ3OoxBfCg@mail.gmail.com>
-Subject: Re: [rcu:dev.2019.09.23a 62/77] kernel/rcu/tree.c:2882
- kfree_call_rcu() warn: inconsistent returns 'irqsave:flags'.
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     kbuild@01.org, kbuild-all@01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce7975cd-6353-3f29-b52c-7a81b1d07caa@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 4:05 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.09.23a
-> head:   97de53b94582c208ee239178b208b8e8b9472585
-> commit: 39676bb72323718a9e7bab1ba9c4a68319a96f62 [62/77] rcu: Add support for debug_objects debugging for kfree_rcu()
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->
-> smatch warnings:
-> kernel/rcu/tree.c:2882 kfree_call_rcu() warn: inconsistent returns 'irqsave:flags'.
->   Locked on:   line 2867
->   Unlocked on: line 2882
->
-> git remote add rcu https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-> git remote update rcu
-> git checkout 39676bb72323718a9e7bab1ba9c4a68319a96f62
-> vim +2882 kernel/rcu/tree.c
->
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2850) void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2851) {
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2852)        unsigned long flags;
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2853)        struct kfree_rcu_cpu *krcp;
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2854)
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2855)        head->func = func;
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2856)
-> 87970ccf5a9125 Paul E. McKenney        2019-09-19  2857         local_irq_save(flags);  // For safely calling this_cpu_ptr().
->                                                                 ^^^^^^^^^^^^^^^^^^^^^
-> IRQs disabled.
->
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2858)        krcp = this_cpu_ptr(&krc);
-> ff8db005e371cb Paul E. McKenney        2019-09-19  2859         if (krcp->initialized)
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2860)                spin_lock(&krcp->lock);
-> 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2861)
-> 87970ccf5a9125 Paul E. McKenney        2019-09-19  2862         // Queue the object but don't yet schedule the batch.
-> 39676bb7232371 Joel Fernandes (Google  2019-09-22  2863)        if (debug_rcu_head_queue(head)) {
-> 39676bb7232371 Joel Fernandes (Google  2019-09-22  2864)                // Probable double kfree_rcu(), just leak.
-> 39676bb7232371 Joel Fernandes (Google  2019-09-22  2865)                WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-> 39676bb7232371 Joel Fernandes (Google  2019-09-22  2866)                          __func__, head);
-> 39676bb7232371 Joel Fernandes (Google  2019-09-22  2867)                return;
->
-> Need to re-enable before returning.
+On Mon 23-09-19 13:51:21, Jens Axboe wrote:
+> On 9/23/19 1:45 PM, Matthew Wilcox wrote:
+> > On Mon, Sep 23, 2019 at 01:38:23PM -0600, Jens Axboe wrote:
+> >> On 9/23/19 5:19 AM, Matthew Wilcox wrote:
+> >>>
+> >>> Ping Jens?
+> >>>
+> >>> On Wed, Sep 18, 2019 at 08:49:49PM -0700, Matthew Wilcox wrote:
+> >>>> On Thu, Sep 19, 2019 at 10:33:10AM +0800, Lin Feng wrote:
+> >>>>> On 9/18/19 20:33, Michal Hocko wrote:
+> >>>>>> I absolutely agree here. From you changelog it is also not clear what is
+> >>>>>> the underlying problem. Both congestion_wait and wait_iff_congested
+> >>>>>> should wake up early if the congestion is handled. Is this not the case?
+> >>>>>
+> >>>>> For now I don't know why, codes seem should work as you said, maybe I need to
+> >>>>> trace more of the internals.
+> >>>>> But weird thing is that once I set the people-disliked-tunable iowait
+> >>>>> drop down instantly, this is contradictory to the code design.
+> >>>>
+> >>>> Yes, this is quite strange.  If setting a smaller timeout makes a
+> >>>> difference, that indicates we're not waking up soon enough.  I see
+> >>>> two possibilities; one is that a wakeup is missing somewhere -- ie the
+> >>>> conditions under which we call clear_wb_congested() are wrong.  Or we
+> >>>> need to wake up sooner.
+> >>>>
+> >>>> Umm.  We have clear_wb_congested() called from exactly one spot --
+> >>>> clear_bdi_congested().  That is only called from:
+> >>>>
+> >>>> drivers/block/pktcdvd.c
+> >>>> fs/ceph/addr.c
+> >>>> fs/fuse/control.c
+> >>>> fs/fuse/dev.c
+> >>>> fs/nfs/write.c
+> >>>>
+> >>>> Jens, is something supposed to be calling clear_bdi_congested() in the
+> >>>> block layer?  blk_clear_congested() used to exist until October 29th
+> >>>> last year.  Or is something else supposed to be waking up tasks that
+> >>>> are sleeping on congestion?
+> >>
+> >> Congestion isn't there anymore. It was always broken as a concept imho,
+> >> since it was inherently racy. We used the old batching mechanism in the
+> >> legacy stack to signal it, and it only worked for some devices.
+> > 
+> > Umm.  OK.  Well, something that used to work is now broken.  So how
+> 
+> It didn't really...
 
-Right. At this point the system has a bug anyway since it is a
-double-free. But yes, no reason to introduce more bugs. Will fix.
-Thank you, Dan!
+Maybe it would have been better to tell users who are using interface
+that rely on this.
+ 
+> > should we fix it?  Take a look at shrink_node() in mm/vmscan.c.  If we've
+> > submitted a lot of writes to a device, and overloaded it, we want to
+> > sleep until it's able to take more writes:
+> > 
+> >                  /*
+> >                   * Stall direct reclaim for IO completions if underlying BDIs
+> >                   * and node is congested. Allow kswapd to continue until it
+> >                   * starts encountering unqueued dirty pages or cycling through
+> >                   * the LRU too quickly.
+> >                   */
+> >                  if (!sc->hibernation_mode && !current_is_kswapd() &&
+> >                     current_may_throttle() && pgdat_memcg_congested(pgdat, root))
+> >                          wait_iff_congested(BLK_RW_ASYNC, HZ/10);
+> > 
+> > With a standard block device, that now sleeps until the timeout (100ms)
+> > expires, which is far too long for a modern SSD but is probably tuned
+> > just right for some legacy piece of spinning rust (or indeed a modern
+> > USB stick).  How would the block layer like to indicate to the mm layer
+> > "I am too busy, please let the device work for a bit"?
+> 
+> Maybe base the sleep on the bdi write speed? We can't feasibly tell you
+> if something is congested. It used to sort of work on things like sata
+> drives, since we'd get congested when we hit the queue limit and that
+> wasn't THAT far off with reality. Didn't work on SCSI with higher queue
+> depths, and certainly doesn't work on NVMe where most devices have very
+> deep queues.
+> 
+> Or we can have something that does "sleep until X requests/MB have been
+> flushed", something that the vm would actively call. Combined with a
+> timeout as well, probably.
+> 
+> For the vm case above, it's further complicated by it being global
+> state. I think you'd be better off just making the delay smaller.  100ms
+> is an eternity, and 10ms wakeups isn't going to cause any major issues
+> in terms of CPU usage. If we're calling the above wait_iff_congested(),
+> it better because we're otherwise SOL.
+
+I do not mind using a shorter sleeps. A downside would be that very slow
+storages could go OOM sooner because we do not wait long enough on one
+side or reintroducing stalls during direct reclaim fixed by 0e093d99763eb.
+
+I do agree that our poor's man congestion feedback mechanism is far from
+being great. It would be really great to have something more resembling
+a real feedback though. The global aspect of the thing is surely not
+helping much but the reclaim is encountering pages from different bdis
+and accounting each of them sounds like an overkill and too elaborate to
+implement. Would it be possible to have something like "throttle on at
+least one too busy bdi"?
+-- 
+Michal Hocko
+SUSE Labs
