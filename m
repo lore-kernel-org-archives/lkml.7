@@ -2,139 +2,252 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40FBC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E4AC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48232146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73AE8214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSpg3aUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438760AbfIXLHo (ORCPT
+        id S2408238AbfIXLLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:07:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35638 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394981AbfIXLHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:07:43 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D77FEB6C3883268478B0;
-        Tue, 24 Sep 2019 19:07:40 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
- 19:07:37 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
- <20190923151519.GE2369@hirez.programming.kicks-ass.net>
- <20190923152856.GB17206@dhcp22.suse.cz>
- <20190923154852.GG2369@hirez.programming.kicks-ass.net>
- <20190923165235.GD17206@dhcp22.suse.cz>
- <20190923203410.GI2369@hirez.programming.kicks-ass.net>
- <f1362dbb-ad31-51a8-2b06-16c9d928b876@huawei.com>
- <20190924092551.GK2369@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <c816abbe-155b-504b-cef1-6413f7cdd20c@huawei.com>
-Date:   Tue, 24 Sep 2019 19:07:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Tue, 24 Sep 2019 07:11:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54740 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395105AbfIXLLh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:11:37 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so1769255wmp.4;
+        Tue, 24 Sep 2019 04:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V5kyz+Vy8ZpFU8IYBPXklbJbx7c6ELiItFHhsEhOj8k=;
+        b=NSpg3aUc/LcPbrv1alj9bsgKVXYWl6PblR19J2F4hxh49hQNdcnJtSA3spnKE+fm6g
+         0Nw3N8LF8NtlAuJPz25YDva3XqUYbQlnsL5OwfFiN6UM8nczeWbhCmFznEgdXG71bPiL
+         a5n1VI9Yd9c4LofCKf4Tg+b5FoXCbAjJ1QSEmJny93Ce75qD8rcmFpEkeXiLe9WPkX+m
+         o6Q7gAVz2xX9mFpzcpYUqaYZ3OuF+bcpg+RFnMTZ5qQ+hL2LO3LX1RhYuAQ6rESsD/8x
+         jKfYNvf8HowrVpSIrfZeihGTmYhCMwLoUq3puTClgKR/GSW9WXH9qnEN19K8GmO9UA57
+         n54A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=V5kyz+Vy8ZpFU8IYBPXklbJbx7c6ELiItFHhsEhOj8k=;
+        b=eor7ANYQKf24EjpRJmjhE0e3emGPibORCHIQ+V2twtSNMTuKvwUo8h5KbVb+cFLf9x
+         JzO+qhYoUmRmY/xyKImFxzNRUGOCAeMGqD1uIEoLS6fd3e/KwbYjYx0tcmFUSLYiZc2W
+         4r/lmXqbt1SY0LhGkG+lFP2Ol+shYmwxyA60lUzWjWtzVDZIFvDusg+UQMDGwsXW6ZV5
+         jmpGCFKKstlsQPVlMQFK5VlVaTKi8qcsVeY+Dk9Q36rTLtB//vl7hQMNrTx9WHG74Fns
+         d5BevHhzIDbUVhys7+p+d5MUNa7UPlkucC2mz/+Skl4wkYg4QEfD+l+y9ZjCMsgFeBtM
+         LqbQ==
+X-Gm-Message-State: APjAAAXUOUFhgCB0DnhHHd0Dq8q6BKZjzfSlabqCsmYRXfi1A63AdTHd
+        RTJGBeiPnp/0jnXUG4yCktRbi7n0mUGB9g==
+X-Google-Smtp-Source: APXvYqxNCmT8mlqnzJ5OuqXdCIEUVD4kP/xVsGdJQgS9VZc8GBomto3lmlGu+S7KgPVEoYnzS+lwig==
+X-Received: by 2002:a1c:4846:: with SMTP id v67mr2222471wma.120.1569323493495;
+        Tue, 24 Sep 2019 04:11:33 -0700 (PDT)
+Received: from [192.168.1.75] ([65.39.69.237])
+        by smtp.gmail.com with ESMTPSA id w12sm2063086wrg.47.2019.09.24.04.11.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 04:11:32 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+To:     Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+ <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+ <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
+ <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+ <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+ <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
+ <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
+ <20190924094942.GN2349@hirez.programming.kicks-ass.net>
+ <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
+ <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
+Date:   Tue, 24 Sep 2019 14:11:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20190924092551.GK2369@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/24 17:25, Peter Zijlstra wrote:
-> On Tue, Sep 24, 2019 at 09:29:50AM +0800, Yunsheng Lin wrote:
->> On 2019/9/24 4:34, Peter Zijlstra wrote:
-> 
->>> I'm saying the ACPI standard is wrong. Explain to me how it is
->>> physically possible to have a device without NUMA affinity in a NUMA
->>> system?
+On 24/09/2019 13:34, Jens Axboe wrote:
+> On 9/24/19 4:13 AM, Jens Axboe wrote:
+>> On 9/24/19 3:49 AM, Peter Zijlstra wrote:
+>>> On Tue, Sep 24, 2019 at 10:36:28AM +0200, Jens Axboe wrote:
 >>>
->>>  1) The fundamental interconnect is not uniform.
->>>  2) The device needs to actually be somewhere.
+>>>> +struct io_wait_queue {
+>>>> +	struct wait_queue_entry wq;
+>>>> +	struct io_ring_ctx *ctx;
+>>>> +	struct task_struct *task;
 >>>
+>>> wq.private is where the normal waitqueue stores the task pointer.
+>>>
+>>> (I'm going to rename that)
 >>
->> From what I can see, NUMA_NO_NODE may make sense in the below case:
->>
->> 1) Theoretically, there would be a device that can access all the memory
->> uniformly and can be accessed by all cpus uniformly even in a NUMA system.
->> Suppose we have two nodes, and the device just sit in the middle of the
->> interconnect between the two nodes.
->>
->> Even we define a third node solely for the device, we may need to look at
->> the node distance to decide the device can be accessed uniformly.
->>
->> Or we can decide that the device can be accessed uniformly by setting
->> it's node to NUMA_NO_NODE.
+>> If you do that, then we can just base the io_uring parts on that.
 > 
-> This is indeed a theoretical case; it doesn't scale. The moment you're
-> adding multiple sockets or even board interconnects this all goes out
-> the window.
-> 
-> And in this case, forcing the device to either node is fine.
-
-Not really.
-For packet sending and receiving, the buffer memory may be allocated
-dynamically. Node of tx buffer memory is mainly based on the cpu
-that is sending sending, node of rx buffer memory is mainly based on
-the cpu the interrupt handler of the device is running on, and the
-device' interrupt affinity is mainly based on node id of the device.
-
-We can bind the processes that are using the device to both nodes
-in order to utilize memory on both nodes for packet sending.
-
-But for packet receiving, the node1 may not be used becuase the node
-id of device is forced to node 0, which is the default way to bind
-the interrupt to the cpu of the same node.
-
-If node_to_cpumask_map() returns all usable cpus when the device's node
-id is NUMA_NO_NODE, then interrupt can be binded to the cpus on both nodes.
-
-> 
->> 2) For many virtual deivces, such as tun or loopback netdevice, they
->> are also accessed uniformly by all cpus.
-> 
-> Not true; the virtual device will sit in memory local to some node.
-> 
-> And as with physical devices, you probably want at least one (virtual)
-> queue per node.
-
-There may be similar handling as above for virtual device too.
-
-> 
-> 
-> .
+> Just took a quick look at it, and ran into block/kyber-iosched.c that
+> actually uses the private pointer for something that isn't a task
+> struct...
 > 
 
+Let reuse autoremove_wake_function anyway. Changed a bit your patch:
+
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5c3f2bb81637..a77971290fdd 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2690,6 +2690,38 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ 	return submit;
+ }
+ 
++struct io_wait_queue {
++	struct wait_queue_entry wq;
++	struct io_ring_ctx *ctx;
++	unsigned to_wait;
++	unsigned nr_timeouts;
++};
++
++static inline bool io_should_wake(struct io_wait_queue *iowq)
++{
++	struct io_ring_ctx *ctx = iowq->ctx;
++
++	/*
++	 * Wake up if we have enough events, or if a timeout occured since we
++	 * started waiting. For timeouts, we always want to return to userspace,
++	 * regardless of event count.
++	 */
++	return io_cqring_events(ctx->rings) >= iowq->to_wait ||
++			atomic_read(&ctx->cq_timeouts) != iowq->nr_timeouts;
++}
++
++static int io_wake_function(struct wait_queue_entry *curr, unsigned int mode,
++			    int wake_flags, void *key)
++{
++	struct io_wait_queue *iowq = container_of(curr, struct io_wait_queue,
++							wq);
++
++	if (!io_should_wake(iowq))
++		return -1;
++
++	return autoremove_wake_function(curr, mode, wake_flags, key);
++}
++
+ /*
+  * Wait until events become available, if we don't already have some. The
+  * application must reap them itself, as they reside on the shared cq ring.
+@@ -2697,8 +2729,16 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			  const sigset_t __user *sig, size_t sigsz)
+ {
++	struct io_wait_queue iowq = {
++		.wq = {
++			.private = current,
++			.func	= io_wake_function,
++			.entry	= LIST_HEAD_INIT(iowq.wq.entry),
++		},
++		.ctx		= ctx,
++		.to_wait	= min_events,
++	};
+ 	struct io_rings *rings = ctx->rings;
+-	unsigned nr_timeouts;
+ 	int ret;
+ 
+ 	if (io_cqring_events(rings) >= min_events)
+@@ -2717,15 +2757,18 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			return ret;
+ 	}
+ 
+-	nr_timeouts = atomic_read(&ctx->cq_timeouts);
+-	/*
+-	 * Return if we have enough events, or if a timeout occured since
+-	 * we started waiting. For timeouts, we always want to return to
+-	 * userspace.
+-	 */
+-	ret = wait_event_interruptible(ctx->wait,
+-				io_cqring_events(rings) >= min_events ||
+-				atomic_read(&ctx->cq_timeouts) != nr_timeouts);
++	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
++	prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
++	do {
++		if (io_should_wake(&iowq))
++			break;
++		schedule();
++		if (signal_pending(current))
++			break;
++		set_current_state(TASK_INTERRUPTIBLE);
++	} while (1);
++	finish_wait(&ctx->wait, &iowq.wq);
++
+ 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
+ 	if (ret == -ERESTARTSYS)
+ 		ret = -EINTR;
+
+
+-- 
+Yours sincerely,
+Pavel Begunkov
