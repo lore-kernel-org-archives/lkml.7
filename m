@@ -2,173 +2,112 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98814C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987E5C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4472146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jTeTNKav"
+	by mail.kernel.org (Postfix) with ESMTP id 6ECF721655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390476AbfIXPpX (ORCPT
+        id S2390526AbfIXPrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:45:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48314 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388223AbfIXPpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:45:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jOfR9f04JOdM45K4qEfyjOiS102zGBwkqhbp9cILr54=; b=jTeTNKavnzWQmuz8rP0rGwEdF
-        +y4XPaqQc9k8kMo4jiHGsbF63UCJsAKGtjbqcRCYyHuJ2wi8bHMsCKFMhsev2a3tibjtKH2g7GGuP
-        GyBrxiaVFTLjMIV3R82zC1YOkkqcgFWPmbcy/FKqmLNsWzeWIqtQG9tmHssSN/lZdT2ciOsDJs3TV
-        cSUSUWfUXeU6sfMEIjVdEOzib431n5HZeR/JUaxp2tT2p5XwJU0mfDp6INWj+TAeg8/ByM/SnIllx
-        tdWoYf0qvTys70NsMosJkvgGIDdjiHIpVrCcD0N+PmbegflbquPV6qmihfj/1E9zbSPJZMlk73xoQ
-        LFhP/JxwA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCn0A-0007Gx-R2; Tue, 24 Sep 2019 15:45:18 +0000
-Date:   Tue, 24 Sep 2019 08:45:18 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Marty McFadden <mcfadden8@llnl.gov>, Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v4 05/10] mm: Return faster for non-fatal signals in user
- mode faults
-Message-ID: <20190924154518.GG1855@bombadil.infradead.org>
-References: <20190923042523.10027-1-peterx@redhat.com>
- <20190923042523.10027-6-peterx@redhat.com>
- <CAHk-=wiNGtUaXtRv1wniw3hfxFnU7SO7ZuisFSVg0btvROcW6w@mail.gmail.com>
- <20190924024721.GD28074@xz-x1>
- <20190924025447.GE1855@bombadil.infradead.org>
- <20190924031908.GF28074@xz-x1>
+        Tue, 24 Sep 2019 11:47:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39518 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388100AbfIXPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:47:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BE33E1DA3;
+        Tue, 24 Sep 2019 15:47:40 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 659B760BFB;
+        Tue, 24 Sep 2019 15:47:37 +0000 (UTC)
+Message-ID: <1a2234884e55e5ee6df5f32f828a99c1b248933f.camel@redhat.com>
+Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Date:   Tue, 24 Sep 2019 10:47:36 -0500
+In-Reply-To: <20190924152514.enzeuoo5a6o3mgqu@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+         <20190911165729.11178-4-swood@redhat.com>
+         <20190917075943.qsaakyent4dxjkq4@linutronix.de>
+         <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
+         <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
+         <20190923175233.yub32stn3xcwkaml@linutronix.de>
+         <20190924112155.rxeyksetgqmer3pg@linutronix.de>
+         <55dc19fcc44b2e658b71f68206306c8310335564.camel@redhat.com>
+         <20190924152514.enzeuoo5a6o3mgqu@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924031908.GF28074@xz-x1>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 24 Sep 2019 15:47:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:19:08AM +0800, Peter Xu wrote:
-> On Mon, Sep 23, 2019 at 07:54:47PM -0700, Matthew Wilcox wrote:
-> > On Tue, Sep 24, 2019 at 10:47:21AM +0800, Peter Xu wrote:
-> > > On Mon, Sep 23, 2019 at 11:03:49AM -0700, Linus Torvalds wrote:
-> > > > On Sun, Sep 22, 2019 at 9:26 PM Peter Xu <peterx@redhat.com> wrote:
-> > > > >
-> > > > > This patch is a preparation of removing that special path by allowing
-> > > > > the page fault to return even faster if we were interrupted by a
-> > > > > non-fatal signal during a user-mode page fault handling routine.
-> > > > 
-> > > > So I really wish saome other vm person would also review these things,
-> > > > but looking over this series once more, this is the patch I probably
-> > > > like the least.
-> > > > 
-> > > > And the reason I like it the least is that I have a hard time
-> > > > explaining to myself what the code does and why, and why it's so full
-> > > > of this pattern:
-> > > > 
-> > > > > -       if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
-> > > > > +       if ((fault & VM_FAULT_RETRY) &&
-> > > > > +           fault_should_check_signal(user_mode(regs)))
-> > > > >                 return;
-> > > > 
-> > > > which isn't all that pretty.
-> > > > 
-> > > > Why isn't this just
-> > > > 
-> > > >   static bool fault_signal_pending(unsigned int fault_flags, struct
-> > > > pt_regs *regs)
-> > > >   {
-> > > >         return (fault_flags & VM_FAULT_RETRY) &&
-> > > >                 (fatal_signal_pending(current) ||
-> > > >                  (user_mode(regs) && signal_pending(current)));
-> > > >   }
-> > > > 
-> > > > and then most of the users would be something like
-> > > > 
-> > > >         if (fault_signal_pending(fault, regs))
-> > > >                 return;
-> > > > 
-> > > > and the exceptions could do their own thing.
-> > > > 
-> > > > Now the code is prettier and more understandable, I feel.
-> > > > 
-> > > > And if something doesn't follow this pattern, maybe it either _should_
-> > > > follow that pattern or it should just not use the helper but explain
-> > > > why it has an unusual pattern.
-> > 
-> > > +++ b/arch/alpha/mm/fault.c
-> > > @@ -150,7 +150,7 @@ do_page_fault(unsigned long address, unsigned long mmcsr,
-> > >  	   the fault.  */
-> > >  	fault = handle_mm_fault(vma, address, flags);
-> > >  
-> > > -	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
-> > > +	if (fault_signal_pending(fault, regs))
-> > >  		return;
-> > >  
-> > >  	if (unlikely(fault & VM_FAULT_ERROR)) {
-> > 
-> > > +++ b/arch/arm/mm/fault.c
-> > > @@ -301,6 +301,11 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
-> > >  		return 0;
-> > >  	}
-> > >  
-> > > +	/* Fast path to handle user mode signals */
-> > > +	if ((fault & VM_FAULT_RETRY) && user_mode(regs) &&
-> > > +	    signal_pending(current))
-> > > +		return 0;
-> > 
-> > But _why_ are they different?  This is a good opportunity to make more
-> > code the same between architectures.
+On Tue, 2019-09-24 at 17:25 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-24 08:53:43 [-0500], Scott Wood wrote:
+> > As I pointed out in the "[PATCH RT 6/8] sched: migrate_enable: Set state
+> > to
+> > TASK_RUNNING" discussion, we can get here inside the rtmutex code (e.g.
+> > from
+> > debug_rt_mutex_print_deadlock) where saved_state is already holding
+> > something -- plus, the waker won't have WF_LOCK_SLEEPER and therefore
+> > saved_state will get cleared anyway.
 > 
-> (Thanks for joining the discussion)
+> So let me drop the saved_state pieces and get back to it once I get to
+> the other thread (which you replied and I didn't realised until now).
 > 
-> I'd like to do these - my only worry is that I can't really test them
-> well simply because I don't have all the hardwares.  For now the
-> changes are mostly straightforward so I'm relatively confident (not to
-> mention the code needs proper reviews too, and of course I would
-> appreciate much if anyone wants to smoke test it).  If I change it in
-> a drastic way, I won't be that confident without some tests at least
-> on multiple archs (not to mention that even smoke testing across major
-> archs will be a huge amount of work...).  So IMHO those might be more
-> suitable as follow-up for per-arch developers if we can at least reach
-> a consensus on the whole idea of this patchset.
+> Regarding the WF_LOCK_SLEEPER part. I think this works as expected.
+> Imagine:
+> 
+> CPU0						CPU1
+> spin_lock();
+> set_current_state(TASK_UNINTERRUPTIBLE);
+> …
+> spin_unlock()
+>  -> migrate_enable();
+>    -> stop_one_cpu();				<-- A)
+> other_func();					<-- B)
+> schedule();
+> 
+> So. With only CPU0 we enter schedule() with TASK_UNINTERRUPTIBLE because
+> the state gets preserved with the change I added (which is expected).
+> If CPU1 sends a wake_up() at A) then the saved_state gets overwritten
+> and we enter schedule() with TASK_RUNNING. Same happens if it is sent at
+> B) point which is outside of any migrate/spin lock related code. 
+> 
+> Was this clear or did I miss the point?
 
-I think the way to do this is to introduce fault_signal_pending(),
-converting the architectures to it that match that pattern.  Then one
-patch per architecture to convert the ones which use a different pattern
-to the same pattern.
+When the stop machine finishes it will do a wake_up_process() via
+complete().  Since this does not pass WF_LOCK_SLEEPER, saved_state will be
+cleared, and you'll have TASK_RUNNING when you get to other_func() and
+schedule(), regardless of whether CPU1 sends wake_up() -- so this change
+doesn't actually accomplish anything.
 
-Oh, and while you're looking at the callers of handle_mm_fault(), a
-lot of them don't check conditions in the right order.  x86, at least,
-handles FAULT_RETRY before handling FAULT_ERROR, which is clearly wrong.
+While as noted in the other thread I don't think these spurious wakeups are
+a huge problem, we could avoid them by doing stop_one_cpu_nowait() and then
+schedule() without messing with task state.  Since we're stopping our own
+cpu, it should be guaranteed that the stopper has finished by the time we
+exit schedule().
 
-Kirill and I recently discussed it here:
-https://lore.kernel.org/linux-mm/20190911152338.gqqgxrmqycodfocb@box/T/
+-Scott
+
+
