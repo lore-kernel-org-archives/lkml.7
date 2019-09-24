@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B22C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38326C4360C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F4F21BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7F0222D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344135;
-	bh=6ns37Ob8BZRTnowWqkz997jdBf9E9CsNqMDuyBEwcRo=;
+	s=default; t=1569344145;
+	bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCO6ghkDfd5l/6U46xcCccnknCHhMOdFktAdTdbk4GCdZLPNpfAamDAI3QX+RXhYy
-	 iP20FkXxKOJBXeOo5qoCrpPwfPwP3vY7BSYq1if1CsFzkFB7qfkSlJSMj0Danexk1F
-	 YTKNjJV2V1XeU1wUivUitYbcz0z4zkepNB/t0OGQ=
+	b=yh+YHrYY59L+marc3KobzamYkpHb69Rtx5pNhN+knfT6cGS0ZDWpGsEcC4+MH0DcK
+	 ue9DOkFW39kAn62Soenwzw/GQrh2F3RIxnVMr1w4FDtkEB5PoGMJZM+yaJvPLYyDvy
+	 KHw5aaEBdhOdEtirVOzstZ8kzO082eUYbwKSYf0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411003AbfIXQzb (ORCPT
+        id S2410769AbfIXQua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43564 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393612AbfIXQuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:37 -0400
+        id S2410716AbfIXQuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05DCE21D6C;
-        Tue, 24 Sep 2019 16:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDE221D82;
+        Tue, 24 Sep 2019 16:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343836;
-        bh=6ns37Ob8BZRTnowWqkz997jdBf9E9CsNqMDuyBEwcRo=;
+        s=default; t=1569343814;
+        bh=X83HWbTqofVal5zxoKrVPyIEsOibVmg3PU1ULh3YdLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyiB+moQyFvLhXbr9yB64r+9FJE5+u6ClZQG6lPo+65R8seE7PnJ0xvkpce+/GYu9
-         r1q7yUJ5RJGkWqZXBDhDmz6CnJTovTaW+r8IU+yQr66m3f6mYLVym0M5PX8+jyYsb2
-         LZjumGdJKNPQhnu+EBU5WR5no1T4fM31uGyyTeaA=
+        b=CR554ori/7xMiBb/O0K56qbvd+kK/9sBwok56zG9ks4DqB4PFSE0aALIFz2YceDkB
+         6xDWuFe6yiVin9ql+I019v9nBwGPDJoNMJZNj7qUB2YOz8/nXaAUrIPNpFnNTc7FZ1
+         3iqTmuCXhWTWrHgwPNP4U7REmfsVLiyDXie2AFDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 03/28] drm/panel: simple: fix AUO g185han01 horizontal blanking
-Date:   Tue, 24 Sep 2019 12:50:06 -0400
-Message-Id: <20190924165031.28292-3-sashal@kernel.org>
+Cc:     Otto Meier <gf435@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 42/50] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
+Date:   Tue, 24 Sep 2019 12:48:39 -0400
+Message-Id: <20190924164847.27780-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
-References: <20190924165031.28292-1-sashal@kernel.org>
+In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
+References: <20190924164847.27780-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,48 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Otto Meier <gf435@gmx.net>
 
-[ Upstream commit f8c6bfc612b56f02e1b8fae699dff12738aaf889 ]
+[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
 
-The horizontal blanking periods are too short, as the values are
-specified for a single LVDS channel. Since this panel is dual LVDS
-they need to be doubled. With this change the panel reaches its
-nominal vrefresh rate of 60Fps, instead of the 64Fps with the
-current wrong blanking.
+Hi i tried to use the uart_C of the the odroid-c2.
 
-Philipp Zabel added:
-The datasheet specifies 960 active clocks + 40/128/160 clocks blanking
-on each of the two LVDS channels (min/typical/max), so doubled this is
-now correct.
+I enabled it in the dts file. During boot it crashed when the
+the sdcard slot is addressed.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1562764060.23869.12.camel@pengutronix.de
+After long search in the net i found this:
+
+https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
+
+After changing the pin definitions accordingly erverything works.
+Uart_c is functioning and sdcard ist working.
+
+Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
+Signed-off-by: Otto Meier <gf435@gmx.net>
+Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 7a0fd4e4e78d5..c1daed3fe8428 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -614,9 +614,9 @@ static const struct panel_desc auo_g133han01 = {
- static const struct display_timing auo_g185han01_timings = {
- 	.pixelclock = { 120000000, 144000000, 175000000 },
- 	.hactive = { 1920, 1920, 1920 },
--	.hfront_porch = { 18, 60, 74 },
--	.hback_porch = { 12, 44, 54 },
--	.hsync_len = { 10, 24, 32 },
-+	.hfront_porch = { 36, 120, 148 },
-+	.hback_porch = { 24, 88, 108 },
-+	.hsync_len = { 20, 48, 64 },
- 	.vactive = { 1080, 1080, 1080 },
- 	.vfront_porch = { 6, 10, 40 },
- 	.vback_porch = { 2, 5, 20 },
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 4edeb4cae72aa..c4c70dc57dbee 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -198,8 +198,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
+ 
+ static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
+ static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
+-static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
+-static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
++static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
++static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
+ 
+ static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
+ static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
+@@ -445,10 +445,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
+ 	GROUP(pwm_f_x,		3,	18),
+ 
+ 	/* Bank Y */
+-	GROUP(uart_cts_c,	1,	19),
+-	GROUP(uart_rts_c,	1,	18),
+-	GROUP(uart_tx_c,	1,	17),
+-	GROUP(uart_rx_c,	1,	16),
++	GROUP(uart_cts_c,	1,	17),
++	GROUP(uart_rts_c,	1,	16),
++	GROUP(uart_tx_c,	1,	19),
++	GROUP(uart_rx_c,	1,	18),
+ 	GROUP(pwm_a_y,		1,	21),
+ 	GROUP(pwm_f_y,		1,	20),
+ 	GROUP(i2s_out_ch23_y,	1,	5),
 -- 
 2.20.1
 
