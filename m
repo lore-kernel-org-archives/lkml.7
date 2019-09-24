@@ -2,247 +2,114 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8C8C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14685C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB722146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569352425;
-	bh=pOsnILBtlXu+awgCMT2MEK7w954jdbfewaaP1cRdc3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EVTpuIHY+yaR2h4re//GvE2tVOGTr3i489uP3bJX7aSWMcOWSGq1cICBH0fbcwSh1
-	 XOiI0JcfP79Hk5jSKjeLnJpQziSEJUrgirWYv0UEfCIdsjr3glTpX5p33iqf5765bx
-	 nOgHlHUPJdZLE04RxkXrJDEfrWHDVmJLOmb0z3RQ=
+	by mail.kernel.org (Postfix) with ESMTP id E2975207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npKdJkon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441888AbfIXTNo (ORCPT
+        id S2441917AbfIXTRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390196AbfIXTNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:13:44 -0400
-Received: from localhost (unknown [12.206.46.61])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2295C2146E;
-        Tue, 24 Sep 2019 19:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569352422;
-        bh=pOsnILBtlXu+awgCMT2MEK7w954jdbfewaaP1cRdc3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g4PtixZSLFrD15AsUFBqb0oCoifOX/YNCXbbmMRPIPahHoJ+k7N8QvDKq/jehtt3x
-         vunV6gcwxsxod41MbtNrDdXwIqgPHmA6hPkPWVdPi/KIyXhhOUVYxpDhHYvOoKkBM4
-         T/SAeTcZAgJazC/EewLooF1LGSJ94rUwQqJPuCYI=
-Date:   Tue, 24 Sep 2019 12:12:40 -0700
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Mehta, Sanju" <Sanju.Mehta@amd.com>
-Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "Kumar, Rajesh" <Rajesh1.Kumar@amd.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dma: Add PTDMA Engine driver support
-Message-ID: <20190924191240.GD3824@vkoul-mobl>
-References: <1569310272-29153-1-git-send-email-Sanju.Mehta@amd.com>
+        Tue, 24 Sep 2019 15:17:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36543 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441899AbfIXTRH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 15:17:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so1937993pfr.3;
+        Tue, 24 Sep 2019 12:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uuYvKDdlCCY0lggc9sBBXzR54+aLnXoUJm8jnQudcgU=;
+        b=npKdJkon5qmHu+jpnZddVbrF8Pa8QGihVlW++CGVzdxayedYxp3dzYNLRYB11cF5L7
+         /MqRAlTN0vIKtdNhuUAac/aZw7TYMtO4xdRolhbRrYZXJ5oqKPvEQMWmaFe2fYL63jDb
+         c02/h8rRWN1g/7pbFc/16rPH4fHQBUYq+4Kvo9b9i5GVflEQc7onbvKIX7Kxalv9eonn
+         3Nj7GC0X3N/00h3cxmeFOVp4Yh3S2K/7wPqFbuNQF+/GlEaUXERJxkscInYJqtnUox0H
+         SRYQ66qFJuQcnGMHFW9hDIf2YBe/UZQT/8kk/BGUhlzdWPunls5Aamub6o9uGtrolJeM
+         hd6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uuYvKDdlCCY0lggc9sBBXzR54+aLnXoUJm8jnQudcgU=;
+        b=kp0AsZo8S+HRjPs5MErtqtYPmc40q6X2WS647ph8P7gtqsQitVvYPAJTAL1cH9dcEE
+         cKQoOH1QzKY5atIqjb9VsEg+xRIeGSiv4hBe3r8a41JJlNCV0uQpK6FzxuTmFDunvEzr
+         mm601xqK5CzG/gPtVIzllWKlqiKkhYwXHtjnT7yibjxzKZpJcIuU/oQY4EcB8eHKqjai
+         gZgGrtUUNQgAFoqlap0ICveumturTkj0gAmIrG/W5cQF3x/7HgnFBlMb33bssCxz2Jyc
+         qk6BMOU4wGVe7o5ThTs2nzq7qXeBh3yZerOfPnty28KsZO7PQ1laY9RvUYWsBMOzwRsb
+         k1Kg==
+X-Gm-Message-State: APjAAAUQBjlDigM9cxhsN19sr0DKW5BKdjwkCDGf/15v4Fmcvflvy0iy
+        GIQGjef4vxmSiUjdemNw3gALlfIl
+X-Google-Smtp-Source: APXvYqyX6VYd6yhegdHOFbFMdpSp1PJ8ZEll/P+fTVQTO9t4vYIhjdtG5duoWgLMsGAaJycf16RdQg==
+X-Received: by 2002:a17:90b:946:: with SMTP id dw6mr1772489pjb.48.1569352626062;
+        Tue, 24 Sep 2019 12:17:06 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id l62sm5360360pfl.167.2019.09.24.12.17.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 12:17:05 -0700 (PDT)
+Subject: Re: [PATCH] kcm: use BPF_PROG_RUN
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tom Herbert <tom@herbertland.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190905211528.97828-1-samitolvanen@google.com>
+ <0f77cc31-4df5-a74f-5b64-a1e3fc439c6d@fb.com>
+ <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
+ <048e82f4-5b31-f9f4-5bf7-82dfbf7ec8f3@gmail.com>
+ <20190924185908.GC5889@pc-63.home>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <589ccc1c-12b9-4700-f6d9-b2efd3f9a347@gmail.com>
+Date:   Tue, 24 Sep 2019 12:17:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569310272-29153-1-git-send-email-Sanju.Mehta@amd.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190924185908.GC5889@pc-63.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-09-19, 07:31, Mehta, Sanju wrote:
-> From: Sanjay R Mehta <sanju.mehta@amd.com>
+
+
+On 9/24/19 11:59 AM, Daniel Borkmann wrote:
+> On Mon, Sep 23, 2019 at 02:31:04PM -0700, Eric Dumazet wrote:
+>> On 9/6/19 10:06 AM, Alexei Starovoitov wrote:
+>>> On Fri, Sep 6, 2019 at 3:03 AM Yonghong Song <yhs@fb.com> wrote:
+>>>> On 9/5/19 2:15 PM, Sami Tolvanen wrote:
+>>>>> Instead of invoking struct bpf_prog::bpf_func directly, use the
+>>>>> BPF_PROG_RUN macro.
+>>>>>
+>>>>> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>>>>
+>>>> Acked-by: Yonghong Song <yhs@fb.com>
+>>>
+>>> Applied. Thanks
+>>
+>> Then we probably need this as well, what do you think ?
 > 
-> This is the driver for the AMD passthrough DMA Engine
+> Yep, it's broken. 6cab5e90ab2b ("bpf: run bpf programs with preemption
+> disabled") probably forgot about it since it wasn't using BPF_PROG_RUN()
+> in the first place. If you get a chance, please send a proper patch,
+> thanks!
 
-Please fix threading for your series, they are all over my inbox :(
+Sure, I will send this today.
 
-> +#include "ptdma.h"
-> +
-> +/* Union to define the function field (cmd_reg1/dword0) */
-> +union pt_function {
-> +	struct {
-> +		u16 byteswap:2;
-> +		u16 bitwise:3;
-> +		u16 reflect:2;
-> +		u16 rsvd:8;
-> +	} pt;
-> +	u16 raw;
-> +};
-
-So IIUC you are using this to write to hw registers, what is wrong with
-defining bit fields for registers using BIT and GENMASK and then write
-the settings to the hardware. That IMHO looks much neater!
-
-> +static inline u32 low_address(unsigned long addr)
-> +{
-> +	return (u64)addr & 0x0ffffffff;
-> +}
-> +
-> +static inline u32 high_address(unsigned long addr)
-> +{
-> +	return ((u64)addr >> 32) & 0x00000ffff;
-> +}
-
-Use lower_32_bits() and upper_32_bits() please. Also check the APIs in
-kernel and don't invent your own!
-
-> +int pt_core_perform_passthru(struct pt_op *op)
-> +{
-> +	struct ptdma_desc desc;
-> +	union pt_function function;
-> +	struct pt_dma_info *saddr = &op->src.u.dma;
-> +
-> +	memset(&desc, 0, Q_DESC_SIZE);
-> +
-> +	PT_CMD_ENGINE(&desc) = PT_ENGINE_PASSTHRU;
-> +
-> +	PT_CMD_SOC(&desc) = 0;
-> +	PT_CMD_IOC(&desc) = 1;
-> +	PT_CMD_INIT(&desc) = 0;
-> +	PT_CMD_EOM(&desc) = op->eom;
-> +	PT_CMD_PROT(&desc) = 0;
-> +
-> +	function.raw = 0;
-> +	PT_BYTESWAP(&function) = op->passthru.byte_swap;
-> +	PT_BITWISE(&function) = op->passthru.bit_mod;
-> +	PT_CMD_FUNCTION(&desc) = function.raw;
-> +
-> +	PT_CMD_LEN(&desc) = saddr->length;
-> +
-> +	PT_CMD_SRC_LO(&desc) = pt_addr_lo(&op->src.u.dma);
-> +	PT_CMD_SRC_HI(&desc) = pt_addr_hi(&op->src.u.dma);
-> +	PT_CMD_SRC_MEM(&desc) = PT_MEMTYPE_SYSTEM;
-> +
-> +	PT_CMD_DST_LO(&desc) = pt_addr_lo(&op->dst.u.dma);
-> +	PT_CMD_DST_HI(&desc) = pt_addr_hi(&op->dst.u.dma);
-> +	PT_CMD_DST_MEM(&desc) = PT_MEMTYPE_SYSTEM;
-
-This really looks bad, as I siad please use bits and genmasks. Also see
-how other driver handles registers transparently!
-
-> +static irqreturn_t pt_core_irq_handler(int irq, void *data)
-> +{
-> +	struct pt_device *pt = (struct pt_device *)data;
-> +
-> +	pt_core_disable_queue_interrupts(pt);
-> +	tasklet_schedule(&pt->irq_tasklet);
-
-Why are you not submitting txn in ISR, you are keeping dmaengine idle
-for tasklet!
-
-> +	cmd_q->qidx = 0;
-> +	/* Preset some register values and masks that are queue
-> +	 * number dependent
-> +	 */
-
-kernel style is 
-/*
- * this is a multi line comment
- * notice first and last line
- */
-
-> +	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
-> +	cmd_q->reg_tail_lo = cmd_q->reg_control + CMD_Q_TAIL_LO_BASE;
-> +	cmd_q->reg_head_lo = cmd_q->reg_control + CMD_Q_HEAD_LO_BASE;
-> +	cmd_q->reg_int_enable = cmd_q->reg_control +
-> +				CMD_Q_INT_ENABLE_BASE;
-> +	cmd_q->reg_interrupt_status = cmd_q->reg_control +
-> +				      CMD_Q_INTERRUPT_STATUS_BASE;
-> +	cmd_q->reg_status = cmd_q->reg_control + CMD_Q_STATUS_BASE;
-> +	cmd_q->reg_int_status = cmd_q->reg_control +
-> +				CMD_Q_INT_STATUS_BASE;
-> +	cmd_q->reg_dma_status = cmd_q->reg_control +
-> +				CMD_Q_DMA_STATUS_BASE;
-> +	cmd_q->reg_dma_read_status = cmd_q->reg_control +
-> +				     CMD_Q_DMA_READ_STATUS_BASE;
-> +	cmd_q->reg_dma_write_status = cmd_q->reg_control +
-> +				      CMD_Q_DMA_WRITE_STATUS_BASE;
-> +
-> +	init_waitqueue_head(&cmd_q->int_queue);
-> +
-> +	dev_dbg(dev, "queue available\n");
-
-Noise
-
-> +
-> +	/* Turn off the queues and disable interrupts until ready */
-> +	pt_core_disable_queue_interrupts(pt);
-> +
-> +	cmd_q->qcontrol = 0; /* Start with nothing */
-> +	iowrite32(cmd_q->qcontrol, cmd_q->reg_control);
-> +
-> +	ioread32(cmd_q->reg_int_status);
-> +	ioread32(cmd_q->reg_status);
-> +
-> +	/* Clear the interrupt status */
-> +	iowrite32(SUPPORTED_INTERRUPTS, cmd_q->reg_interrupt_status);
-> +
-> +	dev_dbg(dev, "Requesting an IRQ...\n");
-> +	/* Request an irq */
-> +	ret = request_irq(pt->pt_irq, pt_core_irq_handler, 0, "pt", pt);
-> +	if (ret) {
-> +		dev_err(dev, "unable to allocate an IRQ\n");
-> +		goto e_pool;
-> +	}
-> +	/* Initialize the ISR tasklet */
-> +	tasklet_init(&pt->irq_tasklet, pt_core_irq_bh,
-> +		     (unsigned long)pt);
-> +
-> +	dev_dbg(dev, "Configuring virtual queues...\n");
-> +	/* Configure size of each virtual queue accessible to host */
-> +
-> +	cmd_q->qcontrol &= ~(CMD_Q_SIZE << CMD_Q_SHIFT);
-> +	cmd_q->qcontrol |= QUEUE_SIZE_VAL << CMD_Q_SHIFT;
-> +
-> +	cmd_q->qdma_tail = cmd_q->qbase_dma;
-> +	dma_addr_lo = low_address(cmd_q->qdma_tail);
-> +	iowrite32((u32)dma_addr_lo, cmd_q->reg_tail_lo);
-> +	iowrite32((u32)dma_addr_lo, cmd_q->reg_head_lo);
-> +
-> +	dma_addr_hi = high_address(cmd_q->qdma_tail);
-> +	cmd_q->qcontrol |= (dma_addr_hi << 16);
-> +	iowrite32(cmd_q->qcontrol, cmd_q->reg_control);
-> +
-> +	dev_dbg(dev, "Starting threads...\n");
-> +	/* Create a kthread for command queue */
-> +
-> +	kthread = kthread_create(pt_cmd_queue_thread, cmd_q, "pt-q");
-
-Why do you need a thread, you already have a tasklet?
-
-
-Okay am stopping here. There are **tons** of style issues with the
-series. For this patch alone checkpatch tells me:
-
-total: 184 errors, 12 warnings, 31 checks, 1593 lines checked
-
-1. Please **FIX** the errors
-2. I suspect tab spaces are wrong (we use 8)
-3. Read Documentation/process/coding-style.rst, if done, re read it
-again
-4. Use dmaengine APIs and virtual dma layer
-5. Dont invent your own stuff, kernel already has stuff to deal with
-most common thngs, no your case is not unique.
-6. Check other drivers on how to do things
-7. Make sure you send a series as athread, if in doubt send to yourself!
-
-Thanks
--- 
-~Vinod
