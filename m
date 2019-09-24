@@ -2,171 +2,160 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2D1C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D0FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2843C20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B68B214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410182AbfIXUXc convert rfc822-to-8bit (ORCPT
+        id S2410373AbfIXU03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:23:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:48717 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfIXUXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:23:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 13:23:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="201020453"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 13:23:31 -0700
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 24 Sep 2019 13:23:31 -0700
-Received: from orsmsx109.amr.corp.intel.com ([169.254.11.122]) by
- ORSMSX161.amr.corp.intel.com ([169.254.4.111]) with mapi id 14.03.0439.000;
- Tue, 24 Sep 2019 13:23:31 -0700
-From:   "Hall, Christopher S" <christopher.s.hall@intel.com>
-To:     "Keller, Jacob E" <jacob.e.keller@intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Richard Cochran <richardcochran@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Index: AQHVaGh/aGiLTWXDV0O998th8wsGNac7v5sA//+O24A=
-Date:   Tue, 24 Sep 2019 20:23:30 +0000
-Message-ID: <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
-References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
- <20190911061622.774006-2-felipe.balbi@linux.intel.com>
- <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
-In-Reply-To: <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 24 Sep 2019 16:26:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3082 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726156AbfIXU03 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 16:26:29 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8OKMnQm018744;
+        Tue, 24 Sep 2019 16:25:40 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v7qx052qj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Sep 2019 16:25:40 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8OKPCJl024377;
+        Tue, 24 Sep 2019 20:25:38 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2v5bg77kp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Sep 2019 20:25:38 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8OKPbxO58261872
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 20:25:38 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD1B3C6057;
+        Tue, 24 Sep 2019 20:25:37 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D1DCC6055;
+        Tue, 24 Sep 2019 20:25:33 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.203.235])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 24 Sep 2019 20:25:32 +0000 (GMT)
+References: <20190913225009.3406-1-prsriva@linux.microsoft.com> <20190913225009.3406-2-prsriva@linux.microsoft.com> <87zhiz1x9l.fsf@morokweng.localdomain> <02234482-b095-e064-f4d6-1c6255a4ff9f@linux.microsoft.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     prsriva <prsriva@linux.microsoft.com>
+Cc:     mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de,
+        takahiro.akashi@linaro.org, sboyd@kernel.org,
+        catalin.marinas@arm.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
+        yamada.masahiro@socionext.com, kristina.martsenko@arm.org,
+        duwe@lst.de, allison@lohutok.net, james.morse@arm.org,
+        linux-integrity@vger.kernel.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima measurement log in kexec_file_load
+In-reply-to: <02234482-b095-e064-f4d6-1c6255a4ff9f@linux.microsoft.com>
+Date:   Tue, 24 Sep 2019 17:25:30 -0300
+Message-ID: <87zhit5tmt.fsf@morokweng.localdomain>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909240166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Keller, Jacob E
-> Sent: Tuesday, September 24, 2019 12:23 PM
-> To: Felipe Balbi <felipe.balbi@linux.intel.com>; Richard Cochran
-> <richardcochran@gmail.com>
-> Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org]
-> On
-> > Behalf Of Felipe Balbi
-> > Sent: Tuesday, September 10, 2019 11:16 PM
-> > To: Richard Cochran <richardcochran@gmail.com>
-> > Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
-> netdev@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; Felipe Balbi
-> <felipe.balbi@linux.intel.com>
-> > Subject: [PATCH v4 2/2] PTP: add support for one-shot output
-> >
-> > Some controllers allow for a one-shot output pulse, in contrast to
-> > periodic output. Now that we have extensible versions of our IOCTLs, we
-> > can finally make use of the 'flags' field to pass a bit telling driver
-> > that if we want one-shot pulse output.
-> >
-> > Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-> > ---
-> >
-> > Changes since v3:
-> > 	- Remove bogus bitwise negation
-> >
-> > Changes since v2:
-> > 	- Add _PEROUT_ to bit macro
-> >
-> > Changes since v1:
-> > 	- remove comment from .flags field
-> >
-> >  include/uapi/linux/ptp_clock.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/ptp_clock.h
-> b/include/uapi/linux/ptp_clock.h
-> > index 9a0af3511b68..f16301015949 100644
-> > --- a/include/uapi/linux/ptp_clock.h
-> > +++ b/include/uapi/linux/ptp_clock.h
-> > @@ -38,8 +38,8 @@
-> >  /*
-> >   * Bits of the ptp_perout_request.flags field:
-> >   */
-> > -#define PTP_PEROUT_VALID_FLAGS (0)
-> > -
-> > +#define PTP_PEROUT_ONE_SHOT (1<<0)
-> > +#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
-> >  /*
-> >   * struct ptp_clock_time - represents a time value
-> >   *
-> > @@ -77,7 +77,7 @@ struct ptp_perout_request {
-> >  	struct ptp_clock_time start;  /* Absolute start time. */
-> >  	struct ptp_clock_time period; /* Desired period, zero means disable.
-> */
-> >  	unsigned int index;           /* Which channel to configure. */
-> > -	unsigned int flags;           /* Reserved for future use. */
-> > +	unsigned int flags;
-> >  	unsigned int rsv[4];          /* Reserved for future use. */
-> >  };
-> >
-> > --
-> > 2.23.0
-> 
-> Hi Felipe,
-> 
-> Do you have any examples for how you envision using this? I don't see any
-> drivers or other code on the list for doing so.
-> 
-> Additionally, it seems weird because we do not have support for specifying
-> the pulse width. I guess you leave that up to driver choice?
-> 
-> Thanks,
-> Jake
 
-Jake,
+Hello,
 
-Good catch on the terminology. This is an API that produces edges not pulses.
-This flag causes the PEROUT ioctl to ignore the period argument and produce a
-single edge. Currently, the igb driver implements the same function, but uses
-a "magic" invalid period specification to signal that the period argument
-should be ignored (use_freq == 0):
+prsriva <prsriva@linux.microsoft.com> writes:
 
-		if (on && ((ns <= 70000000LL) || (ns == 125000000LL) ||
-			   (ns == 250000000LL) || (ns == 500000000LL))) {
-			if (ns < 8LL)
-				return -EINVAL;
-			use_freq = 1;
-		}
+> On 9/19/19 8:07 PM, Thiago Jung Bauermann wrote:
+>> Hello Prakhar,
+>>
+>> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+>>
+>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>> index 3adcec05b1f6..f39b12dbf9e8 100644
+>>> --- a/arch/arm64/Kconfig
+>>> +++ b/arch/arm64/Kconfig
+>>> @@ -976,6 +976,13 @@ config KEXEC_VERIFY_SIG
+>>>   	  verification for the corresponding kernel image type being
+>>>   	  loaded in order for this to work.
+>>>
+>>> +config HAVE_IMA_KEXEC
+>>> +	bool "Carry over IMA measurement log during kexec_file_load() syscall"
+>>> +	depends on KEXEC_FILE
+>>> +	help
+>>> +	  Select this option to carry over IMA measurement log during
+>>> +	  kexec_file_load.
+>>> +
+>>>   config KEXEC_IMAGE_VERIFY_SIG
+>>>   	bool "Enable Image signature verification support"
+>>>   	default y
+>> This is not right. As it stands, HAVE_IMA_KEXEC is essentially a synonym
+>> for IMA_KEXEC.
+>>
+>> It's not meant to be user-visible in the config process. Instead, it's
+>> meant to be selected by the arch Kconfig (probably by the ARM64 config
+>> symbol) to signal to IMA's Kconfig that it can offer the IMA_KEXEC
+>> option.
+>>
+>> I also mentioned in my previous review that config HAVE_IMA_KEXEC should
+>> be defined in arch/Kconfig, not separately in both arch/arm64/Kconfig
+>> and arch/powerpc/Kconfig.
+>
+> I see the entry exists in arch/Kconfig and is overwritten.
+> I will remove entries both from powerpc and arm64.
+>
+> How do i cross-compile for powerpc?
 
-The proposal is to support this function without magic period specifications
-using an explicit flag instead. An example use case is pulse-per-second
-output. While PPS is periodic, time-aware GPIO is driven by (an
-unadjustable) Always Running Timer (ART). It's necessary to schedule each
-edge in software to produce PPS synced with system time.
+There are some instructions here:
 
-Chris
+https://github.com/linuxppc/wiki/wiki/Building-powerpc-kernels
+
+>>> diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
+>>> new file mode 100644
+>>> index 000000000000..e23cee84729f
+>>> --- /dev/null
+>>> +++ b/arch/arm64/include/asm/ima.h
+>>> @@ -0,0 +1,29 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +#ifndef _ASM_ARM64_IMA_H
+>>> +#define _ASM_ARM64_IMA_H
+>>> +
+>>> +struct kimage;
+>>> +
+>>> +int ima_get_kexec_buffer(void **addr, size_t *size);
+>>> +int ima_free_kexec_buffer(void);
+>>> +
+>>> +#ifdef CONFIG_IMA
+>>> +void remove_ima_buffer(void *fdt, int chosen_node);
+>>> +#else
+>>> +static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
+>>> +#endif
+>> I mentioned in my previous review that remove_ima_buffer() should exist
+>> even if CONFIG_IMA isn't set. Did you arrive at a different conclusion?
+>
+> I made the needed changed in makefile, missed removing the
+>
+> configs here. Thanks for pointing this out.
+
+Thanks.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
