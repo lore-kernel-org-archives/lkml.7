@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F94C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CF9C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DDA21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A6421906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343693;
-	bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
+	s=default; t=1569343700;
+	bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvRQ4wQmTeR+rK5rdKARoKIS4eiTrkI8oGbzFTiFDPg3fHrEyjzmtyJiXZIlpBleE
-	 6E/6I7LKvXun7zbz98XEnIeKsvoZ5VyKIFDvOFMQmKjymmleBcAWAbUppq+Z2WlxPC
-	 drWzlEYcYpghohAnX8UZ3D/SJwJVwJ1uUnXKyH9s=
+	b=S4Lms5yH/XCfuACB577j99qVKkFLBy+tJmaQMHy9A7N0U+HqEKR2UvYUjW6cRtVMs
+	 YD3vx/58CL8W0f1LYzCIhuwniTa86Gjy2cKaTWyyZSzSl6qZ2m1l2gJCf/rpZEELxZ
+	 Qp8M9A3sIt8AuerFEXwFljYQVI1tVBPZBoSR2ATs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410465AbfIXQsM (ORCPT
+        id S1729204AbfIXQsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39686 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393357AbfIXQsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:07 -0400
+        id S2410168AbfIXQqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2125A21906;
-        Tue, 24 Sep 2019 16:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B81A21841;
+        Tue, 24 Sep 2019 16:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343686;
-        bh=PWhTwKba2ZSNQzRTJqTmC99Bkw2ToZ0yxWIRCb0nwZY=;
+        s=default; t=1569343580;
+        bh=NjzupDenoqLLyLpB0bUoEgIBSgtmb3n0NUd2iv3HQdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cv0XICaLbpisycWJLyMf55Vm7a3Knhj3pXgwYL3I+CIOAUqvXQDo6RjGVff/Ez1Wb
-         RTwaQJbr9Ow2VcIwpID68gs02oUj+54Nl3zggGJ+9eoddhtyUxRh+fJ2X96p0bQ6mh
-         TZYKjzQBmUTBWYdN7w3V7F2eBtnd7iwyBHjOGZnQ=
+        b=vNqLWHKwUVy5qsepykVr9XvG+AEP2spIhvKfnBOvUumtBZHVRkSLtGbR+no6QacK1
+         Z+QlhC28oCcJMYLGxy9hLJ92xrzD/VFQkljb+w3/rYel3L7iB41zG8G7ciSYnBHruB
+         chqh8Shv7a098AekGU4C3eVQD9noR6zf5wAsbx20=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Otto Meier <gf435@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 56/70] pinctrl: meson-gxbb: Fix wrong pinning definition for uart_c
-Date:   Tue, 24 Sep 2019 12:45:35 -0400
-Message-Id: <20190924164549.27058-56-sashal@kernel.org>
+Cc:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Shirish S <shirish.s@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 13/70] drm/amdgpu: Fix hard hang for S/G display BOs.
+Date:   Tue, 24 Sep 2019 12:44:52 -0400
+Message-Id: <20190924164549.27058-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,61 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Otto Meier <gf435@gmx.net>
+From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 
-[ Upstream commit cb0438e4436085d89706b5ccfce4d5da531253de ]
+[ Upstream commit e4c4073b0139d055d43a9568690fc560aab4fa5c ]
 
-Hi i tried to use the uart_C of the the odroid-c2.
+HW requires for caching to be unset for scanout BO
+mappings when the BO placement is in GTT memory.
+Usually the flag to unset is passed from user mode
+but for FB mode this was missing.
 
-I enabled it in the dts file. During boot it crashed when the
-the sdcard slot is addressed.
+v2:
+Keep all BO placement logic in amdgpu_display_supported_domains
 
-After long search in the net i found this:
-
-https://forum.odroid.com/viewtopic.php?f=139&t=25371&p=194370&hilit=uart_C#p177856
-
-After changing the pin definitions accordingly erverything works.
-Uart_c is functioning and sdcard ist working.
-
-Fixes: 6db0f3a8a04e46 ("pinctrl: amlogic: gxbb: add more UART pins")
-Signed-off-by: Otto Meier <gf435@gmx.net>
-Link: https://lore.kernel.org/r/1cc32a18-464d-5531-7a1c-084390e2ecb1@gmx.net
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Tested-by: Shirish S <shirish.s@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c  | 7 +++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c | 3 ++-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 6c640837073ef..5bfa56f3847ef 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -192,8 +192,8 @@ static const unsigned int uart_rts_b_pins[]	= { GPIODV_27 };
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+index e476092188392..bf0c61baa05c7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+@@ -137,14 +137,14 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
+ 						  fb_tiled);
+ 	domain = amdgpu_display_supported_domains(adev);
+-
+ 	height = ALIGN(mode_cmd->height, 8);
+ 	size = mode_cmd->pitches[0] * height;
+ 	aligned_size = ALIGN(size, PAGE_SIZE);
+ 	ret = amdgpu_gem_object_create(adev, aligned_size, 0, domain,
+ 				       AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
+-				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS |
+-				       AMDGPU_GEM_CREATE_VRAM_CLEARED,
++				       AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS     |
++				       AMDGPU_GEM_CREATE_VRAM_CLEARED 	     |
++				       AMDGPU_GEM_CREATE_CPU_GTT_USWC,
+ 				       ttm_bo_type_kernel, NULL, &gobj);
+ 	if (ret) {
+ 		pr_err("failed to allocate framebuffer (%d)\n", aligned_size);
+@@ -166,7 +166,6 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 			dev_err(adev->dev, "FB failed to set tiling flags\n");
+ 	}
  
- static const unsigned int uart_tx_c_pins[]	= { GPIOY_13 };
- static const unsigned int uart_rx_c_pins[]	= { GPIOY_14 };
--static const unsigned int uart_cts_c_pins[]	= { GPIOX_11 };
--static const unsigned int uart_rts_c_pins[]	= { GPIOX_12 };
-+static const unsigned int uart_cts_c_pins[]	= { GPIOY_11 };
-+static const unsigned int uart_rts_c_pins[]	= { GPIOY_12 };
+-
+ 	ret = amdgpu_bo_pin(abo, domain);
+ 	if (ret) {
+ 		amdgpu_bo_unreserve(abo);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+index d4fcf54754646..6fc77ac814d8e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+@@ -746,7 +746,8 @@ int amdgpu_mode_dumb_create(struct drm_file *file_priv,
+ 	struct amdgpu_device *adev = dev->dev_private;
+ 	struct drm_gem_object *gobj;
+ 	uint32_t handle;
+-	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
++	u64 flags = AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED |
++		    AMDGPU_GEM_CREATE_CPU_GTT_USWC;
+ 	u32 domain;
+ 	int r;
  
- static const unsigned int i2c_sck_a_pins[]	= { GPIODV_25 };
- static const unsigned int i2c_sda_a_pins[]	= { GPIODV_24 };
-@@ -439,10 +439,10 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GROUP(pwm_f_x,		3,	18),
- 
- 	/* Bank Y */
--	GROUP(uart_cts_c,	1,	19),
--	GROUP(uart_rts_c,	1,	18),
--	GROUP(uart_tx_c,	1,	17),
--	GROUP(uart_rx_c,	1,	16),
-+	GROUP(uart_cts_c,	1,	17),
-+	GROUP(uart_rts_c,	1,	16),
-+	GROUP(uart_tx_c,	1,	19),
-+	GROUP(uart_rx_c,	1,	18),
- 	GROUP(pwm_a_y,		1,	21),
- 	GROUP(pwm_f_y,		1,	20),
- 	GROUP(i2s_out_ch23_y,	1,	5),
 -- 
 2.20.1
 
