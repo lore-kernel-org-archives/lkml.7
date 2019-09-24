@@ -2,98 +2,142 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B09C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B160C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5761E2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79242146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504249AbfIXJdn (ORCPT
+        id S2504269AbfIXJeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:33:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2711 "EHLO huawei.com"
+        Tue, 24 Sep 2019 05:34:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2773 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405224AbfIXJdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:33:43 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4C6155CFB229BD2C1AE5;
-        Tue, 24 Sep 2019 17:33:41 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
- 17:33:34 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <guaneryu@gmail.com>, <amir73il@gmail.com>,
-        <david.oberhollenzer@sigma-star.at>, <ebiggers@google.com>,
-        <yi.zhang@huawei.com>
-CC:     <fstests@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH xfstests] overlay: Enable character device to be the base fs partition
-Date:   Tue, 24 Sep 2019 17:40:25 +0800
-Message-ID: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S2504239AbfIXJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:34:12 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D9E1F99325EA1F14D8C6;
+        Tue, 24 Sep 2019 17:34:10 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 17:34:05 +0800
+Subject: Re: [PATCH stable 4.4 net] net: rds: Fix NULL ptr use in
+ rds_tcp_kill_sock
+From:   maowenan <maowenan@huawei.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <chien.yen@oracle.com>, <davem@davemloft.net>,
+        <stable@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20190918083733.50266-1-maowenan@huawei.com>
+ <20190918083253.GA1862222@kroah.com>
+ <c8953355-2b98-c4d0-2af2-4a69ad3e2d2d@huawei.com>
+Message-ID: <8b5b7fd5-dd53-4a73-371d-c997b1b3ce78@huawei.com>
+Date:   Tue, 24 Sep 2019 17:33:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
+In-Reply-To: <c8953355-2b98-c4d0-2af2-4a69ad3e2d2d@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running overlay tests using character devices as base fs partitions,
-all overlay usecase results become 'notrun'. Function
-'_overay_config_override' (common/config) detects that the current base
-fs partition is not a block device and will set FSTYP to base fs. The
-overlay usecase will check the current FSTYP, and if it is not 'overlay'
-or 'generic', it will skip the execution.
+Kindly ping...
 
-For example, using UBIFS as base fs skips all overlay usecases:
-
-  FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
-  MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
-  MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
-
-  overlay/001	[not run] not suitable for this filesystem type: ubifs
-  overlay/002	[not run] not suitable for this filesystem type: ubifs
-  overlay/003	[not run] not suitable for this filesystem type: ubifs
-  ...
-
-When checking that the base fs partition is a block/character device,
-FSTYP is overwritten as 'overlay'. This patch allows the base fs
-partition to be a character device that can also execute overlay
-usecases (such as ubifs).
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- common/config | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/common/config b/common/config
-index 4c86a49..a22acdb 100644
---- a/common/config
-+++ b/common/config
-@@ -550,7 +550,7 @@ _overlay_config_override()
- 	#    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
- 	#    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
- 	#    overlayfs base and mount dirs inside base fs mount.
--	[ -b "$TEST_DEV" ] || return 0
-+	[ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
- 
- 	# Config file may specify base fs type, but we obay -overlay flag
- 	[ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
-@@ -570,7 +570,7 @@ _overlay_config_override()
- 	export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
- 	export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
- 
--	[ -b "$SCRATCH_DEV" ] || return 0
-+	[ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
- 
- 	# Store original base fs vars
- 	export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
--- 
-2.7.4
+On 2019/9/18 17:02, maowenan wrote:
+> 
+> 
+> On 2019/9/18 16:32, Greg KH wrote:
+>> On Wed, Sep 18, 2019 at 04:37:33PM +0800, Mao Wenan wrote:
+>>> After the commit c4e97b06cfdc ("net: rds: force to destroy
+>>> connection if t_sock is NULL in rds_tcp_kill_sock()."),
+>>> it introduced null-ptr-deref in rds_tcp_kill_sock as below:
+>>>
+>>> BUG: KASAN: null-ptr-deref on address 0000000000000020
+>>> Read of size 8 by task kworker/u16:10/910
+>>> CPU: 3 PID: 910 Comm: kworker/u16:10 Not tainted 4.4.178+ #3
+>>> Hardware name: linux,dummy-virt (DT)
+>>> Workqueue: netns cleanup_net
+>>> Call trace:
+>>> [<ffffff90080abb50>] dump_backtrace+0x0/0x618
+>>> [<ffffff90080ac1a0>] show_stack+0x38/0x60
+>>> [<ffffff9008c42b78>] dump_stack+0x1a8/0x230
+>>> [<ffffff90085d469c>] kasan_report_error+0xc8c/0xfc0
+>>> [<ffffff90085d54a4>] kasan_report+0x94/0xd8
+>>> [<ffffff90085d1b28>] __asan_load8+0x88/0x150
+>>> [<ffffff9009c9cc2c>] rds_tcp_dev_event+0x734/0xb48
+>>> [<ffffff90081eacb0>] raw_notifier_call_chain+0x150/0x1e8
+>>> [<ffffff900973fec0>] call_netdevice_notifiers_info+0x90/0x110
+>>> [<ffffff9009764874>] netdev_run_todo+0x2f4/0xb08
+>>> [<ffffff9009796d34>] rtnl_unlock+0x2c/0x48
+>>> [<ffffff9009756484>] default_device_exit_batch+0x444/0x528
+>>> [<ffffff9009720498>] ops_exit_list+0x1c0/0x240
+>>> [<ffffff9009724a80>] cleanup_net+0x738/0xbf8
+>>> [<ffffff90081ca6cc>] process_one_work+0x96c/0x13e0
+>>> [<ffffff90081cf370>] worker_thread+0x7e0/0x1910
+>>> [<ffffff90081e7174>] kthread+0x304/0x390
+>>> [<ffffff9008094280>] ret_from_fork+0x10/0x50
+>>>
+>>> If the first loop add the tc->t_sock = NULL to the tmp_list,
+>>> 1). list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node)
+>>>
+>>> then the second loop is to find connections to destroy, tc->t_sock
+>>> might equal NULL, and tc->t_sock->sk happens null-ptr-deref.
+>>> 2). list_for_each_entry_safe(tc, _tc, &tmp_list, t_tcp_node)
+>>>
+>>> Fixes: c4e97b06cfdc ("net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().")
+>>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>>> ---
+>>>  net/rds/tcp.c | 8 +++++---
+>>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> Why is this not needed upstream as well?
+> Upstream does not use tc->t_sock in the second loop after below two patches.
+> afb4164d91c7 ("RDS: TCP: Refactor connection destruction to handle multiple paths") and
+> 2d746c93b6e5 ("rds: tcp: remove redundant function rds_tcp_conn_paths_destroy()")
+> 
+>>
+>> 4.9.y?  4.14.y?  anything else?
+> 4.19.y and 4.14.y exist rds_tcp_conn_paths_destroy()
+> to guarantee that.
+> +static void rds_tcp_conn_paths_destroy(struct rds_connection *conn)
+> +{
+> +       struct rds_conn_path *cp;
+> +       struct rds_tcp_connection *tc;
+> +       int i;
+> +       struct sock *sk;
+> +
+> +       for (i = 0; i < RDS_MPATH_WORKERS; i++) {
+> +               cp = &conn->c_path[i];
+> +               tc = cp->cp_transport_data;
+> +               if (!tc->t_sock)
+> +                       continue;
+> +               sk = tc->t_sock->sk;
+> +               sk->sk_prot->disconnect(sk, 0);
+> +               tcp_done(sk);
+> +       }
+> +}
+> +
+> 
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
+>> .
+>>
+> 
+> 
+> .
+> 
 
