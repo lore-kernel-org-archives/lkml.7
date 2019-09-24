@@ -7,55 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5A9C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0725C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5213321D82
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEF2217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343847;
-	bh=KlSB4HBw84tIqwEJl/ZN5F7suGhn/NvkDm8CJqPjPb0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Nf4ViPt//bHRZTNDUwfq3pSH0D5NyUEq4pFWQsyNioDf9iVdNUCyGNgMUqui1BICC
-	 Y17FwyH10ai4zQOkBca+5Zd9yV4EyaKbnn/4HesvRZn3CCW8M9i9649KKm9utlkLmd
-	 z/vbh0x9LHg6biP1vTQ9n7tC4Zuxhih8UUN6akuI=
+	s=default; t=1569343850;
+	bh=NpFt4VysNHZNSD9PF2n48smfBRcHUrmddrU3O6zZY+Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UaTHXqRaHl97E01XY6sK8iyG2UvzC6rbOG8/hC9xLzRe/v3nMzK+mt8ing5Glvadh
+	 VY5mcyrqPX+34czVtVHFWHB5cQ2GdMukPmDZRoWZSArFUnrNOGutw0gbYinS8rzFQc
+	 rhy8WD/JYsbBrjt+bSD0plPUb2cbHcDWEz7BGx1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441490AbfIXQuq (ORCPT
+        id S2441501AbfIXQut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410792AbfIXQue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:34 -0400
+        id S2436521AbfIXQul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C88D217D9;
-        Tue, 24 Sep 2019 16:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E3D217D9;
+        Tue, 24 Sep 2019 16:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343834;
-        bh=KlSB4HBw84tIqwEJl/ZN5F7suGhn/NvkDm8CJqPjPb0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gT4uE1y1Wq68WJ9TBpneVfh9vjdqdeBNRGl2GgXNv0IxFgLRgn63pY2PpvODWNi2Q
-         1Kt5BTZSGMQkURHLvAArk5rbIkD3mxSJsj/q1U/6UfRXpKQdNWjzEgN869WppnpSkd
-         4F1Hk3MVM2dOcGaUfOWM4toGjtqUOXLdPgfRrkNc=
+        s=default; t=1569343840;
+        bh=NpFt4VysNHZNSD9PF2n48smfBRcHUrmddrU3O6zZY+Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JmD/l5CA0FaJohJ3xIrydsaW+iFWONJzJ3Lp42Mq6Aneoga0/Jj1yTU9yXBrGh9fY
+         qeBuq8Tbk37hEkLqARSyEkFkeSDw4xrr/iYvkxEtKS9slGw3JF77VR9C2w+aTW8g0i
+         I/kp5OIqUf2ykeoF4sxKvu3l+uAhf3iumxKz5ipQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 01/28] drm/bridge: tc358767: Increase AUX transfer length limit
-Date:   Tue, 24 Sep 2019 12:50:04 -0400
-Message-Id: <20190924165031.28292-1-sashal@kernel.org>
+Cc:     Marko Kohtala <marko.kohtala@okoko.fi>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/28] video: ssd1307fb: Start page range at page_offset
+Date:   Tue, 24 Sep 2019 12:50:07 -0400
+Message-Id: <20190924165031.28292-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
+References: <20190924165031.28292-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,50 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Marko Kohtala <marko.kohtala@okoko.fi>
 
-[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
+[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
 
-According to the datasheet tc358767 can transfer up to 16 bytes via
-its AUX channel, so the artificial limit of 8 appears to be too
-low. However only up to 15-bytes seem to be actually supported and
-trying to use 16-byte transfers results in transfers failing
-sporadically (with bogus status in case of I2C transfers), so limit it
-to 15.
+The page_offset was only applied to the end of the page range. This caused
+the display updates to cause a scrolling effect on the display because the
+amount of data written to the display did not match the range display
+expected.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
+Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
+Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 9705ca197b90d..cefa2c1685ba4 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -300,7 +300,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 			       struct drm_dp_aux_msg *msg)
- {
- 	struct tc_data *tc = aux_to_tc(aux);
--	size_t size = min_t(size_t, 8, msg->size);
-+	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
- 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
- 	u8 *buf = msg->buffer;
- 	u32 tmp = 0;
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index f599520374ddf..5f7dbf1c46092 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -433,7 +433,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.20.1
 
