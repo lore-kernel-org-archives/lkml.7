@@ -2,132 +2,169 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5641C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29380C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EA020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AD820872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441149AbfIXNyH (ORCPT
+        id S2441168AbfIXNyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:54:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52346 "EHLO mx1.redhat.com"
+        Tue, 24 Sep 2019 09:54:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35932 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441133AbfIXNyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:54:07 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2441133AbfIXNyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:54:13 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0A3A4306E171;
-        Tue, 24 Sep 2019 13:54:07 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 715DA60852;
-        Tue, 24 Sep 2019 13:54:01 +0000 (UTC)
-Message-ID: <55dc19fcc44b2e658b71f68206306c8310335564.camel@redhat.com>
-Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-In-Reply-To: <20190924112155.rxeyksetgqmer3pg@linutronix.de>
-References: <20190911165729.11178-1-swood@redhat.com>
-         <20190911165729.11178-4-swood@redhat.com>
-         <20190917075943.qsaakyent4dxjkq4@linutronix.de>
-         <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
-         <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
-         <20190923175233.yub32stn3xcwkaml@linutronix.de>
-         <20190924112155.rxeyksetgqmer3pg@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 7AC747FDCA;
+        Tue, 24 Sep 2019 13:54:09 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-44.pek2.redhat.com [10.72.12.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5087C5B69A;
+        Tue, 24 Sep 2019 13:53:48 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V2 0/8] mdev based hardware virtio offloading support
+Date:   Tue, 24 Sep 2019 21:53:24 +0800
+Message-Id: <20190924135332.14160-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Date:   Tue, 24 Sep 2019 08:53:43 -0500
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 24 Sep 2019 13:54:07 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 24 Sep 2019 13:54:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-24 at 13:21 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-09-23 19:52:33 [+0200], To Scott Wood wrote:
-> 
-> I made dis:
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 885a195dfbe02..25afa2bb1a2cf 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -308,7 +308,9 @@ void pin_current_cpu(void)
->  	preempt_lazy_enable();
->  	preempt_enable();
->  
-> +	sleeping_lock_inc();
->  	__read_rt_lock(cpuhp_pin);
-> +	sleeping_lock_dec();
->  
->  	preempt_disable();
->  	preempt_lazy_disable();
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index e1bdd7f9be054..63a6420d01053 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7388,6 +7388,7 @@ void migrate_enable(void)
->  
->  		WARN_ON(smp_processor_id() != task_cpu(p));
->  		if (!cpumask_test_cpu(task_cpu(p), &p->cpus_mask)) {
-> +			struct task_struct *self = current;
->  			const struct cpumask *cpu_valid_mask =
-> cpu_active_mask;
->  			struct migration_arg arg;
->  			unsigned int dest_cpu;
-> @@ -7405,7 +7406,21 @@ void migrate_enable(void)
->  			unpin_current_cpu();
->  			preempt_lazy_enable();
->  			preempt_enable();
-> +			rt_invol_sleep_inc();
-> +
-> +			raw_spin_lock_irq(&self->pi_lock);
-> +			self->saved_state = self->state;
-> +			__set_current_state_no_track(TASK_RUNNING);
-> +			raw_spin_unlock_irq(&self->pi_lock);
-> +
->  			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
-> +
-> +			raw_spin_lock_irq(&self->pi_lock);
-> +			__set_current_state_no_track(self->saved_state);
-> +			self->saved_state = TASK_RUNNING;
-> +			raw_spin_unlock_irq(&self->pi_lock);
-> +
-> +			rt_invol_sleep_dec();
->  			return;
->  		}
->  	}
-> 
-> I think we need to preserve the current state, otherwise we will lose
-> anything != TASK_RUNNING here. So the spin_lock() would preserve it
-> while waiting but the migrate_enable() will lose it if it needs to
-> change the CPU at the end.
-> I will try to prepare all commits for the next release before I release
-> so you can have a look first and yell if needed.
+Hi all:
 
-As I pointed out in the "[PATCH RT 6/8] sched: migrate_enable: Set state to
-TASK_RUNNING" discussion, we can get here inside the rtmutex code (e.g. from
-debug_rt_mutex_print_deadlock) where saved_state is already holding
-something -- plus, the waker won't have WF_LOCK_SLEEPER and therefore
-saved_state will get cleared anyway.
+There are hardware that can do virtio datapath offloading while having
+its own control path. This path tries to implement a mdev based
+unified API to support using kernel virtio driver to drive those
+devices. This is done by introducing a new mdev transport for virtio
+(virtio_mdev) and register itself as a new kind of mdev driver. Then
+it provides a unified way for kernel virtio driver to talk with mdev
+device implementation.
 
--Scott
+Though the series only contains kernel driver support, the goal is to
+make the transport generic enough to support userspace drivers. This
+means vhost-mdev[1] could be built on top as well by resuing the
+transport.
 
+A sample driver is also implemented which simulate a virito-net
+loopback ethernet device on top of vringh + workqueue. This could be
+used as a reference implementation for real hardware driver.
+
+Consider mdev framework only support VFIO device and driver right now,
+this series also extend it to support other types. This is done
+through introducing class id to the device and pairing it with
+id_talbe claimed by the driver. On top, this seris also decouple
+device specific parents ops out of the common ones.
+
+Pktgen test was done with virito-net + mvnet loop back device.
+
+Please review.
+
+[1] https://lkml.org/lkml/2019/9/16/869
+
+Changes from V1:
+
+- move virtio_mdev.c to drivers/virtio
+- store class_id in mdev_device instead of mdev_parent
+- store device_ops in mdev_device instead of mdev_parent
+- reorder the patch, vringh fix comes first
+- really silent compiling warnings
+- really switch to use u16 for class_id
+- uevent and modpost support for mdev class_id
+- vraious tweaks per comments from Parav
+
+Changes from RFC-V2:
+
+- silent compile warnings on some specific configuration
+- use u16 instead u8 for class id
+- reseve MDEV_ID_VHOST for future vhost-mdev work
+- introduce "virtio" type for mvnet and make "vhost" type for future
+  work
+- add entries in MAINTAINER
+- tweak and typos fixes in commit log
+
+Changes from RFC-V1:
+
+- rename device id to class id
+- add docs for class id and device specific ops (device_ops)
+- split device_ops into seperate headers
+- drop the mdev_set_dma_ops()
+- use device_ops to implement the transport API, then it's not a part
+  of UAPI any more
+- use GFP_ATOMIC in mvnet sample device and other tweaks
+- set_vring_base/get_vring_base support for mvnet device
+
+Jason Wang (8):
+  vringh: fix copy direction of vringh_iov_push_kern()
+  mdev: class id support
+  mdev: bus uevent support
+  modpost: add support for mdev class id
+  mdev: introduce device specific ops
+  mdev: introduce virtio device and its device ops
+  virtio: introduce a mdev based transport
+  docs: sample driver to demonstrate how to implement virtio-mdev
+    framework
+
+ .../driver-api/vfio-mediated-device.rst       |   7 +-
+ MAINTAINERS                                   |   2 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  18 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |  18 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
+ drivers/vfio/mdev/mdev_core.c                 |  19 +
+ drivers/vfio/mdev/mdev_driver.c               |  22 +
+ drivers/vfio/mdev/mdev_private.h              |   2 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
+ drivers/vhost/vringh.c                        |   8 +-
+ drivers/virtio/Kconfig                        |   7 +
+ drivers/virtio/Makefile                       |   1 +
+ drivers/virtio/virtio_mdev.c                  | 417 +++++++++++
+ include/linux/mdev.h                          |  52 +-
+ include/linux/mod_devicetable.h               |   8 +
+ include/linux/vfio_mdev.h                     |  52 ++
+ include/linux/virtio_mdev.h                   | 145 ++++
+ samples/Kconfig                               |   7 +
+ samples/vfio-mdev/Makefile                    |   1 +
+ samples/vfio-mdev/mbochs.c                    |  20 +-
+ samples/vfio-mdev/mdpy.c                      |  20 +-
+ samples/vfio-mdev/mtty.c                      |  18 +-
+ samples/vfio-mdev/mvnet.c                     | 692 ++++++++++++++++++
+ scripts/mod/devicetable-offsets.c             |   3 +
+ scripts/mod/file2alias.c                      |  10 +
+ 25 files changed, 1524 insertions(+), 84 deletions(-)
+ create mode 100644 drivers/virtio/virtio_mdev.c
+ create mode 100644 include/linux/vfio_mdev.h
+ create mode 100644 include/linux/virtio_mdev.h
+ create mode 100644 samples/vfio-mdev/mvnet.c
+
+-- 
+2.19.1
 
