@@ -2,135 +2,160 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD1C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13233C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF0920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D928B20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPSkrDuu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="a3SrpT7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390101AbfIXPeP (ORCPT
+        id S2390328AbfIXPeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:34:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38327 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390040AbfIXPeN (ORCPT
+        Tue, 24 Sep 2019 11:34:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41673 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390145AbfIXPeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:34:13 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so5492900iom.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:34:12 -0700 (PDT)
+        Tue, 24 Sep 2019 11:34:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h7so2459025wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=p4IW7lVwom9cm/5ki431GVwm+aXbWnyT6RgawcJ7NnM=;
-        b=VPSkrDuuF8B7LOfygF6XX12A1DAJBaPDC1Z7i9Mds8nvKyDAkGRiYs32RSB6C7UAYY
-         Jnk1bY0YKPBVv2nyiAXzzeojgFMEuCU4kWmE2VnjUyH/AEw1My987cPOQIE1eXOp3OcE
-         Y/kONFZzy1s3xHT6BNAVtO5xwgV8TQckhOpw3ZZZ7XJ5jpnLZ+RW0OrxZeCV3s0u9ZEw
-         IU/iUXcxacjBmlH4j+rRtexrhzRZaMYunPGanO1QWMSb8rEltZ3YgxFIjFyDHW3Guzj4
-         S/hy7+Pxpr5pYAnybV9Ym6CtfYQqhKAi7ZYf+84KD9AQNU2oCHo17fvE2l7XieGruAha
-         FGdg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ks76Xrr9nKNePqaLMRUF1ZkG2fudOj170M7fieae2vM=;
+        b=a3SrpT7YOFcb6RqQISZy0OBn0LLXJPlaadQLpRvpPfAUu9OF99EtqZ+iZDWCKSQKfm
+         /PY+tEdZw0J+mqtUsu8JTg9ppjXjwcjBySMg3nAb7aTIT34K3m+8Jl1VBj3eHuBXUQSO
+         uLUSHgPIZsBoU52AdQr9pOAs/DihLV4NGltOP/2jIei9uDmFRnWZm6kYKX8kc0h0cLR6
+         kBw+tYPK4W+ch/jJ+JJCcdK5aJ253psq4G4gU9PT4eeraMoiODcud/IylmvIW8/nS+IO
+         g3Ks9unobl885EMsBOy9VUtuEuBNXttCtqdE5aV5vexAXh+JtYnUaE5KtFiuYlG+MZ+4
+         q7Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p4IW7lVwom9cm/5ki431GVwm+aXbWnyT6RgawcJ7NnM=;
-        b=CDXNv8usn8LBQ5tSPCMQDIByA0zaeGPuyF4ZNdBWvwqn4n9yc/e7/nEChf8mFK7FxG
-         1uV1JwgfRA30P/t3F7chihByHhNhvQPBuJxgfdycWKduqi4AFd9Isy/lQavNKLNChWvS
-         f+hvmhjySB9dI1wUoYcHXvGFt2ggyBLK2Kw+pW7M2A95bJWjj3/zUcuLh29DrTU/u8Kb
-         RnPhbNm3L6x6fIdYEitAjvHb1m78diS82h+o6FsxHOuQHmBn+e/RrD+sSZao7xHDBcQ8
-         1ddvsusMwdZgf4NKVQuq+bGyyNhdcBPfZoRK+pacMMl2+7JmCII8lVbb6gv0IH03Xf/R
-         Q3zQ==
-X-Gm-Message-State: APjAAAWqxuMwyiYrlhWcIG6kWHJkHifL8CkevTPHAeNhdFPA3U00VZkw
-        phbNEMs4RTZtE+2Q+RyyRE1FGz4+s52VfW+bY/U=
-X-Google-Smtp-Source: APXvYqwpV4pqbOSw/YoZK3q6p6UwZL/wN0ZWhYwEUFSJSUW3FqByMH7MMtTQpWMy0gA+5+LK8lNHif4RRFEthdqHjL4=
-X-Received: by 2002:a6b:7b01:: with SMTP id l1mr1739481iop.292.1569339252384;
- Tue, 24 Sep 2019 08:34:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ks76Xrr9nKNePqaLMRUF1ZkG2fudOj170M7fieae2vM=;
+        b=BkfDl8qlhypBBi6lGVF8YIvTaxX4kwPjlRZEXQyZ1OfwowmmJlHwBe520fpB0eiSE/
+         Yr6u/4LNf8PpVdc0+yRZD1IwU5OOYhT4rnk2g0Zi+uHj+7ZZ+FPup9Jd3UH2lcW4bUu7
+         +CT5uLZHqGUmCCmtgj4NAwXkzPHwoFYM51IJgbS/VAubBYbTJV/0/ujVVKnNIAK7JQuG
+         laoa73cPzIem0HI8HNLvAigozz8vNGGJKlz3e4/mVTuPtDvsRUITZ4Q7Xj0KJTRGY0xx
+         HX77feX6OMfRyp5364cTfFu/4iQOleQBpGblIc4Yrkoj6NXplWE73RVkZj6nozS2CPp3
+         CUpQ==
+X-Gm-Message-State: APjAAAXsL0r/8Uxnw0ocEBiOCVBod60XI7jnsfqW61FACfeaGK8SJ/Tf
+        dhyTQbHVacBzxul4WzrVWuoiqA==
+X-Google-Smtp-Source: APXvYqwENWiw/6oEckacIFl28j6UnFFsq1VIO9Hk+y2r2bmjzF5Kz7jabrwCicvxYGqr/mVqilsnVw==
+X-Received: by 2002:adf:ed88:: with SMTP id c8mr3117861wro.329.1569339253138;
+        Tue, 24 Sep 2019 08:34:13 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id d10sm144240wma.42.2019.09.24.08.34.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 08:34:11 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 6/7] clk: meson: axg-audio: provide clk top signal name
+Date:   Tue, 24 Sep 2019 17:33:55 +0200
+Message-Id: <20190924153356.24103-7-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190924153356.24103-1-jbrunet@baylibre.com>
+References: <20190924153356.24103-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Received: by 2002:a92:a04a:0:0:0:0:0 with HTTP; Tue, 24 Sep 2019 08:34:11
- -0700 (PDT)
-In-Reply-To: <20190919071828.GC5016@dell>
-References: <1568801744-21380-1-git-send-email-gene.chen.richtek@gmail.com>
- <20190918105121.GB5016@dell> <CAE+NS37XG+kfbj6yJrL5A-d2O_aiRU90yV5TUk3Kfa0Rv7dWmw@mail.gmail.com>
- <20190919071828.GC5016@dell>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Tue, 24 Sep 2019 23:34:11 +0800
-Message-ID: <CAE+NS342Kn6OEz4D9Y0yfXStnW6KQ6N2yuQtgN2q2bXafofShg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: mt6360: add pmic mt6360 driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-09-19 15:18 GMT+08:00, Lee Jones <lee.jones@linaro.org>:
-> On Thu, 19 Sep 2019, Gene Chen wrote:
->
->> Lee Jones <lee.jones@linaro.org> =E6=96=BC 2019=E5=B9=B49=E6=9C=8818=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:51=E5=AF=AB=E9=81=93=EF=BC=9A
->> >
->> > On Wed, 18 Sep 2019, Gene Chen wrote:
->> >
->> > > From: Gene Chen <gene_chen@richtek.com>
->> > >
->> > > Add mfd driver for mt6360 pmic chip include
->> > > Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
->> > >
->> > > Signed-off-by: Gene Chen <gene_chen@richtek.com
->> > > ---
->> >
->> > This looks different from the one you sent before, but I don't see a
->> > version bump or any changelog in this space.  Please re-submit with
->> > the differences noted.
->> >
->>
->> the change is
->> 1. add missing include file
->> 2. modify commit message
->>
->> this patch is regarded as version 1
->
-> It's different to the first one you sent to the list, so it needs a
-> version bump and a change log.  There also appears to still be issues
-> with it, if the auto-builders are to be believed.
->
-> Do ensure you thoroughly test your patches before sending upstream.
->
-> Please fix the issues and resubmit your v3 with a nice changelog.
->
+The peripheral clock on the sm1 goes through some muxes
+and dividers before reaching the audio gates. To model that,
+without repeating our self too much, the "top" clock signal
+is introduced and will serve as a the parent of the gates.
 
-thank you for suggestion
-may i ask how to disable kbuild test reboot for s390/x86_64/ia64?
-we want support only cross compiler =3D  aarch64-linux-gnu-
-and we have test build pass with our patch
+On the axg and g12a, the top clock is just a pass-through to
+the audio peripheral clock provided by the main controller.
 
->> > >  drivers/mfd/Kconfig                |  12 +
->> > >  drivers/mfd/Makefile               |   1 +
->> > >  drivers/mfd/mt6360-core.c          | 463
->> > > +++++++++++++++++++++++++++++++++++++
->> > >  include/linux/mfd/mt6360-private.h | 279 ++++++++++++++++++++++
->> > >  include/linux/mfd/mt6360.h         |  33 +++
->> > >  5 files changed, 788 insertions(+)
->> > >  create mode 100644 drivers/mfd/mt6360-core.c
->> > >  create mode 100644 include/linux/mfd/mt6360-private.h
->> > >  create mode 100644 include/linux/mfd/mt6360.h
->> >
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
->
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/clk/meson/axg-audio.c | 19 ++++++++++++++++---
+ drivers/clk/meson/axg-audio.h |  3 ++-
+ 2 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+index ce8836776d1c..a8ccdbaecae2 100644
+--- a/drivers/clk/meson/axg-audio.c
++++ b/drivers/clk/meson/axg-audio.c
+@@ -74,9 +74,7 @@
+ 	.hw.init = &(struct clk_init_data) {				\
+ 		.name = "aud_"#_name,					\
+ 		.ops = &clk_regmap_gate_ops,				\
+-		.parent_data = &(const struct clk_parent_data) {	\
+-			.fw_name = "pclk",				\
+-		},							\
++		.parent_names = (const char *[]){ "aud_top" },		\
+ 		.num_parents = 1,					\
+ 	},								\
+ }
+@@ -504,6 +502,19 @@ static struct clk_regmap tdmout_c_lrclk =
+ 	AUD_TDM_LRLCK(out_c, AUDIO_CLK_TDMOUT_C_CTRL);
+ 
+ /* AXG/G12A Clocks */
++
++static struct clk_hw axg_aud_top = {
++	.init = &(struct clk_init_data) {
++		/* Provide aud_top signal name on axg and g12a */
++		.name = "aud_top",
++		.ops = &(const struct clk_ops) {},
++		.parent_data = &(const struct clk_parent_data) {
++			.fw_name = "pclk",
++		},
++		.num_parents = 1,
++	},
++};
++
+ static struct clk_regmap mst_a_mclk_sel =
+ 	AUD_MST_MCLK_MUX(mst_a_mclk, AUDIO_MCLK_A_CTRL);
+ static struct clk_regmap mst_b_mclk_sel =
+@@ -691,6 +702,7 @@ static struct clk_hw_onecell_data axg_audio_hw_onecell_data = {
+ 		[AUD_CLKID_TDMOUT_A_LRCLK]	= &tdmout_a_lrclk.hw,
+ 		[AUD_CLKID_TDMOUT_B_LRCLK]	= &tdmout_b_lrclk.hw,
+ 		[AUD_CLKID_TDMOUT_C_LRCLK]	= &tdmout_c_lrclk.hw,
++		[AUD_CLKID_TOP]			= &axg_aud_top,
+ 		[NR_CLKS] = NULL,
+ 	},
+ 	.num = NR_CLKS,
+@@ -835,6 +847,7 @@ static struct clk_hw_onecell_data g12a_audio_hw_onecell_data = {
+ 		[AUD_CLKID_TDM_SCLK_PAD0]	= &g12a_tdm_sclk_pad_0.hw,
+ 		[AUD_CLKID_TDM_SCLK_PAD1]	= &g12a_tdm_sclk_pad_1.hw,
+ 		[AUD_CLKID_TDM_SCLK_PAD2]	= &g12a_tdm_sclk_pad_2.hw,
++		[AUD_CLKID_TOP]			= &axg_aud_top,
+ 		[NR_CLKS] = NULL,
+ 	},
+ 	.num = NR_CLKS,
+diff --git a/drivers/clk/meson/axg-audio.h b/drivers/clk/meson/axg-audio.h
+index c00e28b2e1a9..a4956837f597 100644
+--- a/drivers/clk/meson/axg-audio.h
++++ b/drivers/clk/meson/axg-audio.h
+@@ -116,9 +116,10 @@
+ #define AUD_CLKID_SPDIFOUT_B_CLK_SEL	153
+ #define AUD_CLKID_SPDIFOUT_B_CLK_DIV	154
+ 
++
+ /* include the CLKIDs which are part of the DT bindings */
+ #include <dt-bindings/clock/axg-audio-clkc.h>
+ 
+-#define NR_CLKS	163
++#define NR_CLKS	164
+ 
+ #endif /*__AXG_AUDIO_CLKC_H */
+-- 
+2.21.0
+
