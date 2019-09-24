@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093F2C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6111C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CAB2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF5D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344579;
-	bh=HeXcDpJFh4udfglMoJEg+VigYcrTnVmTUQWzyvKp72A=;
+	s=default; t=1569344585;
+	bh=UFgLiUOs6x9PlG4jSctQ9LRTyjHREDnXiqnZJRJ+uuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJxcFfyG77qngQl1OTTvr0O3TXIF7eEgZZwY3wi2Pv4ic3qFI432ecQEGkHkGgC+c
-	 wf5Gxfx34rBczoEWPdfqgC97m5igBP5pK78Vs+nzso4RDU5xBkPES+swtgDd0cpWLD
-	 wKk8Mkt6M4uVQx1SOLm3UZMJ01W2eNYzknBmt47A=
+	b=pl8DaM+2geDQWRqHifgcHrJ+5UMG+g/ibe9EqKFI+nilSHL4IQNq5rAy/INyD3hzm
+	 3GEQ7Z+PbMOCkS0ggGLEb0kAfWFywCXN7lwwCZclGMK+bhtFiGNBTp3l9kzGU5mHZe
+	 ASpOUnHCoX5d4Htla7C+NToof64d8WC+RRKShyzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439382AbfIXRC6 (ORCPT
+        id S2505064AbfIXQmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409856AbfIXQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:46 -0400
+        id S2404380AbfIXQm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5824F21D6C;
-        Tue, 24 Sep 2019 16:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8DE6217D9;
+        Tue, 24 Sep 2019 16:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343366;
-        bh=HeXcDpJFh4udfglMoJEg+VigYcrTnVmTUQWzyvKp72A=;
+        s=default; t=1569343345;
+        bh=UFgLiUOs6x9PlG4jSctQ9LRTyjHREDnXiqnZJRJ+uuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sd7ygvgt3WUK97wY+7+0Sc3p1QquuHYOcJHDenm73gVJS2dMt1qaby8D8+W2cElHv
-         8gJOcfTXsjVQex49tYHiC10Hp0OilkSBU0dpCK+yFiq7OoftKuUJ27NuQBKv/CFeHY
-         H2LJBNa6cbTyE/3tjsqRRUGSCRXs4Xuy4HBFTEmQ=
+        b=HJN/2VYmYHECtsXrFb06hzevjrAkQVh+NV8cPJIztGTrkqWsa65m/9PxUqB0pO4pP
+         2qUjP5/dyE7SQCZlq/9tyuKxx1S4Lz+AHyp4wGxqS0bt0OgXBKTiLXFpMh++A1wGIi
+         TjDHktelThWnk4O2znVHqWLIND2cXJ4N72FKdNd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersen.wu@amd.com>, Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 21/87] drm/radeon: Fix EEH during kexec
-Date:   Tue, 24 Sep 2019 12:40:37 -0400
-Message-Id: <20190924164144.25591-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 12/87] drm/amd/display: Copy GSL groups when committing a new context
+Date:   Tue, 24 Sep 2019 12:40:28 -0400
+Message-Id: <20190924164144.25591-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,45 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6 ]
+[ Upstream commit 21ffcc94d5b3dc024fedac700f1e7f9dacf4ab4f ]
 
-During kexec some adapters hit an EEH since they are not properly
-shut down in the radeon_pci_shutdown() function. Adding
-radeon_suspend_kms() fixes this issue.
+[Why]
+DC configures the GSL group for the pipe when pipe_split is enabled
+and we're switching flip types (buffered <-> immediate flip) on DCN2.
 
-Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+In order to record what GSL group the pipe is using DC stores it in
+the pipe's stream_res. DM is not aware of this internal grouping, nor
+is DC resource.
+
+So when DM creates a dc_state context and passes it to DC the current
+GSL group is lost - DM never knew about it in the first place.
+
+After 3 immediate flips we run out of GSL groups and we're no longer
+able to correctly perform *any* flip for multi-pipe scenarios.
+
+[How]
+The gsl_group needs to be copied to the new context.
+
+DM has no insight into GSL grouping and could even potentially create
+a brand new context without referencing current hardware state. So this
+makes the most sense to have happen in DC.
+
+There are two places where DC can apply a new context:
+- dc_commit_state
+- dc_commit_updates_for_stream
+
+But what's shared between both of these is apply_ctx_for_surface.
+
+This logic only matters for DCN2, so it can be placed in
+dcn20_apply_ctx_for_surface. Before doing any locking (where the GSL
+group is setup) we can copy over the GSL groups before committing the
+new context.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersen.wu@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index a6cbe11f79c61..15d7bebe17294 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -349,11 +349,19 @@ radeon_pci_remove(struct pci_dev *pdev)
- static void
- radeon_pci_shutdown(struct pci_dev *pdev)
- {
-+	struct drm_device *ddev = pci_get_drvdata(pdev);
-+
- 	/* if we are running in a VM, make sure the device
- 	 * torn down properly on reboot/shutdown
- 	 */
- 	if (radeon_device_is_virtual())
- 		radeon_pci_remove(pdev);
-+
-+	/* Some adapters need to be suspended before a
-+	* shutdown occurs in order to prevent an error
-+	* during kexec.
-+	*/
-+	radeon_suspend_kms(ddev, true, true, false);
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+index 2627e0a98a96a..f8abe98a576be 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+@@ -1319,6 +1319,18 @@ static void dcn20_apply_ctx_for_surface(
+ 	if (!top_pipe_to_program)
+ 		return;
  
- static int radeon_pmops_suspend(struct device *dev)
++	/* Carry over GSL groups in case the context is changing. */
++	for (i = 0; i < dc->res_pool->pipe_count; i++) {
++		struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
++		struct pipe_ctx *old_pipe_ctx =
++			&dc->current_state->res_ctx.pipe_ctx[i];
++
++		if (pipe_ctx->stream == stream &&
++		    pipe_ctx->stream == old_pipe_ctx->stream)
++			pipe_ctx->stream_res.gsl_group =
++				old_pipe_ctx->stream_res.gsl_group;
++	}
++
+ 	tg = top_pipe_to_program->stream_res.tg;
+ 
+ 	interdependent_update = top_pipe_to_program->plane_state &&
 -- 
 2.20.1
 
