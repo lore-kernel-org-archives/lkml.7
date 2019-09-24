@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C96C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2602AC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9366521971
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C4321906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343652;
-	bh=qoBK0hkdFsiiVxNDcmUlZav7h8iEpyyiNs7p2aJpotQ=;
+	s=default; t=1569343662;
+	bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhrKWmkImzI49KeUo1JNHxkmYsWPRDOlUaeCOSRIpZ+x2xTyo3rjAwpiupTVpC44T
-	 B6n45oY6142X96O68csY/1QGalN22H2xT7azGh/JkEzBXAy/UNAf0EYWUu8AqFwr2X
-	 92MI9Ol+EetSbPCX3yEzD+pY4++WU/BWMBvOrQtI=
+	b=ARtkZDAJoLyD4a7GPIAXZZDsLxEfrs1QecKR+NVzYeKY+kkDO+j3VuZQp4GU0ShUH
+	 K6Izb2ISewbekCtiTInNPOLRbxjNLyh4ZTeL5oiJf4YLvM5HElJi2N7LAUHpGQfd+E
+	 bi7mgMMH6et3Qfecv64MHtsJFm6dRCxglRTo6vhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390184AbfIXQrb (ORCPT
+        id S1730069AbfIXQrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404432AbfIXQr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:27 -0400
+        id S2389135AbfIXQre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E1621971;
-        Tue, 24 Sep 2019 16:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A60E217D9;
+        Tue, 24 Sep 2019 16:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343646;
-        bh=qoBK0hkdFsiiVxNDcmUlZav7h8iEpyyiNs7p2aJpotQ=;
+        s=default; t=1569343653;
+        bh=GMQqub5xp0/4XAi4fDZg0COcqBv/GhT/CjZ1rK/+jCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IClMHtgQVAq5Ol1MRWNn5R2VV5OPmZDR3wseL2JhndkcxPjFQCyx9Q+gn7Dd1lvb0
-         QS48xHyVmTaPKPbIU3sM8XClK0HmAhEV2I+saAEKtgChs/bL4Rm42Vq068H5d0TAtE
-         NbTo4I1PSCcko7tH8ak0RkEMS9zXnOHPmQlUOGtw=
+        b=yHWXS9pVp/fINJFumqi+jY8lOpKH6fWKexY1DEFzYo99h0opjcaNWtMNNgplpt5RT
+         tzrVcw+x/EbGTF72W0aRa0FyjOgMOWqzKIEc6mV6045y6kkmlD2vOkFElwkIqAipxk
+         eR7T11LIyPtbt9VG3/NBZMJZfL8c2uCuYqJU0VFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 39/70] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Tue, 24 Sep 2019 12:45:18 -0400
-Message-Id: <20190924164549.27058-39-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 42/70] drm/nouveau/kms/tu102-: disable input lut when input is already FP16
+Date:   Tue, 24 Sep 2019 12:45:21 -0400
+Message-Id: <20190924164549.27058-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -62,42 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit 1e339ab2ac3c769c1b06b9fb7d532f8495ebc56d ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+On Turing, an input LUT is required to transform inputs in fixed-point
+formats to FP16 for the internal display pipe.  We provide an identity
+mapping whenever a window is enabled for this reason.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
+HW has error checks to ensure when the input is already FP16, that the
+input LUT is also disabled.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index abcfbad94f00e..849c3b34e887c 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -32,7 +32,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+index 283ff690350ea..50303ec194bbc 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -320,7 +320,9 @@ nv50_wndw_atomic_check_lut(struct nv50_wndw *wndw,
+ 		asyh->wndw.olut &= ~BIT(wndw->id);
+ 	}
  
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
- {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
- 
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+-	if (!ilut && wndw->func->ilut_identity) {
++	if (!ilut && wndw->func->ilut_identity &&
++	    asyw->state.fb->format->format != DRM_FORMAT_XBGR16161616F &&
++	    asyw->state.fb->format->format != DRM_FORMAT_ABGR16161616F) {
+ 		static struct drm_property_blob dummy = {};
+ 		ilut = &dummy;
+ 	}
 -- 
 2.20.1
 
