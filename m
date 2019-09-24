@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF2CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134BDC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CEE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CEE2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344338;
-	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
+	s=default; t=1569344341;
+	bh=C/gvul4pQ/MCqY9bjfcyrpOzvUH27jWmlmQUkP3PWqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFlAp2rgabp1JUanlhTH0nIcG4B48g5NLBpneUuk5AOuk9pAEB5En08HAL450YJn3
-	 9mtHn/KcGHq56YR36lez81ON2Gi4mIWKGvk9s0n1OsEWld639GJdex1s9sulgsYP+V
-	 k0yH4PmGt+uVUCC/OKM21PdjBoItgT1ahDP3rtUw=
+	b=UduNlXh2foja7o2bscSW0ZvBw2lxEh2wxWpOlsjYquhdTTNz5lm1SUt/ozEXgUJYI
+	 HEbLmf3RSc4565g/vU13Er5u9wSfIqN4VuBPF7KIJaVkiQ/MG8D2pNJHleAxiTsqzI
+	 44GdwEqWDqjpyH1rThuaI4Y3chWv+YPOX+UBBfsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407462AbfIXQ65 (ORCPT
+        id S2389916AbfIXQrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38942 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410405AbfIXQri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:38 -0400
+        id S2391148AbfIXQrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8DB220673;
-        Tue, 24 Sep 2019 16:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494B321D7B;
+        Tue, 24 Sep 2019 16:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343657;
-        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
+        s=default; t=1569343651;
+        bh=C/gvul4pQ/MCqY9bjfcyrpOzvUH27jWmlmQUkP3PWqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/BP3fwns5wEeGwubLKxMgVosRRw8RKtLurfFXTRafDMpG8aPv2K35slqEEwM6KQG
-         DN1hwgciWOgOugx3UR5FQTWTtk7FDdTSbNTCsn5uSjYC2WmD26dQLVNWoiFgPj6Bvu
-         Ln775SvcZVWRd1HqGKhPmtsHZkWHwbNwtKLxSWvk=
+        b=F2KAZcICG41340S0GE/X6YprHe7G0HqxwhC+x+hXksuLibN2puEyTj69H7w1A2PUB
+         MJjFLyHAaJcyuY7SQO/ASP8JvlK6k9WS+gs4G6gkUAouiR/nJBclnzTuvkyDeFOZwx
+         QEyFGZGNx11GjNWGeVPGxSBpZ6ilKoF53/RluQ34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Menzynski <mmenzyns@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 43/70] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
-Date:   Tue, 24 Sep 2019 12:45:22 -0400
-Message-Id: <20190924164549.27058-43-sashal@kernel.org>
+Cc:     hexin <hexin.op@gmail.com>, hexin <hexin15@baidu.com>,
+        Liu Qi <liuqi16@baidu.com>, Zhang Yu <zhangyu31@baidu.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 41/70] vfio_pci: Restore original state on release
+Date:   Tue, 24 Sep 2019 12:45:20 -0400
+Message-Id: <20190924164549.27058-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -62,36 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Menzynski <mmenzyns@redhat.com>
+From: hexin <hexin.op@gmail.com>
 
-[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
+[ Upstream commit 92c8026854c25093946e0d7fe536fd9eac440f06 ]
 
-Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
+vfio_pci_enable() saves the device's initial configuration information
+with the intent that it is restored in vfio_pci_disable().  However,
+the commit referenced in Fixes: below replaced the call to
+__pci_reset_function_locked(), which is not wrapped in a state save
+and restore, with pci_try_reset_function(), which overwrites the
+restored device state with the current state before applying it to the
+device.  Reinstate use of __pci_reset_function_locked() to return to
+the desired behavior.
 
-When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
-
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
-Reviewed-by: Karol Herbst <kherbst@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-index 7143ea4611aa3..33a9fb5ac5585 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
-@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
- 		info->min     = min(info->base,
- 				    info->base + info->step * info->vidmask);
- 		info->max     = nvbios_rd32(bios, volt + 0x0e);
-+		if (!info->max)
-+			info->max = max(info->base, info->base + info->step * info->vidmask);
- 		break;
- 	case 0x50:
- 		info->min     = nvbios_rd32(bios, volt + 0x0a);
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 703948c9fbe10..02206162eaa9e 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+ 
+ 	/*
+-	 * Try to reset the device.  The success of this is dependent on
+-	 * being able to lock the device, which is not always possible.
++	 * Try to get the locks ourselves to prevent a deadlock. The
++	 * success of this is dependent on being able to lock the device,
++	 * which is not always possible.
++	 * We can not use the "try" reset interface here, which will
++	 * overwrite the previously restored configuration information.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
+ 
+ 	pci_restore_state(pdev);
+ out:
 -- 
 2.20.1
 
