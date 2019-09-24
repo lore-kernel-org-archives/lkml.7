@@ -5,60 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C37C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1297C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B1A21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947F421BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ya6PGwhL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XJhw9Qwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409801AbfIXQmb (ORCPT
+        id S2438720AbfIXQmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:42:31 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46972 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403972AbfIXQmU (ORCPT
+        Tue, 24 Sep 2019 12:42:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58766 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404333AbfIXQmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgHVf064244;
-        Tue, 24 Sep 2019 11:42:17 -0500
+        Tue, 24 Sep 2019 12:42:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgM8A054436;
+        Tue, 24 Sep 2019 11:42:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569343337;
-        bh=CrlXIhfT8xsTDmUmEr9Vo9usJitecelkTp/ShJS5Jrc=;
+        s=ti-com-17Q1; t=1569343342;
+        bh=r6LwEruPm5l4y2o3OnL1GB+d2mHbAkCg6/wyb8egeu8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ya6PGwhL0OIY9ijNTBjXKklkJzo8ly5GYJyuSbdi20o+btsEUWWeYgaMwuuxdHONL
-         W9f8mErcpbOY8nykgzs5D3em1+5fBK5GU98ds+nDEal76ltOJNBwzaJ72Kel5Kzm73
-         qJ248985Pb0KXZfxsNNckHyIKwxZmbpdbA0TQVo0=
+        b=XJhw9QwxXyzAJmAXZ0T8NQUnUPPsfE4c1vQ9cGcs3mFunqlt2Y4X132mDna1nid2u
+         oYf6QcUrbU8l/7gvc0oowHCR6PwcrXa15NwvRkjuhm1ymjfnJHLUfbCjQ8txR1sLHf
+         QWwki4neMoZqImRFLly2IlFYiTCOCKdTMm37U2io=
 Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8OGgH50048832
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8OGgMIm079156
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Sep 2019 11:42:17 -0500
+        Tue, 24 Sep 2019 11:42:22 -0500
 Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
- Sep 2019 11:42:10 -0500
+ Sep 2019 11:42:15 -0500
 Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
  (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 24 Sep 2019 11:42:10 -0500
+ Frontend Transport; Tue, 24 Sep 2019 11:42:15 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCQU073229;
-        Tue, 24 Sep 2019 11:42:16 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCQX073229;
+        Tue, 24 Sep 2019 11:42:21 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Subject: [Patch v3 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
-Date:   Tue, 24 Sep 2019 11:44:08 -0500
-Message-ID: <20190924164414.21897-3-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v3 5/8] media: dt-bindings: ov2659: add powerdown/reset-gpios optional property
+Date:   Tue, 24 Sep 2019 11:44:11 -0500
+Message-ID: <20190924164414.21897-6-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
 References: <20190924164414.21897-1-bparrot@ti.com>
@@ -70,35 +69,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that if the expected sensor device id register
-is not recognized properly the failure is propagated
-up so devices are not left partially initialized.
+Add powerdown-gpios and reset-gpios to the list of optional properties
+for the OV2659 camera sensor.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 17573257097d..efbe6dc720e2 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
- 		unsigned short id;
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+index cabc7d827dfb..92989a619f29 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+@@ -12,6 +12,12 @@ Required Properties:
+ - clock-names: should be "xvclk".
+ - link-frequencies: target pixel clock frequency.
  
- 		id = OV265X_ID(pid, ver);
--		if (id != OV2659_ID)
-+		if (id != OV2659_ID) {
- 			dev_err(&client->dev,
- 				"Sensor detection failed (%04X, %d)\n",
- 				id, ret);
--		else {
-+			ret = -ENODEV;
-+		} else {
- 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
- 			ret = ov2659_init(sd, 0);
- 		}
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
++  Active high with internal pull down resistor.
++- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
++  Active low with internal pull up resistor.
++
+ For further reading on port node refer to
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
+@@ -27,6 +33,9 @@ Example:
+ 			clocks = <&clk_ov2659 0>;
+ 			clock-names = "xvclk";
+ 
++			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
++
+ 			port {
+ 				ov2659_0: endpoint {
+ 					remote-endpoint = <&vpfe_ep>;
 -- 
 2.17.1
 
