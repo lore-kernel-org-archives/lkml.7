@@ -2,114 +2,106 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721FDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E29C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5118C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0EB2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cu5yI+Wu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441245AbfIXOCp (ORCPT
+        id S2395253AbfIXOEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:02:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51608 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2441223AbfIXOCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:02:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 42592ABF4;
-        Tue, 24 Sep 2019 14:02:43 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 16:02:41 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, paulmck@kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        prsood@codeaurora.org, avagin@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, dbueso@suse.de,
-        syzbot <syzbot+18379f2a19bc62c12565@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: INFO: rcu detected stall in sys_exit_group
-Message-ID: <20190924140241.be77u2jne3melzte@pathway.suse.cz>
-References: <000000000000674b3d0592d2015b@google.com>
- <CACT4Y+YX3yNz7Fc8wUKsVR-rzusqmTnzP6ysZx+=3CzhVHk36w@mail.gmail.com>
- <20190919170750.GO30224@paulmck-ThinkPad-P72>
- <CACT4Y+bHcy1ZOstVvSGezs+3Q=jccdWTeikm6mnZiXYCBi+Nyw@mail.gmail.com>
- <20190919201200.GP30224@paulmck-ThinkPad-P72>
- <CACT4Y+YdodVKL2h-Z4Svjyd6kug2ORmfiP4jripSC9PpYw4RiA@mail.gmail.com>
- <46269171-ff57-8afd-f36b-40e6519b6557@i-love.sakura.ne.jp>
+        Tue, 24 Sep 2019 10:04:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49144 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfIXOEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:04:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OCd9Fr0CJ9gkQjtYi+RvQr2AUrWhMG1/VlZsM2oF7Yc=; b=cu5yI+WuhPe37UB2o0iJ7Qx5Q
+        5odWybKsCWzA9tcyVGj3aBSDl69PhcCVf25E9LobhN3SkxSMbEyEIZrPoy3j/F/Sf5G1DdQIXUVnA
+        +G2dS+VpOCXkuT9vjYjPH2f6653yBReJGhANNnaO782eRAJSF6A5zBSfzdJmM6p9hTy+ycraszids
+        M/614TxQzRc8ILxTr59o29o/O5HQAIVao5jwyE/mwNKSxgMbAKv+4+nxUsw+SgCN2ML9FjCz8bh90
+        EjlfLHPW/eg4iOibq3MPQrEpDHXcoaQEUiorXfaB8LkOFmTxG6FHFsGwjzAUzLlbevs89HQzV/qQW
+        bFTvVXZgg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iClPj-0001cm-LP; Tue, 24 Sep 2019 14:03:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCF4A305E35;
+        Tue, 24 Sep 2019 16:02:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6803620D83757; Tue, 24 Sep 2019 16:03:32 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 16:03:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Quentin Perret <qperret@qperret.net>,
+        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@suse.de, lenb@kernel.org, rjw@rjwysocki.net,
+        x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com
+Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
+Message-ID: <20190924140332.GL2369@hirez.programming.kicks-ass.net>
+References: <20190909024216.5942-1-ggherdovich@suse.cz>
+ <20190909024216.5942-2-ggherdovich@suse.cz>
+ <20190914105708.GA12877@qperret.net>
+ <1568730466.3329.4.camel@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46269171-ff57-8afd-f36b-40e6519b6557@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <1568730466.3329.4.camel@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-09-20 19:22:10, Tetsuo Handa wrote:
-> Calling printk() people.
+On Tue, Sep 17, 2019 at 04:27:46PM +0200, Giovanni Gherdovich wrote:
+> Hello Quentin,
 > 
-> On 2019/09/20 16:50, Dmitry Vyukov wrote:
-> >>>                                   How it runs on top of an interrupt?
-> >>
-> >> It is not running on top of an interrupt.  Its stack was dumped
-> >> separately.
+> On Sat, 2019-09-14 at 12:57 +0200, Quentin Perret wrote:
+> > Hi Giovanni
 > > 
-> > I see. Usually the first stack is the traceback of the current stack.
-> > So I was confused.
+> > On Monday 09 Sep 2019 at 04:42:15 (+0200), Giovanni Gherdovich wrote:
+> > > +static inline long arch_scale_freq_capacity(int cpu)
+> > > +{
+> > > +	if (static_cpu_has(X86_FEATURE_APERFMPERF))
+> > > +		return per_cpu(arch_cpu_freq, cpu);
 > > 
-> >>> And why one cpu tracebacks another one?
-> >>
-> >> The usual reason is because neither CPU's quiescent state was reported
-> >> to the RCU core, so the stall-warning code dumped both stacks.
+> > So, if this is conditional, perhaps you could also add this check in an
+> > x86-specific implementation of arch_scale_freq_invariant() ? That would
+> > guide sugov in the right path (see get_next_freq()) if APERF/MPERF are
+> > unavailable.
 > > 
-> > But should the other CPU traceback _itself_? Rather than being traced
-> > back by another CPU?
-> > E.g. see this report:
-> > https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L61-L83
-> > Here the overall problem was detected by C2, but then C1 traces back itself.
-> > 
-> > ... however even in that case C0 and C3 are traced by C2:
-> > https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L84-L149
-> > I can't understand this...
-> > This makes understanding what happened harder because it's not easy to
-> > exclude things on other CPUs.
+> > > +	return 1024 /* SCHED_CAPACITY_SCALE */;
+> > > +}
+> >
 > 
-> I think this should be
-> https://github.com/google/syzkaller/blob/master/pkg/report/testdata/linux/report/350#L84-L172
-> than #L84-L149 .
+> Good remark. If the cpu doesn't have APERF/MPERF, the choice here is that
+> freq_curr is constantly equal to freq_max, and the scaling factor is 1 all the
+> time.
 > 
-> Is the reason these lines have "[    C2]" is that these lines were flushed (printk_caller_id()
-> was called) from log_output() from vprintk_store() from vprintk_emit() from vprintk_deferred()
->  from printk_deferred() from printk_safe_flush_line() from __printk_safe_flush() from
-> printk_safe_flush() from printk_safe_flush_on_panic() from panic() ?
+> But I'm checking this static_cpu_has() every time I do a frequency update;
+> arguably schedutil should be smarter and settle such a case once and for all
+> at boot time.
+> 
+> I'll check what's the cost of static_cpu_has() and if it's non-negligible I'll
+> do what you suggest (x86-specific version of arch_scale_freq_invariant().
 
-It seems to be the case. CPU2 is clearly flushing per-CPU buffers
-from NMI context, for example:
-
-[ 1098.703114][    C2] NMI backtrace for cpu 0
-[...]
-[ 1098.703295][    C2] NMI backtrace for cpu 3
-
-A solution would be to store all these metadata (timestamp, caller
-info) already into the per-CPU buffers. I think that it would be
-doable.
-
-But much better solution is a lockless ring buffer. John Ogness is
-working hard on it. The plan is to have it ready for 5.5 or 5.6.
-I would prefer to concentrate on this solution for the moment.
-
-Best Regards,
-Petr
+static_cpu_has() is an alternative and ends up being a static branch
+(similar to static_key) once the alternative patching runs.
