@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DACC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E7C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C01020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3705217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343310;
-	bh=JJiAr0U+y5fK3GJTz/G2EY+1qfyIBZP/h1D8Vy3Euz4=;
+	s=default; t=1569343312;
+	bh=rVZbbjAhkHux7zJ+PirVH6htCfn1dxxVKBY20QsjSAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4kTGPl45ppYB4KGLoV3css48rxfhRlXWVEDgLTa4tyFqLVEmnrfDtkjhSCHmvyl3
-	 l7oXTv+w3GTy58BQogR1Vewqo22MG+a+CMXJNYSmNvcHIWfeclxQNM3yog6OlqEKPa
-	 S6mqGTULrE+mnXjzZFVntyg5hK26nMIPKhh8+ya0=
+	b=S8pzfNjyBSnmb0Fx2nYzzp9emaDmYNmfO52LFFxvnKzwD4mAbGyVDccK+HyYJBjuQ
+	 vu8h4lTP717BhQNX2ClOpTE5/v/Xy04UvOuGPXIf20K0tgJOSsPZuCRKTnCM3Q4v4b
+	 FSF+JSCv/zRVoo/z4lpJXGHbnBhes8qZUfJQRgWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391262AbfIXQlt (ORCPT
+        id S2391330AbfIXQlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57724 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387883AbfIXQls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:41:48 -0400
+        id S2391096AbfIXQlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:41:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5885214AF;
-        Tue, 24 Sep 2019 16:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C16C421655;
+        Tue, 24 Sep 2019 16:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343307;
-        bh=JJiAr0U+y5fK3GJTz/G2EY+1qfyIBZP/h1D8Vy3Euz4=;
+        s=default; t=1569343309;
+        bh=rVZbbjAhkHux7zJ+PirVH6htCfn1dxxVKBY20QsjSAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ubed0fei0sVyT65EoNcGl98TW5U5ab6fteJYCRgkYx65ZfJ6Mq1hMMNdu2sn0bdhK
-         nFwsMzyY9oS1fPKLC6FC8zkZRAwPKovGOaKepi9Min1aApm7mkEymuw5lt3seCyVob
-         6wqpr+l2H021tquwaQrDNl35PzJJ8hAII5OMFahk=
+        b=ZK2RbNdNnot6dnLUUKbXymYLcK2ObCdoaAzkWj5Bo7oRh1qpTjmnLg8/zMfHVze54
+         rXkVs+c3NkQl27C8fagUr2MAHPUseTVaDVhYcif+O2QsgI+9rT7tmP9oEWXSDHFioQ
+         FQVhKyyeVVLvmoEZkHetbQKL0Gkdcp29+cNPLD8Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 02/87] drm/mcde: Fix uninitialized variable
-Date:   Tue, 24 Sep 2019 12:40:18 -0400
-Message-Id: <20190924164144.25591-2-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 03/87] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Tue, 24 Sep 2019 12:40:19 -0400
+Message-Id: <20190924164144.25591-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -60,46 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit ca5be902a87ddccc88144f2dea21b5f0814391ef ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-We need to handle the case when of_drm_find_bridge() returns
-NULL.
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618115245.13915-1-linus.walleij@linaro.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mcde/mcde_drv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
-index baf63fb6850a4..a810568c76df7 100644
---- a/drivers/gpu/drm/mcde/mcde_drv.c
-+++ b/drivers/gpu/drm/mcde/mcde_drv.c
-@@ -319,7 +319,7 @@ static int mcde_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct drm_device *drm;
- 	struct mcde *mcde;
--	struct component_match *match;
-+	struct component_match *match = NULL;
- 	struct resource *res;
- 	u32 pid;
- 	u32 val;
-@@ -485,6 +485,10 @@ static int mcde_probe(struct platform_device *pdev)
- 		}
- 		put_device(p);
- 	}
-+	if (!match) {
-+		dev_err(dev, "no matching components\n");
-+		return -ENODEV;
-+	}
- 	if (IS_ERR(match)) {
- 		dev_err(dev, "could not create component match\n");
- 		ret = PTR_ERR(match);
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index 13ade28a36a8a..b3a7d5f1250c8 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -313,7 +313,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
