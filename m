@@ -2,148 +2,135 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C535C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E09BC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B68214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569354430;
-	bh=N7UNJp2aLm/KoYwPhl0kJKwJrfEikSSiNIClM9H0hYo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=08tgkpnX1FtvZRadcJ71SigLX8O9QBKJHhUEXlPIJcq+7HV7mufljsNlx9FGXNwKN
-	 jjqeRx5TYd0c34dt5ZUBvkxFnzfgsQjM+GeFHC5VTqqikiGlW7Mwj9FiGxALMTSA5V
-	 iUXe0S+IMl4eA8PpMRr1b6p6pbSIbnBI2bvKG0Ms=
+	by mail.kernel.org (Postfix) with ESMTP id E3C2A2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/51q0uH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404416AbfIXTrJ (ORCPT
+        id S2441963AbfIXTsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:47:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36087 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfIXTrI (ORCPT
+        Tue, 24 Sep 2019 15:48:39 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40061 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfIXTsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:47:08 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 67so2612064oto.3;
-        Tue, 24 Sep 2019 12:47:08 -0700 (PDT)
+        Tue, 24 Sep 2019 15:48:39 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x5so3640573qtr.7;
+        Tue, 24 Sep 2019 12:48:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SPba5f00bA5Cimvn7A4kcbHStjN/1bS/+JpQIlkNV5E=;
+        b=i/51q0uHFXqzYFHL8RpIDws0mGFVQqDH212em5fsSMh7i8zQmln4RPc6v1mN0EI+i4
+         NoYtV+27LFjKhkSZ5a50HqeubPQ44YIW9kpr3N34QuViDvzuQ7Cml/Q6QPGvY26DkPTT
+         +TBNJ3+l3UY2cXL5UjTprril7ZZoUrGTUyy2us7NlJjfZTbeTHoG/LiLVhC4I4f0Dx5m
+         BxTivPTxvZ0cQJrcUvIE5sqJYEn+Hss/mt6L4proUHhaKUYyxZ4C39ldyn/+J151UirE
+         3wAyQrlzxDrQhlvJ/L4eEi/YB7CQhlljoeyY5uwJN3eA+qEOcb+aBTZlTOumTYk0C0qR
+         vbsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZHPQMpVO9op7Vu0vGkUhBj5SViO1WuLEbRF6XVcQOi4=;
-        b=XMCjfiHw9rCPPMVdqspV9asYROMEz+icTyxy8n4ElaKWz/n2RJFsGVewttWItYJF24
-         WtIbmNR+hGjziFoJspGcp+IocxW6MrH65ebwL3vxhgJnDvJ1jCILD0dzZjI96j5sFl9s
-         L3c469l9FK8e7JKm68lA0ZD9wGKIoizT4/PakDKQKRd60fPBSoC0LU/7a+1ZLoo3ISs2
-         hw85pijJnypNqR3hhiqlUP3sQ4yYhOCjV09X4ccHWIfoTNbC2Cx/YfwWjvQBORSVky/R
-         trBVwVk7hcPBdGqse6FM3QzGS36+mJdL4FguRbkaR/qJ7qcsJZmNqJVSt1QcEV1Ezp0G
-         8sAw==
-X-Gm-Message-State: APjAAAUQe8y2Nd9eZHioBdgmjsjliuG7rB+dS7roBdmIBixjENox+NGk
-        SvSFy9Mp6ychIXlwut3rHMHNQ+o=
-X-Google-Smtp-Source: APXvYqzq/V8n0w/j43BKO8sETLatIuXKrfBSN9UzNEGxdt2zAohbFjRF2fosDLt5LIb+wo7rpBbC2w==
-X-Received: by 2002:a9d:6405:: with SMTP id h5mr839756otl.115.1569354427442;
-        Tue, 24 Sep 2019 12:47:07 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e18sm868660oib.57.2019.09.24.12.47.06
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SPba5f00bA5Cimvn7A4kcbHStjN/1bS/+JpQIlkNV5E=;
+        b=URNY8SoXBkoPBqDOkjRSJivjQFNUm+bJBRCtefiua+LRu7lgkzlh1M7R52yaeO46XD
+         L7WcTUq65CqbiXiBvrpiRP6JiyTY1aJYQXwxsemtdKfSmCA4wNkh8jJPI1HVkNkdW/xi
+         EVRy8dJ+G4xHTx4Gd6weDgUyEU1xISZBbNjdkTtbX5EWBegf11flqlMnWCU8jNy3o8qk
+         2WH6KN0+Mmxdg1fJ9P3VYO4cnlbWvhxVW0eO37YNPhYnY551hOcdjZa0Ca7lPGUDLJSM
+         hN+tFCCpmcsp12LpaWcBsVP1lM+sT2fJ7mXqGeNFRQCwWWgCJyjhGKW6NyZ/ntKvDtcP
+         Cu+A==
+X-Gm-Message-State: APjAAAWA2p12WBR4gdjF23y7JU2BtHpT2gWYxyEU246fYboq2tQgQrOF
+        tqbJVSL3HeZe5CLWFvtXrAd4lA34
+X-Google-Smtp-Source: APXvYqxRg+k+BBrk0alJEtKwkHqj/ZlH7lqrlG5spyoE6IXKupitKQIEy8kNt97dhl8PhQmLr0rhvQ==
+X-Received: by 2002:a0c:cc14:: with SMTP id r20mr4083479qvk.61.1569354518038;
+        Tue, 24 Sep 2019 12:48:38 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.210.60])
+        by smtp.gmail.com with ESMTPSA id v85sm1391118qkb.25.2019.09.24.12.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 12:47:06 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] dt-bindings: riscv: Fix CPU schema errors
-Date:   Tue, 24 Sep 2019 14:47:05 -0500
-Message-Id: <20190924194705.32240-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 24 Sep 2019 12:48:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E134D41105; Tue, 24 Sep 2019 16:48:31 -0300 (-03)
+Date:   Tue, 24 Sep 2019 16:48:31 -0300
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        brueckner@linux.ibm.com, gor@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH 3/3] perf/java: Add detection of java-11-openjdk-devel
+ package
+Message-ID: <20190924194831.GC20773@kernel.org>
+References: <20190909114116.50469-1-tmricht@linux.ibm.com>
+ <20190909114116.50469-4-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909114116.50469-4-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the errors in the RiscV CPU DT schema:
+Em Mon, Sep 09, 2019 at 01:41:16PM +0200, Thomas Richter escreveu:
+> With Java 11 there is no seperate JRE anymore.
+> Details: https://coderanch.com/t/701603/java/JRE-JDK
+> Therefore the detection of the JRE needs to be adapted.
+> 
+> This change works for s390 and x86.
+> I have not tested other platforms.
 
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+    Committer testing:
 
-Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/riscv/cpus.yaml       | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+    Continues to work with the OpenJDK 8:
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index c899111aa5e3..e7321688f7b9 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -12,15 +12,17 @@ maintainers:
+      $ rm -f ~acme/lib64/libperf-jvmti.so
+      $ rpm -qa | grep jdk-devel
+      java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
+      $ git log --oneline -1
+      a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
+      $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
+      $ ls -la ~acme/lib64/libperf-jvmti.so
+      -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
+      $
+
+
+Thanks, applied.
+
+- Arnaldo
  
- properties:
-   compatible:
--    items:
--      - enum:
--          - sifive,rocket0
--          - sifive,e5
--          - sifive,e51
--          - sifive,u54-mc
--          - sifive,u54
--          - sifive,u5
--      - const: riscv
-+    oneOf:
-+      - items:
-+          - enum:
-+              - sifive,rocket0
-+              - sifive,e5
-+              - sifive,e51
-+              - sifive,u54-mc
-+              - sifive,u54
-+              - sifive,u5
-+          - const: riscv
-+      - const: riscv    # Simulator only
-     description:
-       Identifies that the hart uses the RISC-V instruction set
-       and identifies the type of the hart.
-@@ -51,8 +53,6 @@ properties:
-       https://riscv.org/specifications/
- 
-   timebase-frequency:
--    type: integer
--    minimum: 1
-     description:
-       Specifies the clock frequency of the system timer in Hz.
-       This value is common to all harts on a single system image.
-@@ -86,9 +86,9 @@ examples:
-     cpus {
-         #address-cells = <1>;
-         #size-cells = <0>;
--        timebase-frequency = <1000000>;
-         cpu@0 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 device_type = "cpu";
-                 i-cache-block-size = <64>;
-@@ -104,6 +104,7 @@ examples:
-         };
-         cpu@1 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 d-cache-block-size = <64>;
-                 d-cache-sets = <64>;
+> Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 89ac5a1f1550..3da374911852 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -908,7 +908,7 @@ ifndef NO_JVMTI
+>      JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+>    else
+>      ifneq (,$(wildcard /usr/sbin/alternatives))
+> -      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
+> +      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+>      endif
+>    endif
+>    ifndef JDIR
+> -- 
+> 2.21.0
+
 -- 
-2.20.1
 
+- Arnaldo
