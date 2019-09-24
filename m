@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F19AC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB4EC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC4C222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D90222C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343817;
-	bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
+	s=default; t=1569343823;
+	bh=8XSBu4iP+B1nv+uWJfFddyRTbUf4PPKNBgNrWHITyPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dl0CgGO/gp90dTEULv09RqLzj+lULfZ4NVTGWdWTd0IRHuD8B1I9Si5Pnr8m0f9SB
-	 BBb15K6qgJbgpH2f3ycWHR1gHsRXgxuMST94QjA9HgZk/2TjSylYcctUSiq183PC9D
-	 YC9gFiE8H+DxN8mAuJ2T3INQPCjBoPIdXXdFgg/c=
+	b=FawjeUpb5seU1bshGlTSG1FhvVJ7V6csaTYGlYeUC+rIGIzRpnPvo7k52oXtAnHZt
+	 7N54K2Cs50qWD7acFr80f+k7ALYFncpb5l7ViO7F+Ihmcoesq6+y8yUFMWY5cA2sqV
+	 5ilSNtBZwIWBOCP/MoDjyqDFXH9a8pWs8wNL8j/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410722AbfIXQuQ (ORCPT
+        id S2410745AbfIXQuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410693AbfIXQuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:08 -0400
+        id S2410698AbfIXQuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42C8222C7;
-        Tue, 24 Sep 2019 16:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F52D21906;
+        Tue, 24 Sep 2019 16:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343807;
-        bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
+        s=default; t=1569343810;
+        bh=8XSBu4iP+B1nv+uWJfFddyRTbUf4PPKNBgNrWHITyPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVjrHYnCoqMoCegSSgteAsC1BReSiidNCBxzT4D9t/P6vkzwWFH8kXPTj0VEUIcuC
-         XX19kqnJIQLCcEfRGDadEi55jRO1bHQk5/9e+r6KDc/0z5hY44F53k7frR840gdxRZ
-         pRxcHXMkT5x+OitkjIvHkrar/lZrzL+339c1Ktyw=
+        b=w9Bity/sUY/8yg0JCCPZ67jVMpGYbjAQxEfja0T2wzGAEgh1a8NhgjufMKMRXAip0
+         fXAMP6If6GPfjxIaUEtsb6m5ulocxPwEiz/+ncJu5E70Xs0EAwhERRUnBS9BkIfoMF
+         Ua/Q8aVZzlj2WYmgYJTaMBWkThAd5Qh0rKor+se8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jeff Layton <jlayton@kernel.org>, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 38/50] pstore: fs superblock limits
-Date:   Tue, 24 Sep 2019 12:48:35 -0400
-Message-Id: <20190924164847.27780-38-sashal@kernel.org>
+Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 39/50] powerpc/imc: Dont create debugfs files for cpu-less nodes
+Date:   Tue, 24 Sep 2019 12:48:36 -0400
+Message-Id: <20190924164847.27780-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -61,50 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepa Dinamani <deepa.kernel@gmail.com>
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-[ Upstream commit 83b8a3fbe3aa82ac3c253b698ae6a9be2dbdd5e0 ]
+[ Upstream commit 41ba17f20ea835c489e77bd54e2da73184e22060 ]
 
-Leaving granularity at 1ns because it is dependent on the specific
-attached backing pstore module. ramoops has microsecond resolution.
+Commit <684d984038aa> ('powerpc/powernv: Add debugfs interface for
+imc-mode and imc') added debugfs interface for the nest imc pmu
+devices to support changing of different ucode modes. Primarily adding
+this capability for debug. But when doing so, the code did not
+consider the case of cpu-less nodes. So when reading the _cmd_ or
+_mode_ file of a cpu-less node will create this crash.
 
-Fix the readback of ramoops fractional timestamp microseconds,
-which has incorrectly been reporting the value as nanoseconds.
+  Faulting instruction address: 0xc0000000000d0d58
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  ...
+  CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-20190627+ #19
+  NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:c0000000000d0d50
+  REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-rc6-next-20190627+)
+  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:28022822  XER: 00000000
+  CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:40000000 IRQMASK: 0
+  ...
+  NIP imc_mem_get+0x8/0x20
+  LR  simple_attr_read+0x118/0x170
+  Call Trace:
+    simple_attr_read+0x70/0x170 (unreliable)
+    debugfs_attr_read+0x6c/0xb0
+    __vfs_read+0x3c/0x70
+     vfs_read+0xbc/0x1a0
+    ksys_read+0x7c/0x140
+    system_call+0x5c/0x70
 
-Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore").
+Patch fixes the issue with a more robust check for vbase to NULL.
 
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Cc: anton@enomsg.org
-Cc: ccross@android.com
-Cc: keescook@chromium.org
-Cc: tony.luck@intel.com
+Before patch, ls output for the debugfs imc directory
+
+  # ls /sys/kernel/debug/powerpc/imc/
+  imc_cmd_0    imc_cmd_251  imc_cmd_253  imc_cmd_255  imc_mode_0    imc_mode_251  imc_mode_253  imc_mode_255
+  imc_cmd_250  imc_cmd_252  imc_cmd_254  imc_cmd_8    imc_mode_250  imc_mode_252  imc_mode_254  imc_mode_8
+
+After patch, ls output for the debugfs imc directory
+
+  # ls /sys/kernel/debug/powerpc/imc/
+  imc_cmd_0  imc_cmd_8  imc_mode_0  imc_mode_8
+
+Actual bug here is that, we have two loops with potentially different
+loop counts. That is, in imc_get_mem_addr_nest(), loop count is
+obtained from the dt entries. But in case of export_imc_mode_and_cmd(),
+loop was based on for_each_nid() count. Patch fixes the loop count in
+latter based on the struct mem_info. Ideally it would be better to
+have array size in struct imc_pmu.
+
+Fixes: 684d984038aa ('powerpc/powernv: Add debugfs interface for imc-mode and imc')
+Reported-by: Qian Cai <cai@lca.pw>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190827101635.6942-1-maddy@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/ram.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/powernv/opal-imc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 316c16463b20f..015d74ee31a03 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -162,6 +162,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
- 	if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu-%c\n%n",
- 		   (time64_t *)&time->tv_sec, &time->tv_nsec, &data_type,
- 		   &header_length) == 3) {
-+		time->tv_nsec *= 1000;
- 		if (data_type == 'C')
- 			*compressed = true;
- 		else
-@@ -169,6 +170,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
- 	} else if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu\n%n",
- 			  (time64_t *)&time->tv_sec, &time->tv_nsec,
- 			  &header_length) == 2) {
-+		time->tv_nsec *= 1000;
- 		*compressed = false;
- 	} else {
- 		time->tv_sec = 0;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 828f6656f8f74..649fb268f4461 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -57,9 +57,9 @@ static void export_imc_mode_and_cmd(struct device_node *node,
+ 				    struct imc_pmu *pmu_ptr)
+ {
+ 	static u64 loc, *imc_mode_addr, *imc_cmd_addr;
+-	int chip = 0, nid;
+ 	char mode[16], cmd[16];
+ 	u32 cb_offset;
++	struct imc_mem_info *ptr = pmu_ptr->mem_info;
+ 
+ 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
+ 
+@@ -73,20 +73,20 @@ static void export_imc_mode_and_cmd(struct device_node *node,
+ 	if (of_property_read_u32(node, "cb_offset", &cb_offset))
+ 		cb_offset = IMC_CNTL_BLK_OFFSET;
+ 
+-	for_each_node(nid) {
+-		loc = (u64)(pmu_ptr->mem_info[chip].vbase) + cb_offset;
++	while (ptr->vbase != NULL) {
++		loc = (u64)(ptr->vbase) + cb_offset;
+ 		imc_mode_addr = (u64 *)(loc + IMC_CNTL_BLK_MODE_OFFSET);
+-		sprintf(mode, "imc_mode_%d", nid);
++		sprintf(mode, "imc_mode_%d", (u32)(ptr->id));
+ 		if (!imc_debugfs_create_x64(mode, 0600, imc_debugfs_parent,
+ 					    imc_mode_addr))
+ 			goto err;
+ 
+ 		imc_cmd_addr = (u64 *)(loc + IMC_CNTL_BLK_CMD_OFFSET);
+-		sprintf(cmd, "imc_cmd_%d", nid);
++		sprintf(cmd, "imc_cmd_%d", (u32)(ptr->id));
+ 		if (!imc_debugfs_create_x64(cmd, 0600, imc_debugfs_parent,
+ 					    imc_cmd_addr))
+ 			goto err;
+-		chip++;
++		ptr++;
+ 	}
+ 	return;
+ 
 -- 
 2.20.1
 
