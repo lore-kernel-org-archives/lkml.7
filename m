@@ -2,291 +2,111 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A575C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1973C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAE92146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="J+rM1NRx"
+	by mail.kernel.org (Postfix) with ESMTP id 9E0CD214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569330987;
+	bh=dBf16uSBC3fnl+ZQos6hHoXefs1lQfAvZkI2t8GiKec=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rUOjHPyPkZwnDPv0+nLAYD+qD3+RF5M0QvXwKF9WwBwzO6MGE5Kj3hksVoofgtImL
+	 mCMWE7PeuY3/d/k6CpMhYFR2k8ul5ejzW7Td+KuWzyc86/4RAZZZDvXjiBW8NEsZIg
+	 QkYUjcOUbBgMTGeGcyx66cdJAj1apAF6Nk/ExYTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441107AbfIXNOz (ORCPT
+        id S2441118AbfIXNQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:14:55 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:39178 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441096AbfIXNOy (ORCPT
+        Tue, 24 Sep 2019 09:16:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40454 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441095AbfIXNQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:14:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id A025627E0CFA;
-        Tue, 24 Sep 2019 15:14:53 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id YU6-2rdQqUH4; Tue, 24 Sep 2019 15:14:53 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id F2D7F27E0D98;
-        Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F2D7F27E0D98
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1569330893;
-        bh=CHfhYsclsYqLuOF6BzFzIy+z4FP4HoLkxVz/AeE0Hh8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=J+rM1NRxzoBhlzAks7Nh+ovgBqFfQHEs+ky+bjjCpaXWGU7lNq7jIz/yx/3xiy4PI
-         mvv+CQd7q/SYPxXktwBOAUkyayhys6mmI6VdfHGuJT2WqiAD6UKtAJnY1FAkWG90GD
-         iC6/txNSLiLTEICrPC7pDm4rDmmh2K8R75RdVA1E=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Umz9pB2D1A72; Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
-Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DB3E327E0CFA;
-        Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
-From:   Marta Rybczynska <mrybczyn@kalray.eu>
-To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-ID: <786558932.78398145.1569330892814.JavaMail.zimbra@kalray.eu>
-Subject: [PATCH v3] nvme: allow 64-bit results in passthru commands
+        Tue, 24 Sep 2019 09:16:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id h144so4276279iof.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 06:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zmFb2EMPloIisV5Kbr6QTdeXVJWyxzGPjlF8jdYtZhY=;
+        b=R97y2O7h9JpTxo7iTteQf4D7XlmtHn3jhm1kp3BIoSz5set7pFabIamGi+la/YSSwA
+         FKGjyThEpL1gPa7KpFIFBs3epahZfzxtyBidNH8SkuXbdY3QtCuTYSJcrgmpZAAcjCA0
+         w+ios0UGkygezyBYMaYxt8h+ryzqSF2ubgvrQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zmFb2EMPloIisV5Kbr6QTdeXVJWyxzGPjlF8jdYtZhY=;
+        b=A5TiAUOdOG0KjXkQpRW1mpE7zd325xJProoan3jJxAoe+KjAcgvGNHxhBLC/IXp8my
+         Q6HptNVqxSkkJN0UJQbLEm8mAlR2V+hGVyCELtgJPCtLmz7TVfheim3iiDpA33EUYAEz
+         wjwzLsZ5zUqycGqBp4WNZjnNSOWqcJmlzj14aiSydVfqEpodiOCN59Qby1xD7YJwJoeX
+         iGUq/1ZEKXuNZI7wxUGmo8J0p6ntPRWI0LsMMVjsgfBZIMrBaicvzCRTC52F6u7/gHPQ
+         E1EVMcfmnr91LREI4fi85nn8e2cC+sdOeiDzKRy8n5wCt6x82dv1GGg8XUk/MARlarp1
+         wZBA==
+X-Gm-Message-State: APjAAAVscv8wdUV6IplM/BkGi0Jut7lBhF60KSr8sEmK3rSVzmCN/3AT
+        G0szeH6rJr0dOTBhS8sUD2LPDA==
+X-Google-Smtp-Source: APXvYqy0/c6Bw5NCycjajmI4b6HkHz357M5g1ZkwNKeK3jsgURWsZ+G/d89Bw77UGLHILQXiWxk1Ww==
+X-Received: by 2002:a6b:7d4c:: with SMTP id d12mr72693ioq.165.1569330985186;
+        Tue, 24 Sep 2019 06:16:25 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m67sm3374880iof.21.2019.09.24.06.16.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 06:16:24 -0700 (PDT)
+Subject: Re: [Linux-kernel-mentees] [PATCH] fs: direct-io: Fixed a
+ Documentation build warn
+To:     Matthew Wilcox <willy@infradead.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <20190924121920.GA4593@madhuparna-HP-Notebook>
+ <20190924122310.GF1855@bombadil.infradead.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <684ef896-5062-0997-99fe-8395e9f05d9b@linuxfoundation.org>
+Date:   Tue, 24 Sep 2019 07:16:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190924122310.GF1855@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
-Thread-Index: tWaLpLj02BVn+M3V8YsXMTlR7z2yLA==
-Thread-Topic: nvme: allow 64-bit results in passthru commands
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not possible to get 64-bit results from the passthru commands,
-what prevents from getting for the Capabilities (CAP) property value.
+On 9/24/19 6:23 AM, Matthew Wilcox wrote:
+> On Tue, Sep 24, 2019 at 05:49:25PM +0530, Madhuparna Bhowmik wrote:
+>> Adds the description about
+>> offset within the code.
+> 
+> Why?
+> 
+>> @@ -255,6 +254,7 @@ void dio_warn_stale_pagecache(struct file *filp)
+>>    */
+>>   static ssize_t dio_complete(struct dio *dio, ssize_t ret, unsigned int flags)
+>>   {
+>> +	/* offset: the byte offset in the file of the completed operation */
+>>   	loff_t offset = dio->iocb->ki_pos;
+>>   	ssize_t transferred = 0;
+>>   	int err;
+> 
+> This is not normal practice within the Linux kernel.  I suggest reading
+> section 8 of Documentation/process/coding-style.rst
+> 
 
-As a result, it is not possible to implement IOL's NVMe Conformance
-test 4.3 Case 1 for Fabrics targets [1] (page 123).
+You don't combine documentation and code patches. I don't think you need
+to add this comment in here.
 
-This issue has been already discussed [2], but without a solution.
-
-This patch solves the problem by adding new ioctls with a new
-passthru structure, including 64-bit results. The older ioctls stay
-unchanged.
-
-[1] https://www.iol.unh.edu/sites/default/files/testsuites/nvme/UNH-IOL_NVMe_Conformance_Test_Suite_v11.0.pdf
-[2] http://lists.infradead.org/pipermail/linux-nvme/2018-June/018791.html
-
-Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
----
- drivers/nvme/host/core.c        | 108 ++++++++++++++++++++++++++++++++++------
- include/uapi/linux/nvme_ioctl.h |  23 +++++++++
- 2 files changed, 115 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 1ede176..ac6a787 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -856,7 +856,7 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
- static int nvme_submit_user_cmd(struct request_queue *q,
- 		struct nvme_command *cmd, void __user *ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
--		u32 meta_seed, u32 *result, unsigned timeout)
-+		u32 meta_seed, u64 *result, unsigned timeout)
- {
- 	bool write = nvme_is_write(cmd);
- 	struct nvme_ns *ns = q->queuedata;
-@@ -897,7 +897,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 	else
- 		ret = nvme_req(req)->status;
- 	if (result)
--		*result = le32_to_cpu(nvme_req(req)->result.u32);
-+		*result = le64_to_cpu(nvme_req(req)->result.u64);
- 	if (meta && !ret && !write) {
- 		if (copy_to_user(meta_buffer, meta, meta_len))
- 			ret = -EFAULT;
-@@ -1344,6 +1344,54 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	struct nvme_command c;
- 	unsigned timeout = 0;
- 	u32 effects;
-+	u64 result;
-+	int status;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EACCES;
-+	if (copy_from_user(&cmd, ucmd, sizeof(cmd)))
-+		return -EFAULT;
-+	if (cmd.flags)
-+		return -EINVAL;
-+
-+	memset(&c, 0, sizeof(c));
-+	c.common.opcode = cmd.opcode;
-+	c.common.flags = cmd.flags;
-+	c.common.nsid = cpu_to_le32(cmd.nsid);
-+	c.common.cdw2[0] = cpu_to_le32(cmd.cdw2);
-+	c.common.cdw2[1] = cpu_to_le32(cmd.cdw3);
-+	c.common.cdw10 = cpu_to_le32(cmd.cdw10);
-+	c.common.cdw11 = cpu_to_le32(cmd.cdw11);
-+	c.common.cdw12 = cpu_to_le32(cmd.cdw12);
-+	c.common.cdw13 = cpu_to_le32(cmd.cdw13);
-+	c.common.cdw14 = cpu_to_le32(cmd.cdw14);
-+	c.common.cdw15 = cpu_to_le32(cmd.cdw15);
-+
-+	if (cmd.timeout_ms)
-+		timeout = msecs_to_jiffies(cmd.timeout_ms);
-+
-+	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
-+	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
-+			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
-+			(void __user *)(uintptr_t)cmd.metadata,
-+			cmd.metadata_len, 0, &result, timeout);
-+	nvme_passthru_end(ctrl, effects);
-+
-+	if (status >= 0) {
-+		if (put_user(result, &ucmd->result))
-+			return -EFAULT;
-+	}
-+
-+	return status;
-+}
-+
-+static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			struct nvme_passthru_cmd64 __user *ucmd)
-+{
-+	struct nvme_passthru_cmd64 cmd;
-+	struct nvme_command c;
-+	unsigned timeout = 0;
-+	u32 effects;
- 	int status;
- 
- 	if (!capable(CAP_SYS_ADMIN))
-@@ -1414,6 +1462,41 @@ static void nvme_put_ns_from_disk(struct nvme_ns_head *head, int idx)
- 		srcu_read_unlock(&head->srcu, idx);
- }
- 
-+static bool is_ctrl_ioctl(unsigned int cmd)
-+{
-+	if (cmd == NVME_IOCTL_ADMIN_CMD || cmd == NVME_IOCTL_ADMIN64_CMD)
-+		return true;
-+	if (is_sed_ioctl(cmd))
-+		return true;
-+	return false;
-+}
-+
-+static int nvme_handle_ctrl_ioctl(struct nvme_ns *ns, unsigned int cmd,
-+				  void __user *argp,
-+				  struct nvme_ns_head *head,
-+				  int srcu_idx)
-+{
-+	struct nvme_ctrl *ctrl = ns->ctrl;
-+	int ret;
-+
-+	nvme_get_ctrl(ns->ctrl);
-+	nvme_put_ns_from_disk(head, srcu_idx);
-+
-+	switch (cmd) {
-+	case NVME_IOCTL_ADMIN_CMD:
-+		ret = nvme_user_cmd(ctrl, NULL, argp);
-+		break;
-+	case NVME_IOCTL_ADMIN64_CMD:
-+		ret = nvme_user_cmd64(ctrl, NULL, argp);
-+		break;
-+	default:
-+		ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
-+		break;
-+	}
-+	nvme_put_ctrl(ctrl);
-+	return ret;
-+}
-+
- static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 		unsigned int cmd, unsigned long arg)
- {
-@@ -1431,20 +1514,8 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	 * seperately and drop the ns SRCU reference early.  This avoids a
- 	 * deadlock when deleting namespaces using the passthrough interface.
- 	 */
--	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
--		struct nvme_ctrl *ctrl = ns->ctrl;
--
--		nvme_get_ctrl(ns->ctrl);
--		nvme_put_ns_from_disk(head, srcu_idx);
--
--		if (cmd == NVME_IOCTL_ADMIN_CMD)
--			ret = nvme_user_cmd(ctrl, NULL, argp);
--		else
--			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
--
--		nvme_put_ctrl(ctrl);
--		return ret;
--	}
-+	if (is_ctrl_ioctl(cmd))
-+		return nvme_handle_ctrl_ioctl(ns, cmd, argp, head, srcu_idx);
- 
- 	switch (cmd) {
- 	case NVME_IOCTL_ID:
-@@ -1457,6 +1528,9 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	case NVME_IOCTL_SUBMIT_IO:
- 		ret = nvme_submit_io(ns, argp);
- 		break;
-+	case NVME_IOCTL_IO64_CMD:
-+		ret = nvme_user_cmd64(ns->ctrl, ns, argp);
-+		break;
- 	default:
- 		if (ns->ndev)
- 			ret = nvme_nvm_ioctl(ns, cmd, arg);
-@@ -2847,6 +2921,8 @@ static long nvme_dev_ioctl(struct file *file, unsigned int cmd,
- 	switch (cmd) {
- 	case NVME_IOCTL_ADMIN_CMD:
- 		return nvme_user_cmd(ctrl, NULL, argp);
-+	case NVME_IOCTL_ADMIN64_CMD:
-+		return nvme_user_cmd64(ctrl, NULL, argp);
- 	case NVME_IOCTL_IO_CMD:
- 		return nvme_dev_user_cmd(ctrl, argp);
- 	case NVME_IOCTL_RESET:
-diff --git a/include/uapi/linux/nvme_ioctl.h b/include/uapi/linux/nvme_ioctl.h
-index 1c215ea..e168dc5 100644
---- a/include/uapi/linux/nvme_ioctl.h
-+++ b/include/uapi/linux/nvme_ioctl.h
-@@ -45,6 +45,27 @@ struct nvme_passthru_cmd {
- 	__u32	result;
- };
- 
-+struct nvme_passthru_cmd64 {
-+	__u8	opcode;
-+	__u8	flags;
-+	__u16	rsvd1;
-+	__u32	nsid;
-+	__u32	cdw2;
-+	__u32	cdw3;
-+	__u64	metadata;
-+	__u64	addr;
-+	__u32	metadata_len;
-+	__u32	data_len;
-+	__u32	cdw10;
-+	__u32	cdw11;
-+	__u32	cdw12;
-+	__u32	cdw13;
-+	__u32	cdw14;
-+	__u32	cdw15;
-+	__u32	timeout_ms;
-+	__u64	result;
-+};
-+
- #define nvme_admin_cmd nvme_passthru_cmd
- 
- #define NVME_IOCTL_ID		_IO('N', 0x40)
-@@ -54,5 +75,7 @@ struct nvme_passthru_cmd {
- #define NVME_IOCTL_RESET	_IO('N', 0x44)
- #define NVME_IOCTL_SUBSYS_RESET	_IO('N', 0x45)
- #define NVME_IOCTL_RESCAN	_IO('N', 0x46)
-+#define NVME_IOCTL_ADMIN64_CMD	_IOWR('N', 0x47, struct nvme_passthru_cmd64)
-+#define NVME_IOCTL_IO64_CMD	_IOWR('N', 0x48, struct nvme_passthru_cmd64)
- 
- #endif /* _UAPI_LINUX_NVME_IOCTL_H */
--- 
-1.8.3.1
+thanks,
+-- Shuah
 
