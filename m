@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9694C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBF7C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9D721D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBF9222CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343853;
-	bh=PLozl86nLzZNnxSAsPpoLHxyeB4nJWP2wp3oZsOA194=;
+	s=default; t=1569343857;
+	bh=GJpHzJ+qn9OcaCR4TCj1pJRC+9xWdaPTJJuPR71IuUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfwHSY95nobwP/3jHWZlib1yL3C//mxlFwBwBuZSU5/iWeNYa4Z4JE6tnAPjAjyuc
-	 loOvwJTUZJDa3Yjo+Cd9XbVRSjGilmRx8KD4RxD9fgP8KWKmx+pgVRUrRg8foDkUtD
-	 VTjuTsH91FT1jQxJ/QDklXKWYujqtYAsL3Snz6L8=
+	b=jg/kxm8shzXli73Rp+HvhVgO/focBPYyKh0vokJU2kiZK24uBipAw3289qwXoxiHM
+	 mfn4LnpT7FU43WgvorJKViLKjMwAQ7HUxoPOzISzpOiEJsdJ12GaktVCbk9I0l9xEn
+	 /YWxe/SzrJl+Arcfww+DouVc6D7hniHlejIASqi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441516AbfIXQuw (ORCPT
+        id S2441533AbfIXQu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436577AbfIXQum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:42 -0400
+        id S2436877AbfIXQuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D9E4222C2;
-        Tue, 24 Sep 2019 16:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF712217D9;
+        Tue, 24 Sep 2019 16:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343841;
-        bh=PLozl86nLzZNnxSAsPpoLHxyeB4nJWP2wp3oZsOA194=;
+        s=default; t=1569343843;
+        bh=GJpHzJ+qn9OcaCR4TCj1pJRC+9xWdaPTJJuPR71IuUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjxs9XyXgQ2BtJv9qVQmSGMuPw8Or8ZWLM3i7X5AJniA03v1RGnDYhPQFx/kGDi5c
-         RHAjg+g+ousu7aEHuwdnDc4PSvTTDLwf5K0rP0IaJqcV08+nACM8OsBbmOlShqvoYg
-         PyVklltLskiol58+jN20Q7SRq6HijA8a//+A7UcU=
+        b=gOgvyFgZ+N1oDyUAPv5OMhTYPHY66F54BaDZllmWq8RgC1dDi+h2tC7XSdYS7Mufa
+         fageKeqDyU96GU5fDV9oviwr20P2bC1R5ibpqKAAyP/BYkacNHBAMBaRAk7ZRXK5a0
+         6+OmvHnzkrXkujvS8HgHbkgOtdI93aWDwryZxC6Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 05/28] drm/stm: attach gem fence to atomic state
-Date:   Tue, 24 Sep 2019 12:50:08 -0400
-Message-Id: <20190924165031.28292-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 07/28] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Tue, 24 Sep 2019 12:50:10 -0400
+Message-Id: <20190924165031.28292-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
 References: <20190924165031.28292-1-sashal@kernel.org>
@@ -62,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 8fabc9c3109a71b3577959a05408153ae69ccd8d ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-To properly synchronize with other devices the fence from the GEM
-object backing the framebuffer needs to be attached to the atomic
-state, so the commit work can wait on fence signaling.
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190712084228.8338-1-l.stach@pengutronix.de
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, connector->encoder is checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index d394a03632c45..c3bd80b03f165 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -20,6 +20,7 @@
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_of.h>
- #include <drm/drm_bridge.h>
- #include <drm/drm_plane_helper.h>
-@@ -691,6 +692,7 @@ static const struct drm_plane_funcs ltdc_plane_funcs = {
- };
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index 337d3a1c2a409..48f752cf7a920 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -764,7 +764,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
  
- static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs = {
-+	.prepare_fb = drm_gem_fb_prepare_fb,
- 	.atomic_check = ltdc_plane_atomic_check,
- 	.atomic_update = ltdc_plane_atomic_update,
- 	.atomic_disable = ltdc_plane_atomic_disable,
+ 		radeon_encoder->output_csc = val;
+ 
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
+ 
 -- 
 2.20.1
 
