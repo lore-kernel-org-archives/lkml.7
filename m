@@ -2,167 +2,119 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C12C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9BA20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E75E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409219AbfIXHM3 (ORCPT
+        id S2409241AbfIXHQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:12:29 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42250 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393564AbfIXHM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:12:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 00:12:28 -0700
-X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="182824701"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 00:12:25 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: Use make invocation's -j argument for parallelism
-In-Reply-To: <201909231537.0FC0474C@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <201909191438.C00E6DB@keescook> <20190922140331.3ffe8604@lwn.net> <201909231537.0FC0474C@keescook>
-Date:   Tue, 24 Sep 2019 10:12:22 +0300
-Message-ID: <87pnjqtbft.fsf@intel.com>
+        Tue, 24 Sep 2019 03:16:15 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:29845 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388571AbfIXHQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:16:14 -0400
+IronPort-SDR: okmg58/v18nnT3AIsSmrx1kznSBLduLXwP+SNbPK1qu4QzD1MC6DMOJ7xM9LSmvfEoZL8FO5+b
+ W+b003oj6B6kB7yPKayC+00OzPSevrxRRb8s2WI3FdD9UKq5iXhCZDqLDlRITk/MmNxmQEeZir
+ HK8x0niM2ttzcDXhIZyJJl0xjb7CIp7edUhpygdKQXjF2+B6xIl+FZZ4UFpcsgmeNj5GQPgoH0
+ TLvtEbSJp8Dw+F52iszECP9/IlQ1zqjyHHtFFm2AJL+mOB5PMgFSmxayo8p426KKnhUT8T8lwt
+ ZN4=
+X-IronPort-AV: E=Sophos;i="5.64,543,1559548800"; 
+   d="scan'208";a="43431625"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 23 Sep 2019 23:16:14 -0800
+IronPort-SDR: IQ76IXmnv4LstIrBtQLhKeN32w2DEU0TW6vhRRky0TpUKSQDre+hKvQ3oNmL3A+1nA2LG3PMgl
+ 0vMt/WoYi7UR9XXtcfPCbrtHOAvM0jICrrgyJQu06Kw7w3Yo5IULm/uXcFnGYBwHucD78EXil0
+ +cU9GS9Riw1XFQE912wQQ8MLlcDtfaRskAGICCTmB+pWUzRnMBIrOXN6om54rnp1IcrosML+j0
+ AlhN0X7lYFkofTKffT3J/jmQ60ANoOQtfi7HnNvzIYVNOPylzfvTNpmKu+HSdOE4xAMdGoFkZ0
+ J2o=
+Subject: Re: [PATCH v3 02/49] Input: introduce input_mt_report_slot_inactive
+To:     Henrik Rydberg <rydberg@bitmath.org>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190917093320.18134-1-jiada_wang@mentor.com>
+ <20190917093320.18134-3-jiada_wang@mentor.com>
+ <546c8205-ecb7-1c34-3727-b10c7ff86232@bitmath.org>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <a66d29fc-50fc-da82-5178-cf349d70a14b@mentor.com>
+Date:   Tue, 24 Sep 2019 16:16:03 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <546c8205-ecb7-1c34-3727-b10c7ff86232@bitmath.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019, Kees Cook <keescook@chromium.org> wrote:
-> On Sun, Sep 22, 2019 at 02:03:31PM -0600, Jonathan Corbet wrote:
->> On Thu, 19 Sep 2019 14:44:37 -0700
->> Kees Cook <keescook@chromium.org> wrote:
->> 
->> > While sphinx 1.7 and later supports "-jauto" for parallelism, this
->> > effectively ignores the "-j" flag used in the "make" invocation, which
->> > may cause confusion for build systems. Instead, extract the available
->> 
->> What sort of confusion might we expect?  Or, to channel akpm, "what are the
->> user-visible effects of this bug"?
->
-> When I run "make htmldocs -j16" with a pre-1.7 sphinx, it is not
-> parallelized. When I run "make htmldocs -j8" with 1.7+ sphinx, it uses
-> all my CPUs instead of 8. :)
-
-To be honest, part of the solution should be to require Sphinx 1.8 or
-later. Even Debian stable has it. If your distro doesn't have it
-(really?), using the latest Sphinx in a virtual environment should be a
-matter of:
-
-$ python3 -m venv .venv
-$ . .venv/bin/activate
-(.venv) $ pip install sphinx sphinx_rtd_theme
-(.venv) $ make htmldocs
-
-BR,
-Jani.
+Hi Henrik
 
 
->
->> > +	-j $(shell python3 $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
->> 
->> This (and the shebang line in the script itself) will cause the docs build
->> to fail on systems lacking Python 3.  While we have talked about requiring
->> Python 3 for the docs build, we have not actually taken that step yet.  We
->> probably shouldn't sneak it in here.  I don't see anything in the script
->> that should require a specific Python version, so I think it should be
->> tweaked to be version-independent and just invoke "python".
->
-> Ah, no problem. I can fix this. In a quick scan it looked like sphinx
-> was python3, but I see now that's just my install. :)
->
->> >  	-b $2 \
->> >  	-c $(abspath $(srctree)/$(src)) \
->> >  	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
->> > diff --git a/scripts/jobserver-count b/scripts/jobserver-count
->> > new file mode 100755
->> > index 000000000000..ff6ebe6b0194
->> > --- /dev/null
->> > +++ b/scripts/jobserver-count
->> > @@ -0,0 +1,53 @@
->> > +#!/usr/bin/env python3
->> > +# SPDX-License-Identifier: GPL-2.0-or-later
->> 
->> By license-rules.rst, this should be GPL-2.0+
->
-> Whoops, thanks.
->
->> > +# Extract and prepare jobserver file descriptors from envirnoment.
->> > +try:
->> > +	# Fetch the make environment options.
->> > +	flags = os.environ['MAKEFLAGS']
->> > +
->> > +	# Look for "--jobserver=R,W"
->> > +	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
->> > +
->> > +	# Parse out R,W file descriptor numbers and set them nonblocking.
->> > +	fds = opts[0].split("=", 1)[1]
->> > +	reader, writer = [nonblock(int(x)) for x in fds.split(",", 1)]
->> > +except:
->> 
->> So I have come to really dislike bare "except" clauses; I've seen them hide
->> too many bugs.  In this case, perhaps it's justified, but still ... it bugs
->> me ...
->
-> Fair enough. I will adjust this (and the later instance).
->
->> 
->> > +	# Any failures here should result in just using the default
->> > +	# specified parallelism.
->> > +	print(default)
->> > +	sys.exit(0)
->> > +
->> > +# Read out as many jobserver slots as possible.
->> > +jobs = b""
->> > +while True:
->> > +	try:
->> > +		slot = os.read(reader, 1)
->> > +		jobs += slot
->> > +	except:
->> 
->> This one, I think, should be explicit; anything other than EWOULDBLOCK
->> indicates a real problem, right?
->> 
->> > +		break
->> > +# Return all the reserved slots.
->> > +os.write(writer, jobs)
->> 
->> You made writer nonblocking, so it seems plausible that we could leak some
->> slots here, no?  Does writer really need to be nonblocking?
->
-> Good point. I will fix this too.
->
->> 
->> > +# If the jobserver was (impossibly) full or communication failed, use default.
->> > +if len(jobs) < 1:
->> > +	print(default)
->> > +
->> > +# Report available slots (with a bump for our caller's reserveration).
->> > +print(len(jobs) + 1)
->> 
->> The last question I have is...why is it that we have to do this complex
->> dance rather than just passing the "-j" option through directly to sphinx?
->> That comes down to the "confusion" mentioned at the top, I assume.  It
->> would be good to understand that?
->
-> There is no method I have found to discover the -j option's contents
-> (intentionally so, it seems) from within make. :(
+On 2019/09/18 3:25, Henrik Rydberg wrote:
+> Hi Jiada,
+> 
+>> input_mt_report_slot_state() ignores the tool when the slot is closed.
+>> which has caused a bit of confusion.
+>> This patch introduces input_mt_report_slot_inactive() to report slot
+>> inactive state.
+>> replaces all input_mt_report_slot_state() with
+>> input_mt_report_slot_inactive() in case of close of slot.
+> 
+> This patch looks very odd, I am afraid.
+> 
+> When a driver needs to use input_mt functions, it first calls 
+> input_mt_init_slots() during setup. The MT state then remains in effect 
+> until the driver is destroyed. Thus, there is no valid case when 
+> input_mt_report_slot_state() would fail to execute the line
+> 
+>     input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1)
+> 
+> when active == false.
+> 
+> What input_mt_report_slot_state() does do, however, is to ignore the 
+> event when no MT state has been set, which does happen for some drivers 
+> handling both normal and MT devices. Changing such a driver in the way 
+> you suggest would introduce new events in existing, working cases, and 
+> possibly break userspace. We should try very hard to avoid it.
+> 
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+thanks for your comment,
+
+Just to make sure, I think your comment is for
+patch "[PATCH v3 01/49] Input: switch to use return value of 
+input_mt_report_slot_state"
+not for "[PATCH v3 02/49] Input: introduce 
+input_mt_report_slot_inactive", right?
+
+yes, I agree
+by having change:
+
+-    input_mt_report_slot_state(dev, tool_type, active);
+-    if (active) {
++        if (input_mt_report_slot_state(dev, tool_type, active)){
+              ... ...
+      }
+
+the logic of the driver is changed, when (mt == NULL && active == true).
+I will drop patch "Input: switch to use return value of" in next version
+
+Thanks,
+Jiada
+
+> Thanks,
+> 
+> Henrik
+> 
+> 
