@@ -2,90 +2,177 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6520EC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18412C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301E521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569337911;
-	bh=N9Fc9xapxK42Ld92i1tE4TtP30dzJu+G8igRTDgiRtY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W5WhYXJ5e3fiac+jw4gitwuVv4s779FjWCqyyUXrjtND4WrRJkqws97s08/VWtPh4
-	 Hfp6guM0fZqqcfq+Apk9okBeJIoVMNdiVTcR8qvlnt+dDeEI5YNcYd5ow5xVT/k3SP
-	 tARSJ0hkHS037LqrJ4HK66c+d3GzBQOZ8VLBxaH0=
+	by mail.kernel.org (Postfix) with ESMTP id EE16721655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388241AbfIXPLu (ORCPT
+        id S2388742AbfIXPLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:11:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47534 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727741AbfIXPLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:11:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7DB58B048;
-        Tue, 24 Sep 2019 15:11:48 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 17:11:47 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Message-ID: <20190924151147.GB23050@dhcp22.suse.cz>
-References: <20190924143615.19628-1-david@redhat.com>
- <1569337401.5576.217.camel@lca.pw>
+        Tue, 24 Sep 2019 11:11:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10456 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388243AbfIXPLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:11:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 08:11:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
+   d="scan'208";a="213717849"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2019 08:11:47 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iCmTi-0004kt-8w; Tue, 24 Sep 2019 18:11:46 +0300
+Date:   Tue, 24 Sep 2019 18:11:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org, nv@vosn.de
+Subject: Re: [PATCH] ACPICA: Introduce acpi_load_table_with_index()
+Message-ID: <20190924151146.GW2680@smile.fi.intel.com>
+References: <6851700.HULMXZj6Ep@kreacher>
+ <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569337401.5576.217.camel@lca.pw>
+In-Reply-To: <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24-09-19 11:03:21, Qian Cai wrote:
-[...]
-> While at it, it might be a good time to rethink the whole locking over there, as
-> it right now read files under /sys/kernel/slab/ could trigger a possible
-> deadlock anyway.
+On Mon, Sep 23, 2019 at 11:47:01AM +0200, Nikolaus Voss wrote:
+> For unloading an ACPI table, it is necessary to provide the
+> index of the table. The method intended for dynamically
+> loading or hotplug addition of tables, acpi_load_table(),
+> does not provide this information, so a new function
+> acpi_load_table_with_index() with the same functionality,
+> but an optional pointer to the loaded table index is introduced.
 > 
-[...]
-> [  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
-> [  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
-> [  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
-> [  442.469930][ T5224]        lock_acquire+0x31c/0x360
-> [  442.474803][ T5224]        get_online_mems+0x54/0x150
-> [  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
-> [  442.485072][ T5224]        total_objects_show+0x28/0x34
-> [  442.490292][ T5224]        slab_attr_show+0x38/0x54
-> [  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
-> [  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
-> [  442.505433][ T5224]        seq_read+0x30c/0x8a8
-> [  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
-> [  442.515007][ T5224]        __vfs_read+0x88/0x20c
-> [  442.519620][ T5224]        vfs_read+0xd8/0x10c
-> [  442.524060][ T5224]        ksys_read+0xb0/0x120
-> [  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
-> [  442.533634][ T5224]        el0_svc_handler+0x170/0x240
-> [  442.538768][ T5224]        el0_svc+0x8/0xc
+> The new function is used in the acpi_configfs driver to save the
+> index of the newly loaded table in order to unload it later.
+> 
 
-I believe the lock is not really needed here. We do not deallocated
-pgdat of a hotremoved node nor destroy the slab state because an
-existing slabs would prevent hotremove to continue in the first place.
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-There are likely details to be checked of course but the lock just seems
-bogus.
+But consider addressing my comments in one of previous mails.
+
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Fixes: d06c47e3dd07f ("ACPI: configfs: Resolve objects on host-directed table loads")
+> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> ---
+>  drivers/acpi/acpi_configfs.c   |  2 +-
+>  drivers/acpi/acpica/tbxfload.c | 43 ++++++++++++++++++++++++++++++++++
+>  include/acpi/acpixf.h          |  6 +++++
+>  3 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+> index 57d9d574d4dd..9e77d5a266c0 100644
+> --- a/drivers/acpi/acpi_configfs.c
+> +++ b/drivers/acpi/acpi_configfs.c
+> @@ -53,7 +53,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+>  	if (!table->header)
+>  		return -ENOMEM;
+>  
+> -	ret = acpi_load_table(table->header);
+> +	ret = acpi_load_table_with_index(table->header, &table->index);
+>  	if (ret) {
+>  		kfree(table->header);
+>  		table->header = NULL;
+> diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
+> index 86f1693f6d29..7ea4fc879cb6 100644
+> --- a/drivers/acpi/acpica/tbxfload.c
+> +++ b/drivers/acpi/acpica/tbxfload.c
+> @@ -309,6 +309,49 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
+>  
+>  ACPI_EXPORT_SYMBOL(acpi_load_table)
+>  
+> +/*******************************************************************************
+> + *
+> + * FUNCTION:    acpi_load_table_with_index
+> + *
+> + * PARAMETERS:  table               - Pointer to a buffer containing the ACPI
+> + *                                    table to be loaded.
+> + *              table_idx           - Pointer to a u32 for storing the table
+> + *                                    index, might be NULL
+> + * RETURN:      Status
+> + *
+> + * DESCRIPTION: see acpi_load_table() above. Additionally returns the index
+> + *              of the newly created table in table_idx.
+> + *
+> + ******************************************************************************/
+> +acpi_status acpi_load_table_with_index(struct acpi_table_header *table,
+> +				       u32 *table_idx)
+> +{
+> +	acpi_status status;
+> +	u32 table_index;
+> +
+> +	ACPI_FUNCTION_TRACE(acpi_load_table_with_index);
+> +
+> +	/* Parameter validation */
+> +	if (!table)
+> +		return_ACPI_STATUS(AE_BAD_PARAMETER);
+> +
+> +	/* Install the table and load it into the namespace */
+> +	ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
+> +	status = acpi_tb_install_and_load_table(
+> +		ACPI_PTR_TO_PHYSADDR(table), ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
+> +		FALSE, &table_index);
+> +	if (table_idx)
+> +		*table_idx = table_index;
+> +
+> +	if (ACPI_SUCCESS(status)) {
+> +		/* Complete the initialization/resolution of new objects */
+> +		acpi_ns_initialize_objects();
+> +	}
+> +
+> +	return_ACPI_STATUS(status);
+> +}
+> +ACPI_EXPORT_SYMBOL(acpi_load_table_with_index)
+> +
+>  /*******************************************************************************
+>   *
+>   * FUNCTION:    acpi_unload_parent_table
+> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
+> index e5e041413581..af375ab318de 100644
+> --- a/include/acpi/acpixf.h
+> +++ b/include/acpi/acpixf.h
+> @@ -460,6 +460,12 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status ACPI_INIT_FUNCTION
+>  ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>  			    acpi_load_table(struct acpi_table_header *table))
+>  
+> +
+> +ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+> +			    acpi_load_table_with_index(
+> +				    struct acpi_table_header *table,
+> +				    u32 *table_idx))
+> +
+>  ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+>  			    acpi_unload_parent_table(acpi_handle object))
+>  
+> -- 
+> 2.17.1
+> 
+
 -- 
-Michal Hocko
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
+
+
