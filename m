@@ -2,140 +2,59 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF786C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34C3C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CCD21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAC520673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409210AbfIXHIx (ORCPT
+        id S2409021AbfIXHLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:08:53 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36128 "EHLO inva021.nxp.com"
+        Tue, 24 Sep 2019 03:11:44 -0400
+Received: from mail.monom.org ([188.138.9.77]:44748 "EHLO mail.monom.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409185AbfIXHIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:08:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E5312003B4;
-        Tue, 24 Sep 2019 09:08:47 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B45E2001AD;
-        Tue, 24 Sep 2019 09:08:43 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 238E54029F;
-        Tue, 24 Sep 2019 15:08:37 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] watchdog: imx2_wdt: Use 'dev' instead of dereferencing it repeatedly
-Date:   Tue, 24 Sep 2019 15:07:08 +0800
-Message-Id: <1569308828-8320-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569308828-8320-1-git-send-email-Anson.Huang@nxp.com>
-References: <1569308828-8320-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2388209AbfIXHLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:11:44 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id 2ABB5500114;
+        Tue, 24 Sep 2019 09:11:42 +0200 (CEST)
+Received: from localhost (b9168f76.cgn.dg-w.de [185.22.143.118])
+        by mail.monom.org (Postfix) with ESMTPSA id EAE2F5000E6;
+        Tue, 24 Sep 2019 09:11:41 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 09:11:38 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Saurav Kashyap <skashyap@marvell.com>
+Cc:     "QLogic-Storage-Upstream@cavium.com" 
+        <QLogic-Storage-Upstream@cavium.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: qedf: Add port_id getter
+Message-ID: <20190924071138.pifkyd75xhrminnt@beryllium.lan>
+References: <20190923103738.67749-1-dwagner@suse.de>
+ <MN2PR18MB25273EBD439B3458D6088610D2840@MN2PR18MB2527.namprd18.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR18MB25273EBD439B3458D6088610D2840@MN2PR18MB2527.namprd18.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helper variable dev = &pdev->dev to simply the code.
+On Tue, Sep 24, 2019 at 06:08:09AM +0000, Saurav Kashyap wrote:
+> > +static void qedf_get_host_port_id(struct Scsi_Host *shost) {
+> > +	struct fc_lport *lport = shost_priv(shost);
+> > +
+> > +	fc_host_port_id(shost) = lport->port_id; }
+> 
+> Minor stuff, the closing brace should be in next line. Please submit v2.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/watchdog/imx2_wdt.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+Oops, sorry about that.
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 034f32c..f8d58bf 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -246,13 +246,14 @@ static const struct regmap_config imx2_wdt_regmap_config = {
- 
- static int __init imx2_wdt_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
- 	struct imx2_wdt_device *wdev;
- 	struct watchdog_device *wdog;
- 	void __iomem *base;
- 	int ret;
- 	u32 val;
- 
--	wdev = devm_kzalloc(&pdev->dev, sizeof(*wdev), GFP_KERNEL);
-+	wdev = devm_kzalloc(dev, sizeof(*wdev), GFP_KERNEL);
- 	if (!wdev)
- 		return -ENOMEM;
- 
-@@ -260,16 +261,16 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	wdev->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
-+	wdev->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
- 						 &imx2_wdt_regmap_config);
- 	if (IS_ERR(wdev->regmap)) {
--		dev_err(&pdev->dev, "regmap init failed\n");
-+		dev_err(dev, "regmap init failed\n");
- 		return PTR_ERR(wdev->regmap);
- 	}
- 
--	wdev->clk = devm_clk_get(&pdev->dev, NULL);
-+	wdev->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(wdev->clk)) {
--		dev_err(&pdev->dev, "can't get Watchdog clock\n");
-+		dev_err(dev, "can't get Watchdog clock\n");
- 		return PTR_ERR(wdev->clk);
- 	}
- 
-@@ -279,12 +280,12 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	wdog->min_timeout	= 1;
- 	wdog->timeout		= IMX2_WDT_DEFAULT_TIME;
- 	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
--	wdog->parent		= &pdev->dev;
-+	wdog->parent		= dev;
- 
- 	ret = platform_get_irq(pdev, 0);
- 	if (ret > 0)
--		if (!devm_request_irq(&pdev->dev, ret, imx2_wdt_isr, 0,
--				      dev_name(&pdev->dev), wdog))
-+		if (!devm_request_irq(dev, ret, imx2_wdt_isr, 0,
-+				      dev_name(dev), wdog))
- 			wdog->info = &imx2_wdt_pretimeout_info;
- 
- 	ret = clk_prepare_enable(wdev->clk);
-@@ -294,13 +295,13 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
- 	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
- 
--	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
-+	wdev->ext_reset = of_property_read_bool(dev->of_node,
- 						"fsl,ext-reset-output");
- 	platform_set_drvdata(pdev, wdog);
- 	watchdog_set_drvdata(wdog, wdev);
- 	watchdog_set_nowayout(wdog, nowayout);
- 	watchdog_set_restart_priority(wdog, 128);
--	watchdog_init_timeout(wdog, timeout, &pdev->dev);
-+	watchdog_init_timeout(wdog, timeout, dev);
- 
- 	if (imx2_wdt_is_running(wdev)) {
- 		imx2_wdt_set_timeout(wdog, wdog->timeout);
-@@ -318,7 +319,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto disable_clk;
- 
--	dev_info(&pdev->dev, "timeout %d sec (nowayout=%d)\n",
-+	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
- 		 wdog->timeout, nowayout);
- 
- 	return 0;
--- 
-2.7.4
-
+Thanks
+Daniel
