@@ -2,147 +2,213 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE54AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC73C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E94D207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:47:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qRcTkDjc"
+	by mail.kernel.org (Postfix) with ESMTP id 8E70121655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 04:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569300610;
+	bh=G9RP+Qa3dNbYQldyep2Vb0GBoLFopZ+7tVc/FnTIKlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NTF9hVhz108YuXUjn5RNfLfI8ZXeHNamk2JPUmPJu8tzsf1sW1oiEERh70ZL957IV
+	 2bMGcsz5c6l86bN9OJxndduC3B6/xiMT4fyP09omxB3x7x6nx6qIfik6zyJX1RFULs
+	 RvsMl9zLh4OG883Zrh5Qk8M9V0JmPBjavIBBWEUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407735AbfIXErO (ORCPT
+        id S2408570AbfIXEuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 00:47:14 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42148 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394439AbfIXErO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 00:47:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y23so420176lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 21:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q2XadshqjbJ2rA412+I3YJ2cFnRkZxM8gf+AHI3iIDs=;
-        b=qRcTkDjcJ30tgUtRQBp5fxoy4gJPuuojf5ifHaprlU5iW1dPqAgzBSdxnPjPbrEatM
-         7SxejX2A/JZFr583KuzC3h5aU39fLtQeWiqVjvxSiGXncJRJNygcMqi97NNzbQTo8VHR
-         5fTrJg1eb9RpjrKz6MrqJXyQ8Pih2qExotpzberjbbaJEyFuYxOzxBzj9tvAXQ1QU8W0
-         /YkoJPkDj0H5qVW/pouNdsQnxfr05UrZWVN7oRDknotPOs1giXcyli3F5D5czncrNTcn
-         LGBu9F3MFZYxQS31sXFVojpp3MjCv1j/i/HAZdDuJdEObcpcL6PVE4A1qc0wDczMA1ir
-         U5RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q2XadshqjbJ2rA412+I3YJ2cFnRkZxM8gf+AHI3iIDs=;
-        b=HREbkdiigz85oKH/+EOGGrYLtojMc4k1681ormmRDiOdKAQGW5m6joVql+U9BjeQLm
-         X4W1HmV83p2/zpCZOKCPwCjfubNuP+OSakeuB6EWKUa0roFoYn8rTQxxm+wQYsubetFe
-         34rhnxTgHqhgyOzVV6f3YaMhZkLacgLV0zA4sJ6A/uTsLUj5M2sPNwbYEow9nhCIq3p2
-         N7ssVL3/BagXDHxr8R8Pn9PJ+m9ekRzu+8eKwom9zmJ1mE/uzv3gpEVGgg3noRrxemez
-         TdChIfg9Xehx6H+jPokuilJySg8Mo+NpJV2LecsytkimGWHOQfridFhtcIFToSvi2hJb
-         Fdfg==
-X-Gm-Message-State: APjAAAX36dFgs20Mq9Ja8fTgjo++JlxwuoxVN2IvbM+JpXEK3NZt8vxH
-        MVetmhmhZ5566eyLKNwAOaedpXBwCuY=
-X-Google-Smtp-Source: APXvYqzCEqh+V/Onrbr1zWZBopYQW7p4tZ9I/3SEuky/dCbxR69NGxAmEAGDqLx7DHPj8k7g/yvRRA==
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr536478ljd.83.1569300430744;
-        Mon, 23 Sep 2019 21:47:10 -0700 (PDT)
-Received: from pc-sasha.localdomain ([95.47.123.158])
-        by smtp.gmail.com with ESMTPSA id v1sm139762lji.89.2019.09.23.21.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 21:47:09 -0700 (PDT)
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, mhiramat@kernel.org,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH RESEND] gen-insn-attr-x86.awk: Fix regexp warnings
-Date:   Tue, 24 Sep 2019 07:46:59 +0300
-Message-Id: <20190924044659.3785-1-alexander.kapshuk@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190923114904.dd63949b3433376aeb4b7789@kernel.org>
-References: <20190923114904.dd63949b3433376aeb4b7789@kernel.org>
+        Tue, 24 Sep 2019 00:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394439AbfIXEuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 00:50:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E6A0207FD;
+        Tue, 24 Sep 2019 04:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569300608;
+        bh=G9RP+Qa3dNbYQldyep2Vb0GBoLFopZ+7tVc/FnTIKlQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nb8MS+IEqhMvhrlbvBw0bZaZ8fGhQdqJG7WWs5zsFdBiUlqYUdrDQ800F4hJwiixv
+         wlE1LZT/jmCMEIRniIUEsGRaMdRt2cUwjgzEuSeLpLDQhLLg4PF0JDtIWxcV0q8MBC
+         FVOqb7G8xPF8REzEg5yNQTkerUWwGsNuZxEy3YRw=
+Date:   Tue, 24 Sep 2019 06:50:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     mnalajal@codeaurora.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
+Message-ID: <20190924045005.GB2700@kroah.com>
+References: <20190919213203.GA395325@kroah.com>
+ <20190919215300.GC1418@minitux>
+ <20190919215836.GA426988@kroah.com>
+ <20190919221456.GA63675@minitux>
+ <20190919222525.GA445429@kroah.com>
+ <20190919224017.GB63675@minitux>
+ <20190919224514.GA447028@kroah.com>
+ <20190920033651.GC63675@minitux>
+ <20190920061006.GC473898@kroah.com>
+ <5d9d1f3d11b1e4173990d4c5ac547193@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d9d1f3d11b1e4173990d4c5ac547193@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gawk 5.0.1 generates the regexp warnings shown below:
-GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is not a known regexp operator
+On Mon, Sep 23, 2019 at 02:35:33PM -0700, mnalajal@codeaurora.org wrote:
+> On 2019-09-19 23:10, Greg KH wrote:
+> > On Thu, Sep 19, 2019 at 08:36:51PM -0700, Bjorn Andersson wrote:
+> > > On Thu 19 Sep 15:45 PDT 2019, Greg KH wrote:
+> > > 
+> > > > On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
+> > > > > On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
+> > > > >
+> > > > > > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
+> > > > > > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
+> > > > > > >
+> > > > > > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
+> > > > > > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
+> > > > > > > > >
+> > > > > > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
+> > > > > > > > > > > If the soc drivers want to add custom sysfs entries it needs to
+> > > > > > > > > > > access "dev" field in "struct soc_device". This can be achieved
+> > > > > > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
+> > > > > > > > > > > module they need above API to be exported. Otherwise one can
+> > > > > > > > > > > observe compilation issues.
+> > > > > > > > > > >
+> > > > > > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+> > > > > > > > > > > ---
+> > > > > > > > > > >  drivers/base/soc.c | 1 +
+> > > > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > > > >
+> > > > > > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+> > > > > > > > > > > index 7c0c5ca..4ad52f6 100644
+> > > > > > > > > > > --- a/drivers/base/soc.c
+> > > > > > > > > > > +++ b/drivers/base/soc.c
+> > > > > > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
+> > > > > > > > > > >  {
+> > > > > > > > > > >  	return &soc_dev->dev;
+> > > > > > > > > > >  }
+> > > > > > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
+> > > > > > > > > > >
+> > > > > > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
+> > > > > > > > > > >  				struct attribute *attr,
+> > > > > > > > > >
+> > > > > > > > > > What in-kernel driver needs this?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Half of the drivers interacting with the soc driver calls this API,
+> > > > > > > > > several of these I see no reason for being builtin (e.g.
+> > > > > > > > > ux500 andversatile). So I think this patch makes sense to allow us to
+> > > > > > > > > build these as modules.
+> > > > > > > > >
+> > > > > > > > > > Is linux-next breaking without this?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
+> > > > > > > > > socinfo driver.
+> > > > > > > > >
+> > > > > > > > > > We don't export things unless we have a user of the export.
+> > > > > > > > > >
+> > > > > > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
+> > > > > > > > > > thing to do at all.  The driver should be doing it, by setting up the
+> > > > > > > > > > attribute group properly so that the driver core can do it automatically
+> > > > > > > > > > for it.
+> > > > > > > > > >
+> > > > > > > > > > No driver should be doing individual add/remove of sysfs files.  If it
+> > > > > > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
+> > > > > > > > > > userspace.
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > The problem here is that the attributes are expected to be attached to
+> > > > > > > > > the soc driver, which is separate from the platform-specific drivers. So
+> > > > > > > > > there's no way to do platform specific attributes the right way.
+> > > > > > > > >
+> > > > > > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
+> > > > > > > > > > been working on fixing that up, look at the patches now in Linus's tree
+> > > > > > > > > > for platform and USB drivers that do this as examples of how to do it
+> > > > > > > > > > right.
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Agreed, this patch should not be used as an approval for any crazy
+> > > > > > > > > attributes; but it's necessary in order to extend the soc device's
+> > > > > > > > > attributes, per the current design.
+> > > > > > > >
+> > > > > > > > Wait, no, let's not let the "current design" remain if it is broken!
+> > > > > > > >
+> > > > > > > > Why can't the soc driver handle the attributes properly so that the
+> > > > > > > > individual driver doesn't have to do the create/remove?
+> > > > > > > >
+> > > > > > >
+> > > > > > > The custom attributes that these drivers want to add to the common ones
+> > > > > > > are known in advance, so I presume we could have them passed into
+> > > > > > > soc_device_register() and registered together with the common
+> > > > > > > attributes...
+> > > > > > >
+> > > > > > > It sounds like it's worth a prototype.
+> > > > > >
+> > > > > > Do you have an in-kernel example I can look at to get an idea of what is
+> > > > > > needed here?
+> > > > > >
+> > > > >
+> > > > > realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
+> > > > > implements the current mechanism of acquiring the soc's struct device
+> > > > > and then issuing a few device_create_file calls on that.
+> > > >
+> > > > That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
+> > > > ("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
+> > > > example of how to do this.
+> > > >
+> > > 
+> > > The difference between the two cases is that in the fsl-usb case it's
+> > > attributes of the device itself, while in the soc case the
+> > > realview-soc
+> > > driver (or the others doing this) calls soc_device_register() to
+> > > register a new (dangling) soc device, which it then adds its
+> > > attributes
+> > > onto.
+> > 
+> > That sounds really really odd.  Why can't the soc device do the creation
+> > "automatically" when the device is registered?  The soc core should
+> > handle this for the soc "drivers", that's what it is there for.
+> > 
+> Clients are registering to soc framework using "soce_device_register()"
+> with "soc_device_attribute". This attribute structure does not have all
+> the sysfs fields what client are interested. Hence clients are handling
+> their required sysfs fields in their drivers.
+> https://elixir.bootlin.com/linux/v5.3/source/drivers/base/soc.c#L114
 
-Ealier versions of gawk are not known to generate these warnings.
+Then you should fix that :)
 
-The gawk manual referenced below does not list characters ':' and '&'
-as needing escaping, so 'unescape' them.
-https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+> > > We can't use dev_groups, because the soc_device (soc.c) isn't
+> > > actually a
+> > > driver and the list of attributes is a combination of things from
+> > > soc.c
+> > > and e.g. soc-realview.c.
+> > > 
+> > > But if we pass a struct attribute_group into soc_device_register() and
+> > > then have that register both groups using dev.groups, this should be
+> > > much cleaner at least.
+> > 
+> > Don't you have a structure you can store these in as well?
+> At present client is populating entries one-by-one
+> https://android.googlesource.com/kernel/msm/+/android-7.1.0_r0.2/drivers/soc/qcom/socinfo.c#1254
 
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
+And that is known to be broken and racy and will cause problems with
+userspace.  This should be fixed...
 
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Borislav Petkov <bp@alien8.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
- tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+thanks,
 
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b2c14f..a42015b305f4 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
-
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
-
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
-
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b2c14f..a42015b305f4 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
-
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
-
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
-
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
---
-2.23.0
-
+greg k-h
