@@ -2,70 +2,70 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B115FC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5D2C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9195321783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5412F207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504991AbfIXMrp (ORCPT
+        id S2440991AbfIXMxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:47:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60080 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2504978AbfIXMro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:47:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4148AAB0;
-        Tue, 24 Sep 2019 12:47:41 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 14:47:41 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v7 12/13] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190924124741.tuqks52bpwheqbwj@pathway.suse.cz>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-13-sakari.ailus@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918133419.7969-13-sakari.ailus@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Tue, 24 Sep 2019 08:53:02 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51158 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbfIXMxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:53:02 -0400
+Received: from localhost (231-157-167-83.reverse.alphalink.fr [83.167.157.231])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ADA9315163DFE;
+        Tue, 24 Sep 2019 05:53:00 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 14:52:57 +0200 (CEST)
+Message-Id: <20190924.145257.2013712373872209531.davem@davemloft.net>
+To:     Jason@zx2c4.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on
+ suppress rule
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190924073615.31704-1-Jason@zx2c4.com>
+References: <20190924073615.31704-1-Jason@zx2c4.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 24 Sep 2019 05:53:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-09-18 16:34:18, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-> 
-> On ACPI based systems the resulting strings look like
-> 
-> 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> 
-> where the nodes are separated by a dot (".") and the first three are
-> ACPI device nodes and the latter two ACPI data nodes.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Tue, 24 Sep 2019 09:36:15 +0200
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Commit 7d9e5f422150 removed references from certain dsts, but accounting
+> for this never translated down into the fib6 suppression code. This bug
+> was triggered by WireGuard users who use wg-quick(8), which uses the
+> "suppress-prefix" directive to ip-rule(8) for routing all of their
+> internet traffic without routing loops. The test case in the link of
+> this commit reliably triggers various crashes due to the use-after-free
+> caused by the reference underflow.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 7d9e5f422150 ("ipv6: convert major tx path to use RT6_LOOKUP_F_DST_NOREF")
+> Test-case: https://git.zx2c4.com/WireGuard/commit/?id=ad66532000f7a20b149e47c5eb3a957362c8e161
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-Best Regards,
-Petr
+Please make such test cases integratabe into the selftests area for networking
+and submit it along with this fix.
+
+Otherwise this code will regress.
+
+Thank you.
+
