@@ -2,96 +2,148 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BF9C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB97C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199C32064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5A12064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qdKmzZOc"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="C6mIDqbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392982AbfIXCco (ORCPT
+        id S2392295AbfIXCj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 22:32:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37552 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbfIXCcn (ORCPT
+        Mon, 23 Sep 2019 22:39:29 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46934 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfIXCj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 22:32:43 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O2TKqM067684;
-        Tue, 24 Sep 2019 02:32:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=3p8PT/4DdGrSyR3ARdnCcVuRR4tJiOi2d40JrsPX0es=;
- b=qdKmzZOcYX+EZHj2yd3EQhWnrOUPpAAOnS4X6LGEBsQe64FdISs8J8K5q9z+7eSlJJ37
- cA4i/OGAL+AaZNDAn4xWNL7zitXzxZeYGmewfHeumeCgA8oj3xtuTXw5pTpSggKo4sIL
- HKxsavSvEVW7S0BdttjwpfRelOV7nFNh/LezLtBhzwKLlX4EcpxUUHgNw+QCkdQBN24k
- gHzyisCofghsAdxlr9DBJE4pLcYLriswe1uvxB8+1+p4d+lkmbL2FkHx75BjY8TLR/LD
- Vz/NquFJBoKCW43huacuXq0r7JlkSekwwaZUQSmHT2C2EorBEa7G/fVDP63WG3HksB9q CA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2v5btptvpa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 02:32:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O2STPi125015;
-        Tue, 24 Sep 2019 02:30:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2v6yvqnckt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 02:30:38 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8O2UZAp015797;
-        Tue, 24 Sep 2019 02:30:35 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Sep 2019 19:30:35 -0700
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        QLogic-Storage-Upstream@cavium.com
-Subject: Re: [PATCH] scsi: qedf: Remove always false 'tmp_prio < 0' statement
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190919075548.GA112801@LGEARND20B15>
-Date:   Mon, 23 Sep 2019 22:30:33 -0400
-In-Reply-To: <20190919075548.GA112801@LGEARND20B15> (Austin Kim's message of
-        "Thu, 19 Sep 2019 16:55:48 +0900")
-Message-ID: <yq1o8za4e9i.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 23 Sep 2019 22:39:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e17so213401ljf.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 19:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=69FsbDk3UWzV2ado0kISftXd4Dxcwqhctiepyrz5wa4=;
+        b=C6mIDqbf80FLU0LnPzHEgkLF483jKLHXlK521PxkYT8ynqbV8+qmaX6hC6QUZLK6Ci
+         R6R+o+sG1tbtfrFryoHmi1EJos8bldXIMSa0fnKH7XvXPkaidzC8TDamUykQp6mp2fR+
+         P5vkgc4xkx8IisaqRFW0opFHrBXIkoqspri95omg2fzp7dlBMRk7unyLy/eoinDeFGai
+         089zZb9QVFMHJDN7P8t1LLLtUnwG+Eofl9yVuoMVWorWBYzyxsmn3GNti20ZnjAuQmf3
+         4ZaRgIWUEaVdRWDjFZ5DHwztxESROQWBJHXO16bzJZlfRSpcgLk0SO+HPIsB13HYjQlj
+         rn5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=69FsbDk3UWzV2ado0kISftXd4Dxcwqhctiepyrz5wa4=;
+        b=fAn455e3jo7Ql6i4qsWXm1xgK8V+0jJ6zWfBFezirIuPY9Ld3E6Ry8L1DqOnL7V9K8
+         s28m1sWrECQZqZZjkRt6Hg8IrhfCcdLgmSph5yJEaqWKpO5kNUphlD0QFtol17qf9ADy
+         3itcY9NIgw2McTqlTehuq2fWGa2PGN7Ne1qslyUsY6d4v9eMSXxqpE0IpMdSn+vuLjm8
+         d2MDJyJ3T/nl/IEk3O/yWs4pwPp89U9NKpUfzmYrYxZE6FkGpAbHe1j10AgOj8zo64Q8
+         yaon+ck/GXzGWGUlMS5V0N4G+QkuBqBaVq6qBmGkC3Wwcys8oNZ6gNSj1rLko/wrblm1
+         YgSw==
+X-Gm-Message-State: APjAAAWgff5C20TNeHGEq2o++VrylTicGpbsy+EIltBysfzMsB/vPIJm
+        P39pSQLcdj40ST3Koz7bFdpxi0hmCPVcnOYIEagV
+X-Google-Smtp-Source: APXvYqw9Hua23+qq2hsh3uzAjoZt49lXUPzD6s52CvB4ggcm8e3fEjygRKpDpy8RUBGqKckGHwPovNGUeUR0Y9CRNz4=
+X-Received: by 2002:a2e:9615:: with SMTP id v21mr282460ljh.46.1569292765707;
+ Mon, 23 Sep 2019 19:39:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909240024
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909240024
+References: <20190923155041.GA14807@codemonkey.org.uk> <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+ <20190923165806.GA21466@codemonkey.org.uk> <CAHC9VhTh+cD5pkb8JAHnG1wa9-UgivSb7+-yjjYaD+6vhyYKjA@mail.gmail.com>
+ <20190923194901.GA2787@codemonkey.org.uk> <d5d92540ca5aab8916ac4d93f6b5677ab52d2e7d.camel@redhat.com>
+In-Reply-To: <d5d92540ca5aab8916ac4d93f6b5677ab52d2e7d.camel@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 23 Sep 2019 22:39:14 -0400
+Message-ID: <CAHC9VhSpZ0_oGgdFzM=ZCdh-Z1MfBb4Eruado-Dx52WFcO16ug@mail.gmail.com>
+Subject: Re: ntp audit spew.
+To:     Eric Paris <eparis@redhat.com>
+Cc:     Dave Jones <davej@codemonkey.org.uk>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-audit@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 3:49 PM Eric Paris <eparis@redhat.com> wrote:
+> Is this the thing where systemd is listening on the multicast netlink
+> socket and causes everything to come out kmesg as well?
 
-Austin,
+I don't think so, but I'm still a little confused as to why DaveJ is
+seeing these records, so I'll go with a weak "maybe" ;)
 
-> Since tmp_prio is declared as u8, the following statement is always false.
->    tmp_prio < 0
+> On Mon, 2019-09-23 at 15:49 -0400, Dave Jones wrote:
+> > On Mon, Sep 23, 2019 at 02:57:08PM -0400, Paul Moore wrote:
+> >  > On Mon, Sep 23, 2019 at 12:58 PM Dave Jones <
+> > davej@codemonkey.org.uk> wrote:
+> >  > > On Mon, Sep 23, 2019 at 12:14:14PM -0400, Paul Moore wrote:
+> >  > >  > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <
+> > davej@codemonkey.org.uk> wrote:
+> >  > >  > >
+> >  > >  > > I have some hosts that are constantly spewing audit
+> > messages like so:
+> >  > >  > >
+> >  > >  > > [46897.591182] audit: type=1333 audit(1569250288.663:220):
+> > op=offset old=2543677901372 new=2980866217213
+> >  > >  > > [46897.591184] audit: type=1333 audit(1569250288.663:221):
+> > op=freq old=-2443166611284 new=-2436281764244
+> >  > >  > > [48850.604005] audit: type=1333 audit(1569252241.675:222):
+> > op=offset old=1850302393317 new=3190241577926
+> >  > >  > > [48850.604008] audit: type=1333 audit(1569252241.675:223):
+> > op=freq old=-2436281764244 new=-2413071187316
+> >  > >  > > [49926.567270] audit: type=1333 audit(1569253317.638:224):
+> > op=offset old=2453141035832 new=2372389610455
+> >  > >  > > [49926.567273] audit: type=1333 audit(1569253317.638:225):
+> > op=freq old=-2413071187316 new=-2403561671476
+> >  > >  > >
+> >  > >  > > This gets emitted every time ntp makes an adjustment, which
+> > is apparently very frequent on some hosts.
+> >  > >  > >
+> >  > >  > >
+> >  > >  > > Audit isn't even enabled on these machines.
+> >  > >  > >
+> >  > >  > > # auditctl -l
+> >  > >  > > No rules
+> >  > >  >
+> >  > >  > What happens when you run 'auditctl -a never,task'?  That
+> > *should*
+> >  > >  > silence those messages as the audit_ntp_log() function has
+> > the
+> >  > >  > requisite audit_dummy_context() check.
+> >  > >
+> >  > > They still get emitted.
+> >  > >
+> >  > >  > FWIW, this is the distro
+> >  > >  > default for many (most? all?) distros; for example, check
+> >  > >  > /etc/audit/audit.rules on a stock Fedora system.
+> >  > >
+> >  > > As these machines aren't using audit, they aren't running auditd
+> > either.
+> >  > > Essentially: nothing enables audit, but the kernel side
+> > continues to log
+> >  > > ntp regardless (no other audit messages seem to do this).
+> >  >
+> >  > What does your kernel command line look like?  Do you have
+> > "audit=1"
+> >  > somewhere in there?
+> >
+> > nope.
+> >
+> > ro root=LABEL=/ biosdevname=0 net.ifnames=0 fsck.repair=yes
+> > systemd.gpt_auto=0 pcie_pme=nomsi ipv6.autoconf=0 erst_disable
+> > crashkernel=128M console=tty0 console=ttyS1,57600
+> > intel_iommu=tboot_noforce
+> >
+> >       Dave
+> >
 >
-> So remove 'always false' statement.
 
-Applied to 5.4/scsi-fixes, thanks!
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+paul moore
+www.paul-moore.com
