@@ -2,68 +2,92 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD12C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27EDC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517A5207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="tXBqx+JF"
+	by mail.kernel.org (Postfix) with ESMTP id 76D3D207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441034AbfIXMzT (ORCPT
+        id S2441046AbfIXMzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:55:19 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:38399 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395416AbfIXMzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:55:19 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fe1a5a4c;
-        Tue, 24 Sep 2019 12:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=nnKmr2UXwyC1dIXONRla9eh1CAA=; b=tXBqx+
-        JFLSsyq+fTHXe9H+LdahtsJkvf78IOt3LGZe4bYHGhA5yf3+51idwkrSJjFfy3MP
-        hYKBK5MtZHty7s/rLg8sSKd2+0sJwHZcC6qXkVOya5gaJs5/Kmoc1ieDVQieOuqh
-        5F7/uvIg0H72uie8qOW/N/l/xEvcOktJhR2QrA+BYnv3bVLEyKDPZ2dMR3yv23jr
-        QcdzZR8kQpwehEBEX2ZT5fHhHLPuE//tYonrGjttcj6WgxxJKuYVNDy76k0Tao4/
-        nps7qRSH1PJUo4OVGg9pROmkjL1MCEbnIgQXJAkaNKOa31Viy9uHTCQ2Is+bBFXT
-        nIqNcBiFoaWCbe2w==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d804a112 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Sep 2019 12:09:39 +0000 (UTC)
-Received: by mail-ot1-f46.google.com with SMTP id y39so1342974ota.7;
-        Tue, 24 Sep 2019 05:55:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXP0qeNmy2RSiTcKV+5pZ8wHGEzf/++kpuKj6/mhZgxV+qrWPxZ
-        jYbVDYVGcB2wkClwgBUwEPfOQf4fERM0tWIqLAY=
-X-Google-Smtp-Source: APXvYqwO7wdcCnhRb4E4JFMtnCNwjMLtSvDaazr6aOfYs4qzT8+CfaGmr6ubNvGo/2f1slLkhF9UeX9/dXCrWcmRYnk=
-X-Received: by 2002:a9d:3476:: with SMTP id v109mr1687733otb.179.1569329716132;
- Tue, 24 Sep 2019 05:55:16 -0700 (PDT)
+        Tue, 24 Sep 2019 08:55:25 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:46559 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395416AbfIXMzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:55:21 -0400
+Received: from [192.168.1.110] ([95.114.122.209]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mvbr4-1hvuHu0Nh0-00sh60; Tue, 24 Sep 2019 14:55:20 +0200
+To:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Portege Z930 extra keys and leds
+Organization: metux IT consult
+Message-ID: <09e715a0-08d2-100d-4bc3-c4f6c87f2a98@metux.net>
+Date:   Tue, 24 Sep 2019 14:55:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190924073615.31704-1-Jason@zx2c4.com> <20190924.145257.2013712373872209531.davem@davemloft.net>
-In-Reply-To: <20190924.145257.2013712373872209531.davem@davemloft.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 24 Sep 2019 14:55:04 +0200
-X-Gmail-Original-Message-ID: <CAHmME9oqRg9L+wdhOra=UO3ypuy9N82DHVrbDJDgLpxSmS-rHQ@mail.gmail.com>
-Message-ID: <CAHmME9oqRg9L+wdhOra=UO3ypuy9N82DHVrbDJDgLpxSmS-rHQ@mail.gmail.com>
-Subject: Re: [PATCH] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on
- suppress rule
-To:     David Miller <davem@davemloft.net>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:UOtB/iGkhXcNR2BZbMPmAZ0fHg4wQxTbYIoeGQ53EylKibPTAFt
+ G1P0ZnuNCgtsKK0cC4u3ItXfZNL7xIOMcRp8SXjuybK1+U77ygL4390hM/3fVGRftTgyYyE
+ Ju4swvvs72IQxewtwbFXm0JrxTk6gD6XFtb0jVLh6A0c8wA/qt7ugUbBzI6RtiAaRZ8kHPW
+ B1ahgvvT5KLZxm/rvFJNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:92czqRed0WA=:dbAyzHGkptE+ARtzgy3NwU
+ 3cG9pSMEqeDj/cS5DXzQpFEAb+nOIjWJ2UoHanm8mlQcpZZyRVDnJeKZfdwnQgNMKJk19MicZ
+ B7JoAz93W+TvB/rUugq+H2vp+l9VF2pI/Zkulwx/kYKiEat0xWhMSz6aWrlU7p8XkFMMZN61Y
+ XYbpYMeS/2CdfJOp+0/3LYMljwOoRZb353QrvjBbK/o/EEWjcSSSZYvnz9pTc8ldpdtdOkqIZ
+ S762jItWWM2XCW8IOhWaUcMoQ2PJmlj/KibXr68B9H11LZhglXDMER+SGgu4f+xuk18gPV+B1
+ 9Om9TPpZ0ppr404B6ot4IlfDu4RXddiY72SDhzpsLAmGQOodOrMfr/xP5YccEIL2cquZt1RxJ
+ L0vgXbKuamycUqZmJ1tN07KSLBdrBKw7IOfcpqP7Zjj8g7yWwXImx6LSCjkWhcdQoqZaK7kMa
+ 6UudLlCZb/BwNquhmeXAk9NFWCKYu9EickzLiSodZHvFysmrWlPNMd04oag6hRXnu617MdZw7
+ lL1HZYXyrOYcLTehH3KkKkSmZBeYPNBcre52gvVS7oexAWnrNKefeUIBhT+oSb1Gknr/obr/C
+ 3MQpClG9Wfv0hzfrLInviJS66YV+ZZ85ZbP9B3GBxeeYPkWf14kQYEn85yZtCK82EXHAkhFhQ
+ 9v7N4YtHZnZ4JCT2TdzTVCIGrmntqkVQGiH2Kje49zC8nMTLSh3Atso9Og4mqiaHPWRwgTSAT
+ F7YiGt38HKwPoUkgl7E4HDBtkNhsv+qrtA9o040kqrbeFs89S1hfiWy9R7igO1Eq8aW07o9t+
+ M2zwmpvnpM1qMnTB+BjeybqsvJt6Sc1Cgql7PNT8de7DZh8StbEwdhPbpS1QsF+fVp6hT9q53
+ 3kVis/PSuXaFcO5gE//g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 2:53 PM David Miller <davem@davemloft.net> wrote:
-> Please make such test cases integratabe into the selftests area for networking
-> and submit it along with this fix.
+Hello folks,
 
-That link is for a WireGuard test-case. When we get that upstream,
-those will all live in selftests/ all the same as you'd like. For now,
-it's running for every kernel on https://build.wireguard.com/ which in
-turn runs for every new commit.
+
+does anybody happen to know how to drive the extra keys and leds
+of Toshiba Portege Z930 notebook ?
+
+It has two extra keys above the keyboard (right next to the power
+button) and some indicator leds underneath the touch panel buttons.
+
+Toshiba originally ships the notebook with some strange Windows software
+(for some mysterious "ECO" mode) that reacts on these two buttons and
+drives at least the rightmost LED directly - so there has to be *some*
+way to control them by software.
+
+When in a terminal (on the console only when /dev/input/event10 -
+"Toshiba input device" is opened), both keys seem to generate an "x"
+keypress, but nothing coming in in the event device.
+
+Does anybody have an idea how to catch these key press events or
+how to drive this myserious ("ECO") led ?
+
+
+thx
+--mtx
+
+
+PS: tried on an older 4.14 kernel - haven't had a chance to upgrade
+the notebook to something more recent :o
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
