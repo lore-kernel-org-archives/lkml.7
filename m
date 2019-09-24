@@ -2,124 +2,95 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CBFC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7140FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBAB207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9A6207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LLxllnZj"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z0UDEipE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405417AbfIXScT (ORCPT
+        id S2436865AbfIXSez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:32:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37928 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392088AbfIXScT (ORCPT
+        Tue, 24 Sep 2019 14:34:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47096 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392088AbfIXSez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:32:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h195so1863206pfe.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:32:18 -0700 (PDT)
+        Tue, 24 Sep 2019 14:34:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so1844747pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MFxAZD1w5UhTlzLtE5TmBr2XeUa2P0bLYhndFfGu00E=;
-        b=LLxllnZjxLQEkI7TInx636+7EuAGGhGvR+v/4upvBsIM7hSokgnlBB57aHaRGs7QWZ
-         PocntCahXvUaEtsgonPtApkdgyww6jOnWuCjqiZnjxTx1sJipnFIEUHrNz4MaxzpHOcK
-         YjVaIFRWF5YLLylu9FJzwhydqJEvuzfS9pEhlSz6DO/e21R1An8C4uwbBVDoaZOT/XYv
-         wZUZKP10+AI/5+C+9JqHlicDRYp9lXogUipxxQzyjjCJY5wdZDDWVr4A9kqYDCIWUym9
-         QzHhIxcNleqRWPWoRrcJ3qHOUJXe7LZ3EC3HZGEecMR4hFLPeI3x9ywGT6UEymh3zwqx
-         Ud5w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=jkBCXzn4Uj1xLOMo29hksQeWQpwjGA82dIjcLoLZzTE=;
+        b=z0UDEipE4W/AzOwgLuwPGd0hbYj8lB6P6p5iCggsB+uSOZ2ercDuI6QViE8trcyi68
+         Ms4bpDlbC17FktVTBM5gBlQ8QRBa/OvosuNUn8F9cuqs+nnRgHavcXYsV+fXIn4fOfHi
+         3q+G+MOUuWBNFpOrO58Nvy2MO67v5H5csoVbOuHFdSn2E3jLpAvwwn61KL0KvX26re9h
+         S6apGVlqOmapAPl58/oSQBvm4AnBTkNGbaE12ncpt23zSxAPwjzixYva1rmfmWA87KtC
+         DL8FB7ElOkvo+l+Vcqt3S5bOGU+5NT5G2NZ1yzPV8VUutxTR9xN2DCHz51458mFtWBnR
+         DTdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MFxAZD1w5UhTlzLtE5TmBr2XeUa2P0bLYhndFfGu00E=;
-        b=ME2x9QCuQEkORp24hmxad+U3EMyNnDelp8l209u2VmNoSDMhg3pZiqWkV798lcGbZW
-         qLtUP4AWf0t+z1pxxTQotHGHJpKU0vGIRN9RIcBvMoIwKAv9GA2CF/fLsdhUCV+0FORg
-         rSrBDmsh4fEKRsaFU4eEU5AWBYkcSjqE7gvrKsJUc3pGpsC5o0XijvkdhWjFWNGx092P
-         YtudpV1+bEnSp+KZZp47IpoKv1RADoM7Wf/xGiyJMXvW0T5MUOZaMi9Le3WHNN3CDWZh
-         4Tx2vtDjU4eRtB3tLTmbonj/xB1xZLxT7CoRVrBJEGDZeqcrncXQ6p+aMzkM7+EYSxuA
-         cfRw==
-X-Gm-Message-State: APjAAAUMF2yu5HMEe0b1MxsbTD3c6mDsEEh2ZizmDWYmd/YePgSPt5u2
-        7FWfVc9IXSDe85J8mI8mt7eUuX1vFWnnRsGRg3hAsQ==
-X-Google-Smtp-Source: APXvYqxQV005fHF+HvaEruj1ZJoqo8PtGXpIj9Fq/xsRTZaI4vzVDhfvWzJdU/SymbK4kv1dKZ8aH8kfkI086k8A0ic=
-X-Received: by 2002:a63:d908:: with SMTP id r8mr4509167pgg.263.1569349937836;
- Tue, 24 Sep 2019 11:32:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=jkBCXzn4Uj1xLOMo29hksQeWQpwjGA82dIjcLoLZzTE=;
+        b=O+smtEkvZRRQc7UoXtHqoyUZ/yINZdTZTAOTTBw6801qNRiG0b1bAgEHjOZePZQRq/
+         d96FK6ZkU23wjhsfzDiAx/FkF8oFk5113c2yGHJl6n/KPJ6Ky3F0lcyBUkL3YcTQ46gU
+         TzimUgnQ1Bs1IBPzVMUcv5yBraR/30gRRb986B/AyziTjuca1QEEh1Dzug0RyuSztM4q
+         7rX8GgR9c91k5mqQN+HklBFC48/Di6MXjoaW7V2X05mpqBAQbRyfaf4CowyTrR/AVeb6
+         iss0wsQ6/M+1QTfU2m+eYhOQjW1IKlRvjp3KDwIyPCctJ3wWM5O/2u+vTi/e8NllttQg
+         c70A==
+X-Gm-Message-State: APjAAAU20IYCM+vlvgXRmjUONnKed5mO0dG+j+wPAwlMzjtqHPgitq1f
+        ZF+7tHno+lBmGOQdq3kGo0zbNg==
+X-Google-Smtp-Source: APXvYqw2jfPgxdDoSNqWWhnD7kHlXKrQE4WFeQl8IkHVJv88EXWMyWgt15LGw/6oqqVsdoLFFr5Qmw==
+X-Received: by 2002:a62:4e0f:: with SMTP id c15mr4989864pfb.42.1569350092855;
+        Tue, 24 Sep 2019 11:34:52 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id f62sm5013581pfg.74.2019.09.24.11.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Sep 2019 11:34:52 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] arm64: dts: meson: audio updates
+In-Reply-To: <20190905125956.4384-1-jbrunet@baylibre.com>
+References: <20190905125956.4384-1-jbrunet@baylibre.com>
+Date:   Tue, 24 Sep 2019 11:34:51 -0700
+Message-ID: <7hk19x7dbo.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190923222403.22956-1-ndesaulniers@google.com> <20190924182417.GA2714282@archlinux-threadripper>
-In-Reply-To: <20190924182417.GA2714282@archlinux-threadripper>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Sep 2019 11:32:06 -0700
-Message-ID: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
-Subject: Re: [PATCH] x86, realmode: explicitly set ENTRY in linker script
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:24 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Mon, Sep 23, 2019 at 03:24:02PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > Linking with ld.lld via $ make LD=ld.lld produces the warning:
-> > ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
-> >
-> > Linking with ld.bfd shows the default entry is 0x1000:
-> > $ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
-> >   Entry point address:               0x1000
-> >
-> > While ld.lld is being pedantic, just set the entry point explicitly,
-> > instead of depending on the implicit default.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/216
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  arch/x86/realmode/rm/realmode.lds.S | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
-> > index 3bb980800c58..2034f5f79bff 100644
-> > --- a/arch/x86/realmode/rm/realmode.lds.S
-> > +++ b/arch/x86/realmode/rm/realmode.lds.S
-> > @@ -11,6 +11,7 @@
-> >
-> >  OUTPUT_FORMAT("elf32-i386")
-> >  OUTPUT_ARCH(i386)
-> > +ENTRY(0x1000)
-> >
-> >  SECTIONS
-> >  {
-> > --
-> > 2.23.0.351.gc4317032e6-goog
-> >
->
-> This appears to break ld.bfd?
->
-> ld:arch/x86/realmode/rm/realmode.lds:131: syntax error
-> make[5]: *** [../arch/x86/realmode/rm/Makefile:54: arch/x86/realmode/rm/realmode.elf] Error 1
-> make[4]: *** [../arch/x86/realmode/Makefile:20: arch/x86/realmode/rm/realmode.bin] Error 2
-> make[3]: *** [../scripts/Makefile.build:509: arch/x86/realmode] Error 2
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Thanks for testing.  Strange, it seems that ld.bfd doesn't like it as
-an ENTRY in the linker script, but will accept `-e <addr>`.  Not sure
-if that's a bug in ld.bfd, or if ld.lld should error as well?
-https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Using_ld_the_GNU_Linker/simple-commands.html
-v2 inbound.
--- 
-Thanks,
-~Nick Desaulniers
+> The patchset features a few updates to prepare the addition of the audio
+> on sm1. It fixes the register range of audio fifo which was incorrect.
+>
+> It also create another layer of dtsi, common to g12a and g12b but not sm1.
+> The audio related device are moved to this file.
+>
+> This was done because the audio bus, which was at 0xff642000 on g12, has
+> moved 0xff660000 on sm1. Overwriting the reg property was option but it
+> would have left confusing node names on the sm1.
+>
+> Jerome Brunet (5):
+>   arm64: dts: meson: axg: fix audio fifo reg size
+>   arm64: dts: meson: g12: fix audio fifo reg size
+>   arm64: dts: meson: g12: add a g12 layer
+>   arm64: dts: meson: g12: factor the power domain.
+>   arm64: dts: meson: g12: move audio bus out of g12-common
+
+Queued for v5.5,
+
+Kevin
