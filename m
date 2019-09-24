@@ -2,53 +2,53 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864AEC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0E1C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506D12054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F89D20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344519;
-	bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
+	s=default; t=1569344523;
+	bh=YhMxZFoY6IL1aOj/xsge9Nvb1sMx8PA81BVaG9x7qes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5LSiuj11VWQ5QcuGJIgZ01s8bTVGM8TWGpI6OPxB1ObYeatCyz0ost7IFFNGc3sz
-	 rcaa9Mv0un65FM7axiQwlReZHegZuNg9EaiV2+Pe1PIR4CFkZBXHAb1HdhU7XNr7nf
-	 kxos8QC2lTf3rKelmj6rAjIMV8MNjfaDt9v1Cjk4=
+	b=Uc4+pRZ7GDiyhT+ppu7tuLMIKsaJUQFEcMGOuR7BMIkErI2hyN5UcKBqby/33wyzT
+	 8sW02CgWcOjKc2fTFI6xDXuCrhJ5K1NzML9G9RhlCBZ7iqhi8A5hMrUsbv2UsVi3MS
+	 tFpJkOoReyzhG5bMLrGadaMx/fgGgKCkjAofd7oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410007AbfIXRB6 (ORCPT
+        id S2632876AbfIXQnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632887AbfIXQnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:43:04 -0400
+        id S2409852AbfIXQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5072720872;
-        Tue, 24 Sep 2019 16:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 115B4217F4;
+        Tue, 24 Sep 2019 16:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343383;
-        bh=RXz6wrou/rLsSHwyEPfyPMYLuJ/X2bB/HTRQZPCvBoU=;
+        s=default; t=1569343365;
+        bh=YhMxZFoY6IL1aOj/xsge9Nvb1sMx8PA81BVaG9x7qes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFc/DJIiwKQYvB6FwneZOvQp/91RIcxs68MGdfTNgixpYX/Kmf3Iwe28eBh7hvSGH
-         kl9DDB3tYyUI2hCbV/smOu4kZaBB7G9gIPiWrCQv9PRrsR35eu9c4etD+0+XTi6lgm
-         A7cQmalKLpEKO+JHjWtetbXzhn0itnUXPy+qQeNk=
+        b=iw9cy7aldZbXmWlIU8gSG8xe7tHvB0CqlwjC9RpvuVvTGI0vAOFuwa75L41lTKcnn
+         6LqbRxz2NcM8dO0bjSRrE6lrwWAoYCr1Zk94AKWX/2OxP/hvbkFuvVgVAhsOHGP1gu
+         SDUeQr40oWJwy3SI0EDGPcoJz9iwhf9PBunYp09o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anthony Koo <Anthony.Koo@amd.com>, Aric Cyr <Aric.Cyr@amd.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 30/87] drm/amd/display: fix issue where 252-255 values are clipped
-Date:   Tue, 24 Sep 2019 12:40:46 -0400
-Message-Id: <20190924164144.25591-30-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.3 20/87] drm/amd/display: Use proper enum conversion functions
+Date:   Tue, 24 Sep 2019 12:40:36 -0400
+Message-Id: <20190924164144.25591-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -61,44 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1cbcfc975164f397b449efb17f59d81a703090db ]
+[ Upstream commit d196bbbc28fab82624f7686f8b0da8e8644b6e6a ]
 
-[Why]
-When endpoint is at the boundary of a region, such as at 2^0=1
-we find that the last segment has a sharp slope and some points
-are clipped at the top.
+clang warns:
 
-[How]
-If end point is 1, which is exactly at the 2^0 region boundary, we
-need to program an additional region beyond this point.
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_pp_smu.c:336:8:
+warning: implicit conversion from enumeration type 'enum smu_clk_type'
+to different enumeration type 'enum amd_pp_clock_type'
+[-Wenum-conversion]
+                                        dc_to_smu_clock_type(clk_type),
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_pp_smu.c:421:14:
+warning: implicit conversion from enumeration type 'enum
+amd_pp_clock_type' to different enumeration type 'enum smu_clk_type'
+[-Wenum-conversion]
+                                        dc_to_pp_clock_type(clk_type),
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
+There are functions to properly convert between all of these types, use
+them so there are no longer any warnings.
+
+Fixes: a43913ea50a5 ("drm/amd/powerplay: add function get_clock_by_type_with_latency for navi10")
+Fixes: e5e4e22391c2 ("drm/amd/powerplay: add interface to get clock by type with latency for display (v2)")
+Link: https://github.com/ClangBuiltLinux/linux/issues/586
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-index 7469333a2c8a5..8166fdbacd732 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_cm_common.c
-@@ -357,9 +357,10 @@ bool cm_helper_translate_curve_to_hw_format(
- 		seg_distr[7] = 4;
- 		seg_distr[8] = 4;
- 		seg_distr[9] = 4;
-+		seg_distr[10] = 1;
- 
- 		region_start = -10;
--		region_end = 0;
-+		region_end = 1;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+index 592fa499c9f86..9594c154664fc 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
+@@ -334,7 +334,7 @@ bool dm_pp_get_clock_levels_by_type(
+ 		}
+ 	} else if (adev->smu.funcs && adev->smu.funcs->get_clock_by_type) {
+ 		if (smu_get_clock_by_type(&adev->smu,
+-					  dc_to_smu_clock_type(clk_type),
++					  dc_to_pp_clock_type(clk_type),
+ 					  &pp_clks)) {
+ 			get_default_clock_levels(clk_type, dc_clks);
+ 			return true;
+@@ -419,7 +419,7 @@ bool dm_pp_get_clock_levels_by_type_with_latency(
+ 			return false;
+ 	} else if (adev->smu.ppt_funcs && adev->smu.ppt_funcs->get_clock_by_type_with_latency) {
+ 		if (smu_get_clock_by_type_with_latency(&adev->smu,
+-						       dc_to_pp_clock_type(clk_type),
++						       dc_to_smu_clock_type(clk_type),
+ 						       &pp_clks))
+ 			return false;
  	}
- 
- 	for (i = region_end - region_start; i < MAX_REGIONS_NUMBER ; i++)
 -- 
 2.20.1
 
