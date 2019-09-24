@@ -2,106 +2,124 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E29C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E912C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0EB2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cu5yI+Wu"
+	by mail.kernel.org (Postfix) with ESMTP id 4D4362168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395253AbfIXOEJ (ORCPT
+        id S2436858AbfIXOEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:04:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49144 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727557AbfIXOEI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:04:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OCd9Fr0CJ9gkQjtYi+RvQr2AUrWhMG1/VlZsM2oF7Yc=; b=cu5yI+WuhPe37UB2o0iJ7Qx5Q
-        5odWybKsCWzA9tcyVGj3aBSDl69PhcCVf25E9LobhN3SkxSMbEyEIZrPoy3j/F/Sf5G1DdQIXUVnA
-        +G2dS+VpOCXkuT9vjYjPH2f6653yBReJGhANNnaO782eRAJSF6A5zBSfzdJmM6p9hTy+ycraszids
-        M/614TxQzRc8ILxTr59o29o/O5HQAIVao5jwyE/mwNKSxgMbAKv+4+nxUsw+SgCN2ML9FjCz8bh90
-        EjlfLHPW/eg4iOibq3MPQrEpDHXcoaQEUiorXfaB8LkOFmTxG6FHFsGwjzAUzLlbevs89HQzV/qQW
-        bFTvVXZgg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iClPj-0001cm-LP; Tue, 24 Sep 2019 14:03:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCF4A305E35;
-        Tue, 24 Sep 2019 16:02:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6803620D83757; Tue, 24 Sep 2019 16:03:32 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 16:03:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Quentin Perret <qperret@qperret.net>,
-        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@suse.de, lenb@kernel.org, rjw@rjwysocki.net,
-        x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
-        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com
-Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
-Message-ID: <20190924140332.GL2369@hirez.programming.kicks-ass.net>
-References: <20190909024216.5942-1-ggherdovich@suse.cz>
- <20190909024216.5942-2-ggherdovich@suse.cz>
- <20190914105708.GA12877@qperret.net>
- <1568730466.3329.4.camel@suse.cz>
+        Tue, 24 Sep 2019 10:04:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52070 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392022AbfIXOEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:04:23 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5A2E420F0;
+        Tue, 24 Sep 2019 14:04:22 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6E5960C5E;
+        Tue, 24 Sep 2019 14:04:13 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 08:04:13 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
+Subject: Re: [PATCH 5/6] vringh: fix copy direction of
+ vringh_iov_push_kern()
+Message-ID: <20190924080413.0cc875c5@x1.home>
+In-Reply-To: <20190923115930-mutt-send-email-mst@kernel.org>
+References: <20190923130331.29324-1-jasowang@redhat.com>
+        <20190923130331.29324-6-jasowang@redhat.com>
+        <20190923094559.765da494@x1.home>
+        <20190923115930-mutt-send-email-mst@kernel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568730466.3329.4.camel@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 24 Sep 2019 14:04:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 04:27:46PM +0200, Giovanni Gherdovich wrote:
-> Hello Quentin,
-> 
-> On Sat, 2019-09-14 at 12:57 +0200, Quentin Perret wrote:
-> > Hi Giovanni
-> > 
-> > On Monday 09 Sep 2019 at 04:42:15 (+0200), Giovanni Gherdovich wrote:
-> > > +static inline long arch_scale_freq_capacity(int cpu)
-> > > +{
-> > > +	if (static_cpu_has(X86_FEATURE_APERFMPERF))
-> > > +		return per_cpu(arch_cpu_freq, cpu);
-> > 
-> > So, if this is conditional, perhaps you could also add this check in an
-> > x86-specific implementation of arch_scale_freq_invariant() ? That would
-> > guide sugov in the right path (see get_next_freq()) if APERF/MPERF are
-> > unavailable.
-> > 
-> > > +	return 1024 /* SCHED_CAPACITY_SCALE */;
-> > > +}
-> >
-> 
-> Good remark. If the cpu doesn't have APERF/MPERF, the choice here is that
-> freq_curr is constantly equal to freq_max, and the scaling factor is 1 all the
-> time.
-> 
-> But I'm checking this static_cpu_has() every time I do a frequency update;
-> arguably schedutil should be smarter and settle such a case once and for all
-> at boot time.
-> 
-> I'll check what's the cost of static_cpu_has() and if it's non-negligible I'll
-> do what you suggest (x86-specific version of arch_scale_freq_invariant().
+On Mon, 23 Sep 2019 12:00:41 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-static_cpu_has() is an alternative and ends up being a static branch
-(similar to static_key) once the alternative patching runs.
+> On Mon, Sep 23, 2019 at 09:45:59AM -0600, Alex Williamson wrote:
+> > On Mon, 23 Sep 2019 21:03:30 +0800
+> > Jason Wang <jasowang@redhat.com> wrote:
+> >   
+> > > We want to copy from iov to buf, so the direction was wrong.
+> > > 
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >  drivers/vhost/vringh.c | 8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)  
+> > 
+> > 
+> > Why is this included in the series?  Seems like an unrelated fix being
+> > held up within a proposal for a new feature.  Thanks,
+> > 
+> > Alex  
+> 
+> It's better to have it as patch 1/6, but it's a dependency of the
+> example driver in the series. I can reorder when I apply.
+
+It's a fix, please submit it separately through virtio/vhost channels,
+then it will already be in the base kernel we use for the rest of the
+series.  The remainder of the series certainly suggests a workflow
+through the vfio tree rather than virtio/vhost.  Thanks,
+
+Alex
+
+> > > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > > index 08ad0d1f0476..a0a2d74967ef 100644
+> > > --- a/drivers/vhost/vringh.c
+> > > +++ b/drivers/vhost/vringh.c
+> > > @@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static inline int kern_xfer(void *dst, void *src, size_t len)
+> > > +{
+> > > +	memcpy(dst, src, len);
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * vringh_init_kern - initialize a vringh for a kernelspace vring.
+> > >   * @vrh: the vringh to initialize.
+> > > @@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
+> > >  ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
+> > >  			     const void *src, size_t len)
+> > >  {
+> > > -	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
+> > > +	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
+> > >  }
+> > >  EXPORT_SYMBOL(vringh_iov_push_kern);
+> > >    
+
