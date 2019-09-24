@@ -2,112 +2,103 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C8C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164BCC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5322920673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25682146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:19:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JeYq/lyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632807AbfIXQPW (ORCPT
+        id S2388616AbfIXQTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:15:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388230AbfIXQPG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:15:06 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8OG8Ste103654;
-        Tue, 24 Sep 2019 12:14:45 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v7n2vmmaw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Sep 2019 12:14:45 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8OGAX24009034;
-        Tue, 24 Sep 2019 16:14:44 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01wdc.us.ibm.com with ESMTP id 2v5bg6x0sk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Sep 2019 16:14:44 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8OGEgKu44892472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 16:14:42 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0A86BE061;
-        Tue, 24 Sep 2019 16:14:42 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EFC35BE04F;
-        Tue, 24 Sep 2019 16:14:41 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Sep 2019 16:14:41 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com,
-        robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net,
-        tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 4/4] ARM: dts: aspeed: ast2600: Add SCU interrupt controllers
-Date:   Tue, 24 Sep 2019 11:14:32 -0500
-Message-Id: <1569341672-27632-5-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
-References: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=664 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909240147
+        Tue, 24 Sep 2019 12:19:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34950 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbfIXQTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:19:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vJx4OSw+W8B8k4E2rJbiOozySYYyf29eZ8oUmoJKcmQ=; b=JeYq/lyNoO/HTyK24fwrGLp0HF
+        GW9sM8WUJDY08ljNkyXdGGvx93Q6iodF8o5VMmsZO+b1cJraYCeX2rr6PPyMeOX/kGmWsJwAREpBc
+        H0rxa1ad8isaBunQ8MriCGVrCnWBhuS7CKZITr0Y0YF4ZF7l1bKhBCgYHvMi/3Rsd1vo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iCnXP-0006Zg-P0; Tue, 24 Sep 2019 18:19:39 +0200
+Date:   Tue, 24 Sep 2019 18:19:39 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        Tero Kristo <t-kristo@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 2/3] clk: let init callback return an error code
+Message-ID: <20190924161939.GD28770@lunn.ch>
+References: <20190924123954.31561-1-jbrunet@baylibre.com>
+ <20190924123954.31561-3-jbrunet@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924123954.31561-3-jbrunet@baylibre.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for the interrupt controllers provided by the SCU.
+On Tue, Sep 24, 2019 at 02:39:53PM +0200, Jerome Brunet wrote:
+> If the init callback is allowed to request resources, it needs a return
+> value to report the outcome of such a request.
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+> 
+>  Sorry about the spam.
+>  This patch change quite a few files so I have tried to Cc the
+>  relevant people. Stephen, You may notice that I have added a
+>  couple of the network people. You need an Ack from one of them
+>  since the Amlogic G12a mdio mux has a clock which uses the .init()
+>  callback
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g6.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+>  static void __init of_ti_clockdomain_setup(struct device_node *node)
+> diff --git a/drivers/net/phy/mdio-mux-meson-g12a.c b/drivers/net/phy/mdio-mux-meson-g12a.c
+> index 7a9ad54582e1..bf86c9c7a288 100644
+> --- a/drivers/net/phy/mdio-mux-meson-g12a.c
+> +++ b/drivers/net/phy/mdio-mux-meson-g12a.c
+> @@ -123,7 +123,7 @@ static int g12a_ephy_pll_is_enabled(struct clk_hw *hw)
+>  	return (val & PLL_CTL0_LOCK_DIG) ? 1 : 0;
+>  }
+>  
+> -static void g12a_ephy_pll_init(struct clk_hw *hw)
+> +static int g12a_ephy_pll_init(struct clk_hw *hw)
+>  {
+>  	struct g12a_ephy_pll *pll = g12a_ephy_pll_to_dev(hw);
+>  
+> @@ -136,6 +136,8 @@ static void g12a_ephy_pll_init(struct clk_hw *hw)
+>  	writel(0x20200000, pll->base + ETH_PLL_CTL5);
+>  	writel(0x0000c002, pll->base + ETH_PLL_CTL6);
+>  	writel(0x00000023, pll->base + ETH_PLL_CTL7);
+> +
+> +	return 0;
+>  }
 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 3a1422f..d89f1e6 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -159,6 +159,24 @@
- 					compatible = "aspeed,ast2600-smpmem";
- 					reg = <0x180 0x40>;
- 				};
-+
-+				scu_ic0: interrupt-controller@0 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic0";
-+					reg = <0x560 0x4>;
-+					interrupt-parent = <&gic>;
-+					interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
-+
-+				scu_ic1: interrupt-controller@1 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic1";
-+					reg = <0x570 0x4>;
-+					interrupt-parent = <&gic>;
-+					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
- 			};
- 
- 			rng: hwrng@1e6e2524 {
--- 
-1.8.3.1
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
+It should be safe to merge this via the clk tree. You would probably
+know about an possible merge conflicts, since you wrote this driver!
+
+    Andrew
