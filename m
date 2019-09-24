@@ -2,137 +2,146 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D05EC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542D1C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DF921783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230F02054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344539;
-	bh=5bJxdsQXV+L3rjey0DyRWej71eurOlAnQjNwEdMiw1A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n+apqZI8NliLssVv9XEmea6Nbk6bxiV/ZXcHh14CsggY9ZiDLnoOsuiEAfyDLjORE
-	 cF9pM3OMxnFkpjVKhIb9sOrmGe1K6uvXNWeDUdeYRSDgJtl0MbxdSftFIExSq0BJma
-	 MFMaafFKg6NeR4y5Wdc4+e5qxtKCBgpQn+21F6i4=
+	s=default; t=1569344543;
+	bh=/P72MjB8XhN4/ZZi1bmLbv5QAnQz2BwhA6RjE5T6u/4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xJJ1ZGDGDmh/4pcbuGSOBmICsSnFq3eBzoxT+CNqdp1UVqjSyg+SyPJ5HkUUJSww2
+	 vqfQfFJwo29DQ262Z1vvY23+Kpa5Bk99G/w8QdvEqOvnfiW7YR3oCByWNKzm1WMu88
+	 yQ6b6hsggPbLKjut7MXGfR1Y03cb4KaNQVW56njA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633018AbfIXQnd (ORCPT
+        id S2411067AbfIXRCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:43:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42318 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633002AbfIXQnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:43:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pg+isT0abxRK8PsThFH4dFGWxytvoXKthoZB4FWIcCY=; b=pSSFz/TidsIPuUf4BwKRrs2QZ
-        LXloOqHMGQqnDGcNyEaGbfzDPUl09vSRc2K6UpTyUxW0ZDkBAcsqByWEWQphORjwtjvqyki6mUUHa
-        P/q+UwuyF470ELG8FkSSg8A4pBsKeaMxN5fY0+cRMFVucEwAf8H4OUBWuiAALthkV9yktC7BzDmbq
-        p+8QkW4SXBcHudVMOXg6K8chfeho/zWf++weyvl/Xbl3hV5PDwA5vZa0AqWHTHr4E7JjU8947fQsM
-        +IECp1HMQ/ksN4+s11S4124sp0H58LNN+2J270VtXorKzdN5qLldDhjlGUBwNw0byU11Rw4sixoME
-        tIuWmqfZw==;
-Received: from 177.96.206.173.dynamic.adsl.gvt.net.br ([177.96.206.173] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCnuT-0004nu-RX; Tue, 24 Sep 2019 16:43:30 +0000
-Date:   Tue, 24 Sep 2019 13:43:25 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: Use make invocation's -j argument for
- parallelism
-Message-ID: <20190924134325.4788fc30@coco.lan>
-In-Reply-To: <201909231537.0FC0474C@keescook>
-References: <201909191438.C00E6DB@keescook>
-        <20190922140331.3ffe8604@lwn.net>
-        <201909231537.0FC0474C@keescook>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 24 Sep 2019 13:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2632842AbfIXQm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D91521783;
+        Tue, 24 Sep 2019 16:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569343376;
+        bh=/P72MjB8XhN4/ZZi1bmLbv5QAnQz2BwhA6RjE5T6u/4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ReUInaZOcC6IEgmX09uszfo5IrdYC6kMnPwLz/+6clJFuuyP0ZhSRBTW0ntct8gnG
+         FkKPTYD++drYDWZOeDuK/vwkLDGmEYXwnIDCZPXjCVKFcae4PJCzuuBfs+A+u5yIFd
+         kpDkaiYVyFFKtgL6DHBll5hoLlSLTZ4wTB1nodw8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 25/87] pinctrl: stmfx: update pinconf settings
+Date:   Tue, 24 Sep 2019 12:40:41 -0400
+Message-Id: <20190924164144.25591-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
+References: <20190924164144.25591-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 23 Sep 2019 15:40:41 -0700
-Kees Cook <keescook@chromium.org> escreveu:
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-> On Sun, Sep 22, 2019 at 02:03:31PM -0600, Jonathan Corbet wrote:
-> > On Thu, 19 Sep 2019 14:44:37 -0700
-> > Kees Cook <keescook@chromium.org> wrote:
-> >   
-> > > While sphinx 1.7 and later supports "-jauto" for parallelism, this
-> > > effectively ignores the "-j" flag used in the "make" invocation, which
-> > > may cause confusion for build systems. Instead, extract the available  
-> > 
-> > What sort of confusion might we expect?  Or, to channel akpm, "what are the
-> > user-visible effects of this bug"?  
-> 
-> When I run "make htmldocs -j16" with a pre-1.7 sphinx, it is not
-> parallelized.
+[ Upstream commit a502b343ebd0eab38f3cb33fbb84011847cf5aac ]
 
-Sphinx supports parallel builds for a while. With pre-1.7, you could do
-something like:
+According to the following tab (coming from STMFX datasheet), updates
+have to done in stmfx_pinconf_set function:
 
-	make SPHINXOPTS="-j16" htmldocs
+-"type" has to be set when "bias" is configured as "pull-up or pull-down"
+-PIN_CONFIG_DRIVE_PUSH_PULL should only be used when gpio is configured as
+ output. There is so no need to check direction.
 
-Yet, on my experiences on big machines (tested here with Xeon with 40 and 64
-CPU threads), parallel build doesn't actually benefit with values higher than
--j5 to -j8, with pre-1.7.
+DIR | TYPE | PUPD | MFX GPIO configuration
+----|------|------|---------------------------------------------------
+1   | 1    | 1    | OUTPUT open drain with internal pull-up resistor
+----|------|------|---------------------------------------------------
+1   | 1    | 0    | OUTPUT open drain with internal pull-down resistor
+----|------|------|---------------------------------------------------
+1   | 0    | 0/1  | OUTPUT push pull no pull
+----|------|------|---------------------------------------------------
+0   | 1    | 1    | INPUT with internal pull-up resistor
+----|------|------|---------------------------------------------------
+0   | 1    | 0    | INPUT with internal pull-down resistor
+----|------|------|---------------------------------------------------
+0   | 0    | 1    | INPUT floating
+----|------|------|---------------------------------------------------
+0   | 0    | 0    | analog (GPIO not used, default setting)
 
-Sphinx 1.7 and higher seem to have improved a lot with "-jauto"
-(although I didn't time it comparing with -j5 or -j8 on a big server).
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/1564053416-32192-1-git-send-email-amelie.delaunay@st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-> When I run "make htmldocs -j8" with 1.7+ sphinx, it uses
-> all my CPUs instead of 8. :)
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index d3332da356372..31b6e511670fc 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -296,29 +296,29 @@ static int stmfx_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+ 		case PIN_CONFIG_BIAS_DISABLE:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			if (ret)
++				return ret;
++			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
++			if (ret)
++				return ret;
+ 			ret = stmfx_pinconf_set_pupd(pctl, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+-			break;
+-		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
++			ret = stmfx_pinconf_set_pupd(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-		case PIN_CONFIG_DRIVE_PUSH_PULL:
+-			if (!dir)
+-				ret = stmfx_pinconf_set_type(pctl, pin, 0);
+-			else
+-				ret = stmfx_pinconf_set_type(pctl, pin, 1);
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			ret = stmfx_pinconf_set_type(pctl, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+-- 
+2.20.1
 
-This should do the trick:
-
-	make SPHINXOPTS="-j8" htmldocs
-
-But yeah, IMHO, the best is if it could honor the Makefile flag:
-
-	make -j8 htmldocs
-
-If SPHINXOPTS doesn't contain "-j".
-
-> > > +	-j $(shell python3 $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \  
-> > 
-> > This (and the shebang line in the script itself) will cause the docs build
-> > to fail on systems lacking Python 3.  While we have talked about requiring
-> > Python 3 for the docs build, we have not actually taken that step yet.  We
-> > probably shouldn't sneak it in here.  I don't see anything in the script
-> > that should require a specific Python version, so I think it should be
-> > tweaked to be version-independent and just invoke "python".  
-> 
-> Ah, no problem. I can fix this. In a quick scan it looked like sphinx
-> was python3, but I see now that's just my install. :)
-
-On Fedora 30, both python2 and python3 versions are available:
-
-	python2-sphinx.noarch : Python documentation generator
-	python3-sphinx.noarch : Python documentation generator
-
-However, if one tries to install it without specifying "2" or "3", it
-defaults to python2 version:
-
-	$ sudo dnf install python-sphinx
-	...
-	Installing:
-	 python2-sphinx                  noarch 1:1.8.4-1.fc30            fedora  1.8 M
-
-AFAIKT, this also applies when distro upgrades takes place: upgrading
-a python2 sphinx from Fedora 30 to Rawhide will very likely keep
-the python2 version.
-
-Thanks,
-Mauro
