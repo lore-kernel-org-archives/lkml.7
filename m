@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA9CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B33C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5825D21906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E367A21D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343540;
-	bh=ENY7C6ndhTKXioNw1tKj1SAOP8oceyqR21UUp1PZOIA=;
+	s=default; t=1569343543;
+	bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkLyUedQm8zLX52GNvnpp2YuGGlSy198O7OZLAJ+mvBNnagRrq1w7AvyYe4CLS5e8
-	 h+2JoVAbM9ZofQb4XMiXAR8ffbfPyJLl0xAJ34JDGanYdSDgfKayq1YYonXIX6XS6W
-	 ldczUbUbEw32PzWoIaYwH9iM2xBRJ8mE7Duyu+ik=
+	b=bNizD0LkBmGc/aKL4Ha0jn6aZs/sg6R0rVBf1NGuiXTQFXDxIXafQE4Ze9pDcJQ8x
+	 PkLK/5ACOTl2cUGsUo3WrbsVaFdI3XxA4TzTtDUFWCS0sZi1BAsB8XS7f7GLP1+Hmr
+	 iLBvx0qPrr8f99Xyk4uWUdxU6VsjHBa6j94Y5is0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410006AbfIXQpi (ORCPT
+        id S2410019AbfIXQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409989AbfIXQpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:45:35 -0400
+        id S2410005AbfIXQpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:45:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3C3520872;
-        Tue, 24 Sep 2019 16:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 021D720872;
+        Tue, 24 Sep 2019 16:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343534;
-        bh=ENY7C6ndhTKXioNw1tKj1SAOP8oceyqR21UUp1PZOIA=;
+        s=default; t=1569343537;
+        bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFb+bzIK6wEaRLkfG9f7F1WDxdmReKbmdkPxC/kgFDahE3lubg3S9D6Wk2DFQ8pfw
-         JSXXAQY6BZNn4QBygxsiYJhmNTwq1Oz0FQJQebKYEO7nrltDkoggSEoxdnvTGS6lGk
-         nWF0BMGIeJ4pZXsGP1rDYxsNwe26LPgx2EhXqXBQ=
+        b=2DAFcJ4Ueo4qqfiWr4z0gN5q40kSnzw4hJ/V+Kt0VJYGyYJI/YKeZjOjGxfACLwiS
+         TIW31K2muFSEzl8QSXUn+RrdxsFFxU9yR7oSow/GTRREXfuLY+mWXJdBpWn+ksCFj6
+         +wqwJwdtG7QWl9mRm6m5ZKISYz1sxitrWH+7Vf5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 81/87] mbox: qcom: add APCS child device for QCS404
-Date:   Tue, 24 Sep 2019 12:41:37 -0400
-Message-Id: <20190924164144.25591-81-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 82/87] clk: sprd: add missing kfree
+Date:   Tue, 24 Sep 2019 12:41:38 -0400
+Message-Id: <20190924164144.25591-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -62,57 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-[ Upstream commit 78c86458a440ff356073c21b568cb58ddb67b82b ]
+[ Upstream commit 5e75ea9c67433a065b0e8595ad3c91c7c0ca0d2d ]
 
-There is clock controller functionality in the APCS hardware block of
-qcs404 devices similar to msm8916.
+The number of config registers for different pll clocks probably are not
+same, so we have to use malloc, and should free the memory before return.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Link: https://lkml.kernel.org/r/20190905103009.27166-1-zhang.lyra@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/clk/sprd/pll.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 705e17a5479cc..d3676fd3cf945 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -47,7 +47,6 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
- 
- static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	struct qcom_apcs_ipc *apcs;
- 	struct regmap *regmap;
- 	struct resource *res;
-@@ -55,6 +54,11 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 	void __iomem *base;
- 	unsigned long i;
- 	int ret;
-+	const struct of_device_id apcs_clk_match_table[] = {
-+		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
-+		{ .compatible = "qcom,qcs404-apcs-apps-global", },
-+		{}
-+	};
- 
- 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
- 	if (!apcs)
-@@ -89,7 +93,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+index 36b4402bf09e3..640270f51aa56 100644
+--- a/drivers/clk/sprd/pll.c
++++ b/drivers/clk/sprd/pll.c
+@@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
+ 					 k2 + refin * nint * CLK_PLL_1M;
  	}
  
--	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
-+	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
- 		apcs->clk = platform_device_register_data(&pdev->dev,
- 							  "qcom-apcs-msm8916-clk",
- 							  -1, NULL, 0);
++	kfree(cfg);
+ 	return rate;
+ }
+ 
+@@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
+ 	if (!ret)
+ 		udelay(pll->udelay);
+ 
++	kfree(cfg);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
