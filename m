@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1577CC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB281C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF2321BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878652054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344097;
-	bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
+	s=default; t=1569344105;
+	bh=mhigEyX4N7wPbu9+w1npq2SXog76H2lNXrByJ6FAQyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PD9KWU8zAgAHym7cSGF2qNmhetjnABK/iqqJHheXndFM5J0QaqksHT99pDOOHFibg
-	 VZ9Op3QujnrWFGSn2VeKjDij/HDWkj3K/v6EMYutvVGjMisj7NUro6FXP0HZqyUW7r
-	 NWQOIoCKSR/5MnnC7REa8ym38arLxjddIlJkLWGk=
+	b=bPAmDfLj3mF683PCPNggq3ovyAx0waViHKxytTwEod/Fht2PohG+8Tcph5AsKa+mO
+	 CXuZZpvg4M0AXBX1M6jeC+n50ADOu1PHGBw8rVSlnLpOHHc9yuPwxkf1UD7XXrgbaf
+	 9l6mc9csd7rZtyVuuoWX6kYFw0cOxeVDtfdQBD4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410982AbfIXQy5 (ORCPT
+        id S2441523AbfIXQuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44910 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411151AbfIXQvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:37 -0400
+        id S2441472AbfIXQun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA60217D9;
-        Tue, 24 Sep 2019 16:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B620021D82;
+        Tue, 24 Sep 2019 16:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343896;
-        bh=W6QghoyZXk8Hl3WCgfDzrIHNelWpAuCRcKjsOjXwCMg=;
+        s=default; t=1569343842;
+        bh=mhigEyX4N7wPbu9+w1npq2SXog76H2lNXrByJ6FAQyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2mVfGXvOtIHjEijYyUL1aHZAr2Iq1T7SmW/eg5iRLxbMXI3Yp4RGN/V/rdvvZ7G6
-         Yf3IiVHcDWQMITR4HrnsXAipNGtWpn33DPOiOTym6d7+bAv/PuSGe4qyL4EGTLlDNv
-         8BfsZ629xVjec4QImqk54pdSkxH/LAzkhVnaXhXg=
+        b=HbYYd0M5Z8Va8P9oQwK4oNEFBqGz0QTPC/bahOUC61GZdqLuNg+zXA2h88XeaIJho
+         hY1S7gi1mknR3la2Db5HfY2KOrR2ajhoxKxbrKOMPryz4p0w/zyCVbN23PNyjaFvLG
+         cfnJa4sQmGiF69ioRYoFCscwGQleaHZG2X9vvMmY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marko Kohtala <marko.kohtala@okoko.fi>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/19] video: ssd1307fb: Start page range at page_offset
-Date:   Tue, 24 Sep 2019 12:51:13 -0400
-Message-Id: <20190924165130.28625-2-sashal@kernel.org>
+Cc:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 06/28] drm/radeon: Fix EEH during kexec
+Date:   Tue, 24 Sep 2019 12:50:09 -0400
+Message-Id: <20190924165031.28292-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
-References: <20190924165130.28625-1-sashal@kernel.org>
+In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
+References: <20190924165031.28292-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marko Kohtala <marko.kohtala@okoko.fi>
+From: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
 
-[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
+[ Upstream commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6 ]
 
-The page_offset was only applied to the end of the page range. This caused
-the display updates to cause a scrolling effect on the display because the
-amount of data written to the display did not match the range display
-expected.
+During kexec some adapters hit an EEH since they are not properly
+shut down in the radeon_pci_shutdown() function. Adding
+radeon_suspend_kms() fixes this issue.
 
-Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
-Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
+Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 2925d5ce8d3e5..1267b93c03bd0 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -430,7 +430,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index f4becad0a78c0..54d97dd5780a1 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -368,11 +368,19 @@ radeon_pci_remove(struct pci_dev *pdev)
+ static void
+ radeon_pci_shutdown(struct pci_dev *pdev)
+ {
++	struct drm_device *ddev = pci_get_drvdata(pdev);
++
+ 	/* if we are running in a VM, make sure the device
+ 	 * torn down properly on reboot/shutdown
+ 	 */
+ 	if (radeon_device_is_virtual())
+ 		radeon_pci_remove(pdev);
++
++	/* Some adapters need to be suspended before a
++	* shutdown occurs in order to prevent an error
++	* during kexec.
++	*/
++	radeon_suspend_kms(ddev, true, true, false);
+ }
  
--	ret = ssd1307fb_write_cmd(par->client, 0x0);
-+	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
- 	if (ret < 0)
- 		return ret;
- 
+ static int radeon_pmops_suspend(struct device *dev)
 -- 
 2.20.1
 
