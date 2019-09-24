@@ -2,337 +2,256 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE6C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45996C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8456220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0398020872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:28:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K+0yYXAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632811AbfIXQ06 (ORCPT
+        id S1731762AbfIXQ2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:26:58 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:34300 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389193AbfIXQ05 (ORCPT
+        Tue, 24 Sep 2019 12:28:17 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38912 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfIXQ2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:26:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TdKFhhy_1569342404;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TdKFhhy_1569342404)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 25 Sep 2019 00:26:47 +0800
-Subject: Re: + mm-thp-extract-split_queue_-into-a-struct.patch added to -mm
- tree
-To:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     mm-commits@vger.kernel.org, vdavydov.dev@gmail.com,
-        shakeelb@google.com, rientjes@google.com, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        hannes@cmpxchg.org, cai@lca.pw
-References: <20190923220902.-_eJc%akpm@linux-foundation.org>
- <20190924135608.GW23050@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <1d13fbe3-2a25-3b31-64a5-50d511c201f4@linux.alibaba.com>
-Date:   Tue, 24 Sep 2019 09:26:37 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 24 Sep 2019 12:28:16 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v4so1676291pff.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 09:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7dVwxmu2SkoqvTgiskHM5/QnqENTTsbmyHUXeZUf14A=;
+        b=K+0yYXABVHx91Fy+/iAa9bES1mDMpIQDCWml9eSD5u/FTlQG9yT8HXUbFSSo/8dbE5
+         1nuZmlLqc9yGCR2PzAlhHyMbQVRn3K6wIloNfWjGa/MKT9p9l9FvntNdYsw1VvNjYM/K
+         S4i9T8000lAxE/Wt3KVo2A0vfByi5oNinEo+w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7dVwxmu2SkoqvTgiskHM5/QnqENTTsbmyHUXeZUf14A=;
+        b=Lhre1TYNDPXTQjmztn4hq3LCA1j9SambTOrE3BnJs9BeuXqFsH1gOU/fT5l73g8GMW
+         IR2UYJcwe/EVQKd1sUcRKt7XRjIdq2CBD7VW/Xh9VoeYGtasvsPFxcOK6KWF3flIl9jU
+         c/HO/Y9OEhg3wwNIhPloC6nfCDpWm8phmsL8hSIMVgQ23gVtr4CIpc3aGl6gJjVWuWhP
+         kZu6xGh/4k/fegx+R2LJymC17myn6zXEAxdkEV8cIH8G9Ve1BP8H+WHOIKHdYlJhGhnJ
+         F/kjX8LDuOYqbFie5K7E4NkfYcRc1G2qoSMnKTAIPql09M/gxQDYc6ATsgFzWxOv7DDp
+         u2pw==
+X-Gm-Message-State: APjAAAVj6jXTANsbio/YqQM56iYJcONwFIztoqpKje9c0fdH2my8bg9A
+        pBYgtDmJR/f9HIXLcgyxSB9fEw==
+X-Google-Smtp-Source: APXvYqwEh8Hq0us2wSMfAX8Zrn+A61c2DD/1nfnvPvKNIn55iQBVHd76lPbB5BTHZeMZ4mTKWryUkA==
+X-Received: by 2002:a63:5c11:: with SMTP id q17mr3937684pgb.107.1569342495379;
+        Tue, 24 Sep 2019 09:28:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v4sm2680768pff.181.2019.09.24.09.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 09:28:14 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 09:28:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     pankaj.bharadiya@gmail.com, andriy.shevchenko@linux.intel.com,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        kernel-hardening@lists.openwall.com, akpm@linux-foundation.org,
+        mayhs11saini@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Add and use sizeof_member macro to bring uniformity
+Message-ID: <201909240922.D5A48445@keescook>
+References: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190924135608.GW23050@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+Is a cleanup like this something you'd be willing to include before you
+cut -rc1, or should this wait for a later time? (This is likely very
+close to the final version -- I had some minor feedback, but I wanted
+to figure out timing for the series and how you best wanted to handle it.)
+If it helps, I can build a tree for you to pull from, if you don't want
+to run the scripts?
 
-On 9/24/19 6:56 AM, Michal Hocko wrote:
-> Do we really need this if deferred list is going to be shrunk more
-> pro-actively as discussed already - I am sorry I do not have a link handy
-> but in short the deferred list would be drained from a kworker context
-> more pro-actively rather than wait for the memory pressure to happen.
+Thanks!
 
- From our experience I really didn't see the current waiting for memory 
-pressure approach is a problem, it does work well and is still a good 
-compromise. And, I'm supposed we all agree the side effect incurred by 
-the more proactive kworker approach is definitely a concern (i.e. may 
-waste cpu cycles, break isolation, etc) according to our discussion.
+-Kees
 
-And we do have other much simpler ways to shrink THPs more proactively, 
-for example, waking up kswapd more aggressively via tuning 
-watermark_scale_factor, and/or do shrinking harder, etc.
+On Tue, Sep 24, 2019 at 04:28:34PM +0530, Pankaj Bharadiya wrote:
+> This topic has been discussed on the kernel hardening mailing list [1]
+> few months back. Thanks to Shyam for initiating work on this.
+> 
+> Its been concluded on how the patch series should be but there was
+> no further progress and this work is still pending (Pardon me if I 
+> missed something here).
+> 
+> At present, we have 3 different macros which serve the same purpose
+> of finding the size of a member of a structure:
+>   - SIZEOF_FIELD
+>   - FIELD_SIZEOF
+>   - sizeof_field
+> 
+> To bring uniformity in entire kernel source tree, this patch series -
+>   - adds the new sizeof_member macro
+>   - does scripted replacement of above 3 macros where used with newly
+>     introduced sizeof_member macro
+>   - removes definitions of SIZEOF_FIELD, FIELD_SIZEOF, sizeof_field
+> 
+> This series aims to fix the issue based on given comments in [1].
+> 
+> [1] Link: https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+> 
+> Pankaj Bharadiya (5):
+>   linux/kernel.h: Add sizeof_member macro
+>   treewide: Use sizeof_member macro
+>   MIPS: OCTEON: use sizeof_member macro instead of SIZEOF_FIELD
+>   linux/kernel.h: Remove FIELD_SIZEOF macro
+>   stddef.h: Remove sizeof_field macro
+> 
+>  Documentation/process/coding-style.rst        |   2 +-
+>  .../it_IT/process/coding-style.rst            |   2 +-
+>  .../zh_CN/process/coding-style.rst            |   2 +-
+>  arch/arc/kernel/unwind.c                      |   6 +-
+>  arch/arm64/include/asm/processor.h            |  10 +-
+>  .../cavium-octeon/executive/cvmx-bootmem.c    |   9 +-
+>  arch/powerpc/net/bpf_jit32.h                  |   4 +-
+>  arch/powerpc/net/bpf_jit_comp.c               |  16 +-
+>  arch/sparc/net/bpf_jit_comp_32.c              |   8 +-
+>  arch/x86/kernel/fpu/xstate.c                  |   2 +-
+>  block/blk-core.c                              |   4 +-
+>  crypto/adiantum.c                             |   4 +-
+>  drivers/firmware/efi/efi.c                    |   2 +-
+>  drivers/gpu/drm/i915/gvt/scheduler.c          |   2 +-
+>  drivers/infiniband/hw/hfi1/sdma.c             |   2 +-
+>  drivers/infiniband/hw/hfi1/verbs.h            |   4 +-
+>  .../ulp/opa_vnic/opa_vnic_ethtool.c           |   2 +-
+>  drivers/input/keyboard/applespi.c             |   2 +-
+>  drivers/md/raid5-ppl.c                        |   2 +-
+>  drivers/media/platform/omap3isp/isppreview.c  |  24 +--
+>  drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  |   4 +-
+>  .../ethernet/cavium/liquidio/octeon_console.c |  16 +-
+>  .../net/ethernet/emulex/benet/be_ethtool.c    |   2 +-
+>  .../ethernet/hisilicon/hns3/hns3pf/hclge_tm.c |   2 +-
+>  .../net/ethernet/huawei/hinic/hinic_ethtool.c |   8 +-
+>  .../net/ethernet/intel/fm10k/fm10k_ethtool.c  |   2 +-
+>  .../net/ethernet/intel/i40e/i40e_ethtool.c    |   2 +-
+>  .../net/ethernet/intel/i40e/i40e_lan_hmc.c    |   2 +-
+>  .../net/ethernet/intel/iavf/iavf_ethtool.c    |   2 +-
+>  drivers/net/ethernet/intel/ice/ice_ethtool.c  |  10 +-
+>  .../net/ethernet/intel/ice/ice_lan_tx_rx.h    |   2 +-
+>  drivers/net/ethernet/intel/igb/igb_ethtool.c  |   4 +-
+>  drivers/net/ethernet/intel/igc/igc_ethtool.c  |   4 +-
+>  .../net/ethernet/intel/ixgb/ixgb_ethtool.c    |   4 +-
+>  drivers/net/ethernet/intel/ixgbevf/ethtool.c  |   4 +-
+>  drivers/net/ethernet/marvell/mv643xx_eth.c    |   4 +-
+>  .../net/ethernet/mellanox/mlx4/en_ethtool.c   |   2 +-
+>  .../ethernet/mellanox/mlx5/core/fpga/ipsec.c  |   6 +-
+>  .../net/ethernet/mellanox/mlx5/core/fs_core.c |   4 +-
+>  .../ethernet/mellanox/mlxsw/spectrum_fid.c    |   4 +-
+>  .../ethernet/mellanox/mlxsw/spectrum_ptp.c    |   2 +-
+>  drivers/net/ethernet/netronome/nfp/bpf/jit.c  |  10 +-
+>  drivers/net/ethernet/netronome/nfp/bpf/main.c |   2 +-
+>  .../net/ethernet/netronome/nfp/bpf/offload.c  |   2 +-
+>  .../net/ethernet/netronome/nfp/flower/main.h  |   2 +-
+>  .../oki-semi/pch_gbe/pch_gbe_ethtool.c        |   2 +-
+>  drivers/net/ethernet/qlogic/qede/qede.h       |   2 +-
+>  .../ethernet/qlogic/qlcnic/qlcnic_ethtool.c   |   2 +-
+>  .../net/ethernet/qlogic/qlge/qlge_ethtool.c   |   2 +-
+>  .../ethernet/samsung/sxgbe/sxgbe_ethtool.c    |   2 +-
+>  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   4 +-
+>  drivers/net/ethernet/ti/cpsw_ethtool.c        |   6 +-
+>  drivers/net/ethernet/ti/netcp_ethss.c         |  32 ++--
+>  drivers/net/fjes/fjes_ethtool.c               |   2 +-
+>  drivers/net/geneve.c                          |   2 +-
+>  drivers/net/hyperv/netvsc_drv.c               |   2 +-
+>  drivers/net/usb/sierra_net.c                  |   2 +-
+>  drivers/net/usb/usbnet.c                      |   2 +-
+>  drivers/net/vxlan.c                           |   4 +-
+>  .../net/wireless/marvell/libertas/debugfs.c   |   2 +-
+>  drivers/net/wireless/marvell/mwifiex/util.h   |   4 +-
+>  drivers/s390/net/qeth_core_mpc.h              |  10 +-
+>  drivers/scsi/aacraid/aachba.c                 |   4 +-
+>  drivers/scsi/be2iscsi/be_cmds.h               |   2 +-
+>  drivers/scsi/cxgbi/libcxgbi.c                 |   2 +-
+>  drivers/scsi/smartpqi/smartpqi_init.c         |   6 +-
+>  .../staging/media/davinci_vpfe/dm365_ipipe.c  |  36 ++---
+>  drivers/target/iscsi/cxgbit/cxgbit_main.c     |   2 +-
+>  drivers/usb/atm/usbatm.c                      |   2 +-
+>  drivers/usb/gadget/function/f_fs.c            |   2 +-
+>  fs/befs/linuxvfs.c                            |   2 +-
+>  fs/ext2/super.c                               |   2 +-
+>  fs/ext4/super.c                               |   2 +-
+>  fs/freevxfs/vxfs_super.c                      |   2 +-
+>  fs/orangefs/super.c                           |   2 +-
+>  fs/ufs/super.c                                |   2 +-
+>  include/linux/filter.h                        |  12 +-
+>  include/linux/kernel.h                        |  12 +-
+>  include/linux/kvm_host.h                      |   2 +-
+>  include/linux/phy_led_triggers.h              |   2 +-
+>  include/linux/slab.h                          |   2 +-
+>  include/linux/stddef.h                        |  10 +-
+>  include/net/garp.h                            |   2 +-
+>  include/net/ip_tunnels.h                      |   6 +-
+>  include/net/mrp.h                             |   2 +-
+>  include/net/netfilter/nf_conntrack_helper.h   |   2 +-
+>  include/net/netfilter/nf_tables_core.h        |   2 +-
+>  include/net/sock.h                            |   2 +-
+>  ipc/util.c                                    |   2 +-
+>  kernel/bpf/cgroup.c                           |   2 +-
+>  kernel/bpf/local_storage.c                    |   4 +-
+>  kernel/fork.c                                 |   2 +-
+>  kernel/signal.c                               |  12 +-
+>  kernel/utsname.c                              |   2 +-
+>  net/802/mrp.c                                 |   6 +-
+>  net/batman-adv/main.c                         |   2 +-
+>  net/bpf/test_run.c                            |   4 +-
+>  net/bridge/br.c                               |   2 +-
+>  net/caif/caif_socket.c                        |   2 +-
+>  net/core/dev.c                                |   2 +-
+>  net/core/filter.c                             | 140 +++++++++---------
+>  net/core/flow_dissector.c                     |  10 +-
+>  net/core/skbuff.c                             |   2 +-
+>  net/core/xdp.c                                |   4 +-
+>  net/dccp/proto.c                              |   2 +-
+>  net/ipv4/ip_gre.c                             |   4 +-
+>  net/ipv4/ip_vti.c                             |   4 +-
+>  net/ipv4/raw.c                                |   2 +-
+>  net/ipv4/tcp.c                                |   2 +-
+>  net/ipv6/ip6_gre.c                            |   4 +-
+>  net/ipv6/raw.c                                |   2 +-
+>  net/iucv/af_iucv.c                            |   2 +-
+>  net/netfilter/nf_tables_api.c                 |   4 +-
+>  net/netfilter/nfnetlink_cthelper.c            |   2 +-
+>  net/netfilter/nft_ct.c                        |  12 +-
+>  net/netfilter/nft_masq.c                      |   2 +-
+>  net/netfilter/nft_nat.c                       |   6 +-
+>  net/netfilter/nft_redir.c                     |   2 +-
+>  net/netfilter/nft_tproxy.c                    |   4 +-
+>  net/netfilter/xt_RATEEST.c                    |   2 +-
+>  net/netlink/af_netlink.c                      |   2 +-
+>  net/openvswitch/datapath.c                    |   2 +-
+>  net/openvswitch/flow.h                        |   4 +-
+>  net/rxrpc/af_rxrpc.c                          |   2 +-
+>  net/sched/act_ct.c                            |   4 +-
+>  net/sched/cls_flower.c                        |   2 +-
+>  net/sctp/socket.c                             |   4 +-
+>  net/unix/af_unix.c                            |   2 +-
+>  security/integrity/ima/ima_policy.c           |   4 +-
+>  sound/soc/codecs/hdmi-codec.c                 |   2 +-
+>  virt/kvm/kvm_main.c                           |   2 +-
+>  131 files changed, 345 insertions(+), 360 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 
-Even though we have to drain THPs more proactively by whatever means in 
-the future, I'd prefer it is memcg aware as well.
-
-BTW, we already had these patches running in our production environment 
-for a while, they did resolve the problem we met very well.
-
->
-> On Mon 23-09-19 15:09:02, Andrew Morton wrote:
->> ------------------------------------------------------
->> From: Yang Shi <yang.shi@linux.alibaba.com>
->> Subject: mm: thp: extract split_queue_* into a struct
->>
->> Patch series "Make deferred split shrinker memcg aware", v6.
->>
->> Currently THP deferred split shrinker is not memcg aware, this may cause
->> premature OOM with some configuration.  For example the below test would
->> run into premature OOM easily:
->>
->> $ cgcreate -g memory:thp
->> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
->> $ cgexec -g memory:thp transhuge-stress 4000
->>
->> transhuge-stress comes from kernel selftest.
->>
->> It is easy to hit OOM, but there are still a lot THP on the deferred split
->> queue, memcg direct reclaim can't touch them since the deferred split
->> shrinker is not memcg aware.
->>
->> Convert deferred split shrinker memcg aware by introducing per memcg
->> deferred split queue.  The THP should be on either per node or per memcg
->> deferred split queue if it belongs to a memcg.  When the page is
->> immigrated to the other memcg, it will be immigrated to the target memcg's
->> deferred split queue too.
->>
->> Reuse the second tail page's deferred_list for per memcg list since the
->> same THP can't be on multiple deferred split queues.
->>
->> Make deferred split shrinker not depend on memcg kmem since it is not
->> slab.  It doesn't make sense to not shrink THP even though memcg kmem is
->> disabled.
->>
->> With the above change the test demonstrated above doesn't trigger OOM even
->> though with cgroup.memory=nokmem.
->>
->>
->> This patch (of 4):
->>
->> Put split_queue, split_queue_lock and split_queue_len into a struct in
->> order to reduce code duplication when we convert deferred_split to memcg
->> aware in the later patches.
->>
->> Link: http://lkml.kernel.org/r/1565144277-36240-2-git-send-email-yang.shi@linux.alibaba.com
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Shakeel Butt <shakeelb@google.com>
->> Cc: David Rientjes <rientjes@google.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>
->>   include/linux/mmzone.h |   12 +++++++---
->>   mm/huge_memory.c       |   45 +++++++++++++++++++++------------------
->>   mm/page_alloc.c        |    8 ++++--
->>   3 files changed, 39 insertions(+), 26 deletions(-)
->>
->> --- a/include/linux/mmzone.h~mm-thp-extract-split_queue_-into-a-struct
->> +++ a/include/linux/mmzone.h
->> @@ -679,6 +679,14 @@ struct zonelist {
->>   extern struct page *mem_map;
->>   #endif
->>   
->> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> +struct deferred_split {
->> +	spinlock_t split_queue_lock;
->> +	struct list_head split_queue;
->> +	unsigned long split_queue_len;
->> +};
->> +#endif
->> +
->>   /*
->>    * On NUMA machines, each NUMA node would have a pg_data_t to describe
->>    * it's memory layout. On UMA machines there is a single pglist_data which
->> @@ -758,9 +766,7 @@ typedef struct pglist_data {
->>   #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
->>   
->>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	spinlock_t split_queue_lock;
->> -	struct list_head split_queue;
->> -	unsigned long split_queue_len;
->> +	struct deferred_split deferred_split_queue;
->>   #endif
->>   
->>   	/* Fields commonly accessed by the page reclaim scanner */
->> --- a/mm/huge_memory.c~mm-thp-extract-split_queue_-into-a-struct
->> +++ a/mm/huge_memory.c
->> @@ -2691,6 +2691,7 @@ int split_huge_page_to_list(struct page
->>   {
->>   	struct page *head = compound_head(page);
->>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
->> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->>   	struct anon_vma *anon_vma = NULL;
->>   	struct address_space *mapping = NULL;
->>   	int count, mapcount, extra_pins, ret;
->> @@ -2777,17 +2778,17 @@ int split_huge_page_to_list(struct page
->>   	}
->>   
->>   	/* Prevent deferred_split_scan() touching ->_refcount */
->> -	spin_lock(&pgdata->split_queue_lock);
->> +	spin_lock(&ds_queue->split_queue_lock);
->>   	count = page_count(head);
->>   	mapcount = total_mapcount(head);
->>   	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
->>   		if (!list_empty(page_deferred_list(head))) {
->> -			pgdata->split_queue_len--;
->> +			ds_queue->split_queue_len--;
->>   			list_del(page_deferred_list(head));
->>   		}
->>   		if (mapping)
->>   			__dec_node_page_state(page, NR_SHMEM_THPS);
->> -		spin_unlock(&pgdata->split_queue_lock);
->> +		spin_unlock(&ds_queue->split_queue_lock);
->>   		__split_huge_page(page, list, end, flags);
->>   		if (PageSwapCache(head)) {
->>   			swp_entry_t entry = { .val = page_private(head) };
->> @@ -2804,7 +2805,7 @@ int split_huge_page_to_list(struct page
->>   			dump_page(page, "total_mapcount(head) > 0");
->>   			BUG();
->>   		}
->> -		spin_unlock(&pgdata->split_queue_lock);
->> +		spin_unlock(&ds_queue->split_queue_lock);
->>   fail:		if (mapping)
->>   			xa_unlock(&mapping->i_pages);
->>   		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
->> @@ -2827,52 +2828,56 @@ out:
->>   void free_transhuge_page(struct page *page)
->>   {
->>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
->> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->>   	unsigned long flags;
->>   
->> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->>   	if (!list_empty(page_deferred_list(page))) {
->> -		pgdata->split_queue_len--;
->> +		ds_queue->split_queue_len--;
->>   		list_del(page_deferred_list(page));
->>   	}
->> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
->> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
->>   	free_compound_page(page);
->>   }
->>   
->>   void deferred_split_huge_page(struct page *page)
->>   {
->>   	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
->> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->>   	unsigned long flags;
->>   
->>   	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
->>   
->> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->>   	if (list_empty(page_deferred_list(page))) {
->>   		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
->> -		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
->> -		pgdata->split_queue_len++;
->> +		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
->> +		ds_queue->split_queue_len++;
->>   	}
->> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
->> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
->>   }
->>   
->>   static unsigned long deferred_split_count(struct shrinker *shrink,
->>   		struct shrink_control *sc)
->>   {
->>   	struct pglist_data *pgdata = NODE_DATA(sc->nid);
->> -	return READ_ONCE(pgdata->split_queue_len);
->> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->> +	return READ_ONCE(ds_queue->split_queue_len);
->>   }
->>   
->>   static unsigned long deferred_split_scan(struct shrinker *shrink,
->>   		struct shrink_control *sc)
->>   {
->>   	struct pglist_data *pgdata = NODE_DATA(sc->nid);
->> +	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->>   	unsigned long flags;
->>   	LIST_HEAD(list), *pos, *next;
->>   	struct page *page;
->>   	int split = 0;
->>   
->> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->>   	/* Take pin on all head pages to avoid freeing them under us */
->> -	list_for_each_safe(pos, next, &pgdata->split_queue) {
->> +	list_for_each_safe(pos, next, &ds_queue->split_queue) {
->>   		page = list_entry((void *)pos, struct page, mapping);
->>   		page = compound_head(page);
->>   		if (get_page_unless_zero(page)) {
->> @@ -2880,12 +2885,12 @@ static unsigned long deferred_split_scan
->>   		} else {
->>   			/* We lost race with put_compound_page() */
->>   			list_del_init(page_deferred_list(page));
->> -			pgdata->split_queue_len--;
->> +			ds_queue->split_queue_len--;
->>   		}
->>   		if (!--sc->nr_to_scan)
->>   			break;
->>   	}
->> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
->> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
->>   
->>   	list_for_each_safe(pos, next, &list) {
->>   		page = list_entry((void *)pos, struct page, mapping);
->> @@ -2899,15 +2904,15 @@ next:
->>   		put_page(page);
->>   	}
->>   
->> -	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->> -	list_splice_tail(&list, &pgdata->split_queue);
->> -	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
->> +	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->> +	list_splice_tail(&list, &ds_queue->split_queue);
->> +	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
->>   
->>   	/*
->>   	 * Stop shrinker if we didn't split any page, but the queue is empty.
->>   	 * This can happen if pages were freed under us.
->>   	 */
->> -	if (!split && list_empty(&pgdata->split_queue))
->> +	if (!split && list_empty(&ds_queue->split_queue))
->>   		return SHRINK_STOP;
->>   	return split;
->>   }
->> --- a/mm/page_alloc.c~mm-thp-extract-split_queue_-into-a-struct
->> +++ a/mm/page_alloc.c
->> @@ -6646,9 +6646,11 @@ static unsigned long __init calc_memmap_
->>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>   static void pgdat_init_split_queue(struct pglist_data *pgdat)
->>   {
->> -	spin_lock_init(&pgdat->split_queue_lock);
->> -	INIT_LIST_HEAD(&pgdat->split_queue);
->> -	pgdat->split_queue_len = 0;
->> +	struct deferred_split *ds_queue = &pgdat->deferred_split_queue;
->> +
->> +	spin_lock_init(&ds_queue->split_queue_lock);
->> +	INIT_LIST_HEAD(&ds_queue->split_queue);
->> +	ds_queue->split_queue_len = 0;
->>   }
->>   #else
->>   static void pgdat_init_split_queue(struct pglist_data *pgdat) {}
->> _
->>
->> Patches currently in -mm which might be from yang.shi@linux.alibaba.com are
->>
->> mmthp-add-read-only-thp-support-for-non-shmem-fs.patch
->> mm-thp-extract-split_queue_-into-a-struct.patch
->> mm-move-mem_cgroup_uncharge-out-of-__page_cache_release.patch
->> mm-shrinker-make-shrinker-not-depend-on-memcg-kmem.patch
->> mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-v6.patch
->> mm-thp-make-deferred-split-shrinker-memcg-aware.patch
->> mm-thp-make-deferred-split-shrinker-memcg-aware-v6.patch
-
+-- 
+Kees Cook
