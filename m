@@ -2,95 +2,89 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5987C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3FAC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AF7214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78466214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LZT8JPbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409750AbfIXSFy (ORCPT
+        id S2409896AbfIXSGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:05:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36194 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407040AbfIXSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:05:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5E8AAC049E36;
-        Tue, 24 Sep 2019 18:05:53 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A15BE600CC;
-        Tue, 24 Sep 2019 18:05:47 +0000 (UTC)
-Message-ID: <b07c0ad99393cfa0968a926bd7302adef4c6a7e4.camel@redhat.com>
-Subject: Re: [PATCH RT 7/8] sched: migrate_enable: Use select_fallback_rq()
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Tue, 24 Sep 2019 13:05:47 -0500
-In-Reply-To: <20190917160030.i24gvyye2bpdykfy@linutronix.de>
-References: <20190727055638.20443-1-swood@redhat.com>
-         <20190727055638.20443-8-swood@redhat.com>
-         <20190917160030.i24gvyye2bpdykfy@linutronix.de>
-Organization: Red Hat
+        Tue, 24 Sep 2019 14:06:38 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:40274 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409758AbfIXSGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:06:38 -0400
+Received: by mail-pf1-f202.google.com with SMTP id b8so2051692pfd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TUzB4BV/01osUD6NgeQM+cXNRgz2sTC/G7TmIy4oA+g=;
+        b=LZT8JPbgP33AsnQ4s1X2ZZAHl9DNv4fukDxTVOq5W4q7AO74tG+VteLJJkJfYkMGeH
+         tjWPWWdQySJqPOQa5VJFz8OTIYZ7KcDD2AUQNGk7IsRVsynEtC3ZlUv2tkJoK6Wy99Uq
+         SgBRuV5iAWBKh8mK2ZEi+vskUzga6BeiNGeM9F8KurPNKAmWQ4+oFQYNV3oOtSJxkgp3
+         02q3a+ytOpeUzid0HG+gXk8wVoYFUapKy4MqyeKjahag6YC3pH7u7+kohCNBQTyldgbE
+         sSSbLLDS3JqPY7VGIRZPNbCoVNwUoRGj8X5rk48XJ1LzthzWzQM1c/j68zt6dS4atzSa
+         s1xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TUzB4BV/01osUD6NgeQM+cXNRgz2sTC/G7TmIy4oA+g=;
+        b=tY6pXxlrLxe6+/Ca6Q7Em7h2HrVZvwD7c61fkGYRdxMwbim6XDm7uIfsp+JZlakdxs
+         UFzSwdgDX2ph8BimDxRzcshE/GX67JmRtDcJBMgJKUzpTzVLdyvsJcNQED5Qb94BP9lm
+         1+jqHyn8aHncMw424fztUCZ2sY9Bt/gjxKaw67SkahQ/o3ryyVfYULPJgQtnX7JyFxqp
+         QzrwtlJsuHELX/5V+NaPL4McGzg3paIAQmsUe5QQ6j1Ag1aH5KAKSirg+lx02SuzKhNE
+         y0/Mys2x6LvgGl08Ki+SRYkeC3zpk9WWSAIrSGC3IHR3zpoSxu8js2do1Pzh4KbT2iOL
+         8lpw==
+X-Gm-Message-State: APjAAAUk8FvHt6D5b7tHQ/KyBhfrMgBV+jX2XuO6JuoBmtMgF+zftSMK
+        I9M53i/0ih9I1d3ArPyzc9s7o8tTMJOlfAOOv0k=
+X-Google-Smtp-Source: APXvYqwAjBt9EvSR/D5AmaSKKJoZS2c5kqEtaA2qL9SWfAsZqWBL4puZK5KG2bR4PfyzwG3LvgabPYguUqqCXNQnwh8=
+X-Received: by 2002:a63:354f:: with SMTP id c76mr4373721pga.410.1569348396987;
+ Tue, 24 Sep 2019 11:06:36 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 11:06:34 -0700
+In-Reply-To: <991e5bf9-6e15-1ca1-d593-8abe553ebe7c@arm.com>
+Message-Id: <20190924180634.206177-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <991e5bf9-6e15-1ca1-d593-8abe553ebe7c@arm.com>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
+Subject: Re: Problems with arm64 compat vdso
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     vincenzo.frascino@arm.com
+Cc:     ard.biesheuvel@linaro.org, catalin.marinas@arm.com,
+        linux-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, tglx@linutronix.de, will@kernel.org,
+        natechancellor@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 24 Sep 2019 18:05:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 18:00 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-07-27 00:56:37 [-0500], Scott Wood wrote:
-> > migrate_enable() currently open-codes a variant of select_fallback_rq().
-> > However, it does not have the "No more Mr. Nice Guy" fallback and thus
-> > it will pass an invalid CPU to the migration thread if cpus_mask only
-> > contains a CPU that is !active.
-> > 
-> > Signed-off-by: Scott Wood <swood@redhat.com>
-> > ---
-> > This scenario will be more likely after the next patch, since
-> > the migrate_disable_update check goes away.  However, it could happen
-> > anyway if cpus_mask was updated to a CPU other than the one we were
-> > pinned to, and that CPU subsequently became inactive.
-> 
-> I'm unclear about the problem / side effect this has (before and after
-> the change). It is possible (before and after that change) that a CPU is
-> selected which is invalid / goes offline after the "preempt_enable()"
-> statement and before stop_one_cpu() does its job, correct?
+Hi Vincenzo,
+We also are having issues building the cross vDSO with Clang:
+https://github.com/ClangBuiltLinux/linux/issues/595
 
-By "pass an invalid CPU" I don't mean offline; I mean >= nr_cpu_ids which is
-what cpumask_any_and() returns if the sets don't intersect (a CPU going
-offline is merely a way to end up in that situation).  At one point I
-observed that causing a crash.  I guess is_cpu_allowed() returned true by
-chance based on the contents of data beyond the end of the cpumask?  That
-doesn't seem likely based on what comes after p->cpus_mask (at that point
-migrate_disable should be zero), but maybe I had something else at that
-point in the struct while developing.  In any case, not something to be
-relied on. :-)
+It seems that `LINUXINCLUDE` in arch/arm64/kernel/vdso32/Makefile is including
+arm64 headers in the arm part of the vdso32 build, which causes Clang to error
+on the arm64 inline asm constraints being used in arm64.
 
-Going offline after selection shouldn't be a problem.  migration_cpu_stop()
-won't do anything if is_cpu_allowed() returns false, and we'll get migrated
-off the CPU by migrate_tasks().  Even if we get migrated after reading
-task_cpu(p) but before queuing the stop machine work, it'll either get
-flushed when the stopper thread parks, or rejected due to stopper->enabled
-being false.
+I think if the issue Will described is fixed, it will be simpler for us to fix
+the rest to get it to build w/ Clang.
 
--Scott
+https://github.com/ClangBuiltLinux/linux/issues/595#issuecomment-509874891
+is the basis of such a patch.
 
-
+Clang ships with all backends on by default, and uses a `-target <triple>` to
+cross compile; so the idea of passing two cross compiler binaries for a compat
+vDSO build doesn't really apply to Clang.
