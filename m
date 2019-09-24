@@ -2,73 +2,126 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E561C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1D8C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17C5214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XYkDssxA"
+	by mail.kernel.org (Postfix) with ESMTP id F27E0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569327910;
+	bh=i5wvYOhUJ0EqS4IRzg2a3hBW2UnLMGocUzWH2O/8Lio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u2KHx9d0nLrRz499XQUkB9oWarp1dzm92UcZpfKWZhqY82S8T3fZ8t8GLd1+IvpWC
+	 BJZGNcntGBXgPwj93dqS23FHPYvPLUsv/NTR2xc0fK4sTQ7oNIfU32uQB9FwhEJ+P6
+	 unH8CcsyyXY2VsZKN9R8pwuUpPVahUEIFxpSyPLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504917AbfIXMXN (ORCPT
+        id S2406348AbfIXMZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:23:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57800 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504875AbfIXMXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:23:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MaF/Zn7nRAaxZ3nnq0Sx6bZl4ydSwH98geY5XMZU4qg=; b=XYkDssxA+HB3Cpi4POOGunZ99
-        TBTejN7B/LicvZAPyiN6pyrnRMWcqRyfWiTYtW9zHseqpRBh8+crA+CgA0BneSGXucMSX8jLzz4MK
-        crOIZY7mFAr67ydqMsPYcxBjHN9YvUZ2WPlN0Mw3CN9Ku+1rTWzeEfh3sm0kEa+jxXsorajRS/eAn
-        4/R7W72KlfZpchgQA0mSfNyeopw7ZCDUKvwB+qTQxA38COF/Aw6tfMpEfIkjUkLfHg16POuh83HK3
-        ucW7EQGITorcGyCilD/PRRID0gWBDktjwzDj8ZZfDJraCfW5cVxgE+LOZ+fHoujSnoAFsovXh2dmn
-        mk7g4ktKw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCjqY-0003uT-Pt; Tue, 24 Sep 2019 12:23:10 +0000
-Date:   Tue, 24 Sep 2019 05:23:10 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fs: direct-io: Fixed a Documentation build warn
-Message-ID: <20190924122310.GF1855@bombadil.infradead.org>
-References: <20190924121920.GA4593@madhuparna-HP-Notebook>
+        Tue, 24 Sep 2019 08:25:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50072 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390187AbfIXMZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:25:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8CB02AF23;
+        Tue, 24 Sep 2019 12:25:04 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 14:25:00 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190924122500.GP23050@dhcp22.suse.cz>
+References: <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190924121920.GA4593@madhuparna-HP-Notebook>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:49:25PM +0530, Madhuparna Bhowmik wrote:
-> Adds the description about
-> offset within the code.
+On Tue 24-09-19 14:09:43, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 01:54:01PM +0200, Michal Hocko wrote:
+> > On Tue 24-09-19 13:23:49, Peter Zijlstra wrote:
+> > > On Tue, Sep 24, 2019 at 12:56:22PM +0200, Michal Hocko wrote:
+> > [...]
+> > > > To be honest I really fail to see why to object to a simple semantic
+> > > > that NUMA_NO_NODE imply all usable cpus. Could you explain that please?
+> > > 
+> > > Because it feels wrong. The device needs to be _somewhere_. It simply
+> > > cannot be node-less.
+> > 
+> > What if it doesn't have any numa preference for what ever reason? There
+> > is no other way to express that than NUMA_NO_NODE.
+> 
+> Like I said; how does that physically work? The device needs to be
+> somewhere. It _must_ have a preference.
+> 
+> > Anyway, I am not going to argue more about this because it seems more of
+> > a discussion about "HW shouldn't be doing that although the specification
+> > allows that" which cannot really have any outcome except of "feels
+> > correct/wrong".
+> 
+> We can push back and say we don't respect the specification because it
+> is batshit insane ;-)
 
-Why?
+Here is my fingers crossed.
 
-> @@ -255,6 +254,7 @@ void dio_warn_stale_pagecache(struct file *filp)
->   */
->  static ssize_t dio_complete(struct dio *dio, ssize_t ret, unsigned int flags)
->  {
-> +	/* offset: the byte offset in the file of the completed operation */
->  	loff_t offset = dio->iocb->ki_pos;
->  	ssize_t transferred = 0;
->  	int err;
+[...]
 
-This is not normal practice within the Linux kernel.  I suggest reading
-section 8 of Documentation/process/coding-style.rst 
+> Now granted; there's a number of virtual devices that really don't have
+> a node affinity, but then, those are not hurt by forcing them onto a
+> random node, they really don't do anything. Like:
 
+Do you really consider a random node a better fix than simply living
+with a more robust NUMA_NO_NODE which tells the actual state? Page
+allocator would effectivelly use the local node in that case. Any code
+using the cpumask will know that any of the online cpus are usable.
+
+Compare that to a wild guess that might be easily wrong and have subtle
+side effects which are really hard to debug. You will only see a higher
+utilization on a specific node. Good luck with a bug report like that.
+
+Anyway, I really do  not feel strongly about that. If you really consider
+it a bad idea then I can live with that. This just felt easier and
+reasonably consistent to address. Implementing the guessing and fighting
+vendors who really do not feel like providing a real affinity sounds
+harder and more error prone.
+-- 
+Michal Hocko
+SUSE Labs
