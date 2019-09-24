@@ -2,197 +2,161 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64361C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838E4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A13E21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MBoRit0W"
+	by mail.kernel.org (Postfix) with ESMTP id 61C3D214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441288AbfIXOTP (ORCPT
+        id S2441298AbfIXOTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:19:15 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41446 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395526AbfIXOTP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:19:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nqgSCGmIm+IUwS3ERfhTDAE0sOJMUSKY9CXB5clg1ac=; b=MBoRit0WI62gppHlFbszCPg/7
-        2Vmhi99ihMp4LrvbXQwg5L4JsF3rPJnybeLFMlRtCJL8ZMwajAhQgtKdOY61KWZDIxB8LMN4fR5qZ
-        A9STURyZYndU2WWVvjVyBh+UvHp1poRRNZTXB3vHbwvWbpvMtgm/hIXvJ91sZlPXT/MlrzaKqIaK2
-        tvzkk2pQKZU0TtLTV0qd+6ILY6045cgAV248wGVfZm0NFj6PIVAHjMCBIIdi7bnw/vrOG1U1uOtom
-        sbn6vVaiJmRpfC0jSxNjn2SjC5O6c5ZQ4GQaivP7dW86C3vwZ1hZMyycc+rFVBL7EI5N2xeqt5TvO
-        mewYAokGg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47668)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iCleU-0002L8-IP; Tue, 24 Sep 2019 15:18:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iCleR-0001Jk-Nw; Tue, 24 Sep 2019 15:18:47 +0100
-Date:   Tue, 24 Sep 2019 15:18:47 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
-        andrew.murray@arm.com, mingkai.hu@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
- support
-Message-ID: <20190924141847.GW25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+        Tue, 24 Sep 2019 10:19:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2436753AbfIXOTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:19:49 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D97D3792F32DE17E95AD;
+        Tue, 24 Sep 2019 22:19:46 +0800 (CST)
+Received: from [127.0.0.1] (10.177.224.82) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 22:19:39 +0800
+Subject: Re: [PATCH xfstests] overlay: Enable character device to be the base
+ fs partition
+To:     Amir Goldstein <amir73il@gmail.com>
+CC:     Eryu Guan <guaneryu@gmail.com>,
+        David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
+        Eric Biggers <ebiggers@google.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
+ <CAOQ4uxhL_EZZ_ktv8RYpn-q2nDrA2v7kjv+b99a5ZKg3tmEQ8A@mail.gmail.com>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <b215554a-092b-fcf3-e0a3-36fab291b4ff@huawei.com>
+Date:   Tue, 24 Sep 2019 22:19:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916021742.22844-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOQ4uxhL_EZZ_ktv8RYpn-q2nDrA2v7kjv+b99a5ZKg3tmEQ8A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.224.82]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
-> This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-> EP driver of NXP Layerscape platform.
+As far as I know, _require_scratch_shutdown() is called after _overay_config_override(), at this moment, FSTYP equals to base fs. According the implementation of _require_scratch_shutdown:
+3090 _require_scratch_shutdown()
+3091 {
+3092     [ -x src/godown ] || _notrun "src/godown executable not found"
+3093
+3094     _scratch_mkfs > /dev/null 2>&1 || _notrun "_scratch_mkfs failed on $SCRATCH_DEV"
+3095     _scratch_mount
+3096
+3097     if [ $FSTYP = "overlay" ]; then                                            # FSTYP = base fs
+3098         if [ -z $OVL_BASE_SCRATCH_DEV ]; then
+3099             # In lagacy overlay usage, it may specify directory as
+3100             # SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
+3101             # will be null, so check OVL_BASE_SCRATCH_DEV before
+3102             # running shutdown to avoid shutting down base fs accidently.
+3103             _notrun "$SCRATCH_DEV is not a block device"
+3104         else
+3105             src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
+3106             || _notrun "Underlying filesystem does not support shutdown"
+3107         fi
+3108     else
+3109         src/godown -f $SCRATCH_MNT 2>&1 \
+3110             || _notrun "$FSTYP does not support shutdown"                      # Executes this path
+3111     fi
+3112
+3113     _scratch_unmount
+3114 }
+So, we can't get output: _notrun "$SCRATCH_DEV is not a block device". Instead, the verbose should like:
+  after _overlay_config_override FSTYP=ubifs    # Additional print message
+  FSTYP         -- ubifs
+  PLATFORM      -- Linux/x86_64
+  MKFS_OPTIONS  -- /dev/ubi0_1
+  MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+
+  generic/042	[not run] ubifs does not support shutdown
+
+But I'll consider describing error more concisely in v2.
+
+在 2019/9/24 20:33, Amir Goldstein 写道:
+> On Tue, Sep 24, 2019 at 12:34 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>>
+>> When running overlay tests using character devices as base fs partitions,
+>> all overlay usecase results become 'notrun'. Function
+>> '_overay_config_override' (common/config) detects that the current base
+>> fs partition is not a block device and will set FSTYP to base fs. The
+>> overlay usecase will check the current FSTYP, and if it is not 'overlay'
+>> or 'generic', it will skip the execution.
+>>
+>> For example, using UBIFS as base fs skips all overlay usecases:
+>>
+>>   FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+>>   MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+>>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+>>
+>>   overlay/001   [not run] not suitable for this filesystem type: ubifs
+>>   overlay/002   [not run] not suitable for this filesystem type: ubifs
+>>   overlay/003   [not run] not suitable for this filesystem type: ubifs
+>>   ...
+>>
+>> When checking that the base fs partition is a block/character device,
+>> FSTYP is overwritten as 'overlay'. This patch allows the base fs
+>> partition to be a character device that can also execute overlay
+>> usecases (such as ubifs).
+>>
+>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+>> ---
+>>  common/config | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/common/config b/common/config
+>> index 4c86a49..a22acdb 100644
+>> --- a/common/config
+>> +++ b/common/config
+>> @@ -550,7 +550,7 @@ _overlay_config_override()
+>>         #    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+>>         #    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+>>         #    overlayfs base and mount dirs inside base fs mount.
+>> -       [ -b "$TEST_DEV" ] || return 0
+>> +       [ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+>>
+>>         # Config file may specify base fs type, but we obay -overlay flag
+>>         [ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+>> @@ -570,7 +570,7 @@ _overlay_config_override()
+>>         export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+>>         export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+>>
+>> -       [ -b "$SCRATCH_DEV" ] || return 0
+>> +       [ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+>>
+>>         # Store original base fs vars
+>>         export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+>> --
+>> 2.7.4
+>>
 > 
-> This patch set depends on:
-> https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> Looks fine.
 > 
-> Xiaowei Bao (6):
->   PCI: mobiveil: Add the EP driver support
->   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
->   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
->   PCI: mobiveil: Add workaround for unsupported request error
->   arm64: dts: lx2160a: Add PCIe EP node
->   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
->     support
+> One nit: there is a message in _require_scratch_shutdown():
+> _notrun "$SCRATCH_DEV is not a block device"
+> for when $OVL_BASE_SCRATCH_DEV is not defined.
 > 
->  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
->  MAINTAINERS                                        |   3 +
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
->  drivers/misc/pci_endpoint_test.c                   |   2 +
->  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
->  drivers/pci/controller/mobiveil/Makefile           |   2 +
->  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
->  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
->  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
->  10 files changed, 1009 insertions(+), 12 deletions(-)
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+> Could probably use a better describing error anyway.
+> 
+> Thanks,
+> Amir.
+> 
+> .
+> 
 
-Hi,
-
-I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
-window" and your patch set to 5.3, which seems to be able to detect the
-PCIe card I have plugged in:
-
-layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
-layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
-layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
-[0x40000000-0x7fffffff])
-pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
-pci 0000:00:00.0: enabling Extended Tags
-pci 0000:00:00.0: supports D1 D2
-pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
-pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
-pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
-pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
-pci 0000:00:00.0: up support 3 enabled 0
-pci 0000:00:00.0: dn support 1 enabled 0
-pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
-pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
-pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
-pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
-pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
-pcieport 0000:00:00.0: init_service_irqs: -19
-
-However, a bit later in the kernel boot, I get:
-
-SError Interrupt on CPU1, code 0xbf000002 -- SError
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-pstate: 60400085 (nZCv daIf +PAN -UAO)
-pc : pci_generic_config_read+0xb0/0xc0
-lr : pci_generic_config_read+0x1c/0xc0
-sp : ffffff8010f9baf0
-x29: ffffff8010f9baf0 x28: ffffff8010d620a0
-x27: ffffff8010d79000 x26: ffffff8010d62000
-x25: ffffff8010cb06d4 x24: 0000000000000000
-x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
-x21: 0000000000000000 x20: ffffffe2eda11800
-x19: ffffff8010f62158 x18: ffffff8010bdede0
-x17: ffffff8010bdede8 x16: ffffff8010b96970
-x15: ffffffffffffffff x14: ffffffffff000000
-x13: ffffffffffffffff x12: 0000000000000030
-x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-x9 : 2dff716475687163 x8 : ffffffffffffffff
-x7 : fefefefefefefefe x6 : 0000000000000000
-x5 : 0000000000000000 x4 : ffffff8010f9bb6c
-x3 : 0000000000000001 x2 : 0000000000000003
-x1 : 0000000000000000 x0 : 0000000000000000
-Kernel panic - not syncing: Asynchronous SError Interrupt
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-Call trace:
- dump_backtrace+0x0/0x120
- show_stack+0x14/0x1c
- dump_stack+0x9c/0xc0
- panic+0x148/0x34c
- print_tainted+0x0/0xa8
- arm64_serror_panic+0x74/0x80
- do_serror+0x8c/0x13c
- el1_error+0xbc/0x160
- pci_generic_config_read+0xb0/0xc0
- pci_bus_read_config_byte+0x64/0x90
- pci_read_config_byte+0x40/0x48
- pci_assign_irq+0x34/0xc8
- pci_device_probe+0x28/0x148
- really_probe+0x1c4/0x2d0
- driver_probe_device+0x58/0xfc
- device_driver_attach+0x68/0x70
- __driver_attach+0x94/0xdc
- bus_for_each_dev+0x50/0xa0
- driver_attach+0x20/0x28
- bus_add_driver+0x14c/0x200
- driver_register+0x6c/0x124
- __pci_register_driver+0x48/0x50
- mlx4_init+0x154/0x180
- do_one_initcall+0x30/0x250
- kernel_init_freeable+0x23c/0x32c
- kernel_init+0x10/0xfc
- ret_from_fork+0x10/0x18
-SMP: stopping secondary CPUs
-Kernel Offset: disabled
-CPU features: 0x0002,21006008
-Memory Limit: none
-
-and there it dies.  Any ideas?
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
