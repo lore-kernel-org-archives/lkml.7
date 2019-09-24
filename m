@@ -2,48 +2,44 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1AC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A2EC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6882168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="H7wz64VD"
+	by mail.kernel.org (Postfix) with ESMTP id 419F821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409646AbfIXOBh (ORCPT
+        id S2436715AbfIXOCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:01:37 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:54159 "EHLO frisell.zx2c4.com"
+        Tue, 24 Sep 2019 10:02:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62552 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfIXOBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:01:36 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 631b8b0a;
-        Tue, 24 Sep 2019 13:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=Ni0hMWlCiFMnaQshc8kXJTh4/
-        bA=; b=H7wz64VDaOrxEUv3s1Ld0Cxy5fxjQ7KDf3qDpuwvJWYtNDFt3ZOoJrMbC
-        +VqSW6VXZG/sGw36U8i5a1LZBEVod3YhBIIuKOT7fuWAbe+YoF0Ii/mkuyUXPpLb
-        bKeiyEWoUlR4gxE5yTTcO2TNE4bjON9h/pVWs+ax0xr7Z+3pSEffUBsmRtm7zZ5k
-        5tnqb0NDzl44j7+o1E3TBKCgCNUi8x9QVr45dtJAcagJnUkPDsR5GsA1RxW2dhu4
-        Rz2TkKCiQCYihPKYSNCFbY788kGurMsV9BXZ1trgo6IZkm2xMDPzgPTUar8MQ4t8
-        CfZQsAJPoOoJGIJSgO/oyZvKmlizA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 44093bc1 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Sep 2019 13:15:56 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net, weiwan@google.com
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org
-Subject: [PATCH v2] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on suppress rule
-Date:   Tue, 24 Sep 2019 16:01:28 +0200
-Message-Id: <20190924140128.19394-1-Jason@zx2c4.com>
-In-Reply-To: <20190924.145257.2013712373872209531.davem@davemloft.net>
-References: <20190924.145257.2013712373872209531.davem@davemloft.net>
+        id S2409677AbfIXOCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:02:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 07:02:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
+   d="scan'208";a="188474708"
+Received: from fbielich-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.54.55])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Sep 2019 07:02:13 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-stable@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Tue, 24 Sep 2019 17:01:59 +0300
+Message-Id: <20190924140202.11360-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,78 +47,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7d9e5f422150 removed references from certain dsts, but accounting
-for this never translated down into the fib6 suppression code. This bug
-was triggered by WireGuard users who use wg-quick(8), which uses the
-"suppress-prefix" directive to ip-rule(8) for routing all of their
-internet traffic without routing loops. The test case added here
-causes the reference underflow by causing packets to evaluate a suppress
-rule.
+commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
 
-Cc: stable@vger.kernel.org
-Fixes: 7d9e5f422150 ("ipv6: convert major tx path to use RT6_LOOKUP_F_DST_NOREF")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- net/ipv6/fib6_rules.c                    |  3 ++-
- tools/testing/selftests/net/fib_tests.sh | 17 ++++++++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+This backport is for v4.14 and v4.19 The backport requires non-racy
+behaviour from TPM 1.x sysfs code. Thus, the dependecies for that
+are included.
 
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index d22b6c140f23..f9e8fe3ff0c5 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -287,7 +287,8 @@ static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
- 	return false;
- 
- suppress_route:
--	ip6_rt_put(rt);
-+	if (!(arg->flags & FIB_LOOKUP_NOREF))
-+		ip6_rt_put(rt);
- 	return true;
- }
- 
-diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
-index 4465fc2dae14..c2c5f2bf0f95 100755
---- a/tools/testing/selftests/net/fib_tests.sh
-+++ b/tools/testing/selftests/net/fib_tests.sh
-@@ -9,7 +9,7 @@ ret=0
- ksft_skip=4
- 
- # all tests in this script. Can be overridden with -t option
--TESTS="unregister down carrier nexthop ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter"
-+TESTS="unregister down carrier nexthop suppress ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter"
- 
- VERBOSE=0
- PAUSE_ON_FAIL=no
-@@ -614,6 +614,20 @@ fib_nexthop_test()
- 	cleanup
- }
- 
-+fib_suppress_test()
-+{
-+	$IP link add dummy1 type dummy
-+	$IP link set dummy1 up
-+	$IP -6 route add default dev dummy1
-+	$IP -6 rule add table main suppress_prefixlength 0
-+	ping -f -c 1000 -W 1 1234::1 || true
-+	$IP -6 rule del table main suppress_prefixlength 0
-+	$IP link del dummy1
-+
-+	# If we got here without crashing, we're good.
-+	return 0
-+}
-+
- ################################################################################
- # Tests on route add and replace
- 
-@@ -1591,6 +1605,7 @@ do
- 	fib_carrier_test|carrier)	fib_carrier_test;;
- 	fib_rp_filter_test|rp_filter)	fib_rp_filter_test;;
- 	fib_nexthop_test|nexthop)	fib_nexthop_test;;
-+	fib_suppress_test|suppress)	fib_suppress_test;;
- 	ipv6_route_test|ipv6_rt)	ipv6_route_test;;
- 	ipv4_route_test|ipv4_rt)	ipv4_route_test;;
- 	ipv6_addr_metric)		ipv6_addr_metric_test;;
+NOTE: 1/3 is only needed for v4.14.
+
+Cc: linux-integrity@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vadim Sukhomlinov <sukhomlinov@google.com>
+Link: https://lore.kernel.org/stable/20190712152734.GA13940@kroah.com/
+
+Jarkko Sakkinen (2):
+  tpm: migrate pubek_show to struct tpm_buf
+  tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+
+Vadim Sukhomlinov (1):
+  tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+
+ drivers/char/tpm/tpm-chip.c  |   3 +
+ drivers/char/tpm/tpm-sysfs.c | 201 +++++++++++++++++++++--------------
+ drivers/char/tpm/tpm.h       |  13 ---
+ 3 files changed, 124 insertions(+), 93 deletions(-)
+
 -- 
-2.21.0
+2.20.1
 
