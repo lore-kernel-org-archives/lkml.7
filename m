@@ -2,112 +2,80 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60834C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C1BC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF7A20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B93214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409548AbfIXKnj (ORCPT
+        id S2409565AbfIXKpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 06:43:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53354 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409537AbfIXKnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 06:43:39 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-116-9Hi8Jc8kPpqqOwcPCfmVPQ-1; Tue, 24 Sep 2019 11:43:36 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 24 Sep 2019 11:43:35 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 24 Sep 2019 11:43:35 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Anson Huang' <anson.huang@nxp.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it
- repeatedly
-Thread-Topic: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it
- repeatedly
-Thread-Index: AQHVcra7p8HS4HCHSk+GwFkUo51L56c6k17Q///1BACAABgw0A==
-Date:   Tue, 24 Sep 2019 10:43:35 +0000
-Message-ID: <37b2481ac9094f27bf21325e2770abdb@AcuMS.aculab.com>
-References: <1569315593-769-1-git-send-email-Anson.Huang@nxp.com>
- <6cfb1595992b46dc884731555e6f0334@AcuMS.aculab.com>
- <DB3PR0402MB3916FFD66797DAC0AB1110D8F5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916FFD66797DAC0AB1110D8F5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 24 Sep 2019 06:45:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57638 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2409506AbfIXKpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 06:45:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 52C51AF26;
+        Tue, 24 Sep 2019 10:45:50 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 12:45:49 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
+Message-ID: <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+ <20190918133419.7969-10-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: 9Hi8Jc8kPpqqOwcPCfmVPQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918133419.7969-10-sakari.ailus@linux.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQW5zb24gSHVhbmcNCj4gU2VudDogMjQgU2VwdGVtYmVyIDIwMTkgMTE6MDMNCj4gSGks
-IERhdmlkDQo+IA0KPiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIHB3bTogcHdtLWlteDI3OiBVc2Ug
-J2RldicgaW5zdGVhZCBvZiBkZXJlZmVyZW5jaW5nIGl0DQo+ID4gcmVwZWF0ZWRseQ0KPiA+DQo+
-ID4gRnJvbTogQW5zb24gSHVhbmcNCj4gPiA+IFNlbnQ6IDI0IFNlcHRlbWJlciAyMDE5IDEwOjAw
-DQo+ID4gPiBBZGQgaGVscGVyIHZhcmlhYmxlIGRldiA9ICZwZGV2LT5kZXYgdG8gc2ltcGx5IHRo
-ZSBjb2RlLg0KPiA+ID4NCi4uLg0KPiA+ID4gIHN0YXRpYyBpbnQgcHdtX2lteDI3X3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpICB7DQo+ID4gPiArCXN0cnVjdCBkZXZpY2UgKmRl
-diA9ICZwZGV2LT5kZXY7DQo+ID4gPiAgCXN0cnVjdCBwd21faW14MjdfY2hpcCAqaW14Ow0KPiA+
-ID4NCj4gPiA+IC0JaW14ID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqaW14KSwg
-R0ZQX0tFUk5FTCk7DQo+ID4gPiArCWlteCA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqaW14
-KSwgR0ZQX0tFUk5FTCk7DQouLi4NCj4gPiBIb3BlZnVsbHkgdGhlIGNvbXBpbGVyIHdpbGwgb3B0
-aW1pc2UgdGhpcyBiYWNrIG90aGVyd2lzZSB5b3UndmUgYWRkZWQNCj4gPiBhbm90aGVyIGxvY2Fs
-IHZhcmlhYmxlIHdoaWNoIG1heSBjYXVzZSBzcGlsbGluZyB0byBzdGFjay4NCj4gPiBGb3IgYSBz
-ZXR1cCBmdW5jdGlvbiBpdCBwcm9iYWJseSBkb2Vzbid0IG1hdHRlciwgYnV0IGluIGdlbmVyYWwg
-aXQgbWlnaHQgaGF2ZSBhDQo+ID4gc21hbGwgbmVnYXRpdmUgcGVyZm9ybWFuY2UgaW1wYWN0Lg0K
-PiA+DQo+ID4gSW4gYW55IGNhc2UgdGhpcyBkb2Vzbid0IHNob3J0ZW4gYW55IGxpbmVzIGVub3Vn
-aCB0byByZW1vdmUgbGluZS13cmFwIGFuZA0KPiA+IHVzaW5nICZwZGV2LT5kZXYgaXMgcmVhbGx5
-IG9uZSBsZXNzIHZhcmlhYmxlIHRvIG1lbnRhbGx5IHRyYWNrIHdoZW4gcmVhZGluZw0KPiA+IHRo
-ZSBjb2RlLg0KPiANCj4gRG8gd2Uga25vdyB3aGljaCBjb21waWxlciB3aWxsIG9wdGltaXplIHRo
-aXM/IEkgc2F3IG1hbnkgb2YgdGhlIHBhdGNoZXMgZG9pbmcNCj4gdGhpcyB0byBhdm9pZCBhIGxv
-dCBvZiBkZXJlZmVyZW5jZSwgSSB1bmRlcnN0YW5kIGl0IGRvZXMgTk9UIHNhdmUgbGluZXMsIGJ1
-dCBteSBpbnRlbnRpb24NCj4gaXMgdG8gYXZvaWQgZGVyZWZlcmVuY2Ugd2hpY2ggbWlnaHQgc2F2
-ZSBzb21lIGluc3RydWN0aW9ucy4NCj4gDQo+IEkgdGhvdWdodCBzYXZpbmcgaW5zdHJ1Y3Rpb25z
-IGlzIG1vcmUgaW1wb3J0YW50LiBTbyBub3cgdGhlcmUgYXJlIGRpZmZlcmVudCBvcGluaW9uIGFi
-b3V0DQo+IGRvaW5nIHRoaXM/DQoNClJlbWVtYmVyICZwZGV2LT5kZXYgaXMganVzdCAncGRldiAr
-IGNvbnN0YW50Jy4NCkFzc3VtaW5nICdwZGV2JyBpcyBoZWxkIGluIGEgY2FsbGVlIHNhdmVkIHJl
-Z2lzdGVyICh3aGljaCB5b3Ugd2FudCBpdCB0byBiZSkgdGhlbiB0byBhY2Nlc3MNCmRldi0+Zm9v
-IHRoZSBjb21waWxlciBjYW4gcmVtZW1iZXIgdGhlIGNvbnN0YW50IGFuZCB1c2UgYW4gb2Zmc2V0
-IGZyb20gJ3BkZXYnIGluc3RlYWQgb2YNCmFuIGV4dHJhICdkZXYnIHZhcmlhYmxlLg0KT24gbW9z
-dCBtb2Rlcm4gQUJJIHRoZSBmaXJzdCBmdW5jdGlvbiBjYWxsIGFyZ3VtZW50cyBhcmUgcGFzc2Vk
-IGluIHJlZ2lzdGVycy4NClNvIGFuIGFkZCAgaW5zdHJ1Y3Rpb24gKHByb2JhYmx5IGxlYSkgY2Fu
-IGJlIHVzZWQgdG8gYWRkIHRoZSBjb25zdGFudCBvZmZzZXQgYXQgdGhlIHNhbWUNCnRpbWUgYXMg
-dGhlIHZhbHVlIGlzIG1vdmVkIGludG8gdGhlIGFyZ3VtZW50IHJlZ2lzdGVyLg0KDQpIb3dldmVy
-IHlvdXIgZXh0cmEgdmFyaWFibGUgY291bGQgZWFzaWx5IGdldCBzcGlsbGVkIG91dCB0byB0aGUg
-c3RhY2suDQpTbyB5b3UgZ2V0IGFuIGV4dHJhIG1lbW9yeSByZWFkIHJhdGhlciB0aGFuIChhdCBt
-b3N0KSBhbiBleHRyYSAnYWRkJyBpbnN0cnVjdGlvbi4NCg0KRXZlbiBpZiBwZGV2LT5kZXYgd2Vy
-ZSBhIHBvaW50ZXIsIHJlcGVhdGVkbHkgcmVhZGluZyBpdCBmcm9tIHBkZXYtPmRldiBjb3VsZA0K
-ZWFzaWx5IGdlbmVyYXRlIGJldHRlciBjb2RlIHRoYW4gaGF2aW5nIGFuIGV4dHJhIHZhcmlhYmxl
-IHRoYXQgd291bGQgbWVhbiB0aGUNCnZhbHVlIHdhcyByZXBlYXRlZGx5IHJlYWQgZnJvbSB0aGUg
-c3RhY2suDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
-ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
-dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Wed 2019-09-18 16:34:15, Sakari Ailus wrote:
+> Add a note warning of re-use of obsolete %pf or %pF extensions.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  lib/vsprintf.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b00b57f9f911f..df59818537b52 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+>   * - 'S' For symbolic direct pointers (or function descriptors) with offset
+>   * - 's' For symbolic direct pointers (or function descriptors) without offset
+>   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
+> + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
+> + *	    or function descriptors. Be careful when re-using %pf or %pF!
 
+I am not a native speaker but the sentence is hard to parse to me.
+Also I miss the word 'symbolic'. IMHO, it described that the output
+was a symbol name.
+
+What about something like?
+
+  * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
+  *	    %ps and %pS. Be careful when re-using these specifiers.
+
+Best Regards,
+Petr
