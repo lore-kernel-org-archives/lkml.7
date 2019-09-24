@@ -2,104 +2,110 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0827FC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B0C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB60F21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF2120673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409751AbfIXQLv (ORCPT
+        id S2409759AbfIXQMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:11:51 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51719 "EHLO mga18.intel.com"
+        Tue, 24 Sep 2019 12:12:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:33296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388230AbfIXQLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:11:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 09:11:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
-   d="scan'208";a="364047230"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga005.jf.intel.com with ESMTP; 24 Sep 2019 09:11:50 -0700
-Date:   Tue, 24 Sep 2019 09:11:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, Kai Huang <kai.huang@linux.intel.com>
-Subject: Re: [PATCH v22 01/24] x86/cpufeatures: x86/msr: Add Intel SGX
- hardware bits
-Message-ID: <20190924161150.GA16218@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-2-jarkko.sakkinen@linux.intel.com>
- <20190924152848.GF19317@zn.tnic>
+        id S2388230AbfIXQMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:12:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EAE91570;
+        Tue, 24 Sep 2019 09:12:21 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C9623F694;
+        Tue, 24 Sep 2019 09:12:20 -0700 (PDT)
+Subject: Re: [PATCH] sched: fix migration to invalid cpu in
+ __set_cpus_allowed_ptr
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        shikemeng <shikemeng@huawei.com>, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
+ <1568535662-14956-1-git-send-email-shikemeng@huawei.com>
+ <5dfd4844-6c36-3b8d-203b-564d7ad7103d@arm.com>
+ <40680310-60b3-589a-d0e8-b4dd723db10a@arm.com>
+ <1d8e6aab-5258-494c-c4cd-1802eda34d59@arm.com>
+ <706581c9-e4ee-967d-b010-4798afd2245e@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <ada6743c-a212-39ef-f206-fc81ed4492ef@arm.com>
+Date:   Tue, 24 Sep 2019 17:12:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924152848.GF19317@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <706581c9-e4ee-967d-b010-4798afd2245e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:28:48PM +0200, Borislav Petkov wrote:
-> On Tue, Sep 03, 2019 at 05:26:32PM +0300, Jarkko Sakkinen wrote:
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index 998c2cc08363..c5582e766121 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -222,12 +222,22 @@
-> >  #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
-> >  #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
-> >  
-> > -/* Virtualization flags: Linux defined, word 8 */
-> > -#define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
-> > -#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
-> > -#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
-> > -#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
-> > -#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
-> > +/*
-> > + * Scattered Intel features: Linux defined, word 8.
-> > + *
-> > + * Note that the bit location of the SGX features is meaningful as KVM expects
-> > + * the Linux defined bit to match the Intel defined bit, e.g. X86_FEATURE_SGX1
-> > + * must remain at bit 0, SGX2 at bit 1, etc...
+On 24/09/2019 15:09, Dietmar Eggemann wrote:
+> On 9/23/19 6:06 PM, Valentin Schneider wrote:
+>> On 23/09/2019 16:43, Dietmar Eggemann wrote:
+>>> I'm not sure that CONFIG_DEBUG_PER_CPU_MAPS=y will help you here.
+>>>
+>>> __set_cpus_allowed_ptr(...)
+>>> {
+>>>     ...
+>>>     dest_cpu = cpumask_any_and(...)
+>>>     ...
+>>> }
+>>>
+>>> With:
+>>>
+>>> #define cpumask_any_and(mask1, mask2) cpumask_first_and((mask1), (mask2))
+>>> #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p),
+>>> (src2p))
+>>>
+>>> cpumask_next_and() is called with n = -1 and in this case does not
+>>> invoke cpumask_check().
+>>>
+>>
+>> It won't warn here because it's still a valid return value, but it should
+>> warn in the cpumask_test_cpu() that follows (in is_cpu_allowed()) because
+>> it would be passed a value >= nr_cpu_ids. So at the very least this config
+>> does catch cpumask_any*() return values being blindly passed to
+>> cpumask_test_cpu().
 > 
-> Eww, no.
+> OK, I see and agree.
 > 
-> > + */
-> > +#define X86_FEATURE_SGX1		( 8*32+ 0) /* SGX1 leaf functions */
-> > +#define X86_FEATURE_SGX2		( 8*32+ 1) /* SGX2 leaf functions */
-> > +/* Bits [0:7] are reserved for SGX */
+> But IMHO, we still don't call cpumask_test_cpu(dest_cpu, ...), right.
 > 
-> That leaf has "Bits 31 - 07: Reserved." So what happens if they start
-> adding more bits there? We shoosh the other defines even further into
-> the word?
+> What the patch fixes is that it closes the window between two reads of
+> cpu_active_mask in which cpuhp can potentially punch a hole into the
+> cpu_active_mask.
 > 
-> Talk to your hw guys, if the plan is to leave those bits for other
-> feature flags, then let's allocate a new capability word for F12_EAX.
+> If p is not running or queued and it's state is unequal to TASK_WAKING,
+> a 'dest_cpu == nr_cpu_ids' goes unnoticed.
 
-We tried that, you shot it down[*], hence these shenanigans.  With respect
-to more SGX feature flags, the original changelog even stated "with more
-expected in the not-too-distant future".
+In this case we don't need to force it off to another CPU, since that will
+get sorted out at its next wakeup. However, the patch still catches that
+, since it does an early
 
-I'm not arguing that this isn't ugly, just want to make it clear that
-we're not wantonly throwing junk into the kernel.  I'm all for a dedicated
-SGX word, it makes our lives easier.
+if (dest_cpu >= nr_cpu_ids) {
+        ret = -EINVAL;
+        goto out;
 
-[*] https://lkml.kernel.org/r/20180828102140.GA31102@nazgul.tnic
+and that's regardless of the task's state.
+
+> Otherwise we see an 'unable
+> to handle kernel paging request' or 'unable to handle page fault for
+> address' bug in migration_cpu_stop() or move_queued_task().
+> 
+> Do I miss something?
+> 
+> [...]
+> 
