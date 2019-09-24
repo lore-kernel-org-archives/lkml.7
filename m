@@ -2,196 +2,163 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0EAC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BDAC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A23B214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569325467;
-	bh=FNHOdKquX3IFa5mBM1mglazG55LFJ9TtI25PBKHKeaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TvbPFARhEyeBBeJ0tG+a2TeYF7PUejuTBkjpaHmRIwHnrKPUrgHaCF1J07NeEAYyu
-	 qFUhuPbsDkHMKP8G+vcxa86kElwNGeAgzttuQlnW24TbPy6uII0WyclELvMFuAc2xP
-	 MiKL0YCXnhIaFXZ+eNoFcaQJUHWWhUznJsv1ABkY=
+	by mail.kernel.org (Postfix) with ESMTP id 52D90214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504766AbfIXLo0 (ORCPT
+        id S2504783AbfIXLoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:44:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51926 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfIXLo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:44:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so1900817wme.1;
-        Tue, 24 Sep 2019 04:44:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FfE5HSIoy4bnw4tW0uvOE8G/Ux5CpKN6T9ph37iVZUY=;
-        b=SmipKaBSMwrNl+MDWdtvDyxMlym+1q/mQ8pzTtrjMLJGQEo52eDglwHoMpkHrJQ8Jj
-         ogkX7aX/fA3A/28hHxiB/ronYz/r+mik4NBfK1vlO9KgR2Umo1Pdk+UG3ttWPJisVKG9
-         0iEh+7vimqQ5GjpISCvYTJhLjXRjYLyZ+4bKvQoPTISqQ6Q9eVfsppQbCGneJ7C1YAeL
-         UGpMpkTWIrs0m+boCv83xhceLAGUWEq1ooIMgXACGEBcLA7kdu+owkQ/qtIUJtyIynCm
-         oW34s3bOqU1fXqRP6cxH5cHBaWGL+1Ny/xuxpXeZ0YOoQIh29OUb4SZdwuiyd4l6FpCT
-         zhNQ==
-X-Gm-Message-State: APjAAAWkOwdIgf4aLHUJ/SzmelIbn8Dbs0ljenr9yfkwX4eIS6S31xhv
-        WFK0wHA2JIEriRtAcg4cWl9rOSpi
-X-Google-Smtp-Source: APXvYqzqFOsxB9TPB1cUrC0y7KpPMr4n+t9n/heL8MaG21Cbit3fJZ68Rk7z/b8D+BiiSUudc86+2g==
-X-Received: by 2002:a05:600c:2311:: with SMTP id 17mr2302023wmo.39.1569325463690;
-        Tue, 24 Sep 2019 04:44:23 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id b184sm2319180wmg.47.2019.09.24.04.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 04:44:22 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 13:44:18 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Maciej Falkowski <m.falkowski@samsung.com>
-Subject: Re: [PATCH] dt-bindings: gpu: Convert Samsung 2D Graphics
- Accelerator to dt-schema
-Message-ID: <20190924114418.GA9157@pi3>
-References: <CGME20190924113225eucas1p131429c7f7e0d520693b89bb2a7d9e211@eucas1p1.samsung.com>
- <20190924113159.24873-1-m.szyprowski@samsung.com>
+        Tue, 24 Sep 2019 07:44:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51820 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2504767AbfIXLoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:44:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6B5D69C88CB7E7D0C7CE;
+        Tue, 24 Sep 2019 19:44:35 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 19:44:29 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <f1362dbb-ad31-51a8-2b06-16c9d928b876@huawei.com>
+ <20190924092551.GK2369@hirez.programming.kicks-ass.net>
+ <c816abbe-155b-504b-cef1-6413f7cdd20c@huawei.com>
+ <20190924112811.GK2332@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <8cff8350-311e-3817-0c42-b6f98de589a3@huawei.com>
+Date:   Tue, 24 Sep 2019 19:44:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190924113159.24873-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190924112811.GK2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 01:31:59PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
+On 2019/9/24 19:28, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 07:07:36PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/24 17:25, Peter Zijlstra wrote:
+>>> On Tue, Sep 24, 2019 at 09:29:50AM +0800, Yunsheng Lin wrote:
+>>>> On 2019/9/24 4:34, Peter Zijlstra wrote:
+>>>
+>>>>> I'm saying the ACPI standard is wrong. Explain to me how it is
+>>>>> physically possible to have a device without NUMA affinity in a NUMA
+>>>>> system?
+>>>>>
+>>>>>  1) The fundamental interconnect is not uniform.
+>>>>>  2) The device needs to actually be somewhere.
+>>>>>
+>>>>
+>>>> From what I can see, NUMA_NO_NODE may make sense in the below case:
+>>>>
+>>>> 1) Theoretically, there would be a device that can access all the memory
+>>>> uniformly and can be accessed by all cpus uniformly even in a NUMA system.
+>>>> Suppose we have two nodes, and the device just sit in the middle of the
+>>>> interconnect between the two nodes.
+>>>>
+>>>> Even we define a third node solely for the device, we may need to look at
+>>>> the node distance to decide the device can be accessed uniformly.
+>>>>
+>>>> Or we can decide that the device can be accessed uniformly by setting
+>>>> it's node to NUMA_NO_NODE.
+>>>
+>>> This is indeed a theoretical case; it doesn't scale. The moment you're
+>>> adding multiple sockets or even board interconnects this all goes out
+>>> the window.
+>>>
+>>> And in this case, forcing the device to either node is fine.
+>>
+>> Not really.
+>> For packet sending and receiving, the buffer memory may be allocated
+>> dynamically. Node of tx buffer memory is mainly based on the cpu
+>> that is sending sending, node of rx buffer memory is mainly based on
+>> the cpu the interrupt handler of the device is running on, and the
+>> device' interrupt affinity is mainly based on node id of the device.
+>>
+>> We can bind the processes that are using the device to both nodes
+>> in order to utilize memory on both nodes for packet sending.
+>>
+>> But for packet receiving, the node1 may not be used becuase the node
+>> id of device is forced to node 0, which is the default way to bind
+>> the interrupt to the cpu of the same node.
+>>
+>> If node_to_cpumask_map() returns all usable cpus when the device's node
+>> id is NUMA_NO_NODE, then interrupt can be binded to the cpus on both nodes.
 > 
-> Convert Samsung 2D Graphics Accelerator to newer dt-schema format
+> s/binded/bound/
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  .../devicetree/bindings/gpu/samsung-g2d.txt   | 27 ----------
->  .../devicetree/bindings/gpu/samsung-g2d.yaml  | 53 +++++++++++++++++++
->  2 files changed, 53 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
+> Sure; the data can be allocated wherever, but the control structures are
+> not dynamically allocated every time. They are persistent, and they will
+> be local to some node.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> deleted file mode 100644
-> index 1e7959332dbc..000000000000
-> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -* Samsung 2D Graphics Accelerator
-> -
-> -Required properties:
-> -  - compatible : value should be one among the following:
-> -	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210 SoC
-> -	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
-> -	(c) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
-> -
-> -  - reg : Physical base address of the IP registers and length of memory
-> -	  mapped region.
-> -
-> -  - interrupts : G2D interrupt number to the CPU.
-> -  - clocks : from common clock binding: handle to G2D clocks.
-> -  - clock-names : names of clocks listed in clocks property, in the same
-> -		  order, depending on SoC type:
-> -		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
-> -		    "sclk_fimg2d"
-> -		  - for Exynos5250 SoC: "fimg2d".
-> -
-> -Example:
-> -	g2d@12800000 {
-> -		compatible = "samsung,s5pv210-g2d";
-> -		reg = <0x12800000 0x1000>;
-> -		interrupts = <0 89 0>;
-> -		clocks = <&clock 177>, <&clock 277>;
-> -		clock-names = "sclk_fimg2d", "fimg2d";
-> -	};
->ss diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-> new file mode 100644
-> index 000000000000..bb0a4bf168cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/samsung-g2d.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC 2D Graphics Accelerator
-> +
-> +maintainers:
-> +  - Inki Dae <inki.dae@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - samsung,s5pv210-g2d    # in S5PV210 & Exynos4210 SoC
-> +      - samsung,exynos4212-g2d # in Exynos4x12 SoCs
-> +      - samsung,exynos5250-g2d
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items: # for Exynos5250 SoC
-> +          - const: fimg2d
-> +      - items: # for S5PV210 and Exynos4 based SoCs
-> +          - const: sclk_fimg2d
-> +          - const: fimg2d
+> Anyway, are you saying this stupid corner case is actually relevant?
+> Because how does it scale out? What if you have 8 sockets, with each
+> socket having 2 nodes and 1 such magic device. Then returning all CPUs
+> is just plain wrong.
 
-Just like in previous conversions ("dt-bindings: gpu: Convert Samsung
-Image Scaler to dt-schem") - you need to add here proper if-else
-constraints.
+Yes, the hardware may not scale out, but what about the virtual device?
+
+> 
+>>>> 2) For many virtual deivces, such as tun or loopback netdevice, they
+>>>> are also accessed uniformly by all cpus.
+>>>
+>>> Not true; the virtual device will sit in memory local to some node.
+>>>
+>>> And as with physical devices, you probably want at least one (virtual)
+>>> queue per node.
+>>
+>> There may be similar handling as above for virtual device too.
+> 
+> And it'd be similarly broken.
+
+From [1], there is a lot of devices with node id of NUMA_NO_NODE with the
+FW_BUG.
+
+[1] https://lore.kernel.org/lkml/5a188e2b-6c07-a9db-fbaa-561e9362d3ba@huawei.com/
 
 
-Best regards,
-Krzysztof
+> 
+> .
+> 
 
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples
-> +  - |
-> +    g2d@12800000 {
-> +        compatible = "samsung,s5pv210-g2d";
-> +        reg = <0x12800000 0x1000>;
-> +        interrupts = <0 89 0>;
-> +        clocks = <&clock 177>, <&clock 277>;
-> +        clock-names = "sclk_fimg2d", "fimg2d";
-> +    };
-> +
-> -- 
-> 2.17.1
-> 
-> 
-> 
