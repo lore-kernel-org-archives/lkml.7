@@ -2,120 +2,98 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02D4C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C75C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1A21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C7A21928
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O8XMN3kd";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O8XMN3kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633593AbfIXVyE (ORCPT
+        id S2633596AbfIXV7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:54:04 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42653 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728183AbfIXVyD (ORCPT
+        Tue, 24 Sep 2019 17:59:31 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45924 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387723AbfIXV7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:54:03 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1A2C543EFAD;
-        Wed, 25 Sep 2019 07:53:55 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iCskr-0005bn-N3; Wed, 25 Sep 2019 07:53:53 +1000
-Date:   Wed, 25 Sep 2019 07:53:53 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>, dsterba@suse.cz,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-Message-ID: <20190924215353.GG16973@dread.disaster.area>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
- <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
- <20190923171710.GN2751@twin.jikos.cz>
- <20190923175146.GT2229799@magnolia>
- <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=8DDTXLWI6Pjby6uLqAQA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        Tue, 24 Sep 2019 17:59:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B3C5D8EE175;
+        Tue, 24 Sep 2019 14:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1569362370;
+        bh=uW9yHyVMd+iv3gWkWuuWS6RrXxoBB+KwpZEHrxJLrfU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O8XMN3kdXIPTbxUwCC+yvDgCK6kxoQ1AVgYkJ3sHY0B5I/tYLPbKdY8Zk15WXAxpf
+         nwOM1LWs7pDqIvECsh37FfhhcQF2MB6rU0bgRPJ88mgbZl+QozFGBn/85UNOQgEsRV
+         GpZpqSAngHQDlDv5BxxAWcKCvDenp3nYP/wIPshs=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yKFYae1JZIO6; Tue, 24 Sep 2019 14:59:30 -0700 (PDT)
+Received: from [192.168.101.242] (unknown [24.246.103.29])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E1F5E8EE12C;
+        Tue, 24 Sep 2019 14:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1569362370;
+        bh=uW9yHyVMd+iv3gWkWuuWS6RrXxoBB+KwpZEHrxJLrfU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O8XMN3kdXIPTbxUwCC+yvDgCK6kxoQ1AVgYkJ3sHY0B5I/tYLPbKdY8Zk15WXAxpf
+         nwOM1LWs7pDqIvECsh37FfhhcQF2MB6rU0bgRPJ88mgbZl+QozFGBn/85UNOQgEsRV
+         GpZpqSAngHQDlDv5BxxAWcKCvDenp3nYP/wIPshs=
+Message-ID: <1569362368.5364.19.camel@HansenPartnership.com>
+Subject: Re: allow larger than require DMA masks
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sven Schnelle <svens@stackframe.org>, Helge Deller <deller@gmx.de>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 24 Sep 2019 17:59:28 -0400
+In-Reply-To: <20190924212554.GA31357@lst.de>
+References: <20190215144559.8777-1-hch@lst.de>
+         <20190923211415.GA1875@stackframe.org>
+         <1569286782.3657.29.camel@HansenPartnership.com>
+         <20190924212554.GA31357@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:19:29PM +0200, Vlastimil Babka wrote:
-> On 9/23/19 7:51 PM, Darrick J. Wong wrote:
-> > On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
-> >> On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
-> >>> So if anyone thinks this is a good idea, please express it (preferably
-> >>> in a formal way such as Acked-by), otherwise it seems the patch will be
-> >>> dropped (due to a private NACK, apparently).
+On Tue, 2019-09-24 at 23:25 +0200, Christoph Hellwig wrote:
+> On Mon, Sep 23, 2019 at 08:59:42PM -0400, James Bottomley wrote:
+> > > 	if (mask > ~0U)
+> > > »     »       return 0;
+> > > 
+> > > Removing the if() makes the DMA mapping work. It's almost
+> > > midnight here, so i won't look into that any further today. Does
+> > > anyone have an opinion on this behaviour? Otherwise i will look a
+> > > bit more into this in the next days.
 > > 
-> > Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
-> > privilege of gutting a patch via private NAK without any of that open
-> > development discussion incovenience. <grumble>
-> > 
-> > As far as XFS is concerned I merged Dave's series that checks the
-> > alignment of io memory allocations and falls back to vmalloc if the
-> > alignment won't work, because I got tired of scrolling past the endless
-> > discussion and bug reports and inaction spanning months.
+> > The reason for the if was to kick the device into 32 bit
+> > descriptors, which are usually more efficient, especially with
+> > older dual descriptor format cards like we have on parisc systems.
 > 
-> I think it's a big fail of kmalloc API that you have to do that, and
-> especially with vmalloc, which has the overhead of setting up page
-> tables, and it's a waste for allocation requests smaller than page size.
-> I wish we could have nice things.
+> These days we use the dma_get_required_mask API to query for that.
 
-I don't think the problem here is the code. The problem here is that
-we have a dysfunctional development community and there are no
-processes we can follow to ensure architectural problems in core
-subsystems are addressed in a timely manner...
+It looks like sym53c8xx didn't get the memo.  On the other hand, I'm
+fairly certain it should be compiled in addressing mode zero on all
+parisc systems (since all the 64 bit ones have iommus), so I think we
+can take care of this ourselves.
 
-And this criticism isn't just of the mm/ here - this alignment
-problem is exacerbated by exactly the same issue on the block layer
-side. i.e. the block layer and drivers have -zero- bounds checking
-to catch these sorts of things and the block layer maintainer will
-not accept patches for runtime checks that would catch these issues
-and make them instantly visible to us.
+> Svens patch looks right for how we are now using the DMA mask setting
+> API.
 
-These are not code problems: we can fix the problems with code (and
-I have done so to demonstrate "this is how we do what you say is
-impossible").  The problem here is people in positions of
-control/power are repeatedly demonstrating an inability to
-compromise to reach a solution that works for everyone.
+Agreed.
 
-It's far better for us just to work around bullshit like this in XFS
-now, then when the core subsystems get they act together years down
-the track we can remove the workaround from XFS. Users don't care
-how we fix the problem, they just want it fixed. If that means we
-have to route around dysfunctional developer groups, then we'll just
-have to do that....
+James
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
