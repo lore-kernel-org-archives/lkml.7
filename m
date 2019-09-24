@@ -2,104 +2,169 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E52C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B739C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F6B207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="JK8xERef"
+	by mail.kernel.org (Postfix) with ESMTP id 8097C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408154AbfIXRwV (ORCPT
+        id S2408215AbfIXRwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:52:21 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:36225 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732017AbfIXRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:52:21 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id CoyziGLdmN5I9Coz0iV9ND; Tue, 24 Sep 2019 11:52:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1569347539; bh=H/XOP2fKipCtKvfVrIfB/bod/HsAwHO9dwoqUJh3Vmw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=JK8xERefjpCMRSd429miCFrrPAEMqXvG/eOfsrhP21bvGjR7/bTgkx2zBM/slmxrB
-         XVupk5r/vRq5mX/5OkaGevz1bbdF9Z9dWm32zfn/mI+t/LCKQh3HiBugU6Li/TpQ6V
-         iPL1xRLPly4FCqem7gAPprOWEPZY5E2wOyOnRm5633W0jeQ43VdR73C+Ezgb31TUEd
-         FPIMIcpTQPbBZlAr8vaJ1mFztMP6P+sM3qw7jwhZZB0D20FkT/iPQkgry4CVaJ3zRA
-         FFMOOwW1C4YCJHrJ0Ps0Ekq11/PeM5VrHZ5s2nd77wNUesc/AWaGTkYxyGMJAx5zK7
-         T/2xJmFqRS8JA==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=aatUQebYAAAA:8 a=aCwPpCUuJDWdtZRKGx0A:9 a=CjuIK1q_8ugA:10
- a=7715FyvI7WU-l6oqrZBK:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Mel Gorman'" <mgorman@techsingularity.net>
-Cc:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>, <x86@kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <matt@codeblueprint.co.uk>, <viresh.kumar@linaro.org>,
-        <juri.lelli@redhat.com>, <pjt@google.com>,
-        <vincent.guittot@linaro.org>, <qperret@qperret.net>,
-        <dietmar.eggemann@arm.com>, <srinivas.pandruvada@linux.intel.com>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <peterz@infradead.org>,
-        <bp@suse.de>, <lenb@kernel.org>, <rjw@rjwysocki.net>
-References: <20190909024216.5942-1-ggherdovich@suse.cz> <20190909024216.5942-2-ggherdovich@suse.cz> <000e01d568b5$87de9be0$979bd3a0$@net> <000301d56a76$0022e630$0068b290$@net> <1568730313.3329.1.camel@suse.cz> <001a01d56ef8$7abb07c0$70311740$@net> <20190924080608.GA3321@techsingularity.net>
-In-Reply-To: <20190924080608.GA3321@techsingularity.net>
-Subject: RE: [PATCH 1/2] x86,sched: Add support for frequency invariance
-Date:   Tue, 24 Sep 2019 10:52:13 -0700
-Message-ID: <000b01d57300$cf611ce0$6e2356a0$@net>
+        Tue, 24 Sep 2019 13:52:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36948 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393440AbfIXRwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:52:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AE925AC37;
+        Tue, 24 Sep 2019 17:52:19 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdVyrvSM5wisEN5wR+e/x84tTXNN3QAT9lPw
-X-CMAE-Envelope: MS4wfCgcBy1c7Po5AHQoWI4xadnUF/6gDYl0DmdDkj0h/8f4Q6rS7PSt42oPKQSlXfJ9s13UoXpUp1M/R616MMHftQmbwg36GhHPFSOnX4fBItc4C39OKmOd
- WhHWONSXcUUwmjncbyI4PSkyKoQ3F2HaXDMIyU5OFnXzGVvlAGWsYEcBVDWk0u48H+yIxb0oI5nHzWYD0ITXVq3vPukQHinPr+XFkuVCWbIkqV1OnADoPFgr
- i1wfnArLathDVIo3TSLlVlHEDPRWuhfIGwdBonbgEhjQZkVTytEgrFQPQLoFws8tsPEPPteNTH+iVkZMxtyFEtV/IuQDmVWKYn35OOuppbpBCwnTDjEPybHK
- Oz/p+kFPqTONaNjcI7SQLqHj9O8kjsi0cCph8O56W38wP13ZL9Ka3N7gfe5q+1q9FHT81skToQB8QN1lTf2uoLmxQFGzYN9xdCARBYat8yIbhXzS6SertJ81
- dtuVNyipLJhKs5cI3vaOkrtktZyg1JtMgL/wxQjcT/K9RLpOVgmrefxrOjM6XyTdF9WHjWRYuFriVeXy5KQq+haxglv4q06f8hl667VWt4go+H6aUkav5dZ8
- X0MEUZrain0CWdhSqqMHl+O7WSL2nnLGk2reA/pHNpAUL4LH4d2X9UU74J0cYRsEVLoZbz/GFmWIY+mD7creLKyPHr1FKuY5R4GU3OqyYTGyoaVeVsEqUwop
- 4RZjsyBUDpuTqja3p+3ANNu+ijV3va9/nrqM9qSiXwsCixmdNr652Q==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 24 Sep 2019 19:52:18 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <normalperson@yhbt.net>
+Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
+ CONFIG_DEBUG_LOCK_ALLOC
+In-Reply-To: <04b08b78-6348-d592-ca2e-f718955bcc68@akamai.com>
+References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+ <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
+ <1b26e25fcc0e6c54cbdb9e66dade17db@suse.de>
+ <04b08b78-6348-d592-ca2e-f718955bcc68@akamai.com>
+Message-ID: <76f656dc7ac92f92682641e22e1c44c4@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.09.24 01:06 Mel Gorman wrote:
-> On Thu, Sep 19, 2019 at 07:42:29AM -0700, Doug Smythies wrote:
->> On 2019.09.17 07:25 Giovanni Gherdovich wrote:
->>>On Wed, 2019-09-11 at 08:28 -0700, Doug Smythies wrote:
->>> [...]
+On 2019-09-24 19:34, Jason Baron wrote:
+> On 9/23/19 3:23 PM, Roman Penyaev wrote:
+>> On 2019-09-23 17:43, Jason Baron wrote:
+>>> On 9/4/19 4:22 PM, Jason Baron wrote:
+>>>> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case 
+>>>> uses
+>>>> ep_call_nested() in order to pass the correct subclass argument to
+>>>> spin_lock_irqsave_nested(). However, ep_call_nested() adds 
+>>>> unnecessary
+>>>> checks for epoll depth and loops that are already verified when 
+>>>> doing
+>>>> EPOLL_CTL_ADD. This mirrors a conversion that was done for
+>>>> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
+>>>> ep_call_nested() from ep_eventpoll_poll()")
+>>>> 
+>>>> Signed-off-by: Jason Baron <jbaron@akamai.com>
+>>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>>>> Cc: Roman Penyaev <rpenyaev@suse.de>
+>>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>>>> Cc: Eric Wong <normalperson@yhbt.net>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> ---
+>>>>  fs/eventpoll.c | 36 +++++++++++++-----------------------
+>>>>  1 file changed, 13 insertions(+), 23 deletions(-)
+>>>> 
+>>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>>> index d7f1f50..a9b2737 100644
+>>>> --- a/fs/eventpoll.c
+>>>> +++ b/fs/eventpoll.c
+>>>> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls
+>>>> *ncalls,
+>>>>   */
+>>>>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>>>> 
+>>>> -static struct nested_calls poll_safewake_ncalls;
+>>>> -
+>>>> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int
+>>>> call_nests)
+>>>> -{
+>>>> -    unsigned long flags;
+>>>> -    wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
+>>>> -
+>>>> -    spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
+>>>> -    wake_up_locked_poll(wqueue, EPOLLIN);
+>>>> -    spin_unlock_irqrestore(&wqueue->lock, flags);
+>>>> -
+>>>> -    return 0;
+>>>> -}
+>>>> +static DEFINE_PER_CPU(int, wakeup_nest);
+>>>> 
+>>>>  static void ep_poll_safewake(wait_queue_head_t *wq)
+>>>>  {
+>>>> -    int this_cpu = get_cpu();
+>>>> -
+>>>> -    ep_call_nested(&poll_safewake_ncalls,
+>>>> -               ep_poll_wakeup_proc, NULL, wq, (void *) (long)
+>>>> this_cpu);
+>>>> +    unsigned long flags;
+>>>> +    int subclass;
+>>>> 
+>>>> -    put_cpu();
+>>>> +    local_irq_save(flags);
+>>>> +    preempt_disable();
+>>>> +    subclass = __this_cpu_read(wakeup_nest);
+>>>> +    spin_lock_nested(&wq->lock, subclass + 1);
+>>>> +    __this_cpu_inc(wakeup_nest);
+>>>> +    wake_up_locked_poll(wq, POLLIN);
+>>>> +    __this_cpu_dec(wakeup_nest);
+>>>> +    spin_unlock(&wq->lock);
+>>>> +    local_irq_restore(flags);
+>>>> +    preempt_enable();
+>>>>  }
+>> 
+>> What if reduce number of lines with something as the following:
+>> 
+>>    int this_cpu = get_cpu();
+>>    subclass = __this_cpu_inc_return(wakeup_nest);
+>>    spin_lock_irqsave_nested(&wq->lock, flags, subclass);
+>>    wake_up_locked_poll(wq, POLLIN);
+>>    spin_unlock_irqrestore(&wq->lock, flags);
+>>    __this_cpu_dec(wakeup_nest);
+>>    put_cpu();
+>> 
+>> Other than that looks good to me.
+>> 
+>> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+>> 
+>> --
+>> Roman
 > 
+> 
+> Hi,
+> 
+> I put the local_irq_save(flags), call there first so that there 
+> wouldn't
+> be any nesting. For example, in your sequence, there could be an irq
+> after the  __this_cpu_inc_return(), that could end up back here.
 
-> Hence, I think this patchset should be considered on its own merits.
+That is correct, but seems this is the original behavior of 
+ep_call_nested(),
+where irq can happen just after spin_unlock_irqrestore():
 
-Agree. 
+	spin_unlock_irqrestore(&ncalls->lock, flags);
 
-> I think the patch is fine and should be merged with the main caveat being
-> that some CPU families may need to use a different calculation to account
-> for turbo boost which is a per-arch and per-cpu-family decision.
+         >>>> irq here <<<<<
 
-Agree.
+	/* Call the nested function */
+	error = (*nproc)(priv, cookie, call_nests);
 
-> What, if anything, should change in this patchset before it can be merged?
+so eventually you end up with spin_lock_irqsave_nested() call where
+call_nests is not monotonically increased (not sequential) but has
+a gap (depends on nesting).
 
-Nothing, and apologies for the tangential discussion.
+So if shorter, I thought that your "local_irq_save + increment" sequence
+is excessive.
 
-> Is that an acked-by?
-
-Absolutely, if I am worthy of ack'ing then:
-
-Acked-by: Doug Smythies <dsmythies@telus.net>
-
-... Doug
-
+--
+Roman
 
