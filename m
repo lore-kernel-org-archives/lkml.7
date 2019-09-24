@@ -2,171 +2,155 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F404C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F67C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9072146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753D62146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Er9FZK69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504851AbfIXMKP (ORCPT
+        id S2504876AbfIXMKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:10:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:58516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440945AbfIXMKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:10:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19593142F;
-        Tue, 24 Sep 2019 05:10:14 -0700 (PDT)
-Received: from [192.168.1.25] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 111B93F67D;
-        Tue, 24 Sep 2019 05:10:10 -0700 (PDT)
-Subject: Re: Problems with arm64 compat vdso
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <7f05a25a-36c7-929c-484d-bc964587917c@arm.com>
- <CAKv+Gu9EvwM22HaFJvX55HQhptcNUoQZCxq3nxyzquUjcq6DUg@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <991e5bf9-6e15-1ca1-d593-8abe553ebe7c@arm.com>
-Date:   Tue, 24 Sep 2019 13:11:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 08:10:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56104 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbfIXMKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:10:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Py99/bUhc96pJg4JneE/EcK3DluCeStWrFG1PdjjrUQ=; b=Er9FZK69DqPnnmZdOt8/DcwRo
+        ALWJIRUL5g/PNUrF624BGuY8eUM12KssF79Ga1DDfsCUn6q4Q/noDQV3MDJzkMzDgjJ9K+Gsgx/qw
+        z2jBYR36Lm9NISmBiwNgM1OVm93ble/u5hO8dnKM4Xjz6CBsyCWUGdblYT2QE6VUbNxVzuYf54LAD
+        JCqYDtJVEUSCXS3/f3084ucmwUJUC3zu/8YHXTjtReGzSYU7Y0YKz05oE+4koDSooPl661Rq66knE
+        eS4ZvXd6HuDlU5tg67hLR2FkTqQO1gGPVT9FjjlWTSU9bku1wTx3gPXroU8weR0USqNsZyzyqOcMH
+        tK77ylYmQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCjda-0007nC-K2; Tue, 24 Sep 2019 12:09:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E7120305E54;
+        Tue, 24 Sep 2019 14:08:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7FC4920C3E176; Tue, 24 Sep 2019 14:09:43 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 14:09:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+References: <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu9EvwM22HaFJvX55HQhptcNUoQZCxq3nxyzquUjcq6DUg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924115401.GM23050@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
+On Tue, Sep 24, 2019 at 01:54:01PM +0200, Michal Hocko wrote:
+> On Tue 24-09-19 13:23:49, Peter Zijlstra wrote:
+> > On Tue, Sep 24, 2019 at 12:56:22PM +0200, Michal Hocko wrote:
+> [...]
+> > > To be honest I really fail to see why to object to a simple semantic
+> > > that NUMA_NO_NODE imply all usable cpus. Could you explain that please?
+> > 
+> > Because it feels wrong. The device needs to be _somewhere_. It simply
+> > cannot be node-less.
+> 
+> What if it doesn't have any numa preference for what ever reason? There
+> is no other way to express that than NUMA_NO_NODE.
 
-On 9/23/19 5:41 PM, Ard Biesheuvel wrote:
-> On Fri, 20 Sep 2019 at 18:33, Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
->>
->> Hi Will,
->>
->> thank you for reporting this.
->>
->> On 20/09/2019 15:27, Will Deacon wrote:
->>> Hi Vincenzo,
->>>
->>> I've been running into a few issues with the COMPAT vDSO. Please could
->>> you have a look?
->>>
->>
->> I will be at Linux Recipes next week. I will look at this with priority when I
->> come back.
->>
-> 
-> Hi all,
-> 
-> I noticed another issue: I build out of tree, and the VDSO gets
-> rebuilt every time I build the kernel, even if I haven't made any
-> changes to the source tree at all.
-> 
-> Could you please look into that as well? (once you get around to it)
-> 
+Like I said; how does that physically work? The device needs to be
+somewhere. It _must_ have a preference.
 
-I am happy to have a look at this once back from Kernel Recipes next week.
-In the meantime may I ask for some more details?
+> Anyway, I am not going to argue more about this because it seems more of
+> a discussion about "HW shouldn't be doing that although the specification
+> allows that" which cannot really have any outcome except of "feels
+> correct/wrong".
 
-Could be useful to have a set of commands and a log that shows the problem, in
-this way I will be sure to be looking at the same issue.
+We can push back and say we don't respect the specification because it
+is batshit insane ;-)
 
-> Thanks,
-> Ard.
-> 
-> 
->>> If I do the following:
->>>
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
->>> [...]
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
->>> [set CONFIG_CROSS_COMPILE_COMPAT_VDSO="arm-linux-gnueabihf-"]
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
->>>
->>> Then I see the following warning:
->>>
->>> arch/arm64/Makefile:62: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
->>>
->>> even though the compat vDSO *has* been built:
->>>
->>> $ file arch/arm64/kernel/vdso32/vdso.so
->>> arch/arm64/kernel/vdso32/vdso.so: ELF 32-bit LSB pie executable, ARM, EABI5 version 1 (SYSV), dynamically linked, BuildID[sha1]=c67f6c786f2d2d6f86c71f708595594aa25247f6, stripped
->>>
->>> However, I also get some warnings because arm64 headers are being included
->>> in the compat vDSO build:
->>>
->>> In file included from ./arch/arm64/include/asm/thread_info.h:17:0,
->>>                  from ./include/linux/thread_info.h:38,
->>>                  from ./arch/arm64/include/asm/preempt.h:5,
->>>                  from ./include/linux/preempt.h:78,
->>>                  from ./include/linux/spinlock.h:51,
->>>                  from ./include/linux/seqlock.h:36,
->>>                  from ./include/linux/time.h:6,
->>>                  from /usr/local/google/home/willdeacon/work/linux/lib/vdso/gettimeofday.c:7,
->>>                  from <command-line>:0:
->>> ./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
->>> ./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->>>   u64 __addr = (u64)addr & ~__tag_shifted(0xff);
->>>                ^
->>> In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8:0,
->>>                  from ./arch/arm64/include/asm/processor.h:34,
->>>                  from ./arch/arm64/include/asm/elf.h:118,
->>>                  from ./include/linux/elf.h:5,
->>>                  from ./include/linux/elfnote.h:62,
->>>                  from arch/arm64/kernel/vdso32/note.c:11:
->>> ./arch/arm64/include/asm/memory.h: In function ‘__tag_set’:
->>> ./arch/arm64/include/asm/memory.h:233:15: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->>>   u64 __addr = (u64)addr & ~__tag_shifted(0xff);
->>>                ^
->>> Worse, if your compat binutils isn't up-to-date, you'll actually run into
->>> a build failure:
->>>
->>> /tmp/ccFCrjUg.s:80: Error: invalid barrier type -- `dmb ishld'
->>> /tmp/ccFCrjUg.s:124: Error: invalid barrier type -- `dmb ishld'
->>>
->>> There also appears to be a problem getting the toolchain prefix from Kconfig.
->>> If, for example, I do:
->>>
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
->>> [...]
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
->>> [set CONFIG_CROSS_COMPILE_COMPAT_VDSO="vincenzo"]
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
->>> arch/arm64/Makefile:64: *** vincenzogcc not found, check CROSS_COMPILE_COMPAT.  Stop.
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
->>> [set CONFIG_CROSS_COMPILE_COMPAT_VDSO="arm-linux-gnueabihf-"]
->>> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
->>> arch/arm64/Makefile:64: *** vincenzogcc not found, check CROSS_COMPILE_COMPAT.  Stop.
->>> $ grep CONFIG_CROSS_COMPILE_COMPAT_VDSO .config
->>> CONFIG_CROSS_COMPILE_COMPAT_VDSO="arm-linux-gnueabihf-"
->>>
->>> which is irritating, because it seems to force a 'mrproper' if you don't
->>> get the prefix right first time.
->>>
->>> Cheers,
->>>
->>> Will
->>>
->>
->> --
->> Regards,
->> Vincenzo
+> If you really feel strongly about this then we should think of a proper
+> way to prevent this to happen because an out-of-bound access is
+> certainly not something we really want, right?
 
--- 
-Regards,
-Vincenzo
+I just genuinely don't understand it. And I refuse to duct tape it.
+
+And as shown in that email here:
+
+  https://lkml.kernel.org/r/5a188e2b-6c07-a9db-fbaa-561e9362d3ba@huawei.com
+
+there is a ton of broken...
+
+15.061682] node node0: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+...
+15.285602] node node3: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+
+15.360241] cpu cpu0: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+...
+24.768305] cpu cpu127: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+
+39.623339] clockevents clockevent0: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+...
+48.769530] clockevents clockevent127: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+
+That's all broken for no reason.. those things actually _have_ a trivial
+node affinity.
+
+By silently accepting we let this stuff fester.
+
+Now granted; there's a number of virtual devices that really don't have
+a node affinity, but then, those are not hurt by forcing them onto a
+random node, they really don't do anything. Like:
+
+48.913502] event_source armv8_pmuv3_0: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+48.985462] event_source breakpoint: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+49.057120] event_source uprobe: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+49.128431] event_source kprobe: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+49.199742] event_source tracepoint: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+49.271399] event_source software: has invalid NUMA node(-1), default node of 0 now selected. Readjust it by writing to sysfs numa_node or contact your vendor for updates.
+
+That's just fake devices to get a sysfs entry.
