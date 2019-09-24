@@ -2,67 +2,95 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B27BC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9CCC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA4020673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E23A20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440536AbfIXG23 (ORCPT
+        id S2440549AbfIXGal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:28:29 -0400
-Received: from comms.puri.sm ([159.203.221.185]:38336 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393474AbfIXG22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:28:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 8A2F3E0026;
-        Mon, 23 Sep 2019 23:28:28 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nPWPNiR57Mq3; Mon, 23 Sep 2019 23:28:27 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     corbet@lwn.net, will@kernel.org, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH 2/2] CREDITS: update email address for Martin Kepplinger
-Date:   Tue, 24 Sep 2019 08:28:03 +0200
-Message-Id: <20190924062803.3772-2-martin.kepplinger@puri.sm>
-In-Reply-To: <20190924062803.3772-1-martin.kepplinger@puri.sm>
-References: <20190924062803.3772-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        Tue, 24 Sep 2019 02:30:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37073 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440525AbfIXGal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 02:30:41 -0400
+Received: from [89.27.154.14] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCeLN-0008Ni-0B; Tue, 24 Sep 2019 06:30:37 +0000
+Date:   Tue, 24 Sep 2019 08:30:36 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-um@lists.infradead.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
+Message-ID: <20190924063035.n3dmryhn6cb52ida@wittgenstein>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+ <20190923094916.GB15355@zn.tnic>
+ <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Employers change - Linux stays. Also, add my (long time valid) GPG key
-fingerprint to the contact details.
+On Mon, Sep 23, 2019 at 11:41:59AM -0700, Andy Lutomirski wrote:
+> On Mon, Sep 23, 2019 at 2:49 AM Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
+> > > While touching seccomp code I realized that the struct seccomp_data
+> > > argument to secure_computing() seems to be unused by all current
+> > > callers. So let's remove it unless there is some subtlety I missed.
+> > > Note, I only tested this on x86.
+> >
+> > What was amluto thinking in
+> >
+> > 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
+> 
+> IIRC there was a period of time in which x86 used secure_computing()
+> for normal syscalls, and it was a good deal faster to have the arch
+> code supply seccomp_data.  x86 no longer works like this, and syscalls
+> aren't fast anymore ayway :(
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- CREDITS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I started looking at this and actually had a slightly bigger cleanup in
+mind. It seems odd that we have secure_computing() and
+__secure_computing(). Especially in the mips and x86 case. From what I
+can tell they could both rely on secure_computing() and don't need
+__secure_computing().
+If I can make those changes, we can make __secure_computing() static and
+have only a single function secure_computing() that is used by all
+arches which would make this code simpler.
+Apparenly mips once switched from secure_computing() to
+__secure_computing() because of bpf and tracepoints. The last change to
+this was:
 
-diff --git a/CREDITS b/CREDITS
-index 8b67a85844b5..53c556a0c54e 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -1871,8 +1871,9 @@ S: The Netherlands
- 
- N: Martin Kepplinger
- E: martink@posteo.de
--E: martin.kepplinger@ginzinger.com
-+E: martin.kepplinger@puri.sm
- W: http://www.martinkepplinger.com
-+P: 4096R/5AB387D3 F208 2B88 0F9E 4239 3468  6E3F 5003 98DF 5AB3 87D3
- D: mma8452 accelerators iio driver
- D: pegasus_notetaker input driver
- D: Kernel fixes and cleanups
--- 
-2.20.1
+commit 3d729deaf287c43e415c5d791c9ac8414dbeff70
+Author: James Hogan <jhogan@kernel.org>
+Date:   Fri Aug 11 21:56:50 2017 +0100
 
+    MIPS: seccomp: Fix indirect syscall args
+
+which references a broken samples/bpf/tracex5 test. But in the thread to
+this last change Kees and others were less than sure that this makes
+sense. So I'm not sure. Maybe I should just try and send it out...
+
+Christian
