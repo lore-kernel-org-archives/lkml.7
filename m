@@ -2,143 +2,132 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E901EC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E28C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F74207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HFVBFgQF"
+	by mail.kernel.org (Postfix) with ESMTP id 336E021906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504022AbfIXIF1 (ORCPT
+        id S2504038AbfIXIGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:05:27 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36770 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503939AbfIXIF1 (ORCPT
+        Tue, 24 Sep 2019 04:06:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39997 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503934AbfIXIGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:05:27 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O7wpam117302;
-        Tue, 24 Sep 2019 08:05:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=oPr+dhTOFwNYEC9AvZ3D35vpN0u2mt/C8zmbQDPs4ac=;
- b=HFVBFgQF0T+MqmMIQobTMPauKSJXXccywfobifO6SP2VcousntBXJfWO//Fq4hpKZinf
- 0j8wWm1N8yajtorsqeJPuhqQBk4ZDTrKBe2Pbg4zLKX2dV9RRqwXZ+i50LhLqEPEIZ5+
- thuVIuHbHjnoNobBvffemUmzDLwMpkwZP4wuG7FMJf8mLfZe03jSceGg4LmvkVyrK1yU
- OKOmgtg+2YkOY/uWD43obaQriqlOZjxsLSBa2jmDF8vKgdPrB5EZpbve56gb8XQBU1Wh
- Nj5P9Jfuq4y9i0MA7BYN5ec+p1C2b0My3VvZXLpD2+M8XQlmjoWY/AD+acG0Luuu1Ex7 PQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v5btpv9gu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 08:05:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O83T0K098806;
-        Tue, 24 Sep 2019 08:05:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2v6yvjrx3r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 08:05:19 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8O85HqS009562;
-        Tue, 24 Sep 2019 08:05:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Sep 2019 01:05:16 -0700
-Date:   Tue, 24 Sep 2019 11:05:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@01.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [rcu:dev.2019.09.23a 62/77] kernel/rcu/tree.c:2882 kfree_call_rcu()
- warn: inconsistent returns 'irqsave:flags'.
-Message-ID: <20190924080510.GL20699@kadam>
+        Tue, 24 Sep 2019 04:06:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id r20so1788849ioh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 01:06:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GqvdOrn4bCaeW46Vp64HQvAmLWjeyXNtcqKXSxDqmzs=;
+        b=EysvqsAM6jtVF1n9HObbhTfpYt5kmt1C/LBP3lp7Kg9T2geBrrkgiv3b4l4bYoLDA8
+         fnfUXkU2snSYN3ToJzpA57o+DI5vtNP6/s5TXBklAAYsRBduw2W54AgKY4zZYhaVzMe3
+         2dlhnWzwmos+mSxz6bI0ClvZ6iqj2LN8jYktCag65Lqd7woi1ov3Uzz3FBlgY+E6ByIW
+         LlobMCsp0W4+l4v6LH4LGAJY0BcXcncw4rnrJ4/f4vgVVtN5pM4WsiAs9u7fMhbYNTKT
+         WggZyRyJv/caEEqEan4Z4inPKR7KmDnG+dlZu2W5mRhl+OqiDMgjnokQgj5ezMX+Im4b
+         lA7Q==
+X-Gm-Message-State: APjAAAUmJ8Ibet4LrcSMsJF19DmRXCRgc4qQEivYtuEXS8uu5EhkXNyW
+        Un/v/ad6TNVlRPzS9Zpj9Fp5eNfaUOImGaJoXxbfYnOUtl2/
+X-Google-Smtp-Source: APXvYqzIhHdkXtvQLhH4qAE1kLzCbK7ohlK3BMtaG1Dqfyi9RSEyEPN+s8ld70cRrLhV7laCs8bexrhU4xFuMTLrlokyFczbjnYx
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909240081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909240081
+X-Received: by 2002:a5d:85da:: with SMTP id e26mr2184470ios.101.1569312366485;
+ Tue, 24 Sep 2019 01:06:06 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 01:06:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000025669e05934802d6@google.com>
+Subject: WARNING in mark_lock (2)
+From:   syzbot <syzbot+ef8a7c8214359d969c69@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.09.23a
-head:   97de53b94582c208ee239178b208b8e8b9472585
-commit: 39676bb72323718a9e7bab1ba9c4a68319a96f62 [62/77] rcu: Add support for debug_objects debugging for kfree_rcu()
+Hello,
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+syzbot found the following crash on:
 
-smatch warnings:
-kernel/rcu/tree.c:2882 kfree_call_rcu() warn: inconsistent returns 'irqsave:flags'.
-  Locked on:   line 2867
-  Unlocked on: line 2882
+HEAD commit:    b41dae06 Merge tag 'xfs-5.4-merge-7' of git://git.kernel.o..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b6d8e9600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dfcf592db22b9132
+dashboard link: https://syzkaller.appspot.com/bug?extid=ef8a7c8214359d969c69
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-git remote add rcu https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-git remote update rcu
-git checkout 39676bb72323718a9e7bab1ba9c4a68319a96f62
-vim +2882 kernel/rcu/tree.c
+Unfortunately, I don't have any reproducer for this crash yet.
 
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2850) void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2851) {
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2852) 	unsigned long flags;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2853) 	struct kfree_rcu_cpu *krcp;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2854) 
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2855) 	head->func = func;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2856) 
-87970ccf5a9125 Paul E. McKenney        2019-09-19  2857  	local_irq_save(flags);	// For safely calling this_cpu_ptr().
-                                                                ^^^^^^^^^^^^^^^^^^^^^
-IRQs disabled.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ef8a7c8214359d969c69@syzkaller.appspotmail.com
 
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2858) 	krcp = this_cpu_ptr(&krc);
-ff8db005e371cb Paul E. McKenney        2019-09-19  2859  	if (krcp->initialized)
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2860) 		spin_lock(&krcp->lock);
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2861) 
-87970ccf5a9125 Paul E. McKenney        2019-09-19  2862  	// Queue the object but don't yet schedule the batch.
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2863) 	if (debug_rcu_head_queue(head)) {
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2864) 		// Probable double kfree_rcu(), just leak.
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2865) 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2866) 			  __func__, head);
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2867) 		return;
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 1 PID: 20740 at kernel/locking/lockdep.c:167 hlock_class  
+kernel/locking/lockdep.c:167 [inline]
+WARNING: CPU: 1 PID: 20740 at kernel/locking/lockdep.c:167 hlock_class  
+kernel/locking/lockdep.c:156 [inline]
+WARNING: CPU: 1 PID: 20740 at kernel/locking/lockdep.c:167  
+mark_lock+0x22b/0x1220 kernel/locking/lockdep.c:3643
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 20740 Comm: kworker/u4:10 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
+RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
+RIP: 0010:mark_lock+0x22b/0x1220 kernel/locking/lockdep.c:3643
+Code: d0 7c 08 84 d2 0f 85 a8 0e 00 00 44 8b 1d 9d 6d 6e 08 45 85 db 75 b6  
+48 c7 c6 a0 26 ac 87 48 c7 c7 e0 26 ac 87 e8 2d 79 eb ff <0f> 0b 31 db e9  
+aa fe ff ff 48 c7 c7 e0 60 ae 8a e8 30 8e 54 00 e9
+RSP: 0018:ffff88805d72f8d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c26d6 RDI: ffffed100bae5f0d
+RBP: ffff88805d72f928 R08: ffff88806aefa480 R09: fffffbfff11f40b9
+R10: fffffbfff11f40b8 R11: ffffffff88fa05c3 R12: 0000000000000008
+R13: ffff88806aefad68 R14: 0000000000000000 R15: 00000000000c095a
+  mark_usage kernel/locking/lockdep.c:3592 [inline]
+  __lock_acquire+0x538/0x4e70 kernel/locking/lockdep.c:3909
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
+  __wake_up+0xe/0x10 kernel/sched/wait.c:142
+  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
+  wb_do_writeback fs/fs-writeback.c:2030 [inline]
+  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Need to re-enable before returning.
-
-39676bb7232371 Joel Fernandes (Google  2019-09-22  2868) 	}
-87970ccf5a9125 Paul E. McKenney        2019-09-19  2869  	head->func = func;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2870) 	head->next = krcp->head;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2871) 	krcp->head = head;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2872) 
-87970ccf5a9125 Paul E. McKenney        2019-09-19  2873  	// Set timer to drain after KFREE_DRAIN_JIFFIES.
-ff8db005e371cb Paul E. McKenney        2019-09-19  2874  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
-be39848334e088 Paul E. McKenney        2019-09-22  2875  	    !krcp->monitor_todo) {
-be39848334e088 Paul E. McKenney        2019-09-22  2876  		krcp->monitor_todo = true;
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2877) 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
-be39848334e088 Paul E. McKenney        2019-09-22  2878  	}
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2879) 
-ff8db005e371cb Paul E. McKenney        2019-09-19  2880  	if (krcp->initialized)
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2881) 		spin_unlock(&krcp->lock);
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05 @2882) 	local_irq_restore(flags);
-5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2883) }
-495aa969dbaef2 Andreea-Cristina Bernat 2014-03-18  2884  EXPORT_SYMBOL_GPL(kfree_call_rcu);
 
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
