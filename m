@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67FBC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A187FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF0A21BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E482054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343985;
-	bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
+	s=default; t=1569343994;
+	bh=JWnS6eCa3vkdo1jTO8fCCNR5Mxxo+4+dhhhRNHODc+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ZU+hFRhlBTosd0zogoOKt9WRPT9L5cADvNSAGYHV1PXCSXNApbgbi5Q1QRhIbI8v
-	 nogfmXV80QgqwW7WaCXFhgP/bOwKfyLWrtPLfTsC65BFe+Z8UoO+/F5p4D2pJKhRSp
-	 KkKpYYwnaKJ5/Z+d2vJk3wMc/ronfGTbLpqG6668=
+	b=bvnx2jKYFCb44nbosVgZhtegNpoZBUj3FUc1NI+7soCUoeKkKY82iJ5Kc7X3V8PFW
+	 viT2S2/0J1u51iPLg8yl5Oc/LjDn6g0pR7sLxcZqsnOjjJyxEmbc+4RN2YctVAekSW
+	 9Vcj8WYEMe8zYp1blzwHfvWBbWYt8DVGHvA29DAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404862AbfIXQwz (ORCPT
+        id S2441774AbfIXQxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441666AbfIXQwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:52:30 -0400
+        id S2441760AbfIXQwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:52:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D560B2054F;
-        Tue, 24 Sep 2019 16:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4849721D80;
+        Tue, 24 Sep 2019 16:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343949;
-        bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
+        s=default; t=1569343966;
+        bh=JWnS6eCa3vkdo1jTO8fCCNR5Mxxo+4+dhhhRNHODc+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9QpEA6hrtKuyKZoLwKMIc8Lk1vPg8ez8OuCkZgbD2ZjJdJYwDX8MpXAF63pxdmsJ
-         d3WsXlUOR3dVoLagVkgW/3AZJ+Hse9TUdRockbnNGqD/CGvYru7ScWxO9ydGo8Yuh/
-         ZKR8LQJzx/1f6r1eil8B6UpA8lLZAr+xyvvp6ZT4=
+        b=Q1S1b0b0lxxT9ARluQhG7x+yfSdDdcl1s0Zf5wah9Nw1IMWbjoCDEr3NNtqDw6eQX
+         77ng/vUflUvWTuLYrE+b1X0YfktFlneIty2gmApklG/Fef4pqeuTsg//1lq5Km8l3V
+         svkkTbV5BRhtqJHew3ZwqSQPPP3kCmpgpsP0simI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 07/14] powerpc/futex: Fix warning: 'oldval' may be used uninitialized in this function
-Date:   Tue, 24 Sep 2019 12:52:05 -0400
-Message-Id: <20190924165214.28857-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 13/14] powerpc/pseries: correctly track irq state in default idle
+Date:   Tue, 24 Sep 2019 12:52:11 -0400
+Message-Id: <20190924165214.28857-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
 References: <20190924165214.28857-1-sashal@kernel.org>
@@ -59,49 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
+[ Upstream commit 92c94dfb69e350471473fd3075c74bc68150879e ]
 
-We see warnings such as:
-  kernel/futex.c: In function 'do_futex':
-  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
-     return oldval == cmparg;
-                   ^
-  kernel/futex.c:1651:6: note: 'oldval' was declared here
-    int oldval, ret;
-        ^
+prep_irq_for_idle() is intended to be called before entering
+H_CEDE (and it is used by the pseries cpuidle driver). However the
+default pseries idle routine does not call it, leading to mismanaged
+lazy irq state when the cpuidle driver isn't in use. Manifestations of
+this include:
 
-This is because arch_futex_atomic_op_inuser() only sets *oval if ret
-is 0 and GCC doesn't see that it will only use it when ret is 0.
+* Dropped IPIs in the time immediately after a cpu comes
+  online (before it has installed the cpuidle handler), making the
+  online operation block indefinitely waiting for the new cpu to
+  respond.
 
-Anyway, the non-zero ret path is an error path that won't suffer from
-setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
-it will have no impact.
+* Hitting this WARN_ON in arch_local_irq_restore():
+	/*
+	 * We should already be hard disabled here. We had bugs
+	 * where that wasn't the case so let's dbl check it and
+	 * warn if we are wrong. Only do that when IRQ tracing
+	 * is enabled as mfmsr() can be costly.
+	 */
+	if (WARN_ON_ONCE(mfmsr() & MSR_EE))
+		__hard_irq_disable();
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: reword change log slightly]
+Call prep_irq_for_idle() from pseries_lpar_idle() and honor its
+result.
+
+Fixes: 363edbe2614a ("powerpc: Default arch idle could cede processor on pseries")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/20190910225244.25056-1-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/futex.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
-index f4c7467f74655..b73ab8a7ebc3f 100644
---- a/arch/powerpc/include/asm/futex.h
-+++ b/arch/powerpc/include/asm/futex.h
-@@ -60,8 +60,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 9cc976ff7fecc..88fcf6a95fa67 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -369,6 +369,9 @@ static void pseries_lpar_idle(void)
+ 	 * low power mode by cedeing processor to hypervisor
+ 	 */
  
- 	pagefault_enable();
++	if (!prep_irq_for_idle())
++		return;
++
+ 	/* Indicate to hypervisor that we are idle. */
+ 	get_lppaca()->idle = 1;
  
--	if (!ret)
--		*oval = oldval;
-+	*oval = oldval;
- 
- 	return ret;
- }
 -- 
 2.20.1
 
