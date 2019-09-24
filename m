@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84772C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E17C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628AF214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0084214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439738AbfIXSNB (ORCPT
+        id S2505075AbfIXSNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:13:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44036 "EHLO mx1.suse.de"
+        Tue, 24 Sep 2019 14:13:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44098 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439610AbfIXSM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:12:58 -0400
+        id S2439705AbfIXSNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:13:01 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3CDFFABBD;
-        Tue, 24 Sep 2019 18:12:55 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 376C8AC93;
+        Tue, 24 Sep 2019 18:12:58 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
@@ -34,9 +34,9 @@ To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
 Cc:     mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com,
         james.quinlan@broadcom.com, wahrenst@gmx.net,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 04/11] of: address: introduce of_translate_dma_address_parent()
-Date:   Tue, 24 Sep 2019 20:12:35 +0200
-Message-Id: <20190924181244.7159-5-nsaenzjulienne@suse.de>
+Subject: [PATCH 06/11] of: address: use parent OF node in of_dma_get_range()
+Date:   Tue, 24 Sep 2019 20:12:37 +0200
+Message-Id: <20190924181244.7159-7-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
 References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
@@ -47,150 +47,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices might not have a DT node of their own, but might still need
-to translate DMA addresses based on their bus DT node.
-
-Update of_translate_dma_address() to only depend on the parent DT node.
-Rename it to of_translate_dma_address_parent(). The later will be still
-available as a wrapper around the new function.
+Some devices don't have their own OF node, and are stuck passing their
+bus node. Adapt the function for this use case.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
- drivers/of/address.c | 60 ++++++++++++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 24 deletions(-)
+ drivers/of/address.c       | 33 +++++++++++++++------------------
+ drivers/of/device.c        |  3 ++-
+ include/linux/of_address.h |  8 ++++----
+ 3 files changed, 21 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 9c1e638fa8ea..c9eb4ebcc2e9 100644
+index 53666063e938..b7b864b0ac75 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -570,33 +570,32 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-  * device that had registered logical PIO mapping, and the return code is
-  * relative to that node.
+@@ -914,30 +914,21 @@ EXPORT_SYMBOL(of_io_request_and_map);
+  * It returns -ENODEV if "dma-ranges" property was not found
+  * for this device in DT.
   */
--static u64 __of_translate_address(struct device_node *dev,
--				  struct device_node *(*get_parent)(const struct device_node *),
--				  const __be32 *in_addr, const char *rprop,
--				  struct device_node **host)
-+static u64 __of_translate_address_parent(struct device_node *parent,
-+					 struct device_node *(*get_parent)
-+						(const struct device_node *),
-+					 const __be32 *in_addr,
-+					 const char *rprop,
-+					 struct device_node **host)
+-int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
++int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++		     u64 *paddr, u64 *size)
  {
--	struct device_node *parent = NULL;
-+	struct device_node *dev = NULL;
- 	struct of_bus *bus, *pbus;
- 	__be32 addr[OF_MAX_ADDR_CELLS];
- 	int na, ns, pna, pns;
- 	u64 result = OF_BAD_ADDR;
+-	struct device_node *node = of_node_get(np);
++	struct device_node *node = of_node_get(parent);
+ 	const __be32 *ranges = NULL;
+ 	int naddr, nsize, pna;
+ 	int ret = 0;
+ 	u64 dmaaddr;
  
--	pr_debug("** translation for device %pOF **\n", dev);
+-	if (!node)
+-		return -EINVAL;
 -
--	/* Increase refcount at current level */
--	of_node_get(dev);
+ 	while (1) {
+-		struct device_node *parent;
++		struct device_node *tmp;
+ 		int len;
+ 
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
 -
- 	*host = NULL;
--	/* Get parent & match bus type */
--	parent = get_parent(dev);
--	if (parent == NULL)
-+
-+	if (!parent)
- 		goto bail;
-+
-+	/* Increase refcount at current level and match bus type */
-+	of_node_get(parent);
- 	bus = of_match_bus(parent);
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
++		naddr = __of_n_addr_cells_parent(node);
++		nsize = __of_n_size_cells_parent(node);
  
- 	/* Count address cells & copy address locally */
- 	bus->count_cells(parent, &na, &ns);
- 	if (!OF_CHECK_COUNTS(na, ns)) {
--		pr_debug("Bad cell count for %pOF\n", dev);
-+		pr_debug("Bad cell count for %pOF\n", parent);
- 		goto bail;
- 	}
- 	memcpy(addr, in_addr, na * 4);
-@@ -610,9 +609,8 @@ static u64 __of_translate_address(struct device_node *dev,
- 		struct logic_pio_hwaddr *iorange;
+ 		ranges = of_get_property(node, "dma-ranges", &len);
  
- 		/* Switch to parent bus */
--		of_node_put(dev);
- 		dev = parent;
--		parent = get_parent(dev);
-+		parent = get_parent(parent);
- 
- 		/* If root, we have finished */
- 		if (parent == NULL) {
-@@ -650,6 +648,8 @@ static u64 __of_translate_address(struct device_node *dev,
+@@ -951,10 +942,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 		 */
+ 		if (!ranges)
  			break;
- 
- 		/* Complete the move up one level */
-+		of_node_put(dev);
-+		dev = parent;
- 		na = pna;
- 		ns = pns;
- 		bus = pbus;
-@@ -668,8 +668,10 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
- 	struct device_node *host;
- 	u64 ret;
- 
--	ret = __of_translate_address(dev, of_get_parent,
--				     in_addr, "ranges", &host);
-+	pr_debug("** translation for device %pOF **\n", dev);
 +
-+	ret = __of_translate_address_parent(dev->parent, of_get_parent,
-+					    in_addr, "ranges", &host);
- 	if (host) {
- 		of_node_put(host);
- 		return OF_BAD_ADDR;
-@@ -697,14 +699,14 @@ static struct device_node *__of_get_dma_parent(const struct device_node *np)
- 	return of_node_get(args.np);
++		tmp = __of_get_dma_parent(node);
++		of_node_put(node);
++		node = tmp;
++		if (!node)
++			break;
+ 	}
+ 
+ 	if (!ranges) {
+-		pr_debug("no dma-ranges found for node(%pOF)\n", np);
++		pr_debug("no dma-ranges found for node(%pOF)\n", node);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+@@ -967,10 +964,10 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	 * size		: nsize cells
+ 	 */
+ 	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
++	*paddr = of_translate_dma_address_parent(parent, ranges);
+ 	if (*paddr == OF_BAD_ADDR) {
+ 		pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
+-		       dma_addr, np);
++		       dma_addr, parent);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index da8158392010..267b509df517 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -95,7 +95,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	const struct iommu_ops *iommu;
+ 	u64 mask;
+ 
+-	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++	ret = of_dma_get_range(__of_get_dma_parent(np), &dma_addr,
++			       &paddr, &size);
+ 	if (ret < 0) {
+ 		/*
+ 		 * For legacy reasons, we have to assume some devices need
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 30e40fb6936b..aa1ce0cb59a1 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -55,8 +55,8 @@ extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+ extern struct of_pci_range *of_pci_range_parser_one(
+ 					struct of_pci_range_parser *parser,
+ 					struct of_pci_range *range);
+-extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-				u64 *paddr, u64 *size);
++extern int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++			    u64 *paddr, u64 *size);
+ extern bool of_dma_is_coherent(struct device_node *np);
+ #else /* CONFIG_OF_ADDRESS */
+ static inline void __iomem *of_io_request_and_map(struct device_node *device,
+@@ -104,8 +104,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+ 	return NULL;
  }
  
--u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
-+static u64 of_translate_dma_address_parent(struct device_node *parent,
-+					   const __be32 *in_addr)
+-static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-				u64 *paddr, u64 *size)
++static inline int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++				   u64 *paddr, u64 *size)
  {
- 	struct device_node *host;
- 	u64 ret;
- 
--	ret = __of_translate_address(dev, __of_get_dma_parent,
--				     in_addr, "dma-ranges", &host);
--
-+	ret = __of_translate_address_parent(parent, __of_get_dma_parent, in_addr,
-+					    "dma-ranges", &host);
- 	if (host) {
- 		of_node_put(host);
- 		return OF_BAD_ADDR;
-@@ -712,6 +714,14 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- 
- 	return ret;
+ 	return -ENODEV;
  }
-+
-+u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
-+{
-+	pr_debug("** translation for device %pOF **\n", dev);
-+
-+	return of_translate_dma_address_parent(__of_get_dma_parent(dev->parent),
-+					       in_addr);
-+}
- EXPORT_SYMBOL(of_translate_dma_address);
- 
- const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
-@@ -759,8 +769,10 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
- 	unsigned long port;
- 	struct device_node *host;
- 
--	taddr = __of_translate_address(dev, of_get_parent,
--				       in_addr, "ranges", &host);
-+	pr_debug("** translation for device %pOF **\n", dev);
-+
-+	taddr = __of_translate_address_parent(dev->parent, of_get_parent,
-+					      in_addr, "ranges", &host);
- 	if (host) {
- 		/* host-specific port access */
- 		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
 -- 
 2.23.0
 
