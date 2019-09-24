@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62761C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF2CC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374CD20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CEE2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344332;
-	bh=Z1FXg++vbpg9xKSA6xmGTikQgX/VXgM9vHZDwXnfifc=;
+	s=default; t=1569344338;
+	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KaYMPa5EIoD24HSvtl3VPuWlLgJ1I9UuTp1/5ldLTAPOKM+uATuafPO/p0wiF/xW0
-	 ODN5gnz1Fijv6B0I8IIFcbPhvz05pdLBdT8d/re8wFNm108Ay54BdeGm+pvYhQXt0V
-	 hVtZiqYuVm8dm/Esy/Bv43CgJMp0MD6UAsUED5gA=
+	b=YFlAp2rgabp1JUanlhTH0nIcG4B48g5NLBpneUuk5AOuk9pAEB5En08HAL450YJn3
+	 9mtHn/KcGHq56YR36lez81ON2Gi4mIWKGvk9s0n1OsEWld639GJdex1s9sulgsYP+V
+	 k0yH4PmGt+uVUCC/OKM21PdjBoItgT1ahDP3rtUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407436AbfIXQ6v (ORCPT
+        id S2407462AbfIXQ65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39040 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633288AbfIXQrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:42 -0400
+        id S2410405AbfIXQri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CFBE217D9;
-        Tue, 24 Sep 2019 16:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8DB220673;
+        Tue, 24 Sep 2019 16:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343661;
-        bh=Z1FXg++vbpg9xKSA6xmGTikQgX/VXgM9vHZDwXnfifc=;
+        s=default; t=1569343657;
+        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjzcB8Wv8BrT5i/7uxMaYwNvczot2GT0b7f5RuPEorScljIz4rRbKvO2KnMDklaKG
-         WM+g+x73uUd1mTLEAU5dpKkP/P1auFt0Rdb/f30JIZ5JszbAEas0cU9a3FqNkuUQlx
-         lOHyr/Wvm7V+DsBHbEMw1DnuJWIoc2s+kAVn7Ckk=
+        b=b/BP3fwns5wEeGwubLKxMgVosRRw8RKtLurfFXTRafDMpG8aPv2K35slqEEwM6KQG
+         DN1hwgciWOgOugx3UR5FQTWTtk7FDdTSbNTCsn5uSjYC2WmD26dQLVNWoiFgPj6Bvu
+         Ln775SvcZVWRd1HqGKhPmtsHZkWHwbNwtKLxSWvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+Cc:     Mark Menzynski <mmenzyns@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 46/70] clk: renesas: cpg-mssr: Set GENPD_FLAG_ALWAYS_ON for clock domain
-Date:   Tue, 24 Sep 2019 12:45:25 -0400
-Message-Id: <20190924164549.27058-46-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 43/70] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
+Date:   Tue, 24 Sep 2019 12:45:22 -0400
+Message-Id: <20190924164549.27058-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -61,42 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mark Menzynski <mmenzyns@redhat.com>
 
-[ Upstream commit f787216f33ce5b5a2567766398f44ab62157114c ]
+[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
 
-The CPG/MSSR Clock Domain driver does not implement the
-generic_pm_domain.power_{on,off}() callbacks, as the domain itself
-cannot be powered down.  Hence the domain should be marked as always-on
-by setting the GENPD_FLAG_ALWAYS_ON flag, to prevent the core PM Domain
-code from considering it for power-off, and doing unnessary processing.
+Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
 
-Note that this only affects RZ/A2 SoCs.  On R-Car Gen2 and Gen3 SoCs,
-the R-Car SYSC driver handles Clock Domain creation, and offloads only
-device attachment/detachment to the CPG/MSSR driver.
+When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 9dfa28d6fd9f9..cbe5fb468b7f9 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -555,7 +555,8 @@ static int __init cpg_mssr_add_clk_domain(struct device *dev,
- 
- 	genpd = &pd->genpd;
- 	genpd->name = np->name;
--	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
-+	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ALWAYS_ON |
-+		       GENPD_FLAG_ACTIVE_WAKEUP;
- 	genpd->attach_dev = cpg_mssr_attach_dev;
- 	genpd->detach_dev = cpg_mssr_detach_dev;
- 	pm_genpd_init(genpd, &pm_domain_always_on_gov, false);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+index 7143ea4611aa3..33a9fb5ac5585 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
+ 		info->min     = min(info->base,
+ 				    info->base + info->step * info->vidmask);
+ 		info->max     = nvbios_rd32(bios, volt + 0x0e);
++		if (!info->max)
++			info->max = max(info->base, info->base + info->step * info->vidmask);
+ 		break;
+ 	case 0x50:
+ 		info->min     = nvbios_rd32(bios, volt + 0x0a);
 -- 
 2.20.1
 
