@@ -2,239 +2,177 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC691C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42790C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8275321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HqABhrGV"
+	by mail.kernel.org (Postfix) with ESMTP id 0E4B12064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408674AbfIXDOc (ORCPT
+        id S2394781AbfIXDTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 23:14:32 -0400
-Received: from mail-eopbgr50061.outbound.protection.outlook.com ([40.107.5.61]:28161
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394624AbfIXDOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 23:14:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nMriBbbweZsg9Fp5DzRDbBRk+AYKOjF5jlD0xPd62xfGyQ0X2moNpZlwvwHoefcvuk2tmwdNyBs0WsHIgk3MQ/KEAkokp4dao8H8nqEgEqyFvWjJrjkhqe4EnMQkUMlx9aGlhZG8nH4z7LC42N2HepxLqDLJveqCLW2VBQtZFiceAAcXa6xwbXR/2fsWYkDuGXPCzScOSFa39wmNOP0ne31oTN7OyrNmHsP+hVzRpZRmYmiIG72QCNWfW2Z9Smq42liEJPuUNMFs2CGnrvyJTHD9su3+WFIHWrRfCLctTkc4n8kzf/uUUW2ZD8/ROa+uVsZPxepHX/+b8W7Mg6XmcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16b8EmVXrilFECDyKYGrxPy5Xt3f/iGALurs8fHvoCc=;
- b=RMBfmQAxv+bVepUlE8plx2ZwXMqVP3RVkM/qynosndNj7vwHSjsLUz2KQm4/XOVu4A4Nrzkj4MhFF4MAef4FXMz0uCEPe0ExIDyl2uC+AEOpTLLEpRmq7b86bQyUPRlaFUW8bE+93KPhsa4nUsfO/vSBKVDd4cQ5RWxJfuht88DERdlmOnWkvzP4VYE3Wdj/Uh3KuTM2BHo63mnhhuzaUebHlYM3741JYDyFL5g+dEXdD//7bt1fDjUxNjMWXfQIi1OGyyM4oC9P5V4/xznzlAhV/HcudyPr2fRuUsNLYjOeKeg4bq/71w7+9YGSldyiHTt4AVlV1zMziV3DN3mhaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16b8EmVXrilFECDyKYGrxPy5Xt3f/iGALurs8fHvoCc=;
- b=HqABhrGVnNtZqp6Jn2s0bVfbXo2MtWABFCj1sY/oSTV4nc2vyzm6MNKsd+JyNPTECbfqilJvPx+b4jN3AnU31ELQb/DNZUL4eeZq3kvdQDZLFpHqs15JlbUSlfhUv7MPn5oJpus/v2zHRSSNaNVLt/ZaEIPj7XIBHhCGyErat+g=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6608.eurprd04.prod.outlook.com (20.179.235.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 03:14:26 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561%5]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 03:14:26 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v5 2/3] dmaengine: imx-sdma: fix dma freezes
-Thread-Topic: [PATCH v5 2/3] dmaengine: imx-sdma: fix dma freezes
-Thread-Index: AQHVchbyOim+CiOpQECRxZtOGlM/Lac6JGVA
-Date:   Tue, 24 Sep 2019 03:14:25 +0000
-Message-ID: <VE1PR04MB66381655BCED05ED2F212DE389840@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
- <20190923135808.815-3-philipp.puschmann@emlix.com>
-In-Reply-To: <20190923135808.815-3-philipp.puschmann@emlix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0607aa95-b12f-40e3-1534-08d7409d4e13
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6608;
-x-ms-traffictypediagnostic: VE1PR04MB6608:|VE1PR04MB6608:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB66084B803C920B8499B6134889840@VE1PR04MB6608.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(54534003)(199004)(189003)(229853002)(52536014)(7696005)(33656002)(76176011)(6506007)(53546011)(9686003)(186003)(2906002)(316002)(54906003)(55016002)(3846002)(446003)(99286004)(66066001)(6246003)(486006)(102836004)(4326008)(6116002)(476003)(64756008)(11346002)(66476007)(66946007)(25786009)(76116006)(6436002)(4001150100001)(8676002)(305945005)(256004)(7736002)(478600001)(110136005)(26005)(7416002)(86362001)(8936002)(66446008)(66556008)(14444005)(74316002)(81166006)(2501003)(71200400001)(81156014)(71190400001)(14454004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6608;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1tL9wEztGS0K4yrtCLdU2XCArP2FnjVwVklADJ9mArf1+7pGUktRG0dx7n9eQK/BPfAYTjkWYXJx96BQlypSUCMIgt1oKqOHkPA4wXOoi82YJ+BBSEPSxrz8CBpb2aD8XuKNTacytnktuevMv+DtpjzG8ebK2Ja4WSKlyw83l9e68zQgo6q4jy4B/52BdW49pg3d/DhpklwzhhU7f63/+h10VNm7bD9kY/p7vt2iW+sRVb4lL5DcPPu3hQciSr7KG9334ARLOmi1GWi9ttUYyNS6sBb1oGUH1TBwjvrrPGL6OXOOTKxNXbSFnoTIC7u4SIw1AjSYqiSSd5Hi4VBNLjTEEqur+VFLQANjEd35YS3hux+nzAGmSy8j5wrjPWcTT3h/ZBKYYr4qIMAvbbfZdd3CBssDJP5IqPwNoPLXZVk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Sep 2019 23:19:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38772 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389152AbfIXDTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 23:19:22 -0400
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DABA2A09D8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 03:19:22 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id i187so492913pfc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 20:19:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uePRz+zBUInRiBudQ8Q8EZdu0505xUFOoco9XYwCcgc=;
+        b=appDA7N/9lDYgJRNYLvjnUcraDMkTZw8KS+LH+9N9QSDStMe4WJMYQm+Bx9CPx6asm
+         o6+LLO4mWp2UBY8hSQyY40GisGtgqJSd5Sd62UFypN3HgyhNMdL7SB2LOwRWsj9uDRhC
+         iH7JwL6+yVc7K0J5GfDVkQ/UXevde2qbOVojnKFO7cP8BiKYJKcAZnXMIVYvqJwtDTBh
+         GGQSpxRrF4Qu/ttAKhuOKgQGjjkqtprBX8D3PVrhpO/WI474ywfSWB4DDhtgnj0Rex4X
+         LXYKRQCG5gy3wldct3KrLzetxVf8YmOiIzDoAbQ+R+ZmLMUgB/yc8Hn4z3U5BRSpvjW3
+         DbRA==
+X-Gm-Message-State: APjAAAWrhaVKt/gURjhPDUcE0wzMT0FzEgWMpw9U5bW2AKDE29R4MCki
+        nj8b/ghMVGH8nw/OzQUCKkI57fc6kq/IJZMsbrJdnohbGWhevDiVTRMKxDhp0pzADc8yJHHevlX
+        JTsCbjvJVOdk7xy9RN34TfqLQ
+X-Received: by 2002:a62:1516:: with SMTP id 22mr810669pfv.87.1569295162073;
+        Mon, 23 Sep 2019 20:19:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzvvwc9qmVDzQ+3G7Oq/DsoKfd5QfwPt3k9ug8jmIgqi79JZwmDUqYomKmQbUA8CTqPKchZvw==
+X-Received: by 2002:a62:1516:: with SMTP id 22mr810652pfv.87.1569295161835;
+        Mon, 23 Sep 2019 20:19:21 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id b20sm243572pff.158.2019.09.23.20.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 20:19:21 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 11:19:08 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Marty McFadden <mcfadden8@llnl.gov>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v4 05/10] mm: Return faster for non-fatal signals in user
+ mode faults
+Message-ID: <20190924031908.GF28074@xz-x1>
+References: <20190923042523.10027-1-peterx@redhat.com>
+ <20190923042523.10027-6-peterx@redhat.com>
+ <CAHk-=wiNGtUaXtRv1wniw3hfxFnU7SO7ZuisFSVg0btvROcW6w@mail.gmail.com>
+ <20190924024721.GD28074@xz-x1>
+ <20190924025447.GE1855@bombadil.infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0607aa95-b12f-40e3-1534-08d7409d4e13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 03:14:25.8392
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ERLK8bQLr3Yhwfwx5QLMrbKrefEGZKjFUqCXMK7MT0xi5hCHTqRcYEeK73iL+ZMQcNnipLxRi5Jq2okrTD6Wdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6608
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190924025447.GE1855@bombadil.infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-9-23 21:58 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
-> For some years and since many kernel versions there are reports that the =
-RX
-> UART SDMA channel stops working at some point. The workaround was to
-> disable DMA for RX. This commit fixes the problem itself. Cyclic DMA tran=
-sfers
-> are used by uart and other drivers and these can fail in at least two cas=
-es
-> where we can run out of descriptors available to the
-> engine:
-> - Interrupts are disabled for too long and all buffers are filled with
->   data, especially in a setup where many small dma transfers are being
->   executed only using a tiny part of a single buffer
-> - DMA errors (such as generated by baud rate mismatch with imx-uart)
->   use up all descriptors before we can react.
->=20
-> In this case, SDMA stops the channel and no further transfers are done un=
-til
-> the respective channel is disabled and re-enabled. We can check if the
-> channel has been stopped and re-enable it then. To distinguish from the t=
-he
-> case that the channel was stopped by upper-level driver we introduce new
-> flag IMX_DMA_ACTIVE.
->=20
-> As sdmac->desc is constant we can move desc out of the loop.
->=20
-> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->=20
-> Changelog v5:
->  - join with patch version from Jan Luebbe
->  - adapt comments and patch descriptions
->=20
-> Changelog v4:
->  - fixed the fixes tag
->=20
-> Changelog v3:
->  - use correct dma_wmb() instead of dma_wb()
->  - add fixes tag
->=20
-> Changelog v2:
->  - clarify comment and commit description
->=20
->  drivers/dma/imx-sdma.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
-> b42281604e54..0b1d6a62423d 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -383,6 +383,7 @@ struct sdma_channel {  };
->=20
->  #define IMX_DMA_SG_LOOP		BIT(0)
-> +#define IMX_DMA_ACTIVE		BIT(1)
->=20
->  #define MAX_DMA_CHANNELS 32
->  #define MXC_SDMA_DEFAULT_PRIORITY 1
-> @@ -658,6 +659,9 @@ static int sdma_config_ownership(struct
-> sdma_channel *sdmac,
->=20
->  static void sdma_enable_channel(struct sdma_engine *sdma, int channel)  =
-{
-> +	struct sdma_channel *sdmac =3D &sdma->channel[channel];
-> +
-> +	sdmac->flags |=3D IMX_DMA_ACTIVE;
-Add spin_lock_irq protect this flags.
->  	writel(BIT(channel), sdma->regs + SDMA_H_START);  }
->=20
-> @@ -774,16 +778,17 @@ static void sdma_start_desc(struct sdma_channel
-> *sdmac)
->=20
->  static void sdma_update_channel_loop(struct sdma_channel *sdmac)  {
-> +	struct sdma_engine *sdma =3D sdmac->sdma;
->  	struct sdma_buffer_descriptor *bd;
-> +	struct sdma_desc *desc =3D sdmac->desc;
->  	int error =3D 0;
-> -	enum dma_status	old_status =3D sdmac->status;
-> +	enum dma_status old_status =3D sdmac->status;
->=20
->  	/*
->  	 * loop mode. Iterate over descriptors, re-setup them and
->  	 * call callback function.
->  	 */
-> -	while (sdmac->desc) {
-> -		struct sdma_desc *desc =3D sdmac->desc;
-> +	while (desc) {
->=20
->  		bd =3D &desc->bd[desc->buf_tail];
->=20
-> @@ -822,6 +827,18 @@ static void sdma_update_channel_loop(struct
-> sdma_channel *sdmac)
->  		if (error)
->  			sdmac->status =3D old_status;
->  	}
-> +
-> +	/* In some situations it may happen that the sdma does not find any
-> +	 * usable descriptor in the ring to put data into. The channel is
-> +	 * stopped then and after having freed some buffers we have to restart
-> +	 * it manually.
-> +	 */
-> +	if ((sdmac->flags & IMX_DMA_ACTIVE) &&
-> +	    !(readl_relaxed(sdma->regs + SDMA_H_STATSTOP) &
-> BIT(sdmac->channel))) {
-Seems duplicate checking here, IMX_DMA_ACTIVE is enough.
-> +		dev_err_ratelimited(sdma->dev, "SDMA channel %d: cyclic transfer
-> disabled by HW, reenabling\n",
-Would you change the print log to below:
-"cyclic bds consumed all,reenableing".?
-> +				    sdmac->channel);
-> +			writel(BIT(sdmac->channel), sdma->regs + SDMA_H_START);
-> +	};
->  }
->=20
->  static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
-> @@ -1051,7 +1068,8 @@ static int sdma_disable_channel(struct dma_chan
-> *chan)
->  	struct sdma_engine *sdma =3D sdmac->sdma;
->  	int channel =3D sdmac->channel;
->=20
-> -	writel_relaxed(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
-> +	sdmac->flags &=3D ~IMX_DMA_ACTIVE;
-> +	writel(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
->  	sdmac->status =3D DMA_ERROR;
->=20
->  	return 0;
-> --
-> 2.23.0
+On Mon, Sep 23, 2019 at 07:54:47PM -0700, Matthew Wilcox wrote:
+> On Tue, Sep 24, 2019 at 10:47:21AM +0800, Peter Xu wrote:
+> > On Mon, Sep 23, 2019 at 11:03:49AM -0700, Linus Torvalds wrote:
+> > > On Sun, Sep 22, 2019 at 9:26 PM Peter Xu <peterx@redhat.com> wrote:
+> > > >
+> > > > This patch is a preparation of removing that special path by allowing
+> > > > the page fault to return even faster if we were interrupted by a
+> > > > non-fatal signal during a user-mode page fault handling routine.
+> > > 
+> > > So I really wish saome other vm person would also review these things,
+> > > but looking over this series once more, this is the patch I probably
+> > > like the least.
+> > > 
+> > > And the reason I like it the least is that I have a hard time
+> > > explaining to myself what the code does and why, and why it's so full
+> > > of this pattern:
+> > > 
+> > > > -       if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
+> > > > +       if ((fault & VM_FAULT_RETRY) &&
+> > > > +           fault_should_check_signal(user_mode(regs)))
+> > > >                 return;
+> > > 
+> > > which isn't all that pretty.
+> > > 
+> > > Why isn't this just
+> > > 
+> > >   static bool fault_signal_pending(unsigned int fault_flags, struct
+> > > pt_regs *regs)
+> > >   {
+> > >         return (fault_flags & VM_FAULT_RETRY) &&
+> > >                 (fatal_signal_pending(current) ||
+> > >                  (user_mode(regs) && signal_pending(current)));
+> > >   }
+> > > 
+> > > and then most of the users would be something like
+> > > 
+> > >         if (fault_signal_pending(fault, regs))
+> > >                 return;
+> > > 
+> > > and the exceptions could do their own thing.
+> > > 
+> > > Now the code is prettier and more understandable, I feel.
+> > > 
+> > > And if something doesn't follow this pattern, maybe it either _should_
+> > > follow that pattern or it should just not use the helper but explain
+> > > why it has an unusual pattern.
+> 
+> > +++ b/arch/alpha/mm/fault.c
+> > @@ -150,7 +150,7 @@ do_page_fault(unsigned long address, unsigned long mmcsr,
+> >  	   the fault.  */
+> >  	fault = handle_mm_fault(vma, address, flags);
+> >  
+> > -	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
+> > +	if (fault_signal_pending(fault, regs))
+> >  		return;
+> >  
+> >  	if (unlikely(fault & VM_FAULT_ERROR)) {
+> 
+> > +++ b/arch/arm/mm/fault.c
+> > @@ -301,6 +301,11 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+> >  		return 0;
+> >  	}
+> >  
+> > +	/* Fast path to handle user mode signals */
+> > +	if ((fault & VM_FAULT_RETRY) && user_mode(regs) &&
+> > +	    signal_pending(current))
+> > +		return 0;
+> 
+> But _why_ are they different?  This is a good opportunity to make more
+> code the same between architectures.
 
+(Thanks for joining the discussion)
+
+I'd like to do these - my only worry is that I can't really test them
+well simply because I don't have all the hardwares.  For now the
+changes are mostly straightforward so I'm relatively confident (not to
+mention the code needs proper reviews too, and of course I would
+appreciate much if anyone wants to smoke test it).  If I change it in
+a drastic way, I won't be that confident without some tests at least
+on multiple archs (not to mention that even smoke testing across major
+archs will be a huge amount of work...).  So IMHO those might be more
+suitable as follow-up for per-arch developers if we can at least reach
+a consensus on the whole idea of this patchset.
+
+Thanks,
+
+-- 
+Peter Xu
