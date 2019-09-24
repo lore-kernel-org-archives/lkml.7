@@ -2,107 +2,114 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39213C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C39FC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098A121655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:19:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQr9ye8X"
+	by mail.kernel.org (Postfix) with ESMTP id E6BE921655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733260AbfIXMTc (ORCPT
+        id S2504862AbfIXMWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:19:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40202 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfIXMTc (ORCPT
+        Tue, 24 Sep 2019 08:22:01 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41539 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfIXMWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:19:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so1267853pfb.7;
-        Tue, 24 Sep 2019 05:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+5sR8QwSbelH07Sakdk8YenxqqWQUDtCpTgfPZQuv4k=;
-        b=dQr9ye8XZLwMOxxQ9GG1g4dguj2pNJ5CSmPXp1uYpWiILcDSthtQZRhGHmkAiYlbc8
-         Is+x2Jp2G28Zu5I27vWiuPYS9D5DkmTetwVUlZFYSZmvki1BzHAZg0ytlDHt9kj0uItl
-         MPBnLo+mAOypGGRE8W7Kcw+/6XRvCQhxdWPvi7+dzBfIYCMXXJuthNx7dB6SZUDGi6A9
-         ZYx5fJh+X9G8tZ7P2rtrGuCnY7Ek6k8nHBWpg0TZ7fSdJ6aPWnGI3PNlDlKtPHqMhylK
-         6b8mAEDpA8MzRrbCvqlR4K3wG0YmaaekZ4GIkhCNOxuKeK6gpHpz2jrSyi4kFM61WbpO
-         MO+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+5sR8QwSbelH07Sakdk8YenxqqWQUDtCpTgfPZQuv4k=;
-        b=N4wb8CQqPIBCMRw8L6+ybLpdGcPDaumzqjhYD32rEeyRZfjXFwVjPoSrVnixmSZHqA
-         ck8PP9AHaEKME2nC404kbQGmId7hW0pLJjCwM5qz6y8WVXLel8VcN1Vl+8e75EjAQqCI
-         OA/QYB8wfvKp0RodrICyjVQLTAjpvRoo36tuqn4rOGm871bT17BNsAePhlK6+iwfH64p
-         YYDhOS2SCbs+DwDdsG9RyI3FGH+mEqYG/HMeCfQb1DqukRsQmonNFU0jbbXDcXmHrK13
-         nKAWNmRlFsU4JDSOsZMuXfTyZOE0uEsL/cpbojddLJ7Uwoz7rkaiPCN1uLbRcPjtirOx
-         M4jw==
-X-Gm-Message-State: APjAAAWS8mhHBF+MtOWeApizWls9/AyebQeEtp5cBILKhcQB/vw6waY2
-        8Z+IVzhZC+/0wkfpysuq420=
-X-Google-Smtp-Source: APXvYqwh42CpUv1KlO3LdNt1jHk+eEwSSPesowB8pKujp61l4wjaF2JVxEUdbtBaWW2jsBhi7Xx7RA==
-X-Received: by 2002:a63:3585:: with SMTP id c127mr2710435pga.93.1569327570971;
-        Tue, 24 Sep 2019 05:19:30 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:537:7ff9:654f:9ca4:a1c9:4c8f])
-        by smtp.gmail.com with ESMTPSA id u3sm2038412pfn.134.2019.09.24.05.19.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Sep 2019 05:19:30 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 17:49:25 +0530
-From:   Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-To:     linux-kernel-mentees@lists.linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fs: direct-io: Fixed a Documentation build warn
-Message-ID: <20190924121920.GA4593@madhuparna-HP-Notebook>
+        Tue, 24 Sep 2019 08:22:00 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCjpI-0006IT-GQ; Tue, 24 Sep 2019 14:21:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iCjpD-00085A-Ku; Tue, 24 Sep 2019 14:21:47 +0200
+Date:   Tue, 24 Sep 2019 14:21:47 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: at91: avoid sleeping early
+Message-ID: <20190924122147.fojcu5u44letrele@pengutronix.de>
+References: <20190920153906.20887-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190920153906.20887-1-alexandre.belloni@bootlin.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-warning: Excess function parameter 'offset' description in 
-'dio_complete'.
-This patch removes offset from the list of arguments from the function
-header as it not an argument to the function. Adds the description about
-offset within the code.
+On Fri, Sep 20, 2019 at 05:39:06PM +0200, Alexandre Belloni wrote:
+> It is not allowed to sleep to early in the boot process and this may lead
+> to kernel issues if the bootloader didn't prepare the slow clock and main
+> clock.
+> 
+> This results in the following error and dump stack on the AriettaG25:
+>    bad: scheduling from the idle thread!
+> 
+> Ensure it is possible to sleep, else simply have a delay.
+> 
+> Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- fs/direct-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index ae196784f487..a9cb770f0bc1 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -243,7 +243,6 @@ void dio_warn_stale_pagecache(struct file *filp)
- 
- /**
-  * dio_complete() - called when all DIO BIO I/O has been completed
-- * @offset: the byte offset in the file of the completed operation
-  *
-  * This drops i_dio_count, lets interested parties know that a DIO operation
-  * has completed, and calculates the resulting return code for the operation.
-@@ -255,6 +254,7 @@ void dio_warn_stale_pagecache(struct file *filp)
-  */
- static ssize_t dio_complete(struct dio *dio, ssize_t ret, unsigned int flags)
- {
-+	/* offset: the byte offset in the file of the completed operation */
- 	loff_t offset = dio->iocb->ki_pos;
- 	ssize_t transferred = 0;
- 	int err;
+See below for a comment.
+
+> Note that this was already discussed a while ago and Arnd said this approach was
+> reasonable:
+>   https://lore.kernel.org/lkml/6120818.MyeJZ74hYa@wuerfel/
+> 
+>  drivers/clk/at91/clk-main.c |  5 ++++-
+>  drivers/clk/at91/sckc.c     | 20 ++++++++++++++++----
+>  2 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+> index f607ee702c83..ccd48e7a3d74 100644
+> --- a/drivers/clk/at91/clk-main.c
+> +++ b/drivers/clk/at91/clk-main.c
+> @@ -293,7 +293,10 @@ static int clk_main_probe_frequency(struct regmap *regmap)
+>  		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
+>  		if (mcfr & AT91_PMC_MAINRDY)
+>  			return 0;
+> -		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+> +		if (system_state < SYSTEM_RUNNING)
+> +			udelay(MAINF_LOOP_MIN_WAIT);
+> +		else
+> +			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+
+Given that this construct is introduced several times, I wonder if we
+want something like:
+
+	static inline void early_usleep_range(unsigned long min, unsigned long max)
+	{
+		if (system_state < SYSTEM_RUNNING)
+			udelay(min);
+		else
+			usleep_range(min, max);
+	}
+
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
