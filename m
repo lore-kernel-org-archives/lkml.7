@@ -2,55 +2,51 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFFDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D7C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E07121928
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A50D217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343489;
-	bh=io5E/XLC2xLF3oDgetiVEl84yoGCYv5MMRcAAKaWvBQ=;
+	s=default; t=1569343497;
+	bh=cHqYgbigJfROhlyBdcrTmz1tt2vh7ZpYE1w0/e5Fieg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzl8QzqaMDng57OzZxgqQaHCkiCk55ddtMcOytwJxJTp1ni5g5ygqRIqr4JPujmyr
-	 YQ8OodpswZddsAlpzUBFJafzfVAlih7HM7F8ul1FuwJ8L8Y4DFzjwrV6XObh4C3HTK
-	 7HGXe+UtBPcIEQIBwrXYGqjQRHf2UrwKcixzmHJg=
+	b=LoPXLVnYJjb2PLh0a/x3sMKu2WRxJRzAW1tQQiT4HbvCM7I5OiP3lfUZNoXLl5fI5
+	 RgdsWJuuTFhRa3v60e7+ljqrfpdlQJpMWFeDOJhfzt1wi/4xXpSI14mXiCsf5EpiiK
+	 mPXqffoZAZS1NPYGQxQh3B4fmA6cokpE4tK6yl9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409898AbfIXQos (ORCPT
+        id S2633199AbfIXQoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:44:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33942 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:44:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409865AbfIXQom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:44:42 -0400
+        id S2409911AbfIXQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF42B21841;
-        Tue, 24 Sep 2019 16:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A224C20872;
+        Tue, 24 Sep 2019 16:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343481;
-        bh=io5E/XLC2xLF3oDgetiVEl84yoGCYv5MMRcAAKaWvBQ=;
+        s=default; t=1569343492;
+        bh=cHqYgbigJfROhlyBdcrTmz1tt2vh7ZpYE1w0/e5Fieg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5I3YHypVx4M5taxa4Boc1AwjMAVHIp2UFQiN8btIwGrgBlCIPhWEMDZ+HuzyUgBG
-         F/DGj/T/445lxjpn68lmpfiDG0T0d3N/5cQeilQppq3peKr3fuNxFZopSuanppuA7Z
-         v0wrCiUG3NdI6DYAsd0C6A6LD8JVKJgV8nB4un3U=
+        b=KcI9UACQ2hhWJBL123i9rdIvDH8jGy/gCFpL1QR0r+d2DPr1cwOv+h683qUwiXryn
+         UWdt934kY95+7/kCEyroE7hxD+JMMlHuujPVMl1YSVBxeF/IkQGhAIISPbpITZkolu
+         yFRirJw2bGmroPuZWJFdvuTNPEIOrVDXD0BITcjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.3 64/87] kbuild: Do not enable -Wimplicit-fallthrough for clang for now
-Date:   Tue, 24 Sep 2019 12:41:20 -0400
-Message-Id: <20190924164144.25591-64-sashal@kernel.org>
+Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.3 69/87] powerpc/imc: Dont create debugfs files for cpu-less nodes
+Date:   Tue, 24 Sep 2019 12:41:25 -0400
+Message-Id: <20190924164144.25591-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -63,80 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-[ Upstream commit e2079e93f562c7f7a030eb7642017ee5eabaaa10 ]
+[ Upstream commit 41ba17f20ea835c489e77bd54e2da73184e22060 ]
 
-This functionally reverts commit bfd77145f35c ("Makefile: Convert
--Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang").
+Commit <684d984038aa> ('powerpc/powernv: Add debugfs interface for
+imc-mode and imc') added debugfs interface for the nest imc pmu
+devices to support changing of different ucode modes. Primarily adding
+this capability for debug. But when doing so, the code did not
+consider the case of cpu-less nodes. So when reading the _cmd_ or
+_mode_ file of a cpu-less node will create this crash.
 
-clang enabled support for -Wimplicit-fallthrough in C in r369414 [1],
-which causes a lot of warnings when building the kernel for two reasons:
+  Faulting instruction address: 0xc0000000000d0d58
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  ...
+  CPU: 67 PID: 5301 Comm: cat Not tainted 5.2.0-rc6-next-20190627+ #19
+  NIP:  c0000000000d0d58 LR: c00000000049aa18 CTR:c0000000000d0d50
+  REGS: c00020194548f9e0 TRAP: 0300   Not tainted  (5.2.0-rc6-next-20190627+)
+  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:28022822  XER: 00000000
+  CFAR: c00000000049aa14 DAR: 000000000003fc08 DSISR:40000000 IRQMASK: 0
+  ...
+  NIP imc_mem_get+0x8/0x20
+  LR  simple_attr_read+0x118/0x170
+  Call Trace:
+    simple_attr_read+0x70/0x170 (unreliable)
+    debugfs_attr_read+0x6c/0xb0
+    __vfs_read+0x3c/0x70
+     vfs_read+0xbc/0x1a0
+    ksys_read+0x7c/0x140
+    system_call+0x5c/0x70
 
-1. Clang does not support the /* fall through */ comments. There seems
-   to be a general consensus in the LLVM community that this is not
-   something they want to support. Joe Perches wrote a script to convert
-   all of the comments to a "fallthrough" keyword that will be added to
-   compiler_attributes.h [2] [3], which catches the vast majority of the
-   comments. There doesn't appear to be any consensus in the kernel
-   community when to do this conversion.
+Patch fixes the issue with a more robust check for vbase to NULL.
 
-2. Clang and GCC disagree about falling through to final case statements
-   with no content or cases that simply break:
+Before patch, ls output for the debugfs imc directory
 
-   https://godbolt.org/z/c8csDu
+  # ls /sys/kernel/debug/powerpc/imc/
+  imc_cmd_0    imc_cmd_251  imc_cmd_253  imc_cmd_255  imc_mode_0    imc_mode_251  imc_mode_253  imc_mode_255
+  imc_cmd_250  imc_cmd_252  imc_cmd_254  imc_cmd_8    imc_mode_250  imc_mode_252  imc_mode_254  imc_mode_8
 
-   This difference contributes at least 50 warnings in an allyesconfig
-   build for x86, not considering other architectures. This difference
-   will need to be discussed to see which compiler is right [4] [5].
+After patch, ls output for the debugfs imc directory
 
-[1]: https://github.com/llvm/llvm-project/commit/1e0affb6e564b7361b0aadb38805f26deff4ecfc
-[2]: https://lore.kernel.org/lkml/61ddbb86d5e68a15e24ccb06d9b399bbf5ce2da7.camel@perches.com/
-[3]: https://lore.kernel.org/lkml/1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com/
-[4]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
-[5]: https://github.com/ClangBuiltLinux/linux/issues/636
+  # ls /sys/kernel/debug/powerpc/imc/
+  imc_cmd_0  imc_cmd_8  imc_mode_0  imc_mode_8
 
-Given these two problems need discussion and coordination, do not enable
--Wimplicit-fallthrough with clang right now. Add a comment to explain
-what is going on as well. This commit should be reverted once these two
-issues are fully flushed out and resolved.
+Actual bug here is that, we have two loops with potentially different
+loop counts. That is, in imc_get_mem_addr_nest(), loop count is
+obtained from the dt entries. But in case of export_imc_mode_and_cmd(),
+loop was based on for_each_nid() count. Patch fixes the loop count in
+latter based on the struct mem_info. Ideally it would be better to
+have array size in struct imc_pmu.
 
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 684d984038aa ('powerpc/powernv: Add debugfs interface for imc-mode and imc')
+Reported-by: Qian Cai <cai@lca.pw>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190827101635.6942-1-maddy@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/powernv/opal-imc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index f32e8d2e09c36..23703ecb8fdd0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -751,6 +751,11 @@ else
- # These warnings generated too much noise in a regular build.
- # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
- KBUILD_CFLAGS += -Wno-unused-but-set-variable
-+
-+# Warn about unmarked fall-throughs in switch statement.
-+# Disabled for clang while comment to attribute conversion happens and
-+# https://github.com/ClangBuiltLinux/linux/issues/636 is discussed.
-+KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
- endif
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 186109bdd41be..e04b20625cb94 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -53,9 +53,9 @@ static void export_imc_mode_and_cmd(struct device_node *node,
+ 				    struct imc_pmu *pmu_ptr)
+ {
+ 	static u64 loc, *imc_mode_addr, *imc_cmd_addr;
+-	int chip = 0, nid;
+ 	char mode[16], cmd[16];
+ 	u32 cb_offset;
++	struct imc_mem_info *ptr = pmu_ptr->mem_info;
  
- KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
-@@ -845,9 +850,6 @@ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- # warn about C99 declaration after statement
- KBUILD_CFLAGS += -Wdeclaration-after-statement
+ 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
  
--# Warn about unmarked fall-throughs in switch statement.
--KBUILD_CFLAGS += $(call cc-option,-Wimplicit-fallthrough,)
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
+@@ -69,20 +69,20 @@ static void export_imc_mode_and_cmd(struct device_node *node,
+ 	if (of_property_read_u32(node, "cb_offset", &cb_offset))
+ 		cb_offset = IMC_CNTL_BLK_OFFSET;
+ 
+-	for_each_node(nid) {
+-		loc = (u64)(pmu_ptr->mem_info[chip].vbase) + cb_offset;
++	while (ptr->vbase != NULL) {
++		loc = (u64)(ptr->vbase) + cb_offset;
+ 		imc_mode_addr = (u64 *)(loc + IMC_CNTL_BLK_MODE_OFFSET);
+-		sprintf(mode, "imc_mode_%d", nid);
++		sprintf(mode, "imc_mode_%d", (u32)(ptr->id));
+ 		if (!imc_debugfs_create_x64(mode, 0600, imc_debugfs_parent,
+ 					    imc_mode_addr))
+ 			goto err;
+ 
+ 		imc_cmd_addr = (u64 *)(loc + IMC_CNTL_BLK_CMD_OFFSET);
+-		sprintf(cmd, "imc_cmd_%d", nid);
++		sprintf(cmd, "imc_cmd_%d", (u32)(ptr->id));
+ 		if (!imc_debugfs_create_x64(cmd, 0600, imc_debugfs_parent,
+ 					    imc_cmd_addr))
+ 			goto err;
+-		chip++;
++		ptr++;
+ 	}
+ 	return;
  
 -- 
 2.20.1
