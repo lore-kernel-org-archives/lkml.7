@@ -2,210 +2,259 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D1AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A934AC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F641214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:12:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ristioja.ee header.i=@ristioja.ee header.b="m53PpNdu"
+	by mail.kernel.org (Postfix) with ESMTP id 79A38214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504129AbfIXJL7 (ORCPT
+        id S2504132AbfIXJNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:11:59 -0400
-Received: from heh.ee ([213.35.143.160]:43810 "EHLO mx1.heh.ee"
+        Tue, 24 Sep 2019 05:13:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40596 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504101AbfIXJL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:11:59 -0400
-Received: from [0.0.0.0] (unknown [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726094AbfIXJNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:13:35 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.heh.ee (Postfix) with ESMTPSA id 28C8816D1A8;
-        Tue, 24 Sep 2019 12:11:57 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ristioja.ee; s=mail;
-        t=1569316317; bh=+FTdeih0wbhelrsKafPiC+6qY12Mc34G72pLIoqYmiU=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=m53PpNduD1hhf1kZVpM5uW3cjTbX/ZkAuZniKln+7rLOnqU+GWzphvKGHDB49Lh19
-         vP4BxN9sfZmTzQbl5qCfm+/lyXwtR12dBPp56dszXqANLAorYn47JQfZAHZOn8QCsL
-         tEZNkP0EVv5sJ66Er7Z5YaF4bEjrw59bzxW6C7VE=
-Subject: Re: Xorg indefinitely hangs in kernelspace
-From:   Jaak Ristioja <jaak@ristioja.ee>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Dave Airlie <airlied@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id 822988A1C95;
+        Tue, 24 Sep 2019 09:13:34 +0000 (UTC)
+Received: from [10.36.116.87] (ovpn-116-87.ams2.redhat.com [10.36.116.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E198F10013D9;
+        Tue, 24 Sep 2019 09:13:31 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] memory_hotplug: Add a bounds check to
+ check_hotplug_memory_range()
+To:     Michal Hocko <mhocko@kernel.org>,
+        Alastair D'Silva <alastair@d-silva.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <92785039-0941-4626-610b-f4e3d9613069@ristioja.ee>
- <20190905071407.47iywqcqomizs3yr@sirius.home.kraxel.org>
- <e4b7d889-15f3-0c90-3b9f-d395344499c0@ristioja.ee>
+References: <20190917010752.28395-1-alastair@au1.ibm.com>
+ <20190917010752.28395-2-alastair@au1.ibm.com>
+ <20190923122513.GO6016@dhcp22.suse.cz>
+ <25e0af4cb24a41466032d704b89d25559e7ad968.camel@d-silva.org>
+ <20190924090934.GF23050@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=jaak@ristioja.ee; prefer-encrypt=mutual; keydata=
- mDMEWyjlXBYJKwYBBAHaRw8BAQdABEPNmQfWmwZZXSl5vKnpI1UVtS4l2N9kv7KqyFYtfLe0
- IEphYWsgUmlzdGlvamEgPGphYWtAcmlzdGlvamEuZWU+iJYEExYIAD4WIQTjaPCMFhRItZ2p
- iV/uxscoTrbt3AUCWyjlXAIbIwUJA8OZNAULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRDu
- xscoTrbt3OYPAP9l6ZjLh4qK2r/H1b+7a7qZIAjwf0o4AX6qvtX1WERxywEAhhtOHg+G8idL
- FR08XPW7nlobl2qEHMnqBTqteSsz1gG4OARbKOVcEgorBgEEAZdVAQUBAQdAU6y3a2gcxTI+
- bZgPkJjPXxr0tvuLpCqkIb/envF5ajADAQgHiH4EGBYIACYWIQTjaPCMFhRItZ2piV/uxsco
- Trbt3AUCWyjlXAIbDAUJA8OZNAAKCRDuxscoTrbt3OG5AP0cd6gLbKVSBvSEgRNQ+BNk/1a5
- lSQtocXAcwUx0X9h0gEAqIZ9u7pCWBlRTL+rij97VWWkB/jb1deZ2gExNhd6RAU=
-Message-ID: <ccafdbaf-7f8e-8616-5543-2a178bd63828@ristioja.ee>
-Date:   Tue, 24 Sep 2019 12:12:16 +0300
-User-Agent: undefined
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <32531671-77dd-7857-f34f-f73ea45f7e22@redhat.com>
+Date:   Tue, 24 Sep 2019 11:13:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <e4b7d889-15f3-0c90-3b9f-d395344499c0@ristioja.ee>
+In-Reply-To: <20190924090934.GF23050@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: et-EE
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Tue, 24 Sep 2019 09:13:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.09.19 15:34, Jaak Ristioja wrote:
-> On 05.09.19 10:14, Gerd Hoffmann wrote:
->> On Tue, Aug 06, 2019 at 09:00:10PM +0300, Jaak Ristioja wrote:
->>> Hello!
+On 24.09.19 11:09, Michal Hocko wrote:
+> On Tue 24-09-19 11:31:05, Alastair D'Silva wrote:
+>> On Mon, 2019-09-23 at 14:25 +0200, Michal Hocko wrote:
+>>> On Tue 17-09-19 11:07:47, Alastair D'Silva wrote:
+>>>> From: Alastair D'Silva <alastair@d-silva.org>
+>>>>
+>>>> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
+>>>> are allocated from firmware. These address ranges may be higher
+>>>> than what older kernels permit, as we increased the maximum
+>>>> permissable address in commit 4ffe713b7587
+>>>> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
+>>>> possible that the addressable range may change again in the
+>>>> future.
+>>>>
+>>>> In this scenario, we end up with a bogus section returned from
+>>>> __section_nr (see the discussion on the thread "mm: Trigger bug on
+>>>> if a section is not found in __section_nr").
+>>>>
+>>>> Adding a check here means that we fail early and have an
+>>>> opportunity to handle the error gracefully, rather than rumbling
+>>>> on and potentially accessing an incorrect section.
+>>>>
+>>>> Further discussion is also on the thread ("powerpc: Perform a
+>>>> bounds
+>>>> check in arch_add_memory").
 >>>
->>> I'm writing to report a crash in the QXL / DRM code in the Linux kernel.
->>> I originally filed the issue on LaunchPad and more details can be found
->>> there, although I doubt whether these details are useful.
+>>> It would be nicer to refer to this by a message-id based url.
+>>> E.g. 
+>>> http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
+>>>
 >>
->> Any change with kernel 5.3-rc7 ?
+>> Ok.
+>>
+>>>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+>>>> ---
+>>>>  include/linux/memory_hotplug.h |  1 +
+>>>>  mm/memory_hotplug.c            | 13 ++++++++++++-
+>>>>  2 files changed, 13 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/memory_hotplug.h
+>>>> b/include/linux/memory_hotplug.h
+>>>> index f46ea71b4ffd..bc477e98a310 100644
+>>>> --- a/include/linux/memory_hotplug.h
+>>>> +++ b/include/linux/memory_hotplug.h
+>>>> @@ -110,6 +110,7 @@ extern void
+>>>> __online_page_increment_counters(struct page *page);
+>>>>  extern void __online_page_free(struct page *page);
+>>>>  
+>>>>  extern int try_online_node(int nid);
+>>>> +int check_hotplug_memory_addressable(u64 start, u64 size);
+>>>>  
+>>>>  extern int arch_add_memory(int nid, u64 start, u64 size,
+>>>>  			struct mhp_restrictions *restrictions);
+>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>>>> index c73f09913165..02cb9a74f561 100644
+>>>> --- a/mm/memory_hotplug.c
+>>>> +++ b/mm/memory_hotplug.c
+>>>> @@ -1030,6 +1030,17 @@ int try_online_node(int nid)
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> +int check_hotplug_memory_addressable(u64 start, u64 size)
+>>>> +{
+>>>> +#ifdef MAX_PHYSMEM_BITS
+>>>> +	if ((start + size - 1) >> MAX_PHYSMEM_BITS)
+>>>> +		return -E2BIG;
+>>>> +#endif
+>>>
+>>> Is there any arch which doesn't define this? We seemed to be using
+>>> this
+>>> in sparsemem code without any ifdefs.
+>>
+>> A few, but none of them would be enabling hotplug (which depends on
+>> sparsemem), so you're right, the ifdef could be removed.
+>>
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(check_hotplug_memory_addressable);
+>>>
+>>> If you squashed the patch 2 then it would become clear why this needs
+>>> to
+>>> be exported because you would have a driver user. I find it a bit
+>>> unfortunate to expect that any driver which uses the hotplug code is
+>>> expected to know that this check should be called. This sounds too
+>>> error
+>>> prone. Why hasn't been this done at __add_pages layer?
+>>>
+>>
+>> It seemed that is should be a peer of check_hotplug_memory_range(), as
+>> it gives similar feedback (whether the provided range is suitable).
 > 
-> Didn't try. Did you change something? I could try, but I've done so
-> before and every time this bug manifests itself with MAJOR.MINOR-rc# I
-> get asked to try version MAJOR.(MINOR+1)-rc# so I guess I could as well
-> give up?
+> Well, that one seems to do a similar yet a different kind of check. It
+> imposes a constrain to the alignment of the memory that is hotplugable
+> via add_memory_resource - aka memory with user visible sysfs interface
+> and that really has some restrictions on the memory block sizes now.
+>  
+>> If we did the check in __add_pages, wouldn't we potentially lose bits
+>> from the LSBs of start & size, or is there some other requirement that
+>> already ensures start & size are always page aligned?
 > 
-> Alright, I'll install 5.3-rc7, but once more it might take some time for
-> this bug to expose itself.
+> I do not really think we have to care about page unaligned addresses.
+> Callers down the road usually work with pfns. 
+> 
+>> It appears this patch has been accepted - if we were to make this
+>> change, does it go as another spin on this series or a new series?
+> 
+> yes, the patch has been rushed to Linus unfortunatelly. Although I do
+> not really see any reason why. Sigh...
+> Anyway, now that it is in Linus' tree then we can only do a follow up on
+> top.
+> 
+>>>> +
+>>>>  static int check_hotplug_memory_range(u64 start, u64 size)
+>>>>  {
+>>>>  	/* memory range must be block size aligned */
+>>>> @@ -1040,7 +1051,7 @@ static int check_hotplug_memory_range(u64
+>>>> start, u64 size)
+>>>>  		return -EINVAL;
+>>>>  	}
+>>>>  
+>>>> -	return 0;
+>>>> +	return check_hotplug_memory_addressable(start, size);
+>>>
+>>> This will result in a silent failure (unlike misaligned case). Is
+>>> this
+>>> what we want?
+>>
+>> Good point - I guess it comes down to, is there anything we expect an
+>> end user to do about it? I'm not sure there is, in which case the bad
+>> RC, which is reported up every call chain that I can see, should be
+>> sufficient.
+> 
+> It seems like a clear HW/platform bug to me. And that should better be
+> reported loudly to the log to make sure people do complain to their FW
+> friends and have it fixed.
+> 
 
-Just got the issue with 5.3.0-050300rc7-generic:
+I don't agree in virtual environment. On s390x, MAX_PHYSMEM_BITS is
+configurable. For example, if you have paravirtualized memory hotplug
+(e.g., virtio-mem), you could add memory to the system that violates
+this constraint.
 
-[124212.547403] INFO: task Xorg:797 blocked for more than 120 seconds.
-[124212.548639]       Not tainted 5.3.0-050300rc7-generic #201909021831
-[124212.549839] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[124212.547403] INFO: task Xorg:797 blocked for more than 120 seconds.
-[124212.548639]       Not tainted 5.3.0-050300rc7-generic #201909021831
-[124212.549839] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[124212.551329] Xorg            D    0   797    773 0x00404004
-[124212.551331] Call Trace:
-[124212.551336]  __schedule+0x2b9/0x6c0
-[124212.551337]  schedule+0x42/0xb0
-[124212.551338]  schedule_preempt_disabled+0xe/0x10
-[124212.551340]  __ww_mutex_lock.isra.0+0x261/0x7f0
-[124212.551345]  ? ttm_bo_init+0x6b/0x100 [ttm]
-[124212.551346]  __ww_mutex_lock_slowpath+0x16/0x20
-[124212.551347]  ww_mutex_lock+0x38/0x90
-[124212.551352]  ttm_eu_reserve_buffers+0x1cc/0x2f0 [ttm]
-[124212.551371]  qxl_release_reserve_list+0x6d/0x150 [qxl]
-[124212.551373]  ? qxl_bo_pin+0xf4/0x190 [qxl]
-[124212.551375]  qxl_cursor_atomic_update+0x1ab/0x2e0 [qxl]
-[124212.551376]  ? qxl_bo_pin+0xf4/0x190 [qxl]
-[124212.551384]  drm_atomic_helper_commit_planes+0xd5/0x220 [drm_kms_helper]
-[124212.551388]  drm_atomic_helper_commit_tail+0x2c/0x70 [drm_kms_helper]
-[124212.551392]  commit_tail+0x68/0x70 [drm_kms_helper]
-[124212.551395]  drm_atomic_helper_commit+0x118/0x120 [drm_kms_helper]
-[124212.551407]  drm_atomic_commit+0x4a/0x50 [drm]
-[124212.551411]  drm_atomic_helper_update_plane+0xea/0x100 [drm_kms_helper]
-[124212.551418]  __setplane_atomic+0xcb/0x110 [drm]
-[124212.551428]  drm_mode_cursor_universal+0x140/0x260 [drm]
-[124212.551435]  drm_mode_cursor_common+0xcc/0x220 [drm]
-[124212.551441]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[124212.551447]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[124212.551452]  drm_ioctl_kernel+0xae/0xf0 [drm]
-[124212.551458]  drm_ioctl+0x234/0x3d0 [drm]
-[124212.551464]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[124212.551466]  ? timerqueue_add+0x5f/0xa0
-[124212.551469]  ? enqueue_hrtimer+0x3d/0x90
-[124212.551471]  do_vfs_ioctl+0x407/0x670
-[124212.551473]  ? fput+0x13/0x20
-[124212.551475]  ? __sys_recvmsg+0x88/0xa0
-[124212.551476]  ksys_ioctl+0x67/0x90
-[124212.551477]  __x64_sys_ioctl+0x1a/0x20
-[124212.551479]  do_syscall_64+0x5a/0x130
-[124212.551480]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[124212.551481] RIP: 0033:0x7f07c79ee417
-[124212.551485] Code: Bad RIP value.
-[124212.551485] RSP: 002b:00007ffc6b1de1a8 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[124212.551486] RAX: ffffffffffffffda RBX: 00005612f109a610 RCX:
-00007f07c79ee417
-[124212.551487] RDX: 00007ffc6b1de1e0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[124212.551487] RBP: 00007ffc6b1de1e0 R08: 0000000000000040 R09:
-0000000000000004
-[124212.551488] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[124212.551488] R13: 000000000000000e R14: 0000000000000000 R15:
-00005612f10981d0
-[124333.376328] INFO: task Xorg:797 blocked for more than 241 seconds.
-[124333.377474]       Not tainted 5.3.0-050300rc7-generic #201909021831
-[124333.378609] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[124333.376328] INFO: task Xorg:797 blocked for more than 241 seconds.
-[124333.377474]       Not tainted 5.3.0-050300rc7-generic #201909021831
-[124333.378609] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[124333.380060] Xorg            D    0   797    773 0x00404004
-[124333.380062] Call Trace:
-[124333.380067]  __schedule+0x2b9/0x6c0
-[124333.380068]  schedule+0x42/0xb0
-[124333.380069]  schedule_preempt_disabled+0xe/0x10
-[124333.380070]  __ww_mutex_lock.isra.0+0x261/0x7f0
-[124333.380076]  ? ttm_bo_init+0x6b/0x100 [ttm]
-[124333.380077]  __ww_mutex_lock_slowpath+0x16/0x20
-[124333.380077]  ww_mutex_lock+0x38/0x90
-[124333.380080]  ttm_eu_reserve_buffers+0x1cc/0x2f0 [ttm]
-[124333.380083]  qxl_release_reserve_list+0x6d/0x150 [qxl]
-[124333.380085]  ? qxl_bo_pin+0xf4/0x190 [qxl]
-[124333.380087]  qxl_cursor_atomic_update+0x1ab/0x2e0 [qxl]
-[124333.380088]  ? qxl_bo_pin+0xf4/0x190 [qxl]
-[124333.380096]  drm_atomic_helper_commit_planes+0xd5/0x220 [drm_kms_helper]
-[124333.380101]  drm_atomic_helper_commit_tail+0x2c/0x70 [drm_kms_helper]
-[124333.380105]  commit_tail+0x68/0x70 [drm_kms_helper]
-[124333.380109]  drm_atomic_helper_commit+0x118/0x120 [drm_kms_helper]
-[124333.380128]  drm_atomic_commit+0x4a/0x50 [drm]
-[124333.380132]  drm_atomic_helper_update_plane+0xea/0x100 [drm_kms_helper]
-[124333.380140]  __setplane_atomic+0xcb/0x110 [drm]
-[124333.380147]  drm_mode_cursor_universal+0x140/0x260 [drm]
-[124333.380153]  drm_mode_cursor_common+0xcc/0x220 [drm]
-[124333.380160]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[124333.380166]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
-[124333.380171]  drm_ioctl_kernel+0xae/0xf0 [drm]
-[124333.380176]  drm_ioctl+0x234/0x3d0 [drm]
-[124333.380182]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
-[124333.380184]  ? timerqueue_add+0x5f/0xa0
-[124333.380186]  ? enqueue_hrtimer+0x3d/0x90
-[124333.380188]  do_vfs_ioctl+0x407/0x670
-[124333.380190]  ? fput+0x13/0x20
-[124333.380192]  ? __sys_recvmsg+0x88/0xa0
-[124333.380193]  ksys_ioctl+0x67/0x90
-[124333.380194]  __x64_sys_ioctl+0x1a/0x20
-[124333.380195]  do_syscall_64+0x5a/0x130
-[124333.380197]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[124333.380198] RIP: 0033:0x7f07c79ee417
-[124333.380202] Code: Bad RIP value.
-[124333.380203] RSP: 002b:00007ffc6b1de1a8 EFLAGS: 00003246 ORIG_RAX:
-0000000000000010
-[124333.380204] RAX: ffffffffffffffda RBX: 00005612f109a610 RCX:
-00007f07c79ee417
-[124333.380204] RDX: 00007ffc6b1de1e0 RSI: 00000000c02464bb RDI:
-000000000000000e
-[124333.380205] RBP: 00007ffc6b1de1e0 R08: 0000000000000040 R09:
-0000000000000004
-[124333.380205] R10: 000000000000003f R11: 0000000000003246 R12:
-00000000c02464bb
-[124333.380206] R13: 000000000000000e R14: 0000000000000000 R15:
-00005612f10981d0
+virtio-mem, however, does properly check for MAX_PHYSMEM_BITS itself -
+at least in the current RFC v3.
 
+-- 
 
-Best regards,
-J
+Thanks,
+
+David / dhildenb
