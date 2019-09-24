@@ -2,101 +2,119 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282FEC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62444C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E791721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343337;
-	bh=p/LTZv2Rg4AcXfx4nYRbWpJmu7o4xkjBC4qUBZfeDW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmAum7wxe2KYH9QnV277F8wrCGJalPgUMKveM/qB4Z8Tw1XKn1BezN78OSGL725gl
-	 SuBgQDitxZ8JkBQrSLJoN7/ue2pluB6PtPdslefhIPPVte6qDiXDN6aZbW8rUmOCxb
-	 atw0VH2dhAc+x/+SzEQJ9WNwdiWkmgHBfILxULQc=
+	by mail.kernel.org (Postfix) with ESMTP id 396A520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MRVeoOBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403982AbfIXQmP (ORCPT
+        id S2404198AbfIXQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392940AbfIXQmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:12 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6EF220872;
-        Tue, 24 Sep 2019 16:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343331;
-        bh=p/LTZv2Rg4AcXfx4nYRbWpJmu7o4xkjBC4qUBZfeDW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZk1iqXagr46juZzlk1YrEUJDtmf7fCI5MSeBLzWj4UiF/pNT2wY2ExSE08wr0/dg
-         RR2a6jFxbQmoRip+PodmcB3pIu7lx6AoY8q0yG+DpjGoOD6Ya1nw18cMB9gpiQnuPm
-         3gzlMU10bzOgyXoS5V7SRb3z3KWjB/js80euZ6xw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikola Cornij <nikola.cornij@amd.com>,
-        Nevenko Stupar <Nevenko.Stupar@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 09/87] drm/amd/display: Power-gate all DSCs at driver init time
-Date:   Tue, 24 Sep 2019 12:40:25 -0400
-Message-Id: <20190924164144.25591-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
-References: <20190924164144.25591-1-sashal@kernel.org>
+        Tue, 24 Sep 2019 12:42:19 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58732 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403972AbfIXQmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCrN054386;
+        Tue, 24 Sep 2019 11:42:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569343332;
+        bh=QyocoQI2IJmSXTEBOua9cDMHDOEeT61Hn7qFcGU0ZtQ=;
+        h=From:To:CC:Subject:Date;
+        b=MRVeoOBRss0BOnkQZS1cb2NZHYNmuAunRiPFzu1h8d/xka6Yl91aGVX/CYST2ihRl
+         YtVHyENOFUkOSGRwgvRWxVMHqdIycu2cBVx8RoDBlzRpShP7Ox+MSLVb3b+GTcWJ+W
+         Eo6Haz+N2nGPanFvK0gQ4ixmiptkSGpLmPjXt30s=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8OGgC0X048727
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Sep 2019 11:42:12 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
+ Sep 2019 11:42:05 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 24 Sep 2019 11:42:12 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCQS073229;
+        Tue, 24 Sep 2019 11:42:12 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v3 0/8] media: i2c: ov2659: maintenance series
+Date:   Tue, 24 Sep 2019 11:44:06 -0500
+Message-ID: <20190924164414.21897-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+This patch series is a collection of patches we have been carrying for a
+while.
 
-[ Upstream commit 75c35000235f3662f2810e9a59b0c8eed045432e ]
+It includes a few sensor register fixes which would cause visual
+artifacts at lower resolution and also at 720p.
 
-[why]
-DSC should be powered-on only on as-needed basis, i.e. if the mode
-requires it
+Also on some board the 'powerdown' and /or 'reset' pins are not tied so
+we need to add support for optional gpios to handle these.
 
-[how]
-Loop over all the DSCs at driver init time and power-gate each
+Since these camera are removable on some board we also need the driver
+to actually fail when there is no hardware present so the driver is
+actually removed.
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Nevenko Stupar <Nevenko.Stupar@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Also added a patch to check and propagate errors on s_stream invocation.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index d810c8940129b..2627e0a98a96a 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -585,6 +585,10 @@ static void dcn20_init_hw(struct dc *dc)
- 		}
- 	}
- 
-+	/* Power gate DSCs */
-+	for (i = 0; i < res_pool->res_cap->num_dsc; i++)
-+		dcn20_dsc_pg_control(hws, res_pool->dscs[i]->inst, false);
-+
- 	/* Blank pixel data with OPP DPG */
- 	for (i = 0; i < dc->res_pool->timing_generator_count; i++) {
- 		struct timing_generator *tg = dc->res_pool->timing_generators[i];
+Finally, we update the licensing statement to use SPDX licensing.
+
+Changes since v2:
+- Addressed review comment from Sakari
+- Reworked the "media: i2c: ov2659: Add powerdown/reset gpio handling"
+  to use pm_runtime if it is available but not to make it depend on it.
+- Cleaned up the gpio related calls to remove the unnecessary NULL check
+
+Changes since v1:
+- Addressed review comment from Prabhakar
+- Added support for reset-gpios
+- Rework the power setting to use pm_runtime instead of s_power
+  as based on discussion with Sakari it would be the prefered method
+- Added a patch to reduce the number explicit include files to the
+  minimum necessary instead of the previous kitchen sink approach
+
+Benoit Parrot (8):
+  media: i2c: ov2659: Fix for image wrap-around in lower resolution
+  media: i2c: ov2659: Fix sensor detection to actually fail when device
+    is not present
+  media: i2c: ov2659: Cleanup include file list
+  media: i2c: ov2659: fix s_stream return value
+  media: dt-bindings: ov2659: add powerdown/reset-gpios optional
+    property
+  media: i2c: ov2659: Add powerdown/reset gpio handling
+  media: i2c: ov2659: Fix missing 720p register config
+  media: i2c: ov2659: Switch to SPDX Licensing
+
+ .../devicetree/bindings/media/i2c/ov2659.txt  |   9 ++
+ drivers/media/i2c/Kconfig                     |   2 +-
+ drivers/media/i2c/ov2659.c                    | 135 +++++++++++++-----
+ 3 files changed, 109 insertions(+), 37 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
