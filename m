@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7F0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3301C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39F2222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A966E21D80
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343941;
-	bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
+	s=default; t=1569343945;
+	bh=AA3UGzytwFlaFFB0h7c09QGX5TW/ljwxPmgI+tY/N1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3D+8glsjEgZ2SIDHTwDCHUaZ4IEGqLOR8TRHkDuT0AUQQmJaopElwrIaBxjXSakz
-	 EivnmJ3WXvMPWF1N4BgS1sNZj4jEHd/kin+dHSszlWVx737ynSDjPqeO++zZ8Xjrwr
-	 0oo33u8/eySmmOF94Hoy+4gLBBZPHYwd8RzLCo/E=
+	b=ltti8aLSBlyXiozCP1DYEEsxryCIXAkSEhlS/lYooFZ8lkwuXat2Vqpn9tNX2V0JY
+	 THVR8p5uOeVS23jwXuR3PIlp+/S5Hmoy5DDR58uEC8nRkCkLqdDaJn+hWrJ7dOPXg2
+	 VsD19m2QgiF5jmChaYfuzNwtPRvlWIPDFR4Tv7Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410900AbfIXQwU (ORCPT
+        id S2441646AbfIXQwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411177AbfIXQvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:50 -0400
+        id S2411183AbfIXQvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DDA2054F;
-        Tue, 24 Sep 2019 16:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 668F621BE5;
+        Tue, 24 Sep 2019 16:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343909;
-        bh=Uf2nDEV49yw4oowqLvdm31CnXpqTZwShAEMgAjBAvm8=;
+        s=default; t=1569343912;
+        bh=AA3UGzytwFlaFFB0h7c09QGX5TW/ljwxPmgI+tY/N1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgboSkUK7c4DIlzON9W7zo6UG13SDp8wmzTLE7fS5MJf5jRQ22RAfuXxgpS50XHC3
-         frs305sLSDxDen5Rj9fph9I15ZyZsS7INHA4strlhKz7imyO773+hOhmE4x+Ge2b4k
-         aKWudrs9BiyCnbipeZ2FgOGlGyJMd2Key4Ey9os8=
+        b=Vbzxa/G31eEHHjkEUNbYpjDCqNeoZ6uLi4Y+q+Jpkvbb8IPC70vQEG58XceKFr6Ab
+         kyRuPVGDmNeaLIgevWTv+1Fkb/0eHhVhOLCY/4wErIGN3CJ/6HQsRGlJH178RJTwUa
+         3qmFHdgtsGICgfNH0HXps+nUO6CJ633AjJKxGFz0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 10/19] powerpc/futex: Fix warning: 'oldval' may be used uninitialized in this function
-Date:   Tue, 24 Sep 2019 12:51:21 -0400
-Message-Id: <20190924165130.28625-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/19] powerpc/pseries/mobility: use cond_resched when updating device tree
+Date:   Tue, 24 Sep 2019 12:51:22 -0400
+Message-Id: <20190924165130.28625-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
 References: <20190924165130.28625-1-sashal@kernel.org>
@@ -59,49 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
+[ Upstream commit ccfb5bd71d3d1228090a8633800ae7cdf42a94ac ]
 
-We see warnings such as:
-  kernel/futex.c: In function 'do_futex':
-  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
-     return oldval == cmparg;
-                   ^
-  kernel/futex.c:1651:6: note: 'oldval' was declared here
-    int oldval, ret;
-        ^
+After a partition migration, pseries_devicetree_update() processes
+changes to the device tree communicated from the platform to
+Linux. This is a relatively heavyweight operation, with multiple
+device tree searches, memory allocations, and conversations with
+partition firmware.
 
-This is because arch_futex_atomic_op_inuser() only sets *oval if ret
-is 0 and GCC doesn't see that it will only use it when ret is 0.
+There's a few levels of nested loops which are bounded only by
+decisions made by the platform, outside of Linux's control, and indeed
+we have seen RCU stalls on large systems while executing this call
+graph. Use cond_resched() in these loops so that the cpu is yielded
+when needed.
 
-Anyway, the non-zero ret path is an error path that won't suffer from
-setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
-it will have no impact.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-[mpe: reword change log slightly]
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/20190802192926.19277-4-nathanl@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/futex.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
-index f4c7467f74655..b73ab8a7ebc3f 100644
---- a/arch/powerpc/include/asm/futex.h
-+++ b/arch/powerpc/include/asm/futex.h
-@@ -60,8 +60,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index 3784a7abfcc80..74791e8382d22 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -11,6 +11,7 @@
  
- 	pagefault_enable();
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
++#include <linux/sched.h>
+ #include <linux/smp.h>
+ #include <linux/stat.h>
+ #include <linux/completion.h>
+@@ -206,7 +207,11 @@ static int update_dt_node(__be32 phandle, s32 scope)
  
--	if (!ret)
--		*oval = oldval;
-+	*oval = oldval;
+ 				prop_data += vd;
+ 			}
++
++			cond_resched();
+ 		}
++
++		cond_resched();
+ 	} while (rtas_rc == 1);
  
- 	return ret;
- }
+ 	of_node_put(dn);
+@@ -282,8 +287,12 @@ int pseries_devicetree_update(s32 scope)
+ 					add_dt_node(phandle, drc_index);
+ 					break;
+ 				}
++
++				cond_resched();
+ 			}
+ 		}
++
++		cond_resched();
+ 	} while (rc == 1);
+ 
+ 	kfree(rtas_buf);
 -- 
 2.20.1
 
