@@ -2,86 +2,98 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2440FC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63143C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EE4214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569351389;
-	bh=LSnxNkAK4K1j/IzwlV7DqnevZGMvr4ZQeIMxCU8J5vQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s0pRTGqPGKghm76ptHBmyUBofUv34XDUDVshQGp8J7HGP1se67/iQDCjKs/F6NPLV
-	 Rsp+bLWYkyC79Xg7QNVmsMhbQ+P2F4xe13/n17fjSAKAqO4pMgyAOrXIYExlDe0kgp
-	 DDRKhgUDYV0lm0g8kXTrZ6xolZY6+yVWrMmxseug=
+	by mail.kernel.org (Postfix) with ESMTP id 37702214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406485AbfIXS41 (ORCPT
+        id S2441791AbfIXS6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 14:58:06 -0400
+Received: from sauhun.de ([88.99.104.3]:44258 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404492AbfIXS41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:56:27 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F24B217D7;
-        Tue, 24 Sep 2019 18:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569351386;
-        bh=LSnxNkAK4K1j/IzwlV7DqnevZGMvr4ZQeIMxCU8J5vQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tFN0/Q3HSpKyaXRS1ezEo/lWr3qRUDs/uDBOZ0JD5QKSQwx6572O13z/K2D64zcEk
-         DLSyWNnDZgsD95DB5ZqPoXEfDReQiNObo9wmkZ0QGcvJHHs/KNSDVlQgkX4YCqLqsy
-         Y1oAm6zkblqjwIwRCXs3k4IWGlVBmr37CG6SMiQQ=
-Received: by mail-qk1-f170.google.com with SMTP id 201so2862883qkd.13;
-        Tue, 24 Sep 2019 11:56:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAX4rcaPUy+5rISB8e5kuTXglt9bAdVXBOO0vQ60VDqthSDGgG3a
-        QaVCzjBip00Z4Ry70Iw20NRrcfbzPJAH1n0K6g==
-X-Google-Smtp-Source: APXvYqzgGJQAxwg29kI1BAufWxuS/v+zfPqBzGSeDOF57xsu58JMb98Gap3AA0MrWWA5pI6TPglIXyu9nnpsuaZGoBk=
-X-Received: by 2002:a05:620a:549:: with SMTP id o9mr4215400qko.223.1569351385602;
- Tue, 24 Sep 2019 11:56:25 -0700 (PDT)
+        id S2404799AbfIXS6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:58:06 -0400
+Received: from localhost (unknown [90.85.113.197])
+        by pokefinder.org (Postfix) with ESMTPSA id 4C5152C039D;
+        Tue, 24 Sep 2019 20:58:03 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 20:57:57 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+Message-ID: <20190924185757.GA1538@kunai>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190830125626.GC2870@ninjato>
+ <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+ <20190831094940.GA1138@kunai>
+ <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
+ <20190904213745.GG23608@ninjato>
+ <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
 MIME-Version: 1.0
-References: <20190923134449.22326-1-aford173@gmail.com> <20190923134449.22326-2-aford173@gmail.com>
-In-Reply-To: <20190923134449.22326-2-aford173@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 24 Sep 2019 13:56:14 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
-Message-ID: <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Adam Ford <aford173@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-omap <linux-omap@vger.kernel.org>, adam.ford@logicpd.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Content-Disposition: inline
+In-Reply-To: <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:45 AM Adam Ford <aford173@gmail.com> wrote:
->
-> This patch adds documentation of device tree bindings for the WVGA panel
-> Logic PD Type 28 display.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V2:  Use YAML instead of TXT for binding
 
-Fails to build with 'make dt_binding_check':
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://patchwork.ozlabs.org/patch/1166057/
 
-Looks like a tab character used perhaps.
+> In my opinion, it's probably better to continue to support master_xfer in
+> our driver (with obvious limitations), in order to allow i2ctransfer (or =
+any
+> apps that use I2C RDWR) to continue to work.
+>=20
+> What do you think?
 
-Rob
+Yes, don't break it for users. We should have paid more attention to it
+in the beginning. But, while not ideal, it is not such a big deal to
+keep it like this.
+
+Thanks for your investigations!
+
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2KZzEACgkQFA3kzBSg
+Kbam+A//dpJL9KQfjH0vct83wG2I23jh0ofw2vQQ0Oz4QCKWS+Vz9dex7nvEiecY
+Pua7zt0evVz6Du44tpAJGpsydjgNJBdEWjZp4rxksVNpyc5SOkF186eEdjjN633L
+LqCpl6TgqyZhVXCs9H1y9WGy47i9xEH4B+gRG3SwEx19Wc47pUnURQrWA/7HGnjF
+7tzEIdZTJKLBU0BzGQqXJ2bo5mf1Vt2eT112G3Uj+yh5/TifFnjGKqv4rGG4uE8W
+pXkOg94Jb0ywSl2YWV8axsAIyNVNzW74lxkvsRoPuZ/qcCdw9n+U8YoXeOKJuJEc
+6BCH4UDC5mf/m88q70UyZwryz2xZtkvS7Df7JU92dbWRgHG5SNAW6cHo3FDKO6km
+uWWqMAidEhBw3t8SXbzhQkjyuxTEGNue/LcX+SYhWEXqSiuNQ4Kudr/imW4B6NAC
+X1G+fUxdyQlEgju1g28Bfh6cSH7DZ0v20k/cy7Pdqa4yPp3LhgUnRkfLdNH1qo2R
+judxCqo824+GiMU5vAQYkA8+ZI5WFPqX8KCEmhqh8qCH++NAnqxmpwmVS4FmvN9X
+5bGDRe71F8Z5UTXKTc+IajEc6Nu0+XUN68rNAlpM/NLD2Q0kRJVHh+bFoWrkwNdf
+ODfzxF5EI/Uz/G4N6pytdB2SFMdTCvSieG/kqk/K1zTVZUWplw8=
+=5VKZ
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
