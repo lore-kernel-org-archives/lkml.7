@@ -2,172 +2,89 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E06C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA47C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347942146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vpYnrsrh"
+	by mail.kernel.org (Postfix) with ESMTP id E580421655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfIXMIV (ORCPT
+        id S2395419AbfIXMIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:08:21 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:39949 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbfIXMIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:08:20 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x8OC7kL1025508;
-        Tue, 24 Sep 2019 21:07:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x8OC7kL1025508
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569326867;
-        bh=cb5/PGWE0fw3V3R4o0l2Wqf2UuRqKlbo0mCnbe4LKG0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vpYnrsrhm8pQNp1ekNWTSJ+CphUb58I+Id3gcV3yWg8hJLopD+qFsg+oW2Tikx1Pv
-         J5cUkrBCib6EsG5ULPcUGCyaTE4Yaz91kKKqTgDPMnsdSkbK7DGSTwP38ZjXtAyUAK
-         lLEQ/1oWQGIhZS3VHCcSIzWxDOYsoxaReq4KQkUApvyjaCMlvNeLH5K1qeS1vnCwNN
-         tpvJGlIYrZKBmRTTiOpSUBbNAJ/lvOp1f5JsZWcBb1D14pIKjIuS5VnWaw9BGmuuXW
-         Oo8YzqeYzeIUBgndGxCYf9LrYWYV/5xi1iJ+PMf7Nwd0zc3zS0qMkxs9GZT0uZvhFy
-         UXaPlEr/wUu7g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] modpost: fix static EXPORT_SYMBOL warnings for UML build
-Date:   Tue, 24 Sep 2019 21:07:40 +0900
-Message-Id: <20190924120740.12425-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Sep 2019 08:08:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30847 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728354AbfIXMIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:08:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 05:08:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,544,1559545200"; 
+   d="scan'208";a="389836309"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Sep 2019 05:08:45 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iCjcZ-0001Vm-MF; Tue, 24 Sep 2019 15:08:43 +0300
+Date:   Tue, 24 Sep 2019 15:08:43 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org, nv@vosn.de,
+        Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH] ACPICA: Introduce acpi_load_table_with_index()
+Message-ID: <20190924120843.GU2680@smile.fi.intel.com>
+References: <6851700.HULMXZj6Ep@kreacher>
+ <20190923094701.24950-1-nikolaus.voss@loewensteinmedical.de>
+ <20190924120734.GT2680@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924120734.GT2680@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Berg reports lots of modpost warnings on ARCH=um builds:
+On Tue, Sep 24, 2019 at 03:07:34PM +0300, Shevchenko, Andriy wrote:
+> On Mon, Sep 23, 2019 at 11:47:01AM +0200, Nikolaus Voss wrote:
+> > For unloading an ACPI table, it is necessary to provide the
+> > index of the table. The method intended for dynamically
+> > loading or hotplug addition of tables, acpi_load_table(),
+> > does not provide this information, so a new function
+> > acpi_load_table_with_index() with the same functionality,
+> > but an optional pointer to the loaded table index is introduced.
+> > 
+> > The new function is used in the acpi_configfs driver to save the
+> > index of the newly loaded table in order to unload it later.
+> 
+> I'll test it later, though couple of remarks:
+> - would it make sense to provide a counter part helper for unloading? Now it
+>   looks a bit inconsistent in configfs when we use acpi_load_*() vs.
+>   acpi_tb_*() in remove.
 
-WARNING: "rename" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "lseek" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "ftruncate64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "getuid" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "lseek64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "unlink" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "pwrite64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "close" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "opendir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "pread64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "syscall" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "readdir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "readdir64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "futimes" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__lxstat" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "write" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "closedir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__xstat" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "fsync" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__lxstat64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__fxstat64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "telldir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "printf" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "readlink" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__sprintf_chk" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "link" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "rmdir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "fdatasync" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "truncate" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "statfs" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__errno_location" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__xmknod" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "open64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "truncate64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "open" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "read" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "chown" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "chmod" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "utime" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "fchmod" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "seekdir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "ioctl" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "dup2" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "statfs64" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "utimes" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "mkdir" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "fchown" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__guard" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "symlink" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "access" [vmlinux] is a static EXPORT_SYMBOL
-WARNING: "__stack_smash_handler" [vmlinux] is a static EXPORT_SYMBOL
+...and I think we may unexport acpi_tb_* in this case as Bob suggested for it
+to be internal API.
 
-When you run "make", the modpost is run twice; before linking vmlinux,
-and before building modules. All the warnings above are from the second
-modpost.
+> - please, include Ferry into Cc (as done in this mail)
 
-The offending symbols are defined not in vmlinux, but in the C library.
-The first modpost is run against the relocatable vmlinux.o, and those
-warnings are nicely suppressed because the SH_UNDEF entries from the
-symbol table clear the ->is_static flag.
 
-The second modpost is run against the executable vmlinux (+ modules),
-where those symbols have been resolved, but the definitions do not
-exist.
-
-This commit fixes it in a straight forward way. Suppress the static
-EXPORT_SYMBOL warnings from "vmlinux".
-
-We see the same warnings twice anyway. For example, ARCH=arm64 defconfig
-shows the following warning twice:
-
-WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-So, it is reasonable to suppress the second one.
-
-Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
-Reported-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- scripts/mod/modpost.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 3961941e8e7a..442d5e2ad688 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2652,15 +2652,20 @@ int main(int argc, char **argv)
- 		fatal("modpost: Section mismatches detected.\n"
- 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
- 	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
--		struct symbol *s = symbolhash[n];
-+		struct symbol *s;
-+
-+		for (s = symbolhash[n]; s; s = s->next) {
-+			/*
-+			 * Do not check "vmlinux". This avoids the same warnings
-+			 * shown twice, and false-positives for ARCH=um.
-+			 */
-+			if (is_vmlinux(s->module->name) && !s->module->is_dot_o)
-+				continue;
- 
--		while (s) {
- 			if (s->is_static)
- 				warn("\"%s\" [%s] is a static %s\n",
- 				     s->name, s->module->name,
- 				     export_str(s->export));
--
--			s = s->next;
- 		}
- 	}
- 
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
