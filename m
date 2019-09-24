@@ -2,101 +2,154 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B1C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBDAC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744B720872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF0E21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nyog3bUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438063AbfIXVrB (ORCPT
+        id S2438108AbfIXVuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:47:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59622 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395520AbfIXVrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:47:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1BCC185550;
-        Tue, 24 Sep 2019 21:47:01 +0000 (UTC)
-Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2CC65B69A;
-        Tue, 24 Sep 2019 21:46:58 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 17:46:57 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        Tue, 24 Sep 2019 17:50:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37237 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388257AbfIXVuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 17:50:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c17so2012128pgg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 14:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9dYRzKO1g1R4/IX0G1CbX+gjWofgYMvYTRiyo8NBhnk=;
+        b=Nyog3bUmtz7c05l4kKSdtxqM9CIRqGmFQA/+AASIxNDFCjsYjiqoJV6eA/M+6MaTMh
+         Z+jR23roZ/3DU7nA7X6yUxgUjJtOmw5n19LN6ACS8+oSnZvUdcR02tvXlPFV5P327hyA
+         FEM40rreewkNPXqqD2loRpTkZ/sN/efpk6Ji4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9dYRzKO1g1R4/IX0G1CbX+gjWofgYMvYTRiyo8NBhnk=;
+        b=htTuor9AOsrDFMMzlFH6MQJWMxaVY0/M6r/520RJA7+6/XXWQuYTTe9F+4YO8MaCaT
+         7aMJ1qxE0ppeUaUflcMAbGn+a7W2kXOuAV/W1NMTGiCkfo97luRJ1lGCODiBUZMQfdBP
+         istRLzNC+eLi5T5USTNWXUO1+aZuym9mC7fguMrgL6Jal1paXbiCVyUjaXkbrzNeBfgR
+         Ckw/CnT1e+nFK8OoP0jcoN4OMKVJvthQFwhrysqAHd3B24JlesfF6Sj/6D4Mce/XH0S1
+         TeaV+STXqLbFfrmsl+2i2cYivD8hgQfT1zMXO4ScxZesN+wQ5oVn4H4pLRGGJ2qrIo3D
+         dpDw==
+X-Gm-Message-State: APjAAAUyvpjx8e+jrbPbMY01YmyWzHOkv/wEqUBMvPoPeVvxXq9AGJ+9
+        Nv0hAvInMwhTXc8aefeBFbTuqg==
+X-Google-Smtp-Source: APXvYqy6AEYKCeT0iEFEsUB13HusI2JDuDfNQE3YlXYE2ZS7xp/2jmaVJuCoKL7ooatAmXFYJfZW9w==
+X-Received: by 2002:a65:66c4:: with SMTP id c4mr5230420pgw.246.1569361821761;
+        Tue, 24 Sep 2019 14:50:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t14sm2600111pgv.84.2019.09.24.14.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 14:50:20 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 14:50:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-Message-ID: <20190924214657.GE4658@redhat.com>
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-16-aarcange@redhat.com>
- <87o8zb8ik1.fsf@vitty.brq.redhat.com>
- <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
- <20190923190514.GB19996@redhat.com>
+Subject: Re: [RFC][PATCH] docs: Programmatically render MAINTAINERS into ReST
+Message-ID: <201909241446.3284D27@keescook>
+References: <201909231534.E8BE691@keescook>
+ <20190924070819.0a7b6658@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190923190514.GB19996@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 24 Sep 2019 21:47:01 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190924070819.0a7b6658@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 03:05:14PM -0400, Andrea Arcangeli wrote:
-> On Mon, Sep 23, 2019 at 11:57:57AM +0200, Paolo Bonzini wrote:
-> > On 23/09/19 11:31, Vitaly Kuznetsov wrote:
-> > > +#ifdef CONFIG_RETPOLINE
-> > > +		if (exit_reason == EXIT_REASON_MSR_WRITE)
-> > > +			return handle_wrmsr(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
-> > > +			return handle_preemption_timer(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
-> > > +			return handle_interrupt_window(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-> > > +			return handle_external_interrupt(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_HLT)
-> > > +			return handle_halt(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
-> > > +			return handle_pause(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_MSR_READ)
-> > > +			return handle_rdmsr(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_CPUID)
-> > > +			return handle_cpuid(vcpu);
-> > > +		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
-> > > +			return handle_ept_misconfig(vcpu);
-> > > +#endif
-> > >  		return kvm_vmx_exit_handlers[exit_reason](vcpu);
-> > 
-> > Most of these, while frequent, are already part of slow paths.
-> > 
-> > I would keep only EXIT_REASON_MSR_WRITE, EXIT_REASON_PREEMPTION_TIMER,
-> > EXIT_REASON_EPT_MISCONFIG and add EXIT_REASON_IO_INSTRUCTION.
+On Tue, Sep 24, 2019 at 07:08:19AM -0300, Mauro Carvalho Chehab wrote:
+> It probably makes sense to change some things there, as, right now, it 
+> is considering multiple lines as continuation. So, for example, if
+> it has multiple M: entries, it will produce this at MAINTAINERS.rst
+> output:
 > 
-> Intuition doesn't work great when it comes to CPU speculative
-> execution runtime. I can however run additional benchmarks to verify
-> your theory that keeping around frequent retpolines will still perform
-> ok.
+> 
+> 	:Mail:
+> 		Juergen Gross <jgross@suse.com>
+> 		Thomas Hellstrom <thellstrom@vmware.com>
+> 		"VMware, Inc." <pv-drivers@vmware.com>
+> 
+> With would be displayed as:
+> 
+> 	Mail
+> 	    Juergen Gross <jgross@suse.com> Thomas Hellstrom <thellstrom@vmware.com> “VMware, Inc.” <pv-drivers@vmware.com>
+> 
+> It would probably be better to output it as:
+> 
+> 	:Mail:
+> 		- Juergen Gross <jgross@suse.com>
+> 		- Thomas Hellstrom <thellstrom@vmware.com>
+> 		- "VMware, Inc." <pv-drivers@vmware.com>
+> 
+> or:
+> 	:Mail:
+> 		Juergen Gross <jgross@suse.com>
+> 
+> 		Thomas Hellstrom <thellstrom@vmware.com>
+> 
+> 		"VMware, Inc." <pv-drivers@vmware.com>
+> 
+> or, eventually:
+> 
+> 	:Mail:
+> 		Juergen Gross <jgross@suse.com>,
+> 		Thomas Hellstrom <thellstrom@vmware.com>,
+> 		"VMware, Inc." <pv-drivers@vmware.com>
+> 
+> (Using commas is probably a bad idea, as DT file names may have a
+> comma in the middle)
 
-On one most recent CPU model there's no measurable difference with
-your list or my list with a hrtimer workload (no cpuid). It's
-challenging to measure any difference below 0.5%.
+Doing explicit lists here made the output, I think, way too long and
+hard to read. Adding commas for email fields seems like the right
+solution here.
 
-An artificial cpuid loop takes 1.5% longer to compute if I don't add
-CPUID to the list, but that's just the measurement of the cost of
-hitting a frequent retpoline in the exit reason handling code.
+> No need to use "python3" here, as the script has a shebang markup. Just
+> ensure that it has 755 permission, and call it directly.
 
-Thanks,
-Andrea
+BTW, I found where I thought python3 was required:
+sphinx/kernel_include.py's shebang is "#!/usr/bin/env python3"
+
+> > +/* Keep fields from being strangely far apart due to inheirited table CSS. */
+> > +.rst-content table.field-list th.field-name {
+> > +    padding-top: 1px;
+> > +    padding-bottom: 1px;
+> > +}
+> > +.rst-content table.field-list td.field-body {
+> > +    padding-top: 1px;
+> > +    padding-bottom: 1px;
+> > +}
+> > +
+> >  @media screen {
+> >  
+> >      /* content column
+> 
+> I would place this on a separate patch, as this is a layout change that
+> may affect other files.
+
+Noted, yes.
+
+> Btw, what does this change?
+
+This gets rid of what looks like an extra blank line after every field
+line. I checked other places where fields are used and they suffer from
+a similar problem. I'll split this out and call attention to the
+existing users.
+
+-- 
+Kees Cook
