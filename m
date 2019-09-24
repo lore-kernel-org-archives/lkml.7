@@ -2,150 +2,531 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2BBC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B7EC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16361214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZCEv6244"
+	by mail.kernel.org (Postfix) with ESMTP id 13641214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569319716;
+	bh=Xw+SO74iPwJyzyRP/c5391ed1ZZq99jE6PsZ6fQTCns=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lmPtyPdqLXasVHDBRl0xIOwsXT/mkPpMS13DzRArpZN8Blk4HEEoVorQFNo1vb9rs
+	 93xm5yCtti8Byt/iivG0+RvjPcO0QEed2tVzXhZuJGgT+YmgYZDOrnzqTKawycg9bL
+	 uUkhkaMfrOqk0+sFeJ6h+JBxPoqfQUP9YX6VP0kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504440AbfIXKDY (ORCPT
+        id S2504458AbfIXKIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 06:03:24 -0400
-Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:23111
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2504358AbfIXKDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 06:03:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G4G7fFWd4yvx/gZcq9RgVexL3RL0TXZCInTwQZc162QR+w8iKKkq5fqQEWMIFHUB3JlZjPCh0wZhh4FuRt2I/PKkZeekv6KjwA7346CuXUQszUijq5BWTYwf0En3iUNCap+OhHRJ1yOrH7jF4weipPdVopjgAXSZ0OQCnRJYfBbKbpJJ2ficpaJQVXDfzc17KEzdQ9afOvs4+rgLmX1Yzvs2T4IrDQoUK4LFUBc08HRdb+oVxs7hr2fikhGDgHUIScPWoX9ilyx//JGiQHR4vYOgErZVM9++++zVYYoNSaIaHu+MZTvl5k0qbxdqPQxLInUDf3PipVd4lwH3oJ/26w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NdzP6YDLfy/KAS5c7wZ1b+lg1003n02W6hpsoc08SI=;
- b=j+Yfuj05VlpA4mvVInWTZTeCkJRle1yd82z8oQIwR5/Xs3A5V/3bLuGN1V96UNYAMPzbf6c2P0sNlvIsk4aFg5yH39Z3dT6/qo0nUvQ1K35j4jMpC2mkNXBDkCz2nMMmRVla3bQgwtOejI56pwKk7Bnpa6sYUtnv4JT5AsGfN/sm1WABIc2ssJCKQTOHCKTcEMPV4tlQoiWmjUL2ittUmbFRYBowKBMd9rjkjZqG52qlYQUwO5A6AWRgC4WXDoqjFj4ffZmpiD2hgRjgSXiwZ6iEZlDfA34AqoWHmJdEsjlvItMJSXwnguQ17tBfM6q1Q/slprbJ4KrB+5tvxMQi/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NdzP6YDLfy/KAS5c7wZ1b+lg1003n02W6hpsoc08SI=;
- b=ZCEv624489daZXcQKYVvDkPr0US6SSPidTBsSxcr90Y+vdctCmqysfspUcWEeIxx6gkaSvOpA1269i7VZTo6HTOFXXIJju/HWyy6/ZjsLQMJ+3zGTtorCjC9EEGyf8DhqvXFlvOlew+g/E5nBkIEerHZVISWT0jFNgAxHl7jcWA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3641.eurprd04.prod.outlook.com (52.134.69.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.26; Tue, 24 Sep 2019 10:03:18 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 10:03:18 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it
- repeatedly
-Thread-Topic: [PATCH] pwm: pwm-imx27: Use 'dev' instead of dereferencing it
- repeatedly
-Thread-Index: AQHVcra4SlIMDowCwkO5fDgX0dE1dKc6lGgAgAADXwA=
-Date:   Tue, 24 Sep 2019 10:03:18 +0000
-Message-ID: <DB3PR0402MB3916FFD66797DAC0AB1110D8F5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1569315593-769-1-git-send-email-Anson.Huang@nxp.com>
- <6cfb1595992b46dc884731555e6f0334@AcuMS.aculab.com>
-In-Reply-To: <6cfb1595992b46dc884731555e6f0334@AcuMS.aculab.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 79b46d9f-f78f-4196-64ef-08d740d66c8e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3641;
-x-ms-traffictypediagnostic: DB3PR0402MB3641:|DB3PR0402MB3641:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB36417682AB408E7E0A81E200F5840@DB3PR0402MB3641.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(76116006)(7736002)(2906002)(66556008)(66476007)(7696005)(66946007)(6116002)(305945005)(25786009)(3846002)(66066001)(478600001)(64756008)(33656002)(66446008)(446003)(11346002)(99286004)(2201001)(486006)(186003)(86362001)(76176011)(26005)(81156014)(81166006)(8676002)(2501003)(102836004)(6506007)(44832011)(52536014)(14454004)(5660300002)(6436002)(110136005)(6246003)(74316002)(476003)(71200400001)(9686003)(229853002)(55016002)(4326008)(256004)(14444005)(316002)(8936002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3641;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iYun5GqQBQc3nzoGHU1tnfK2lggOMZAVKaCpY8kT9uOME+ntQtVj4lqvYFwbESMOiJZYT68n/RZ/bVRKiLSdlF6hFXVtlr3OUKydWKYEewn7MzgF9bT7cFrj6mt00OcqmHVA7oDDPjZmxSFbWdSBCKDQLpw+gOfgwvWwmKBth5Aoah92tCKbgNzx4GDEdGx6DaeO3M5tTuDYEhRSyOUeDXoT5gK43DoNKLF+dDIfIPIsnpDJU4FlBGJ+x6yO2er+2r3JhrjgnZeOWx9VUuPyC7WzLqJNeEYz9jMUJHredLl8gwItF1yYK67oOGPqZ5Jnr3dpNcXCg2urotSpTTpXsPgZ2JG6vlk+9PvpKX5yXj3AfDhz2+ed1zL3ev5qccwsBIKVE67EkBkWTS6tu4E2qRLS4XLiogMtRlvFous6+DM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 24 Sep 2019 06:08:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35620 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504442AbfIXKIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 06:08:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nw+BjlnfOqg2fByI6D3h61cOMIFM4qFyOiqC602LuwA=; b=op5sUoARncFXCdBLAO7Mta7aB
+        IcSxLih/AZB9xx8aogXGZd+Py2Bt6xBAgOS28y8sgbgOKYHGnER4h9TU48YCkik9wsHGpKqcw/Sv3
+        yHHPvYj2rBMugrpR/KC0bPUoq2PcPCCWMASFNDPrSVm0aMnAAbKUqqDdnLjtF+gHLZitAFkIugTwJ
+        5Pnq60iD06maR8HcLKSEKZyJml5vVqesu2n1gJOydQ0EikPTvykGB14FFFmwVT9VO2oS98+8rxT63
+        4tJt6RaNGxOr7qc2fs+iEZvjXoYhmF3k8S8lk4FivSwkB1O7EHctVF2HNRgdk/zIoI4cRt1bRmyDJ
+        dLdUiFS0A==;
+Received: from [177.96.206.173] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iChkG-00017y-UQ; Tue, 24 Sep 2019 10:08:33 +0000
+Date:   Tue, 24 Sep 2019 07:08:19 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] docs: Programmatically render MAINTAINERS into
+ ReST
+Message-ID: <20190924070819.0a7b6658@coco.lan>
+In-Reply-To: <201909231534.E8BE691@keescook>
+References: <201909231534.E8BE691@keescook>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79b46d9f-f78f-4196-64ef-08d740d66c8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 10:03:18.4085
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xNvCIcJm+bwZ+IjdjRSvTLcVlupW1dn0wnwwbUdc4eDHRp6o3rnBIQt3LXYxLpmMOZWC4rcRfTFCAH2hLlVtcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3641
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhdmlkDQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gcHdtOiBwd20taW14Mjc6IFVzZSAn
-ZGV2JyBpbnN0ZWFkIG9mIGRlcmVmZXJlbmNpbmcgaXQNCj4gcmVwZWF0ZWRseQ0KPiANCj4gRnJv
-bTogQW5zb24gSHVhbmcNCj4gPiBTZW50OiAyNCBTZXB0ZW1iZXIgMjAxOSAxMDowMA0KPiA+IEFk
-ZCBoZWxwZXIgdmFyaWFibGUgZGV2ID0gJnBkZXYtPmRldiB0byBzaW1wbHkgdGhlIGNvZGUuDQo+
-ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wd20vcHdtLWlteDI3LmMgfCAxMyArKysrKysrLS0tLS0t
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdtLWlteDI3LmMgYi9kcml2ZXJzL3B3
-bS9wd20taW14MjcuYyBpbmRleA0KPiA+IDQzNGEzNTEuLjNhZmVlMjkgMTAwNjQ0DQo+ID4gLS0t
-IGEvZHJpdmVycy9wd20vcHdtLWlteDI3LmMNCj4gPiArKysgYi9kcml2ZXJzL3B3bS9wd20taW14
-MjcuYw0KPiA+IEBAIC0yOTAsMjcgKzI5MCwyOCBAQCBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLA0K
-PiBwd21faW14MjdfZHRfaWRzKTsNCj4gPg0KPiA+ICBzdGF0aWMgaW50IHB3bV9pbXgyN19wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSAgew0KPiA+ICsJc3RydWN0IGRldmljZSAq
-ZGV2ID0gJnBkZXYtPmRldjsNCj4gPiAgCXN0cnVjdCBwd21faW14MjdfY2hpcCAqaW14Ow0KPiA+
-DQo+ID4gLQlpbXggPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCppbXgpLCBHRlBf
-S0VSTkVMKTsNCj4gPiArCWlteCA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqaW14KSwgR0ZQ
-X0tFUk5FTCk7DQo+ID4gIAlpZiAoaW14ID09IE5VTEwpDQo+ID4gIAkJcmV0dXJuIC1FTk9NRU07
-DQo+ID4NCj4gPiAgCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGlteCk7DQo+ID4NCj4gPiAt
-CWlteC0+Y2xrX2lwZyA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiaXBnIik7DQo+ID4gKwlp
-bXgtPmNsa19pcGcgPSBkZXZtX2Nsa19nZXQoZGV2LCAiaXBnIik7DQo+ID4gIAlpZiAoSVNfRVJS
-KGlteC0+Y2xrX2lwZykpIHsNCj4gPiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJnZXR0aW5nIGlw
-ZyBjbG9jayBmYWlsZWQgd2l0aCAlbGRcbiIsDQo+ID4gKwkJZGV2X2VycihkZXYsICJnZXR0aW5n
-IGlwZyBjbG9jayBmYWlsZWQgd2l0aCAlbGRcbiIsDQo+ID4gIAkJCQlQVFJfRVJSKGlteC0+Y2xr
-X2lwZykpOw0KPiA+ICAJCXJldHVybiBQVFJfRVJSKGlteC0+Y2xrX2lwZyk7DQo+ID4gIAl9DQo+
-ID4NCj4gPiAtCWlteC0+Y2xrX3BlciA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAicGVyIik7
-DQo+ID4gKwlpbXgtPmNsa19wZXIgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGVyIik7DQo+ID4gIAlp
-ZiAoSVNfRVJSKGlteC0+Y2xrX3BlcikpIHsNCj4gPiAgCQlpbnQgcmV0ID0gUFRSX0VSUihpbXgt
-PmNsa19wZXIpOw0KPiA+DQo+ID4gIAkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQ0KPiA+IC0J
-CQlkZXZfZXJyKCZwZGV2LT5kZXYsDQo+ID4gKwkJCWRldl9lcnIoZGV2LA0KPiA+ICAJCQkJImZh
-aWxlZCB0byBnZXQgcGVyaXBoZXJhbCBjbG9jazogJWRcbiIsDQo+ID4gIAkJCQlyZXQpOw0KPiAN
-Cj4gSG9wZWZ1bGx5IHRoZSBjb21waWxlciB3aWxsIG9wdGltaXNlIHRoaXMgYmFjayBvdGhlcndp
-c2UgeW91J3ZlIGFkZGVkDQo+IGFub3RoZXIgbG9jYWwgdmFyaWFibGUgd2hpY2ggbWF5IGNhdXNl
-IHNwaWxsaW5nIHRvIHN0YWNrLg0KPiBGb3IgYSBzZXR1cCBmdW5jdGlvbiBpdCBwcm9iYWJseSBk
-b2Vzbid0IG1hdHRlciwgYnV0IGluIGdlbmVyYWwgaXQgbWlnaHQgaGF2ZSBhDQo+IHNtYWxsIG5l
-Z2F0aXZlIHBlcmZvcm1hbmNlIGltcGFjdC4NCj4gDQo+IEluIGFueSBjYXNlIHRoaXMgZG9lc24n
-dCBzaG9ydGVuIGFueSBsaW5lcyBlbm91Z2ggdG8gcmVtb3ZlIGxpbmUtd3JhcCBhbmQNCj4gdXNp
-bmcgJnBkZXYtPmRldiBpcyByZWFsbHkgb25lIGxlc3MgdmFyaWFibGUgdG8gbWVudGFsbHkgdHJh
-Y2sgd2hlbiByZWFkaW5nDQo+IHRoZSBjb2RlLg0KDQpEbyB3ZSBrbm93IHdoaWNoIGNvbXBpbGVy
-IHdpbGwgb3B0aW1pemUgdGhpcz8gSSBzYXcgbWFueSBvZiB0aGUgcGF0Y2hlcyBkb2luZw0KdGhp
-cyB0byBhdm9pZCBhIGxvdCBvZiBkZXJlZmVyZW5jZSwgSSB1bmRlcnN0YW5kIGl0IGRvZXMgTk9U
-IHNhdmUgbGluZXMsIGJ1dCBteSBpbnRlbnRpb24NCmlzIHRvIGF2b2lkIGRlcmVmZXJlbmNlIHdo
-aWNoIG1pZ2h0IHNhdmUgc29tZSBpbnN0cnVjdGlvbnMuDQoNCkkgdGhvdWdodCBzYXZpbmcgaW5z
-dHJ1Y3Rpb25zIGlzIG1vcmUgaW1wb3J0YW50LiBTbyBub3cgdGhlcmUgYXJlIGRpZmZlcmVudCBv
-cGluaW9uIGFib3V0DQpkb2luZyB0aGlzPw0KDQpBbnNvbiANCg==
+Em Mon, 23 Sep 2019 15:43:45 -0700
+Kees Cook <keescook@chromium.org> escreveu:
+
+> In order to have the MAINTAINERS file visible in the rendered ReST
+> output, this makes some small changes to the existing MAINTAINERS file
+> to allow for better machine processing, and adds a tool to perform the
+> rendering.
+>=20
+> Features include:
+> - Per-subsystem reference links: subsystem maintainer entries can be
+>   trivially linked to both internally and external. For example:
+>   https://www.kernel.org/doc/html/latest/process/maintainers.html#secure-=
+computing
+>=20
+> - Internally referenced .rst files are linked so they can be followed
+>   when browsing the resulting rendering. This allows, for example, the
+>   future addition of maintainer profiles to be automatically linked.
+>=20
+> - Field name expansion: instead of the short fields (e.g. "M", "F",
+>   "K"), use the indicated inline "full names" for the fields (which are
+>   marked with "*"s in MAINTAINERS) so that a rendered subsystem entry
+>   is more human readable. For example:
+>=20
+>     SECURE COMPUTING
+> 	Mail:	  Kees Cook <keescook@chromium.org>
+> 	Reviewer: Andy Lutomirski <luto@amacapital.net>
+> 		  Will Drewry <wad@chromium.org>
+> 	SCM:	  git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git =
+seccomp
+> 	Status:	  Supported
+> 	Files:	  kernel/seccomp.c include/uapi/linux/seccomp.h
+> 		  include/linux/seccomp.h tools/testing/selftests/seccomp/*
+> 		  tools/testing/selftests/kselftest_harness.h
+> 		  userspace-api/seccomp_filter
+> 	Content regex:	\bsecure_computing \bTIF_SECCOMP\b
+
+Output looks almost OK on my eyes.
+
+It probably makes sense to change some things there, as, right now, it=20
+is considering multiple lines as continuation. So, for example, if
+it has multiple M: entries, it will produce this at MAINTAINERS.rst
+output:
+
+
+	:Mail:
+		Juergen Gross <jgross@suse.com>
+		Thomas Hellstrom <thellstrom@vmware.com>
+		"VMware, Inc." <pv-drivers@vmware.com>
+
+With would be displayed as:
+
+	Mail
+	    Juergen Gross <jgross@suse.com> Thomas Hellstrom <thellstrom@vmware.co=
+m> =E2=80=9CVMware, Inc.=E2=80=9D <pv-drivers@vmware.com>
+
+It would probably be better to output it as:
+
+	:Mail:
+		- Juergen Gross <jgross@suse.com>
+		- Thomas Hellstrom <thellstrom@vmware.com>
+		- "VMware, Inc." <pv-drivers@vmware.com>
+
+or:
+	:Mail:
+		Juergen Gross <jgross@suse.com>
+
+		Thomas Hellstrom <thellstrom@vmware.com>
+
+		"VMware, Inc." <pv-drivers@vmware.com>
+
+or, eventually:
+
+	:Mail:
+		Juergen Gross <jgross@suse.com>,
+		Thomas Hellstrom <thellstrom@vmware.com>,
+		"VMware, Inc." <pv-drivers@vmware.com>
+
+(Using commas is probably a bad idea, as DT file names may have a
+comma in the middle)
+
+Same applies to other fields.
+
+>=20
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Documentation/Makefile                        | 18 ++--
+>  Documentation/process/index.rst               |  1 +
+>  Documentation/process/maintainers.rst         |  1 +
+>  .../sphinx-static/theme_overrides.css         | 10 ++
+>  Documentation/sphinx/convert-maintainers.py   | 92 +++++++++++++++++++
+>  MAINTAINERS                                   | 59 ++++++------
+>  6 files changed, 146 insertions(+), 35 deletions(-)
+>  create mode 100644 Documentation/process/maintainers.rst
+>  create mode 100644 Documentation/sphinx/convert-maintainers.py
+>=20
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index 16116d038161..6ebe99edfbad 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -9,6 +9,8 @@ ifeq ($(CONFIG_WARN_MISSING_DOCUMENTS),y)
+>  $(shell $(srctree)/scripts/documentation-file-ref-check --warn)
+>  endif
+> =20
+> +DOC_DEPS      =3D $(BUILDDIR)/MAINTAINERS.rst
+> +
+>  # You can set these variables from the command line.
+>  SPHINXBUILD   =3D sphinx-build
+>  SPHINXOPTS    =3D
+> @@ -77,14 +79,14 @@ quiet_cmd_sphinx =3D SPHINX  $@ --> file://$(abspath =
+$(BUILDDIR)/$3/$4)
+>  	$(abspath $(srctree)/$(src)/$5) \
+>  	$(abspath $(BUILDDIR)/$3/$4)
+> =20
+> -htmldocs:
+> +htmldocs: $(DOC_DEPS)
+>  	@$(srctree)/scripts/sphinx-pre-install --version-check
+>  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var=
+)))
+> =20
+> -linkcheckdocs:
+> +linkcheckdocs: $(DOC_DEPS)
+>  	@$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,linkcheck,$(var),,$=
+(var)))
+> =20
+> -latexdocs:
+> +latexdocs: $(DOC_DEPS)
+>  	@$(srctree)/scripts/sphinx-pre-install --version-check
+>  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,latex,$(var),latex=
+,$(var)))
+> =20
+> @@ -102,11 +104,11 @@ pdfdocs: latexdocs
+> =20
+>  endif # HAVE_PDFLATEX
+> =20
+> -epubdocs:
+> +epubdocs: $(DOC_DEPS)
+>  	@$(srctree)/scripts/sphinx-pre-install --version-check
+>  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,epub,$(var),epub,$=
+(var)))
+> =20
+> -xmldocs:
+> +xmldocs: $(DOC_DEPS)
+>  	@$(srctree)/scripts/sphinx-pre-install --version-check
+>  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,xml,$(var),xml,$(v=
+ar)))
+> =20
+> @@ -115,7 +117,11 @@ endif # HAVE_SPHINX
+>  # The following targets are independent of HAVE_SPHINX, and the rules sh=
+ould
+>  # work or silently pass without Sphinx.
+> =20
+> -refcheckdocs:
+> +$(BUILDDIR)/MAINTAINERS.rst: $(srctree)/MAINTAINERS $(srctree)/Documenta=
+tion/sphinx/convert-maintainers.py
+> +	$(Q)mkdir -p $(BUILDDIR)
+> +	$(Q)$(shell python3 $(srctree)/Documentation/sphinx/convert-maintainers=
+.py $< > $@ || rm -f $@)
+> +
+
+No need to use "python3" here, as the script has a shebang markup. Just
+ensure that it has 755 permission, and call it directly.
+
+> +refcheckdocs: $(DOC_DEPS)
+>  	$(Q)cd $(srctree);scripts/documentation-file-ref-check
+> =20
+>  cleandocs:
+> diff --git a/Documentation/process/index.rst b/Documentation/process/inde=
+x.rst
+> index e2c9ffc682c5..e2fb0c9652ac 100644
+> --- a/Documentation/process/index.rst
+> +++ b/Documentation/process/index.rst
+> @@ -46,6 +46,7 @@ Other guides to the community that are of interest to m=
+ost developers are:
+>     kernel-docs
+>     deprecated
+>     embargoed-hardware-issues
+> +   maintainers
+> =20
+>  These are some overall technical guides that have been put here for now =
+for
+>  lack of a better place.
+> diff --git a/Documentation/process/maintainers.rst b/Documentation/proces=
+s/maintainers.rst
+> new file mode 100644
+
+
+> index 000000000000..32267a1666ff
+> --- /dev/null
+> +++ b/Documentation/process/maintainers.rst
+> @@ -0,0 +1 @@
+> +.. kernel-include:: $BUILDDIR/MAINTAINERS.rst
+> diff --git a/Documentation/sphinx-static/theme_overrides.css b/Documentat=
+ion/sphinx-static/theme_overrides.css
+> index e21e36cd6761..459ec5b29d68 100644
+> --- a/Documentation/sphinx-static/theme_overrides.css
+> +++ b/Documentation/sphinx-static/theme_overrides.css
+> @@ -53,6 +53,16 @@ div[class^=3D"highlight"] pre {
+>      line-height: normal;
+>  }
+> =20
+> +/* Keep fields from being strangely far apart due to inheirited table CS=
+S. */
+> +.rst-content table.field-list th.field-name {
+> +    padding-top: 1px;
+> +    padding-bottom: 1px;
+> +}
+> +.rst-content table.field-list td.field-body {
+> +    padding-top: 1px;
+> +    padding-bottom: 1px;
+> +}
+> +
+>  @media screen {
+> =20
+>      /* content column
+
+I would place this on a separate patch, as this is a layout change that
+may affect other files.
+
+Btw, what does this change?
+
+> diff --git a/Documentation/sphinx/convert-maintainers.py b/Documentation/=
+sphinx/convert-maintainers.py
+> new file mode 100644
+> index 000000000000..86cfce7b70c7
+> --- /dev/null
+> +++ b/Documentation/sphinx/convert-maintainers.py
+> @@ -0,0 +1,92 @@
+> +#!/usr/bin/env python3
+
+While using python3 is actually OK from my side, as Jon pointed on another
+e-mail, we're still discussing if we should either force python3 or not.
+
+So, I would change:
+
+	python3 -> python
+
+but that's just my 2 cents.
+
+> +# SPDX-License-Identifier: GPL-2.0
+> +import os, sys, re
+> +
+> +print(".. _maintainers:\n")
+> +
+> +# Poor man's state machine.
+> +descriptions =3D False
+> +maintainers =3D False
+> +subsystems =3D False
+> +
+> +# Field letter to field name mapping.
+> +field_letter =3D None
+> +fields =3D dict()
+> +
+> +prev =3D None
+> +for line in open(sys.argv[1]):
+> +	# Have we reached the end of the preformatted Descriptions text?
+> +	if descriptions and line.startswith('Maintainers'):
+> +		descriptions =3D False
+> +		# Ensure a blank line following the last "|"-prefixed line.
+> +		print("")
+> +
+> +	# Start subsystem processing? This is to skip processing the text
+> +	# between the Maintainers heading and the first subsystem name.
+> +	if maintainers and not subsystems:
+> +		if re.search('^[A-Z0-9]', line):
+> +			subsystems =3D True
+> +
+> +	# Drop needless input whitespace.
+> +	line =3D line.rstrip()
+> +
+> +	# Linkify all non-wildcard references to ReST files in Documentation/.
+> +	pat =3D '(Documentation/([^\s\?\*]*)\.rst)'
+> +	m =3D re.search(pat, line)
+> +	if m:
+> +		# maintainers.rst is in a subdirectory, so include "../".
+> +		line =3D re.sub(pat, ':doc:`%s <../%s>`' % (m.group(2), m.group(2)), l=
+ine)
+> +
+> +	# Check state machine for output rendering behavior.
+> +	output =3D ""
+> +	if descriptions:
+> +		output =3D "| %s" % (line)
+> +		# Look for and record field letter to field name mappings:
+> +		#   R: Designated *reviewer*: FullName <address@domain>
+> +		m =3D re.search("\s(\S):\s", line)
+> +		if m:
+> +			field_letter =3D m.group(1)
+> +		if field_letter and not field_letter in fields:
+> +			m =3D re.search("\*([^\*]+)\*", line)
+> +			if m:
+> +				fields[field_letter] =3D m.group(1)
+> +	elif subsystems and len(line) > 1:
+> +		if line[1] !=3D ':':
+> +			# Render a subsystem entry as:
+> +			#   SUBSYSTEM NAME
+> +			#   ~~~~~~~~~~~~~~
+> +			heading =3D re.sub("\s+", " ", line)
+> +			output =3D "%s\n%s" % (heading, "~" * len(heading))
+> +			field_prev =3D ""
+> +		else:
+> +			# Render a subsystem field as:
+> +			#   :Field: entry
+> +			#   	entry...
+> +			field, details =3D line.split(':', 1)
+> +			details =3D details.strip()
+> +
+> +			# Mark paths as literal text for readability.
+> +			if field in ['F', 'N', 'X', 'K']:
+> +				# But only if not already marked :)
+> +				if not ':doc:' in details:
+> +					details =3D '``%s``' % (details)
+> +
+> +			# Do not repeat field names, so that field entries
+> +			# will be collapsed together.
+> +			if field !=3D field_prev:
+> +				output =3D ":%s:\n" % (fields.get(field, field))
+> +			output =3D output + "\t%s" % (details)
+> +			field_prev =3D field
+> +	else:
+> +		output =3D line
+> +	print(output)
+> +
+> +	# Update the state machine when we find heading separators.
+> +	if line.startswith('----------'):
+> +		if prev.startswith('Descriptions'):
+> +			descriptions =3D True
+> +		if prev.startswith('Maintainers'):
+> +			maintainers =3D True
+> +
+> +	# Retain previous line for state machine transitions.
+> +	prev =3D line
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2b6f10ea1573..fbaf09210647 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1,12 +1,14 @@
+> -
+> -
+> -	List of maintainers and how to submit kernel changes
+> +List of maintainers and how to submit kernel changes
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> =20
+>  Please try to follow the guidelines below.  This will make things
+>  easier on the maintainers.  Not all of these guidelines matter for every
+>  trivial patch so apply some common sense.
+> =20
+> -1.	Always _test_ your changes, however small, on at least 4 or
+> +Tips for patch submitters
+> +-------------------------
+> +
+> +1.	Always *test* your changes, however small, on at least 4 or
+>  	5 people, preferably many more.
+> =20
+>  2.	Try to release a few ALPHA test versions to the net. Announce
+> @@ -25,7 +27,7 @@ trivial patch so apply some common sense.
+>  	testing and await feedback.
+> =20
+>  5.	Make a patch available to the relevant maintainer in the list. Use
+> -	'diff -u' to make the patch easy to merge. Be prepared to get your
+> +	``diff -u`` to make the patch easy to merge. Be prepared to get your
+>  	changes sent back with seemingly silly requests about formatting
+>  	and variable names.  These aren't as silly as they seem. One
+>  	job the maintainers (and especially Linus) do is to keep things
+> @@ -38,7 +40,7 @@ trivial patch so apply some common sense.
+>  	See Documentation/process/coding-style.rst for guidance here.
+> =20
+>  	PLEASE CC: the maintainers and mailing lists that are generated
+> -	by scripts/get_maintainer.pl.  The results returned by the
+> +	by ``scripts/get_maintainer.pl.`` The results returned by the
+>  	script will be best if you have git installed and are making
+>  	your changes in a branch derived from Linus' latest git tree.
+>  	See Documentation/process/submitting-patches.rst for details.
+> @@ -74,22 +76,22 @@ trivial patch so apply some common sense.
+> =20
+>  8.	Happy hacking.
+> =20
+> -Descriptions of section entries:
+> +Descriptions of section entries
+> +-------------------------------
+> =20
+> -	P: Person (obsolete)
+> -	M: Mail patches to: FullName <address@domain>
+> -	R: Designated reviewer: FullName <address@domain>
+> +	M: *Mail* patches to: FullName <address@domain>
+> +	R: Designated *Reviewer*: FullName <address@domain>
+>  	   These reviewers should be CCed on patches.
+> -	L: Mailing list that is relevant to this area
+> -	W: Web-page with status/info
+> -	B: URI for where to file bugs. A web-page with detailed bug
+> +	L: *Mailing list* that is relevant to this area
+> +	W: *Web-page* with status/info
+> +	B: URI for where to file *bugs*. A web-page with detailed bug
+>  	   filing info, a direct bug tracker link, or a mailto: URI.
+> -	C: URI for chat protocol, server and channel where developers
+> +	C: URI for *chat* protocol, server and channel where developers
+>  	   usually hang out, for example irc://server/channel.
+> -	Q: Patchwork web based patch tracking system site
+> -	T: SCM tree type and location.
+> +	Q: *Patchwork* web based patch tracking system site
+> +	T: *SCM* tree type and location.
+>  	   Type is one of: git, hg, quilt, stgit, topgit
+> -	S: Status, one of the following:
+> +	S: *Status*, one of the following:
+>  	   Supported:	Someone is actually paid to look after this.
+>  	   Maintained:	Someone actually looks after it.
+>  	   Odd Fixes:	It has a maintainer but they don't have time to do
+> @@ -99,13 +101,13 @@ Descriptions of section entries:
+>  	   Obsolete:	Old code. Something tagged obsolete generally means
+>  			it has been replaced by a better system and you
+>  			should be using that.
+> -	F: Files and directories with wildcard patterns.
+> +	F: *Files* and directories wildcard patterns.
+>  	   A trailing slash includes all files and subdirectory files.
+>  	   F:	drivers/net/	all files in and below drivers/net
+>  	   F:	drivers/net/*	all files in drivers/net, but not below
+>  	   F:	*/net/*		all files in "any top level directory"/net
+>  	   One pattern per line.  Multiple F: lines acceptable.
+> -	N: Files and directories with regex patterns.
+> +	N: Files and directories *Regex* patterns.
+>  	   N:	[^a-z]tegra	all files whose path contains the word tegra
+>  	   One pattern per line.  Multiple N: lines acceptable.
+>  	   scripts/get_maintainer.pl has different behavior for files that
+> @@ -113,14 +115,14 @@ Descriptions of section entries:
+>  	   get_maintainer will not look at git log history when an F: pattern
+>  	   match occurs.  When an N: match occurs, git log history is used
+>  	   to also notify the people that have git commit signatures.
+> -	X: Files and directories that are NOT maintained, same rules as F:
+> -	   Files exclusions are tested before file matches.
+> +	X: *Excluded* files and directories that are NOT maintained, same
+> +	   rules as F:. Files exclusions are tested before file matches.
+>  	   Can be useful for excluding a specific subdirectory, for instance:
+>  	   F:	net/
+>  	   X:	net/ipv6/
+>  	   matches all files in and below net excluding net/ipv6/
+> -	K: Keyword perl extended regex pattern to match content in a
+> -	   patch or file.  For instance:
+> +	K: *Content regex* (perl extended) pattern match in a patch or file.
+> +	   For instance:
+>  	   K: of_get_profile
+>  	      matches patches or files that contain "of_get_profile"
+>  	   K: \b(printk|pr_(info|err))\b
+> @@ -128,13 +130,12 @@ Descriptions of section entries:
+>  	      printk, pr_info or pr_err
+>  	   One regex pattern per line.  Multiple K: lines acceptable.
+> =20
+> -Note: For the hard of thinking, this list is meant to remain in alphabet=
+ical
+> -order. If you could add yourselves to it in alphabetical order that woul=
+d be
+> -so much easier [Ed]
+> -
+> -Maintainers List (try to look for most precise areas first)
+> +Maintainers List
+> +----------------
+> =20
+> -		-----------------------------------
+> +.. note:: When reading this list, please look for the most precise areas
+> +          first. When adding to this list, please keep the entries in
+> +          alphabetical order.
+> =20
+>  3C59X NETWORK DRIVER
+>  M:	Steffen Klassert <klassert@kernel.org>
+
+
+
+Thanks,
+Mauro
