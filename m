@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C64C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D041C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687B0222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4F12054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344032;
-	bh=P5yrhEzdFdo0qVfMiA38Ip22G1j0H8ar9SlOTwIHjD0=;
+	s=default; t=1569344039;
+	bh=l3BN8vqr6/zyqtmtEAZUgOrafTSH74gWX5X1bQxxev4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVOgYG7ZHlhu038EXPSA8+602wfz7ERwHNoRWs/pXEXhPvYhd/zZJyNmMxG/6qe+Y
-	 44+RskhGe4dncCRuSI+ZHJzUxZNr9DnavLe6C9gTGV4NvgKH5hYJmTInsm8//h9LTH
-	 eivtpVxVuC3emVvfy2HYTyr8iIKLMVfd+tozGvsM=
+	b=2jQzdrVZ/eX6gn7PVGjzmh6MC1fVBckKYrDerL78Ca57/T/eTFamQ778L2nti4thj
+	 tM4yH53dVOod8ioe9QL7Vl15O3poX7hySCmMINMOUF73LlwGzj4VYEv+5jda2m4k3Z
+	 aZ4PpbiIcYdbyDMQuBzEMPW4Y0YXEKDNR451h+NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410918AbfIXQxv (ORCPT
+        id S2441680AbfIXQwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441689AbfIXQwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:52:35 -0400
+        id S2441572AbfIXQwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:52:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A0921D7A;
-        Tue, 24 Sep 2019 16:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F307217D9;
+        Tue, 24 Sep 2019 16:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343954;
-        bh=P5yrhEzdFdo0qVfMiA38Ip22G1j0H8ar9SlOTwIHjD0=;
+        s=default; t=1569343921;
+        bh=l3BN8vqr6/zyqtmtEAZUgOrafTSH74gWX5X1bQxxev4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGSWaGbvL7igcFJGvDhPJOVJSBCRmWgQU1hMIev6GKlqHmC8dkTSDU2Y0FJzrX+UM
-         Yh3cGwDNdjfrQlaqTSN0jzJ0RQhsp04ywNVp+GC3JQz2f/0eeVaPqKiEyddqFFOery
-         DmA6DT2zCP/E5LO4AOVOcXhVSJAC1KDsQEPI5LMs=
+        b=pTxzY7cUcJA5JcSunI+dV6uVfSWUoKtPqivh/MGmDsqBY4NztcSCdmF9L5DK24e1Y
+         QKaOSE2GlIAT1RIWgHCcK0Cm/ryxLn/4krmVJoMM71PFQ91zjBKZ0wg5W2KUT2d40N
+         j5+KNuZ5tzomNef+EdKwyzbkn/UvPSX1eStGCoso=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/14] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Tue, 24 Sep 2019 12:52:07 -0400
-Message-Id: <20190924165214.28857-9-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>, Ken Wang <Qingqing.Wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 14/19] drm/amdgpu/si: fix ASIC tests
+Date:   Tue, 24 Sep 2019 12:51:25 -0400
+Message-Id: <20190924165130.28625-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
-References: <20190924165214.28857-1-sashal@kernel.org>
+In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
+References: <20190924165130.28625-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,42 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+Comparing adev->family with CHIP constants is not correct.
+adev->family can only be compared with AMDGPU_FAMILY constants and
+adev->asic_type is the struct member to compare with CHIP constants.
+They are separate identification spaces.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+Cc: Ken Wang <Qingqing.Wang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-tegra.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-tegra.c b/drivers/pinctrl/pinctrl-tegra.c
-index 0fd7fd2b0f72c..a30e967d75c2a 100644
---- a/drivers/pinctrl/pinctrl-tegra.c
-+++ b/drivers/pinctrl/pinctrl-tegra.c
-@@ -52,7 +52,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 327bdf13e8bc8..b0beb5e537bcb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1606,7 +1606,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
  
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
- {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
+-			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
++			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
+ 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
+ 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
+ 				if (orig != data)
+@@ -1655,14 +1655,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
  
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
+ 
+ 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
