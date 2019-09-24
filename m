@@ -2,172 +2,127 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801A1C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B87C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBD02146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrQ96GoV"
+	by mail.kernel.org (Postfix) with ESMTP id E56B4217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569346941;
+	bh=SWsxUoKvNrcwqgvRvktKZdQ/RAP+XinsF3OqqxOTZVY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=EuvNcMJlkwF2gF+0ZQrrmnTJS4egEOLURfZ9S1dSjo1v49Ji40j2tyiMsn6eVZrh9
+	 EWIBad6AQb93Ct8qzs9DSuYUy8bPlLOMydaw6NUuGC5y0rjtIfboBF0rGUPa8Nc2w6
+	 8Gm/RJpbfkFYeDRV/+IHQBegtfOPAGTTZEde7lKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502058AbfIXRhc (ORCPT
+        id S2394048AbfIXRmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:37:32 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:40572 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbfIXRhc (ORCPT
+        Tue, 24 Sep 2019 13:42:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50902 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387559AbfIXRmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:37:32 -0400
-Received: by mail-vk1-f201.google.com with SMTP id 70so12469vkc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=cqlaQgskXZZonmcDyxSMH60accriyGsyjcSMTQXFDVo=;
-        b=GrQ96GoVZCaNN10oq89i4aHnK6PqT2oRCB+KP7YvdXoO+LiXCSCjS521zmlVq6Ngzw
-         fM2S18l+9Km3sNnAmAbitUsbC6SBoKbGecKzFdVmVg1AxV6EUHdpe8i38U4Gj+i4HC0t
-         lrej3ZbBabIukl5yDVt6G/jtjgKZC8hsElSG15QXzs6TipHUEECTZyCxOp2xv0c9a5hJ
-         U+sLpWkh0OMCYw2zirPhoETlurM94zdCChQgipuBAFlG76p+hCpvnCjGoScdYPmbyYBb
-         j8Cw160KdYDFqJY1r2MoFJESTBVjT6gMqXG/ZveD/85LX+62wRCDEewHYGBUeCbkQlmB
-         0zdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=cqlaQgskXZZonmcDyxSMH60accriyGsyjcSMTQXFDVo=;
-        b=Ad1pdvA1W5tfYX3WummEIzUtQuGK2fv1oTZhZgOE9t/0Jy1yX9udnwVVX3tBLEAh+q
-         2ahbxA1ArW0CuApfs6exHnO2v3rxrOSVmZJFLas9PKd6CVFbdGb3wLyvFnptHT5QAcys
-         xmRLDeEW6zjJXJC6h+otytEi7wBMJijzmLnL5YD9bdlSugyKi33vctBrwXnEu4dXLgpc
-         ZrSrDx36W/byX99ylhYflZ7bCOyDzxDrXczQ9uFJ9s4u6nJRQjHbjv1hc4BHg1maPTpG
-         J9elJWSgm/t6ApnK2Nfri/+J0B2vveCimJODxmKJl2Jbg8C2W5Upe1OP0AOz9LJgmTs8
-         sDFA==
-X-Gm-Message-State: APjAAAW6ZTFK9LOmXjVuOh3VIRXQKH/HX0miU9R6o2d3qjyQkp76Gh+B
-        WWwm+WjCl2CUjoWEKmeVjbkTkB4LLuznhzPogyk=
-X-Google-Smtp-Source: APXvYqwp66tsQmiz5d8XVId4w7Ks7XKk7COLEK7zfZ3+Dy6OZILbIEz4tLj9lQEHlx3kgsr4zSDdYHlbbXK9DV88IMY=
-X-Received: by 2002:a1f:3f10:: with SMTP id m16mr11725vka.15.1569346649344;
- Tue, 24 Sep 2019 10:37:29 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 10:37:17 -0700
-Message-Id: <20190924173717.198637-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH] hwmon: (applesmc) fix UB and udelay overflow
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     linux@roeck-us.net
-Cc:     clang-built-linux@googlegroups.com, jdelvare@suse.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "=?UTF-8?q?Tomasz=20Pawe=C5=82=20Gajc?=" <tpgxyz@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 13:42:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zes2dxJDlGtac+6+LdBHVUz2/S2c9+ELLrylkyDTREE=; b=gfoEjdUSj4SNm7t2DOAPmfPW0
+        J18O2mCcYpmRu1OcYFi4CrPe4xgLz271BBMZ9bDSlO2qkIysU9abEjE3TVjg6LiKBjgKL9S2kKi/J
+        YgMcDUoba35ajzLjZ2YkfFJSt6GzgQvEcFcCtz+4H2o3RHXdWaz6b6MRo04tKk095A8Ns=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iCopI-00029A-MI; Tue, 24 Sep 2019 17:42:12 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 602F8D02FC7; Tue, 24 Sep 2019 18:42:10 +0100 (BST)
+Date:   Tue, 24 Sep 2019 10:42:10 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the integrity tree with the modules tree
+Message-ID: <20190924174210.GZ2036@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Z5Iw6G/4V9lVaptU"
+Content-Disposition: inline
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following 2 issues in the driver:
-1. Left shifting a signed integer is undefined behavior. Unsigned
-   integral types should be used for bitwise operations.
-2. The delay scales from 0x0010 to 0x20000 by powers of 2, but udelay
-   will result in a linkage failure when given a constant that's greater
-   than 20000 (0x4E20). Agressive loop unrolling can fully unroll the
-   loop, resulting in later iterations overflowing the call to udelay.
 
-2 is fixed via splitting the loop in two, iterating the first up to the
-point where udelay would overflow, then switching to mdelay, as
-suggested in Documentation/timers/timers-howto.rst.
+--Z5Iw6G/4V9lVaptU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Tomasz Pawe=C5=82 Gajc <tpgxyz@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/678
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- drivers/hwmon/applesmc.c | 35 +++++++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+Hi all,
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 183ff3d25129..2bc12812f52f 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -46,6 +46,7 @@
- #define APPLESMC_MIN_WAIT	0x0010
- #define APPLESMC_RETRY_WAIT	0x0100
- #define APPLESMC_MAX_WAIT	0x20000
-+#define APPLESMC_UDELAY_MAX	20000
-=20
- #define APPLESMC_READ_CMD	0x10
- #define APPLESMC_WRITE_CMD	0x11
-@@ -157,14 +158,23 @@ static struct workqueue_struct *applesmc_led_wq;
- static int wait_read(void)
- {
- 	u8 status;
--	int us;
--	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+	unsigned int us;
-+
-+	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_UDELAY_MAX; us <<=3D 1) {
- 		udelay(us);
- 		status =3D inb(APPLESMC_CMD_PORT);
- 		/* read: wait for smc to settle */
- 		if (status & 0x01)
- 			return 0;
- 	}
-+	/* switch to mdelay for longer sleeps */
-+	for (; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+		mdelay(us);
-+		status =3D inb(APPLESMC_CMD_PORT);
-+		/* read: wait for smc to settle */
-+		if (status & 0x01)
-+			return 0;
-+	}
-=20
- 	pr_warn("wait_read() fail: 0x%02x\n", status);
- 	return -EIO;
-@@ -177,10 +187,10 @@ static int wait_read(void)
- static int send_byte(u8 cmd, u16 port)
- {
- 	u8 status;
--	int us;
-+	unsigned int us;
-=20
- 	outb(cmd, port);
--	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+	for (us =3D APPLESMC_MIN_WAIT; us < APPLESMC_UDELAY_MAX; us <<=3D 1) {
- 		udelay(us);
- 		status =3D inb(APPLESMC_CMD_PORT);
- 		/* write: wait for smc to settle */
-@@ -196,6 +206,23 @@ static int send_byte(u8 cmd, u16 port)
- 		udelay(APPLESMC_RETRY_WAIT);
- 		outb(cmd, port);
- 	}
-+	/* switch to mdelay for longer sleeps */
-+	for (; us < APPLESMC_MAX_WAIT; us <<=3D 1) {
-+		mdelay(us);
-+		status =3D inb(APPLESMC_CMD_PORT);
-+		/* write: wait for smc to settle */
-+		if (status & 0x02)
-+			continue;
-+		/* ready: cmd accepted, return */
-+		if (status & 0x04)
-+			return 0;
-+		/* timeout: give up */
-+		if (us << 1 =3D=3D APPLESMC_MAX_WAIT)
-+			break;
-+		/* busy: long wait and resend */
-+		udelay(APPLESMC_RETRY_WAIT);
-+		outb(cmd, port);
-+	}
-=20
- 	pr_warn("send_byte(0x%02x, 0x%04x) fail: 0x%02x\n", cmd, port, status);
- 	return -EIO;
---=20
-2.23.0.351.gc4317032e6-goog
+Today's linux-next merge of the integrity tree got a conflict in:
 
+  init/Kconfig
+
+between commit:
+
+  d189c2a4b6f0f4a ("module: remove redundant 'depends on MODULES'")
+
+=66rom the modules tree and commit:
+
+  c8424e776b09328 ("MODSIGN: Export module signature definitions")
+
+=66rom the integrity tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc init/Kconfig
+index 70734141a2f5a,2dca877c9ed71..0000000000000
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@@ -2047,7 -2010,8 +2051,7 @@@ config MODULE_SRCVERSION_AL
+ =20
+  config MODULE_SIG
+  	bool "Module signature verification"
+- 	select SYSTEM_DATA_VERIFICATION
+ -	depends on MODULES
++ 	select MODULE_SIG_FORMAT
+  	help
+  	  Check modules for valid signatures upon load: the signature
+  	  is simply appended to the module. For more information see
+
+--Z5Iw6G/4V9lVaptU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2KVXEACgkQJNaLcl1U
+h9BO2Qf/Riuc9Ogb9q6Q9JIlOKiEMESZ13GqkNzBCU24n7FPiO639flGaNBK0g8p
+eqTHHhEkrkia1rJbkppDn1hLZ86lSrCBYiMHFrznhirDQQ+Q2kRl6A3KzE0hCl0m
+0bYK2zN/Z9akzKhHKACjqjpa/HpZz9Cv8NHYp4ieCRVBwsJAOLKV22+aGz2KOi2J
+KySKJrs+/NiQZd/nVPst8jOnS1B+OfaBRsm6iXIJ3jRvHM7t6hU/xsLLp+LYcPjw
+ki555VEEwrYaG9/IKsK7pU3JyT0uwksX2LpnutMYCLd235IogNpWF5fwvuGMjVY9
+E0UykZmiw9VYQzmD5Bdk1fJnkGNufg==
+=MhpP
+-----END PGP SIGNATURE-----
+
+--Z5Iw6G/4V9lVaptU--
