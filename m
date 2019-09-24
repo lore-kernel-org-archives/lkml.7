@@ -2,114 +2,98 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14685C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5E8C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2975207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165B9217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npKdJkon"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iN0dsE6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441917AbfIXTRH (ORCPT
+        id S1730835AbfIXTSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:17:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36543 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441899AbfIXTRH (ORCPT
+        Tue, 24 Sep 2019 15:18:24 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33600 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730010AbfIXTSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:17:07 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so1937993pfr.3;
-        Tue, 24 Sep 2019 12:17:06 -0700 (PDT)
+        Tue, 24 Sep 2019 15:18:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i30so1849908pgl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 12:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uuYvKDdlCCY0lggc9sBBXzR54+aLnXoUJm8jnQudcgU=;
-        b=npKdJkon5qmHu+jpnZddVbrF8Pa8QGihVlW++CGVzdxayedYxp3dzYNLRYB11cF5L7
-         /MqRAlTN0vIKtdNhuUAac/aZw7TYMtO4xdRolhbRrYZXJ5oqKPvEQMWmaFe2fYL63jDb
-         c02/h8rRWN1g/7pbFc/16rPH4fHQBUYq+4Kvo9b9i5GVflEQc7onbvKIX7Kxalv9eonn
-         3Nj7GC0X3N/00h3cxmeFOVp4Yh3S2K/7wPqFbuNQF+/GlEaUXERJxkscInYJqtnUox0H
-         SRYQ66qFJuQcnGMHFW9hDIf2YBe/UZQT/8kk/BGUhlzdWPunls5Aamub6o9uGtrolJeM
-         hd6g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=a7+izJYYosgd7zHjanZYValds7ow3BOFmZCRlJjVnPA=;
+        b=iN0dsE6qKEf18ktGqXha+auVSqp1K9xsRtMPakuGHFG5GXMgMn/FjaEvv30rbYUkvc
+         KkvVYNIU1IoK1teGbHrMvl62L/bi5bZRkDyCGCT9Tq4N40wmOmir9d15H85r75snX3ZQ
+         6ZoK8xU1dvXNRxgB5Wc9prpKH4IMjmwHXXdp226FIHRAHWhlZX2mGv+eypuYusoBhyoP
+         +fWKmlso70BGBmLOaR5glrwv+xAWjHOHGQq9zREpORZRVIwGAo7L/AhoB/0gG8mfE9Sl
+         rvIikkb0lAcHo+OGd0mgDOgVXdlAW77/eRG0CjgO7Ius8pMvuM60aupsVZ1rEgPI57oL
+         LIJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uuYvKDdlCCY0lggc9sBBXzR54+aLnXoUJm8jnQudcgU=;
-        b=kp0AsZo8S+HRjPs5MErtqtYPmc40q6X2WS647ph8P7gtqsQitVvYPAJTAL1cH9dcEE
-         cKQoOH1QzKY5atIqjb9VsEg+xRIeGSiv4hBe3r8a41JJlNCV0uQpK6FzxuTmFDunvEzr
-         mm601xqK5CzG/gPtVIzllWKlqiKkhYwXHtjnT7yibjxzKZpJcIuU/oQY4EcB8eHKqjai
-         gZgGrtUUNQgAFoqlap0ICveumturTkj0gAmIrG/W5cQF3x/7HgnFBlMb33bssCxz2Jyc
-         qk6BMOU4wGVe7o5ThTs2nzq7qXeBh3yZerOfPnty28KsZO7PQ1laY9RvUYWsBMOzwRsb
-         k1Kg==
-X-Gm-Message-State: APjAAAUQBjlDigM9cxhsN19sr0DKW5BKdjwkCDGf/15v4Fmcvflvy0iy
-        GIQGjef4vxmSiUjdemNw3gALlfIl
-X-Google-Smtp-Source: APXvYqyX6VYd6yhegdHOFbFMdpSp1PJ8ZEll/P+fTVQTO9t4vYIhjdtG5duoWgLMsGAaJycf16RdQg==
-X-Received: by 2002:a17:90b:946:: with SMTP id dw6mr1772489pjb.48.1569352626062;
-        Tue, 24 Sep 2019 12:17:06 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id l62sm5360360pfl.167.2019.09.24.12.17.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2019 12:17:05 -0700 (PDT)
-Subject: Re: [PATCH] kcm: use BPF_PROG_RUN
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tom Herbert <tom@herbertland.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190905211528.97828-1-samitolvanen@google.com>
- <0f77cc31-4df5-a74f-5b64-a1e3fc439c6d@fb.com>
- <CAADnVQJxrPDZtKAik4VEzvw=TwY6PoWytfp7HcQt5Jsaja7mxw@mail.gmail.com>
- <048e82f4-5b31-f9f4-5bf7-82dfbf7ec8f3@gmail.com>
- <20190924185908.GC5889@pc-63.home>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <589ccc1c-12b9-4700-f6d9-b2efd3f9a347@gmail.com>
-Date:   Tue, 24 Sep 2019 12:17:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=a7+izJYYosgd7zHjanZYValds7ow3BOFmZCRlJjVnPA=;
+        b=aUillHERxIJrzj0qN4nN7eccC2JjDuF9qivJ/46C4eRDhv3RWeYpb2/fdqT13Kdwr3
+         6TsqlCJmcKkLyOJ343P7Isgm8tQDAQSyJGk2/Fb/1S66qK2LMKmMu3XbhCYA3IjnVUbu
+         jGyhZRTNO9Z4kJL4tXf+lJ6KRAXq7KXENP6/0SOOVI7h7sr3jwqUFn1kwozFwW/Vks8x
+         psI/V/n/8yDtWSgWS7/k9uZ9ijyV0+8HeYBSN9riz4Sby5jSwSWEhOh/lDSqFS9E6Vok
+         Jm57t4jGRejkac49wtcT0uBzeTbBvu8sqTOjR1RCI22gC3Bxm9rAxJszz/FWAgWWNOsT
+         hwxg==
+X-Gm-Message-State: APjAAAXwzm2V4EPp7zohn39citgGEhM6YkNH9A0RqrEPYIqByOQfoy7H
+        eS90bNsXg7kLnCJ0XV599QVRI6jwLcKZsQ==
+X-Google-Smtp-Source: APXvYqwUtX0FY4xf/0UwDn+yg9UjZNFwrHooHBidGhmXaRY+URNGLcdC2hpL39Xw/wCmWCAaTsx6Tg==
+X-Received: by 2002:a62:1cf:: with SMTP id 198mr5251106pfb.31.1569352703005;
+        Tue, 24 Sep 2019 12:18:23 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id v43sm4926886pjb.1.2019.09.24.12.18.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Sep 2019 12:18:22 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Oleg Ivanov <balbes-150@yandex.ru>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH v5 0/3] arm64: meson-g12b: Add support for the Ugoos AM6
+In-Reply-To: <1569248036-6729-1-git-send-email-christianshewitt@gmail.com>
+References: <1569248036-6729-1-git-send-email-christianshewitt@gmail.com>
+Date:   Tue, 24 Sep 2019 12:18:21 -0700
+Message-ID: <7hpnjp5wqq.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190924185908.GC5889@pc-63.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
+> This patchset adds support for the Ugoos AM6, an Android STB based on
+> the Amlogic W400 reference design with the S922X chipset.
+>
+> v2: correction of minor nits
+>
+> v3: address regulator and GPIO corrections from Neil Armstrong (using
+> schematic excerpts from Ugoos) and related v2 comments from Martin
+> Blumenstingle. Add acks on patches 1/2 from Rob Herring.
+>
+> v4: address nits from Martin except for the vcc_3v3 node as it's not
+> known how to handle the vcc_3v3 regulator managed by ATF firmware, so
+> it remains untouched/undeclared like other g12a/g12b/sm1 boards.
+>
+> v5: corrected some tabs v spaces issues introduced in v4.
 
-On 9/24/19 11:59 AM, Daniel Borkmann wrote:
-> On Mon, Sep 23, 2019 at 02:31:04PM -0700, Eric Dumazet wrote:
->> On 9/6/19 10:06 AM, Alexei Starovoitov wrote:
->>> On Fri, Sep 6, 2019 at 3:03 AM Yonghong Song <yhs@fb.com> wrote:
->>>> On 9/5/19 2:15 PM, Sami Tolvanen wrote:
->>>>> Instead of invoking struct bpf_prog::bpf_func directly, use the
->>>>> BPF_PROG_RUN macro.
->>>>>
->>>>> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
->>>>
->>>> Acked-by: Yonghong Song <yhs@fb.com>
->>>
->>> Applied. Thanks
->>
->> Then we probably need this as well, what do you think ?
-> 
-> Yep, it's broken. 6cab5e90ab2b ("bpf: run bpf programs with preemption
-> disabled") probably forgot about it since it wasn't using BPF_PROG_RUN()
-> in the first place. If you get a chance, please send a proper patch,
-> thanks!
+Queued for v5.5,
 
-Sure, I will send this today.
+Thanks,
 
+Kevin
