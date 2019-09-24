@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8DEC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B7FC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA78A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E2A21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343424;
-	bh=krP95kJpB0a0xTJ3F8JGhh+MB+OwJOuNWiIa/d8ubwc=;
+	s=default; t=1569343428;
+	bh=I8B5kB4woAS8zeIX3RW9KSgJ4z9Xq/XpjsL8Ffdl0vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=As4xkXegEx552FhjhQeyY2gVOb+oZTCo2nflAYHCz18/5Hc0ccv8jJw5P6cWEnPn8
-	 E75qIj/oppRXdyncKyTQQHaC4iV7u+QaWznka2k+gJLJqBWCg8Q53ydEs8VmdJ524W
-	 4Ec+QXoDYCl7kmGclzGioQLuYYegIMahzakfHpjE=
+	b=kjx5skXQZ7p9srKmkw36yai2NITNpKD+oqhiCIg7XWvU1v2S+rIAJJxIrofglhNmW
+	 d+OVE+d4ME4ZIFC9L4EQT+rVg3AHMp53q2PZ62etaJWtBc2UdtLUmQxJCjsg2E2ExC
+	 SemfZtJhYhjmZDSH2+pnLxtgRZLdbOdfyaFlXwq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633061AbfIXQnn (ORCPT
+        id S2633069AbfIXQnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60698 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387852AbfIXQnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:43:42 -0400
+        id S2387852AbfIXQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:43:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909D6217D9;
-        Tue, 24 Sep 2019 16:43:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC57217F4;
+        Tue, 24 Sep 2019 16:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343422;
-        bh=krP95kJpB0a0xTJ3F8JGhh+MB+OwJOuNWiIa/d8ubwc=;
+        s=default; t=1569343424;
+        bh=I8B5kB4woAS8zeIX3RW9KSgJ4z9Xq/XpjsL8Ffdl0vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0cAdPcezdf9j0COqnZ701kLOBek/bL8eK6h8RutYAQMp12DcFH9VzjaDZVwg8L/E
-         tIfYNd5xupyrAOLSxwulFBtTOGvBEAS1qTr7ckXNhSxmTvsFGOusPQc0NjIyBBOJ5R
-         /k+evZm9ENQaGnodGjkimKAuXVrgsow8XK9yDGQY=
+        b=Qo+BKvv2v6nLPWisOUaoKg3NukZBU0nImtxcS6pffrl0jdBYstxjSXJJil3ZA+QnT
+         9AaS8KhZWpt8NcpHkbKvIgrNcCdxYJSnZsyuYZOmVVHuRIaLcI0HlSqbCaji55erca
+         /IpDI6PlJLJH2p4JJowMwulTuk0MzSUKsFy7gOdA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.3 44/87] powerpc/ptdump: fix walk_pagetables() address mismatch
-Date:   Tue, 24 Sep 2019 12:41:00 -0400
-Message-Id: <20190924164144.25591-44-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 45/87] powerpc/futex: Fix warning: 'oldval' may be used uninitialized in this function
+Date:   Tue, 24 Sep 2019 12:41:01 -0400
+Message-Id: <20190924164144.25591-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -61,53 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit e033829d2aaad85cb7cf46986c3be0bcc72f791e ]
+[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
 
-walk_pagetables() always walk the entire pgdir from address 0
-but considers PAGE_OFFSET or KERN_VIRT_START as the starting
-address of the walk, resulting in a possible mismatch in the
-displayed addresses.
+We see warnings such as:
+  kernel/futex.c: In function 'do_futex':
+  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+     return oldval == cmparg;
+                   ^
+  kernel/futex.c:1651:6: note: 'oldval' was declared here
+    int oldval, ret;
+        ^
 
-Ex: on PPC32, when KERN_VIRT_START was locally defined as
-PAGE_OFFSET, ptdump displayed 0x80000000
-instead of 0xc0000000 for the first kernel page,
-because 0xc0000000 + 0xc0000000 = 0x80000000
+This is because arch_futex_atomic_op_inuser() only sets *oval if ret
+is 0 and GCC doesn't see that it will only use it when ret is 0.
 
-Start the walk at st->start_address instead of starting at 0.
+Anyway, the non-zero ret path is an error path that won't suffer from
+setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
+it will have no impact.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: reword change log slightly]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/5aa2ac513295f594cce8ddb1c649f61947bd063d.1565786091.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ptdump/ptdump.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/futex.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-index 6a88a9f585d4f..5d6111a9ee0e7 100644
---- a/arch/powerpc/mm/ptdump/ptdump.c
-+++ b/arch/powerpc/mm/ptdump/ptdump.c
-@@ -299,17 +299,15 @@ static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index 3a6aa57b9d901..eea28ca679dbb 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -60,8 +60,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
  
- static void walk_pagetables(struct pg_state *st)
- {
--	pgd_t *pgd = pgd_offset_k(0UL);
- 	unsigned int i;
--	unsigned long addr;
--
--	addr = st->start_address;
-+	unsigned long addr = st->start_address & PGDIR_MASK;
-+	pgd_t *pgd = pgd_offset_k(addr);
+ 	pagefault_enable();
  
- 	/*
- 	 * Traverse the linux pagetable structure and dump pages that are in
- 	 * the hash pagetable.
- 	 */
--	for (i = 0; i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
-+	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
- 		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
- 			/* pgd exists */
- 			walk_pud(st, pgd, addr);
+-	if (!ret)
+-		*oval = oldval;
++	*oval = oldval;
+ 
+ 	prevent_write_to_user(uaddr, sizeof(*uaddr));
+ 	return ret;
 -- 
 2.20.1
 
