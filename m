@@ -2,137 +2,127 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C4BC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9FDC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D33207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdVTQLgk"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1E2207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 01:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407733AbfIXB2j (ORCPT
+        id S2408392AbfIXB36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 21:28:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34554 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391730AbfIXB2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 21:28:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so143806pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 18:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dAEzx7fT/0S8T6OwYYfD593mWT+cjAFFU5hLQ2lomU0=;
-        b=XdVTQLgkx65yGyZWW1UNLpT1ol9jqft5ELDACaQFZAMQZpDGySxY59Nwkl4n3vLvtA
-         b6xYv3DHnS7ihrCzDsxdpj4xhEmPZds7qJnssR/COxSPfrK2N/gT5jv6ZWHCn7rCJ2mD
-         JgaxEPEvIwWVhlUiwL0cWB4gwEGRt2T8cuFtziqUcOtCppi7vC6LXsfnNaDi/pNGFuqS
-         CO0x8lsMHzGNsaWM+k3mCShf7OGWgoBf1a2rMRGrDGyc5pj4N9SMovAYICmOUEsdOsiS
-         TDyDaXGSSkMIGft2lXhWF0y2ON1YS5AMyLykrx4pyDM+lgrikCGsgeLLu+SVFLHcSB7M
-         epNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dAEzx7fT/0S8T6OwYYfD593mWT+cjAFFU5hLQ2lomU0=;
-        b=l7tX4pHxLz/MmGwPUaSiSraDj5LqeHKUFf1l7e/Ab2eB7PW3XpebBYd2mmepYYGnsl
-         vKQ19v7lLzPBBkqFK0nuUg5IdnRoCsv+KSMz4TuSdi72PSGgDLr9MRbr5ooFdQCLvlhU
-         gHvIok9ybxCtPhPUz13ZM2V1k/DgaJTF0J9m7hE724Mr8wRhMMsScmvvhwHnmEnM1fO6
-         sSzKBOlgKGwAH38NBZTrUVOCHCFJcji/w1sYFjXv2v3CabD/oz6nFkXHgqmAM54+rOvB
-         3S1zF1sO7p2+A/oiBLaCkHM6EHi5SvEJSJwqdhkRi0AvGg3g8j1qXQKul/q+57FymRQs
-         M3GQ==
-X-Gm-Message-State: APjAAAUKPaLQ/QxS+02l+sHBE3b0KViv3fbOlHF1yxLkLsZmv0zrUxQW
-        2uKjBlfFmPG1miz+ApjriZ0=
-X-Google-Smtp-Source: APXvYqwhEWYZe65h6MvxMjQ45DCNMriaqT2Rx0Bc9L8bicYBJ0gNLFDXBbmJbGa+Xzo4GOFJ/4mZXw==
-X-Received: by 2002:a63:1f23:: with SMTP id f35mr462440pgf.298.1569288518651;
-        Mon, 23 Sep 2019 18:28:38 -0700 (PDT)
-Received: from localhost ([110.70.15.91])
-        by smtp.gmail.com with ESMTPSA id f188sm26664pfa.170.2019.09.23.18.28.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2019 18:28:37 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 10:28:34 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Will Deacon <will@kernel.org>, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Theodore Ts'o <tytso@mit.edu>,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: printk() + memory offline deadlock (WAS Re: page_alloc.shuffle=1
- + CONFIG_PROVE_LOCKING=y = arm64 hang)
-Message-ID: <20190924012834.GC3864@jagdpanzerIV>
-References: <1567717680.5576.104.camel@lca.pw>
- <1568128954.5576.129.camel@lca.pw>
- <20190911011008.GA4420@jagdpanzerIV>
- <1568289941.5576.140.camel@lca.pw>
- <20190916104239.124fc2e5@gandalf.local.home>
- <1568817579.5576.172.camel@lca.pw>
- <20190918155059.GA158834@tigerII.localdomain>
- <1568823006.5576.178.camel@lca.pw>
- <20190923102100.GA1171@jagdpanzerIV>
- <20190923125851.cykw55jpqwlerjrz@pathway.suse.cz>
+        Mon, 23 Sep 2019 21:29:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2708 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404600AbfIXB35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 21:29:57 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B5C2B8D913E60B3E6185;
+        Tue, 24 Sep 2019 09:29:54 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 09:29:51 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <f1362dbb-ad31-51a8-2b06-16c9d928b876@huawei.com>
+Date:   Tue, 24 Sep 2019 09:29:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923125851.cykw55jpqwlerjrz@pathway.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/23/19 14:58), Petr Mladek wrote:
+On 2019/9/24 4:34, Peter Zijlstra wrote:
+> On Mon, Sep 23, 2019 at 06:52:35PM +0200, Michal Hocko wrote:
+>> On Mon 23-09-19 17:48:52, Peter Zijlstra wrote:
 > 
-> If I understand it correctly then this is the re-appearing problem.
-> The only systematic solution with the current approach is to
-> take port->lock in printk_safe/printk_deferred context.
+>> To the NUMA_NO_NODE itself. Your earlier email noted:
+>> : > +
+>> : >  	if ((unsigned)node >= nr_node_ids) {
+>> : >  		printk(KERN_WARNING
+>> : >  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+>> : 
+>> : I still think this makes absolutely no sense what so ever.
+>>
+>> Did you mean the NUMA_NO_NODE handling or the specific node >= nr_node_ids
+>> check?
+> 
+> The NUMA_NO_NODE thing. It's is physical impossibility. And if the
+> device description doesn't give us a node, then the description is
+> incomplete and wrong and we should bloody well complain about it.
+> 
+>> Because as to NUMA_NO_NODE I believe this makes sense because this is
+>> the only way that a device is not bound to any numa node.
+> 
+> Which is a physical impossibility.
+> 
+>> I even the
+>> ACPI standard is considering this optional. Yunsheng Lin has referred to
+>> the specific part of the standard in one of the earlier discussions.
+>> Trying to guess the node affinity is worse than providing all CPUs IMHO.
+> 
+> I'm saying the ACPI standard is wrong. Explain to me how it is
+> physically possible to have a device without NUMA affinity in a NUMA
+> system?
+> 
+>  1) The fundamental interconnect is not uniform.
+>  2) The device needs to actually be somewhere.
+> 
 
-It probably is.
-We have a number of reverse paths. TTY invokes MM under port->lock,
-UART invokes TTY under port->lock, MM invokes UART under zone->lock,
-UART invokes sched under port->lock, shced invokes UART, UART invokes
-UART under port->lock (!), and so on.
+From what I can see, NUMA_NO_NODE may make sense in the below case:
 
-> But this is a massive change that almost nobody wants. Instead,
-> we want the changes that were discussed on Plumbers.
->
-> Now, the question is what to do with existing kernels. There were
-> several lockdep reports. And I am a bit lost. Did anyone seen
-> real deadlocks or just the lockdep reports?
+1) Theoretically, there would be a device that can access all the memory
+uniformly and can be accessed by all cpus uniformly even in a NUMA system.
+Suppose we have two nodes, and the device just sit in the middle of the
+interconnect between the two nodes.
 
-I think so. Qian Cai mentioned "a hang" in one of his reports
-(was it unseeded random()?). I'll send a formal patch maybe,
-since there were no objections.
+Even we define a third node solely for the device, we may need to look at
+the node distance to decide the device can be accessed uniformly.
 
-> To be clear. I would feel more comfortable when there are no
-> deadlocks. But I also do not want to invest too much time
-> into old kernels. All these problems were there for ages.
-> We could finally see them because lockdep was enabled in printk()
-> thanks to printk_safe.
+Or we can decide that the device can be accessed uniformly by setting
+it's node to NUMA_NO_NODE.
 
-True.
-Everyone was so much happier when printk() used to do
 
-       lockdep_off();
-       call_console_drivers();
-       lockdep_on();
+2) For many virtual deivces, such as tun or loopback netdevice, they
+are also accessed uniformly by all cpus.
 
-Now we can have lockdep and RCU checks enabled, yet somehow
-printk_safe is still "a terrible thing" :)
-
-	-ss
