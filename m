@@ -2,228 +2,268 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F217C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5992EC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FE421655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569337337;
-	bh=QMgJORPCEe45dbWla/cKE5rqnESJgYjO5D24uofcrxQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=dI2dzC+6Qa5UaPUeH9sU4/NNztLJ0ZKnVL5EAN+SxsTNEpbfdtQV5W8zVS6guV+oE
-	 Gs+VT6FoYe4zfXRHdOnptesSLEKf/XuNhNMdCwTUOyTklLkpGf4OA1/2MdXvHMPbcz
-	 BvyuatokPLNaOi6PdwyCNJPJcDB+9+LJCY9PJ8ZM=
+	by mail.kernel.org (Postfix) with ESMTP id 2343D21906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pexGuttK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409842AbfIXPCQ (ORCPT
+        id S2409851AbfIXPCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409761AbfIXPBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:01:24 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [170.225.9.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F41B214DA;
-        Tue, 24 Sep 2019 15:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569337283;
-        bh=QMgJORPCEe45dbWla/cKE5rqnESJgYjO5D24uofcrxQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cZbx/VG1ivhOQa3JjDAS56PdhUm8mCSh4IPFFvk/DLSEdObzqSzNy9Gub93N6pKHc
-         cAVeKBs7ITvTOSkgprLZy10wfl9QBV58YwCBfTDXRQwucptcTT5SqelNnkV0hSZiVl
-         HMHd2KWPO4DtKwtmuVA/eLFW/H5i1kuvu4loIVFQ=
-Date:   Tue, 24 Sep 2019 08:01:20 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2019.09.23a 61/77] htmldocs: kernel/rcu/tree.c:2706:
- warning: Function parameter or member 'krcp' not described in
- 'kfree_rcu_cpu_work'
-Message-ID: <20190924150120.GB2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <201909241021.mW1BN9Yl%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909241021.mW1BN9Yl%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 24 Sep 2019 11:02:34 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:32918 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728570AbfIXPCd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:02:33 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190924150231euoutp017aee1231e79fe0f5f27c10e240ee710c~HaAGjB31u2906729067euoutp01e
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:02:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190924150231euoutp017aee1231e79fe0f5f27c10e240ee710c~HaAGjB31u2906729067euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569337351;
+        bh=Kcx8u3C9GjgjM7Fhh6E8ZKxs1htYdyHkRFX2tVGkFGA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=pexGuttKpzBaNu3yU7ElPI3FocCJoJ6EL/xFpEIpaWT4fJXfIgV3MTpZBgQx+/uZ/
+         PZtKnPXT2T8difJeBvriKja1Qx+iWdJK/wpyHeTS8tWq9YDfEuP2HxQK0GPa7cGSIV
+         NU74pvvId0lMYymPXS8ZpLhNV3PyfhMaRXsP8RCM=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190924150230eucas1p2f09b36b872a7eab97a5b6ee644b3aeef~HaAF-IeBg1397913979eucas1p2F;
+        Tue, 24 Sep 2019 15:02:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A5.C9.04374.6003A8D5; Tue, 24
+        Sep 2019 16:02:30 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1~HaAFrJu3f0400504005eucas1p26;
+        Tue, 24 Sep 2019 15:02:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190924150230eusmtrp1c31cc381d4d44f763f65ed2995c1ff89~HaAFpk90w2674326743eusmtrp1M;
+        Tue, 24 Sep 2019 15:02:30 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-f7-5d8a3006c15c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id DA.6C.04166.6003A8D5; Tue, 24
+        Sep 2019 16:02:30 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190924150229eusmtip2b860a511b3cff6ca7f1f15a704247b76~HaAFE5KwK0655206552eusmtip2E;
+        Tue, 24 Sep 2019 15:02:29 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E) audio
+ complex with WM5110 codec to dt-schema
+Date:   Tue, 24 Sep 2019 17:01:46 +0200
+Message-Id: <20190924150146.15972-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduzneV02g65Yg81t+hZXLh5ispj68Amb
+        xfwj51gtzp/fwG7x7UoHk8XlXXPYLGac38dk8aB5HZvF2iN32S2WXr/IZNG69wi7xeE37awO
+        PB4bPjexeayZt4bRY+esu+wem1Z1snn0bVnF6PF5k1wAWxSXTUpqTmZZapG+XQJXxr3+j2wF
+        UzUrLrzYwtLA+Eq+i5GTQ0LARKKheRtjFyMXh5DACkaJpm3ToZwvjBKPOl6wQDifGSVud09n
+        7WLkAGu5cDQXIr6cUeL3pQsscB0zLp9mBpnLJmAo0fW2iw3EFhGokzh75gjYWGaBI0wSzfd/
+        M4EkhAVKJf5+ecEKYrMIqEpMfr6MEcTmFbCVmL7gOgvEgfISqzccYAZplhBoZpdYcBiiQULA
+        RaJxXw+ULSzx6vgWdghbRuL05B4WqAZGiYfn1rJDOD2MEpebZjBCVFlLHD5+EewhZgFNifW7
+        9CHCjhJvn1xlhPiTT+LGW0GQMDOQOWnbdGaIMK9ER5sQRLWaxKzj6+DWHrxwiRnC9pBYt/4B
+        2GlCArESp5bNYJ3AKDcLYdcCRsZVjOKppcW56anFxnmp5XrFibnFpXnpesn5uZsYgank9L/j
+        X3cw7vuTdIhRgINRiYfXgbUrVog1say4MvcQowQHs5II7ywZoBBvSmJlVWpRfnxRaU5q8SFG
+        aQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQbGKYc0/7WHJa2dO3fT/+n3JHWuBuu8Diye
+        0jo/9+S6xriI7H3NBWGRks79HhZX2b9NdLbk+VhvpRPIfipCUV5E+vLZniXa8ab5bYdVen/b
+        Tnn541WhygP+cxOnz5KW9X6pvnbpp/iun8ybZSpWhvn+OmIkJ3ChwsjE+dtll3/3511mCJez
+        eWyoxFKckWioxVxUnAgAEqBpuSEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsVy+t/xe7psBl2xBi/XiVpcuXiIyWLqwyds
+        FvOPnGO1OH9+A7vFtysdTBaXd81hs5hxfh+TxYPmdWwWa4/cZbdYev0ik0Xr3iPsFofftLM6
+        8Hhs+NzE5rFm3hpGj52z7rJ7bFrVyebRt2UVo8fnTXIBbFF6NkX5pSWpChn5xSW2StGGFkZ6
+        hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6Gff6P7IVTNWsuPBiC0sD4yv5LkYODgkB
+        E4kLR3O7GLk4hASWMkrM/dHO2sXICRSXkTg5rQHKFpb4c62LDaLoE6PEq8Oz2UESbAKGEl1v
+        IRIiAk2MEsc2z2QBcZgFTjFJ3Lg6hRGkSligWGJXw0pmEJtFQFVi8vNlYHFeAVuJ6Quus0Cs
+        kJdYveEA8wRGngWMDKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECQ3jbsZ+bdzBe2hh8iFGA
+        g1GJh9eBtStWiDWxrLgy9xCjBAezkgjvLBmgEG9KYmVValF+fFFpTmrxIUZToOUTmaVEk/OB
+        8ZVXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoGx5966qOhnby7N
+        O57pJrpAiuud52/PTI0/iTMK73WLn02TPhnqc6lquo/TovCZ/ilBfBN2H3WJm/RngZGn1b5D
+        DwNP3Knk7rkQV3zz5t3U47stVwR8mvB3yv6lT6Vaa0JDveZfvlkTmNrTu03U5PbBiU83Tdvz
+        O3rmmt39roc3TLKbeIo7m2/rfiWW4oxEQy3mouJEAAKxDPt3AgAA
+X-CMS-MailID: 20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1
+References: <CGME20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 10:24:24AM +0800, kbuild test robot wrote:
-> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.09.23a
-> head:   97de53b94582c208ee239178b208b8e8b9472585
-> commit: 3cc794ad18bfc6e46d58411b53f2784388d5bb85 [61/77] rcu: Add multiple in-flight batches of kfree_rcu() work
-> reproduce: make htmldocs
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    Warning: The Sphinx 'sphinx_rtd_theme' HTML theme was not found. Make sure you have the theme installed to produce pretty HTML output. Falling back to the default theme.
->    WARNING: dot(1) not found, for better output quality install graphviz from http://www.graphviz.org
->    WARNING: convert(1) not found, for SVG to PDF conversion install ImageMagick (https://www.imagemagick.org)
->    include/linux/spi/spi.h:190: warning: Function parameter or member 'driver_override' not described in 'spi_device'
->    include/linux/i2c.h:337: warning: Function parameter or member 'init_irq' not described in 'i2c_client'
->    include/linux/regulator/machine.h:196: warning: Function parameter or member 'max_uV_step' not described in 'regulation_constraints'
->    include/linux/regulator/driver.h:223: warning: Function parameter or member 'resume' not described in 'regulator_ops'
->    fs/direct-io.c:258: warning: Excess function parameter 'offset' description in 'dio_complete'
->    fs/libfs.c:496: warning: Excess function parameter 'available' description in 'simple_write_end'
->    fs/posix_acl.c:647: warning: Function parameter or member 'inode' not described in 'posix_acl_update_mode'
->    fs/posix_acl.c:647: warning: Function parameter or member 'mode_p' not described in 'posix_acl_update_mode'
->    fs/posix_acl.c:647: warning: Function parameter or member 'acl' not described in 'posix_acl_update_mode'
->    mm/util.c:1: warning: 'get_user_pages_fast' not found
->    mm/slab.c:4215: warning: Function parameter or member 'objp' not described in '__ksize'
->    drivers/usb/typec/bus.c:1: warning: 'typec_altmode_register_driver' not found
->    drivers/usb/typec/bus.c:1: warning: 'typec_altmode_unregister_driver' not found
->    drivers/usb/typec/class.c:1: warning: 'typec_altmode_unregister_notifier' not found
->    drivers/usb/typec/class.c:1: warning: 'typec_altmode_register_notifier' not found
->    include/linux/w1.h:272: warning: Function parameter or member 'of_match_table' not described in 'w1_family'
->    include/linux/input/sparse-keymap.h:43: warning: Function parameter or member 'sw' not described in 'key_entry'
->    include/linux/mod_devicetable.h:822: warning: Function parameter or member 'context' not described in 'wmi_device_id'
->    drivers/gpu/drm/mcde/mcde_drv.c:1: warning: 'ST-Ericsson MCDE DRM Driver' not found
->    lib/genalloc.c:1: warning: 'gen_pool_add_virt' not found
->    lib/genalloc.c:1: warning: 'gen_pool_alloc' not found
->    lib/genalloc.c:1: warning: 'gen_pool_free' not found
->    lib/genalloc.c:1: warning: 'gen_pool_alloc_algo' not found
->    include/linux/clk.h:381: warning: Function parameter or member 'num_clks' not described in 'devm_clk_bulk_get_optional'
-> >> kernel/rcu/tree.c:2706: warning: Function parameter or member 'krcp' not described in 'kfree_rcu_cpu_work'
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-Good catch, fix set up to squash into original.
+Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to newer dt-schema format.
 
-							Thanx, Paul
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ .../bindings/sound/samsung,tm2-audio.txt      | 42 ----------
+ .../bindings/sound/samsung,tm2-audio.yaml     | 83 +++++++++++++++++++
+ 2 files changed, 83 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
 
->    include/linux/rculist.h:374: warning: Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
->    include/linux/rculist.h:651: warning: Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:142: warning: Function parameter or member 'blockable' not described in 'amdgpu_mn_read_lock'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:347: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:348: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:494: warning: Function parameter or member 'start' not described in 'amdgpu_vm_pt_first_dfs'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'adev' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'vm' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'start' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'cursor' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'entry' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:823: warning: Function parameter or member 'level' not described in 'amdgpu_vm_bo_param'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'params' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'bo' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'level' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'pe' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'addr' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'count' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'incr' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'flags' not described in 'amdgpu_vm_update_flags'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:2822: warning: Function parameter or member 'pasid' not described in 'amdgpu_vm_make_compute'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:378: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:379: warning: Function parameter or member 'ih' not described in 'amdgpu_irq_dispatch'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:379: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
->    drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:1: warning: no structured comments found
->    drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:1: warning: no structured comments found
->    drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c:1: warning: 'pp_dpm_sclk pp_dpm_mclk pp_dpm_pcie' not found
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:131: warning: Incorrect use of kernel-doc format:          * @atomic_obj
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:237: warning: Incorrect use of kernel-doc format:          * gpu_info FW provided soc bounding box struct or 0 if not
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'atomic_obj' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'backlight_link' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'backlight_caps' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'freesync_module' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'fw_dmcu' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'dmcu_fw_version' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'soc_bounding_box' not described in 'amdgpu_display_manager'
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'register_hpd_handlers' not found
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'dm_crtc_high_irq' not found
->    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'dm_pflip_high_irq' not found
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_pin' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_unpin' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_res_obj' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_get_sg_table' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_import_sg_table' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vmap' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vunmap' not described in 'drm_driver'
->    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_mmap' not described in 'drm_driver'
->    include/drm/drm_modeset_helper_vtables.h:1053: warning: Function parameter or member 'prepare_writeback_job' not described in 'drm_connector_helper_funcs'
->    include/drm/drm_modeset_helper_vtables.h:1053: warning: Function parameter or member 'cleanup_writeback_job' not described in 'drm_connector_helper_funcs'
->    include/drm/drm_atomic_state_helper.h:1: warning: no structured comments found
->    include/linux/skbuff.h:893: warning: Function parameter or member 'dev_scratch' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'list' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'ip_defrag_offset' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'skb_mstamp_ns' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member '__cloned_offset' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'head_frag' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member '__pkt_type_offset' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'encapsulation' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'encap_hdr_csum' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_valid' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member '__pkt_vlan_present_offset' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'vlan_present' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_complete_sw' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_level' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'inner_protocol_type' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'remcsum_offload' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'sender_cpu' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'reserved_tailroom' not described in 'sk_buff'
->    include/linux/skbuff.h:893: warning: Function parameter or member 'inner_ipproto' not described in 'sk_buff'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_addrpair' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_portpair' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_ipv6only' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_net_refcnt' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_v6_daddr' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_v6_rcv_saddr' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_cookie' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_listener' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_tw_dr' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_rcv_wnd' not described in 'sock_common'
->    include/net/sock.h:233: warning: Function parameter or member 'skc_tw_rcv_nxt' not described in 'sock_common'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_rx_skb_cache' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_wq_raw' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'tcp_rtx_queue' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_tx_skb_cache' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_route_forced_caps' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_txtime_report_errors' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_validate_xmit_skb' not described in 'sock'
->    include/net/sock.h:515: warning: Function parameter or member 'sk_bpf_storage' not described in 'sock'
->    include/net/sock.h:2439: warning: Function parameter or member 'tcp_rx_skb_cache_key' not described in 'DECLARE_STATIC_KEY_FALSE'
->    include/net/sock.h:2439: warning: Excess function parameter 'sk' description in 'DECLARE_STATIC_KEY_FALSE'
->    include/net/sock.h:2439: warning: Excess function parameter 'skb' description in 'DECLARE_STATIC_KEY_FALSE'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'gso_partial_features' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'l3mdev_ops' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'xfrmdev_ops' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'tlsdev_ops' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'name_assign_type' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'ieee802154_ptr' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'mpls_ptr' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'xdp_prog' not described in 'net_device'
->    include/linux/netdevice.h:2040: warning: Function parameter or member 'gro_flush_timeout' not described in 'net_device'
-> 
-> vim +2706 kernel/rcu/tree.c
-> 
->   2694	
->   2695	/**
->   2696	 * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
->   2697	 * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
->   2698	 * @head_free: List of kfree_rcu() objects waiting for a grace period
->   2699	 * @kcrp: Pointer to @kfree_rcu_cpu structure
->   2700	 */
->   2701	
->   2702	struct kfree_rcu_cpu_work {
->   2703		struct rcu_work rcu_work;
->   2704		struct rcu_head *head_free;
->   2705		struct kfree_rcu_cpu *krcp;
-> > 2706	};
->   2707	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+deleted file mode 100644
+index f5ccc12ddc00..000000000000
+--- a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
+-
+-Required properties:
+-
+- - compatible		 : "samsung,tm2-audio"
+- - model		 : the user-visible name of this sound complex
+- - audio-codec		 : the first entry should be phandle of the wm5110 audio
+-			   codec node, as described in ../mfd/arizona.txt;
+-			   the second entry should be phandle of the HDMI
+-			   transmitter node
+- - i2s-controller	 : the list of phandle and argument tuples pointing to
+-			   I2S controllers, the first entry should be I2S0 and
+-			   the second one I2S1
+- - audio-amplifier	 : the phandle of the MAX98504 amplifier
+- - samsung,audio-routing : a list of the connections between audio components;
+-			   each entry is a pair of strings, the first being the
+-			   connection's sink, the second being the connection's
+-			   source; valid names for sources and sinks are the
+-			   WM5110's and MAX98504's pins and the jacks on the
+-			   board: HP, SPK, Main Mic, Sub Mic, Third Mic,
+-			   Headset Mic
+- - mic-bias-gpios	 : GPIO pin that enables the Main Mic bias regulator
+-
+-
+-Example:
+-
+-sound {
+-	compatible = "samsung,tm2-audio";
+-	audio-codec = <&wm5110>, <&hdmi>;
+-	i2s-controller = <&i2s0 0>, <&i2s1 0>;
+-	audio-amplifier = <&max98504>;
+-	mic-bias-gpios = <&gpr3 2 0>;
+-	model = "wm5110";
+-	samsung,audio-routing =
+-		"HP", "HPOUT1L",
+-		"HP", "HPOUT1R",
+-		"SPK", "SPKOUT",
+-		"SPKOUT", "HPOUT2L",
+-		"SPKOUT", "HPOUT2R",
+-		"Main Mic", "MICBIAS2",
+-		"IN1R", "Main Mic";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
+new file mode 100644
+index 000000000000..377f8cbe17b8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,tm2-audio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos SoC Exynos5433 TM2(E) audio complex with WM5110 codec
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    const: samsung,tm2-audio
++
++  model:
++    maxItems: 1
++
++  audio-codec:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle-array
++      - items:
++          - description: |
++              phandle of the wm5110 audio codec node,
++              as described in ../mfd/arizona.txt;
++          - description: phandle of the HDMI transmitter node.
++
++  i2s-controller:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle-array
++      - items:
++          - description: phandle of the I2S0.
++          - description: phandle of the I2S1.
++
++  audio-amplifier:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle of the MAX98504 amplifier.
++
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio components.
++      Each entry is a pair of strings, the first being the
++      connection's sink, the second being the connection's
++      source. Valid names for sources and sinks are
++      the WM5110's and MAX98504's pins and the jacks on the
++      board: HP, SPK, Main Mic, Sub Mic, Third Mic, Headset Mic.
++
++  mic-bias-gpios:
++    description: GPIO pin that enables the Main Mic bias regulator.
++    maxItems: 1
++
++required:
++  - compatible
++  - model
++  - audio-codec
++  - i2s-controller
++  - audio-amplifier
++  - samsung,audio-routing
++  - mic-bias-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    sound {
++        compatible = "samsung,tm2-audio";
++        model = "wm5110";
++        audio-codec = <&wm5110>, <&hdmi>;
++        i2s-controller = <&i2s0 0>, <&i2s1 0>;
++        audio-amplifier = <&max98504>;
++        mic-bias-gpios = <&gpr3>;
++        samsung,audio-routing =
++                "HP", "HPOUT1L",
++                "HP", "HPOUT1R",
++                "SPK", "SPKOUT",
++                "SPKOUT", "HPOUT2L",
++                "SPKOUT", "HPOUT2R",
++                "Main Mic", "MICBIAS2",
++                "IN1R", "Main Mic";
++    };
++
+-- 
+2.17.1
+
 
 
