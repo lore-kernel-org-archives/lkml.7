@@ -2,69 +2,95 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DECDC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5987C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFD6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AF7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408293AbfIXSFn (ORCPT
+        id S2409750AbfIXSFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:05:43 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:51058 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407040AbfIXSFn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:05:43 -0400
-Received: by mail-wm1-f52.google.com with SMTP id 5so1212651wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:05:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eoMKHj//ONDW1S1NMnFnwPq2ttmM7DvL+iTlG4Z3yag=;
-        b=DHAeqsImoyCAr+sWC2PH+Gv8DQ0PGlaMQ53T5jNcERt8uiY2HOD62ct/i9YguPpN3s
-         nJXAmSNA3z73ISJw10/cCg9szw5hm1qJgGwmlKPup2qepdAU6tWPnItrXNY6Xj/+W2Z0
-         tfwix16MUJQPUd1gLqyq3/mr5GA5Gp7LPqhMUNsLfvNQN6PYDYFnkDVsjcju1Z9vWmKS
-         oeBSe4udSSkaXtEgQCgLKGzaGYcthv//khdqHf+HmPRJpArdXazcDrcwSlmM0ZYnXKIH
-         FLhhjKfo+LZIAiCagBttstbm4FBxq8UPzcLfuttAEJeQJiIIiz+m2bk37BdBChUL49aG
-         v/3A==
-X-Gm-Message-State: APjAAAWLK139XAPK1STuM1TepMoUtBo7WUKYiEm5NlpN8+o6Gsf+Hsjw
-        Cve05rgl1575mgvatDw7cO37G8wW
-X-Google-Smtp-Source: APXvYqx2gIZsA+0WBXME1MOWCslOJYjqVk5Ti5jwdHHfsJvrML+LnKJ29/yWryQj42KGIUeSDEAb7w==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr1529049wmk.30.1569348341388;
-        Tue, 24 Sep 2019 11:05:41 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id b22sm953231wmj.36.2019.09.24.11.05.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 11:05:40 -0700 (PDT)
-Subject: Re: [PATCH v3] nvme: allow 64-bit results in passthru commands
-To:     Marta Rybczynska <mrybczyn@kalray.eu>, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <786558932.78398145.1569330892814.JavaMail.zimbra@kalray.eu>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <17936ba6-8f2c-370f-753b-fef8b531c810@grimberg.me>
-Date:   Tue, 24 Sep 2019 11:05:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 14:05:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36194 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407040AbfIXSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:05:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5E8AAC049E36;
+        Tue, 24 Sep 2019 18:05:53 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A15BE600CC;
+        Tue, 24 Sep 2019 18:05:47 +0000 (UTC)
+Message-ID: <b07c0ad99393cfa0968a926bd7302adef4c6a7e4.camel@redhat.com>
+Subject: Re: [PATCH RT 7/8] sched: migrate_enable: Use select_fallback_rq()
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Tue, 24 Sep 2019 13:05:47 -0500
+In-Reply-To: <20190917160030.i24gvyye2bpdykfy@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+         <20190727055638.20443-8-swood@redhat.com>
+         <20190917160030.i24gvyye2bpdykfy@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <786558932.78398145.1569330892814.JavaMail.zimbra@kalray.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 24 Sep 2019 18:05:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks fine to me,
+On Tue, 2019-09-17 at 18:00 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-07-27 00:56:37 [-0500], Scott Wood wrote:
+> > migrate_enable() currently open-codes a variant of select_fallback_rq().
+> > However, it does not have the "No more Mr. Nice Guy" fallback and thus
+> > it will pass an invalid CPU to the migration thread if cpus_mask only
+> > contains a CPU that is !active.
+> > 
+> > Signed-off-by: Scott Wood <swood@redhat.com>
+> > ---
+> > This scenario will be more likely after the next patch, since
+> > the migrate_disable_update check goes away.  However, it could happen
+> > anyway if cpus_mask was updated to a CPU other than the one we were
+> > pinned to, and that CPU subsequently became inactive.
+> 
+> I'm unclear about the problem / side effect this has (before and after
+> the change). It is possible (before and after that change) that a CPU is
+> selected which is invalid / goes offline after the "preempt_enable()"
+> statement and before stop_one_cpu() does its job, correct?
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+By "pass an invalid CPU" I don't mean offline; I mean >= nr_cpu_ids which is
+what cpumask_any_and() returns if the sets don't intersect (a CPU going
+offline is merely a way to end up in that situation).  At one point I
+observed that causing a crash.  I guess is_cpu_allowed() returned true by
+chance based on the contents of data beyond the end of the cpumask?  That
+doesn't seem likely based on what comes after p->cpus_mask (at that point
+migrate_disable should be zero), but maybe I had something else at that
+point in the struct while developing.  In any case, not something to be
+relied on. :-)
 
-Keith, Christoph?
+Going offline after selection shouldn't be a problem.  migration_cpu_stop()
+won't do anything if is_cpu_allowed() returns false, and we'll get migrated
+off the CPU by migrate_tasks().  Even if we get migrated after reading
+task_cpu(p) but before queuing the stop machine work, it'll either get
+flushed when the stopper thread parks, or rejected due to stopper->enabled
+being false.
+
+-Scott
+
+
