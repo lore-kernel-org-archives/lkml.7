@@ -2,275 +2,282 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750B6C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED8EC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2749620872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A7321783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="jqMEabtz";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="jqMEabtz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+YNMRdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441446AbfIXQWi (ORCPT
+        id S1731538AbfIXQWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:22:38 -0400
-Received: from mail-eopbgr40079.outbound.protection.outlook.com ([40.107.4.79]:5673
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439190AbfIXQWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:22:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wOXRJknPluHn02sDXkhj0zC/r48jxe5T1U4QR0BlsiM=;
- b=jqMEabtzsx5LLxqWbCHahBWjAiqgZfkS+BH1rCwXCbn4OcbFZMj3Ez2NSZnbyOGZhC6iB1XtFrcdGYdJUyMEWw90qcG/yXDEjy5iMGWDd9X06mNI4VXAL6O35UJxd8IVGJOjUhFA5tqSa/NjC2LFZwrDXOy1V17z0kY9T5In7u8=
-Received: from DB6PR0801CA0047.eurprd08.prod.outlook.com (2603:10a6:4:2b::15)
- by HE1PR08MB2892.eurprd08.prod.outlook.com (2603:10a6:7:30::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Tue, 24 Sep
- 2019 16:22:29 +0000
-Received: from DB5EUR03FT043.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::200) by DB6PR0801CA0047.outlook.office365.com
- (2603:10a6:4:2b::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2284.20 via Frontend
- Transport; Tue, 24 Sep 2019 16:22:29 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT043.mail.protection.outlook.com (10.152.20.236) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2284.20 via Frontend Transport; Tue, 24 Sep 2019 16:22:28 +0000
-Received: ("Tessian outbound 927f2cdd66cc:v33"); Tue, 24 Sep 2019 16:22:25 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 4b454cbef0f6f92a
-X-CR-MTA-TID: 64aa7808
-Received: from b305b4b39e61.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.0.51])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DAF65AD1-8B78-4CE5-96BC-85BD31B798EB.1;
-        Tue, 24 Sep 2019 16:22:20 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2051.outbound.protection.outlook.com [104.47.0.51])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b305b4b39e61.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Tue, 24 Sep 2019 16:22:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nSpibYBt8e+ZwFkFUPtzxlMv6T1g752EP+ck24Bi3BnfEpTU9PzZwqLTzGwI9hjU6g/V65616WKF6DFlzPhR4tLXOmA2fzI4TIVUW4aKe2WsLbz3q2y+bAUoNb28FvNzUuvtF1FVLuNeWJOzBTGLpCwzEGaNXVVT1Oi9eu0beZBpbsxoaCjWyMPv3AYXMBv1gWb4rcyduHHqOkrpFquldJUYm6A6kfCY2K/BMRnEMcggQ7waO0PVA66H9+vOusOcxbb2mGPOZ9QW0A1xBUdw14Vf2/3TB0cOD7BJW7+GMehJFdA7LtkGqfeQxFsrX2s2Q0RfHOnnszAD8nGha0DHYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wOXRJknPluHn02sDXkhj0zC/r48jxe5T1U4QR0BlsiM=;
- b=JUM212AIBc9XiZ5Ao18cE8zZJljKoFEy8/FQvCtYL3De1yRbHPPNEttux5fhDKd/nEk5h+tQVCjS4XvMmzwgHbRZeUMeRzgZ6OWwADRVE/RB5XZV9g4pr/7GeAnY1QiP5u+C/fx17zIyGZT5M+Txmed5L2R2yzdpEYL/SCUPhFH8AqzIKbG5I7Jb5DFGeJMhV06HxC6L5ByUug1cLipDH+0g8uIzzDCUcNm6ZCgR5Bea3fgPWEugEqHOP0zsPrB8sE4plBSX9VhBSnghCzb/1UH1EWggR3ns490n2ypBNWxT+6/6+TR6aDemRDye/UBExjbCo5gmBFFYLdMdk9uf9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wOXRJknPluHn02sDXkhj0zC/r48jxe5T1U4QR0BlsiM=;
- b=jqMEabtzsx5LLxqWbCHahBWjAiqgZfkS+BH1rCwXCbn4OcbFZMj3Ez2NSZnbyOGZhC6iB1XtFrcdGYdJUyMEWw90qcG/yXDEjy5iMGWDd9X06mNI4VXAL6O35UJxd8IVGJOjUhFA5tqSa/NjC2LFZwrDXOy1V17z0kY9T5In7u8=
-Received: from AM7PR08MB5352.eurprd08.prod.outlook.com (10.141.172.139) by
- AM7PR08MB5495.eurprd08.prod.outlook.com (10.141.175.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Tue, 24 Sep 2019 16:22:18 +0000
-Received: from AM7PR08MB5352.eurprd08.prod.outlook.com
- ([fe80::c81a:63b1:5826:cf74]) by AM7PR08MB5352.eurprd08.prod.outlook.com
- ([fe80::c81a:63b1:5826:cf74%2]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 16:22:18 +0000
-From:   Ayan Halder <Ayan.Halder@arm.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-CC:     John Stultz <john.stultz@linaro.org>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alistair Strachan <astrachan@google.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Pratik Patel <pratikp@codeaurora.org>, nd <nd@arm.com>
-Subject: Re: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
-Thread-Topic: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
-Thread-Index: AQHVZOOF+0BJBq1hEUK86gknnLECMKczS0sAgAfTZIA=
-Date:   Tue, 24 Sep 2019 16:22:18 +0000
-Message-ID: <20190924162217.GA12974@arm.com>
-References: <20190906184712.91980-1-john.stultz@linaro.org>
- <CAO_48GFHx4uK6cWwJ4oGdJ8HNZNZYDzdD=yR3VK0EXQ86ya9-g@mail.gmail.com>
-In-Reply-To: <CAO_48GFHx4uK6cWwJ4oGdJ8HNZNZYDzdD=yR3VK0EXQ86ya9-g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR0701CA0037.eurprd07.prod.outlook.com
- (2603:10a6:200:42::47) To AM7PR08MB5352.eurprd08.prod.outlook.com
- (2603:10a6:20b:106::11)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.140.106.54]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: fddec494-6d70-490e-04d2-08d7410b64b3
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM7PR08MB5495;
-X-MS-TrafficTypeDiagnostic: AM7PR08MB5495:|AM7PR08MB5495:|HE1PR08MB2892:
-X-MS-Exchange-PUrlCount: 3
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR08MB289205E1F7167C0719353A42E4840@HE1PR08MB2892.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:9508;OLM:9508;
-x-forefront-prvs: 0170DAF08C
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(199004)(189003)(102836004)(476003)(14444005)(256004)(316002)(71200400001)(6486002)(44832011)(305945005)(6916009)(2906002)(2616005)(486006)(11346002)(7416002)(6246003)(7736002)(4326008)(6116002)(1076003)(3846002)(71190400001)(66066001)(5660300002)(478600001)(446003)(81166006)(8676002)(64756008)(66446008)(81156014)(66476007)(6512007)(6306002)(52116002)(33656002)(25786009)(86362001)(36756003)(8936002)(66556008)(66946007)(6436002)(14454004)(966005)(26005)(99286004)(6506007)(76176011)(186003)(229853002)(386003)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR08MB5495;H:AM7PR08MB5352.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: DMpcsOQIcs9vL8eos0uyNwu8vpvWWbJ5XS5Gtgin0yB7ULfH+x5xFtBPxaO57vGCnthb4C69F3hcFY0OIEjb3sKvx+dje9GeL5W8/wMpoxSHKo5YjTUxiLleEVC2G2e0HOvFdozBtPdPWcBvzYM99QBX7bdXoxLzbFZQOkAFUxFXuwg9Bko+oLUKJZuezTsE7Z3sdosyS82/+qcwyHQpA+Y0xa+vPQhpcPSl4hV+3WcI1edBL6NGrxii94SPRPmyuMg36YidzCaotPP1DBzNYvtd4SlkbtsORsUmSNrhAs3BFIyksTi3WmXawOckdI40xp32bJvqUgp/2ZLyU3g3RfDRKLUaolJx3RGIAMidJ/XfN4f50+/HXVWUXs5Rudm7Iu01+U3ktZ6VZ1wiRdOUfYu+WtuhMPE1Typ1b0bf38Oq7S6an8VE6Wjo9NGQpMhuA2oASzXYahTsl6ynBipzMQ==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <973560B28D0AFC44A283B782CB3534B6@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 24 Sep 2019 12:22:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40320 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfIXQWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:22:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l3so2647186wru.7;
+        Tue, 24 Sep 2019 09:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H5K9dwGeehPsNkiitTIYE3/RrG3fUirzCIs9ZbU18EE=;
+        b=F+YNMRdITAs15Q0iaRGGNa/MDxVQBLbZq0oTRIfjUtLhaNq9LcqvH7g6olQxJGY+es
+         M+8Q2Pr5/6bZzaZkrvyaaQ3Ld8HJgWrjR8fDLHJ0ZMVTWvJiOLjjyuzLtJle299GSC9c
+         88a2f3d2Xd+cG52U3bU7Mp5rORbnYu/AjvmOXcREss3f+x39xPDhIoHIhb5LPg4O1qZM
+         KJa9OQ3IEdcdBIS2PXb99mG/Y4v/5l/oktSMcqw/DZA12ypt4N3hQa4AvNmGnRSnMHId
+         THBi48fvXE9/4UyCmrnzoYD4XbYJhFHAyTa/Ly8WlipBD0STD7yFwjKA0eUZ5l/MEPfh
+         J2uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H5K9dwGeehPsNkiitTIYE3/RrG3fUirzCIs9ZbU18EE=;
+        b=AYMOP/ZonQtuFW0Crd0ShIjvYBRr/RBLgFiAp779ntNuCnDyp8ly6eQ4RQaf1/RKM1
+         W9RLeEkzvifPB3bbjzcbmrosU+0yx3hdJ5bu7El6/EUhPDvN/t9ejrw9pfTFgnUTudlA
+         P5R6nWZpXh1D+u8oNI1q86Njig98zxvUdfGySoKGbM4FeO9uLO5UVjEFncJLYlI+eZqW
+         ApqxczfoeXwW6asWuSGGN4SED7hnfyq9dthI0WVh6ITBWSBS9qiswZDxZ1LZ7gZmhv3M
+         GVaO3SqvOgeWNrGfCzrZAFCHuTGaO0bm6aTttVUD38MU2EDVpFhcx0VDkVJUx9t12BKK
+         UYjg==
+X-Gm-Message-State: APjAAAV8bzSpn3OWaYCxdPCHb3LFEwEn6enno20hfpnNTFhE5O3XAD1d
+        dyp5n3gImhZqniq+bovL02c=
+X-Google-Smtp-Source: APXvYqzjwYNuqhoYIohg5Bhrh8eYI5GxG/gohNhcrXlvOtx9Ixns3gIoJ44/qg3/t/1k0+xnzqJw7w==
+X-Received: by 2002:adf:f287:: with SMTP id k7mr3368327wro.206.1569342169590;
+        Tue, 24 Sep 2019 09:22:49 -0700 (PDT)
+Received: from xws.fritz.box (pD9E5AB82.dip0.t-ipconnect.de. [217.229.171.130])
+        by smtp.gmail.com with ESMTPSA id z9sm3907871wrp.26.2019.09.24.09.22.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 09:22:48 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH v2] serdev: Add ACPI devices by ResourceSource field
+Date:   Tue, 24 Sep 2019 18:22:26 +0200
+Message-Id: <20190924162226.1493407-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5495
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT043.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(189003)(199004)(33656002)(81156014)(63350400001)(476003)(54906003)(478600001)(966005)(6306002)(26826003)(229853002)(6486002)(446003)(7736002)(1076003)(76130400001)(70586007)(316002)(305945005)(22756006)(50466002)(70206006)(8676002)(81166006)(86362001)(6246003)(14444005)(6512007)(5660300002)(8936002)(102836004)(6862004)(14454004)(336012)(6116002)(186003)(2906002)(356004)(436003)(486006)(11346002)(66066001)(2486003)(23676004)(47776003)(76176011)(99286004)(26005)(2616005)(25786009)(36756003)(126002)(6506007)(386003)(4326008)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR08MB2892;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 3c2acb74-25d2-4090-3237-08d7410b5e62
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:HE1PR08MB2892;
-NoDisclaimer: True
-X-Forefront-PRVS: 0170DAF08C
-X-Microsoft-Antispam-Message-Info: Z9+bQ0LEeCp5GxAVQ6XzELp7PzG5e0VQ290qFnwN+YokHCbaKU6QzvdBWhcm4T61KRW/spr1eA3sr82GjK4kp4FI7s+fZrDJqwpsHrzoPg4y79uDijPLeXEp4DHjMJM5wHc6sEMOKx+pvYjo3KkSQtl7gqbadyENfV8/K5KrHoF45ygCK7B36O10+y/lMLVBqKtdH58QdKgzi5jIESvPcqvkjV74pnBZM36rrkMZIx1u+AVi8bA7NDik48y4LHmjOp5dH2H072BowRB+0v8W5fsoztXn45j5fHNg5UIf+IMghqyZP30XPWdSIBWY/MPTW0vJ7+1YKv/Ea6+f68/yanIrfIrughFPTZnHWzEq+2mHRhPC26HHENKG91AT2v0FhlV8SADMg9hYqxOAORPNR4HcHv/+pUW6RPN/TVHINzWXPWyWRjGKYKYumnOxdE14V5MuK9vJsN80XjpxzxfCSw==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2019 16:22:28.5463
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fddec494-6d70-490e-04d2-08d7410b64b3
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2892
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCBTZXAgMTksIDIwMTkgYXQgMTA6MjE6NTJQTSArMDUzMCwgU3VtaXQgU2Vtd2FsIHdy
-b3RlOg0KPiBIZWxsbyBDaHJpc3RvcGgsIGV2ZXJ5b25lLA0KPiANCj4gT24gU2F0LCA3IFNlcCAy
-MDE5IGF0IDAwOjE3LCBKb2huIFN0dWx0eiA8am9obi5zdHVsdHpAbGluYXJvLm9yZz4gd3JvdGU6
-DQo+ID4NCj4gPiBIZXJlIGlzIHlldCBhbm90aGVyIHBhc3MgYXQgdGhlIGRtYS1idWYgaGVhcHMg
-cGF0Y2hzZXQgQW5kcmV3DQo+ID4gYW5kIEkgaGF2ZSBiZWVuIHdvcmtpbmcgb24gd2hpY2ggdHJp
-ZXMgdG8gZGVzdGFnZSBhIGZhaXIgY2h1bmsNCj4gPiBvZiBJT04gZnVuY3Rpb25hbGl0eS4NCj4g
-Pg0KPiA+IFRoZSBwYXRjaHNldCBpbXBsZW1lbnRzIHBlci1oZWFwIGRldmljZXMgd2hpY2ggY2Fu
-IGJlIG9wZW5lZA0KPiA+IGRpcmVjdGx5IGFuZCB0aGVuIGFuIGlvY3RsIGlzIHVzZWQgdG8gYWxs
-b2NhdGUgYSBkbWFidWYgZnJvbSB0aGUNCj4gPiBoZWFwLg0KPiA+DQo+ID4gVGhlIGludGVyZmFj
-ZSBpcyBzaW1pbGFyLCBidXQgbXVjaCBzaW1wbGVyIHRoZW4gSU9Ocywgb25seQ0KPiA+IHByb3Zp
-ZGluZyBhbiBBTExPQyBpb2N0bC4NCj4gPg0KPiA+IEFsc28sIEkndmUgcHJvdmlkZWQgcmVsYXRp
-dmVseSBzaW1wbGUgc3lzdGVtIGFuZCBjbWEgaGVhcHMuDQo+ID4NCj4gPiBJJ3ZlIGJvb3RlZCBh
-bmQgdGVzdGVkIHRoZXNlIHBhdGNoZXMgd2l0aCBBT1NQIG9uIHRoZSBIaUtleTk2MA0KPiA+IHVz
-aW5nIHRoZSBrZXJuZWwgdHJlZSBoZXJlOg0KPiA+ICAgaHR0cHM6Ly9naXQubGluYXJvLm9yZy9w
-ZW9wbGUvam9obi5zdHVsdHovYW5kcm9pZC1kZXYuZ2l0L2xvZy8/aD1kZXYvZG1hLWJ1Zi1oZWFw
-DQo+ID4NCj4gPiBBbmQgdGhlIHVzZXJzcGFjZSBjaGFuZ2VzIGhlcmU6DQo+ID4gICBodHRwczov
-L2FuZHJvaWQtcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20vYy9kZXZpY2UvbGluYXJvL2hpa2V5Lysv
-OTA5NDM2DQo+ID4NCj4gPiBDb21wYXJlZCB0byBJT04sIHRoaXMgcGF0Y2hzZXQgaXMgbWlzc2lu
-ZyB0aGUgc3lzdGVtLWNvbnRpZywNCj4gPiBjYXJ2ZW91dCBhbmQgY2h1bmsgaGVhcHMsIGFzIEkg
-ZG9uJ3QgaGF2ZSBhIGRldmljZSB0aGF0IHVzZXMNCj4gPiB0aG9zZSwgc28gSSdtIHVuYWJsZSB0
-byBkbyBtdWNoIHVzZWZ1bCB2YWxpZGF0aW9uIHRoZXJlLg0KPiA+IEFkZGl0aW9uYWxseSB3ZSBo
-YXZlIG5vIHVwc3RyZWFtIHVzZXJzIG9mIGNodW5rIG9yIGNhcnZlb3V0LA0KPiA+IGFuZCB0aGUg
-c3lzdGVtLWNvbnRpZyBoYXMgYmVlbiBkZXByZWNhdGVkIGluIHRoZSBjb21tb24vYW5kb2lkLSoN
-Cj4gPiBrZXJuZWxzLCBzbyB0aGlzIHNob3VsZCBiZSBvay4NCj4gPg0KPiA+IEkndmUgYWxzbyBy
-ZW1vdmVkIHRoZSBzdGF0cyBhY2NvdW50aW5nLCBzaW5jZSBhbnkgc3VjaCBhY2NvdW50aW5nDQo+
-ID4gc2hvdWxkIGJlIGltcGxlbWVudGVkIGJ5IGRtYS1idWYgY29yZSBvciB0aGUgaGVhcHMgdGhl
-bXNlbHZlcy4NCj4gPg0KPiA+IE1vc3Qgb2YgdGhlIGNoYW5nZXMgaW4gdGhpcyByZXZpc2lvbiBh
-cmUgYWRkZHJlc3NpbmcgdGhlIG1vcmUNCj4gPiBjb25jcmV0ZSBmZWVkYmFjayBmcm9tIENocmlz
-dG9waCAobWFueSB0aGFua3MhKS4gVGhvdWdoIEknbSBub3QNCj4gPiBzdXJlIGlmIHNvbWUgb2Yg
-dGhlIGxlc3Mgc3BlY2lmaWMgZmVlZGJhY2sgd2FzIGNvbXBsZXRlbHkgcmVzb2x2ZWQNCj4gPiBp
-biBkaXNjdXNzaW9uIGxhc3QgdGltZSBhcm91bmQuIFBsZWFzZSBsZXQgbWUga25vdyENCj4gDQo+
-IEl0IGxvb2tzIGxpa2UgbW9zdCBvZiB0aGUgZmVlZGJhY2sgaGFzIGJlZW4gdGFrZW4gY2FyZSBv
-Zi4gSWYgdGhlcmUncw0KPiBubyBtb3JlIG9iamVjdGlvbiB0byB0aGlzIHNlcmllcywgSSdkIGxp
-a2UgdG8gbWVyZ2UgaXQgaW4gc29vbi4NCj4gDQo+IElmIHRoZXJlIGFyZSBhbnkgbW9yZSByZXZp
-ZXcgY29tbWVudHMsIG1heSBJIHJlcXVlc3QgeW91IHRvIHBsZWFzZSBwcm92aWRlIHRoZW0/DQoN
-CkkgdGVzdGVkIHRoZXNlIHBhdGNoZXMgdXNpbmcgb3VyIGludGVybmFsIHRlc3Qgc3VpdGUgd2l0
-aCBBcm0sa29tZWRhDQpkcml2ZXIgYW5kIHRoZSBmb2xsb3dpbmcgbm9kZSBpbiBkdHMNCg0KICAg
-ICAgICByZXNlcnZlZC1tZW1vcnkgew0KICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0g
-PDB4Mj47DQogICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MHgyPjsNCiAgICAgICAgICAg
-ICAgICByYW5nZXM7DQoNCiAgICAgICAgICAgICAgICBmcmFtZWJ1ZmZlckA2MDAwMDAwMCB7DQog
-ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInNoYXJlZC1kbWEtcG9vbCI7DQog
-ICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxjbWEtZGVmYXVsdDsNCiAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwweDAgMHg2MDAwMDAwMCAweDAgMHg4MDAwMDAwPjsNCiAgICAgICAg
-ICAgICAgICB9Ow0KICAgICAgICB9DQoNClRoZSB0ZXN0cyB3ZW50IGZpbmUuIE91ciB0ZXN0cyBh
-bGxvY2F0ZXMgZnJhbWVidWZmZXJzIG9mIGRpZmZlcmVudA0Kc2l6ZXMsIHBvc3RzIHRoZW0gb24g
-c2NyZWVuIGFuZCB0aGUgZHJpdmVyIHdyaXRlcyBiYWNrIHRvIG9uZSBvZiB0aGUNCmZyYW1lYnVm
-ZmVycy4gSSBoYXZlbm90IHRlc3RlZCBmb3IgYW55IHBlcmZvcm1hbmNlLCBsYXRlbmN5IG9yDQpj
-YWNoZSBtYW5hZ2VtZW50IHJlbGF0ZWQgc3R1ZmYuIFNvLCBpdCB0aGF0IGxvb2tzIGFwcHJvcHJp
-YXRlLCBmZWVsDQpmcmVlIHRvIGFkZDotDQpUZXN0ZWQtYnk6LSBBeWFuIEt1bWFyIEhhbGRlciA8
-YXlhbi5oYWxkZXJAYXJtLmNvbT4NCg0KQXJlIHlvdSBwbGFubmluZyB0byB3cml0ZSBzb21lIGln
-dCB0ZXN0cyBmb3IgaXQgPw0KPiANCj4gPg0KPiA+IE5ldyBpbiB2ODoNCj4gPiAqIE1ha2Ugc3Ry
-dWN0IGRtYV9oZWFwX29wcyBjb25zdHMgKFN1Z2dlc3RlZCBieSBDaHJpc3RvcGgpDQo+ID4gKiBB
-ZGQgZmx1c2hfa2VybmVsX3ZtYXBfcmFuZ2UvaW52YWxpZGF0ZV9rZXJuZWxfdm1hcF9yYW5nZSBj
-YWxscw0KPiA+ICAgKHN1Z2dlc3RlZCBieSBDaHJpc3RvcGgpDQo+ID4gKiBDb25kZW5zZSBkbWFf
-aGVhcF9idWZmZXIgYW5kIGhlYXBfaGVscGVyX2J1ZmZlciAoc3VnZ2VzdGVkIGJ5DQo+ID4gICBD
-aHJpc3RvcGgpDQo+ID4gKiBHZXQgcmlkIG9mIG5lZWRsZXNzIHN0cnVjdCBzeXN0ZW1faGVhcCAo
-c3VnZ2VzdGVkIGJ5IENocmlzdG9waCkNCj4gPiAqIEZpeCBpbmRlbnRhdGlvbiBieSB1c2luZyBz
-aG9ydGVyIGFyZ3VtZW50IG5hbWVzIChzdWdnZXN0ZWQgYnkNCj4gPiAgIENocmlzdG9waCkNCj4g
-PiAqIFJlbW92ZSB1bnVzZWQgcHJpdmF0ZV9mbGFncyB2YWx1ZQ0KPiA+ICogQWRkIGZvcmdvdHRl
-biBpbmNsdWRlIGZpbGUgdG8gZml4IGJ1aWxkIGlzc3VlIG9uIHg4Ng0KPiA+ICogQ2hlY2twYXRj
-aCB3aGl0ZXNwYWNlIGZpeHVwcw0KPiA+DQo+ID4gVGhvdWdodHMgYW5kIGZlZWRiYWNrIHdvdWxk
-IGJlIGdyZWF0bHkgYXBwcmVjaWF0ZWQhDQo+ID4NCj4gPiB0aGFua3MNCj4gPiAtam9obg0KPiBC
-ZXN0LA0KPiBTdW1pdC4NCj4gPg0KPiA+IENjOiBMYXVyYSBBYmJvdHQgPGxhYmJvdHRAcmVkaGF0
-LmNvbT4NCj4gPiBDYzogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFy
-by5vcmc+DQo+ID4gQ2M6IFN1bWl0IFNlbXdhbCA8c3VtaXQuc2Vtd2FsQGxpbmFyby5vcmc+DQo+
-ID4gQ2M6IExpYW0gTWFyayA8bG1hcmtAY29kZWF1cm9yYS5vcmc+DQo+ID4gQ2M6IFByYXRpayBQ
-YXRlbCA8cHJhdGlrcEBjb2RlYXVyb3JhLm9yZz4NCj4gPiBDYzogQnJpYW4gU3RhcmtleSA8QnJp
-YW4uU3RhcmtleUBhcm0uY29tPg0KPiA+IENjOiBWaW5jZW50IERvbm5lZm9ydCA8VmluY2VudC5E
-b25uZWZvcnRAYXJtLmNvbT4NCj4gPiBDYzogU3VkaXB0byBQYXVsIDxTdWRpcHRvLlBhdWxAYXJt
-LmNvbT4NCj4gPiBDYzogQW5kcmV3IEYuIERhdmlzIDxhZmRAdGkuY29tPg0KPiA+IENjOiBDaHJp
-c3RvcGggSGVsbHdpZyA8aGNoQGluZnJhZGVhZC5vcmc+DQo+ID4gQ2M6IENoZW5ibyBGZW5nIDxm
-ZW5nY0Bnb29nbGUuY29tPg0KPiA+IENjOiBBbGlzdGFpciBTdHJhY2hhbiA8YXN0cmFjaGFuQGdv
-b2dsZS5jb20+DQo+ID4gQ2M6IEhyaWR5YSBWYWxzYXJhanUgPGhyaWR5YUBnb29nbGUuY29tPg0K
-PiA+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+ID4NCj4gPg0KPiA+IEFu
-ZHJldyBGLiBEYXZpcyAoMSk6DQo+ID4gICBkbWEtYnVmOiBBZGQgZG1hLWJ1ZiBoZWFwcyBmcmFt
-ZXdvcmsNCj4gPg0KPiA+IEpvaG4gU3R1bHR6ICg0KToNCj4gPiAgIGRtYS1idWY6IGhlYXBzOiBB
-ZGQgaGVhcCBoZWxwZXJzDQo+ID4gICBkbWEtYnVmOiBoZWFwczogQWRkIHN5c3RlbSBoZWFwIHRv
-IGRtYWJ1ZiBoZWFwcw0KPiA+ICAgZG1hLWJ1ZjogaGVhcHM6IEFkZCBDTUEgaGVhcCB0byBkbWFi
-dWYgaGVhcHMNCj4gPiAgIGtzZWxmdGVzdHM6IEFkZCBkbWEtaGVhcCB0ZXN0DQo+ID4NCj4gPiAg
-TUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE4ICsrDQo+
-ID4gIGRyaXZlcnMvZG1hLWJ1Zi9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSAr
-DQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MiArDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9kbWEtaGVhcC5jICAgICAgICAgICAgICAgICAgICB8
-IDI1MCArKysrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9LY29uZmln
-ICAgICAgICAgICAgICAgICB8ICAxNCArDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICB8ICAgNCArDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9j
-bWFfaGVhcC5jICAgICAgICAgICAgICB8IDE2NCArKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL2Rt
-YS1idWYvaGVhcHMvaGVhcC1oZWxwZXJzLmMgICAgICAgICAgfCAyNjkgKysrKysrKysrKysrKysr
-KysrDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9oZWFwLWhlbHBlcnMuaCAgICAgICAgICB8
-ICA1NSArKysrDQo+ID4gIGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9zeXN0ZW1faGVhcC5jICAgICAg
-ICAgICB8IDEyMiArKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L2RtYS1oZWFwLmggICAgICAg
-ICAgICAgICAgICAgICAgfCAgNTkgKysrKw0KPiA+ICBpbmNsdWRlL3VhcGkvbGludXgvZG1hLWhl
-YXAuaCAgICAgICAgICAgICAgICAgfCAgNTUgKysrKw0KPiA+ICB0b29scy90ZXN0aW5nL3NlbGZ0
-ZXN0cy9kbWFidWYtaGVhcHMvTWFrZWZpbGUgfCAgIDkgKw0KPiA+ICAuLi4vc2VsZnRlc3RzL2Rt
-YWJ1Zi1oZWFwcy9kbWFidWYtaGVhcC5jICAgICAgfCAyMzAgKysrKysrKysrKysrKysrDQo+ID4g
-IDE0IGZpbGVzIGNoYW5nZWQsIDEyNjIgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9kbWEtYnVmL2RtYS1oZWFwLmMNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9LY29uZmlnDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2RtYS1idWYvaGVhcHMvTWFrZWZpbGUNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZG1hLWJ1Zi9oZWFwcy9jbWFfaGVhcC5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2RtYS1idWYvaGVhcHMvaGVhcC1oZWxwZXJzLmMNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9oZWFwLWhlbHBlcnMuaA0KPiA+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9kbWEtYnVmL2hlYXBzL3N5c3RlbV9oZWFwLmMNCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvZG1hLWhlYXAuaA0KPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgaW5jbHVkZS91YXBpL2xpbnV4L2RtYS1oZWFwLmgNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2RtYWJ1Zi1oZWFwcy9NYWtlZmlsZQ0KPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvZG1hYnVmLWhlYXBzL2Rt
-YWJ1Zi1oZWFwLmMNCj4gPg0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCj4gDQo+IA0KPiAtLSAN
-Cj4gVGhhbmtzIGFuZCByZWdhcmRzLA0KPiANCj4gU3VtaXQgU2Vtd2FsDQo+IExpbmFybyBDb25z
-dW1lciBHcm91cCAtIEtlcm5lbCBUZWFtIExlYWQNCj4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3Vy
-Y2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fDQo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QNCj4gZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA0K
+When registering a serdev controller, ACPI needs to be checked for
+devices attached to it. Currently, all immediate children of the ACPI
+node of the controller are assumed to be UART client devices for this
+controller. Furthermore, these devices are not searched elsewhere.
+
+This is incorrect: Similar to SPI and I2C devices, the UART client
+device definition (via UARTSerialBusV2) can reside anywhere in the ACPI
+namespace as resource definition inside the _CRS method and points to
+the controller via its ResourceSource field. This field may either
+contain a fully qualified or relative path, indicating the controller
+device. To address this, we need to walk over the whole ACPI namespace,
+looking at each resource definition, and match the client device to the
+controller via this field.
+
+This patch is based on the existing acpi serial bus implementations in
+drivers/i2c/i2c-core-acpi.c and drivers/spi/spi.c, specifically commit
+4c3c59544f33e97cf8557f27e05a9904ead16363 ("spi/acpi: enumerate all SPI
+slaves in the namespace").
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+Changes compared to v1:
+- Patch now reflects the behavior of the existing ACPI serial bus
+  implementations (drivers/i2c/i2c-core-acpi.c and drivers/spi/spi.c),
+  with a maximum of one serdev client device per ACPI device node
+  allocated.
+
+- Ignores and continues on errors from AML code execution and resource
+  parsing.
+
+Notes:
+  The resource lookup is kept generic (similarly to the implementations
+  it is based on), meaning that it should be fairly simple to extend
+  acpi_serdev_parse_resource and acpi_serdev_check_resources to get and
+  return more information about the serdev client device (e.g. initial
+  baud rate) once this is required.
+
+  If multiple device definitions inside a single _CRS block ever become
+  a concern, the lookup function can be instructed as to which
+  UARTSerialBusV2 resource should be considered by spefifying its index
+  in acpi_serdev_lookup.index. This is again based on the I2C
+  implementation. Currently the last resource definition is chosen (i.e.
+  index = -1) to reflect the behavior of the other ACPI serial bus
+  implementations.
+---
+ drivers/tty/serdev/core.c | 111 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 99 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index a0ac16ee6575..226adeec2aed 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -552,16 +552,97 @@ static int of_serdev_register_devices(struct serdev_controller *ctrl)
+ }
+ 
+ #ifdef CONFIG_ACPI
++
++#define SERDEV_ACPI_MAX_SCAN_DEPTH 32
++
++struct acpi_serdev_lookup {
++	acpi_handle device_handle;
++	acpi_handle controller_handle;
++	int n;
++	int index;
++};
++
++static int acpi_serdev_parse_resource(struct acpi_resource *ares, void *data)
++{
++	struct acpi_serdev_lookup *lookup = data;
++	struct acpi_resource_uart_serialbus *sb;
++	acpi_status status;
++
++	if (ares->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
++		return 1;
++
++	if (ares->data.common_serial_bus.type != ACPI_RESOURCE_SERIAL_TYPE_UART)
++		return 1;
++
++	if (lookup->index != -1 && lookup->n++ != lookup->index)
++		return 1;
++
++	sb = &ares->data.uart_serial_bus;
++
++	status = acpi_get_handle(lookup->device_handle,
++				 sb->resource_source.string_ptr,
++				 &lookup->controller_handle);
++	if (ACPI_FAILURE(status))
++		return 1;
++
++	/*
++	 * NOTE: Ideally, we would also want to retreive other properties here,
++	 * once setting them before opening the device is supported by serdev.
++	 */
++
++	return 1;
++}
++
++static int acpi_serdev_do_lookup(struct acpi_device *adev,
++                                 struct acpi_serdev_lookup *lookup)
++{
++	struct list_head resource_list;
++	int ret;
++
++	lookup->device_handle = acpi_device_handle(adev);
++	lookup->controller_handle = NULL;
++	lookup->n = 0;
++
++	INIT_LIST_HEAD(&resource_list);
++	ret = acpi_dev_get_resources(adev, &resource_list,
++				     acpi_serdev_parse_resource, lookup);
++	acpi_dev_free_resource_list(&resource_list);
++
++	if (ret < 0)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int acpi_serdev_check_resources(struct serdev_controller *ctrl,
++				       struct acpi_device *adev)
++{
++	struct acpi_serdev_lookup lookup;
++	int ret;
++
++	if (acpi_bus_get_status(adev) || !adev->status.present)
++		return -EINVAL;
++
++	/* Look for UARTSerialBusV2 resource */
++	lookup.index = -1;	// we only care for the last device
++
++	ret = acpi_serdev_do_lookup(adev, &lookup);
++	if (ret)
++		return ret;
++
++	/* Make sure controller and ResourceSource handle match */
++	if (ACPI_HANDLE(ctrl->dev.parent) != lookup.controller_handle)
++		return -ENODEV;
++
++	return 0;
++}
++
+ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
+-					    struct acpi_device *adev)
++					       struct acpi_device *adev)
+ {
+-	struct serdev_device *serdev = NULL;
++	struct serdev_device *serdev;
+ 	int err;
+ 
+-	if (acpi_bus_get_status(adev) || !adev->status.present ||
+-	    acpi_device_enumerated(adev))
+-		return AE_OK;
+-
+ 	serdev = serdev_device_alloc(ctrl);
+ 	if (!serdev) {
+ 		dev_err(&ctrl->dev, "failed to allocate serdev device for %s\n",
+@@ -583,7 +664,7 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
+ }
+ 
+ static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
+-				       void *data, void **return_value)
++					  void *data, void **return_value)
+ {
+ 	struct serdev_controller *ctrl = data;
+ 	struct acpi_device *adev;
+@@ -591,22 +672,28 @@ static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
+ 	if (acpi_bus_get_device(handle, &adev))
+ 		return AE_OK;
+ 
++	if (acpi_device_enumerated(adev))
++		return AE_OK;
++
++	if (acpi_serdev_check_resources(ctrl, adev))
++		return AE_OK;
++
+ 	return acpi_serdev_register_device(ctrl, adev);
+ }
+ 
++
+ static int acpi_serdev_register_devices(struct serdev_controller *ctrl)
+ {
+ 	acpi_status status;
+-	acpi_handle handle;
+ 
+-	handle = ACPI_HANDLE(ctrl->dev.parent);
+-	if (!handle)
++	if (!has_acpi_companion(ctrl->dev.parent))
+ 		return -ENODEV;
+ 
+-	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
++	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
++				     SERDEV_ACPI_MAX_SCAN_DEPTH,
+ 				     acpi_serdev_add_device, NULL, ctrl, NULL);
+ 	if (ACPI_FAILURE(status))
+-		dev_dbg(&ctrl->dev, "failed to enumerate serdev slaves\n");
++		dev_warn(&ctrl->dev, "failed to enumerate serdev slaves\n");
+ 
+ 	if (!ctrl->serdev)
+ 		return -ENODEV;
+-- 
+2.23.0
+
