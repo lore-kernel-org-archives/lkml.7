@@ -2,54 +2,57 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39484C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6831C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18682054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8469A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344001;
-	bh=iPEH/I3u7cWV6fjDgTXUXyANlZ47x/PQT5QxbCG2sac=;
+	s=default; t=1569344004;
+	bh=9SHFMyTZ1b8A1lNB7zidcHr+FW0PPNHHLbMg322wdgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZlMXN2JC80qeVaHHAz7D/BUD64LD/EmYFKJSBStaTtOadLiM5NRdftgieje0c4bhM
-	 1LK1tEkhkfG4WyMuDnLN2DjsQHrVrtK3TagVFMDWP7tuuaPpTwCNG6tsGLuGykK/bi
-	 BBFAjeJYpvbgiXVrIt8B+5YWEpS3T1VoZ/RLb8bc=
+	b=R8VjQIi7ZiVI63h1iPwd56CiPRLDuW/129DqGS+MTtdiUM4CMbkD29BAnCWMEPpra
+	 wtxR0KLKbSSOqif2h7GxhVxJchypobS84CSjjCEHLnieUoYy4EMxKK2b1+iv9hIcTv
+	 +PExAiwLb97mBuUIjmj2n7o84ABO6Mv6krSnPdBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633378AbfIXQxT (ORCPT
+        id S2441742AbfIXQwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441745AbfIXQwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Sep 2019 12:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2410902AbfIXQvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1CB92054F;
-        Tue, 24 Sep 2019 16:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C53121D6C;
+        Tue, 24 Sep 2019 16:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343963;
-        bh=iPEH/I3u7cWV6fjDgTXUXyANlZ47x/PQT5QxbCG2sac=;
+        s=default; t=1569343883;
+        bh=9SHFMyTZ1b8A1lNB7zidcHr+FW0PPNHHLbMg322wdgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8NatXUsqdsFpiPWg1mHkn8Kdz08Uzt1VzKnkZqY2TKVlFPcL7ErkrWywM7+R5mdS
-         2W2NQxHkZL4PS2lC+ylytlq8FHLSEkKY3DsuUwXq7v6QLwh6jMZRNeyZRXhOZleq7s
-         aPdPmS5pedgwmdJ07F4hkuOnIP9Fmzzod++Wb4U0=
+        b=n3v7pfrD5a48NmC4st/5laIo+dPH7ktktjQaP51l0N34yufjut64u25qV/icSAs8a
+         1IJLIrDfMhRw8j+OrHfbAzWu3LgPq22BxzWVZn+k67G9M2L8+07g+DpTd6hdJDTf3N
+         WIABtuBCqWPketzi+VsUkoV3I5o+04caSfRIA2Go=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 12/14] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Tue, 24 Sep 2019 12:52:10 -0400
-Message-Id: <20190924165214.28857-12-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 25/28] arm64: fix unreachable code issue with cmpxchg
+Date:   Tue, 24 Sep 2019 12:50:28 -0400
+Message-Id: <20190924165031.28292-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
-References: <20190924165214.28857-1-sashal@kernel.org>
+In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
+References: <20190924165031.28292-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit 920fdab7b3ce98c14c840261e364f490f3679a62 ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
+when CONFIG_OPTIMIZE_INLINING is set.
+Clang then fails a compile-time assertion, because it cannot tell at
+compile time what the size of the argument is:
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
+mm/memcontrol.o: In function `__cmpxchg_mb':
+memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
+memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
 
-Restore the CFAR to the saved value before running the late handler.
+Mark all of the cmpxchg() style functions as __always_inline to
+ensure that the compiler can see the result.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/648
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Tested-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/include/asm/cmpxchg.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index a44f1755dc4bf..536718ed033fc 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1465,6 +1465,10 @@ machine_check_handle_early:
- 	RFI_TO_USER_OR_KERNEL
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	b	machine_check_pSeries
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index 0f2e1ab5e1666..9b2e2e2e728ae 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -73,7 +73,7 @@ __XCHG_CASE( ,  ,  mb_8, dmb ish, nop,  , a, l, "memory")
+ #undef __XCHG_CASE
  
+ #define __XCHG_GEN(sfx)							\
+-static inline unsigned long __xchg##sfx(unsigned long x,		\
++static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
+ 					volatile void *ptr,		\
+ 					int size)			\
+ {									\
+@@ -115,7 +115,7 @@ __XCHG_GEN(_mb)
+ #define xchg(...)		__xchg_wrapper( _mb, __VA_ARGS__)
+ 
+ #define __CMPXCHG_GEN(sfx)						\
+-static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
++static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
+ 					   unsigned long old,		\
+ 					   unsigned long new,		\
+ 					   int size)			\
+@@ -248,7 +248,7 @@ __CMPWAIT_CASE( ,  , 8);
+ #undef __CMPWAIT_CASE
+ 
+ #define __CMPWAIT_GEN(sfx)						\
+-static inline void __cmpwait##sfx(volatile void *ptr,			\
++static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
+ 				  unsigned long val,			\
+ 				  int size)				\
+ {									\
 -- 
 2.20.1
 
