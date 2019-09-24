@@ -2,131 +2,103 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44310C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9717C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20381214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8289521655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C6+uN6EF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHJ1UGr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfIXS70 (ORCPT
+        id S2441809AbfIXTA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:59:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33693 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfIXS7Z (ORCPT
+        Tue, 24 Sep 2019 15:00:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38670 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfIXTA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:59:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so1918256pfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:59:23 -0700 (PDT)
+        Tue, 24 Sep 2019 15:00:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so7117125iom.5;
+        Tue, 24 Sep 2019 12:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=S+NemDcyACE9qaE3AzZLyHri3U+LN0BbGdBBWP83xAQ=;
-        b=C6+uN6EFptObBbReMx4otiZx5Z/xanbuyya/+Ka+EGaS1zvrzaICMGr1kf+Ke7gRpV
-         PfQEj9G8xcA/t+Lqa7K71ZZ2bZOFxa7t6+gjOcc7MLayuBgYzbf/NUPAdFUEPH6PGn7n
-         zpMaKwedE7HVNxymY+ZW7OR99yVBPJAXmjiR4xd4zHCObJuFL6e1foJNWo39kraazHHo
-         fBoSH0k/r1oAbb3XqOfsq/2CUhpHAs47LcxEahsSFrCYlWrm6ICUE8YNl9ZJfU/IDm1Q
-         v2N5MmSucHAsNvjrf9ivzpewivzKVtxO9zL+AbUZdMfpQUqTr1zU4YbYltuFYNLCh4R9
-         pYsA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/poXcNaPImsCkHOsb+IHz5eVbMSJsczlFsct2m7oOgc=;
+        b=sHJ1UGr+A5LvATOEjqybLlMDMbqFel8di7dayKOPx29Eq4zK27NF6UK61rwXBgsVS8
+         ExvK/uGFmCIem6mJf6kDaCQHrK9znWnzSrGVx7ZFlR8FaTy5PNI7OkBRqMErhI7G6ylc
+         lRzUNSWihhvzFiExeDyjpZpO0NiW9VSiLSvJoDTyeuTlrifxOkTqM8jr1JQ188OE8+cT
+         DrzKZy08l9YqSJke2WvzO4iUxr+6ObioHkazKnkgqjMV08uGMSsOAfAc+sOROOHnK8Ze
+         13vCc6G82L4dBo9XVWvaV1WMJrL0FLVmor3AFyXIB9OkMqcwcebvN6Wx1Y/he54s8kQC
+         DC+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=S+NemDcyACE9qaE3AzZLyHri3U+LN0BbGdBBWP83xAQ=;
-        b=RA6wOF9mR08NJxIFyU4bIIJzrskpivn3eNr/iscNgiwuYurNIq4KnDReAPxVoh11/O
-         i+BPoaxzA8utXyUcc8w+j7ph5has7pjEZmP8DbnrzLSQ/KwePQ2yBNVtwENdnLD2ZB5e
-         RlmbTFKLzrP+Wh8Fj5tqLezueOoz1E4oxvkTh3I9MiZE3Jx9VSDWD0Fwa36EQQ7PUfou
-         5oas1fMyNJTmzqtUgcBYsaJ8K2AoqFeXxVeCkUKQSxz9FmYBIhu8sTrQUTFXE8iXhHej
-         TbXplWj8RXHnRQRfBPk9kWQ0YlLziLNYU7Ax+n5tVhROYVirL+uRb4TsLcDee+pyvhOd
-         6PiQ==
-X-Gm-Message-State: APjAAAVsW6hNSLNzApQvt+hX8dvwmny3eGvBioV4foktBffsoIhECVTE
-        iHTJw4pDecMMlXQcFGwOWY+dig==
-X-Google-Smtp-Source: APXvYqwBoEwDBTyuhiKLpoZslSVm3448hn+4VMKYnLGOo9+/IWR6JjsrRaebH1qxvZxp8hANK6Y9FQ==
-X-Received: by 2002:aa7:8e55:: with SMTP id d21mr4895272pfr.241.1569351563237;
-        Tue, 24 Sep 2019 11:59:23 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 69sm3370025pfb.145.2019.09.24.11.59.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Sep 2019 11:59:22 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        lorenzo.pieralisi@arm.com, kishon@ti.com, bhelgaas@google.com,
-        andrew.murray@arm.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yue.wang@Amlogic.com, maz@kernel.org, repk@triplefau.lt,
-        nick@khadas.com, gouwa@khadas.com
-Subject: Re: [PATCH v2 0/6] arm64: dts: meson-g12: add support for PCIe
-In-Reply-To: <20190916125022.10754-1-narmstrong@baylibre.com>
-References: <20190916125022.10754-1-narmstrong@baylibre.com>
-Date:   Tue, 24 Sep 2019 11:59:21 -0700
-Message-ID: <7h4l117c6u.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/poXcNaPImsCkHOsb+IHz5eVbMSJsczlFsct2m7oOgc=;
+        b=nb4XFH41V025S11tGnuMmfPLHltLG67ZL0Th6oXR2JWrvCyzIah+ozud5CVK+jWfFX
+         yzpFgMqsuOa50WBeutI07ZFFDgTP6q5zCEFuJu9dW2+DBb8rAUbR2Pt5hg0J4ae+dYY1
+         moykb9gKw9bv2kSjFQKl2ZrOKmmRZKpCUjqO9B/49GQLJZ5LXRADakoDl4K3/06NYC0G
+         YwoWwMiYfCIWHVvhyYrYLOSKaCUvsbbhCpXysl2iILaJMxHSjjXsRav4VeGIR1otYg/M
+         7trS9AqWN0UxZbEspsBHjGm4bctWorSSaMsNRLdF/TeG3ky5BM4suww4o2xHuRK1tTqf
+         KMgw==
+X-Gm-Message-State: APjAAAV6oL8vCn2XN1UPTpOBYcsqBocVZlUQCRzv79bf5FtN1acKwxvT
+        oR9V+x28lFiahLNY6SiBUsK1hp5PKSw4LYubFyg=
+X-Google-Smtp-Source: APXvYqy/VoYXHn8FHc4GUb/SVvX9H/ShxuZ2vA5n7J/xs1YmNhW/qWGzu14sSS7Rn1ed3AM95fvhp3hDB5tF927bIYs=
+X-Received: by 2002:a05:6638:3a5:: with SMTP id z5mr307586jap.95.1569351654867;
+ Tue, 24 Sep 2019 12:00:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190923134449.22326-1-aford173@gmail.com> <20190923134449.22326-2-aford173@gmail.com>
+ <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 24 Sep 2019 14:00:43 -0500
+Message-ID: <CAHCN7xJy4=gdSz5Thhy_be-NNFhf4FaJ=iv8=F3sXbPwaQu1xA@mail.gmail.com>
+Subject: Re: [PATCH V2 2/3] dt-bindings: Add Logic PD Type 28 display panel
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Tue, Sep 24, 2019 at 1:56 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Sep 23, 2019 at 8:45 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > This patch adds documentation of device tree bindings for the WVGA panel
+> > Logic PD Type 28 display.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > V2:  Use YAML instead of TXT for binding
+>
+> Fails to build with 'make dt_binding_check':
+>
+> https://patchwork.ozlabs.org/patch/1166057/
+>
+> Looks like a tab character used perhaps.
 
-> This patchset :
-> - updates the Amlogic PCI bindings for G12A
-> - reworks the Amlogic PCIe driver to make use of the
-> G12a USB3+PCIe Combo PHY instead of directly writing in
-> the PHY register
-> - adds the necessary operations to the G12a USB3+PCIe Combo PHY driver
-> - adds the PCIe Node for G12A, G12B and SM1 SoCs
-> - adds the commented support for the S922X, A311D and S905D3 based
-> VIM3 boards.
->
-> The VIM3 schematic can be found at [1].
->
-> This patchset is dependent on Remi's "Fix reset assertion via gpio descriptor"
-> patch at [2].
->
-> This patchset has been tested in a A311D VIM3 and S905D3 VIM3L using a
-> 128Go TS128GMTE110S NVMe PCIe module.
->
-> For indication, here is a bonnie++ run as ext4 formatted on the VIM3:
->      ------Sequential Output------ --Sequential Input- --Random-
->      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
-> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP /sec %CP
->   4G 93865  99 312837  96 194487  23 102808  97 415501 21 +++++ +++
->
-> and the S905D3 VIM3L version:
->      ------Sequential Output------ --Sequential Input- --Random-
->      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
-> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
->   4G 52144  95 71766  21 47302  10 57078  98 415469  44 +++++ +++
->
-> Changes since v1 at [3]:
->  - Collected Andrew's and Rob's Reviewed-by tags
->  - Added missing calls to phy_init/phy_exit
->  - Fixes has_shared_phy handling for MIPI clock
->  - Add comment in the DT concerning firmware setting the right properties
->  - Added SM1 Power Domain to PCIe node
->
-> [1] https://docs.khadas.com/vim3/HardwareDocs.html
-> [2] https://patchwork.kernel.org/patch/11125261/
-> [3] https://patchwork.kernel.org/cover/11136927/
->
-> Neil Armstrong (6):
->   dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
->   PCI: amlogic: Fix probed clock names
->   PCI: amlogic: meson: Add support for G12A
->   phy: meson-g12a-usb3-pcie: Add support for PCIe mode
->   arm64: dts: meson-g12a: Add PCIe node
->   arm64: dts: khadas-vim3: add commented support for PCIe
+I am not familiar with yaml.  I thought I copied an existing file but
+apparently it didn't work.  Is there a recommended editor that know
+this markup language?  Better yet, is there a script I can run to
+convert a text file to the yaml?
 
-Queued the "arm64: dts" patches for v5.5,
-
-Kevin
+adam
+>
+> Rob
