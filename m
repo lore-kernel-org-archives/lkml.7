@@ -2,162 +2,219 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065A0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906FEC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB43214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ph0fHye0"
+	by mail.kernel.org (Postfix) with ESMTP id 63936214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440711AbfIXKLx (ORCPT
+        id S2504467AbfIXKMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 06:11:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36205 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438579AbfIXKLw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 06:11:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y22so1062548pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 03:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zFj+W21UBEqh8XHsvLd6EQrEC8J1XYOJHhKVopUNcRg=;
-        b=ph0fHye07aJm1FGweBetkYVsbQUiB0tpJyiAO2rPMjnyVDrKN1V9JuylbOJJh+Uiq6
-         ERZAssw97/WpZXs4cdaPKHzf9oVPvx3lZq9+zwjKc9fJXtHvMIGO8mSZevacuz3CEI2G
-         HwDAGHD8AuJy+yE+YT1cct+oAg9qWOu/i6fEKHRlrf5MhZJk1tfKFd9IZyEgNwcKgRJU
-         3F1cLIR46AKWefArQYOgqOPc5P0qBhH4PCWZaUYYcaueDp4Fc7HX7ICkYnbENrEcABH1
-         z0isubH0xJDKGfjUGmhAz2d4Gcy+wBw+rYQwtEui9QEIvHcn30BzJP4QU/hr7uH5zv++
-         380A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zFj+W21UBEqh8XHsvLd6EQrEC8J1XYOJHhKVopUNcRg=;
-        b=crajQPqdq7ivuSh1QY+ajT+JCypgRPJUY1vmWTvCBG7H3ojaXqXf/PcYuGQhLwisMB
-         rhVa/V2D6X1gaUsFc2eDItTEIYno43XZgb06YF4TPqCNDPoTP/Ii5KPPO65ufgWBfTjm
-         sx9HyD7rxRfHOmMeSF0GTvU71hgOLOMuo1TIcuUagnPnicQKwDY4AjI36arIlq2qcsNR
-         nBi8xH6Gp6XOWoldGq0wHziWd4mTao0ijf1z4iyl0H17ku9LMj0c3UDzgRZrQM1bLdfR
-         e5/Qu54Mw5GrTU8ZutrzxQt2sHSAesgL87o/AGBT305ka/226UMMuVFEh+hCVRAho9vk
-         xu1Q==
-X-Gm-Message-State: APjAAAWluToPGgpzUAOdlK9nOki4XOG9Nj5nQph/efHICtfboq6h6oPW
-        Hc6vgygJKaYZJBVpp4AhSz9G2g6wSDDi0zL/
-X-Google-Smtp-Source: APXvYqx1RXW1RWcdH95KHMQFZU/aJNhyZZqCImx1y43LoC1hEiEikDXF2Coary3axGa9YA/Hsx+mcg==
-X-Received: by 2002:a63:2a87:: with SMTP id q129mr2374326pgq.101.1569319911155;
-        Tue, 24 Sep 2019 03:11:51 -0700 (PDT)
-Received: from ?IPv6:2600:380:8419:743e:6023:99b1:fa9f:a39c? ([2600:380:8419:743e:6023:99b1:fa9f:a39c])
-        by smtp.gmail.com with ESMTPSA id n29sm4277137pgm.4.2019.09.24.03.11.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 03:11:50 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1569139018.git.asml.silence@gmail.com>
- <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
- <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <0fec66fb-4534-59f8-cd88-d8d2297779aa@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d931c8ff-1736-e4f8-8937-51cccfbd827f@kernel.dk>
-Date:   Tue, 24 Sep 2019 12:11:43 +0200
+        Tue, 24 Sep 2019 06:12:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54188 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438540AbfIXKMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 06:12:02 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1163330860BD;
+        Tue, 24 Sep 2019 10:12:01 +0000 (UTC)
+Received: from [10.72.12.44] (ovpn-12-44.pek2.redhat.com [10.72.12.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B7AF219C58;
+        Tue, 24 Sep 2019 10:11:39 +0000 (UTC)
+Subject: Re: [PATCH 1/6] mdev: class id support
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
+References: <20190923130331.29324-1-jasowang@redhat.com>
+ <20190923130331.29324-2-jasowang@redhat.com>
+ <20190923100529.54568ad8@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e565c496-7ce8-5889-57c7-7356458c50d5@redhat.com>
+Date:   Tue, 24 Sep 2019 18:11:37 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <0fec66fb-4534-59f8-cd88-d8d2297779aa@gmail.com>
+In-Reply-To: <20190923100529.54568ad8@x1.home>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 24 Sep 2019 10:12:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 3:33 AM, Pavel Begunkov wrote:
-> 
-> 
-> On 24/09/2019 11:36, Jens Axboe wrote:
->> On 9/24/19 2:27 AM, Jens Axboe wrote:
->>> On 9/24/19 2:02 AM, Jens Axboe wrote:
->>>> On 9/24/19 1:06 AM, Pavel Begunkov wrote:
->>>>> On 24/09/2019 02:00, Jens Axboe wrote:
->>>>>>> I think we can do the same thing, just wrapping the waitqueue in a
->>>>>>> structure with a count in it, on the stack. Got some flight time
->>>>>>> coming up later today, let me try and cook up a patch.
->>>>>>
->>>>>> Totally untested, and sent out 5 min before departure... But something
->>>>>> like this.
->>>>> Hmm, reminds me my first version. Basically that's the same thing but
->>>>> with macroses inlined. I wanted to make it reusable and self-contained,
->>>>> though.
->>>>>
->>>>> If you don't think it could be useful in other places, sure, we could do
->>>>> something like that. Is that so?
->>>>
->>>> I totally agree it could be useful in other places. Maybe formalized and
->>>> used with wake_up_nr() instead of adding a new primitive? Haven't looked
->>>> into that, I may be talking nonsense.
->>>>
->>>> In any case, I did get a chance to test it and it works for me. Here's
->>>> the "finished" version, slightly cleaned up and with a comment added
->>>> for good measure.
->>>
->>> Notes:
->>>
->>> This version gets the ordering right, you need exclusive waits to get
->>> fifo ordering on the waitqueue.
->>>
->>> Both versions (yours and mine) suffer from the problem of potentially
->>> waking too many. I don't think this is a real issue, as generally we
->>> don't do threaded access to the io_urings. But if you had the following
->>> tasks wait on the cqring:
->>>
->>> [min_events = 32], [min_events = 8], [min_events = 8]
->>>
->>> and we reach the io_cqring_events() == threshold, we'll wake all three.
->>> I don't see a good solution to this, so I suspect we just live with
->>> until proven an issue. Both versions are much better than what we have
->>> now.
+
+On 2019/9/24 上午12:05, Alex Williamson wrote:
+> On Mon, 23 Sep 2019 21:03:26 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> Mdev bus only supports vfio driver right now, so it doesn't implement
+>> match method. But in the future, we may add drivers other than vfio,
+>> one example is virtio-mdev[1] driver. This means we need to add device
+>> class id support in bus match method to pair the mdev device and mdev
+>> driver correctly.
 >>
->> Forgot an issue around signal handling, version below adds the
->> right check for that too.
-> 
-> It seems to be a good reason to not keep reimplementing
-> "prepare_to_wait*() + wait loop" every time, but keep it in sched :)
+>> So this patch adds id_table to mdev_driver and class_id for mdev
+>> parent with the match method for mdev bus.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>  Documentation/driver-api/vfio-mediated-device.rst |  7 +++++--
+>>  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  2 +-
+>>  drivers/s390/cio/vfio_ccw_ops.c                   |  2 +-
+>>  drivers/s390/crypto/vfio_ap_ops.c                 |  3 ++-
+>>  drivers/vfio/mdev/mdev_core.c                     | 14 ++++++++++++--
+>>  drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
+>>  drivers/vfio/mdev/mdev_private.h                  |  1 +
+>>  drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
+>>  include/linux/mdev.h                              |  7 ++++++-
+>>  include/linux/mod_devicetable.h                   |  8 ++++++++
+>>  samples/vfio-mdev/mbochs.c                        |  2 +-
+>>  samples/vfio-mdev/mdpy.c                          |  2 +-
+>>  samples/vfio-mdev/mtty.c                          |  2 +-
+>>  13 files changed, 59 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+>> index 25eb7d5b834b..0e052072e1d8 100644
+>> --- a/Documentation/driver-api/vfio-mediated-device.rst
+>> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+>> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
+>>        * @probe: called when new device created
+>>        * @remove: called when device removed
+>>        * @driver: device driver structure
+>> +      * @id_table: the ids serviced by this driver.
+>>        */
+>>       struct mdev_driver {
+>>  	     const char *name;
+>>  	     int  (*probe)  (struct device *dev);
+>>  	     void (*remove) (struct device *dev);
+>>  	     struct device_driver    driver;
+>> +	     const struct mdev_class_id *id_table;
+>>       };
+>>  
+>>  A mediated bus driver for mdev should use this structure in the function calls
+>> @@ -116,7 +118,7 @@ to register and unregister itself with the core driver:
+>>  * Register::
+>>  
+>>      extern int  mdev_register_driver(struct mdev_driver *drv,
+>> -				   struct module *owner);
+>> +                                     struct module *owner);
+>>  
+>>  * Unregister::
+>>  
+>> @@ -163,7 +165,8 @@ A driver should use the mdev_parent_ops structure in the function call to
+>>  register itself with the mdev core driver::
+>>  
+>>  	extern int  mdev_register_device(struct device *dev,
+>> -	                                 const struct mdev_parent_ops *ops);
+>> +	                                 const struct mdev_parent_ops *ops,
+>> +	                                 u8 class_id);
+>>  
+>>  However, the mdev_parent_ops structure is not required in the function call
+>>  that a driver should use to unregister itself with the mdev core driver::
+>> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+>> index 23aa3e50cbf8..19d51a35f019 100644
+>> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+>> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+>> @@ -1625,7 +1625,7 @@ static int kvmgt_host_init(struct device *dev, void *gvt, const void *ops)
+>>  		return -EFAULT;
+>>  	intel_vgpu_ops.supported_type_groups = kvm_vgpu_type_groups;
+>>  
+>> -	return mdev_register_device(dev, &intel_vgpu_ops);
+>> +	return mdev_register_vfio_device(dev, &intel_vgpu_ops);
+>>  }
+>>  
+>>  static void kvmgt_host_exit(struct device *dev)
+>> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
+>> index f0d71ab77c50..246ff0f80944 100644
+>> --- a/drivers/s390/cio/vfio_ccw_ops.c
+>> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+>> @@ -588,7 +588,7 @@ static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
+>>  
+>>  int vfio_ccw_mdev_reg(struct subchannel *sch)
+>>  {
+>> -	return mdev_register_device(&sch->dev, &vfio_ccw_mdev_ops);
+>> +	return mdev_register_vfio_device(&sch->dev, &vfio_ccw_mdev_ops);
+>>  }
+>>  
+>>  void vfio_ccw_mdev_unreg(struct subchannel *sch)
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 5c0f53c6dde7..7487fc39d2c5 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -1295,7 +1295,8 @@ int vfio_ap_mdev_register(void)
+>>  {
+>>  	atomic_set(&matrix_dev->available_instances, MAX_ZDEV_ENTRIES_EXT);
+>>  
+>> -	return mdev_register_device(&matrix_dev->device, &vfio_ap_matrix_ops);
+>> +	return mdev_register_vfio_device(&matrix_dev->device,
+>> +					 &vfio_ap_matrix_ops);
+>>  }
+>>  
+>>  void vfio_ap_mdev_unregister(void)
+>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>> index b558d4cfd082..a02c256a3514 100644
+>> --- a/drivers/vfio/mdev/mdev_core.c
+>> +++ b/drivers/vfio/mdev/mdev_core.c
+>> @@ -135,11 +135,14 @@ static int mdev_device_remove_cb(struct device *dev, void *data)
+>>   * mdev_register_device : Register a device
+>>   * @dev: device structure representing parent device.
+>>   * @ops: Parent device operation structure to be registered.
+>> + * @id: device id.
+>>   *
+>>   * Add device to list of registered parent devices.
+>>   * Returns a negative value on error, otherwise 0.
+>>   */
+>> -int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>> +int mdev_register_device(struct device *dev,
+>> +			 const struct mdev_parent_ops *ops,
+>> +			 u8 class_id)
+>>  {
+>>  	int ret;
+>>  	struct mdev_parent *parent;
+>> @@ -175,6 +178,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>  
+>>  	parent->dev = dev;
+>>  	parent->ops = ops;
+>> +	parent->class_id = class_id;
+>>  
+> I don't think we want to tie the class_id to the parent.  mdev parent
+> devices can create various types of devices, some might be virtio, some
+> might be vfio.  I think the cover letter even suggests that's a
+> direction these virtio devices might be headed.  It seems the class
+> should be on the resulting device itself.  That also suggests that at
+> the parent we cannot have a single device_ops, the ops used will depend
+> on the type of device created.  Perhaps that means we need vfio_ops
+> alongside virtio_ops, rather than a common device_ops.  Thanks,
+>
+> Alex
+>
 
-I think if we do the ->private cleanup that Peter mentioned, then
-there's not much left in terms of consolidation. Not convinced the case
-is interesting enough to warrant a special helper. If others show up,
-it's easy enough to consolidate the use cases and unify them.
+Yes, will do it in V2.
 
-If you look at wake_up_nr(), I would have thought that would be more
-widespread. But it really isn't.
-
->> Curious what your test case was for this?
-> You mean a performance test case? It's briefly described in a comment
-> for the second patch. That's just rewritten io_uring-bench, with
-> 1. a thread generating 1 request per call in a loop
-> 2. and the second thread waiting for ~128 events.
-> Both are pinned to the same core.
-
-Gotcha, thanks.
-
--- 
-Jens Axboe
+Thanks
 
