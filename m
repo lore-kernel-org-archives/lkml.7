@@ -2,104 +2,85 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0F1C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF02DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A012A21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965E22146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504384AbfIXJob (ORCPT
+        id S2504399AbfIXJog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:44:31 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58972 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfIXJo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:44:28 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 80D2A2002C6;
-        Tue, 24 Sep 2019 11:44:26 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F15A2000DE;
-        Tue, 24 Sep 2019 11:44:22 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D7BF3402ED;
-        Tue, 24 Sep 2019 17:44:16 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     thierry.reding@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] pwm: pwm-mxs: Use 'dev' instead of dereferencing it repeatedly
-Date:   Tue, 24 Sep 2019 17:42:49 +0800
-Message-Id: <1569318169-12327-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
-References: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 24 Sep 2019 05:44:36 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43186 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504385AbfIXJoe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:44:34 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so1171577ljj.10;
+        Tue, 24 Sep 2019 02:44:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qWmkYOt5baX4aQhfwtcn7sK3MbxZygEY/vjhPk+RANo=;
+        b=my1sFslfglrChUW8BP+LY2FgUGJhFzu0gGbqOwcTkkY6bJDYPtGbsHOeMTVKW7u44F
+         cvYXEKBuIMP2Affg1ToBji7xOJRIo9xt4FlEQixq1vdIr0b5T4duosOtAbBbskr5lMGI
+         F/1KSsutkiax9EvNAilMPJIHFpKmOSeqprgzO9YCxerBSLFiQrTlUdVntfqR8z6mP4d1
+         WVb5yUSkMU2c4hv1iIkDUegV82HLWv1IZT/7df2jGvgudT4ntxkEBpHP65t4WCHU0prV
+         xAH/28g1LB2p4wDuPXdZ/7/41iP62Pa4dKRaGitvykJeYqxOHPhyLVbiqyll4EBuRXxL
+         Kmew==
+X-Gm-Message-State: APjAAAV8uECy2WFsFpgV3ejhURktHCw/tDCxKNK+o82e9Q+WQFNnJWeV
+        71NKpUcJlJ/hF/B0v4SKw25XOskPBkA=
+X-Google-Smtp-Source: APXvYqy7yqmHPXCMavncOwv48hYUCpyjzwtT4Hi6SFKa1Kz7OZBX5JuIRCa9xsfDJta7eL/dwSNAXg==
+X-Received: by 2002:a2e:a41b:: with SMTP id p27mr1374496ljn.104.1569318271776;
+        Tue, 24 Sep 2019 02:44:31 -0700 (PDT)
+Received: from [10.10.124.58] (99-48-196-88.sta.estpak.ee. [88.196.48.99])
+        by smtp.gmail.com with ESMTPSA id v1sm332317lfe.34.2019.09.24.02.44.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 02:44:31 -0700 (PDT)
+Subject: Re: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        linux-scsi@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-19-efremov@linux.com> <yq1wody4eml.fsf@oracle.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <2c240ad0-80b1-3c2e-72a9-a3139f2eae14@linux.com>
+Date:   Tue, 24 Sep 2019 12:44:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <yq1wody4eml.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helper variable dev = &pdev->dev to simply the code.
+Hi,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/pwm/pwm-mxs.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+On 24.09.2019 05:22, Martin K. Petersen wrote:
+> 
+> Denis,
+> 
+>> Replace the magic constant (6) with define PCI_STD_NUM_BARS
+>> representing the number of PCI BARs.
+> 
+> Applied to 5.4/scsi-fixes. Thanks!
+> 
 
-diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-index b14376b..6255ffc 100644
---- a/drivers/pwm/pwm-mxs.c
-+++ b/drivers/pwm/pwm-mxs.c
-@@ -124,11 +124,12 @@ static const struct pwm_ops mxs_pwm_ops = {
- 
- static int mxs_pwm_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct mxs_pwm_chip *mxs;
- 	int ret;
- 
--	mxs = devm_kzalloc(&pdev->dev, sizeof(*mxs), GFP_KERNEL);
-+	mxs = devm_kzalloc(dev, sizeof(*mxs), GFP_KERNEL);
- 	if (!mxs)
- 		return -ENOMEM;
- 
-@@ -136,23 +137,23 @@ static int mxs_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(mxs->base))
- 		return PTR_ERR(mxs->base);
- 
--	mxs->clk = devm_clk_get(&pdev->dev, NULL);
-+	mxs->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(mxs->clk))
- 		return PTR_ERR(mxs->clk);
- 
--	mxs->chip.dev = &pdev->dev;
-+	mxs->chip.dev = dev;
- 	mxs->chip.ops = &mxs_pwm_ops;
- 	mxs->chip.base = -1;
- 
- 	ret = of_property_read_u32(np, "fsl,pwm-number", &mxs->chip.npwm);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
-+		dev_err(dev, "failed to get pwm number: %d\n", ret);
- 		return ret;
- 	}
- 
- 	ret = pwmchip_add(&mxs->chip);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
-+		dev_err(dev, "failed to add pwm chip %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.7.4
+This constant PCI_STD_NUM_BARS is introduced in the first patch [01/26].
+I'm afraid that this patch without the first one will break the compilation.
+This patchset is dedicated to Bjorn's tree. Sorry for confusing you.
 
+Thanks,
+Denis
