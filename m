@@ -2,148 +2,276 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E670C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40690C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBEA2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E792064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcDEnqCq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bz6ggJLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbfIXRHZ (ORCPT
+        id S2394588AbfIXRHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:07:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43033 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfIXRHY (ORCPT
+        Tue, 24 Sep 2019 13:07:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40789 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732478AbfIXRHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:07:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id v2so6214213iob.10;
-        Tue, 24 Sep 2019 10:07:23 -0700 (PDT)
+        Tue, 24 Sep 2019 13:07:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so1653345pgj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lmspopvSKpX7B64KcDeaaqo7jPi/4Ao7F6ujlQxBuGE=;
-        b=hcDEnqCq6c4biZl3J7K7tP0DKQ9JAzpWVtMOsVyhDsOwK1Ca7YXRaADqifdZsfBxK7
-         5fowDdvrvKRMrOhFHJm0S1wSSZaVnkt7nE6t0r8wrldzrkt7jofiucDzmrDp4jtjIdGr
-         VprKVbGpHUYmn0ePw6mO7ytb1umpXoLNto9BB1nw6xLSLimvL7FaiYm6rGYP8VJS3T/e
-         Lqqc360+YVyzPJyJ0HLDEhHCtt+hrfFCOpzZ81xzmIMFbdOp1TqHgB6fgOmeJche3MSq
-         43ZFEtB4puCyV22ccg7GBY9eLrnPIBLpvee33+WcBox/2wdUM+3Pbds3zhpY/FWgOXlL
-         XtLg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MocWKl4CUEB/3bMPJJJkKTim74T/U5mbnmkggy4k9NQ=;
+        b=Bz6ggJLehXu63UaCZ9wrIubgRaJe0IgvW859z9jMp7J7tttA6FZF+gZkR4RKxxnG/I
+         pIRPxfAmw1R/uh+4nuCj4jPH3TJip+/NcXJh+krQp4XrkYDN0A1JsaF672nc0dW9lA9A
+         /OPjidfD9lOBDLEdfe4Df1FYPVHQHiSpUSpdY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lmspopvSKpX7B64KcDeaaqo7jPi/4Ao7F6ujlQxBuGE=;
-        b=KjHy0079oCmruI6njkrvkIgvQ1grliFZ/IlvpDzBLW6EFCaGsJyUjfBQgDyANPMaKY
-         ufTEQ7dgCcHsAOm1Ry/sdZ4CxMXFnEudP2zgELXT/R8yvUJ7/veLOHv3xqvixi3XujyX
-         z7p0yOmvb4eid57xUBYl5zhhnPobxyxzmz9dPe3DqTIBE0zWKFLBXuu53H7W5iJoUTXO
-         dUyi6dU+uQsLRApNSnw6xUaF22RbHKUW8CJVdytyvg5ELCkH+NerCPgZzbtZZy9PvODg
-         vAin0e/AC6RwjkvZAtjp7bzBm2bVigVVQdgAmy6R6faRdb7q5WqLAPh8lHUsTG3CJmf1
-         MDmQ==
-X-Gm-Message-State: APjAAAX99c/4lkPbrNvlXK/zpHQoIWi5RzTvU5a6upuT9H+rVokf/B/r
-        OjfkWtnenwXdE7As/FEgeustZjLdn43e19NXc24=
-X-Google-Smtp-Source: APXvYqzTx4/P0xGyBwbu8UrJ3aYyizZ4e4JPbj3P3E7+rFvspFGEEfawedIVxihESqhtv9T0LO547VkHQL4a0Kac6WE=
-X-Received: by 2002:a6b:ac85:: with SMTP id v127mr4175604ioe.97.1569344843093;
- Tue, 24 Sep 2019 10:07:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MocWKl4CUEB/3bMPJJJkKTim74T/U5mbnmkggy4k9NQ=;
+        b=BcC6d+kdrJxmgfJJNPyfDqe7uCkWVvtTxRePbcfHsIE/YYpjjuubYctMOXAykMpaQa
+         GO3PuAT39keKYQhybT1X+TybEm2B3gHD9SK2hxIxT6jXSzfMViEB5yIPJt+RDf/MrSIt
+         glk0Yugk9YfWALypZoNV58Gs40uJngmCSGzJNcqd3DKpxQQvU4mDAg1ArnQxLTO0y1GW
+         A1Jey+qRTVfq+c2fvKZqfy3d2QwmZHP7xvYbdaT43HMZooxxzV1mU0bwmgiVibbrpvpM
+         NHr5ge2e++TGELtcrkDtUKFIIVaqUsvoY+i6KKBwXJ7cOKzqkgAL80VSyL0dZ9WbTIo5
+         1vAw==
+X-Gm-Message-State: APjAAAVFlSocuZ1rXylRPwnHBpd/evGFo9YzaxMHpj1AXE/poCJR8we7
+        7FhKh/rxAmMonNiPtRzgav0+iw==
+X-Google-Smtp-Source: APXvYqxGprIyHgPzyRDb1n8Dm8nLv8UvPL68Kto01TQs5omEReraALEtGZ463eAByvxJKMMSVErjcQ==
+X-Received: by 2002:a63:3112:: with SMTP id x18mr3684150pgx.301.1569344865125;
+        Tue, 24 Sep 2019 10:07:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s18sm439944pji.30.2019.09.24.10.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 10:07:44 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 10:07:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     pankaj.bharadiya@gmail.com, andriy.shevchenko@linux.intel.com,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        kernel-hardening@lists.openwall.com, akpm@linux-foundation.org,
+        mayhs11saini@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Add and use sizeof_member macro to bring uniformity
+Message-ID: <201909241003.07B7329A4@keescook>
+References: <20190924105839.110713-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <201909240922.D5A48445@keescook>
 MIME-Version: 1.0
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
- <20190924142342.GX23050@dhcp22.suse.cz> <d2a7acdd-3bb9-05c9-42d0-70a500801cd6@redhat.com>
-In-Reply-To: <d2a7acdd-3bb9-05c9-42d0-70a500801cd6@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 24 Sep 2019 10:07:11 -0700
-Message-ID: <CAKgT0UedoNBk3cp64SpCzXJqjtqBWZQSB7QzF7R_jhTDXbzNPg@mail.gmail.com>
-Subject: Re: [PATCH v10 0/6] mm / virtio: Provide support for unused page reporting
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, virtio-dev@lists.oasis-open.org,
-        kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909240922.D5A48445@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 8:32 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 24.09.19 16:23, Michal Hocko wrote:
-> > On Wed 18-09-19 10:52:25, Alexander Duyck wrote:
-> > [...]
-> >> In order to try and keep the time needed to find a non-reported page to
-> >> a minimum we maintain a "reported_boundary" pointer. This pointer is used
-> >> by the get_unreported_pages iterator to determine at what point it should
-> >> resume searching for non-reported pages. In order to guarantee pages do
-> >> not get past the scan I have modified add_to_free_list_tail so that it
-> >> will not insert pages behind the reported_boundary.
-> >>
-> >> If another process needs to perform a massive manipulation of the free
-> >> list, such as compaction, it can either reset a given individual boundary
-> >> which will push the boundary back to the list_head, or it can clear the
-> >> bit indicating the zone is actively processing which will result in the
-> >> reporting process resetting all of the boundaries for a given zone.
-> >
-> > Is this any different from the previous version? The last review
-> > feedback (both from me and Mel) was that we are not happy to have an
-> > externally imposed constrains on how the page allocator is supposed to
-> > maintain its free lists.
-> >
-> > If this is really the only way to go forward then I would like to hear
-> > very convincing arguments about other approaches not being feasible.
->
-> Adding to what Alexander said, I don't consider the other approaches
-> (especially the bitmap-based approach Nitesh is currently working on)
-> infeasible. There might be more rough edges (e.g., sparse zones) and
-> eventually sometimes a little more work to be done, but definitely
-> feasible. Incorporating stuff into the buddy might make some tasks
-> (e.g., identify free pages) more efficient.
->
-> I still somewhat like the idea of capturing hints of free pages (in
-> whatever data structure) and then going over the hints, seeing if the
-> pages are still free. Then only temporarily isolating the still-free
-> pages, reporting them, and un-isolating them after they were reported. I
-> like the idea that the pages are not fake-allocated but only temporarily
-> blocked. That works nicely e.g., with the movable zone (contain only
-> movable data).
+On Tue, Sep 24, 2019 at 09:28:13AM -0700, Kees Cook wrote:
+> Hi Linus,
+> 
+> Is a cleanup like this something you'd be willing to include before you
+> cut -rc1, or should this wait for a later time? (This is likely very
+> close to the final version -- I had some minor feedback, but I wanted
+> to figure out timing for the series and how you best wanted to handle it.)
+> If it helps, I can build a tree for you to pull from, if you don't want
+> to run the scripts?
 
-One other change in this patch set is that I split the headers so that
-there is an internal header that resides in the mm tree and an
-external one that provides the page reporting device structure and the
-register/unregister functions. All that virtio-balloon knows is that
-it is registering a notifier and will be called with scatter gather
-lists for memory that is not currently in use by the kernel. It has no
-visibility into the internal free_areas or the current state of the
-buddy allocator. Rather than having two blocks that are both trying to
-maintain that state, I have consolidated it all into the buddy
-allocator with page reporting.
+For fun, I've actually rearranged things and put the tree here (my test
+builds are still running):
 
-> But anyhow, after decades of people working on free page
-> hinting/reporting, I am happy with anything that gets accepted upstream :D
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/sizeof_member/full
 
-Agreed. After working on this for 9 months I would be happy to get
-something upstream that addresses this.
+I do see one "old macro" user in -next, so perhaps for -rc1, we could
+do the conversion but delay the removal of the old macros until later:
 
-- Alex
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/sizeof_member/rc1
+
+Thoughts?
+
+-Kees
+
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> On Tue, Sep 24, 2019 at 04:28:34PM +0530, Pankaj Bharadiya wrote:
+> > This topic has been discussed on the kernel hardening mailing list [1]
+> > few months back. Thanks to Shyam for initiating work on this.
+> > 
+> > Its been concluded on how the patch series should be but there was
+> > no further progress and this work is still pending (Pardon me if I 
+> > missed something here).
+> > 
+> > At present, we have 3 different macros which serve the same purpose
+> > of finding the size of a member of a structure:
+> >   - SIZEOF_FIELD
+> >   - FIELD_SIZEOF
+> >   - sizeof_field
+> > 
+> > To bring uniformity in entire kernel source tree, this patch series -
+> >   - adds the new sizeof_member macro
+> >   - does scripted replacement of above 3 macros where used with newly
+> >     introduced sizeof_member macro
+> >   - removes definitions of SIZEOF_FIELD, FIELD_SIZEOF, sizeof_field
+> > 
+> > This series aims to fix the issue based on given comments in [1].
+> > 
+> > [1] Link: https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+> > 
+> > Pankaj Bharadiya (5):
+> >   linux/kernel.h: Add sizeof_member macro
+> >   treewide: Use sizeof_member macro
+> >   MIPS: OCTEON: use sizeof_member macro instead of SIZEOF_FIELD
+> >   linux/kernel.h: Remove FIELD_SIZEOF macro
+> >   stddef.h: Remove sizeof_field macro
+> > 
+> >  Documentation/process/coding-style.rst        |   2 +-
+> >  .../it_IT/process/coding-style.rst            |   2 +-
+> >  .../zh_CN/process/coding-style.rst            |   2 +-
+> >  arch/arc/kernel/unwind.c                      |   6 +-
+> >  arch/arm64/include/asm/processor.h            |  10 +-
+> >  .../cavium-octeon/executive/cvmx-bootmem.c    |   9 +-
+> >  arch/powerpc/net/bpf_jit32.h                  |   4 +-
+> >  arch/powerpc/net/bpf_jit_comp.c               |  16 +-
+> >  arch/sparc/net/bpf_jit_comp_32.c              |   8 +-
+> >  arch/x86/kernel/fpu/xstate.c                  |   2 +-
+> >  block/blk-core.c                              |   4 +-
+> >  crypto/adiantum.c                             |   4 +-
+> >  drivers/firmware/efi/efi.c                    |   2 +-
+> >  drivers/gpu/drm/i915/gvt/scheduler.c          |   2 +-
+> >  drivers/infiniband/hw/hfi1/sdma.c             |   2 +-
+> >  drivers/infiniband/hw/hfi1/verbs.h            |   4 +-
+> >  .../ulp/opa_vnic/opa_vnic_ethtool.c           |   2 +-
+> >  drivers/input/keyboard/applespi.c             |   2 +-
+> >  drivers/md/raid5-ppl.c                        |   2 +-
+> >  drivers/media/platform/omap3isp/isppreview.c  |  24 +--
+> >  drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  |   4 +-
+> >  .../ethernet/cavium/liquidio/octeon_console.c |  16 +-
+> >  .../net/ethernet/emulex/benet/be_ethtool.c    |   2 +-
+> >  .../ethernet/hisilicon/hns3/hns3pf/hclge_tm.c |   2 +-
+> >  .../net/ethernet/huawei/hinic/hinic_ethtool.c |   8 +-
+> >  .../net/ethernet/intel/fm10k/fm10k_ethtool.c  |   2 +-
+> >  .../net/ethernet/intel/i40e/i40e_ethtool.c    |   2 +-
+> >  .../net/ethernet/intel/i40e/i40e_lan_hmc.c    |   2 +-
+> >  .../net/ethernet/intel/iavf/iavf_ethtool.c    |   2 +-
+> >  drivers/net/ethernet/intel/ice/ice_ethtool.c  |  10 +-
+> >  .../net/ethernet/intel/ice/ice_lan_tx_rx.h    |   2 +-
+> >  drivers/net/ethernet/intel/igb/igb_ethtool.c  |   4 +-
+> >  drivers/net/ethernet/intel/igc/igc_ethtool.c  |   4 +-
+> >  .../net/ethernet/intel/ixgb/ixgb_ethtool.c    |   4 +-
+> >  drivers/net/ethernet/intel/ixgbevf/ethtool.c  |   4 +-
+> >  drivers/net/ethernet/marvell/mv643xx_eth.c    |   4 +-
+> >  .../net/ethernet/mellanox/mlx4/en_ethtool.c   |   2 +-
+> >  .../ethernet/mellanox/mlx5/core/fpga/ipsec.c  |   6 +-
+> >  .../net/ethernet/mellanox/mlx5/core/fs_core.c |   4 +-
+> >  .../ethernet/mellanox/mlxsw/spectrum_fid.c    |   4 +-
+> >  .../ethernet/mellanox/mlxsw/spectrum_ptp.c    |   2 +-
+> >  drivers/net/ethernet/netronome/nfp/bpf/jit.c  |  10 +-
+> >  drivers/net/ethernet/netronome/nfp/bpf/main.c |   2 +-
+> >  .../net/ethernet/netronome/nfp/bpf/offload.c  |   2 +-
+> >  .../net/ethernet/netronome/nfp/flower/main.h  |   2 +-
+> >  .../oki-semi/pch_gbe/pch_gbe_ethtool.c        |   2 +-
+> >  drivers/net/ethernet/qlogic/qede/qede.h       |   2 +-
+> >  .../ethernet/qlogic/qlcnic/qlcnic_ethtool.c   |   2 +-
+> >  .../net/ethernet/qlogic/qlge/qlge_ethtool.c   |   2 +-
+> >  .../ethernet/samsung/sxgbe/sxgbe_ethtool.c    |   2 +-
+> >  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   4 +-
+> >  drivers/net/ethernet/ti/cpsw_ethtool.c        |   6 +-
+> >  drivers/net/ethernet/ti/netcp_ethss.c         |  32 ++--
+> >  drivers/net/fjes/fjes_ethtool.c               |   2 +-
+> >  drivers/net/geneve.c                          |   2 +-
+> >  drivers/net/hyperv/netvsc_drv.c               |   2 +-
+> >  drivers/net/usb/sierra_net.c                  |   2 +-
+> >  drivers/net/usb/usbnet.c                      |   2 +-
+> >  drivers/net/vxlan.c                           |   4 +-
+> >  .../net/wireless/marvell/libertas/debugfs.c   |   2 +-
+> >  drivers/net/wireless/marvell/mwifiex/util.h   |   4 +-
+> >  drivers/s390/net/qeth_core_mpc.h              |  10 +-
+> >  drivers/scsi/aacraid/aachba.c                 |   4 +-
+> >  drivers/scsi/be2iscsi/be_cmds.h               |   2 +-
+> >  drivers/scsi/cxgbi/libcxgbi.c                 |   2 +-
+> >  drivers/scsi/smartpqi/smartpqi_init.c         |   6 +-
+> >  .../staging/media/davinci_vpfe/dm365_ipipe.c  |  36 ++---
+> >  drivers/target/iscsi/cxgbit/cxgbit_main.c     |   2 +-
+> >  drivers/usb/atm/usbatm.c                      |   2 +-
+> >  drivers/usb/gadget/function/f_fs.c            |   2 +-
+> >  fs/befs/linuxvfs.c                            |   2 +-
+> >  fs/ext2/super.c                               |   2 +-
+> >  fs/ext4/super.c                               |   2 +-
+> >  fs/freevxfs/vxfs_super.c                      |   2 +-
+> >  fs/orangefs/super.c                           |   2 +-
+> >  fs/ufs/super.c                                |   2 +-
+> >  include/linux/filter.h                        |  12 +-
+> >  include/linux/kernel.h                        |  12 +-
+> >  include/linux/kvm_host.h                      |   2 +-
+> >  include/linux/phy_led_triggers.h              |   2 +-
+> >  include/linux/slab.h                          |   2 +-
+> >  include/linux/stddef.h                        |  10 +-
+> >  include/net/garp.h                            |   2 +-
+> >  include/net/ip_tunnels.h                      |   6 +-
+> >  include/net/mrp.h                             |   2 +-
+> >  include/net/netfilter/nf_conntrack_helper.h   |   2 +-
+> >  include/net/netfilter/nf_tables_core.h        |   2 +-
+> >  include/net/sock.h                            |   2 +-
+> >  ipc/util.c                                    |   2 +-
+> >  kernel/bpf/cgroup.c                           |   2 +-
+> >  kernel/bpf/local_storage.c                    |   4 +-
+> >  kernel/fork.c                                 |   2 +-
+> >  kernel/signal.c                               |  12 +-
+> >  kernel/utsname.c                              |   2 +-
+> >  net/802/mrp.c                                 |   6 +-
+> >  net/batman-adv/main.c                         |   2 +-
+> >  net/bpf/test_run.c                            |   4 +-
+> >  net/bridge/br.c                               |   2 +-
+> >  net/caif/caif_socket.c                        |   2 +-
+> >  net/core/dev.c                                |   2 +-
+> >  net/core/filter.c                             | 140 +++++++++---------
+> >  net/core/flow_dissector.c                     |  10 +-
+> >  net/core/skbuff.c                             |   2 +-
+> >  net/core/xdp.c                                |   4 +-
+> >  net/dccp/proto.c                              |   2 +-
+> >  net/ipv4/ip_gre.c                             |   4 +-
+> >  net/ipv4/ip_vti.c                             |   4 +-
+> >  net/ipv4/raw.c                                |   2 +-
+> >  net/ipv4/tcp.c                                |   2 +-
+> >  net/ipv6/ip6_gre.c                            |   4 +-
+> >  net/ipv6/raw.c                                |   2 +-
+> >  net/iucv/af_iucv.c                            |   2 +-
+> >  net/netfilter/nf_tables_api.c                 |   4 +-
+> >  net/netfilter/nfnetlink_cthelper.c            |   2 +-
+> >  net/netfilter/nft_ct.c                        |  12 +-
+> >  net/netfilter/nft_masq.c                      |   2 +-
+> >  net/netfilter/nft_nat.c                       |   6 +-
+> >  net/netfilter/nft_redir.c                     |   2 +-
+> >  net/netfilter/nft_tproxy.c                    |   4 +-
+> >  net/netfilter/xt_RATEEST.c                    |   2 +-
+> >  net/netlink/af_netlink.c                      |   2 +-
+> >  net/openvswitch/datapath.c                    |   2 +-
+> >  net/openvswitch/flow.h                        |   4 +-
+> >  net/rxrpc/af_rxrpc.c                          |   2 +-
+> >  net/sched/act_ct.c                            |   4 +-
+> >  net/sched/cls_flower.c                        |   2 +-
+> >  net/sctp/socket.c                             |   4 +-
+> >  net/unix/af_unix.c                            |   2 +-
+> >  security/integrity/ima/ima_policy.c           |   4 +-
+> >  sound/soc/codecs/hdmi-codec.c                 |   2 +-
+> >  virt/kvm/kvm_main.c                           |   2 +-
+> >  131 files changed, 345 insertions(+), 360 deletions(-)
+> > 
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Kees Cook
+
+-- 
+Kees Cook
