@@ -2,82 +2,92 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5832C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD4DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DC620640
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="0K6Ytrl/"
+	by mail.kernel.org (Postfix) with ESMTP id 65934214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502735AbfIXHgZ (ORCPT
+        id S2502861AbfIXHif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 03:36:25 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:43049 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388489AbfIXHgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 03:36:25 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 6c2e1b8c;
-        Tue, 24 Sep 2019 06:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:mime-version:content-transfer-encoding;
-         s=mail; bh=sxkr1GjA+CsTQ6F9imEHmeQRp90=; b=0K6Ytrl/QEsiaO1QZr6s
-        +K7CfH2DPbhur/Qy3RFbGxcJzXNW2ugJbMgIhVnUMpZxVpzTgMqxE3lXYyHe30ZL
-        4KbwsIEZthGw9zi+qowGGpxDkB2XsaictHzT8vnq1txFDdUHf/nT9QKr7V8L3xJW
-        O9QCKE00gkivk1hykqNT3obEgyeLL4YtLg+YM4RZGecvyPQIpGVIlidG2eDQgj9a
-        kWUEtrBG8ArIyDxwZBFv6orgP5PWAS+RoENJWt677BNh4I39wIxYmKceGrBgBaqQ
-        HdUvSDMxb3jWLCaKfXbf67t61bGhEOLbuOA2uMXD9SBrIaNFsXS9Ua6vnLMMjfne
-        Zw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6493f950 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Sep 2019 06:50:47 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org
-Subject: [PATCH] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on suppress rule
-Date:   Tue, 24 Sep 2019 09:36:15 +0200
-Message-Id: <20190924073615.31704-1-Jason@zx2c4.com>
+        Tue, 24 Sep 2019 03:38:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38148 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388489AbfIXHif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:38:35 -0400
+Received: from [185.81.136.22] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCfOv-0004Up-Tc; Tue, 24 Sep 2019 07:38:22 +0000
+Date:   Tue, 24 Sep 2019 09:38:18 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: For review: pidfd_open(2) manual page
+Message-ID: <20190924073817.zb7vr5he4wbibl7j@wittgenstein>
+References: <90399dee-53d8-a82c-3871-9ec8f94601ce@gmail.com>
+ <87tv939td6.fsf@mid.deneb.enyo.de>
+ <63566f1f-667d-50ca-ae85-784924d09af4@gmail.com>
+ <874l12924w.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <874l12924w.fsf@mid.deneb.enyo.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7d9e5f422150 removed references from certain dsts, but accounting
-for this never translated down into the fib6 suppression code. This bug
-was triggered by WireGuard users who use wg-quick(8), which uses the
-"suppress-prefix" directive to ip-rule(8) for routing all of their
-internet traffic without routing loops. The test case in the link of
-this commit reliably triggers various crashes due to the use-after-free
-caused by the reference underflow.
+On Mon, Sep 23, 2019 at 10:41:19PM +0200, Florian Weimer wrote:
+> * Michael Kerrisk:
+> 
+> >>>        static
+> >>>        int pidfd_open(pid_t pid, unsigned int flags)
+> >>>        {
+> >>>            return syscall(__NR_pidfd_open, pid, flags);
+> >>>        }
+> >> 
+> >> Please call this function something else (not pidfd_open), so that the
+> >> example continues to work if glibc provides the system call wrapper.
+> >
+> > I figured that if the syscall does get added to glibc, then I would
+> > modify the example. In the meantime, this does seem the most natural
+> > way of doing things, since the example then uses the real syscall
+> > name as it would be used if there were a wrapper function.
+> 
+> The problem is that programs do this as well, so they fail to build
+> once they are built on a newer glibc version.
+> 
+> > But, this leads to the question: what do you think the likelihood
+> > is that this system call will land in glibc?
+> 
+> Quite likely.  It's easy enough to document, there are no P&C issues,
+> and it doesn't need any new types.
 
-Cc: stable@vger.kernel.org
-Fixes: 7d9e5f422150 ("ipv6: convert major tx path to use RT6_LOOKUP_F_DST_NOREF")
-Test-case: https://git.zx2c4.com/WireGuard/commit/?id=ad66532000f7a20b149e47c5eb3a957362c8e161
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- net/ipv6/fib6_rules.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+My previous mail probably didn't make it so here it is again: I think
+especially with the recently established glibc consensus to provide
+wrappers for all new system calls (with some sensible exceptions) I'd
+expect this to be the case.
 
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index d22b6c140f23..f9e8fe3ff0c5 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -287,7 +287,8 @@ static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
- 	return false;
- 
- suppress_route:
--	ip6_rt_put(rt);
-+	if (!(arg->flags & FIB_LOOKUP_NOREF))
-+		ip6_rt_put(rt);
- 	return true;
- }
- 
--- 
-2.21.0
+> 
+> pidfd_send_signal is slightly more difficult because we probably need
+> to add rt_sigqueueinfo first, for consistency.
 
+Oh, huh. Somehow I thought we already provide that.
+
+Christian
