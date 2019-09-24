@@ -2,118 +2,112 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C96DC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328C4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E4A20820
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="egZhZal+"
+	by mail.kernel.org (Postfix) with ESMTP id 09D2120820
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503614AbfIXATG (ORCPT
+        id S2503620AbfIXAYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 20:19:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40430 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbfIXATF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 20:19:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O047WW193144;
-        Tue, 24 Sep 2019 00:18:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=CYnernZqxWUzUsnsA+ryrZNCCZdIPViU9+VB3OeyCag=;
- b=egZhZal+XCur2Gx8ugLu5eQkb80AVHe/EFGCeaH3n5L4JUoBpU8u2+VXNPdDmu1c7d2n
- ZHvoo2G46k20tXpJSVbgbZ6pLeEzATdKYjZU5ZKfgqPS91dByk2kHkPeGl17wEAPRmjO
- 8/klkfIV7JS33yTO5CT0zqwogc6CDoMdKW56Vh7RQfzCAGg8rdT7KJyebgdzDxXHSeD+
- uhBLH/UO12TqldyR7QitubAnT7tRJHmQxg1i9p6SK1+Gk+2+Zf/1FLP+CF/Vfh7n40Ms
- wzlHYHRrqBq/KrqlpgfVEESREhHKtEScPfMLz2VyAhADYsGV6fW72CzxUSJ7DKrkhQ+k cw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2v5cgqt5qt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 00:18:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O093nm152425;
-        Tue, 24 Sep 2019 00:18:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2v6yvhvg0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Sep 2019 00:18:53 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8O0IniH023008;
-        Tue, 24 Sep 2019 00:18:49 GMT
-Received: from [10.182.71.192] (/10.182.71.192)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Sep 2019 17:18:48 -0700
-Subject: Re: [PATCH 1/1] MAINTAINERS: add Yanjun to FORCEDETH maintainers list
-To:     rain.1986.08.12@gmail.com, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org, robh@kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190923143746.4310-1-rain.1986.08.12@gmail.com>
-From:   Zhu Yanjun <yanjun.zhu@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b227d9ea-d393-23f3-51c2-9de28678943f@oracle.com>
-Date:   Tue, 24 Sep 2019 08:23:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 23 Sep 2019 20:24:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729276AbfIXAYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 20:24:46 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0FEAE368E2;
+        Tue, 24 Sep 2019 00:24:46 +0000 (UTC)
+Received: from mail (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FA2810013A1;
+        Tue, 24 Sep 2019 00:24:43 +0000 (UTC)
+Date:   Mon, 23 Sep 2019 20:24:42 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/17] KVM: monolithic: x86: handle the
+ request_immediate_exit variation
+Message-ID: <20190924002442.GA2975@redhat.com>
+References: <20190920212509.2578-1-aarcange@redhat.com>
+ <20190920212509.2578-4-aarcange@redhat.com>
+ <20190923223526.GQ18195@linux.intel.com>
+ <20190923230626.GF19996@redhat.com>
+ <20190923234500.GR18195@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190923143746.4310-1-rain.1986.08.12@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909230207
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909230207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923234500.GR18195@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 24 Sep 2019 00:24:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 04:45:00PM -0700, Sean Christopherson wrote:
+> With a straight rename to kvm_x86_<function>() instead of wrappers, we
+> shouldn't need kvm_ops.c.  kvm_ops.h might be helpful, but it'd be just
+> as easy to keep them in kvm_host.h and would likely yield a more
+> insightful diff[*].
 
-On 2019/9/23 22:37, rain.1986.08.12@gmail.com wrote:
-> From: Rain River <rain.1986.08.12@gmail.com>
->
-> Yanjun has been spending quite a lot of time fixing bugs
-> in FORCEDETH source code. I'd like to add Yanjun to maintainers
-> list.
->
-> Signed-off-by: Rain River <rain.1986.08.12@gmail.com>
+Yes, I already commented about this change Paolo asked.
 
-Acked-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+> Hmm, I was thinking more along the lines of extending the kvm_host.h
+> pattern down into vendor specific code, e.g. arch/x86/kvm/vmx/kvm_host.h.
+> Probably with a different name though, two of those is confusing enough.
+> 
+> It'd still need Makefile changes, but we wouldn't litter the code with
+> #ifdefs.  Future enhancments can also take advantage of the per-vendor
+> header to inline other things.  Such a header would also make it possible
+> to fully remove kvm_x86_ops in this series (I think).
 
-Thanks a lot.
+It's common in include/linux/* to include the same .h file that just
+implements the inlines depending on some #ifdef, but in this case it's
+simpler to have different .h files to keep the two versions more
+separated as they may be maintained by different groups, so including
+different .h file sounds better than -D__VMX__ -D__VMX__ agreed.
 
-Zhu Yanjun
+> [*] Tying into the thought above, if we go for a straight rename and
+>     eliminate the conditionally-implemented kvm_x86_ops ahead of time,
+>     e.g. with inlines that return -EINVAL or something, then the
+>     conversion to direct calls can be a straight replacement of
+>     "kvm_x86_ops->" with "kvm_x86_" at the same time the declarations
+>     are changed from members of kvm_x86_ops to externs.
+> 
+> Actually, typing out the above made me realize the immediate exit code
+> can be:
+> 
+> 	if (req_immediate_exit) {
+> 		kvm_make_request(KVM_REQ_EVENT, vcpu);
+> 		if (kvm_x86_request_immediate_exit(vcpu))
+> 			smp_send_reschedule(vcpu->cpu);
+> 	}
+> 
+> Where kvm_x86_request_immediate_exit() returns 0 on success, e.g. the SVM
+> implementation can be "return -EINVAL" or whatever is appropriate, which
+> I assume the compiler can optimize out.  Or maybe a boolean return is
+> better in this case?
 
-> ---
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a400af0501c9..336ad8fe8b60 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -643,6 +643,7 @@ F:	drivers/net/ethernet/alacritech/*
->   
->   FORCEDETH GIGABIT ETHERNET DRIVER
->   M:	Rain River <rain.1986.08.12@gmail.com>
-> +M:	Zhu Yanjun <yanjun.zhu@oracle.com>
->   L:	netdev@vger.kernel.org
->   S:	Maintained
->   F:	drivers/net/ethernet/nvidia/*
+While the final cleanup of kvm_x86_ops doesn't strictly require the
+inlining Makefile tricks to be functional just yet, it would be
+beneficial to remove some branch at runtime from non frequently
+invoked methods and to get the final optimal implementation sorted out
+during the initial cleanup of the structure, this should reduce the
+number of patches to get to the most optimal possible end result. So I
+think making the inline work in the Makefile as a dependency to remove
+kvm_x86_ops is a fine plan.
+
+Thanks,
+Andrea
