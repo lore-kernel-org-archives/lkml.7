@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED41C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83521C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01FF217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EB0217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344123;
-	bh=/J1o5rPQg1YYMn3xya9OoaaLq4oaynFEnqT78U6lrjE=;
+	s=default; t=1569344133;
+	bh=flJuwdHDKHHk5hfxoKoJys79qfod4cIb0lAH+IcazAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoiVydKmgKk56dE3TILkFqTy3svD793PlHQXU1BbMMI/1Jon1n52pW6NgvB7uvutQ
-	 OjuP3YEGoxxwjCvNzbv+Z8eSkP9Qwamo5RzVPZYQETKEpZNWCBaXvjiwK/IDghjH/U
-	 6qW3MmrgpvX3Nakz7jIBQbJPXpxukEhBfqu1ymh4=
+	b=ZVdr3dBW6UsGZ7zmxR2gZ+NKA4kg+PhGPA0S0oqsh7pNX01EFGRmG+qluMm5DA4fb
+	 shrv+cdyrMHmP2UFHLNGrFjr33bng8OI1Nivdh8Zuk/lh75yvM7jz775yPCf9wd3nN
+	 oes5xZ06TQVJVOeuAfs3ypyHtEqD6GhTkBCC/nNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410998AbfIXQzX (ORCPT
+        id S2411013AbfIXQzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441483AbfIXQup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:45 -0400
+        id S2410799AbfIXQug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1584621D82;
-        Tue, 24 Sep 2019 16:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF64F21D82;
+        Tue, 24 Sep 2019 16:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343844;
-        bh=/J1o5rPQg1YYMn3xya9OoaaLq4oaynFEnqT78U6lrjE=;
+        s=default; t=1569343835;
+        bh=flJuwdHDKHHk5hfxoKoJys79qfod4cIb0lAH+IcazAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKV7jj19yfxk3JYRB+qthy1imGuB7/5ToCcxhMhzLLk7W1BV+O1SSG7Vm+dTKI4NK
-         cirUGFjEWJe9mQYllhTwdLtrdE8dhQfivVOBN4GuQunkBliFt0Gfu0jOU8bpy5YJNo
-         l3USa1hTX5guS4Nl5YicIIu6swed7VsxrvwtUODI=
+        b=JYKaCha0327WrwiNuDwW/Xtz2u6MKwrmtnv0AKC7rAWYOJh5m4oWL3RQdU2XEA0Os
+         MmO+iJr6wNtUcDR92Uis4BUwgWXVIMokTu45HZ5LUoqFZdNJzOzJ2qE89eR4TdBkfD
+         6ICuqNFyq27WvJq3Z63drppB5y7IQ961cZ+5daEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 08/28] ipmi_si: Only schedule continuously in the thread in maintenance mode
-Date:   Tue, 24 Sep 2019 12:50:11 -0400
-Message-Id: <20190924165031.28292-8-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 02/28] drm/kms: Catch mode_object lifetime errors
+Date:   Tue, 24 Sep 2019 12:50:05 -0400
+Message-Id: <20190924165031.28292-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
 References: <20190924165031.28292-1-sashal@kernel.org>
@@ -58,86 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
+[ Upstream commit 4f5368b5541a902f6596558b05f5c21a9770dd32 ]
 
-ipmi_thread() uses back-to-back schedule() to poll for command
-completion which, on some machines, can push up CPU consumption and
-heavily tax the scheduler locks leading to noticeable overall
-performance degradation.
+Only dynamic mode objects, i.e. those which are refcounted and have a free
+callback, can be added while the overall drm_device is visible to
+userspace. All others must be added before drm_dev_register and
+removed after drm_dev_unregister.
 
-This was originally added so firmware updates through IPMI would
-complete in a timely manner.  But we can't kill the scheduler
-locks for that one use case.
+Small issue around drivers still using the load/unload callbacks, we
+need to make sure we set dev->registered so that load/unload code in
+these callbacks doesn't trigger false warnings. Only a small
+adjustement in drm_dev_register was needed.
 
-Instead, only run schedule() continuously in maintenance mode,
-where firmware updates should run.
+Motivated by some irc discussions about object ids of dynamic objects
+like blobs become invalid, and me going on a bit an audit spree.
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614061723.1173-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_drv.c         | 4 ++--
+ drivers/gpu/drm/drm_mode_object.c | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index a106cf7b5ee02..f6ba90b90503f 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -284,6 +284,9 @@ struct smi_info {
- 	 */
- 	bool irq_enable_broken;
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 340440febf9a5..426365181bdc1 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -804,14 +804,14 @@ int drm_dev_register(struct drm_device *dev, unsigned long flags)
+ 	if (ret)
+ 		goto err_minors;
  
-+	/* Is the driver in maintenance mode? */
-+	bool in_maintenance_mode;
-+
- 	/*
- 	 * Did we get an attention that we did not handle?
- 	 */
-@@ -1094,11 +1097,20 @@ static int ipmi_thread(void *data)
- 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
- 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
- 						  &busy_until);
--		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
-+		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
- 			; /* do nothing */
--		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
--			schedule();
--		else if (smi_result == SI_SM_IDLE) {
-+		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
-+			/*
-+			 * In maintenance mode we run as fast as
-+			 * possible to allow firmware updates to
-+			 * complete as fast as possible, but normally
-+			 * don't bang on the scheduler.
-+			 */
-+			if (smi_info->in_maintenance_mode)
-+				schedule();
-+			else
-+				usleep_range(100, 200);
-+		} else if (smi_result == SI_SM_IDLE) {
- 			if (atomic_read(&smi_info->need_watch)) {
- 				schedule_timeout_interruptible(100);
- 			} else {
-@@ -1106,8 +1118,9 @@ static int ipmi_thread(void *data)
- 				__set_current_state(TASK_INTERRUPTIBLE);
- 				schedule();
- 			}
--		} else
-+		} else {
- 			schedule_timeout_interruptible(1);
-+		}
+-	dev->registered = true;
+-
+ 	if (dev->driver->load) {
+ 		ret = dev->driver->load(dev, flags);
+ 		if (ret)
+ 			goto err_minors;
  	}
- 	return 0;
- }
-@@ -1286,6 +1299,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
  
- 	if (!enable)
- 		atomic_set(&smi_info->req_events, 0);
-+	smi_info->in_maintenance_mode = enable;
- }
++	dev->registered = true;
++
+ 	if (drm_core_check_feature(dev, DRIVER_MODESET))
+ 		drm_modeset_register_all(dev);
  
- static const struct ipmi_smi_handlers handlers = {
+diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
+index 5b692ce6a45db..639f869de171b 100644
+--- a/drivers/gpu/drm/drm_mode_object.c
++++ b/drivers/gpu/drm/drm_mode_object.c
+@@ -37,6 +37,8 @@ int __drm_mode_object_add(struct drm_device *dev, struct drm_mode_object *obj,
+ {
+ 	int ret;
+ 
++	WARN_ON(dev->registered && !obj_free_cb);
++
+ 	mutex_lock(&dev->mode_config.idr_mutex);
+ 	ret = idr_alloc(&dev->mode_config.crtc_idr, register_obj ? obj : NULL, 1, 0, GFP_KERNEL);
+ 	if (ret >= 0) {
+@@ -96,6 +98,8 @@ void drm_mode_object_register(struct drm_device *dev,
+ void drm_mode_object_unregister(struct drm_device *dev,
+ 				struct drm_mode_object *object)
+ {
++	WARN_ON(dev->registered && !object->free_cb);
++
+ 	mutex_lock(&dev->mode_config.idr_mutex);
+ 	if (object->id) {
+ 		idr_remove(&dev->mode_config.crtc_idr, object->id);
 -- 
 2.20.1
 
