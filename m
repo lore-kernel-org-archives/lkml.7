@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE872C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A07C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B623920872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B1021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343443;
-	bh=hotPHqNA0Hauqn1+we+VM6z41hs1TrkZFPv6VGRGl50=;
+	s=default; t=1569343447;
+	bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvVY7NsAVxMACMpMJRE2sTlFcQjTwdeT/iJCOgxLBVYjQfUL3ssoVSZ/n1/Fd0NVa
-	 CSuVjC4n5a9a5FMjcryN50a6XBkQc4SBv0hV20iYzFAzoInwxZFkX1h+kEEj1qUMqJ
-	 AJEeX5aqLgMVHPK8lgr6dXMMOelfaKRlzDLc3fR4=
+	b=DU4kq9pLumTLRgIwb6HrQ/eIWTmCtsvA5oxe6Xey9RNN8S6dq6yLj8DchdpIaP47l
+	 c6l1Mxra3cOy4Ar44il8v4Wp6X2mdJJTM6+STEWmdqfcFMBUC2okr8mS32K1QwrU0A
+	 mLla2vl//Z0F8pl6FIPUV7QyDYDNx8rKqj02KdWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633110AbfIXQoC (ORCPT
+        id S2633118AbfIXQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633094AbfIXQn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:43:58 -0400
+        id S2633108AbfIXQoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:44:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A053217D9;
-        Tue, 24 Sep 2019 16:43:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D111621783;
+        Tue, 24 Sep 2019 16:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343437;
-        bh=hotPHqNA0Hauqn1+we+VM6z41hs1TrkZFPv6VGRGl50=;
+        s=default; t=1569343442;
+        bh=jujcImgHDYGHQ7uDDwkXOSgG2q4SgjbpIX6MY4h8sRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qnu4sKMF62Tcjy+krf/kdpTKsB3WAdAb16W7V/ImamZ58GcGTSYmsCRNiSkGkihz4
-         T6DRlnZ0zOMTG0Nxgg6NIFot265VBe/6yi755Q3pN82qVvHTTVhPyEP2C6g3RaHL66
-         vXmLDbglOKtjJCiCBcKp8wm2aO/7PXtF5SwyKFlo=
+        b=2ONuYKs5zwe1cZhIivWVWUX2thS5S1xu4F61lZtVHddGW1Dgx7MfCLEb9lshAHD7o
+         CjGCY7tIwMHre4KzJXRITaf5NoLuRjWb3zkWj/Ikfdz8axTM0hqWMSefr7yTspU1Vk
+         1mEc/JuIMsVCT431P0eFw/XMhCuIxptYc5szFHtA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.3 49/87] powerpc/perf: fix imc allocation failure handling
-Date:   Tue, 24 Sep 2019 12:41:05 -0400
-Message-Id: <20190924164144.25591-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 51/87] powerpc/eeh: Clear stale EEH_DEV_NO_HANDLER flag
+Date:   Tue, 24 Sep 2019 12:41:07 -0400
+Message-Id: <20190924164144.25591-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
 References: <20190924164144.25591-1-sashal@kernel.org>
@@ -61,92 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 10c4bd7cd28e77aeb8cfa65b23cb3c632ede2a49 ]
+[ Upstream commit aa06e3d60e245284d1e55497eb3108828092818d ]
 
-The alloc_pages_node return value should be tested for failure
-before being passed to page_address.
+The EEH_DEV_NO_HANDLER flag is used by the EEH system to prevent the
+use of driver callbacks in drivers that have been bound part way
+through the recovery process. This is necessary to prevent later stage
+handlers from being called when the earlier stage handlers haven't,
+which can be confusing for drivers.
 
-Tested-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+However, the flag is set for all devices that are added after boot
+time and only cleared at the end of the EEH recovery process. This
+results in hot plugged devices erroneously having the flag set during
+the first recovery after they are added (causing their driver's
+handlers to be incorrectly ignored).
+
+To remedy this, clear the flag at the beginning of recovery
+processing. The flag is still cleared at the end of recovery
+processing, although it is no longer really necessary.
+
+Also clear the flag during eeh_handle_special_event(), for the same
+reasons.
+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190724084638.24982-3-npiggin@gmail.com
+Link: https://lore.kernel.org/r/b8ca5629d27de74c957d4f4b250177d1b6fc4bbd.1565930772.git.sbobroff@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/imc-pmu.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index dea243185ea4b..cb50a9e1fd2d7 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -577,6 +577,7 @@ static int core_imc_mem_init(int cpu, int size)
- {
- 	int nid, rc = 0, core_id = (cpu / threads_per_core);
- 	struct imc_mem_info *mem_info;
-+	struct page *page;
- 
- 	/*
- 	 * alloc_pages_node() will allocate memory for core in the
-@@ -587,11 +588,12 @@ static int core_imc_mem_init(int cpu, int size)
- 	mem_info->id = core_id;
- 
- 	/* We need only vbase for core counters */
--	mem_info->vbase = page_address(alloc_pages_node(nid,
--					  GFP_KERNEL | __GFP_ZERO | __GFP_THISNODE |
--					  __GFP_NOWARN, get_order(size)));
--	if (!mem_info->vbase)
-+	page = alloc_pages_node(nid,
-+				GFP_KERNEL | __GFP_ZERO | __GFP_THISNODE |
-+				__GFP_NOWARN, get_order(size));
-+	if (!page)
- 		return -ENOMEM;
-+	mem_info->vbase = page_address(page);
- 
- 	/* Init the mutex */
- 	core_imc_refc[core_id].id = core_id;
-@@ -849,15 +851,17 @@ static int thread_imc_mem_alloc(int cpu_id, int size)
- 	int nid = cpu_to_node(cpu_id);
- 
- 	if (!local_mem) {
-+		struct page *page;
- 		/*
- 		 * This case could happen only once at start, since we dont
- 		 * free the memory in cpu offline path.
- 		 */
--		local_mem = page_address(alloc_pages_node(nid,
-+		page = alloc_pages_node(nid,
- 				  GFP_KERNEL | __GFP_ZERO | __GFP_THISNODE |
--				  __GFP_NOWARN, get_order(size)));
--		if (!local_mem)
-+				  __GFP_NOWARN, get_order(size));
-+		if (!page)
- 			return -ENOMEM;
-+		local_mem = page_address(page);
- 
- 		per_cpu(thread_imc_mem, cpu_id) = local_mem;
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 89623962c7275..1fbe541856f5e 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -793,6 +793,10 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+ 		result = PCI_ERS_RESULT_DISCONNECT;
  	}
-@@ -1095,11 +1099,14 @@ static int trace_imc_mem_alloc(int cpu_id, int size)
- 	int core_id = (cpu_id / threads_per_core);
  
- 	if (!local_mem) {
--		local_mem = page_address(alloc_pages_node(phys_id,
--					GFP_KERNEL | __GFP_ZERO | __GFP_THISNODE |
--					__GFP_NOWARN, get_order(size)));
--		if (!local_mem)
-+		struct page *page;
++	eeh_for_each_pe(pe, tmp_pe)
++		eeh_pe_for_each_dev(tmp_pe, edev, tmp)
++			edev->mode &= ~EEH_DEV_NO_HANDLER;
 +
-+		page = alloc_pages_node(phys_id,
-+				GFP_KERNEL | __GFP_ZERO | __GFP_THISNODE |
-+				__GFP_NOWARN, get_order(size));
-+		if (!page)
- 			return -ENOMEM;
-+		local_mem = page_address(page);
- 		per_cpu(trace_imc_mem, cpu_id) = local_mem;
+ 	/* Walk the various device drivers attached to this slot through
+ 	 * a reset sequence, giving each an opportunity to do what it needs
+ 	 * to accomplish the reset.  Each child gets a report of the
+@@ -981,7 +985,8 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+  */
+ void eeh_handle_special_event(void)
+ {
+-	struct eeh_pe *pe, *phb_pe;
++	struct eeh_pe *pe, *phb_pe, *tmp_pe;
++	struct eeh_dev *edev, *tmp_edev;
+ 	struct pci_bus *bus;
+ 	struct pci_controller *hose;
+ 	unsigned long flags;
+@@ -1050,6 +1055,10 @@ void eeh_handle_special_event(void)
+ 				    (phb_pe->state & EEH_PE_RECOVERING))
+ 					continue;
  
- 		/* Initialise the counters for trace mode */
++				eeh_for_each_pe(pe, tmp_pe)
++					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
++						edev->mode &= ~EEH_DEV_NO_HANDLER;
++
+ 				/* Notify all devices to be down */
+ 				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
+ 				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
 -- 
 2.20.1
 
