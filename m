@@ -2,146 +2,171 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E085DC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2D1C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50E320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2843C20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390676AbfIXUWN (ORCPT
+        id S2410182AbfIXUXc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:22:13 -0400
-Received: from mga03.intel.com ([134.134.136.65]:65190 "EHLO mga03.intel.com"
+        Tue, 24 Sep 2019 16:23:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48717 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfIXUWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:22:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727264AbfIXUXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 16:23:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 13:22:11 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 13:23:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="213812412"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2019 13:22:10 -0700
-Date:   Tue, 24 Sep 2019 13:22:10 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, Kai Huang <kai.huang@linux.intel.com>,
-        Haim Cohen <haim.cohen@intel.com>
-Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
- Control hardware bits
-Message-ID: <20190924202210.GC16218@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
- <20190924155232.GG19317@zn.tnic>
+   d="scan'208";a="201020453"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 13:23:31 -0700
+Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 13:23:31 -0700
+Received: from orsmsx109.amr.corp.intel.com ([169.254.11.122]) by
+ ORSMSX161.amr.corp.intel.com ([169.254.4.111]) with mapi id 14.03.0439.000;
+ Tue, 24 Sep 2019 13:23:31 -0700
+From:   "Hall, Christopher S" <christopher.s.hall@intel.com>
+To:     "Keller, Jacob E" <jacob.e.keller@intel.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Richard Cochran <richardcochran@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
+Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
+Thread-Index: AQHVaGh/aGiLTWXDV0O998th8wsGNac7v5sA//+O24A=
+Date:   Tue, 24 Sep 2019 20:23:30 +0000
+Message-ID: <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
+References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
+ <20190911061622.774006-2-felipe.balbi@linux.intel.com>
+ <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
+In-Reply-To: <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924155232.GG19317@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:32PM +0200, Borislav Petkov wrote:
-> On Tue, Sep 03, 2019 at 05:26:33PM +0300, Jarkko Sakkinen wrote:
-> > From: Kai Huang <kai.huang@linux.intel.com>
-> > 
-> > Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
-> > Launch Control.
-> > 
-> > Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
-> > SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
-> > called enclaves, are always signed. All enclaves signed with the public key
-> > are unconditionally allowed to initialize. [1]
-> > 
-> > Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
-> > whether the formentioned MSRs are writable or not. If the bit is off, the
-> > public key MSRs are read-only for the OS.
-> > 
-> > If the MSRs are read-only, the platform must provide a launch enclave (LE).
-> > LE can create cryptographic tokens for other enclaves that they can pass
-> > together with their signature to the ENCLS(EINIT) opcode, which is used
-> > to initialize enclaves.
-> > 
-> > Linux is unlikely to support the locked configuration because it takes away
-> > the control of the launch decisions from the kernel.
+> -----Original Message-----
+> From: Keller, Jacob E
+> Sent: Tuesday, September 24, 2019 12:23 PM
+> To: Felipe Balbi <felipe.balbi@linux.intel.com>; Richard Cochran
+> <richardcochran@gmail.com>
+> Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
 > 
-> Right, who has control over FEATURE_CONTROL_SGX_LE_WR? Can the
-> kernel set it and put another hash in there or there will be locked
-> configurations where setting that bit will trap?
-
-Short answer, BIOS controls SGX_LE_WR.
-
-The approach we chose (patch 04, which we were discussing) is to disable
-SGX if SGX_LE_WR is not set, i.e. disallow SGX unless the hash MSRs exist
-and are fully writable.
-
-WRMSR will #GP if FEATURE_CONTROL is locked (bit 0), e.g. attempting to
-set SGX_LE_WR will trap if FEATURE_CONTROL was locked by BIOS.  And
-conversely, the various enable bits in FEATURE_CONTROL don't take effect
-until FEATURE_CONTROL is locked, e.g. the LE hash MSRs aren't writable if
-FEATURE_CONTROL is unlocked, regardless of whether SGX_LE_WR is set.
-
-> I don't want to leave anything in the hands of the BIOS controlling
-> whether the platform can set its own key because BIOS is known to f*ck
-> it up almost every time. And so I'd like for us to be able to fix up
-> things without depending on the mood of some OEM vendor's BIOS fixing
-> desire.
-
-Sadly, because FEATURE_CONTROL must be locked to fully enable SGX, the
-reality is that any BIOS that supports SGX will lock FEATURE_CONTROL.
-
-That's the status quo today as well since VMX (and SMX/TXT) is also
-enabled via FEATURE_CONTROL.  KVM does have logic to enable VMX and lock
-FEATURE_CONTROL if the MSR isn't locked, but AIUI that exists only to work
-with old BIOSes.
-
-If we want to support setting and locking FEATURE_CONTROL in the extremely
-unlikely scenario that BIOS left it unlocked, the proper change would be
-to move the existing KVM FEATURE_CONTROL logic into the early-ish boot
-flow and try to set all known bits before locking FEATURE_CONTROL.  I
-don't have a strong preference either way.  We opted not to try and set
-FEATURE_CONTROL as we felt that doing so was more likely to cause breakage
-than it was to actually "fix" a broken BIOS.
-
-> > [1] Intel SDM: 38.1.4 Intel SGX Launch Control Configuration
-
-One note on Launch Control that isn't covered in the SDM: the LE hash
-MSRs can also be written before SGX is activated.  SGX activation must
-occur before FEATURE_CONTROL is locked, meaning BIOS can set the LE
-hash MSRs to a non-intel and then lock FEATURE_CONTROL with SGX_LE_WR=0.
-
-There's a blurb on SGX activation in the kernel docs (patch 23).
-
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index c5582e766121..ca82226e25ec 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -355,6 +355,7 @@
-> >  #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
-> >  #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
-> >  #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
-> > +#define X86_FEATURE_SGX_LC		(16*32+30) /* Software Guard Extensions Launch Control */
 > 
-> Amazing. SGX feature bits are spread around at least three CPUID leafs:
 > 
-> 7_EBX, 7_ECX, 12_EAX. Maybe there's a 4th somewhere because hey... :-\
+> > -----Original Message-----
+> > From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org]
+> On
+> > Behalf Of Felipe Balbi
+> > Sent: Tuesday, September 10, 2019 11:16 PM
+> > To: Richard Cochran <richardcochran@gmail.com>
+> > Cc: Hall, Christopher S <christopher.s.hall@intel.com>;
+> netdev@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; Felipe Balbi
+> <felipe.balbi@linux.intel.com>
+> > Subject: [PATCH v4 2/2] PTP: add support for one-shot output
+> >
+> > Some controllers allow for a one-shot output pulse, in contrast to
+> > periodic output. Now that we have extensible versions of our IOCTLs, we
+> > can finally make use of the 'flags' field to pass a bit telling driver
+> > that if we want one-shot pulse output.
+> >
+> > Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> > ---
+> >
+> > Changes since v3:
+> > 	- Remove bogus bitwise negation
+> >
+> > Changes since v2:
+> > 	- Add _PEROUT_ to bit macro
+> >
+> > Changes since v1:
+> > 	- remove comment from .flags field
+> >
+> >  include/uapi/linux/ptp_clock.h | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/ptp_clock.h
+> b/include/uapi/linux/ptp_clock.h
+> > index 9a0af3511b68..f16301015949 100644
+> > --- a/include/uapi/linux/ptp_clock.h
+> > +++ b/include/uapi/linux/ptp_clock.h
+> > @@ -38,8 +38,8 @@
+> >  /*
+> >   * Bits of the ptp_perout_request.flags field:
+> >   */
+> > -#define PTP_PEROUT_VALID_FLAGS (0)
+> > -
+> > +#define PTP_PEROUT_ONE_SHOT (1<<0)
+> > +#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
+> >  /*
+> >   * struct ptp_clock_time - represents a time value
+> >   *
+> > @@ -77,7 +77,7 @@ struct ptp_perout_request {
+> >  	struct ptp_clock_time start;  /* Absolute start time. */
+> >  	struct ptp_clock_time period; /* Desired period, zero means disable.
+> */
+> >  	unsigned int index;           /* Which channel to configure. */
+> > -	unsigned int flags;           /* Reserved for future use. */
+> > +	unsigned int flags;
+> >  	unsigned int rsv[4];          /* Reserved for future use. */
+> >  };
+> >
+> > --
+> > 2.23.0
+> 
+> Hi Felipe,
+> 
+> Do you have any examples for how you envision using this? I don't see any
+> drivers or other code on the list for doing so.
+> 
+> Additionally, it seems weird because we do not have support for specifying
+> the pulse width. I guess you leave that up to driver choice?
+> 
+> Thanks,
+> Jake
 
-Heh, why stop at 4?  12_EBX, 12_1_ECX and 12_1_EDX are effectively feature
-leafs as well, although the kernel can ignore them for the most part.
+Jake,
+
+Good catch on the terminology. This is an API that produces edges not pulses.
+This flag causes the PEROUT ioctl to ignore the period argument and produce a
+single edge. Currently, the igb driver implements the same function, but uses
+a "magic" invalid period specification to signal that the period argument
+should be ignored (use_freq == 0):
+
+		if (on && ((ns <= 70000000LL) || (ns == 125000000LL) ||
+			   (ns == 250000000LL) || (ns == 500000000LL))) {
+			if (ns < 8LL)
+				return -EINVAL;
+			use_freq = 1;
+		}
+
+The proposal is to support this function without magic period specifications
+using an explicit flag instead. An example use case is pulse-per-second
+output. While PPS is periodic, time-aware GPIO is driven by (an
+unadjustable) Always Running Timer (ART). It's necessary to schedule each
+edge in software to produce PPS synced with system time.
+
+Chris
