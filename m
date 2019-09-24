@@ -2,140 +2,107 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDC8C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2141C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67DE207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A425B207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569355522;
+	bh=nB3ANp+/569VNYtSayN5jMF7IHRxY+m3iP1QD1TGWw8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=YIrjNM9y1cqSk93xrog55zsHWkBKrTncmySK4Ttd6syPvlVXnuEgcCW1aup1Ij0Ih
+	 ypNVNDLBxijZaZiJlMzbmc2OtYc5BeXjC7IEbFZqeY6y7TNmqppvhOYoDk+uzZC3gB
+	 L8OF0F9nRciuoSTd1h1xtrQ9hBxi2MEh3IDPja2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbfIXUFK (ORCPT
+        id S2407372AbfIXUFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:05:10 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:16700 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728175AbfIXUFJ (ORCPT
+        Tue, 24 Sep 2019 16:05:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36309 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbfIXUFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:05:09 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8OJuYap023126;
-        Tue, 24 Sep 2019 20:04:44 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2v7qkdj4ra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Sep 2019 20:04:44 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id A760F53;
-        Tue, 24 Sep 2019 20:04:42 +0000 (UTC)
-Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 020674A;
-        Tue, 24 Sep 2019 20:04:40 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 15:04:40 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: Re: [PATCH v2 1/2] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-Message-ID: <20190924200440.GC8138@swahl-linux>
-References: <cover.1569004922.git.steve.wahl@hpe.com>
- <51b87d62e0cade3c46a69706b9be249190abc7bd.1569004923.git.steve.wahl@hpe.com>
- <63a38733-974f-9032-1980-9a8289d72d21@intel.com>
+        Tue, 24 Sep 2019 16:05:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so7611732iof.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tzqNMqA07jBcBpcqIcid0j0G7N4xLkFUhmGjg7IIOuU=;
+        b=DCyKK193tOOwAbtGLptlJdOOKYY/0pAfa4quNNXrWUvG3TJ7wXw/pThGwGpG+9QiwN
+         FazKM7SpbmIueD8YLUzNgzzgixAWUC4leRTPUG/z7IwX9zqjQydBTyOUnRi/xqLq7O0X
+         vwnBLD/ePKlVhAXYcazuiJhoHAT+eKbgJPEi0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tzqNMqA07jBcBpcqIcid0j0G7N4xLkFUhmGjg7IIOuU=;
+        b=qpNOAqa5tUkZ54vmn+BQHq+t7KOzXIL8IfIwrv/OHPtPxETIsHezbEft5z+LB49mhf
+         Cf3N2Xe5u7YntLDeESVD82zdABwRn5kQKSDVNOH0YOhEj0fRNRh01yHzpFppJjJO9twP
+         zUmqWQQdZkomndcCefVWHnxfMasRtgxr1fwzlSo+TkOMw36sAqh4ayQddYFlkk4RsNeq
+         XD7ZIEOrcQS/5k6YkF6LjR0lA1Gc9VMGvHm8jlqUmStBRirW0KXQ1fODHDXt6ycJgYyV
+         btloEosTrStwBFhavm+QFQ/6+YQlzNGVb3ipGBw4oSwv4ynn2paQMuFa8S5EBSuWgsvH
+         fnCA==
+X-Gm-Message-State: APjAAAWzf5xdCO7nyk16PbACwfj6QaJiztYs+gYxoWo5WzX8jAGg3Dvz
+        M+OXHv+U6plQFiooZIz0KAVP9w==
+X-Google-Smtp-Source: APXvYqxALuZ+2sOPVcl1PCpmgHoIsSghK1bXD0k9qNItmHh8nea4aKSF+aMNcivHLWvltHMCZ47cgQ==
+X-Received: by 2002:a5d:89da:: with SMTP id a26mr4311422iot.61.1569355520865;
+        Tue, 24 Sep 2019 13:05:20 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id k66sm4656319iof.25.2019.09.24.13.05.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 13:05:20 -0700 (PDT)
+Subject: Re: [PATCH] selftests: proc: Fix _GNU_SOURCE redefined build warns
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     shuah@kernel.org, akpm@linux-foundation.org,
+        sabyasachi.linux@gmail.com, jrdr.linux@gmail.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <20190924181910.23588-1-skhan@linuxfoundation.org>
+ <20190924181910.23588-2-skhan@linuxfoundation.org>
+ <20190924195253.GA2633@avx2>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f6c20b9b-4984-f865-3698-70b61bcd4be0@linuxfoundation.org>
+Date:   Tue, 24 Sep 2019 14:05:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63a38733-974f-9032-1980-9a8289d72d21@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-24_07:2019-09-23,2019-09-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909240164
+In-Reply-To: <20190924195253.GA2633@avx2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 02:19:46PM -0700, Dave Hansen wrote:
-> On 9/23/19 11:15 AM, Steve Wahl wrote:
-> >  	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
-> > -	for (i = 0; i < PTRS_PER_PMD; i++) {
-> > +	for (i = 0; i < pmd_index((unsigned long)_text); i++)
-> > +		pmd[i] &= ~_PAGE_PRESENT;
-> > +
-> > +	for (; i <= pmd_index((unsigned long)_end); i++)
-> >  		if (pmd[i] & _PAGE_PRESENT)
-> >  			pmd[i] += load_delta;
-> > -	}
-> > +
-> > +	for (; i < PTRS_PER_PMD; i++)
-> > +		pmd[i] &= ~_PAGE_PRESENT;
+On 9/24/19 1:52 PM, Alexey Dobriyan wrote:
+> On Tue, Sep 24, 2019 at 12:19:10PM -0600, Shuah Khan wrote:
+>> Fix the following _GNU_SOURCE redefined build warns:
+>>
+>> proc-loadavg-001.c:17: warning: "_GNU_SOURCE" redefined
+>> proc-self-syscall.c:16: warning: "_GNU_SOURCE" redefined
+>> proc-uptime-002.c:18: warning: "_GNU_SOURCE" redefined
 > 
-> This is looking a bunch better.  The broken-up loop could probably use
-> some comments, or you could combine it back to a single loop like this:
+>> +#ifndef _GNU_SOURCE
+>>   #define _GNU_SOURCE
+>> +#endif
 > 
-> 	int text_start_pmd_index = pmd_index((unsigned long)_text);
-> 	int text_end_pmd_index   = pmd_index((unsigned long)_end);
+> Why are you doing this.
 > 
-> 	for (i = 0; i < PTRS_PER_PMD; i++) {
-> 		if ((i < text_start_pmd_index) ||
-> 		    (i > text_end_pmd_index)) {
-> 			/* Unmap entries not mapping the kernel image */
-> 			pmd[i] &= ~_PAGE_PRESENT;
-> 		} else if (pmd[i] & _PAGE_PRESENT)
->  			pmd[i] += load_delta;
-> 		}
-> 	}
-
-That's funny, I wrote it very close to that way initially, and
-re-wrote it broken-up loop style because I thought it better conveyed
-my intention.  (Mark pages before the kernel image as invalid, fixup
-the pages that are in kernel image range, mark pages after the kernel
-image as invalid.)
-
-Given that, would you feel better with A) the way I have it, B) your
-rewrite, or C) with an inline comment for each part of the loop:
-
-	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
-
-	/* invalidate pages before the kernel image */
-	for (i = 0; i < pmd_index((unsigned long)_text); i++)
-		pmd[i] &= ~_PAGE_PRESENT;
-
-	/* fixup pages that are part of the kernel image */
-	for (; i <= pmd_index((unsigned long)_end); i++)
-		if (pmd[i] & _PAGE_PRESENT)
-			pmd[i] += load_delta;
-
-	/* invalidate pages after the kernel image */
-	for (; i < PTRS_PER_PMD; i++)
-		pmd[i] &= ~_PAGE_PRESENT;
-
-> Although I'd prefer it get commented or rewritten, it's passable like
-> this, so:
+> There are 140 redefinitions of _GNU_SOURCE
 > 
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-Thanks for your input!  
 
---> Steve Wahl
+Is there something wrong with getting rid of this warning?
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+thanks,
+-- Shuah
