@@ -2,101 +2,129 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617B4C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92F0C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203BC217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B47217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344259;
-	bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1av5a4kBeaTOuFazsKsYhhr78/WPlpyS1Dh2LhLYqjdn3JDNr5LzODJTHxSHGPm3
-	 HERGtgep7Cku3ScP4SuNHbV4vn40racmssuphp01K8IrVmjo+LLD5/Gt3rmTcy8bZv
-	 9YM28M21MeJ03Vrhk4VQcQHi0B+Dq9VbLXoQkoX8=
+	s=default; t=1569344263;
+	bh=ukvkbUWPZgKT8DM481/hafI6yceN2bLg0AIJm/fKvsg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=J9TVLV/gPE7PFsaWCMVikO0XlSxWCia4miaW7hUho4wl3keftcTdaiy+LxXqLoRpJ
+	 jqdMiZbWGqTsvm53qzA0J7nMGZc5hI4j6XgGsBfY3CZ4uA+lL3Xo9r/Linsq115o6/
+	 ox1JRt+3VP9A4kOH54Bi2QYcj+Nx/ndAj6vq54j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411043AbfIXQ5h (ORCPT
+        id S2404760AbfIXQ5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbfIXQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:39 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730534AbfIXQ5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:57:39 -0400
+Received: from devnote2 (unknown [12.206.46.61])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07D1921906;
-        Tue, 24 Sep 2019 16:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E8420673;
+        Tue, 24 Sep 2019 16:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343718;
-        bh=RWaQefVK8ASVG6pbqzbUIqMWiTGMpl6fvlxtzPjJeq0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJyM9dlizzdeHcpXDziW2bNnh3ZhrqPlZZ2sNOo4OXpl6ZnqetLfXwak0VxXLo2tp
-         iNBsRi/YwWaf4OS9HOrP3YghgkJ97q7modAPZaCjljpbxejupSD3mk87TEeSYBiv8J
-         EayYa+2+ai8K8Crpn2ne6vQoi/agJaL7GOIKCdBY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 65/70] clk: sprd: add missing kfree
-Date:   Tue, 24 Sep 2019 12:45:44 -0400
-Message-Id: <20190924164549.27058-65-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
-References: <20190924164549.27058-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1569344259;
+        bh=ukvkbUWPZgKT8DM481/hafI6yceN2bLg0AIJm/fKvsg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZAisG4Tv4lkpwx383sYq1aSCBklYWwnPhZHN9aUU9f+Z8AVTtPDKspA1s/LtAsQVC
+         anIOtwdjverTGILBUnuxs2shjV0pq0O6ip2EmzPpBXxM2if8EJdzX+VL3slt/RKlyr
+         6bAnHEeyvsJUg9JVxWsu6Qi96Fj+V+tLRwR4HUPY=
+Date:   Tue, 24 Sep 2019 09:57:37 -0700
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing/probe: Fix same probe event argument matching
+Message-Id: <20190924095737.571b71594c25dc4b246e5377@kernel.org>
+In-Reply-To: <20190924114906.14038-1-srikar@linux.vnet.ibm.com>
+References: <20190924114906.14038-1-srikar@linux.vnet.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Hi Srikar,
 
-[ Upstream commit 5e75ea9c67433a065b0e8595ad3c91c7c0ca0d2d ]
+On Tue, 24 Sep 2019 17:19:06 +0530
+Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
 
-The number of config registers for different pll clocks probably are not
-same, so we have to use malloc, and should free the memory before return.
+> Commit fe60b0ce8e73 ("tracing/probe: Reject exactly same probe event")
+> tries to reject a event which matches an already existing probe.
+> 
+> However it currently continues to match arguments and rejects adding a
+> probe even when the arguments don't match. Fix this by only rejecting a
+> probe if and only if all the arguments match.
 
-Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Link: https://lkml.kernel.org/r/20190905103009.27166-1-zhang.lyra@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clk/sprd/pll.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you for fixing!
+This looks good to me.
 
-diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
-index 36b4402bf09e3..640270f51aa56 100644
---- a/drivers/clk/sprd/pll.c
-+++ b/drivers/clk/sprd/pll.c
-@@ -136,6 +136,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
- 					 k2 + refin * nint * CLK_PLL_1M;
- 	}
- 
-+	kfree(cfg);
- 	return rate;
- }
- 
-@@ -222,6 +223,7 @@ static int _sprd_pll_set_rate(const struct sprd_pll *pll,
- 	if (!ret)
- 		udelay(pll->udelay);
- 
-+	kfree(cfg);
- 	return ret;
- }
- 
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+> 
+> Fixes: fe60b0ce8e73 ("tracing/probe: Reject exactly same probe event")
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+>  kernel/trace/trace_kprobe.c | 5 +++--
+>  kernel/trace/trace_uprobe.c | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index a6697e28ddda..402dc3ce88d3 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -549,10 +549,11 @@ static bool trace_kprobe_has_same_kprobe(struct trace_kprobe *orig,
+>  		for (i = 0; i < orig->tp.nr_args; i++) {
+>  			if (strcmp(orig->tp.args[i].comm,
+>  				   comp->tp.args[i].comm))
+> -				continue;
+> +				break;
+>  		}
+>  
+> -		return true;
+> +		if (i == orig->tp.nr_args)
+> +			return true;
+>  	}
+>  
+>  	return false;
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 34dd6d0016a3..dd884341f5c5 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -431,10 +431,11 @@ static bool trace_uprobe_has_same_uprobe(struct trace_uprobe *orig,
+>  		for (i = 0; i < orig->tp.nr_args; i++) {
+>  			if (strcmp(orig->tp.args[i].comm,
+>  				   comp->tp.args[i].comm))
+> -				continue;
+> +				break;
+>  		}
+>  
+> -		return true;
+> +		if (i == orig->tp.nr_args)
+> +			return true;
+>  	}
+>  
+>  	return false;
+> -- 
+> 2.18.1
+> 
+
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
