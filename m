@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A41DC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1522321971
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8D021906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343730;
-	bh=IGfnI1Dz+xQEv9yvrsskBlt8PEIQaCUQmgO4pJ6/vH4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PP6kT16zNDfcj+2r2Nzyu0mi9Z5J8/Ti7YmN1YQXnMnAGKv5GYSCYXqdmSxIMb5LI
-	 wuvRx6TXjXh6IPw7d0EiNSx6t8AfoJ/lv6ly2UBzn0DEpb78+zYMAW5/VQB28b8z9p
-	 3sFvczeV7yDp9zLSSdvtZThtFtsyBU0lTx7aV9Ws=
+	s=default; t=1569343734;
+	bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HcyfJDEGr6NcgbuJxMiZBBN3bvzE1hDEq1HDI/bu0NxUXhUyFmktxT6MgMd7t5wLw
+	 t2n+nDT0xcfQxkZa1+7b2IgtB0N97/ux04CJh7EsgQ27wjMoHSJN7+piYo1xdYQTfC
+	 07BOw38pW4SnixI6jgBK9vcT7vL7CLFJFHfFkdLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbfIXQst (ORCPT
+        id S1731274AbfIXQsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410556AbfIXQso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:44 -0400
+        id S1730722AbfIXQsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D7F5217D9;
-        Tue, 24 Sep 2019 16:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E5B21906;
+        Tue, 24 Sep 2019 16:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343723;
-        bh=IGfnI1Dz+xQEv9yvrsskBlt8PEIQaCUQmgO4pJ6/vH4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwYqKnmR6gao9y/wKOx/aHYyjTA7CiGF0QTzAqk4dn4+ZTjGm4lsczjHSZvep9puk
-         ZuA8emMSvpHbvV/uQB/6q1Snum8MEChFr4eFoHpAA7xeE6yQZbIxtAnAsRMqJjCb00
-         xD+FARNY8WkvTavQ/bukshNfQs+HR0CnG6AERev0=
+        s=default; t=1569343729;
+        bh=2Q/4MtwUVizCp4FO/MXsq8GYoPfKnljP6aUWr61tcrg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JsT2JTRV1KluTtM7Yum8w8BWJEJ1X00lYTyh2fMcxsdlDSS9HmaqMmnhYRi2rTuSe
+         AXjKMcaS4PxpqicvGpQw44f0xG9mWG26DTbcPtMr9CQ1SdqYW6zayo9Kgb9++y1YcS
+         GiuMdMf3k4pAzwVmF6Z8YzqBxwUmZpVeHxByyyVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.2 69/70] f2fs: fix to drop meta/node pages during umount
-Date:   Tue, 24 Sep 2019 12:45:48 -0400
-Message-Id: <20190924164549.27058-69-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/50] drm/bridge: tc358767: Increase AUX transfer length limit
+Date:   Tue, 24 Sep 2019 12:47:58 -0400
+Message-Id: <20190924164847.27780-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
-References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,76 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit a8933b6b68f775b5774e7b075447fae13f4d01fe ]
+[ Upstream commit e0655feaec62d5139b6b13a7b1bbb1ab8f1c2d83 ]
 
-As reported in bugzilla:
+According to the datasheet tc358767 can transfer up to 16 bytes via
+its AUX channel, so the artificial limit of 8 appears to be too
+low. However only up to 15-bytes seem to be actually supported and
+trying to use 16-byte transfers results in transfers failing
+sporadically (with bogus status in case of I2C transfers), so limit it
+to 15.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204193
-
-A null pointer dereference bug is triggered in f2fs under kernel-5.1.3.
-
- kasan_report.cold+0x5/0x32
- f2fs_write_end_io+0x215/0x650
- bio_endio+0x26e/0x320
- blk_update_request+0x209/0x5d0
- blk_mq_end_request+0x2e/0x230
- lo_complete_rq+0x12c/0x190
- blk_done_softirq+0x14a/0x1a0
- __do_softirq+0x119/0x3e5
- irq_exit+0x94/0xe0
- call_function_single_interrupt+0xf/0x20
-
-During umount, we will access NULL sbi->node_inode pointer in
-f2fs_write_end_io():
-
-	f2fs_bug_on(sbi, page->mapping == NODE_MAPPING(sbi) &&
-				page->index != nid_of_node(page));
-
-The reason is if disable_checkpoint mount option is on, meta dirty
-pages can remain during umount, and then be flushed by iput() of
-meta_inode, however node_inode has been iput()ed before
-meta_inode's iput().
-
-Since checkpoint is disabled, all meta/node datas are useless and
-should be dropped in next mount, so in umount, let's adjust
-drop_inode() to give a hint to iput_final() to drop all those dirty
-datas correctly.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190619052716.16831-9-andrew.smirnov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/gpu/drm/bridge/tc358767.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 4b47ac994daf5..afca410fa7094 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -894,7 +894,21 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
- 
- static int f2fs_drop_inode(struct inode *inode)
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index aaca5248da070..d728b6cf61096 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -302,7 +302,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
  {
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int ret;
-+
-+	/*
-+	 * during filesystem shutdown, if checkpoint is disabled,
-+	 * drop useless meta/node dirty pages.
-+	 */
-+	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
-+		if (inode->i_ino == F2FS_NODE_INO(sbi) ||
-+			inode->i_ino == F2FS_META_INO(sbi)) {
-+			trace_f2fs_drop_inode(inode, 1);
-+			return 1;
-+		}
-+	}
-+
- 	/*
- 	 * This is to avoid a deadlock condition like below.
- 	 * writeback_single_inode(inode)
+ 	struct tc_data *tc = aux_to_tc(aux);
+-	size_t size = min_t(size_t, 8, msg->size);
++	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+ 	u8 *buf = msg->buffer;
+ 	u32 tmp = 0;
 -- 
 2.20.1
 
