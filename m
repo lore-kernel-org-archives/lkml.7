@@ -2,203 +2,228 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51317C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F217C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FEF214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FE421655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 15:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569337337;
+	bh=QMgJORPCEe45dbWla/cKE5rqnESJgYjO5D24uofcrxQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=dI2dzC+6Qa5UaPUeH9sU4/NNztLJ0ZKnVL5EAN+SxsTNEpbfdtQV5W8zVS6guV+oE
+	 Gs+VT6FoYe4zfXRHdOnptesSLEKf/XuNhNMdCwTUOyTklLkpGf4OA1/2MdXvHMPbcz
+	 BvyuatokPLNaOi6PdwyCNJPJcDB+9+LJCY9PJ8ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409771AbfIXPBk (ORCPT
+        id S2409842AbfIXPCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 11:01:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59212 "EHLO mx1.redhat.com"
+        Tue, 24 Sep 2019 11:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390565AbfIXPBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 11:01:39 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2409761AbfIXPBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 11:01:24 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [170.225.9.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2D8BC057F88;
-        Tue, 24 Sep 2019 15:01:38 +0000 (UTC)
-Received: from [10.36.116.245] (ovpn-116-245.ams2.redhat.com [10.36.116.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1545060BFB;
-        Tue, 24 Sep 2019 15:01:36 +0000 (UTC)
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190924143615.19628-1-david@redhat.com>
- <20190924144846.GA23050@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <fe50c38c-df15-26c1-e8f5-04c17937a534@redhat.com>
-Date:   Tue, 24 Sep 2019 17:01:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F41B214DA;
+        Tue, 24 Sep 2019 15:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569337283;
+        bh=QMgJORPCEe45dbWla/cKE5rqnESJgYjO5D24uofcrxQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cZbx/VG1ivhOQa3JjDAS56PdhUm8mCSh4IPFFvk/DLSEdObzqSzNy9Gub93N6pKHc
+         cAVeKBs7ITvTOSkgprLZy10wfl9QBV58YwCBfTDXRQwucptcTT5SqelNnkV0hSZiVl
+         HMHd2KWPO4DtKwtmuVA/eLFW/H5i1kuvu4loIVFQ=
+Date:   Tue, 24 Sep 2019 08:01:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.09.23a 61/77] htmldocs: kernel/rcu/tree.c:2706:
+ warning: Function parameter or member 'krcp' not described in
+ 'kfree_rcu_cpu_work'
+Message-ID: <20190924150120.GB2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <201909241021.mW1BN9Yl%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190924144846.GA23050@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 24 Sep 2019 15:01:39 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909241021.mW1BN9Yl%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.09.19 16:48, Michal Hocko wrote:
-> On Tue 24-09-19 16:36:15, David Hildenbrand wrote:
->> Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
->> rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
->> introduced to fix a potential deadlock between get_online_mems() and
->> get_online_cpus() - the memory and cpu hotplug lock. The root issue was
->> that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
->>     The reason is that memory hotplug takes the memory hotplug lock and
->>     then calls stop_machine() which calls get_online_cpus().  That's the
->>     reverse lock order to get_online_cpus(); get_online_mems(); in
->>     mm/slub_common.c
->>
->> So memory hotplug never really required any cpu lock itself, only
->> stop_machine() and lru_add_drain_all() required it. Back then,
->> stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
->> as the cpu hotplug lock was now obtained in the caller.
->>
->> Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
->> all_zonelists"), the stop_machine_cpuslocked() call is gone.
->> build_all_zonelists() does no longer require the cpu lock and does no
->> longer make use of stop_machine().
->>
->> Since commit 9852a7212324 ("mm: drop hotplug lock from
->> lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
->> locking because we do rely on per-cpu kworkers being shut down before our
->> page_alloc_cpu_dead callback is executed on the offlined cpu.". The
->> lru_add_drain_all_cpuslocked() variant was removed.
->>
->> So there is nothing left that requires the cpu hotplug lock. The memory
->> hotplug lock and the device hotplug lock are sufficient.
+On Tue, Sep 24, 2019 at 10:24:24AM +0800, kbuild test robot wrote:
+> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.09.23a
+> head:   97de53b94582c208ee239178b208b8e8b9472585
+> commit: 3cc794ad18bfc6e46d58411b53f2784388d5bb85 [61/77] rcu: Add multiple in-flight batches of kfree_rcu() work
+> reproduce: make htmldocs
 > 
-> I would love to see this happen. The biggest offenders should be gone. 
-> I really hated how those two locks have been conflated which likely
-> resulted in some undocumented/unintended dependencies. So for now, I
-> cannot really tell you whether the patch is correct. It would really
-> require a lot of testing. I am not sure this is reasonably reviewable.
-
-At least judging from the obvious history, this should be fine. But the
-bad parts are undocumented side effects that sneaked in in the meantime.
-I agree that reviewing this is hard - too much hidden and undocumented
-complexity.
-
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> So please add some testing results (ideally cpu hotplug racing a lot
-> with the memory hotplug). Then I would be willing to give this a try
-> and see. First by keeping it in linux-next for a release or two and then
-> eyes closed, fingers crossed and go to the wild. Do we have a tag for
-> that Dared-by maybe?
-
-I'll do some more testing to try to find the obvious issues. But I
-suspect if there are still some leftovers, they will be hard to trigger.
-So I agree that keeping this in linux-next for a longer period sounds
-like a good idea.
-
-Tentatively-Acked-by ? :D
-
+> All warnings (new ones prefixed by >>):
 > 
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>
->> RFC -> v1:
->> - Reword and add more details why the cpu hotplug lock was needed here
->>   in the first place, and why we no longer require it.
->>
->> ---
->>  mm/memory_hotplug.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index c3e9aed6023f..5fa30f3010e1 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -88,14 +88,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
->>  
->>  void mem_hotplug_begin(void)
->>  {
->> -	cpus_read_lock();
->>  	percpu_down_write(&mem_hotplug_lock);
->>  }
->>  
->>  void mem_hotplug_done(void)
->>  {
->>  	percpu_up_write(&mem_hotplug_lock);
->> -	cpus_read_unlock();
->>  }
->>  
->>  u64 max_mem_size = U64_MAX;
->> -- 
->> 2.21.0
+>    Warning: The Sphinx 'sphinx_rtd_theme' HTML theme was not found. Make sure you have the theme installed to produce pretty HTML output. Falling back to the default theme.
+>    WARNING: dot(1) not found, for better output quality install graphviz from http://www.graphviz.org
+>    WARNING: convert(1) not found, for SVG to PDF conversion install ImageMagick (https://www.imagemagick.org)
+>    include/linux/spi/spi.h:190: warning: Function parameter or member 'driver_override' not described in 'spi_device'
+>    include/linux/i2c.h:337: warning: Function parameter or member 'init_irq' not described in 'i2c_client'
+>    include/linux/regulator/machine.h:196: warning: Function parameter or member 'max_uV_step' not described in 'regulation_constraints'
+>    include/linux/regulator/driver.h:223: warning: Function parameter or member 'resume' not described in 'regulator_ops'
+>    fs/direct-io.c:258: warning: Excess function parameter 'offset' description in 'dio_complete'
+>    fs/libfs.c:496: warning: Excess function parameter 'available' description in 'simple_write_end'
+>    fs/posix_acl.c:647: warning: Function parameter or member 'inode' not described in 'posix_acl_update_mode'
+>    fs/posix_acl.c:647: warning: Function parameter or member 'mode_p' not described in 'posix_acl_update_mode'
+>    fs/posix_acl.c:647: warning: Function parameter or member 'acl' not described in 'posix_acl_update_mode'
+>    mm/util.c:1: warning: 'get_user_pages_fast' not found
+>    mm/slab.c:4215: warning: Function parameter or member 'objp' not described in '__ksize'
+>    drivers/usb/typec/bus.c:1: warning: 'typec_altmode_register_driver' not found
+>    drivers/usb/typec/bus.c:1: warning: 'typec_altmode_unregister_driver' not found
+>    drivers/usb/typec/class.c:1: warning: 'typec_altmode_unregister_notifier' not found
+>    drivers/usb/typec/class.c:1: warning: 'typec_altmode_register_notifier' not found
+>    include/linux/w1.h:272: warning: Function parameter or member 'of_match_table' not described in 'w1_family'
+>    include/linux/input/sparse-keymap.h:43: warning: Function parameter or member 'sw' not described in 'key_entry'
+>    include/linux/mod_devicetable.h:822: warning: Function parameter or member 'context' not described in 'wmi_device_id'
+>    drivers/gpu/drm/mcde/mcde_drv.c:1: warning: 'ST-Ericsson MCDE DRM Driver' not found
+>    lib/genalloc.c:1: warning: 'gen_pool_add_virt' not found
+>    lib/genalloc.c:1: warning: 'gen_pool_alloc' not found
+>    lib/genalloc.c:1: warning: 'gen_pool_free' not found
+>    lib/genalloc.c:1: warning: 'gen_pool_alloc_algo' not found
+>    include/linux/clk.h:381: warning: Function parameter or member 'num_clks' not described in 'devm_clk_bulk_get_optional'
+> >> kernel/rcu/tree.c:2706: warning: Function parameter or member 'krcp' not described in 'kfree_rcu_cpu_work'
+
+Good catch, fix set up to squash into original.
+
+							Thanx, Paul
+
+>    include/linux/rculist.h:374: warning: Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
+>    include/linux/rculist.h:651: warning: Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:142: warning: Function parameter or member 'blockable' not described in 'amdgpu_mn_read_lock'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:347: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:348: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:494: warning: Function parameter or member 'start' not described in 'amdgpu_vm_pt_first_dfs'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'adev' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'vm' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'start' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'cursor' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'entry' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:823: warning: Function parameter or member 'level' not described in 'amdgpu_vm_bo_param'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'params' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'bo' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'level' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'pe' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'addr' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'count' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'incr' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'flags' not described in 'amdgpu_vm_update_flags'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:2822: warning: Function parameter or member 'pasid' not described in 'amdgpu_vm_make_compute'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:378: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:379: warning: Function parameter or member 'ih' not described in 'amdgpu_irq_dispatch'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:379: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:1: warning: no structured comments found
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:1: warning: no structured comments found
+>    drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c:1: warning: 'pp_dpm_sclk pp_dpm_mclk pp_dpm_pcie' not found
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:131: warning: Incorrect use of kernel-doc format:          * @atomic_obj
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:237: warning: Incorrect use of kernel-doc format:          * gpu_info FW provided soc bounding box struct or 0 if not
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'atomic_obj' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'backlight_link' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'backlight_caps' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'freesync_module' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'fw_dmcu' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'dmcu_fw_version' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:242: warning: Function parameter or member 'soc_bounding_box' not described in 'amdgpu_display_manager'
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'register_hpd_handlers' not found
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'dm_crtc_high_irq' not found
+>    drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: 'dm_pflip_high_irq' not found
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_pin' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_unpin' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_res_obj' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_get_sg_table' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_import_sg_table' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vmap' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vunmap' not described in 'drm_driver'
+>    include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_mmap' not described in 'drm_driver'
+>    include/drm/drm_modeset_helper_vtables.h:1053: warning: Function parameter or member 'prepare_writeback_job' not described in 'drm_connector_helper_funcs'
+>    include/drm/drm_modeset_helper_vtables.h:1053: warning: Function parameter or member 'cleanup_writeback_job' not described in 'drm_connector_helper_funcs'
+>    include/drm/drm_atomic_state_helper.h:1: warning: no structured comments found
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'dev_scratch' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'list' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'ip_defrag_offset' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'skb_mstamp_ns' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member '__cloned_offset' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'head_frag' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member '__pkt_type_offset' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'encapsulation' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'encap_hdr_csum' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_valid' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member '__pkt_vlan_present_offset' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'vlan_present' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_complete_sw' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'csum_level' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'inner_protocol_type' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'remcsum_offload' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'sender_cpu' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'reserved_tailroom' not described in 'sk_buff'
+>    include/linux/skbuff.h:893: warning: Function parameter or member 'inner_ipproto' not described in 'sk_buff'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_addrpair' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_portpair' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_ipv6only' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_net_refcnt' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_v6_daddr' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_v6_rcv_saddr' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_cookie' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_listener' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_tw_dr' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_rcv_wnd' not described in 'sock_common'
+>    include/net/sock.h:233: warning: Function parameter or member 'skc_tw_rcv_nxt' not described in 'sock_common'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_rx_skb_cache' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_wq_raw' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'tcp_rtx_queue' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_tx_skb_cache' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_route_forced_caps' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_txtime_report_errors' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_validate_xmit_skb' not described in 'sock'
+>    include/net/sock.h:515: warning: Function parameter or member 'sk_bpf_storage' not described in 'sock'
+>    include/net/sock.h:2439: warning: Function parameter or member 'tcp_rx_skb_cache_key' not described in 'DECLARE_STATIC_KEY_FALSE'
+>    include/net/sock.h:2439: warning: Excess function parameter 'sk' description in 'DECLARE_STATIC_KEY_FALSE'
+>    include/net/sock.h:2439: warning: Excess function parameter 'skb' description in 'DECLARE_STATIC_KEY_FALSE'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'gso_partial_features' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'l3mdev_ops' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'xfrmdev_ops' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'tlsdev_ops' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'name_assign_type' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'ieee802154_ptr' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'mpls_ptr' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'xdp_prog' not described in 'net_device'
+>    include/linux/netdevice.h:2040: warning: Function parameter or member 'gro_flush_timeout' not described in 'net_device'
 > 
+> vim +2706 kernel/rcu/tree.c
+> 
+>   2694	
+>   2695	/**
+>   2696	 * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+>   2697	 * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
+>   2698	 * @head_free: List of kfree_rcu() objects waiting for a grace period
+>   2699	 * @kcrp: Pointer to @kfree_rcu_cpu structure
+>   2700	 */
+>   2701	
+>   2702	struct kfree_rcu_cpu_work {
+>   2703		struct rcu_work rcu_work;
+>   2704		struct rcu_head *head_free;
+>   2705		struct kfree_rcu_cpu *krcp;
+> > 2706	};
+>   2707	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 
--- 
-
-Thanks,
-
-David / dhildenb
