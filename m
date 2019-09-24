@@ -2,166 +2,155 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A44C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E235C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FD72054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569322862;
-	bh=id35lcZsvnm3/nSbrHNpVyGMnIrdDJcrxCU94YcbsyY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=nWKSPN4n0IidHHxN0nOhxoMjuh4eqjsQp+FnGLbal5EcW1PxNMg53EG+JRQUAFkOG
-	 WQwgokWeh+Yeot3BHHfD0n0JB/dJq8neCJyvDLp5TV6Z7E4FuV2V0uAZkWPCw1AS3U
-	 RJN/KgYGupoVAVVZ5RFqsSBkBTQbUKXWrg9TTzT0=
+	by mail.kernel.org (Postfix) with ESMTP id 40F4D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRMMpwxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395219AbfIXLBB (ORCPT
+        id S2504518AbfIXLCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:01:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:57584 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389414AbfIXLBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:01:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E1D3142F;
-        Tue, 24 Sep 2019 04:01:00 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97E563F67D;
-        Tue, 24 Sep 2019 04:00:58 -0700 (PDT)
-Subject: Re: [PATCH 05/35] irqchip/gic-v3: Add GICv4.1 VPEID size discovery
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-6-maz@kernel.org>
- <20190924104903.GO9720@e119886-lin.cambridge.arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <846924ff-e3ab-5f21-ea52-a44b1548b7ca@kernel.org>
-Date:   Tue, 24 Sep 2019 12:00:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 24 Sep 2019 07:02:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33092 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389414AbfIXLCy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:02:54 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so1451329wrs.0;
+        Tue, 24 Sep 2019 04:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=39oBHhyT5LUKl72KBXNwxMjpwohyaM3Lf/IBs+S5VfM=;
+        b=KRMMpwxRTvDUSCbPtoBKXH1+SEQMejphNnTSPDh7MUKKjN95H/di8OjcMIIvnvd5b7
+         fLgJlJOJigGHVjPuhwDmBfJXqfko76wHPyWsNedgJgSzoUjcaT6yipBayzPjK8+ViiZn
+         1SBl35K4GsWDH131gnW/edR54ZK1Wx3VuJmYXL+JZYU3zXe21XkZY4qY1fCRNbO/3Fai
+         4LtVUXscWzHj8gfACXdKKX0rBBUFx143d9MuD9DCCslYnyGrhQ45ifTXRq6/QC9Z6iup
+         4DuIuTGEAUCZBXKq2v3M8pt3A5GIJCAjEcb91AMqxJS3EcOTXe/EVpyvL+dbXEuYYi5Y
+         cx3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=39oBHhyT5LUKl72KBXNwxMjpwohyaM3Lf/IBs+S5VfM=;
+        b=Nq8m/jI31z/zt4MTkFLu7S0YGFwRpX3rS8qA/CQvl7z2KUOcaSJ87Ip6tdH7evlboI
+         oOOAFiI9ZEK4fecMmUMw02GikTFeutA52VANRCyIF10I9TFWAoj5XjmEnfIYOdANa5P3
+         Fm3x7AKakGTneqqT6jAzpsvxyQTvrCaQ1jep2mma1PJ6D6TKrs/KTN3waqiOXhXzdVxv
+         VwruskBZvSoMnrbHUNBiJlWms+rPObIJntQJZZtzlaKsClx+e7/P5yhcu4K+XcZCfk8G
+         7FzcvNDFC3dBUP525YFFN8FlcW1n0UEtbLuy07jChu2D2aF1WhJArM9J5Hv9rcHkagEY
+         WMQA==
+X-Gm-Message-State: APjAAAUFpeO3ESlgcY/FYotJRaUOPqtKpgd1TxIOZPXlGwuCjEp5Xs7n
+        ePgL66oDv6W2vVP0qqzCocI=
+X-Google-Smtp-Source: APXvYqyiabsF55sMwAHaoHbBYJyTJizQtfzpgpeT7+A/Pub6tNlghPfdwkrq6m06iZXyCjmzNOBpzg==
+X-Received: by 2002:a5d:6242:: with SMTP id m2mr1795532wrv.261.1569322971287;
+        Tue, 24 Sep 2019 04:02:51 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id e6sm1733774wrp.91.2019.09.24.04.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 04:02:49 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 13:02:48 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] pwm: pwm-mxs: use devm_platform_ioremap_resource()
+ to simplify code
+Message-ID: <20190924110248.GF14924@ulmo>
+References: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190924104903.GO9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cz6wLo+OExbGG7q/"
+Content-Disposition: inline
+In-Reply-To: <1569318169-12327-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/2019 11:49, Andrew Murray wrote:
-> On Mon, Sep 23, 2019 at 07:25:36PM +0100, Marc Zyngier wrote:
->> While GICv4.0 mandates 16 bit worth of VPEIDs, GICv4.1 allows smaller
-> 
-> s/VPEIDs/vPEIDs/
-> 
->> implementations to be built. Add the required glue to dynamically
->> compute the limit.
->>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/irqchip/irq-gic-v3-its.c   | 11 ++++++++++-
->>  drivers/irqchip/irq-gic-v3.c       |  3 +++
->>  include/linux/irqchip/arm-gic-v3.h |  5 +++++
->>  3 files changed, 18 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->> index c94eb287393b..17b77a0b9d97 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -119,7 +119,16 @@ struct its_node {
->>  #define ITS_ITT_ALIGN		SZ_256
->>  
->>  /* The maximum number of VPEID bits supported by VLPI commands */
->> -#define ITS_MAX_VPEID_BITS	(16)
->> +#define ITS_MAX_VPEID_BITS						\
->> +	({								\
->> +		int nvpeid = 16;					\
->> +		if (gic_rdists->has_rvpeid &&				\
-> 
-> We use rvpeid as a way of determining if this is a GICv4.1, are there any
-> other means of determining this? If we use it in this way, is there any
-> benefit to having a has_gicv4_1 type of flag instead?
 
-RVPEID *is* the way to discover a GICv4.1. To be clear, if we adopted
-the ARM ARM nomenclature to describe extensions, GICv4.1 would be called
-GIC-RVPEID, and that'd be it.
+--cz6wLo+OExbGG7q/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Also for 'insane' configurations we set has_rvpeid to false, thus preventing
-> this feature. Does it make sense to do that?
+On Tue, Sep 24, 2019 at 05:42:48PM +0800, Anson Huang wrote:
+> Use the new helper devm_platform_ioremap_resource() which wraps the
+> platform_get_resource() and devm_ioremap_resource() together, to
+> simplify the code.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> 	- This is a resend version of patch: https://patchwork.kernel.org/patch/=
+11048365/
+> ---
+>  drivers/pwm/pwm-mxs.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-It makes perfect sense. RVPEID *and* VLPI are set to false, and we don't
-do *any* direct injection, because it simply cannot work.
+When you do resend patches, please make sure to include an Reviewed-by
+or Acked-by tags that you get.
 
-> GICD_TYPER2 is reserved in GICv4, however I understand this reads as RES0,
-> can we just rely on that instead? (We read it below anyway).
+In this case that's not necessary since I had already applied the other
+patch.
 
-Yes. In general for the GIC, any RESERVED register is RAZ/WI.
+Thierry
 
-> 
->> +		    gic_rdists->gicd_typer2 & GICD_TYPER2_VIL)		\
->> +			nvpeid = 1 + (gic_rdists->gicd_typer2 &		\
->> +				      GICD_TYPER2_VID);			\
->> +									\
->> +		nvpeid;							\
->> +	})
->>  #define ITS_MAX_VPEID		(1 << (ITS_MAX_VPEID_BITS))
->>  
->>  /* Convert page order to size in bytes */
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index 0b545e2c3498..fb6360161d6c 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -1556,6 +1556,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
->>  
->>  	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
->>  	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
->> +
->> +	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
->> +
->>  	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
->>  						 &gic_data);
->>  	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
->> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
->> index b34e0c113697..71730b9def0c 100644
->> --- a/include/linux/irqchip/arm-gic-v3.h
->> +++ b/include/linux/irqchip/arm-gic-v3.h
->> @@ -13,6 +13,7 @@
->>  #define GICD_CTLR			0x0000
->>  #define GICD_TYPER			0x0004
->>  #define GICD_IIDR			0x0008
->> +#define GICD_TYPER2			0x000C
->>  #define GICD_STATUSR			0x0010
->>  #define GICD_SETSPI_NSR			0x0040
->>  #define GICD_CLRSPI_NSR			0x0048
->> @@ -89,6 +90,9 @@
->>  #define GICD_TYPER_ESPIS(typer)						\
->>  	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
->>  
->> +#define GICD_TYPER2_VIL			(1U << 7)
->> +#define GICD_TYPER2_VID			GENMASK(4, 0)
-> 
-> Given that the 4th bit is reserved for future expansion and values greater
-> than 0xF are reserved, is there value in changing this to GENMASK(3, 0)?
+>=20
+> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+> index 04c0f6b..b14376b 100644
+> --- a/drivers/pwm/pwm-mxs.c
+> +++ b/drivers/pwm/pwm-mxs.c
+> @@ -126,15 +126,13 @@ static int mxs_pwm_probe(struct platform_device *pd=
+ev)
+>  {
+>  	struct device_node *np =3D pdev->dev.of_node;
+>  	struct mxs_pwm_chip *mxs;
+> -	struct resource *res;
+>  	int ret;
+> =20
+>  	mxs =3D devm_kzalloc(&pdev->dev, sizeof(*mxs), GFP_KERNEL);
+>  	if (!mxs)
+>  		return -ENOMEM;
+> =20
+> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	mxs->base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	mxs->base =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(mxs->base))
+>  		return PTR_ERR(mxs->base);
+> =20
+> --=20
+> 2.7.4
+>=20
 
-No, I'd rather leave the field to match the specification, and discard
-values that go beyond 16 in the ITS_MAX_VPEID_BITS macro.
+--cz6wLo+OExbGG7q/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-	
-	M.
--- 
-Jazz is not dead, it just smells funny...
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2J99gACgkQ3SOs138+
+s6GQAhAArhAUpmU0pjAl8qc9eLxwkVNYkfxSagID+AR2KE1BW29cp1kDA5Mkg2/s
+dy4eDAwIjvNSh0l8rlFrUmZ2Mxa5kOkHwEcfnHxNf6sps28wd2TseR0oIs/Nka4p
+F8PDHqh7ukLOuJpLCt4H2oC2BkmXLq18w7fneryX8TMfg/KgrOqLDyuUIxUP7OzW
+HKfgz6u1IfDH6U/1ehn601t6MJBNjenqFIJsiEVqUbynIBRqE4Ss7+QAxGQ2jrAu
+A4NnolWe05xJjLeRqXGmD71fkHZHjyyN1sRggpsOOXCWkqcAZP0/wWq25PI055jv
+eFZ/WjvqMfEVXCvxqR1iLmr/cgIsCpTrW8kzbyVbIjcWaw6fQtKdPOnEx0TQIC4v
+GgDmVIMnjxhG82CSr9LBQ1hpQL6hDQJKltYSkQPZ8WwO2ISY0xmjCcvm1+FMG2ak
+QjROGJw7JGoKQ46sD5/iYlEnGaEQTqVKCsTwb8kWGbQswKMxMmdd9cBImxTJxrua
+ta2PsGUDKC18XSbw+bzh4EDJ1wYr4kOca2rWYbO9ubKXTsEkM4iiDIN9zrEhbmIH
+L+CIlM03DnQq++a3DQsTS3/XpLAHVynaID9sa7nzcadb0ex6Twno+WP7weo/xySH
+Q6S0fwoqdI8yJgN2SMmI/xePpnp7CDmRJ0pmXRx1GbJnfbsZbrI=
+=h/nA
+-----END PGP SIGNATURE-----
+
+--cz6wLo+OExbGG7q/--
