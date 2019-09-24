@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61506C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED41C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275DA217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01FF217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344117;
-	bh=zL1w5syTRE29MPGD3HK6k4a/25ozxavpM0xkeCziFPM=;
+	s=default; t=1569344123;
+	bh=/J1o5rPQg1YYMn3xya9OoaaLq4oaynFEnqT78U6lrjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=twqY9CG0PxqHBjigaJ1cn+aMginMf0uKB0DWETq43jGHA53Vni3sqSiRUBG2EA1OF
-	 C0/KYK3r9GAK6JBhZS5vw9MHrWIukmgpSiuenIZnNOZbTZXH8k13YoAqw+rcLIdauL
-	 Tq3VwbVj0RzAweYO7tV0gg6IGvJHTL/y5dQOKfFE=
+	b=LoiVydKmgKk56dE3TILkFqTy3svD793PlHQXU1BbMMI/1Jon1n52pW6NgvB7uvutQ
+	 OjuP3YEGoxxwjCvNzbv+Z8eSkP9Qwamo5RzVPZYQETKEpZNWCBaXvjiwK/IDghjH/U
+	 6qW3MmrgpvX3Nakz7jIBQbJPXpxukEhBfqu1ymh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410879AbfIXQzQ (ORCPT
+        id S2410998AbfIXQzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441493AbfIXQur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:47 -0400
+        id S2441483AbfIXQup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4596A217D9;
-        Tue, 24 Sep 2019 16:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1584621D82;
+        Tue, 24 Sep 2019 16:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343847;
-        bh=zL1w5syTRE29MPGD3HK6k4a/25ozxavpM0xkeCziFPM=;
+        s=default; t=1569343844;
+        bh=/J1o5rPQg1YYMn3xya9OoaaLq4oaynFEnqT78U6lrjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Le0mQ9Y+q6js8FmCsDZwhB5QvUewtOe10ANyTZajFDC1mbw6TdKGixuT9Vdf1FdDV
-         8FDKGCQvz4KLJ++cw6Odv2SOdHZQxrRr1AVo9vG7hE/WdVBQGdvQYfpG9mHXrovXUh
-         LK5i/ad91iyq0LeTft71zDo20uZhVJds8LY2MSx0=
+        b=tKV7jj19yfxk3JYRB+qthy1imGuB7/5ToCcxhMhzLLk7W1BV+O1SSG7Vm+dTKI4NK
+         cirUGFjEWJe9mQYllhTwdLtrdE8dhQfivVOBN4GuQunkBliFt0Gfu0jOU8bpy5YJNo
+         l3USa1hTX5guS4Nl5YicIIu6swed7VsxrvwtUODI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/28] clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
-Date:   Tue, 24 Sep 2019 12:50:13 -0400
-Message-Id: <20190924165031.28292-10-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 08/28] ipmi_si: Only schedule continuously in the thread in maintenance mode
+Date:   Tue, 24 Sep 2019 12:50:11 -0400
+Message-Id: <20190924165031.28292-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
 References: <20190924165031.28292-1-sashal@kernel.org>
@@ -59,37 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 720099603d1f62e37b789366d7e89824b009ca28 ]
+[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
 
-The MMC2 clock slices are currently not defined in V3s CCU driver, which
-makes MMC2 not working.
+ipmi_thread() uses back-to-back schedule() to poll for command
+completion which, on some machines, can push up CPU consumption and
+heavily tax the scheduler locks leading to noticeable overall
+performance degradation.
 
-Fix this issue.
+This was originally added so firmware updates through IPMI would
+complete in a timely manner.  But we can't kill the scheduler
+locks for that one use case.
 
-Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Instead, only run schedule() continuously in maintenance mode,
+where firmware updates should run.
+
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index ac12f261f8caa..9e3f4088724b4 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -499,6 +499,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
- 		[CLK_MMC1]		= &mmc1_clk.common.hw,
- 		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
- 		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
-+		[CLK_MMC2]		= &mmc2_clk.common.hw,
-+		[CLK_MMC2_SAMPLE]	= &mmc2_sample_clk.common.hw,
-+		[CLK_MMC2_OUTPUT]	= &mmc2_output_clk.common.hw,
- 		[CLK_CE]		= &ce_clk.common.hw,
- 		[CLK_SPI0]		= &spi0_clk.common.hw,
- 		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index a106cf7b5ee02..f6ba90b90503f 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -284,6 +284,9 @@ struct smi_info {
+ 	 */
+ 	bool irq_enable_broken;
+ 
++	/* Is the driver in maintenance mode? */
++	bool in_maintenance_mode;
++
+ 	/*
+ 	 * Did we get an attention that we did not handle?
+ 	 */
+@@ -1094,11 +1097,20 @@ static int ipmi_thread(void *data)
+ 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
+ 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
+ 						  &busy_until);
+-		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
++		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
+ 			; /* do nothing */
+-		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+-			schedule();
+-		else if (smi_result == SI_SM_IDLE) {
++		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
++			/*
++			 * In maintenance mode we run as fast as
++			 * possible to allow firmware updates to
++			 * complete as fast as possible, but normally
++			 * don't bang on the scheduler.
++			 */
++			if (smi_info->in_maintenance_mode)
++				schedule();
++			else
++				usleep_range(100, 200);
++		} else if (smi_result == SI_SM_IDLE) {
+ 			if (atomic_read(&smi_info->need_watch)) {
+ 				schedule_timeout_interruptible(100);
+ 			} else {
+@@ -1106,8 +1118,9 @@ static int ipmi_thread(void *data)
+ 				__set_current_state(TASK_INTERRUPTIBLE);
+ 				schedule();
+ 			}
+-		} else
++		} else {
+ 			schedule_timeout_interruptible(1);
++		}
+ 	}
+ 	return 0;
+ }
+@@ -1286,6 +1299,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ 
+ 	if (!enable)
+ 		atomic_set(&smi_info->req_events, 0);
++	smi_info->in_maintenance_mode = enable;
+ }
+ 
+ static const struct ipmi_smi_handlers handlers = {
 -- 
 2.20.1
 
