@@ -2,108 +2,70 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39723C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323B7C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C7C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086772064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436553AbfIXN1m (ORCPT
+        id S2632747AbfIXNaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:27:42 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:57810 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbfIXN1m (ORCPT
+        Tue, 24 Sep 2019 09:30:14 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51550 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504934AbfIXNaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:27:42 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 598D567A918;
-        Tue, 24 Sep 2019 15:27:37 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 24 Sep
- 2019 15:27:36 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 24 Sep 2019 15:27:36 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "yibin.gong@nxp.com" <yibin.gong@nxp.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
- on i.mx8mm
-Thread-Topic: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
- on i.mx8mm
-Thread-Index: AQHVctvU4cuMSjzwIEqWCaN8EgDgaQ==
-Date:   Tue, 24 Sep 2019 13:27:36 +0000
-Message-ID: <29cf9f29-bdb4-94db-00b0-56ec36386f7a@kontron.de>
-References: <20190610081753.11422-12-yibin.gong@nxp.com>
-In-Reply-To: <20190610081753.11422-12-yibin.gong@nxp.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C4390F60D119BB47AC69CC0E65ED73CB@snt-world.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 598D567A918.AF6FA
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, vkoul@kernel.org, yibin.gong@nxp.com
+        Tue, 24 Sep 2019 09:30:14 -0400
+Received: from localhost (231-157-167-83.reverse.alphalink.fr [83.167.157.231])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 97DB915248DA9;
+        Tue, 24 Sep 2019 06:30:12 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 15:30:08 +0200 (CEST)
+Message-Id: <20190924.153008.1663682877890370513.davem@davemloft.net>
+To:     Jason@zx2c4.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on
+ suppress rule
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAHmME9oqRg9L+wdhOra=UO3ypuy9N82DHVrbDJDgLpxSmS-rHQ@mail.gmail.com>
+References: <20190924073615.31704-1-Jason@zx2c4.com>
+        <20190924.145257.2013712373872209531.davem@davemloft.net>
+        <CAHmME9oqRg9L+wdhOra=UO3ypuy9N82DHVrbDJDgLpxSmS-rHQ@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 24 Sep 2019 06:30:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCj4gRnJvbTogUm9iaW4gR29uZyA8eWliaW4uZ29uZyBhdCBueHAuY29tPg0K
-PiANCj4gQmVjYXVzZSB0aGUgbnVtYmVyIG9mIGVjc3BpMSByeCBldmVudCBvbiBpLm14OG1tIGlz
-IDAsIHRoZSBjb25kaXRpb24NCj4gY2hlY2sgaWdub3JlIHN1Y2ggc3BlY2lhbCBjYXNlIHdpdGhv
-dXQgZG1hIGNoYW5uZWwgZW5hYmxlZCwgd2hpY2ggY2F1c2VkDQo+IGVjc3BpMSByeCB3b3JrcyBm
-YWlsZWQuIEFjdHVhbGx5LCBubyBuZWVkIHRvIGNoZWNrIGV2ZW50X2lkMC9ldmVudF9pZDENCj4g
-YW5kIHJlcGxhY2UgY2hlY2tpbmcgJ2V2ZW50X2lkMScgd2l0aCAnRE1BX0RFVl9UT19ERVYnLCBz
-byB0aGF0IGNvbmZpZ3VyZQ0KPiBldmVudF9pZDEgb25seSBpbiBjYXNlIERFVl9UT19ERVYuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nIGF0IG54cC5jb20+DQo+
-IEFja2VkLWJ5OiBWaW5vZCBLb3VsIDx2a291bCBhdCBrZXJuZWwub3JnPg0KDQpJIGhhdmUgYSBj
-dXN0b20gYm9hcmQgd2l0aCBpLk1YOE1NIGFuZCBTUEkgZmxhc2ggb24gZWNzcGkxLiBJJ20gDQpj
-dXJyZW50bHkgdGVzdGluZyB3aXRoIHY1LjMgYW5kIGFzIFNQSSBkaWRuJ3Qgd29yaywgSSB0cmll
-ZCB0d28gDQpkaWZmZXJlbnQgdGhpbmdzOg0KDQoxLiBSZW1vdmluZyAnZG1hcycgYW5kICdkbWEt
-bmFtZXMnIGZyb20gdGhlIGVjc3BpMSBub2RlIGluIGlteDhtbS5kdHNpLA0KICAgIHRvIHVzZSBQ
-SU8gaW5zdGVhZCBvZiBETUEuIFRoaXMgd29ya3MgYXMgZXhwZWN0ZWQgYW5kIHRoZSBkcml2ZXIN
-CiAgICBib290cyB3aXRoIHRoZSBmb2xsb3dpbmcgbWVzc2FnZXM6DQoNCiAgICAgICAgc3BpX2lt
-eCAzMDgyMDAwMC5zcGk6IGRtYSBzZXR1cCBlcnJvciAtMTksIHVzZSBwaW8NCiAgICAgICAgbTI1
-cDgwIHNwaTAuMDogbXgyNXY4MDM1ZiAoMTAyNCBLYnl0ZXMpDQogICAgICAgIHNwaV9pbXggMzA4
-MjAwMDAuc3BpOiBwcm9iZWQNCg0KMi4gQXBwbHlpbmcgeW91ciBwYXRjaHNldCBhbmQgdXNlIERN
-QS4gSW4gdGhpcyBjYXNlLCB0aGUgZmxhc2ggYWxzbw0KICAgIHdvcmtzIGZpbmUsIGJ1dCB0aGVy
-ZSBhcmUgc29tZSBlcnJvciBtZXNzYWdlcyBwcmludGVkIHdoaWxlIGJvb3Rpbmc6DQoNCiAgICAg
-ICAgc3BpX21hc3RlciBzcGkwOiBJL08gRXJyb3IgaW4gRE1BIFJYDQogICAgICAgIG0yNXA4MCBz
-cGkwLjA6IFNQSSB0cmFuc2ZlciBmYWlsZWQ6IC0xMTANCiAgICAgICAgc3BpX21hc3RlciBzcGkw
-OiBmYWlsZWQgdG8gdHJhbnNmZXIgb25lIG1lc3NhZ2UgZnJvbSBxdWV1ZQ0KICAgICAgICBtMjVw
-ODAgc3BpMC4wOiBteDI1djgwMzVmICgxMDI0IEtieXRlcykNCiAgICAgICAgc3BpX2lteCAzMDgy
-MDAwMC5zcGk6IHByb2JlZA0KDQpJdCB3b3VsZCBiZSBncmVhdCB0byBnZXQgeW91ciBwYXRjaGVz
-IG1lcmdlZCBhbmQgZml4IFNQSSArIERNQSwgYnV0IGZvciANCmkuTVg4TU0sIHdlIG5lZWQgdG8g
-Z2V0IHJpZCBvZiB0aGUgZXJyb3IgbWVzc2FnZXMuIERvIHlvdSBoYXZlIGFuIGlkZWEsIA0Kd2hh
-dCdzIHdyb25nPw0KDQpUaGFua3MsDQpGcmllZGVy
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Tue, 24 Sep 2019 14:55:04 +0200
+
+> On Tue, Sep 24, 2019 at 2:53 PM David Miller <davem@davemloft.net> wrote:
+>> Please make such test cases integratabe into the selftests area for networking
+>> and submit it along with this fix.
+> 
+> That link is for a WireGuard test-case. When we get that upstream,
+> those will all live in selftests/ all the same as you'd like. For now,
+> it's running for every kernel on https://build.wireguard.com/ which in
+> turn runs for every new commit.
+
+I'm asking you to make a non-wireguard test that triggers the problem.
+
+Or would you like a situation you're interested in to break from time
+to time.
+
+Jason, please don't be difficult about this and write a proper test
+case just like I would ask anyone else fixing bugs like this to write.
+
+Thank you.
