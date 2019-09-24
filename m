@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A03C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA5BC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE9020673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8A1217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343674;
-	bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+	s=default; t=1569343677;
+	bh=3LtsCDgG2wyB0+Zp2EqzJWjVdQVP2cXvkkS19JZpOP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2e3VSUbkmZhlvOH+ZRyUr3j7PAsdceuNg5nOQ7ChDhFuyHX+wYkQTM6l7YuRKtXeH
-	 pVWuIZpy0M4UyIBJWNr2cQokDP4XZDHeZiqdek+56QVof0Kti1qh1N4wiNmTx+agru
-	 giQCSsFhrvWIaj+oM1uK7eSV3A3obv/xeDWe9Gto=
+	b=Crqw7zCJ77e+xE1XGiN1F3wZkSEDO3V0RJhYzlER3pC2DlwUKsqmbvkeRyXg/4thm
+	 OC216sq7kEQvosCYaUIS4GPYYOuATC9cqfCfoiw95sseEpN5BUd7tyleT01V+HtEUQ
+	 XuRMpAlEYvWcWHPJThe4iKGfcfLCweQt4O8jdZ/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633318AbfIXQrx (ORCPT
+        id S2633327AbfIXQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:47:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39258 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633309AbfIXQrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:47:49 -0400
+        id S2633314AbfIXQrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:47:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250ED20673;
-        Tue, 24 Sep 2019 16:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D37A222CA;
+        Tue, 24 Sep 2019 16:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343669;
-        bh=szCeKCu1HOCfG8Xa5dhnSRI7Vdwm04GAxX3XtKErotk=;
+        s=default; t=1569343672;
+        bh=3LtsCDgG2wyB0+Zp2EqzJWjVdQVP2cXvkkS19JZpOP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQbofE0MsdjroR/zv5valnd6YlN+3HpXlkjL3pBpvUItK7EF66CfoTI1E2/pzGuiJ
-         gPopTmzcFRfCTLpGRP1/JaAoSYQ3CDwJPquOF3tw5w+g+YTeW6ODNsus5G/KkfxbqO
-         a2F9G1rVDzELCfOGiQILmmwMV9WlTaq/O2/zA2Z0=
+        b=q6GvMaIgQAw7g0P1XPqHEQl5VwveY2MjHj/COzypHeXgRdbXOLN0mm6tEgZVPph5F
+         bnMjdEYGdvAglnW7HtEdnJi90u2DEvR+hrBkQLV1AYFLyoIKjdRV4nTH8ZJrjOg4S6
+         j+G6gWngkoclvVa4Vg+GwkMjyP0Dj6ANj4+DJkuY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        "Desnes A . Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 48/70] selftests/powerpc: Retry on host facility unavailable
-Date:   Tue, 24 Sep 2019 12:45:27 -0400
-Message-Id: <20190924164549.27058-48-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>, Ken Wang <Qingqing.Wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 49/70] drm/amdgpu/si: fix ASIC tests
+Date:   Tue, 24 Sep 2019 12:45:28 -0400
+Message-Id: <20190924164549.27058-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,38 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 6652bf6408895b09d31fd4128a1589a1a0672823 ]
+[ Upstream commit 77efe48a729588527afb4d5811b9e0acb29f5e51 ]
 
-TM test tm-unavailable must take into account aborts due to host aborting
-a transactin because of a facility unavailable exception, just like it
-already does for aborts on reschedules (TM_CAUSE_KVM_RESCHED).
+Comparing adev->family with CHIP constants is not correct.
+adev->family can only be compared with AMDGPU_FAMILY constants and
+adev->asic_type is the struct member to compare with CHIP constants.
+They are separate identification spaces.
 
-Reported-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1566341651-19747-1-git-send-email-gromero@linux.vnet.ibm.com
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+Cc: Ken Wang <Qingqing.Wang@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/tm/tm.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/si.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
-index 97f9f491c541a..c402464b038fc 100644
---- a/tools/testing/selftests/powerpc/tm/tm.h
-+++ b/tools/testing/selftests/powerpc/tm/tm.h
-@@ -55,7 +55,8 @@ static inline bool failure_is_unavailable(void)
- static inline bool failure_is_reschedule(void)
- {
- 	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
--	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
-+	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED ||
-+	    (failure_code() & TM_CAUSE_KVM_FAC_UNAV) == TM_CAUSE_KVM_FAC_UNAV)
- 		return true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 9d8df68893b9d..1e34dfc143556 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1867,7 +1867,7 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_PWRDOWN_1, data);
  
- 	return false;
+-			if ((adev->family != CHIP_OLAND) && (adev->family != CHIP_HAINAN)) {
++			if ((adev->asic_type != CHIP_OLAND) && (adev->asic_type != CHIP_HAINAN)) {
+ 				orig = data = si_pif_phy0_rreg(adev,PB0_PIF_PWRDOWN_0);
+ 				data &= ~PLL_RAMP_UP_TIME_0_MASK;
+ 				if (orig != data)
+@@ -1916,14 +1916,14 @@ static void si_program_aspm(struct amdgpu_device *adev)
+ 
+ 			orig = data = si_pif_phy0_rreg(adev,PB0_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy0_wreg(adev,PB0_PIF_CNTL, data);
+ 
+ 			orig = data = si_pif_phy1_rreg(adev,PB1_PIF_CNTL);
+ 			data &= ~LS2_EXIT_TIME_MASK;
+-			if ((adev->family == CHIP_OLAND) || (adev->family == CHIP_HAINAN))
++			if ((adev->asic_type == CHIP_OLAND) || (adev->asic_type == CHIP_HAINAN))
+ 				data |= LS2_EXIT_TIME(5);
+ 			if (orig != data)
+ 				si_pif_phy1_wreg(adev,PB1_PIF_CNTL, data);
 -- 
 2.20.1
 
