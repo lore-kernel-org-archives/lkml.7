@@ -2,149 +2,221 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE074C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C91C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70802053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D5021850
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="mda76Tfi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8/QWp3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436685AbfIXJ4W (ORCPT
+        id S2440668AbfIXJ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:56:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34125 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395316AbfIXJ4W (ORCPT
+        Tue, 24 Sep 2019 05:56:57 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46849 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394079AbfIXJ44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:56:22 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so1226412wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 02:56:20 -0700 (PDT)
+        Tue, 24 Sep 2019 05:56:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f21so904938otl.13;
+        Tue, 24 Sep 2019 02:56:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=6mFLvIMfw2DNaFq2SlQUFoLc0Apcq4Du4YX3SLzWJpM=;
-        b=mda76TfiArq/V8QqRLC1++0HuqHIXhUKYZ5ljVy4Ace07v2wzTCsKegaGZCkcjs6T+
-         eA28YmI55iSyvkRcOOb4yIDXIcCInWMFZav+jrRhnZSdYKzWRRJd2iH7Zv22P/b+R2SL
-         ZKiBEnsVeiz8dTEDS7oVmdBwK5SRmhD2qooXfl2ZI/gTGGO2G0slza0y4WVkMYMO+kD7
-         AHZmFAe2KNLQzJU/TtIwLmYJAsAhmSyw1KbyypgsM3/SF+v2xgOit949b4SZeuuXPdVs
-         X2G+pKht8BTU0myEL3ptA7ImllNNZ+3odA0o2/5icyRjZjbbW0JqucQigE97TVSwiOhI
-         GSzQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ml8qAvVeI/oVzxatM9ZW9urxDvsb84kxIZjzlp/0xdA=;
+        b=U8/QWp3HBVXyPqjoIYGyi0SrZJeV/Ebh0fHA/0MsU0HZ6/FzClKwWEBTm4BGCdsqsO
+         V5v216OlTJKVA9vMkvdcWabznigYRsL88GGXvS7IST8b0ytE2OpiEsIuVLKyhnjtZVAc
+         QiB2nH22nuLM+sXhUJZ6du1kKEahL7YLEffW3w/duxxU3DKpjYDDQFn/IGeh3w2rs1hf
+         p8NTEIuVIXfacQKnJT1l0N3cpM+9K9ZvmWjtpzCn6laK6bxkn3kdXvBFEd0XxF/6qHRS
+         9c/Jlz1AqFuuI8W/TaIdYRANHGgQuMMcCctbug1SsMtf4DTwTlfhMIscWnR1guiKcTpE
+         M8iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=6mFLvIMfw2DNaFq2SlQUFoLc0Apcq4Du4YX3SLzWJpM=;
-        b=VAij/jY0L/7BAd6eGEcoS6+Tp0w/sJKMjRug1y9zMqZQGGtYy1B6sgE9WH7Ii8bzFh
-         rd49kVBtcHMzfTChkRYnCRt7nA6YqeKyU2z8/HX5fT3+YEfWpdhO5YK0JZeJ2GGKpOmy
-         atKFCu0H2evQK0735+VwQjMGe+/z33txwkY+pdiVkNyqXsXISvnOYEoJwL4t5iRnS8Lx
-         O3h+HgpGSD4FPYi9Wepl/ouzhR/92BnATtziwAeQUKPDb6PAAMbL0LE/EwlEkK+c97J1
-         MdrVT/cz15mC6V1ZNo90UnjCBRGkSM/SQoPJ41Ks1pple7eUj2jHFeAjLFjw13xqoGor
-         WbGA==
-X-Gm-Message-State: APjAAAVou6Mr5VR/HJmghlHp0KT67HLxghFKk0Nd4KKNCuooW8sKmY6X
-        zotCNdVTIwK3UfZyQNQ9STSl0bsKRY1y7A==
-X-Google-Smtp-Source: APXvYqzWyQ3Vc4JJNt1BcrebaTvJAE7VZZtlPdYHSjHUo4w+Tw2fNs3nHjojwC6mJJ5zaVRRshRFKg==
-X-Received: by 2002:a1c:1f47:: with SMTP id f68mr2129335wmf.78.1569318979864;
-        Tue, 24 Sep 2019 02:56:19 -0700 (PDT)
-Received: from [64.233.167.108] ([149.199.62.129])
-        by smtp.gmail.com with ESMTPSA id f13sm1190257wmj.17.2019.09.24.02.56.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 02:56:18 -0700 (PDT)
-From:   Michal Simek <monstr@monstr.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: [GIT PULL] arch/microblaze patches for 5.4-rc1
-Message-ID: <99b0cfb6-0d4a-555b-ebd6-d97f96dfd2c9@monstr.eu>
-Date:   Tue, 24 Sep 2019 11:56:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ml8qAvVeI/oVzxatM9ZW9urxDvsb84kxIZjzlp/0xdA=;
+        b=bdjl8ufSIJrxM238TAJSfAIARTdcS84iCV1k3V2S559P4FayNwyXf3alL2i4y66qfX
+         049iI4T4yYzZ2stUt42cZAVx6bgtOEKjz5gf8h0ZyNhwah8PG9TxgYpcL6ugzlWxqXYM
+         y9pWUueP1FpBQE5D8sPJfj0EDqiynKhnj50iIdO8Jo9cm+L0Ct+ckVYt+gzxWFaDZMoX
+         9D5u5+xnTxsH1mzQy6iRwRI8CCVXZgRwNADyHD+g/hhVBXsdF6gIyW2Zi9E4sfH74UIc
+         Gc6zPcO1RNy1nZ2AW0NP7oPRxRc/U094PZViMuOnP1oU3mfd9GQMfALeMddRiXfwvDrj
+         G58A==
+X-Gm-Message-State: APjAAAX10hcnubA4gnb01g/YSue0CPQs8OSoHquZv+OynbFKgIozTXyx
+        xokxP9Y7KOh3UN8FAlzMwM1nsHD9qL7VnYgEseE=
+X-Google-Smtp-Source: APXvYqwvP/KXTb/jVis3QJJ+pBqN6jRM2sjEwDeU1+H1qxRNVsh4di6xqzj7qPOO7gDwYS5Qz2y9cpc21FGzvLX0FL0=
+X-Received: by 2002:a05:6830:15d7:: with SMTP id j23mr1032546otr.343.1569319016044;
+ Tue, 24 Sep 2019 02:56:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1567438203-8405-1-git-send-email-sundeep.lkml@gmail.com> <20190923123543.GL9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190923123543.GL9720@e119886-lin.cambridge.arm.com>
+From:   sundeep subbaraya <sundeep.lkml@gmail.com>
+Date:   Tue, 24 Sep 2019 15:26:44 +0530
+Message-ID: <CALHRZuqycJ1bypE4iyHYEt7wiPpiG4wMpDt8Nbm2sjCZ29Pm7Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Do not use bus number zero from EA capability
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Stalley, Sean" <sean.stalley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Andrew,
 
-please pull the following patches to your tree. Just a reminder to
-remove atomic_pool_init() from arch/microblaze/mm/consistent.c.
-In tag I have also added link to patch created by Stephen.
+On Mon, Sep 23, 2019 at 6:05 PM Andrew Murray <andrew.murray@arm.com> wrote:
+>
+> On Mon, Sep 02, 2019 at 09:00:03PM +0530, sundeep.lkml@gmail.com wrote:
+> > From: Subbaraya Sundeep <sbhatta@marvell.com>
+> >
+> > As per the spec, "Enhanced Allocation (EA) for Memory
+> > and I/O Resources" ECN, approved 23 October 2014,
+> > sec 6.9.1.2, fixed bus numbers of a bridge can be zero
+>
+> s/can/must/
+>
+> The spec uses the term *must*. "Can" implies that this is optional.
+>
+Yes will change to must.
 
-This is the first time this is needed that's why please let me know if I
-should do it differently.
+> > when no function that uses EA is located behind it.
+> > Hence assign bus numbers sequentially when fixed bus
+> > numbers are zero.
+>
+> Perhaps s/sequentially/as per normal/ or similar. As we're not doing
+> anything different here.
+>
+Ok will change
 
-Thanks,
-Michal
+> >
+> > Fixes: 2dbce590117981196fe355efc0569bc6f949ae9b
+>
+> Is it worth describing what actually goes wrong without this patch - and
+> when this occurs? I guess it's possible for a bridge to have an EA
+> capability, but no devices using EA behind it - and thus in this suitation
+> the downstream devices have unnecessary bus number constraints?
+>
+EA is for functions which are permanently connected to host bridge.
+In our case all the on chip devices use EA and bridges which are there for
+connecting off chip devices use EA with fixed bus numbers as zero.
+Bus numbers for those bridges need to be configured as per
+normal enumeration, failing to do so makes those bridges not functional
+because secondary and subordinate bus numbers are 0.
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+> >
+> > Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+>
+> Does this need to be CC'd to stable?
+>
+Ok will CC stable from v2
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+> > ---
+> >  drivers/pci/probe.c | 25 +++++++++++++------------
+> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index a3c7338..c06ca4c 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1095,27 +1095,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+> >   * @sub: updated with subordinate bus number from EA
+> >   *
+> >   * If @dev is a bridge with EA capability, update @sec and @sub with
+> > - * fixed bus numbers from the capability and return true.  Otherwise,
+> > - * return false.
+> > + * fixed bus numbers from the capability. Otherwise @sec and @sub
+> > + * will be zeroed.
+> >   */
+> > -static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> > +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> >  {
+> >       int ea, offset;
+> >       u32 dw;
+> >
+> > +     *sec = *sub = 0;
+> > +
+> >       if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+> > -             return false;
+> > +             return;
+> >
+> >       /* find PCI EA capability in list */
+> >       ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> >       if (!ea)
+> > -             return false;
+> > +             return;
+> >
+> >       offset = ea + PCI_EA_FIRST_ENT;
+> >       pci_read_config_dword(dev, offset, &dw);
+> >       *sec =  dw & PCI_EA_SEC_BUS_MASK;
+> >       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+>
+> Is there any value in doing any sanity checking here? E.g. sub !=0, sub > sec?
+>
 
-are available in the Git repository at:
+I don't think it is needed since we read hardwired values from HW.
 
-  git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v5.4-rc1
+> > -     return true;
+> >  }
+> >
+> >  /*
+> > @@ -1151,7 +1152,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >       u16 bctl;
+> >       u8 primary, secondary, subordinate;
+> >       int broken = 0;
+> > -     bool fixed_buses;
+> >       u8 fixed_sec, fixed_sub;
+> >       int next_busnr;
+> >
+> > @@ -1254,11 +1254,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >               pci_write_config_word(dev, PCI_STATUS, 0xffff);
+> >
+> >               /* Read bus numbers from EA Capability (if present) */
+> > -             fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > -             if (fixed_buses)
+> > +             pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > +
+> > +             next_busnr = max + 1;
+> > +             /* Use secondary bus number in EA */
+> > +             if (fixed_sec)
+> >                       next_busnr = fixed_sec;
+> > -             else
+> > -                     next_busnr = max + 1;
+>
+> There is a subtle style change here (assigning and then potentially reassigning
+> with a new value vs assigning once using both if/else). No idea if this matters
+> but I thought I'd point it out in case it wasn't intentional.
+>
+This is intentional just to avoid else case.
 
-for you to fetch changes up to 7cca9b8b7c5bcc56d627851550840586a25aaa1b:
+Thanks for review. I will send v2.
+Sundeep
 
-  microblaze: Switch to standard restart handler (2019-09-19 10:43:32 +0200)
-
-----------------------------------------------------------------
-Microblaze patches for 5.4-rc1
-
-- Clean up reset gpio handler
-- Defconfig updates
-- Add support for 8 byte get_user()
-- Switch to generic dma code
-
-In merge please fix dma_atomic_pool_init reported also by:
-https://lkml.org/lkml/2019/9/2/393
-or
-https://lore.kernel.org/linux-next/20190902214011.2a5400c9@canb.auug.org.au/
-
-----------------------------------------------------------------
-Christoph Hellwig (3):
-      microblaze/nommu: use the generic uncached segment support
-      microblaze: use the generic dma coherent remap allocator
-      microblaze: remove ioremap_fullcache
-
-Linus Walleij (1):
-      microblaze: Switch to standard restart handler
-
-Michal Simek (2):
-      microblaze: Enable Xilinx AXI emac driver by default
-      microblaze: defconfig synchronization
-
-Randy Dunlap (1):
-      arch/microblaze: support get_user() of size 8 bytes
-
- arch/microblaze/Kconfig                 |   3 ++
- arch/microblaze/boot/dts/system.dts     |  16 +++++++-
- arch/microblaze/configs/mmu_defconfig   |  22 +++++------
- arch/microblaze/configs/nommu_defconfig |  25 ++++++------
- arch/microblaze/include/asm/io.h        |   1 -
- arch/microblaze/include/asm/uaccess.h   |  42 +++++---------------
- arch/microblaze/kernel/reset.c          |  87
-++++++-----------------------------------
- arch/microblaze/mm/consistent.c         | 223
-++++++++++++++++----------------------------------------------------------------------------------------
- 8 files changed, 96 insertions(+), 323 deletions(-)
-
-
-
-
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
+> Thanks,
+>
+> Andrew Murray
+>
+> >
+> >               /*
+> >                * Prevent assigning a bus number that already exists.
+> > @@ -1336,7 +1337,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >                * If fixed subordinate bus number exists from EA
+> >                * capability then use it.
+> >                */
+> > -             if (fixed_buses)
+> > +             if (fixed_sub)
+> >                       max = fixed_sub;
+> >               pci_bus_update_busn_res_end(child, max);
+> >               pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
+> > --
+> > 2.7.4
+> >
