@@ -2,143 +2,114 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B53AC4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79572C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0756B205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D523205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 03:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sSx8Qs6h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DvZFu4Ph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408994AbfIXDau (ORCPT
+        id S2409005AbfIXDbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 23:30:50 -0400
-Received: from mail-eopbgr40082.outbound.protection.outlook.com ([40.107.4.82]:30993
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408868AbfIXDat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 23:30:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UWQhWtuDnA3/tUhQimTJLpXjdP7hAwH67Cb3wtRvBBol7ip8yB29/aUNA1V/5MInbmxMsZY9VdYoTRRA347ZTVVQfzzbKR/XgWNroFW4fZqEweI9F4wpS7T+yey+pXY9PItnmHhjzS6Tbieiq3ATvwVe9w5Z9PC4nbHjrdOQHwt4E9sU++eFPHZQGFXMg+4D3K6ZH7LsffPrvwsEC7l9qFmvMLJmJ8e6FCvyX+m3zDWrKDzbhv5qJTNiReN1P7fmcfWue/Z4Vx0S2VBIkG++qgw4sEDHw4aAQs9AEhB3mHDLwZyc1hnVXUnEnYDgZkEbmfHkyUntqMsanDzhh90guw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HC5aFZ+AVUf42ydCGK5iw4GtFLL81FSS5O97BdvKyYY=;
- b=iIaPQZ1GopXjn/6domrt+MQkVBKvjLT8eZxDHuFstuuS0XBR/b0cd28INU3iu8hdmcmBILrmLAz6/Zz9hNeeqPMHXgkgYB1mQFL/HWzbrhuXNNmUeUGIFAmVj1E/plcKihedHm1GwANAMqT3Y3k6CG1n5LAV61NO0Sd/RZQAEv5yZMmTDS9/J41xQ/SHJNb7ncnX21NW7LrcPZjX6rj8KZmW0Pp0nea4KSQmKdtrhKpeGnImsZIPdiS+mbnQjCPZosuTSZEiS48rK6juBEfAkeK/acsbU13U0zXoGNrU5sCH6WaZJSL9zLvN0ZQMERoHjJPeYYwAcMbsimOCGMNh4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HC5aFZ+AVUf42ydCGK5iw4GtFLL81FSS5O97BdvKyYY=;
- b=sSx8Qs6hiyUyf+z8ckuS58GQ4wSCc1UPq0Jg1cIZSwk6Fn1WwSBuwhh5PF7Uvb4syGL4xZw4Ol7lRi9HOUVPtTCMZJgWFBvSNmsyRpE+jDQk8rEsMiZ7chKqu5nPkiNsx2vOZPb6qruuoXFm4n1t1FGyvXi2HXNCZC3x9Q1iUWY=
-Received: from VI1PR04MB4158.eurprd04.prod.outlook.com (52.133.15.33) by
- VI1PR04MB4734.eurprd04.prod.outlook.com (20.177.48.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.26; Tue, 24 Sep 2019 03:30:06 +0000
-Received: from VI1PR04MB4158.eurprd04.prod.outlook.com
- ([fe80::fddc:d4ac:5cb9:e1c6]) by VI1PR04MB4158.eurprd04.prod.outlook.com
- ([fe80::fddc:d4ac:5cb9:e1c6%6]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 03:30:06 +0000
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>,
-        Ran Wang <ran.wang_1@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
- layerscape
-Thread-Topic: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
- layerscape
-Thread-Index: AQHVcogKKVIHkmsOA0qi72Us7K9FWKc6KxDQ
-Date:   Tue, 24 Sep 2019 03:30:06 +0000
-Message-ID: <VI1PR04MB4158004466B191173A34B4C9E9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
-References: <20190924032903.32775-1-yinbo.zhu@nxp.com>
-In-Reply-To: <20190924032903.32775-1-yinbo.zhu@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yinbo.zhu@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c380c85-39d3-4e96-6dfa-08d7409f7e77
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4734;
-x-ms-traffictypediagnostic: VI1PR04MB4734:|VI1PR04MB4734:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4734B17CCED5B858B5FA9661E9840@VI1PR04MB4734.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(13464003)(64756008)(76176011)(66446008)(66556008)(25786009)(446003)(3846002)(8676002)(11346002)(54906003)(76116006)(6246003)(7736002)(305945005)(33656002)(52536014)(4326008)(81156014)(81166006)(66946007)(9686003)(66476007)(8936002)(110136005)(476003)(53546011)(486006)(186003)(71190400001)(6506007)(102836004)(2906002)(71200400001)(7696005)(316002)(478600001)(66066001)(74316002)(229853002)(99286004)(5660300002)(14454004)(14444005)(44832011)(6436002)(55016002)(86362001)(256004)(26005)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4734;H:VI1PR04MB4158.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RB6t52t6/eINHI95APCGLGZNwZ0J8MGTwgvAVBa0XOY8JpuRMdfIrydlYQsq+VRTGGHh9CqDbkH1bzTQUGu4kBXsvclK+My7jssVOtdCn3grWwgvmT9CC8Bz1H0P2Nl2coyGG6oq4I1Bb2tR5UhLpO/Tm+0lce2o5ylolCucsdVsalRS9lTVBxuM5ovtG7q+BR7jHYcuf6rk9LUDd3/BntVPC+Jv50lW5E0e5CWexutBntCDM7b4m8fIaZjJocSTnIjwSAs54m8MLzLxYNupi2A67iqZlBl8TXWMODqMAybjzURrRFU8tJckyUZ43/GXK3LPOqR6ZBq0ptNvg0dTGqP/GqRn2dYir4+82ZFInzIgvB60pu2JOCrWjiDOVzFmy/paF+XpJJ9YWncH7MVmowke050N9VkcgC+4XuA8DfQ=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 23 Sep 2019 23:31:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46890 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408868AbfIXDbH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 23:31:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so832492ioo.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 20:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TEueK3CR530Cn8YwvlpswATDviFm42G64mVpbmzRlU0=;
+        b=DvZFu4PhLqNkQifEHPCTm8AzcdIc5wXbzz/cLcFIqSUlaU06CXDVV2lpreOn70UcPc
+         uQAMp1TtvZ/IIQ/M+wyycdhlTmptZ8be3gluSJLsBEB/VPDPoXvAu/LJGyFG31V/9Q/O
+         nQVdJdICfjCmj4ZopxyIiAoE+ObpZRpoS4oJ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TEueK3CR530Cn8YwvlpswATDviFm42G64mVpbmzRlU0=;
+        b=O9D4OQntj3lhB8QWriHJ8+ZI13GlUpCVkVodkOxkobpcRWfIPDsY0THmglD7KIk9ek
+         XxE1qUkSuaqCYXgsxLpSIM81inmsKcgE2lWOL1GPDU26pHqq4WvpcdiHz+FzmaxzZGJc
+         xk2tgjRQrlezDahDFVVaH9ExjUBXhF1siQXUUg7dMhf3OfKTafTDzAG0nacctmGJCSBF
+         1qkyQ24V1lYLmkEOQ9gfjshbGvmwwLiTMVilp238Diue8qzsU2SoKQ4PgNSjoyA9RO3h
+         olVmgHpnyymBKIvR9SGbgnUyflMrFPHV1JTm6S87GlE3/oQMea/6xX96oQW6lk53mtBu
+         FFNQ==
+X-Gm-Message-State: APjAAAVN/J0EytS+oqhgLzNDh4VJz7d9s7Si1LFRz5VoKtCig/REuM7i
+        nLblpuWtTDC1/6XUP4Zp3wSM+o/Y3yIZSswxjtqO8g==
+X-Google-Smtp-Source: APXvYqz0WKVcfAtIDnOv8+vZOsCQbnc4AlcTrWDoQGlP5KcmtkDB+q77PwCxqlr7szAGoWsuneUbSv5kn57gIprr7Ig=
+X-Received: by 2002:a5d:9441:: with SMTP id x1mr933357ior.160.1569295866351;
+ Mon, 23 Sep 2019 20:31:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c380c85-39d3-4e96-6dfa-08d7409f7e77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 03:30:06.0769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JkDIxwNLFFBjir1vpedtEtGEEXMwg47BGeu0h4Zkb26L/je881c4Cx1/KzT1NebGt+C8Ow38f+k8IoatS5wn2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4734
+References: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
+ <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
+ <CAHk-=wh_CHD9fQOyF6D2q3hVdAhFOmR8vNzcq5ZPcxKW3Nc+2Q@mail.gmail.com>
+ <alpine.LRH.2.21.1909231633400.54130@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+ <CAHk-=wh4cuHsE8jFHO7XVatdXa=M2f4RHL3VwnSkAf5UNHUJ-Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wh4cuHsE8jFHO7XVatdXa=M2f4RHL3VwnSkAf5UNHUJ-Q@mail.gmail.com>
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Mon, 23 Sep 2019 20:30:54 -0700
+Message-ID: <CAJ-EccMy=tNPp3=PQZxLT7eovojoAdpfQmqhAyv7XO3GwPQBMg@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     James Morris <jamorris@linuxonhyperv.com>,
+        Jann Horn <jannh@google.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkNoYW5nZSBpbiB2MjoNCgkJCQltb3ZlIHRoZSBvdGcgcHJvcGVydHkgZnJvbSBkdHNp
-IHRvIGR0cy4NCg0KUmVnYXJkcywNCllpbmJvIFpodS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCkZyb206IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+IA0KU2VudDogMjAxOcTq
-OdTCMjTI1SAxMToyOQ0KVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBM
-aSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47
-IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQpDYzogWWluYm8gWmh1IDx5aW5i
-by56aHVAbnhwLmNvbT47IFhpYW9ibyBYaWUgPHhpYW9iby54aWVAbnhwLmNvbT47IEppYWZlaSBQ
-YW4gPGppYWZlaS5wYW5AbnhwLmNvbT47IFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+OyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggdjJd
-IHVzYjogZHdjMzogZW5hYmxlIG90ZyBtb2RlIGZvciBkd2MzIHVzYiBpcCBvbiBsYXllcnNjYXBl
-DQoNCmxheWVyc2NhcGUgb3RnIGZ1bmN0aW9uIHNob3VsZCBiZSBzdXBwb3J0ZWQgSE5QIFNSUCBh
-bmQgQURQIHByb3RvY29sIGFjY3JvaW5nIHRvIHJtIGRvYywgYnV0IGR3YzMgY29kZSBub3QgcmVh
-bGl6ZSBpdCBhbmQgdXNlIGlkIHBpbiB0byBkZXRlY3Qgd2hvIGlzIGhvc3Qgb3IgZGV2aWNlKDAg
-aXMgaG9zdCAxIGlzIGRldmljZSkgdGhpcyBwYXRjaCBpcyB0byBlbmFibGUgT1RHIG1vZGUgb24g
-bHMxMDI4YXJkYiBsczEwODhhcmRiIGFuZCBsczEwNDZhcmRiIGluIGR0cw0KDQpTaWduZWQtb2Zm
-LWJ5OiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cyB8IDEgKw0KIDMgZmlsZXMg
-Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KaW5kZXggOWZiOTExMy4uMDc2Y2FjNiAxMDA2
-NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
-dHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
-dHMNCkBAIC0xNzEsMyArMTcxLDcgQEANCiAmc2F0YSB7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
-Ow0KKw0KKyZ1c2IxIHsNCisJZHJfbW9kZSA9ICJvdGciOw0KK307DQpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLXJkYi5kdHMNCmluZGV4IDZhNjUxNGQu
-LjBjNzQyYmUgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDQ2YS1yZGIuZHRzDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDQ2YS1yZGIuZHRzDQpAQCAtMTIyLDYgKzEyMiwxMCBAQA0KIAl9Ow0KIH07DQogDQorJnVz
-YjEgew0KKwlkcl9tb2RlID0gIm90ZyI7DQorfTsNCisNCiAjaW5jbHVkZSAiZnNsLWxzMTA0Ni1w
-b3N0LmR0c2kiDQogDQogJmZtYW4wIHsNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cw0KaW5kZXggOGU5MjVkZi4uOTBiMTk4OSAxMDA2NDQN
-Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
-CisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
-CkBAIC05NSw1ICs5NSw2IEBADQogfTsNCiANCiAmdXNiMSB7DQorCWRyX21vZGUgPSAib3RnIjsN
-CiAJc3RhdHVzID0gIm9rYXkiOw0KIH07DQotLQ0KMi45LjUNCg0K
+On Mon, Sep 23, 2019 at 5:45 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, Sep 23, 2019 at 4:35 PM James Morris <jamorris@linuxonhyperv.com> wrote:
+> >
+> > My understanding is that SafeSetID is shipping in ChromeOS -- this was
+> > part of the rationale for merging it.
+>
+> Well, if even the developer didn't test it for two months, I don't
+> think "it's in upstream" makes any sense or difference.
+>
+>                      Linus
+
+Yes, SafeSetID is shipping on Chrome OS, although I agree having that
+bug in 5.3 without anyone noticing is bad. When Jann sent the last
+round of patches for 5.3 he had tested the code and everything looked
+good, although I unfortunately neglected to test it again after a
+tweak to one of the patches, which of course broke stuff when the
+patches ultimately went in.
+
+Even though this is enabled in production for Chrome OS, none of the
+Chrome OS devices are using version 5.3 yet, so it went unnoticed on
+Chrome OS so far. In general the fact that a kernel feature is
+shipping on Chrome OS isn't an up-to-date assurance that the feature
+works in the most recent Linux release, as it would likely be months
+(at least) from when a change makes it into the kernel until that
+kernel release is ever run on a Chrome OS device (right now the most
+recent kernel we ship on Chrome OS is 4.19, so I've had to backport
+the SafeSetID stuff).
+
+We've found this SafeSetID LSM to be pretty useful on Chrome OS, and
+more use cases have popped up than we had in mind when writing it,
+which suggests others would potentially find it useful as well. But I
+understand for it to be useful to others it needs to be stable and
+functional on every release. The best way I know of ensuring this is
+for me to personally run the SafeSetID selftest (in
+tools/testing/selftests/safesetid/) every release, regardless of
+whether we make any changes to SafeSetID itself. Does this sound
+sufficient or are there more formal guidelines/processes here that I'm
+not aware of?
