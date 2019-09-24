@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D555BC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F19AC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A121221906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC4C222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343814;
-	bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
+	s=default; t=1569343817;
+	bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2UpcgDSUxjufXvG7nHYZWAMIv6uH2oIFzkTH380gfaUQqDmr+2Qp8Ld8pWXayd/CJ
-	 MejvOI9aIMAQMNG+Gvs/j4g6G3RrMNxhpSQR4TN/OeCTn2BLt/1Wj2TS9uj6Ld1KKr
-	 62JCuSm4NtI+tpsFQCH38qHG4r5O7CT2N2GPE0Ng=
+	b=dl0CgGO/gp90dTEULv09RqLzj+lULfZ4NVTGWdWTd0IRHuD8B1I9Si5Pnr8m0f9SB
+	 BBb15K6qgJbgpH2f3ycWHR1gHsRXgxuMST94QjA9HgZk/2TjSylYcctUSiq183PC9D
+	 YC9gFiE8H+DxN8mAuJ2T3INQPCjBoPIdXXdFgg/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410710AbfIXQuN (ORCPT
+        id S2410722AbfIXQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:50:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410688AbfIXQuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:06 -0400
+        id S2410693AbfIXQuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:50:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA82C21906;
-        Tue, 24 Sep 2019 16:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42C8222C7;
+        Tue, 24 Sep 2019 16:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343806;
-        bh=0ZSwGD0yIhbn+Y46gEL7KTJq9btBY1FBXRX+yBn0Ofo=;
+        s=default; t=1569343807;
+        bh=xwr8Gf+ZGbLNOhIHlpy1MgCwANMR3tLyATZ+L+siVIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BektQUD5l4BqnO4rFSPOfQArmzoNksvxPS4NC3WK9QiL/wcxLgFMuRzdJ7xu1FjkG
-         dFAR11lJe5QL8uvlWygCtH02ZE3jcSNOPC/HvwMysletscYEI8u42J2OoecR8U+DEv
-         gdsfdX+flo6t22XP1e19eP1Mym+s+4ML4kSOOyGo=
+        b=bVjrHYnCoqMoCegSSgteAsC1BReSiidNCBxzT4D9t/P6vkzwWFH8kXPTj0VEUIcuC
+         XX19kqnJIQLCcEfRGDadEi55jRO1bHQk5/9e+r6KDc/0z5hY44F53k7frR840gdxRZ
+         pRxcHXMkT5x+OitkjIvHkrar/lZrzL+339c1Ktyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 37/50] powerpc/64s/exception: machine check use correct cfar for late handler
-Date:   Tue, 24 Sep 2019 12:48:34 -0400
-Message-Id: <20190924164847.27780-37-sashal@kernel.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jeff Layton <jlayton@kernel.org>, anton@enomsg.org,
+        ccross@android.com, tony.luck@intel.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 38/50] pstore: fs superblock limits
+Date:   Tue, 24 Sep 2019 12:48:35 -0400
+Message-Id: <20190924164847.27780-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -59,43 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Deepa Dinamani <deepa.kernel@gmail.com>
 
-[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
+[ Upstream commit 83b8a3fbe3aa82ac3c253b698ae6a9be2dbdd5e0 ]
 
-Bare metal machine checks run an "early" handler in real mode before
-running the main handler which reports the event.
+Leaving granularity at 1ns because it is dependent on the specific
+attached backing pstore module. ramoops has microsecond resolution.
 
-The main handler runs exactly as a normal interrupt handler, after the
-"windup" which sets registers back as they were at interrupt entry.
-CFAR does not get restored by the windup code, so that will be wrong
-when the handler is run.
+Fix the readback of ramoops fractional timestamp microseconds,
+which has incorrectly been reporting the value as nanoseconds.
 
-Restore the CFAR to the saved value before running the late handler.
+Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore").
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jeff Layton <jlayton@kernel.org>
+Cc: anton@enomsg.org
+Cc: ccross@android.com
+Cc: keescook@chromium.org
+Cc: tony.luck@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/pstore/ram.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 06cc77813dbb7..90af86f143a91 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -520,6 +520,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	RFI_TO_USER_OR_KERNEL
- 9:
- 	/* Deliver the machine check to host kernel in V mode. */
-+BEGIN_FTR_SECTION
-+	ld	r10,ORIG_GPR3(r1)
-+	mtspr	SPRN_CFAR,r10
-+END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
- 	MACHINE_CHECK_HANDLER_WINDUP
- 	b	machine_check_pSeries
- 
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 316c16463b20f..015d74ee31a03 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -162,6 +162,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
+ 	if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu-%c\n%n",
+ 		   (time64_t *)&time->tv_sec, &time->tv_nsec, &data_type,
+ 		   &header_length) == 3) {
++		time->tv_nsec *= 1000;
+ 		if (data_type == 'C')
+ 			*compressed = true;
+ 		else
+@@ -169,6 +170,7 @@ static int ramoops_read_kmsg_hdr(char *buffer, struct timespec64 *time,
+ 	} else if (sscanf(buffer, RAMOOPS_KERNMSG_HDR "%lld.%lu\n%n",
+ 			  (time64_t *)&time->tv_sec, &time->tv_nsec,
+ 			  &header_length) == 2) {
++		time->tv_nsec *= 1000;
+ 		*compressed = false;
+ 	} else {
+ 		time->tv_sec = 0;
 -- 
 2.20.1
 
