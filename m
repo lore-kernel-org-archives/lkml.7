@@ -2,156 +2,166 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE89C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F130FC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132DF21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31F121783
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SGnBwd7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbfIXNjf (ORCPT
+        id S1730314AbfIXNn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:39:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34308 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730104AbfIXNje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:39:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B1C40AE99;
-        Tue, 24 Sep 2019 13:39:31 +0000 (UTC)
-Subject: Re: [RFC] mm: Proactive compaction
-To:     Nitin Gupta <nigupta@nvidia.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
-        "jannh@google.com" <jannh@google.com>, "guro@fb.com" <guro@fb.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "yuzhao@google.com" <yuzhao@google.com>,
-        "arunks@codeaurora.org" <arunks@codeaurora.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "khalid.aziz@oracle.com" <khalid.aziz@oracle.com>,
-        "janne.huttunen@nokia.com" <janne.huttunen@nokia.com>,
-        "khlebnikov@yandex-team.ru" <khlebnikov@yandex-team.ru>
-References: <20190816214413.15006-1-nigupta@nvidia.com>
- <87634ddc-8bfd-8311-46c4-35f7dc32d42f@suse.cz>
- <7bbd5322ed7a7fcb349c83952f8fc17448cd07d8.camel@nvidia.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <71d7fba0-bd6f-3ac5-1fd8-9a8ff6fc6b8b@suse.cz>
-Date:   Tue, 24 Sep 2019 15:39:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 24 Sep 2019 09:43:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58642 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbfIXNn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:43:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8ODhOdD022608;
+        Tue, 24 Sep 2019 08:43:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569332604;
+        bh=MGPyYnOE9iJUG1lF+FjK3DuaMzMR8PthtlnbMzCnkWY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SGnBwd7KtaGNMfFGxoEmchvTacVbzL/kamdKhN6Yg5WQd7ooVcRaU2xlUoOyb+6xR
+         2BvhtgzKKJIBwF/QRSKM/dE0xUcbktVNPRwTMaswkDBIXbLPxEA9OayigmHBfOOGbH
+         Ky0f59PhYft4z5egXRRPwCeTQAVFiXC4XYKX2N4M=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8ODhO5W005401
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Sep 2019 08:43:24 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
+ Sep 2019 08:43:17 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 24 Sep 2019 08:43:17 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8ODhMOk055308;
+        Tue, 24 Sep 2019 08:43:22 -0500
+Subject: Re: [PATCH v4 1/3] led: make led_set_brightness_sync() use
+ led_set_brightness_nosleep()
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <daniel.thompson@linaro.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmurphy@ti.com>, <tomi.valkeinen@ti.com>
+References: <20190920122525.15712-1-jjhiblot@ti.com>
+ <20190920122525.15712-2-jjhiblot@ti.com>
+ <c8519e2f-9d46-e164-04d0-42cc5834042a@gmail.com>
+ <2172e1c7-931e-d510-648b-80ef9c606ab6@ti.com>
+ <2de8d45c-dc0f-90d2-ed8d-96494a6386c1@gmail.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <360f37a8-da8d-6ea9-3164-35d2289097dc@ti.com>
+Date:   Tue, 24 Sep 2019 15:43:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <7bbd5322ed7a7fcb349c83952f8fc17448cd07d8.camel@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2de8d45c-dc0f-90d2-ed8d-96494a6386c1@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 1:37 AM, Nitin Gupta wrote:
-> On Tue, 2019-08-20 at 10:46 +0200, Vlastimil Babka wrote:
+
+On 23/09/2019 23:03, Jacek Anaszewski wrote:
+> Hi Jean,
+>
+> On 9/23/19 11:14 AM, Jean-Jacques Hiblot wrote:
+>> Hi Jacek,
 >>
->> That's a lot of control knobs - how is an admin supposed to tune them to
->> their
->> needs?
-> 
-> 
-> Yes, it's difficult for an admin to get so many tunable right unless
-> targeting a very specific workload.
-> 
-> How about a simpler solution where we exposed just one tunable per-node:
->    /sys/.../node-x/compaction_effort
-> which accepts [0, 100]
-> 
-> This parallels /proc/sys/vm/swappiness but for compaction. With this
-> single number, we can estimate per-order [low, high] watermarks for external
-> fragmentation like this:
->  - For now, map this range to [low, medium, high] which correponds to specific
-> low, high thresholds for extfrag.
->  - Apply more relaxed thresholds for higher-order than for lower orders.
-> 
-> With this single tunable we remove the burden of setting per-order explicit
-> [low, high] thresholds and it should be easier to experiment with.
+>> On 20/09/2019 23:10, Jacek Anaszewski wrote:
+>>> Hi Jean,
+>>>
+>>> On 9/20/19 2:25 PM, Jean-Jacques Hiblot wrote:
+>>>> Making led_set_brightness_sync() use led_set_brightness_nosleep() has 2
+>>>> advantages:
+>>>> - works for LED controllers that do not provide
+>>>> brightness_set_blocking()
+>>>> - When the blocking callback is used, it uses the workqueue to update
+>>>> the
+>>>>     LED state, removing the need for mutual exclusion between
+>>>>     led_set_brightness_sync() and set_brightness_delayed().
+>>> And third:
+>>>
+>>> - it compromises the "sync" part of the function name :-)
+>> Making it sync is the role of the flush_work() function. It waits until
+>> the deferred work has been done.
+> The thing is not in the blocking character of the function, but rather
+> in the fastest possible way of setting torch brightness.
+> led_set_brightness_nosleep() will defer brightness_set_blocking op
+> to the workqueue so this condition will not be met then.
 
-What about instead autotuning by the numbers of allocations hitting
-direct compaction recently? IIRC there were attempts in the past (myself
-included) and recently Khalid's that was quite elaborated.
+OK. I see the point there.
 
-> -Nitin
-> 
-> 
-> 
+>
+> This function was added specifically for LED class flash v4l2 wrapper:
+> drivers/media/v4l2-core/v4l2-flash-led-class.c.
+>
+> It may need an addition of support for brightness_set only drivers,
+> but we haven't had a use case so far, since all client flash LED
+> controllers are driven via blocking buses (there are not many of them).
+>
+> Also, when LED flash class (and thus LED class also as a parent)
+> is hijacked by v4l2-flash-led wrapper, its sysfs is disabled,
+> so it is not possible to set e.g. timer trigger which could
+> interfere with the led_set_brightness_sync() (and it also returns
+> -EBUSY when blinking is enabled).
 
+Then this is a really special use case and we don't really have to  
+worry about synchronization with the other ways to set the LED 
+brightness. I'll drop any change to this function then.
+
+Thanks for the detailed explanation.
+
+JJ
+
+
+>
+>>> This function has been introduced specifically to be blocking
+>>> and have the immediate effect. Its sole client is
+>>> drivers/media/v4l2-core/v4l2-flash-led-class.c.
+>>>
+>>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>>>> ---
+>>>>    drivers/leds/led-core.c | 12 +++++++-----
+>>>>    1 file changed, 7 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>>>> index f1f718dbe0f8..50e28a8f9357 100644
+>>>> --- a/drivers/leds/led-core.c
+>>>> +++ b/drivers/leds/led-core.c
+>>>> @@ -294,15 +294,17 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
+>>>>    int led_set_brightness_sync(struct led_classdev *led_cdev,
+>>>>                    enum led_brightness value)
+>>>>    {
+>>>> +    int ret;
+>>>> +
+>>>>        if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
+>>>>            return -EBUSY;
+>>>>    -    led_cdev->brightness = min(value, led_cdev->max_brightness);
+>>>> -
+>>>> -    if (led_cdev->flags & LED_SUSPENDED)
+>>>> -        return 0;
+>>>> +    ret = led_set_brightness_nosleep(led_cdev, value);
+>>>> +    if (!ret)
+>>>> +        return ret;
+>>>>    -    return __led_set_brightness_blocking(led_cdev,
+>>>> led_cdev->brightness);
+>>>> +    flush_work(&led_cdev->set_brightness_work);
+>>>> +    return 0;
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(led_set_brightness_sync);
+>>>>   
