@@ -2,129 +2,89 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45344C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B94C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E45B20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D2D20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409665AbfIXNzk (ORCPT
+        id S2409679AbfIXNzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:55:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:28644 "EHLO mx1.redhat.com"
+        Tue, 24 Sep 2019 09:55:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53374 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730484AbfIXNzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:55:40 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2409666AbfIXNzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:55:42 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8AC483A206;
-        Tue, 24 Sep 2019 13:55:39 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-44.pek2.redhat.com [10.72.12.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1E3D5B69A;
-        Tue, 24 Sep 2019 13:55:18 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V2 4/8] modpost: add support for mdev class id
-Date:   Tue, 24 Sep 2019 21:53:28 +0800
-Message-Id: <20190924135332.14160-5-jasowang@redhat.com>
-In-Reply-To: <20190924135332.14160-1-jasowang@redhat.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3FD68859FB
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:55:42 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id z8so604116wrs.14
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 06:55:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OsafvY49lv+IdkcQBZiY+1pyMhsITwm284eCfBsvG3Q=;
+        b=m00t2uTPLRNJXCJCdM1mABBqwRrPnyNXe2vuBMt8wdZ/GVqSFl4Aq9Id/opLvWujZi
+         CYWDU+qH5oMP9mBr9LxQmyV2RzLbs6QG5NfmTC3Qon5Y5OqrLWlA9VRqHAOsDXD9x+tu
+         jOVeYFxKQ9b8xMhE+SY3119OF1pop82uwKNzUIl0mCxeMecvBaK6dk6x87/GFJ2XrL58
+         RqkzeHGN10CUy2fcZtSV3ZwRlGiHSfBMdShqj5SVrbQmvAUaITf1zpduFUf7fAPutGVa
+         J3j+oB78Y9ShAkm6ro4Z68iHonui8tiqLoIt9PdCNOg5xejfCcGqqAQVL+IRpOmaWqu5
+         NFfQ==
+X-Gm-Message-State: APjAAAXn3PaJvJvs3eWJSZnYI1GS+DRdDGOYSH6JthYNPnw2QL78LX+B
+        0UzRjzc411A5tfl0IkE243WKeHqo6jTVGSxnrGsvGFl74Ic7LD3nbxaw9zW1lZ47QIG+CVOjAOS
+        kREiJVXPW889CT9U+y+sR7KLD
+X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2412465wrx.156.1569333340906;
+        Tue, 24 Sep 2019 06:55:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwg4Zkq5DqRbVkfGA29BmZtf2KR4d9hVorp2wEdWQ5fXNb3WiB0tDW4Xw1GTkf7h7ZkJFH54w==
+X-Received: by 2002:a05:6000:12:: with SMTP id h18mr2412442wrx.156.1569333340651;
+        Tue, 24 Sep 2019 06:55:40 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id s1sm4225070wrg.80.2019.09.24.06.55.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 06:55:39 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] KVM: X86: Fix userspace set broken combinations of
+ CPUID and CR4
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
+References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
+ <1568708186-20260-2-git-send-email-wanpengli@tencent.com>
+ <20190917173258.GB2876@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d0c35f21-b262-2c4e-9109-4ab803487705@redhat.com>
+Date:   Tue, 24 Sep 2019 15:55:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 24 Sep 2019 13:55:39 +0000 (UTC)
+In-Reply-To: <20190917173258.GB2876@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to parse mdev class id table.
+On 17/09/19 19:32, Sean Christopherson wrote:
+> 
+> Paolo, can you provide an "official" ruling on how KVM_SET_SREGS should
+> interact with reserved bits?  It's not at all clear from the git history
+> if skipping the checks was intentional or an oversight.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vfio/mdev/vfio_mdev.c     |  2 ++
- scripts/mod/devicetable-offsets.c |  3 +++
- scripts/mod/file2alias.c          | 10 ++++++++++
- 3 files changed, 15 insertions(+)
+It's okay to make it fail as long as KVM already checks the value of the
+reserved bits on vmexit.  If not, some care might be required.
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index fd2a4d9a3f26..891cf83a2d9a 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -125,6 +125,8 @@ static struct mdev_class_id id_table[] = {
- 	{ 0 },
- };
- 
-+MODULE_DEVICE_TABLE(mdev, id_table);
-+
- static struct mdev_driver vfio_mdev_driver = {
- 	.name	= "vfio_mdev",
- 	.probe	= vfio_mdev_probe,
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-index 054405b90ba4..6cbb1062488a 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -231,5 +231,8 @@ int main(void)
- 	DEVID(wmi_device_id);
- 	DEVID_FIELD(wmi_device_id, guid_string);
- 
-+	DEVID(mdev_class_id);
-+	DEVID_FIELD(mdev_class_id, id);
-+
- 	return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index e17a29ae2e97..6805f87a1149 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1330,6 +1330,15 @@ static int do_wmi_entry(const char *filename, void *symval, char *alias)
- 	return 1;
- }
- 
-+/* looks like: "mdev:cN" */
-+static int do_mdev_entry(const char *filename, void *symval, char *alias)
-+{
-+	DEF_FIELD(symval, mdev_class_id, id);
-+
-+	sprintf(alias, "mdev:c%02X", id);
-+	return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1402,6 +1411,7 @@ static const struct devtable devtable[] = {
- 	{"typec", SIZE_typec_device_id, do_typec_entry},
- 	{"tee", SIZE_tee_client_device_id, do_tee_entry},
- 	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
-+	{"mdev", SIZE_mdev_class_id, do_mdev_entry},
- };
- 
- /* Create MODULE_ALIAS() statements.
--- 
-2.19.1
-
+Paolo
