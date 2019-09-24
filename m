@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC36C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9BBC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A739E20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164DB21906
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343621;
-	bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+	s=default; t=1569343625;
+	bh=xXqTTNREpLdYn6bT7Dacf3FS8rp75G+TLfM3oBVMFtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KS/ZslXUZTGY2kchoxw9debrb+m1F3Lrnu7CYKDTqUGH3lLZ0r21aJKqHwYc4ZQAN
-	 NawOgq5oJe6oehDe6nvVR9eBOiGM3OPUcYyT+Y/MHQkbZBv9CUuE2YRIIHB7jLPaOV
-	 H6cWOMNr3qA7nDz9IHbgVTTMe5UdLATL88G4HOyA=
+	b=aOJUqhOqU4wDmu0IA8r4xciSA4Y1caiQynm+UqNob03E53zCcmrRdoN5zbYOKZsDv
+	 NfpzH6bRfGpm0MvWzaOq5kOpF1FAKqsu2tNydV49u5wafCjDbn8mKrHqViikcgQDVl
+	 oHIsvn3J01iVEm3DD8Qs91a0yqU/hAAVDZpqVZF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410247AbfIXQrA (ORCPT
+        id S1729939AbfIXQrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410093AbfIXQqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:55 -0400
+        id S2410161AbfIXQq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B100421906;
-        Tue, 24 Sep 2019 16:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CE5920673;
+        Tue, 24 Sep 2019 16:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343614;
-        bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+        s=default; t=1569343615;
+        bh=xXqTTNREpLdYn6bT7Dacf3FS8rp75G+TLfM3oBVMFtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kjwmaz+s1EUtmFpZmrOMXaNSM6UC/mxE3xVcN7buvVZiAUUIAxPeHf9hNXm7OgTTs
-         bWz6X32QY3IFVfkq/pdk3IsP0xlbTv8Kf1O6+XW+O3kUdI7drQEGJR32iGU7ycvRb+
-         WbXSIveolWJJZIUprNLw4+Ps4NdS6PO7AmqDR/Jg=
+        b=b672iV96DKkTxOPTObFUMtarmE9kwTEmKSD3CYdKwZZtsE2+QlNWiL1nwtDkKDAin
+         4eGD2xVRfAr788rT+YogaXwc2QB1kkbob9TlaWFUTkUm0TDOwW0Ki+JEQdQaggA32o
+         XAVIjlFF+4LGLdnsbCfie0jbDWEGbUktnlbD1MBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ahzo <Ahzo@tutanota.com>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 26/70] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
-Date:   Tue, 24 Sep 2019 12:45:05 -0400
-Message-Id: <20190924164549.27058-26-sashal@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 27/70] clk: actions: Don't reference clk_init_data after registration
+Date:   Tue, 24 Sep 2019 12:45:06 -0400
+Message-Id: <20190924164549.27058-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahzo <Ahzo@tutanota.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
+[ Upstream commit cf9ec1fc6d7cceb73e7f1efd079d2eae173fdf57 ]
 
-This fixes screen corruption/flickering on 75 Hz displays.
+A future patch is going to change semantics of clk_register() so that
+clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+referencing this member here so that we don't run into NULL pointer
+exceptions.
 
-v2: make print statement debug only (Alex)
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Ahzo <Ahzo@tutanota.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190731193517.237136-2-sboyd@kernel.org
+[sboyd@kernel.org: Move name to after checking for error or NULL hw]
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/actions/owl-common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index 048757e8f4949..d1919d343cce4 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -4064,6 +4064,11 @@ static int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
+diff --git a/drivers/clk/actions/owl-common.c b/drivers/clk/actions/owl-common.c
+index 32dd29e0a37e1..4de97cc7cb54d 100644
+--- a/drivers/clk/actions/owl-common.c
++++ b/drivers/clk/actions/owl-common.c
+@@ -68,16 +68,17 @@ int owl_clk_probe(struct device *dev, struct clk_hw_onecell_data *hw_clks)
+ 	struct clk_hw *hw;
  
- 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
+ 	for (i = 0; i < hw_clks->num; i++) {
++		const char *name;
  
-+	if (data->frame_time_x2 < 280) {
-+		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
-+		data->frame_time_x2 = 280;
-+	}
-+
- 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
+ 		hw = hw_clks->hws[i];
+-
+ 		if (IS_ERR_OR_NULL(hw))
+ 			continue;
  
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
++		name = hw->init->name;
+ 		ret = devm_clk_hw_register(dev, hw);
+ 		if (ret) {
+ 			dev_err(dev, "Couldn't register clock %d - %s\n",
+-				i, hw->init->name);
++				i, name);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.20.1
 
