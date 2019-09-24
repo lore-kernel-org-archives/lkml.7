@@ -2,136 +2,95 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24A5C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EBFC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715892146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S0wL3sdM"
+	by mail.kernel.org (Postfix) with ESMTP id 635292146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 20:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441994AbfIXUiy (ORCPT
+        id S2442009AbfIXUk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 16:38:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45571 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441977AbfIXUiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 16:38:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id u12so1442755pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 13:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UZKL+542wWKMtqmPB6ZvBJSdUhAfyCh5/zN16bhGakE=;
-        b=S0wL3sdM8d7Q+5AXyTcUlMHv1TTpJejEloFuec4WRpAkLmKcvHmgitE1IokWm23HwW
-         r+9a9GSziwe0GDztbRTKWzAGkdkec6tLYLINYCNpRX4PHpC0cddz5w3l5+XtquS5NnVf
-         fqZP5D1nV0ZUJ3VrRp4xuEQCDLBuOei31MZ46orV7epEfNhvEqwIQRRhQwUBcicvJemG
-         GtcJW6qW0BukiLlU7p2kqS9cW28NB0Nc31/537h0CJ2uZgTBhbTcC1u/fcAjbn2qQr6R
-         /IrlFVVrpBoMcVo6YOVTGQpYmQozhHHkxJOaefCm35jiP1t3VYNpqYcs7dvWrgZLHXrm
-         Fn3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UZKL+542wWKMtqmPB6ZvBJSdUhAfyCh5/zN16bhGakE=;
-        b=rdjzhgd9G9RzmTMBliSZNI1VBHR8tPCThpnFnVjdjag1SzREVFu4r9gAZ/lUbdfL0L
-         Ame5F65JMkQXn4Q8f1KwUoNdReF4li8NeBP5vJ0zq4bu7zEss+Fk+se0+Ud9rIFy3IcF
-         ffWxvqcLRRhgUMz5FN1ATlNh79FAPlnQYV83vjFt4mJ7fDUemmTONXt9pbqEykX7xoGv
-         JPRqfOuFX+E9edrnUhS6Byyh5ynp59ABN7DpyGJJxmuFfAXroJHXewayQWN5J4uLzQKp
-         PrK25V4npr26timS9ZBFfAGzduxXqCjMhj2Ro+wpTPETpYaYhOQAT9tvNpDdUscsJAY/
-         i02Q==
-X-Gm-Message-State: APjAAAVVy/AYpi6K036jDA7Ft9Rv8SEdw6oQF/CvXr6+A+TPoVV3l0Bm
-        WkDMAZAZRSDHmElDVN6RHgOApg==
-X-Google-Smtp-Source: APXvYqys8CWbFt5YPo4VOMno8TMWKcB9zMouJBRLLd0jC5kTZUKLp1yNC4y6Yy2B+9rsAj0o0qbsHA==
-X-Received: by 2002:a17:902:20b:: with SMTP id 11mr5302676plc.62.1569357531963;
-        Tue, 24 Sep 2019 13:38:51 -0700 (PDT)
-Received: from dell ([12.157.10.114])
-        by smtp.gmail.com with ESMTPSA id p88sm865032pjp.22.2019.09.24.13.38.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Sep 2019 13:38:51 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 21:38:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com
-Subject: Re: [PATCH] mfd: mt6360: add pmic mt6360 driver
-Message-ID: <20190924203848.GC4469@dell>
-References: <1568801744-21380-1-git-send-email-gene.chen.richtek@gmail.com>
- <20190918105121.GB5016@dell>
- <CAE+NS37XG+kfbj6yJrL5A-d2O_aiRU90yV5TUk3Kfa0Rv7dWmw@mail.gmail.com>
- <20190919071828.GC5016@dell>
- <CAE+NS342Kn6OEz4D9Y0yfXStnW6KQ6N2yuQtgN2q2bXafofShg@mail.gmail.com>
+        Tue, 24 Sep 2019 16:40:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:36806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441998AbfIXUk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 16:40:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2DDA337;
+        Tue, 24 Sep 2019 13:40:25 -0700 (PDT)
+Received: from [172.23.27.158] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1BA53F67D;
+        Tue, 24 Sep 2019 13:40:20 -0700 (PDT)
+Subject: Re: Problems with arm64 compat vdso
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     ard.biesheuvel@linaro.org, catalin.marinas@arm.com,
+        linux-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, tglx@linutronix.de, will@kernel.org,
+        natechancellor@gmail.com
+References: <991e5bf9-6e15-1ca1-d593-8abe553ebe7c@arm.com>
+ <20190924180634.206177-1-ndesaulniers@google.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <c164b359-75a0-5244-1e9b-7a4db1f52bd3@arm.com>
+Date:   Tue, 24 Sep 2019 21:42:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190924180634.206177-1-ndesaulniers@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS342Kn6OEz4D9Y0yfXStnW6KQ6N2yuQtgN2q2bXafofShg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Sep 2019, Gene Chen wrote:
+Hi Nick,
 
-> 2019-09-19 15:18 GMT+08:00, Lee Jones <lee.jones@linaro.org>:
-> > On Thu, 19 Sep 2019, Gene Chen wrote:
-> >
-> >> Lee Jones <lee.jones@linaro.org> 於 2019年9月18日 週三 下午6:51寫道：
-> >> >
-> >> > On Wed, 18 Sep 2019, Gene Chen wrote:
-> >> >
-> >> > > From: Gene Chen <gene_chen@richtek.com>
-> >> > >
-> >> > > Add mfd driver for mt6360 pmic chip include
-> >> > > Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
-> >> > >
-> >> > > Signed-off-by: Gene Chen <gene_chen@richtek.com
-> >> > > ---
-> >> >
-> >> > This looks different from the one you sent before, but I don't see a
-> >> > version bump or any changelog in this space.  Please re-submit with
-> >> > the differences noted.
-> >> >
-> >>
-> >> the change is
-> >> 1. add missing include file
-> >> 2. modify commit message
-> >>
-> >> this patch is regarded as version 1
-> >
-> > It's different to the first one you sent to the list, so it needs a
-> > version bump and a change log.  There also appears to still be issues
-> > with it, if the auto-builders are to be believed.
-> >
-> > Do ensure you thoroughly test your patches before sending upstream.
-> >
-> > Please fix the issues and resubmit your v3 with a nice changelog.
-> >
+thanks for reporting this.
+
+On 9/24/19 7:06 PM, Nick Desaulniers wrote:
+> Hi Vincenzo,
+> We also are having issues building the cross vDSO with Clang:
+> https://github.com/ClangBuiltLinux/linux/issues/595
 > 
-> thank you for suggestion
-> may i ask how to disable kbuild test reboot for s390/x86_64/ia64?
-> we want support only cross compiler =  aarch64-linux-gnu-
-> and we have test build pass with our patch
 
-You can't and we wouldn't want to.
+The initial implementation of vdso32 does not have support for Clang. I was
+planning to add it with a second patch set but it seems requiring more work.
 
-If this driver should only be built/tested for AArch64, you need to
-ensure the Kconfig represents that.
+> It seems that `LINUXINCLUDE` in arch/arm64/kernel/vdso32/Makefile is including
+> arm64 headers in the arm part of the vdso32 build, which causes Clang to error
+> on the arm64 inline asm constraints being used in arm64.
+> 
+> I think if the issue Will described is fixed, it will be simpler for us to fix
+> the rest to get it to build w/ Clang.
+> 
+> https://github.com/ClangBuiltLinux/linux/issues/595#issuecomment-509874891
+> is the basis of such a patch.
+> 
+
+I agree with you this issue needs to be solved once and for all, but I feel that
+the solution is not straight forward. Next week I will post a fix to the problem
+Will raised and then will start investigating a more long term solution.
+
+> Clang ships with all backends on by default, and uses a `-target <triple>` to
+> cross compile; so the idea of passing two cross compiler binaries for a compat
+> vDSO build doesn't really apply to Clang.
+> 
+
+My idea was to derivate the triple for clang from the compat cross compiler name
+removing the final dash.
+
+I have in my Makefile something on the lines:
+
+CLANG_TRIPLE ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%-"=%)
+...
+COMPATCC := $(CC) --target=$(notdir $CLANG_TRIPLE)
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Vincenzo
