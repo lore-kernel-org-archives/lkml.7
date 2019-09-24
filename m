@@ -2,27 +2,27 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9E0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84772C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999A9214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628AF214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439655AbfIXSM4 (ORCPT
+        id S2439738AbfIXSNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:12:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43946 "EHLO mx1.suse.de"
+        Tue, 24 Sep 2019 14:13:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44036 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393874AbfIXSMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:12:54 -0400
+        id S2439610AbfIXSM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:12:58 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 22E57AC93;
-        Tue, 24 Sep 2019 18:12:51 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 3CDFFABBD;
+        Tue, 24 Sep 2019 18:12:55 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
@@ -33,13 +33,13 @@ To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-media@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com,
         james.quinlan@broadcom.com, wahrenst@gmx.net,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno@lists.freedesktop.org
-Subject: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-Date:   Tue, 24 Sep 2019 20:12:31 +0200
-Message-Id: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 04/11] of: address: introduce of_translate_dma_address_parent()
+Date:   Tue, 24 Sep 2019 20:12:35 +0200
+Message-Id: <20190924181244.7159-5-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,80 +47,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
-this series tries to address one of the issues blocking us from
-upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
-devices not represented in DT which sit behind a PCI bus fail to get the
-bus' DMA addressing constraints.
+Some devices might not have a DT node of their own, but might still need
+to translate DMA addresses based on their bus DT node.
 
-This is due to the fact that of_dma_configure() assumes it's receiving a
-DT node representing the device being configured, as opposed to the PCIe
-bridge node we currently pass. This causes the code to directly jump
-into PCI's parent node when checking for 'dma-ranges' and misses
-whatever was set there.
+Update of_translate_dma_address() to only depend on the parent DT node.
+Rename it to of_translate_dma_address_parent(). The later will be still
+available as a wrapper around the new function.
 
-To address this I create a new API in OF - inspired from Robin Murphys
-original proposal[2] - which accepts a bus DT node as it's input in
-order to configure a device's DMA constraints. The changes go deep into
-of/address.c's implementation, as a device being having a DT node
-assumption was pretty strong.
-
-On top of this work, I also cleaned up of_dma_configure() removing its
-redundant arguments and creating an alternative function for the special cases
-not applicable to either the above case or the default usage.
-
-IMO the resulting functions are more explicit. They will probably
-surface some hacky usages that can be properly fixed as I show with the
-DT fixes on the Layerscape platform.
-
-This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
-on a Seattle AMD board.
-
-Regards,
-Nicolas
-
-[1] https://patchwork.kernel.org/patch/9650345/#20294961
-[2] https://patchwork.kernel.org/patch/9650345/
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
-Nicolas Saenz Julienne (11):
-  of: address: clean-up unused variable in of_dma_get_range()
-  of: base: introduce __of_n_*_cells_parent()
-  of: address: use parent DT node in bus->count_cells()
-  of: address: introduce of_translate_dma_address_parent()
-  of: expose __of_get_dma_parent() to OF subsystem
-  of: address: use parent OF node in of_dma_get_range()
-  dts: arm64: layerscape: add dma-ranges property to qoric-mc node
-  dts: arm64: layerscape: add dma-ranges property to pcie nodes
-  of: device: remove comment in of_dma_configure()
-  of: device: introduce of_dma_configure_parent()
-  of: simplify of_dma_config()'s arguments
+ drivers/of/address.c | 60 ++++++++++++++++++++++++++------------------
+ 1 file changed, 36 insertions(+), 24 deletions(-)
 
- .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   1 +
- .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi |   5 +
- .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |   1 +
- drivers/base/platform.c                       |   2 +-
- drivers/bcma/main.c                           |   2 +-
- drivers/bus/fsl-mc/fsl-mc-bus.c               |   2 +-
- drivers/dma/qcom/hidma_mgmt.c                 |   2 +-
- drivers/gpu/drm/etnaviv/etnaviv_drv.c         |   2 +-
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |   2 +-
- drivers/gpu/drm/sun4i/sun4i_backend.c         |   2 +-
- drivers/gpu/drm/xen/xen_drm_front.c           |   2 +-
- drivers/gpu/host1x/bus.c                      |   4 +-
- drivers/media/platform/qcom/venus/firmware.c  |   2 +-
- drivers/media/platform/s5p-mfc/s5p_mfc.c      |   2 +-
- drivers/of/address.c                          | 136 +++++++++---------
- drivers/of/base.c                             |  69 +++++++--
- drivers/of/device.c                           |  59 +++++++-
- drivers/of/of_private.h                       |   5 +
- drivers/pci/pci-driver.c                      |   3 +-
- drivers/xen/gntdev.c                          |   2 +-
- include/linux/of_address.h                    |   8 +-
- include/linux/of_device.h                     |  23 ++-
- 22 files changed, 223 insertions(+), 113 deletions(-)
-
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 9c1e638fa8ea..c9eb4ebcc2e9 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -570,33 +570,32 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+  * device that had registered logical PIO mapping, and the return code is
+  * relative to that node.
+  */
+-static u64 __of_translate_address(struct device_node *dev,
+-				  struct device_node *(*get_parent)(const struct device_node *),
+-				  const __be32 *in_addr, const char *rprop,
+-				  struct device_node **host)
++static u64 __of_translate_address_parent(struct device_node *parent,
++					 struct device_node *(*get_parent)
++						(const struct device_node *),
++					 const __be32 *in_addr,
++					 const char *rprop,
++					 struct device_node **host)
+ {
+-	struct device_node *parent = NULL;
++	struct device_node *dev = NULL;
+ 	struct of_bus *bus, *pbus;
+ 	__be32 addr[OF_MAX_ADDR_CELLS];
+ 	int na, ns, pna, pns;
+ 	u64 result = OF_BAD_ADDR;
+ 
+-	pr_debug("** translation for device %pOF **\n", dev);
+-
+-	/* Increase refcount at current level */
+-	of_node_get(dev);
+-
+ 	*host = NULL;
+-	/* Get parent & match bus type */
+-	parent = get_parent(dev);
+-	if (parent == NULL)
++
++	if (!parent)
+ 		goto bail;
++
++	/* Increase refcount at current level and match bus type */
++	of_node_get(parent);
+ 	bus = of_match_bus(parent);
+ 
+ 	/* Count address cells & copy address locally */
+ 	bus->count_cells(parent, &na, &ns);
+ 	if (!OF_CHECK_COUNTS(na, ns)) {
+-		pr_debug("Bad cell count for %pOF\n", dev);
++		pr_debug("Bad cell count for %pOF\n", parent);
+ 		goto bail;
+ 	}
+ 	memcpy(addr, in_addr, na * 4);
+@@ -610,9 +609,8 @@ static u64 __of_translate_address(struct device_node *dev,
+ 		struct logic_pio_hwaddr *iorange;
+ 
+ 		/* Switch to parent bus */
+-		of_node_put(dev);
+ 		dev = parent;
+-		parent = get_parent(dev);
++		parent = get_parent(parent);
+ 
+ 		/* If root, we have finished */
+ 		if (parent == NULL) {
+@@ -650,6 +648,8 @@ static u64 __of_translate_address(struct device_node *dev,
+ 			break;
+ 
+ 		/* Complete the move up one level */
++		of_node_put(dev);
++		dev = parent;
+ 		na = pna;
+ 		ns = pns;
+ 		bus = pbus;
+@@ -668,8 +668,10 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+ 	struct device_node *host;
+ 	u64 ret;
+ 
+-	ret = __of_translate_address(dev, of_get_parent,
+-				     in_addr, "ranges", &host);
++	pr_debug("** translation for device %pOF **\n", dev);
++
++	ret = __of_translate_address_parent(dev->parent, of_get_parent,
++					    in_addr, "ranges", &host);
+ 	if (host) {
+ 		of_node_put(host);
+ 		return OF_BAD_ADDR;
+@@ -697,14 +699,14 @@ static struct device_node *__of_get_dma_parent(const struct device_node *np)
+ 	return of_node_get(args.np);
+ }
+ 
+-u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
++static u64 of_translate_dma_address_parent(struct device_node *parent,
++					   const __be32 *in_addr)
+ {
+ 	struct device_node *host;
+ 	u64 ret;
+ 
+-	ret = __of_translate_address(dev, __of_get_dma_parent,
+-				     in_addr, "dma-ranges", &host);
+-
++	ret = __of_translate_address_parent(parent, __of_get_dma_parent, in_addr,
++					    "dma-ranges", &host);
+ 	if (host) {
+ 		of_node_put(host);
+ 		return OF_BAD_ADDR;
+@@ -712,6 +714,14 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ 
+ 	return ret;
+ }
++
++u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
++{
++	pr_debug("** translation for device %pOF **\n", dev);
++
++	return of_translate_dma_address_parent(__of_get_dma_parent(dev->parent),
++					       in_addr);
++}
+ EXPORT_SYMBOL(of_translate_dma_address);
+ 
+ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+@@ -759,8 +769,10 @@ static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
+ 	unsigned long port;
+ 	struct device_node *host;
+ 
+-	taddr = __of_translate_address(dev, of_get_parent,
+-				       in_addr, "ranges", &host);
++	pr_debug("** translation for device %pOF **\n", dev);
++
++	taddr = __of_translate_address_parent(dev->parent, of_get_parent,
++					      in_addr, "ranges", &host);
+ 	if (host) {
+ 		/* host-specific port access */
+ 		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
 -- 
 2.23.0
 
