@@ -2,126 +2,143 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D888C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004AEC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620F4214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DAA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SktUiaLd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Diz/MIln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437151AbfIXThm (ORCPT
+        id S2439567AbfIXTj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:37:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42627 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730848AbfIXThm (ORCPT
+        Tue, 24 Sep 2019 15:39:59 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40721 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730834AbfIXTj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:37:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so1942375pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 12:37:42 -0700 (PDT)
+        Tue, 24 Sep 2019 15:39:58 -0400
+Received: by mail-qk1-f193.google.com with SMTP id y144so3037799qkb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 12:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=861g/thnt5QkfvdcsmgCyLRARPkFspYG3nF0aXDzCWA=;
-        b=SktUiaLd9F5Jf3iByUjAf+GkoVnW2XX4kdsqmEIhB2IhVb+pTZBPocC80KxizMaerH
-         Ri+d71iDRduEmMDXKUC68B09OZAsksiEbIUj4lMd9EXi+N8TJOMH9L0fl5BfTe3Dl1gq
-         CYB4HfNt7QJFPOJ8NhX5koF97r3twWDnQeevbEcdoHpIt14PN4ko34550JfqmCrJ5ENN
-         3sGlc85bZsBMQaN8vWMXHB758I9xafnIGBasVn1oX8skJzlW7HDGOEpf4elcTbcKtsTo
-         j3NL84EmAZc70ZDKvPjIcvI/ase8sZqWUAb0AUZwGlhXYpGrcORIO+plEOfVYeANVnwI
-         6+QQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hst94Q/uEIj99uJShhCkFvpZkrB3EQ8x2MXnvyPaPyo=;
+        b=Diz/MIln0Ci08QUy8q8XscghMGLcVtTzXZc1saNGpsT2ACsPNUtSh5RKA9bEQq4pNC
+         P8r8FpvOSm5fcF5qPlFncIUWnZ+WNNRq9WxL6rjl5Lq8cNmeyOrjVsss6xzSdWCn1xgQ
+         +LPSiAKO8/1h0HGqviMaCVbAo87xKtIG5KLoXWXwV/Bf/ZCkKtp9VBvpPk90ehdoq1po
+         TcJWuMYG6Nim85vIBQ45B3LOKNnEN5VC7l1avPT/z0oGMI5PaSpUDArQoRX55iR+wY2x
+         AVgvRnT0SPpHD8DNPqVTCcnhHd0LY6igYREMWEiwOvSJMPwGcoXgg1JrzjWbUVHtsRMw
+         PIZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=861g/thnt5QkfvdcsmgCyLRARPkFspYG3nF0aXDzCWA=;
-        b=miv7CVgjSEZfiR6s/9Vsmrgs4lcWD7vUigj82OR3kbuMeIAAXfE9b1yLtcgs8ccnCb
-         r/Yqfg67iQ8J2fNJ8V674366Xaqz8EeNnU9lghUJdW/dJm/Y5ZL3ulS8K0w4JqVoR7nz
-         c71IeeNW5wiGfOcoaM/0nntwKcHCVGtE9dzXIYMOY384e064KytZ3+r7U7G8dOvx0Afx
-         smoTwv14mRdnat4XtAYH6bSES0Z/GSdMUM9bGffWMW/fJOiPxQTnSxgFsMkFT3ScRWXK
-         xU7CcYe0HRWW+Yjb35aR2xsXtkkKXrucfC88Kq3BXt+dqRggxhs1SCmub/AvrGtjxYrL
-         vf/w==
-X-Gm-Message-State: APjAAAUU/iDtnA/QM8DZcCn0r0mtkrx20M8Lg08LoSdBTUDG/Zmz1ntW
-        iTkFnIhuq4iQIrxJP1YlCprBShWUrMmGPTCRsi5gtw==
-X-Google-Smtp-Source: APXvYqx2VLE/eblOPChlvUvwmwZbJMDq48hIcoLWVKYN/QofXMt9O6X4xo8a/Ckegi4UzAmVo8TycOrKxZ47bAGOHzg=
-X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr1747977pjb.123.1569353861100;
- Tue, 24 Sep 2019 12:37:41 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hst94Q/uEIj99uJShhCkFvpZkrB3EQ8x2MXnvyPaPyo=;
+        b=kos/ZdUTUT9LDf+QT7axzWJ4ak9gDTORTbNqwOmF0BPC7/5Tx//rozcH+yxqsQcmMc
+         3fvU+kza464JYTL9W0Uq3tRVzUCCZzlQmm244QH/E1hydhB+v33+bZ93iixPF7l2gmZZ
+         wR/S72FSIjbpsjaFSCHRT4UA+AMpLj89qzNot4dv2WHs2JLUXje/0S3ZwRICejYfOLwg
+         NrkWoeBwIb/aaudBjxQZ4DLDJS1kOuLh+Q9tETkwHZ/khEfuwjLzUY76f0/EuVhxiVXd
+         5Vewu0jrG8aPDsJbdtOGYwHBZ7GDG0L8dJDF6sN4uBp0vk0pFnGNKTtW/AdMEMSgonPK
+         VhjQ==
+X-Gm-Message-State: APjAAAU9U/3YvfR/eeqfPg+VaxVNf1arwOm+e1OpiY7F8oosEm68JaXf
+        ki+7eGeZS1Xn3jDgxb1+6kg=
+X-Google-Smtp-Source: APXvYqxl9tF8OblJkzVkfY13yJw2V3kGQ7Rrjw4aZlGwnVdasnw9sd3aXvwhsSFJ9bxdXG9Ra+JGFg==
+X-Received: by 2002:a37:660e:: with SMTP id a14mr4101995qkc.481.1569353997605;
+        Tue, 24 Sep 2019 12:39:57 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.210.60])
+        by smtp.gmail.com with ESMTPSA id v13sm1229040qtp.61.2019.09.24.12.39.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 12:39:57 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9B0B141105; Tue, 24 Sep 2019 16:39:46 -0300 (-03)
+Date:   Tue, 24 Sep 2019 16:39:46 -0300
+To:     Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, ravi.bangoria@linux.ibm.com,
+        maddy@linux.vnet.ibm.com, peterz@infradead.org, mpe@ellerman.id.au,
+        alexander.shishkin@linux.intel.com, mingo@redhat.com,
+        namhyung@kernel.org, jolsa@redhat.com
+Subject: Re: [PATCH]perf vendor events:Remove P8 HW events which are not
+ supported
+Message-ID: <20190924193946.GB20773@kernel.org>
+References: <20190909065624.11956.3992.stgit@localhost.localdomain>
 MIME-Version: 1.0
-References: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
- <20190924193310.132104-1-ndesaulniers@google.com>
-In-Reply-To: <20190924193310.132104-1-ndesaulniers@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Sep 2019 12:37:30 -0700
-Message-ID: <CAKwvOdnesgP8uVv3x9Ywqy0U24d_V9G-ovD5y__xJKB+t==6hg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86, realmode: explicitly set entry via command line
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Tri Vo <trong@android.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>,
-        George Rimar <grimar@accesssoftek.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909065624.11956.3992.stgit@localhost.localdomain>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:33 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Linking with ld.lld via $ make LD=ld.lld produces the warning:
-> ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
->
-> Linking with ld.bfd shows the default entry is 0x1000:
-> $ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
->   Entry point address:               0x1000
->
-> While ld.lld is being pedantic, just set the entry point explicitly,
-> instead of depending on the implicit default.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/216
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Em Mon, Sep 09, 2019 at 12:33:33PM +0530, Mamatha Inamdar escreveu:
+> This patch is to remove following hardware events
+> from JSON file which are not supported on POWER8.
+> 
+> pm_l3_p0_grp_pump
+> pm_l3_p0_lco_data
+> pm_l3_p0_lco_no_data
+> pm_l3_p0_lco_rty
 
-I meant to pick up Sedat's reported by tag:
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Thanks, applied.
 
+- Arnaldo
+ 
+> Fixes: c3b4d5c4afb0 ("perf vendor events: Remove P8 HW events which are not supported")
+> Note: Unfortunately power8 event list is not publicly available.
+> Signed-off-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+> Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 > ---
-> Changes V1 -> V2:
-> * Use command line flag, rather than linker script, as ld.bfd produces a
->   syntax error for `ENTRY(0x1000)` but is happy with `-e 0x1000`
->
->  arch/x86/realmode/rm/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-> index f60501a384f9..338a00c5257f 100644
-> --- a/arch/x86/realmode/rm/Makefile
-> +++ b/arch/x86/realmode/rm/Makefile
-> @@ -46,7 +46,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
->  targets += realmode.lds
->  $(obj)/realmode.lds: $(obj)/pasyms.h
->
-> -LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
-> +LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -e 0x1000 -T
->  CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
->
->  targets += realmode.elf
-> --
-> 2.23.0.351.gc4317032e6-goog
->
-
+>  .../perf/pmu-events/arch/powerpc/power8/other.json |   24 --------------------
+>  1 file changed, 24 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power8/other.json b/tools/perf/pmu-events/arch/powerpc/power8/other.json
+> index 9dc2f6b7..b2a3df0 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power8/other.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power8/other.json
+> @@ -1776,30 +1776,6 @@
+>      "PublicDescription": ""
+>    },
+>    {,
+> -    "EventCode": "0xa29084",
+> -    "EventName": "PM_L3_P0_GRP_PUMP",
+> -    "BriefDescription": "L3 pf sent with grp scope port 0",
+> -    "PublicDescription": ""
+> -  },
+> -  {,
+> -    "EventCode": "0x528084",
+> -    "EventName": "PM_L3_P0_LCO_DATA",
+> -    "BriefDescription": "lco sent with data port 0",
+> -    "PublicDescription": ""
+> -  },
+> -  {,
+> -    "EventCode": "0x518080",
+> -    "EventName": "PM_L3_P0_LCO_NO_DATA",
+> -    "BriefDescription": "dataless l3 lco sent port 0",
+> -    "PublicDescription": ""
+> -  },
+> -  {,
+> -    "EventCode": "0xa4908c",
+> -    "EventName": "PM_L3_P0_LCO_RTY",
+> -    "BriefDescription": "L3 LCO received retry port 0",
+> -    "PublicDescription": ""
+> -  },
+> -  {,
+>      "EventCode": "0x84908d",
+>      "EventName": "PM_L3_PF0_ALLOC",
+>      "BriefDescription": "lifetime, sample of PF machine 0 valid",
 
 -- 
-Thanks,
-~Nick Desaulniers
+
+- Arnaldo
