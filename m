@@ -7,51 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE6C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FFEC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DA82054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281C12054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344233;
-	bh=eQQX1mrwjoz4wTwPLvSAkqRdOPfl9X+kxA550T8b/II=;
+	s=default; t=1569344236;
+	bh=PPtC1byf+ycl0gIBvOoGFB9Pn3P+DpibUDguInGQ/6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLW6YJGTFU4ILmAHvKvsrPFLNx3SMjAIe7mjDtWa4gl62byG4xx8GtzA2SVSHz5/g
-	 dHLs7KYFEu4Bh1OWYyZFyZtHa0aRfFBlqWruRECwSQrWZQG1/eQdhfzWD7peBNTyTI
-	 SYHFJ1xNWsEmj3YWUFDfyiX+aXZA/MnFO+B4nn+o=
+	b=eyJpVL3kbSy9N1dzbysFNc6b/+nt0xyoY4Bn3cG28N6qcT+xAUSuCYr6wy3dzPL2w
+	 T5DZzKzvdg3P/KYdFmfAeNtCAzxQvELxCPUs/d/oxNMS5KudxGHBui+4DEmLdTWsoV
+	 GYHHhNkqsA94fdVrKU9gLhXs9iSvJ0jp6K/iJvUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410176AbfIXQs7 (ORCPT
+        id S1732044AbfIXQ5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731013AbfIXQsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:52 -0400
+        id S2410164AbfIXQs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B06221D7E;
-        Tue, 24 Sep 2019 16:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B49B21906;
+        Tue, 24 Sep 2019 16:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343732;
-        bh=eQQX1mrwjoz4wTwPLvSAkqRdOPfl9X+kxA550T8b/II=;
+        s=default; t=1569343737;
+        bh=PPtC1byf+ycl0gIBvOoGFB9Pn3P+DpibUDguInGQ/6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAkS63XNwZoegXuRfTRkGwdD/8V1m5kr+V7izCMt2zGDRrjIy1cgybWdjFdbAlR4F
-         K2EwiGv4tvv7ST/2qm4LVs+t1c5hdeYCij3G9ArDhMiAkRV4dW2OW2zjoohbCn7AG8
-         GElqFksapJpF5fpDuHBvaJjehjcR0XC+5Bxsovt0=
+        b=R6U/2PiQxDqAftyiwR20NlPViuE/KqsCWLc3kpcko8xueZoyAgUZY7FBCnCR4r+Hh
+         vDxitVzEbyKiEunAHn9kEcNYIcprQLtzldgPGMKJJfhfxiuhhOQsz8wJ4ebzEifVWs
+         LgQieo77XwfkGlqxJPfom+HOVTlj2vIR7dG8ZnXY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+Cc:     Marko Kohtala <marko.kohtala@okoko.fi>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 02/50] drm/bridge: adv7511: Attach to DSI host at probe time
-Date:   Tue, 24 Sep 2019 12:47:59 -0400
-Message-Id: <20190924164847.27780-2-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/50] video: ssd1307fb: Start page range at page_offset
+Date:   Tue, 24 Sep 2019 12:48:02 -0400
+Message-Id: <20190924164847.27780-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,64 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Redfearn <matt.redfearn@thinci.com>
+From: Marko Kohtala <marko.kohtala@okoko.fi>
 
-[ Upstream commit 83f35bc3a852f1c3892c7474998c5cec707c7ba3 ]
+[ Upstream commit dd9782834dd9dde3624ff1acea8859f3d3e792d4 ]
 
-In contrast to all of the DSI panel drivers in drivers/gpu/drm/panel
-which attach to the DSI host via mipi_dsi_attach() at probe time, the
-ADV7533 bridge device does not. Instead it defers this to the point that
-the upstream device connects to its bridge via drm_bridge_attach().
-The generic Synopsys MIPI DSI host driver does not register it's own
-drm_bridge until the MIPI DSI has attached. But it does not call
-drm_bridge_attach() on the downstream device until the upstream device
-has attached. This leads to a chicken and the egg failure and the DRM
-pipeline does not complete.
-Since all other mipi_dsi_device drivers call mipi_dsi_attach() in
-probe(), make the adv7533 mipi_dsi_device do the same. This ensures that
-the Synopsys MIPI DSI host registers it's bridge such that it is
-available for the upstream device to connect to.
+The page_offset was only applied to the end of the page range. This caused
+the display updates to cause a scrolling effect on the display because the
+amount of data written to the display did not match the range display
+expected.
 
-Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190627151740.2277-1-matt.redfearn@thinci.com
+Fixes: 301bc0675b67 ("video: ssd1307fb: Make use of horizontal addressing mode")
+Signed-off-by: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618074111.9309-4-marko.kohtala@okoko.fi
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index e7ddd3e3db920..807827bd910e5 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -874,9 +874,6 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
- 				 &adv7511_connector_helper_funcs);
- 	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 6439231f2db22..da565f39c9b06 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -433,7 +433,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
  
--	if (adv->type == ADV7533)
--		ret = adv7533_attach_dsi(adv);
--
- 	if (adv->i2c_main->irq)
- 		regmap_write(adv->regmap, ADV7511_REG_INT_ENABLE(0),
- 			     ADV7511_INT0_HPD);
-@@ -1222,8 +1219,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
- 	drm_bridge_add(&adv7511->bridge);
+-	ret = ssd1307fb_write_cmd(par->client, 0x0);
++	ret = ssd1307fb_write_cmd(par->client, par->page_offset);
+ 	if (ret < 0)
+ 		return ret;
  
- 	adv7511_audio_init(dev, adv7511);
-+
-+	if (adv7511->type == ADV7533) {
-+		ret = adv7533_attach_dsi(adv7511);
-+		if (ret)
-+			goto err_remove_bridge;
-+	}
-+
- 	return 0;
- 
-+err_remove_bridge:
-+	drm_bridge_remove(&adv7511->bridge);
- err_unregister_cec:
- 	i2c_unregister_device(adv7511->i2c_cec);
- 	if (adv7511->cec_clk)
 -- 
 2.20.1
 
