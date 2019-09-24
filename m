@@ -2,173 +2,126 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159EEC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF9C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D4320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3619221655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 09:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YOArI7n5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OrfOVB6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395390AbfIXJt0 (ORCPT
+        id S2504403AbfIXJt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 05:49:26 -0400
-Received: from mail-eopbgr140045.outbound.protection.outlook.com ([40.107.14.45]:38614
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392592AbfIXJtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 05:49:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O0txogB4rFx6NKY5ZqwmrVy9wSXOv/92LbnYBDhle+iPOMdvTXoV6WhvcW66QMZ/TNTnydddwZdKZL24LrZvC2Xzj+FwNVMtjwqGYc0sl7jjQllW3MyAc5PjtXh/OZU1sMMt5G6ouhXpl2KwgfMtPh+g+uBOYKm42tf2ODBcyk5XvyFtLIWDL9zQICG3DezuQVh/GhagXp2juLsESJ+RTaEyjFA7junyHNpbB2e8NIdS05ib6kOu9fg+lbbC3QXYcWSNFjYrYW7Hook6cPyRmgxgYA3X+IvMHHy3KZV7y8sNG4jWjDmVB69ggrkatyFoMeg6hDq6CCx/BtsfarbV5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OAPPSsCtAOwgKhNpbzg/xYaJiessAiZJO4uR8zuUmPU=;
- b=TWaPO5sbvO183pcXX6A+kZpGFpe/2RWRoYxEq7eKoFIpzyb8TXlmgCzPAK/URlmOl4nERPxsmhqU8deqM0wIKF5PGD3sYO99OG0UNZsmcTSuohBn712MM+FfdKoWJkfM7BOyBnnBNXLKah5Gcsi8I9cv0kBZIVoM3RWk54HD/d3wc32VtsCmZBxW2m5nKVPNeqfcQf1dTUaGRqzK1xkKAb1Lp2VlqWhWe4xeM+muOVb/wvnrc+9+sBEZtlSEkwN72vIXUvp8MPRc8ZaeW6cYlwTfsR3RKPgcx1ntf/IWRfMTsVanuIUV6qi2Swqfb9wSG+ycirZe8mS4FkfU63m7JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OAPPSsCtAOwgKhNpbzg/xYaJiessAiZJO4uR8zuUmPU=;
- b=YOArI7n5HtOHr9az3QrKGjx018ealUNoW35AAa+KKWmUbUckO+KTNHZUqwnaOP38LqHTGp5yZVox/hmBn6PVMkZa5yHqsOz1x/SI1LayvtLJ7dANQ4rydKy0Z+F8LQrDPbb795U303L47il032AYTDdr65yn6WpkaD15qkrDGeI=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6560.eurprd04.prod.outlook.com (20.179.234.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 09:49:18 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561%5]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 09:49:18 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "J.Lambrecht@TELEVIC.com" <J.Lambrecht@TELEVIC.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1] dmaengine: imx-sdma: fix kernel hangs with SLUB slab
- allocator
-Thread-Topic: [PATCH v1] dmaengine: imx-sdma: fix kernel hangs with SLUB slab
- allocator
-Thread-Index: AQHVcr1VGWNo2EzDlEmVbBRWEyoOAw==
-Date:   Tue, 24 Sep 2019 09:49:18 +0000
-Message-ID: <1569347584-3478-1-git-send-email-yibin.gong@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0P153CA0045.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:17::33) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8483d06d-f9be-4148-f3d9-08d740d477b2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6560;
-x-ms-traffictypediagnostic: VE1PR04MB6560:|VE1PR04MB6560:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB65604C340BA36162D990FB8689840@VE1PR04MB6560.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:605;
-x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(199004)(189003)(5660300002)(66476007)(110136005)(6486002)(36756003)(6306002)(86362001)(8676002)(486006)(66446008)(7416002)(26005)(81156014)(8936002)(966005)(4326008)(99286004)(2501003)(102836004)(6436002)(50226002)(256004)(14454004)(2201001)(3846002)(186003)(25786009)(478600001)(6116002)(66066001)(305945005)(71190400001)(81166006)(71200400001)(2906002)(14444005)(2616005)(54906003)(6506007)(316002)(386003)(7736002)(476003)(66556008)(66946007)(52116002)(64756008)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6560;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XKKTYo4pPRs+46TEbEl/CXyJvGirY8qB3d2B5mnXzRuTH5ZXMl4zGYoj2eINSmK4QifxcqOp9wf+ury17Xx2k54qR+Kw0zIX+DhS2oPnfljLGMx5plMu804Abpf7Q/qdvgGY5cSJm+pfUN0FgQN4NWtIGuy58TFOI5Y4ki6xKclrfIBGbprDC0d0YfIpuHh+OaCLCLYaBsdt0MUMA09H910dLkJHjnNHht2jMPiQD7f9JkkdIDlZZbSOn723G69tgbJCpkTgfdP5b3q1YiMsdTAXAbvSeJwAM8/m4TeXXNPL8KnMLyvh8ERhjR/wBLe6Jl+CV6Tu0Anlqzm9VCxfrUWmoP/K4vy0Ft+eOZGmEspVYFmALtWQ3TDMubNulza170MrdNTqNWBmpWp1pmrYC6i+ANeYtTdODSJ32Y4eafeYOvr8lzM2yCvbYuH7rEhVLACgk3l954XkLw6ueBvI+w==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 05:49:57 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47898 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392592AbfIXJt5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 05:49:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=J0LZ/gusRdLyBWuYJRWJKvWsgZDGpCWr1sFbbmR0ywU=; b=OrfOVB6yh0tLqWmKmibVsYj7v
+        Y7RqOoFoTFHmJzVEEnPzO3ycgqqjdiULaBY9g+B7fX5Tkv8bfG7OQc1yKMu/ppfwwywcBvNDxFeqM
+        CpKae2SqC0H1jvs3m+ksS2xVys3D0Fhw12J3dN3Xf+iSRxKj+CeM6bBN5JNvFqXACz8WNwD0/skmY
+        cz6O0kTvdGDsNORYDXbdaUIpGceNjwB9YHSL1utX6Le1a1NSncpcwXdAy5NNj5sAFeqPDZJRdqM4B
+        oDelUPuFe3MkrthRQh5mef1PIn0q4B6QKufhPSu3KqqtDBE1sD3SCa0ta5ZeG2x5+IzGn4A6LtZgs
+        i6q0ehSuw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iChS7-0006sx-Aj; Tue, 24 Sep 2019 09:49:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76DDD305E35;
+        Tue, 24 Sep 2019 11:48:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 054BF20D80D41; Tue, 24 Sep 2019 11:49:43 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 11:49:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+Message-ID: <20190924094942.GN2349@hirez.programming.kicks-ass.net>
+References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+ <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+ <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
+ <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+ <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+ <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
+ <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8483d06d-f9be-4148-f3d9-08d740d477b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 09:49:18.4343
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VmFAyFNomgWRXTTuRZ+WDUviwNOnSn7sTdmyJ2pZzRvzmUDjwt0fLSWSQmdntsDrOLfcqR0dV/fP94Cnv3FW5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6560
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(41) exceed the size of structure sdma_script_start_addrs(40),
-thus cause memory corrupt such as slob block header so that kernel
-trap into while() loop forever in slob_free(). Please refer to below
-code piece in imx-sdma.c:
-for (i =3D 0; i < sdma->script_number; i++)
-	if (addr_arr[i] > 0)
-		saddr_arr[i] =3D addr_arr[i]; /* memory corrupt here */
-That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
-support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(38->41 3 scripts added) not align with script number added in
-sdma_script_start_addrs(2 scripts).
+On Tue, Sep 24, 2019 at 10:36:28AM +0200, Jens Axboe wrote:
 
-Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmwa=
-re")
-Cc: stable@vger.kernel
-Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
----
- drivers/dma/imx-sdma.c                     | 8 ++++++++
- include/linux/platform_data/dma-imx-sdma.h | 3 +++
- 2 files changed, 11 insertions(+)
+> +struct io_wait_queue {
+> +	struct wait_queue_entry wq;
+> +	struct io_ring_ctx *ctx;
+> +	struct task_struct *task;
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 9ba74ab..c27e206 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1707,6 +1707,14 @@ static void sdma_add_scripts(struct sdma_engine *sdm=
-a,
- 	if (!sdma->script_number)
- 		sdma->script_number =3D SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
-=20
-+	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
-+				  / sizeof(s32)) {
-+		dev_err(sdma->dev,
-+			"SDMA script number %d not match with firmware.\n",
-+			sdma->script_number);
-+		return;
-+	}
-+
- 	for (i =3D 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] =3D addr_arr[i];
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/pla=
-tform_data/dma-imx-sdma.h
-index 6eaa53c..30e676b 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -51,7 +51,10 @@ struct sdma_script_start_addrs {
- 	/* End of v2 array */
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
-+	s32 mcu_2_ecspi_addr;
- 	/* End of v3 array */
-+	s32 mcu_2_zqspi_addr;
-+	/* End of v4 array */
- };
-=20
- /**
---=20
-2.7.4
+wq.private is where the normal waitqueue stores the task pointer.
+
+(I'm going to rename that)
+
+> +	unsigned to_wait;
+> +	unsigned nr_timeouts;
+> +};
+> +
+> +static inline bool io_should_wake(struct io_wait_queue *iowq)
+> +{
+> +	struct io_ring_ctx *ctx = iowq->ctx;
+> +
+> +	/*
+> +	 * Wake up if we have enough events, or if a timeout occured since we
+> +	 * started waiting. For timeouts, we always want to return to userspace,
+> +	 * regardless of event count.
+> +	 */
+> +	return io_cqring_events(ctx->rings) >= iowq->to_wait ||
+> +			atomic_read(&ctx->cq_timeouts) != iowq->nr_timeouts;
+> +}
+> +
+> +static int io_wake_function(struct wait_queue_entry *curr, unsigned int mode,
+> +			    int wake_flags, void *key)
+> +{
+> +	struct io_wait_queue *iowq = container_of(curr, struct io_wait_queue,
+> +							wq);
+> +
+> +	if (io_should_wake(iowq)) {
+> +		list_del_init(&curr->entry);
+> +		wake_up_process(iowq->task);
+
+Then you can use autoremove_wake_function() here.
+
+> +		return 1;
+> +	}
+> +
+> +	return -1;
+> +}
+
+Ideally we'd get wait_event()'s @cond in a custom wake function. Then we
+can _always_ do this.
+
+This is one I'd love to have lambda functions for. It would actually
+work with GCC nested functions, because the wake function will always be
+in scope, but we can't use those in the kernel for other reasons :/
 
