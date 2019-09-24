@@ -2,110 +2,117 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6101C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373C9C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C9721A4C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QXOLXWDX"
+	by mail.kernel.org (Postfix) with ESMTP id 14668214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 14:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441416AbfIXOgI (ORCPT
+        id S2441390AbfIXOgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 10:36:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39494 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441388AbfIXOgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 10:36:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so1494763pff.6
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 07:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mWrjSZbVzCSF8WZ+++HHslTJ1JQwI009WrWGF5Q75K0=;
-        b=QXOLXWDXD9cpbzgz03LiGWlIBs/0qBEe80yPw2GCtljpLIWho1iF80bPezz6ZNnP6I
-         D4rA3JhatVzlkT7Oli+DDLHiC/lWW55x2meeHh1bsya2aqBiFiDt0PQ+EOo3LeTOvKf2
-         9XiRoRnemDBmtkZxx1/DGqK6efW/b6ckVx66tuzVznQU8CmTfPpWyEVEUn6p/LZ6B7zv
-         67C5n0GDBfxTC7MYM1Lbxvf1N1uzMkPWS+qeE9TJTHaLQVUIN/mjlHVXyM89vcbcNGKb
-         Bi7Gb9uhHUP9uryb7REQ5Yjos4tc1Jq6nlPrh1QE5vjyGytw9xOyEhwwvIiTbERjkkY3
-         msjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mWrjSZbVzCSF8WZ+++HHslTJ1JQwI009WrWGF5Q75K0=;
-        b=BaIChNfWLkADdftl94Jjk9sxWY6M9Kg7+1lOUsqIFYKiN9KePvwp/ofw1aAVWgKlzl
-         QIT99Am3GSDJ43QSlcApPSv50vUYWrPMu0ZAQA3EMxZ4mvywNwY/p3Hspkzhek+iTBGt
-         8IIF6vqxNsJm/9ZaX0O3Xmhy307NjymGlEcPXwhmHjVyUyXEh8AcF0d2ztwO++Qct+wX
-         V4KJNEoRjbuLPnWGAGJQ5/ebs76A0do3ue58qatDipIujuMvpM4xCHuh7XfUhyHU2508
-         UuFpx+er29iHCDtKoqEU6tcVdHynwRnoWUoqezzFXdiHxDgLf4chTeTAv9STPyGbZrka
-         ftJA==
-X-Gm-Message-State: APjAAAWA5ASb49y/bAe8Ao0cPzzEKei4hgJ3wfB3itaOJ04aExgFNj1k
-        IIzQcUFiqTdJ0ZBjki+KhFIxPGNfg711ORns9H5//Q==
-X-Google-Smtp-Source: APXvYqyassC1JU9mUeijE+TXPXc9EO7l74X+9vvcwIMCjByf/qWBPPeG4NmqGp82zUmMmAxfXtMpZYCSGJ6iI9OyuYk=
-X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr323505pjb.123.1569335766151;
- Tue, 24 Sep 2019 07:36:06 -0700 (PDT)
+        Tue, 24 Sep 2019 10:36:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54356 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388630AbfIXOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 10:36:21 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 91D81309BF1A;
+        Tue, 24 Sep 2019 14:36:20 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-245.ams2.redhat.com [10.36.116.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B2181001B08;
+        Tue, 24 Sep 2019 14:36:15 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+Date:   Tue, 24 Sep 2019 16:36:15 +0200
+Message-Id: <20190924143615.19628-1-david@redhat.com>
 MIME-Version: 1.0
-References: <CAAeHK+wE8ngx2Pa9=vD6Fw6MCbHpxfX6ss97deQUsmGD_Bw_Bw@mail.gmail.com>
- <Pine.LNX.4.44L0.1909241031550.6144-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1909241031550.6144-100000@netrider.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 24 Sep 2019 16:35:55 +0200
-Message-ID: <CAAeHK+wx8bHJXHDyx29Jnc7K+FzL33DCs23_NZPN6uHxho4vKA@mail.gmail.com>
-Subject: Re: general protection fault in open_rio
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+dbd38fbb686a9681143a@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 24 Sep 2019 14:36:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 4:33 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 24 Sep 2019, Andrey Konovalov wrote:
->
-> > On Tue, Sep 24, 2019 at 4:19 PM syzbot
-> > <syzbot+dbd38fbb686a9681143a@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    d9e63adc usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1602b303600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f4fa60e981ee8e6a
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=dbd38fbb686a9681143a
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+dbd38fbb686a9681143a@syzkaller.appspotmail.com
->
-> > Most probably the same bug:
-> >
-> > https://syzkaller.appspot.com/bug?extid=745b0dff8028f9488eba
-> >
-> > #syz dup: KASAN: invalid-free in disconnect_rio (2)
->
-> Even more to the point, a patch was recently posted to the mailing list
-> to remove the rio500 driver entirely:
->
->         https://marc.info/?l=linux-usb&m=156925553004947&w=2
+Since commit 3f906ba23689 ("mm/memory-hotplug: switch locking to a percpu
+rwsem") we do a cpus_read_lock() in mem_hotplug_begin(). This was
+introduced to fix a potential deadlock between get_online_mems() and
+get_online_cpus() - the memory and cpu hotplug lock. The root issue was
+that build_all_zonelists() -> stop_machine() required the cpu hotplug lock:
+    The reason is that memory hotplug takes the memory hotplug lock and
+    then calls stop_machine() which calls get_online_cpus().  That's the
+    reverse lock order to get_online_cpus(); get_online_mems(); in
+    mm/slub_common.c
 
-OK, I'll use this commit to mark the remaining rio500 reports once
-it's upstream. Thanks!
+So memory hotplug never really required any cpu lock itself, only
+stop_machine() and lru_add_drain_all() required it. Back then,
+stop_machine_cpuslocked() and lru_add_drain_all_cpuslocked() were used
+as the cpu hotplug lock was now obtained in the caller.
+
+Since commit 11cd8638c37f ("mm, page_alloc: remove stop_machine from build
+all_zonelists"), the stop_machine_cpuslocked() call is gone.
+build_all_zonelists() does no longer require the cpu lock and does no
+longer make use of stop_machine().
+
+Since commit 9852a7212324 ("mm: drop hotplug lock from
+lru_add_drain_all()"), lru_add_drain_all() "Doesn't need any cpu hotplug
+locking because we do rely on per-cpu kworkers being shut down before our
+page_alloc_cpu_dead callback is executed on the offlined cpu.". The
+lru_add_drain_all_cpuslocked() variant was removed.
+
+So there is nothing left that requires the cpu hotplug lock. The memory
+hotplug lock and the device hotplug lock are sufficient.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+RFC -> v1:
+- Reword and add more details why the cpu hotplug lock was needed here
+  in the first place, and why we no longer require it.
+
+---
+ mm/memory_hotplug.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c3e9aed6023f..5fa30f3010e1 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -88,14 +88,12 @@ __setup("memhp_default_state=", setup_memhp_default_state);
+ 
+ void mem_hotplug_begin(void)
+ {
+-	cpus_read_lock();
+ 	percpu_down_write(&mem_hotplug_lock);
+ }
+ 
+ void mem_hotplug_done(void)
+ {
+ 	percpu_up_write(&mem_hotplug_lock);
+-	cpus_read_unlock();
+ }
+ 
+ u64 max_mem_size = U64_MAX;
+-- 
+2.21.0
+
