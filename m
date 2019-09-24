@@ -2,104 +2,105 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F14FC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AE4C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED83E21BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dW+YhmmP"
+	by mail.kernel.org (Postfix) with ESMTP id AB9F9217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:42:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569343368;
+	bh=NDBtYKgN3zzwF34NkX10fbsw48KNwYppKEDi5dL90zc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jKbL/AYRxIiZtVMglaBEQgL3YgjE2fYlfgdOTNt4H2hYmAOy+weGThBS3nceSQgnB
+	 hIMsnlk0JKq36YK6IeltWzKAzCLcJY4jXtWIZ6lrSpaZCRncWhzHBCS1x/S+hiqRp5
+	 Cvid41A+hENIUNWy09w7krSfN812jdgVT96OIVl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441467AbfIXQmj (ORCPT
+        id S2505067AbfIXQmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:42:39 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50540 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405867AbfIXQm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:42:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgOff069325;
-        Tue, 24 Sep 2019 11:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569343344;
-        bh=K7lDNtUuO5vpQIbYTqcQ/9ho+gI4TbiTgMLfOPWETG0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dW+YhmmPJnAkKdSdm2981TRlBsaVccrclDydSXt44NghdY12Si32jKyNwpD1eQY+5
-         hGLkl39o2IxPdODAtXhsVaZU78NGc36W4P73GB7gJHXmbQ2FxX6oT7L7x+eScvWjjP
-         87ddwsfgmb7fZJZczPQWutJTitMfQQSSEoXh6cpU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgOfC122076;
-        Tue, 24 Sep 2019 11:42:24 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 24
- Sep 2019 11:42:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 24 Sep 2019 11:42:24 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8OGgCQZ073229;
-        Tue, 24 Sep 2019 11:42:24 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 7/8] media: i2c: ov2659: Fix missing 720p register config
-Date:   Tue, 24 Sep 2019 11:44:13 -0500
-Message-ID: <20190924164414.21897-8-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
-References: <20190924164414.21897-1-bparrot@ti.com>
+        Tue, 24 Sep 2019 12:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409810AbfIXQmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:42:33 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E442121850;
+        Tue, 24 Sep 2019 16:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569343352;
+        bh=NDBtYKgN3zzwF34NkX10fbsw48KNwYppKEDi5dL90zc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Th9PVXcwK9SWn5RsaGP3X0CDN/iskb+laqek0elG++JJ3nHrrhTcZE0Bn0XMrcOjw
+         oUQYKSr4mTPNXuZ74uG3imQbmhSWH5BUaD4czFAdTsk3AQF+ow67XXj1JUaTaGCglg
+         v53Xka4xRVe5XOLUhJ77SfhFU1m/bAnvEcKk2Or0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 15/87] drm/stm: attach gem fence to atomic state
+Date:   Tue, 24 Sep 2019 12:40:31 -0400
+Message-Id: <20190924164144.25591-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190924164144.25591-1-sashal@kernel.org>
+References: <20190924164144.25591-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-This was not done properly for the 720p case.
+[ Upstream commit 8fabc9c3109a71b3577959a05408153ae69ccd8d ]
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
+To properly synchronize with other devices the fence from the GEM
+object backing the framebuffer needs to be attached to the atomic
+state, so the commit work can wait on fence signaling.
+
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Tested-by: Philippe Cornu <philippe.cornu@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190712084228.8338-1-l.stach@pengutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/stm/ltdc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 0e026b810de5..23f161fd69bb 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -412,10 +412,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 2fe6c4a8d9155..3ab4fbf8eb0d1 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -26,6 +26,7 @@
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_of.h>
+ #include <drm/drm_plane_helper.h>
+ #include <drm/drm_probe_helper.h>
+@@ -922,6 +923,7 @@ static const struct drm_plane_funcs ltdc_plane_funcs = {
  };
  
+ static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs = {
++	.prepare_fb = drm_gem_fb_prepare_fb,
+ 	.atomic_check = ltdc_plane_atomic_check,
+ 	.atomic_update = ltdc_plane_atomic_update,
+ 	.atomic_disable = ltdc_plane_atomic_disable,
 -- 
-2.17.1
+2.20.1
 
