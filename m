@@ -2,107 +2,130 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416ADC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F94DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B36A207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPnTCL2s"
+	by mail.kernel.org (Postfix) with ESMTP id E3447207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407399AbfIXTVU (ORCPT
+        id S2501951AbfIXTX2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:21:20 -0400
-Received: from mail-qt1-f179.google.com ([209.85.160.179]:37719 "EHLO
-        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730858AbfIXTVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:21:19 -0400
-Received: by mail-qt1-f179.google.com with SMTP id d2so3562716qtr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 12:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=A5eS5NXht/vOaGonLfgI9sz4CtBniYeY84hPs1tCF1U=;
-        b=pPnTCL2s+MDwOixyKhQt4so/dr7NxfSvZtoG6zTBeUbJnurN4L/Wt2417aeCaYQeHQ
-         0ARnrk4Edbj7XgxvCivBp6CAPlrUDiyRFNpAziInufexp8LXUrlMUxDy/r53xEe+ish6
-         2EglZW6obyuM4pHb1Jyl1V5MZi4w6+W85npiFwsZudv3lAU0TKEtFP+g4S9MQ2FqhG94
-         DsL0NRtFji9G7YdfRMK3bmvP/CyyyjCiwtOjy2vk1zF+c5apbh3WaxOPFR2MpKSX8LjD
-         8pWXrPOf1xIqcyjqE/MLQXC1IIUNqYEOpLo7FkQlC+dSFGxFGEEeHoj1pPW+cZRPYaHM
-         /W3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A5eS5NXht/vOaGonLfgI9sz4CtBniYeY84hPs1tCF1U=;
-        b=PsIhQmv72lkj317evvdQBTjesBLqFdIJUT6SCk7OJhimAI+UlEOJ0kQwiOuG3gLMIq
-         vw/Q/oS1GkS+GqsoHfCNlHafoD1C9AmMDQ+QYY9aJFnMXxPDyC/ejwd5/re1HvvTTBnH
-         SzP3Wp1N0jUPHCDaVCO789mffjhyIjP+PO5ZizHcomAs9Hpkj/SigQJbHNxT0/4MUcTf
-         LBbL6d2CJ2owv6AHxJ7niN2oRL3nVDgBLm61wWOMGrKRfM/Ta8DjAaLmj+co18WGwwI4
-         ChpRabNFLTgA5dzMStMr20P/wo6DZVKLw+i+dpE18HQZFChYMTDzW9ae//eZCKLRpGiI
-         9/cA==
-X-Gm-Message-State: APjAAAVsUJypfxLvzkG4FHCGk97Jrd8e/W/QmDJjOjgM46pF9CqlQ3c2
-        dJszV/o11/xsyxLotEWdfZY=
-X-Google-Smtp-Source: APXvYqymWFT56IJ+vjDefojeO4qqFdA/Csb37ZGdXCQtDhRQsc94r/Go0f1QQr63x8U2PmmWZhdEhA==
-X-Received: by 2002:ac8:7b2e:: with SMTP id l14mr4574224qtu.11.1569352878906;
-        Tue, 24 Sep 2019 12:21:18 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.210.60])
-        by smtp.gmail.com with ESMTPSA id j137sm1571001qke.64.2019.09.24.12.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 12:21:18 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A9DA041105; Tue, 24 Sep 2019 16:20:46 -0300 (-03)
-Date:   Tue, 24 Sep 2019 16:20:46 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Andi Kleen <andi@firstfloor.org>,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf, stat: Fix free memory access / memory leaks in
- metrics
-Message-ID: <20190924192046.GA20773@kernel.org>
-References: <20190923233339.25326-1-andi@firstfloor.org>
- <20190923233339.25326-3-andi@firstfloor.org>
- <20190924075040.GC26797@krava>
- <20190924140856.GQ8537@tassilo.jf.intel.com>
- <20190924144418.GC21815@krava>
+        Tue, 24 Sep 2019 15:23:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:11584 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407325AbfIXTX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 15:23:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 12:23:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
+   d="scan'208";a="201006599"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 12:23:26 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
+ ORSMSX102.amr.corp.intel.com ([169.254.3.63]) with mapi id 14.03.0439.000;
+ Tue, 24 Sep 2019 12:23:26 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Richard Cochran <richardcochran@gmail.com>
+CC:     "Hall, Christopher S" <christopher.s.hall@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
+Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
+Thread-Index: AQHVaGiJVAygg13ZgEaRBcEK9JTjfKc7SaLQ
+Date:   Tue, 24 Sep 2019 19:23:26 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
+References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
+ <20190911061622.774006-2-felipe.balbi@linux.intel.com>
+In-Reply-To: <20190911061622.774006-2-felipe.balbi@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzBiMDY1MDEtNGJhZi00NDg3LThmN2MtOTMzZGViYTZhYmZhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUGJZdkpiMHJIU3lXTmx5dTZSRlByRHVsMzRja1RLWU1mNXhvQnROcnd0V2hvajBcL1pxN0NTQnlTeENoYkt2UGQifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924144418.GC21815@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Sep 24, 2019 at 04:44:18PM +0200, Jiri Olsa escreveu:
-> On Tue, Sep 24, 2019 at 07:08:56AM -0700, Andi Kleen wrote:
-> > > >  	expr__ctx_init(&pctx);
-> > > > +	/* Must be first id entry */
-> > > > +	expr__add_id(&pctx, name, avg);
-> > > 
-> > > hum, shouldn't u instead use strdup(name) instead of name?
-> > 
-> > The cleanup loop later skips freeing the first entry.
+
+
+> -----Original Message-----
+> From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org] On
+> Behalf Of Felipe Balbi
+> Sent: Tuesday, September 10, 2019 11:16 PM
+> To: Richard Cochran <richardcochran@gmail.com>
+> Cc: Hall, Christopher S <christopher.s.hall@intel.com>; netdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Felipe Balbi <felipe.balbi@linux.intel.com>
+> Subject: [PATCH v4 2/2] PTP: add support for one-shot output
 > 
-> aaah, nice ;-)
+> Some controllers allow for a one-shot output pulse, in contrast to
+> periodic output. Now that we have extensible versions of our IOCTLs, we
+> can finally make use of the 'flags' field to pass a bit telling driver
+> that if we want one-shot pulse output.
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> ---
+> 
+> Changes since v3:
+> 	- Remove bogus bitwise negation
+> 
+> Changes since v2:
+> 	- Add _PEROUT_ to bit macro
+> 
+> Changes since v1:
+> 	- remove comment from .flags field
+> 
+>  include/uapi/linux/ptp_clock.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 9a0af3511b68..f16301015949 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -38,8 +38,8 @@
+>  /*
+>   * Bits of the ptp_perout_request.flags field:
+>   */
+> -#define PTP_PEROUT_VALID_FLAGS (0)
+> -
+> +#define PTP_PEROUT_ONE_SHOT (1<<0)
+> +#define PTP_PEROUT_VALID_FLAGS	(PTP_PEROUT_ONE_SHOT)
+>  /*
+>   * struct ptp_clock_time - represents a time value
+>   *
+> @@ -77,7 +77,7 @@ struct ptp_perout_request {
+>  	struct ptp_clock_time start;  /* Absolute start time. */
+>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>  	unsigned int index;           /* Which channel to configure. */
+> -	unsigned int flags;           /* Reserved for future use. */
+> +	unsigned int flags;
+>  	unsigned int rsv[4];          /* Reserved for future use. */
+>  };
+> 
+> --
+> 2.23.0
 
-Thanks, reproduced and applied, before the patch:
+Hi Felipe,
 
-      # perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
-      #           time      CPU_Utilization
-           1.000470810                      free(): double free detected in tcache 2
-      Aborted (core dumped)
-      #
+Do you have any examples for how you envision using this? I don't see any drivers or other code on the list for doing so.
 
-- Arnaldo
+Additionally, it seems weird because we do not have support for specifying the pulse width. I guess you leave that up to driver choice?
+
+Thanks,
+Jake
