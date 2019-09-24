@@ -2,53 +2,50 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4317C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B6C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D42F222CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05890217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344089;
-	bh=yz1l+mX2kWTBNqWz5GwY4gYJsIc9SZG72FUV/512H3c=;
+	s=default; t=1569344087;
+	bh=pNwcDY5adZIASHbxH2YPHMcw4V0qqTCiDHEkIG00gyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AY7sijTN7gnbQ1+cs6BiWbuVWTkHLEQUKNWTcda9b6fIlKqQhjJKXkCsjSxhavNbi
-	 AOV9hCrR/vhyTL59DIplKqImEWMHxjs6YorlK9dX4lCmnb+bPR/SiqwwlQ5gfcwFwk
-	 OgniRdr+xs0cJiDuhsJQfrK+kmSheM5wQ+3WCQjU=
+	b=BPTaVebaEdwQkH7jgVD+13MXN30LO5k7WMXYe8ZTe/f/lGY/dP58U4HkRfaZ80EHT
+	 KerkYDMkG7KSjrZoUDKQ3OFtH8UBYAH/ZIBvXmtstGA2SI5LUqz1hH9yw9HV+aabCo
+	 0j1gHKPMWP2UhVMhCQxh43fLlMHJBC8/UoqxVZ30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405941AbfIXQyo (ORCPT
+        id S2410961AbfIXQyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45086 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411167AbfIXQvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:41 -0400
+        id S2411162AbfIXQvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6898A21D7A;
-        Tue, 24 Sep 2019 16:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B359222C3;
+        Tue, 24 Sep 2019 16:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343901;
-        bh=yz1l+mX2kWTBNqWz5GwY4gYJsIc9SZG72FUV/512H3c=;
+        s=default; t=1569343900;
+        bh=pNwcDY5adZIASHbxH2YPHMcw4V0qqTCiDHEkIG00gyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1MP71Yx00/nH2MjDKvqhPrxYEl4yCTJMcjEDgZEcc8dyw5cSFDsXqb6g5GDLBO5z
-         zYi4wIoCdb6UP30eFD6doefioXv42DSJycpSwPv3fBvTKnY1Be2x0LfFln242u5dGj
-         4zbRYkfwHatU/1fuWVWEHgsscN8V+fEao3oBFtSs=
+        b=KEnWJiwyqO35hW3lCa/U3Jxpeu5zcvEkaWxxKoDZrSV6qZlsGHFoKIO0QxZX5AzUf
+         tTabq+4ul/YPbxDI32Mpv36tzDkaVq9Mmc0hZSs1Gaift8QyNS6aC1Xu4xw3WB0TAt
+         v7Gt8boP1yh8ODHZ7UIz+fViXGgmtg/wVx44GgRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Scott Wood <oss@buserror.net>, Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/19] clk: qoriq: Fix -Wunused-const-variable
-Date:   Tue, 24 Sep 2019 12:51:17 -0400
-Message-Id: <20190924165130.28625-6-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 05/19] ipmi_si: Only schedule continuously in the thread in maintenance mode
+Date:   Tue, 24 Sep 2019 12:51:16 -0400
+Message-Id: <20190924165130.28625-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
 References: <20190924165130.28625-1-sashal@kernel.org>
@@ -61,47 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit a95fb581b144b5e73da382eaedb2e32027610597 ]
+[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
 
-drivers/clk/clk-qoriq.c:138:38: warning: unused variable
-'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp1
+ipmi_thread() uses back-to-back schedule() to poll for command
+completion which, on some machines, can push up CPU consumption and
+heavily tax the scheduler locks leading to noticeable overall
+performance degradation.
 
-drivers/clk/clk-qoriq.c:146:38: warning: unused variable
-'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
-clockgen_muxinfo p5020_cmux_grp2
+This was originally added so firmware updates through IPMI would
+complete in a timely manner.  But we can't kill the scheduler
+locks for that one use case.
 
-In the definition of the p5020 chip, the p2041 chip's info was used
-instead.  The p5020 and p2041 chips have different info. This is most
-likely a typo.
+Instead, only run schedule() continuously in maintenance mode,
+where firmware updates should run.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/525
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Link: https://lkml.kernel.org/r/20190627220642.78575-1-nhuck@google.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 80ae2a51452d7..cdce49f6476aa 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -540,7 +540,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
- 		.guts_compat = "fsl,qoriq-device-config-1.0",
- 		.init_periph = p5020_init_periph,
- 		.cmux_groups = {
--			&p2041_cmux_grp1, &p2041_cmux_grp2
-+			&p5020_cmux_grp1, &p5020_cmux_grp2
- 		},
- 		.cmux_to_group = {
- 			0, 1, -1
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index e0a53156b782f..82af658184444 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -283,6 +283,9 @@ struct smi_info {
+ 	 */
+ 	bool irq_enable_broken;
+ 
++	/* Is the driver in maintenance mode? */
++	bool in_maintenance_mode;
++
+ 	/*
+ 	 * Did we get an attention that we did not handle?
+ 	 */
+@@ -1093,11 +1096,20 @@ static int ipmi_thread(void *data)
+ 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
+ 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
+ 						  &busy_until);
+-		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
++		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
+ 			; /* do nothing */
+-		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+-			schedule();
+-		else if (smi_result == SI_SM_IDLE) {
++		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
++			/*
++			 * In maintenance mode we run as fast as
++			 * possible to allow firmware updates to
++			 * complete as fast as possible, but normally
++			 * don't bang on the scheduler.
++			 */
++			if (smi_info->in_maintenance_mode)
++				schedule();
++			else
++				usleep_range(100, 200);
++		} else if (smi_result == SI_SM_IDLE) {
+ 			if (atomic_read(&smi_info->need_watch)) {
+ 				schedule_timeout_interruptible(100);
+ 			} else {
+@@ -1105,8 +1117,9 @@ static int ipmi_thread(void *data)
+ 				__set_current_state(TASK_INTERRUPTIBLE);
+ 				schedule();
+ 			}
+-		} else
++		} else {
+ 			schedule_timeout_interruptible(1);
++		}
+ 	}
+ 	return 0;
+ }
+@@ -1285,6 +1298,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ 
+ 	if (!enable)
+ 		atomic_set(&smi_info->req_events, 0);
++	smi_info->in_maintenance_mode = enable;
+ }
+ 
+ static const struct ipmi_smi_handlers handlers = {
 -- 
 2.20.1
 
