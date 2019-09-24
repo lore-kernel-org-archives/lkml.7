@@ -2,70 +2,154 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68E1C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF3C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9B421655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569328070;
-	bh=UkoYPSvoNbyEGz8D99UJ45H7fpqACMqVy4xrbMiSILc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ChsIvRvaKma8Do7S9kui1b6mIkukIHMp6lceOQfD3xSWM8n2hcDYvpeXEghwp3c7O
-	 jOApwwnMeXuvS/4LUb4YT56Qw/LoaDmrFTwnsYVijqK7s99kPsF7xWi3x3JkOc3iby
-	 +O7RYpD0PEV+hFpCTZE13UK12kT6aPh2YLEcGEXg=
+	by mail.kernel.org (Postfix) with ESMTP id DA2DA2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436592AbfIXM1t (ORCPT
+        id S2504932AbfIXMcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:27:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52202 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390187AbfIXM1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:27:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F0D6DB0E2;
-        Tue, 24 Sep 2019 12:27:47 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 14:27:47 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     akpm@linux-foundation.org, tj@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] memcg: Only record foreign writebacks with dirty
- pages when memcg is not disabled
-Message-ID: <20190924122747.GQ23050@dhcp22.suse.cz>
-References: <20190923083030.6442-1-bhe@redhat.com>
- <20190924111138.GA31919@MiWiFi-R3L-srv>
+        Tue, 24 Sep 2019 08:32:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9286 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2504919AbfIXMcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 08:32:08 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8OCMh8K139995
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:07 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v7huw3re0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 08:32:07 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 24 Sep 2019 13:32:04 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Sep 2019 13:31:54 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8OCVrqt49414322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 12:31:53 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32A1FA4060;
+        Tue, 24 Sep 2019 12:31:53 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E2E9A4062;
+        Tue, 24 Sep 2019 12:31:49 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.153])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 24 Sep 2019 12:31:49 +0000 (GMT)
+Date:   Tue, 24 Sep 2019 15:31:47 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 0/2] mm/debug: Add tests for architecture exported
+ page table helpers
+References: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
+ <20190924115101.p6y7vpbtgmj5qjku@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190924111138.GA31919@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190924115101.p6y7vpbtgmj5qjku@box>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19092412-0012-0000-0000-0000034FFF16
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092412-0013-0000-0000-0000218A8EF4
+Message-Id: <20190924123146.GC5202@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909240125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24-09-19 19:11:51, Baoquan He wrote:
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index f3c15bb07cce..84e3fdb1ccb4 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4317,6 +4317,9 @@ void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
->  
->  	trace_track_foreign_dirty(page, wb);
->  
-> +	if (mem_cgroup_disabled())
-> +		return;
-> +
+On Tue, Sep 24, 2019 at 02:51:01PM +0300, Kirill A. Shutemov wrote:
+> On Fri, Sep 20, 2019 at 12:03:21PM +0530, Anshuman Khandual wrote:
+> > This series adds a test validation for architecture exported page table
+> > helpers. Patch in the series adds basic transformation tests at various
+> > levels of the page table. Before that it exports gigantic page allocation
+> > function from HugeTLB.
+> > 
+> > This test was originally suggested by Catalin during arm64 THP migration
+> > RFC discussion earlier. Going forward it can include more specific tests
+> > with respect to various generic MM functions like THP, HugeTLB etc and
+> > platform specific tests.
+> > 
+> > https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+> > 
+> > Testing:
+> > 
+> > Successfully build and boot tested on both arm64 and x86 platforms without
+> > any test failing. Only build tested on some other platforms. Build failed
+> > on some platforms (known) in pud_clear_tests() as there were no available
+> > __pgd() definitions.
+> > 
+> > - ARM32
+> > - IA64
+> 
+> Hm. Grep shows __pgd() definitions for both of them. Is it for specific
+> config?
+ 
+For ARM32 it's defined only for 3-lelel page tables, i.e with LPAE on.
+For IA64 it's defined for !STRICT_MM_TYPECHECKS which is even not a config
+option, but a define in arch/ia64/include/asm/page.h
+ 
+> -- 
+>  Kirill A. Shutemov
 
-This doesn't seem correct. We shouldn't even enter the slowpath with
-memcg disabled AFAIC. The check should be done at mem_cgroup_track_foreign_dirty
-level.
 -- 
-Michal Hocko
-SUSE Labs
+Sincerely yours,
+Mike.
+
