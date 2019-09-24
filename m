@@ -2,58 +2,57 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F26C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFB9C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFA42054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5002054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344280;
-	bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
+	s=default; t=1569344282;
+	bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YrIw9snhM4BVVAHW3spoMsu0ZPfywLFzRM1SQVDfjc1can9NO5Lm2ZmEDQMN6ys2Y
-	 Ex3B28MUIhMld9lLV9OVLPPmqSGvxANMV0NJRiXLoJ0OMO8+bnFONeb8JCGAOoILco
-	 zmzc2OUyljFeQHlGeuVvgCsl1L7U6nd+qDWCKDGU=
+	b=rfJQLf4L+j2aOhz0TAi8QFYDdNC+pQTV13K//l6qI2/njJrKWIiDyZPQZFrrw5PS3
+	 FjWqRj6W6wYEhaK78h085b//GjhoeRqj7Q4LdD1NGSid8JChOX25PLK0pO0SxqnbZU
+	 DfVu4/bRiV76vG7fmz1koDkLGSF0ngMttfVzU3xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfIXQs3 (ORCPT
+        id S2410505AbfIXQs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410091AbfIXQsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:48:17 -0400
+        id S1725208AbfIXQqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B8321971;
-        Tue, 24 Sep 2019 16:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12C7C20673;
+        Tue, 24 Sep 2019 16:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343696;
-        bh=OykuoBvG7eWAabm6JjGpW/J91pGbkUxRh6yTEZjST08=;
+        s=default; t=1569343570;
+        bh=TmUVAbWSEcYcj+irDhRNLuE3zHUilfSwCYvlTjdtEr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xE3h7EPAtwJoukpagb+bdda5JfmpkPS0LKnsU2yfdxzNt76ZZeCZIc87X9jGiz5WZ
-         YbD3FCmyzFUXftRXSPoblEw5P2pS4eWt5TEcR82AsHHLo6NeitlBIwhQhDnxte+gOr
-         3BZLR9SRU71t1mZvWehWdIT4lDdIpTgj8HmtOPj8=
+        b=hJOXR3cwsEvRBCZzwH8EpDETt8ranklOhlRiBrbhe2v9f1SjUYHIwiIaI7KuGfwcp
+         288BYExkWBLMR97LPw3ktQfcn9UjEPsy91YaRzTll6N0G+/YFWGWiSBV2W8m7JYnxh
+         t1p5d0EDrAc+l7gZxaMiv/grdhzzV01nDiJkGU4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 58/70] arm64: fix unreachable code issue with cmpxchg
-Date:   Tue, 24 Sep 2019 12:45:37 -0400
-Message-Id: <20190924164549.27058-58-sashal@kernel.org>
+Cc:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 09/70] drm/tinydrm/Kconfig: drivers: Select BACKLIGHT_CLASS_DEVICE
+Date:   Tue, 24 Sep 2019 12:44:48 -0400
+Message-Id: <20190924164549.27058-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,67 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Noralf Trønnes <noralf@tronnes.org>
 
-[ Upstream commit 920fdab7b3ce98c14c840261e364f490f3679a62 ]
+[ Upstream commit 3389669ac5ea598562673c04971d7bb0fab0e9f1 ]
 
-On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
-when CONFIG_OPTIMIZE_INLINING is set.
-Clang then fails a compile-time assertion, because it cannot tell at
-compile time what the size of the argument is:
+The mipi_dbi helper is missing a dependency on DRM_KMS_HELPER and putting
+that in revealed this problem:
 
-mm/memcontrol.o: In function `__cmpxchg_mb':
-memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
-memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
+drivers/video/fbdev/Kconfig:12:error: recursive dependency detected!
+drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
+drivers/gpu/drm/Kconfig:75:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
+drivers/gpu/drm/Kconfig:69:     symbol DRM_KMS_HELPER is selected by TINYDRM_MIPI_DBI
+drivers/gpu/drm/tinydrm/Kconfig:11:     symbol TINYDRM_MIPI_DBI is selected by TINYDRM_HX8357D
+drivers/gpu/drm/tinydrm/Kconfig:15:     symbol TINYDRM_HX8357D depends on BACKLIGHT_CLASS_DEVICE
+drivers/video/backlight/Kconfig:144:    symbol BACKLIGHT_CLASS_DEVICE is selected by FB_BACKLIGHT
+drivers/video/fbdev/Kconfig:187:        symbol FB_BACKLIGHT depends on FB
 
-Mark all of the cmpxchg() style functions as __always_inline to
-ensure that the compiler can see the result.
+A symbol that selects DRM_KMS_HELPER can not depend on
+BACKLIGHT_CLASS_DEVICE. The reason for this is that DRM_KMS_FB_HELPER
+selects FB instead of depending on it.
 
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/648
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Tested-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Will Deacon <will@kernel.org>
+The tinydrm drivers have somehow gotten away with depending on
+BACKLIGHT_CLASS_DEVICE because DRM_TINYDRM selects DRM_KMS_HELPER and the
+drivers depend on that symbol.
+
+An audit shows that all DRM drivers that select DRM_KMS_HELPER and use
+BACKLIGHT_CLASS_DEVICE, selects it:
+  DRM_TILCDC, DRM_GMA500, DRM_SHMOBILE, DRM_NOUVEAU, DRM_FSL_DCU,
+  DRM_I915, DRM_RADEON, DRM_AMDGPU, DRM_PARADE_PS8622
+
+Documentation/kbuild/kconfig-language.txt has a note regarding select:
+1. 'select should be used with care since it doesn't visit dependencies.'
+   This is not a problem since BACKLIGHT_CLASS_DEVICE doesn't have any
+   dependencies.
+2. 'In general use select only for non-visible symbols'
+   BACKLIGHT_CLASS_DEVICE is user visible.
+
+The real solution to this would be to have DRM_KMS_FB_HELPER depend on the
+user visible symbol FB. That is a can of worms I'm not willing to tackle.
+I fear that such a change will result in me handling difficult fallouts
+for the next weeks. So I'm following DRM suite here.
+
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: David Lechner <david@lechnology.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190722104312.16184-7-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cmpxchg.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tinydrm/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
-index 7a299a20f6dcc..7a8b8bc69e8d1 100644
---- a/arch/arm64/include/asm/cmpxchg.h
-+++ b/arch/arm64/include/asm/cmpxchg.h
-@@ -63,7 +63,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
- #undef __XCHG_CASE
- 
- #define __XCHG_GEN(sfx)							\
--static inline unsigned long __xchg##sfx(unsigned long x,		\
-+static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
- 					volatile void *ptr,		\
- 					int size)			\
- {									\
-@@ -105,7 +105,7 @@ __XCHG_GEN(_mb)
- #define arch_xchg(...)		__xchg_wrapper( _mb, __VA_ARGS__)
- 
- #define __CMPXCHG_GEN(sfx)						\
--static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
-+static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
- 					   unsigned long old,		\
- 					   unsigned long new,		\
- 					   int size)			\
-@@ -212,7 +212,7 @@ __CMPWAIT_CASE( ,  , 64);
- #undef __CMPWAIT_CASE
- 
- #define __CMPWAIT_GEN(sfx)						\
--static inline void __cmpwait##sfx(volatile void *ptr,			\
-+static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
- 				  unsigned long val,			\
- 				  int size)				\
- {									\
+diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
+index 87819c82bcce8..f2f0739d1035d 100644
+--- a/drivers/gpu/drm/tinydrm/Kconfig
++++ b/drivers/gpu/drm/tinydrm/Kconfig
+@@ -14,8 +14,8 @@ config TINYDRM_MIPI_DBI
+ config TINYDRM_HX8357D
+ 	tristate "DRM support for HX8357D display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the following HX8357D panels:
+ 	  * YX350HV15-T 3.5" 340x350 TFT (Adafruit 3.5")
+@@ -35,8 +35,8 @@ config TINYDRM_ILI9225
+ config TINYDRM_ILI9341
+ 	tristate "DRM support for ILI9341 display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the following Ilitek ILI9341 panels:
+ 	  * YX240QV29-T 2.4" 240x320 TFT (Adafruit 2.4")
+@@ -46,8 +46,8 @@ config TINYDRM_ILI9341
+ config TINYDRM_MI0283QT
+ 	tristate "DRM support for MI0283QT"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver for the Multi-Inno MI0283QT display panel
+ 	  If M is selected the module will be called mi0283qt.
+@@ -78,8 +78,8 @@ config TINYDRM_ST7586
+ config TINYDRM_ST7735R
+ 	tristate "DRM support for Sitronix ST7735R display panels"
+ 	depends on DRM_TINYDRM && SPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	select TINYDRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  DRM driver Sitronix ST7735R with one of the following LCDs:
+ 	  * JD-T18003-T01 1.8" 128x160 TFT
 -- 
 2.20.1
 
