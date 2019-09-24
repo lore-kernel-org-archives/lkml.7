@@ -2,151 +2,137 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901E6C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F29C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C42214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 10:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNogPM1q"
+	by mail.kernel.org (Postfix) with ESMTP id 90FC7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504512AbfIXK6O (ORCPT
+        id S2394514AbfIXLAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 06:58:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43987 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388652AbfIXK6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 06:58:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v27so1103677pgk.10;
-        Tue, 24 Sep 2019 03:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=0d4AYNtRkLfpkDim1W4lc4CifwLMiEr/+iKYtJT4Oxw=;
-        b=SNogPM1q0Frg3ofEOIbzuKjAsn9fM85Ga0XT+07KBQBIsm3ODaiWzScBEJuJSJiUxq
-         pcflkTkN5Km1oZPWwCChI9r3ekxI9KTs+3TxKI3i5UzqGZEBDMkltcAV5V3q5k45aJY3
-         tHnu3U5gNw/K2FpT2lkkz6S06LZ0JUx6sXHyKy7XTIr/M4sVKL1dXq12J55shoWdN23z
-         ESGi6ngX00V9SvtrmdVRL107HJ/0UMCo0//hacU0g+YW1JfP4ZeTSnNsG2h/Cud2RPun
-         oc8JJfE1rf/Qu7XtViNGWvLm6dseO9D/uf3gQ977Jc7ZfBLtbMPqzsZ/VJfU5ayyKe7u
-         22/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=0d4AYNtRkLfpkDim1W4lc4CifwLMiEr/+iKYtJT4Oxw=;
-        b=nD6Lin5kbo4bGc4g76vO4YOmx0Faec7QTY1/UJFBA35WswDsAJhyDWSR1wxjHa7PHZ
-         1PsqKPkwjy9Lcv7qqdxsRJR2IT/0m29PpS7lI1ZCalyp56k5AhVCGuAGyfbbP4kD6vPz
-         nQ38H0xK04PcS/mtEHcqZUwnLfGm9B9eYKQeFcr5QHUi+fhFOVmszNynYEYxudZ0SdBM
-         UJShdkOe/UHbQ/fP8DdPoDNPL5CpVql3PVk2kActs9gljNCW/htvjJqFgEUVnie9c2hz
-         1I73MAUARC6WQuxbO6NFd3Xb1yrJQt9+xulerRHlAkCDqAtz5TjyPFnSIWxntHtW6qJS
-         ciJQ==
-X-Gm-Message-State: APjAAAULp+j+8X77Eb/g2F1QqpjbCJrq996wwEPnrd8ymf25yAkgd8mB
-        U2MhNDWDViFXRuKol/oWZmw=
-X-Google-Smtp-Source: APXvYqyKHPXFXmai4Q0lnCtL4IQ7IiJNAn+Qr9TTek57cEzbVIRxJFJWcgkNCrBy5aZETYHGsbSYrA==
-X-Received: by 2002:a62:4e0f:: with SMTP id c15mr2689062pfb.42.1569322693271;
-        Tue, 24 Sep 2019 03:58:13 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.110.135])
-        by smtp.gmail.com with ESMTPSA id c125sm1953886pfa.107.2019.09.24.03.58.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 24 Sep 2019 03:58:12 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hslester96@gmail.com, wsa+renesas@sang-engineering.com,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [RESEND PATCH v2 3/3] iio: documentation: light: Add veml6030 sysfs documentation
-Date:   Tue, 24 Sep 2019 16:21:58 +0530
-Message-Id: <35614391cf5e79765a6151ce998a213544562a37.1569321085.git.gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1569321085.git.gupt21@gmail.com>
-References: <cover.1569321085.git.gupt21@gmail.com>
-In-Reply-To: <cover.1569321085.git.gupt21@gmail.com>
-References: <cover.1569321085.git.gupt21@gmail.com>
+        Tue, 24 Sep 2019 07:00:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:57564 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389414AbfIXLAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:00:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BF91142F;
+        Tue, 24 Sep 2019 04:00:21 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 142D03F67D;
+        Tue, 24 Sep 2019 04:00:20 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 12:00:19 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 04/35] irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
+Message-ID: <20190924110019.GP9720@e119886-lin.cambridge.arm.com>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-5-maz@kernel.org>
+ <20190924102413.GN9720@e119886-lin.cambridge.arm.com>
+ <a8107ed9-bb95-a648-ea41-597510f35ec8@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8107ed9-bb95-a648-ea41-597510f35ec8@kernel.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver for veml6030 light sensor provides custom sysfs entries
-used to know parameters supported by the driver and to configure
-sensor like setting power saving mode and persistence etc. This
-commit document them.
+On Tue, Sep 24, 2019 at 11:49:24AM +0100, Marc Zyngier wrote:
+> On 24/09/2019 11:24, Andrew Murray wrote:
+> > On Mon, Sep 23, 2019 at 07:25:35PM +0100, Marc Zyngier wrote:
+> >> GICv4.1 supports the RVPEID ("Residency per vPE ID"), which allows for
+> >> a much efficient way of making virtual CPUs resident (to allow direct
+> >> injection of interrupts).
+> >>
+> >> The functionnality needs to be discovered on each and every redistributor
+> >> in the system, and disabled if the settings are inconsistent.
+> >>
+> >> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >> ---
+> >>  drivers/irqchip/irq-gic-v3.c       | 21 ++++++++++++++++++---
+> >>  include/linux/irqchip/arm-gic-v3.h |  2 ++
+> >>  2 files changed, 20 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> >> index 422664ac5f53..0b545e2c3498 100644
+> >> --- a/drivers/irqchip/irq-gic-v3.c
+> >> +++ b/drivers/irqchip/irq-gic-v3.c
+> >> @@ -849,8 +849,21 @@ static int __gic_update_rdist_properties(struct redist_region *region,
+> >>  					 void __iomem *ptr)
+> >>  {
+> >>  	u64 typer = gic_read_typer(ptr + GICR_TYPER);
+> >> +
+> >>  	gic_data.rdists.has_vlpis &= !!(typer & GICR_TYPER_VLPIS);
+> >> -	gic_data.rdists.has_direct_lpi &= !!(typer & GICR_TYPER_DirectLPIS);
+> >> +
+> >> +	/* RVPEID implies some form of DirectLPI, no matter what the doc says... :-/ */
+> > 
+> > I think the doc says, RVPEID is *always* 1 for GICv4.1 (and presumably beyond)
+> > and when RVPEID==1 then DirectLPI is *always* 0 - but that's OK because for
+> > GICv4.1 support for direct LPIs is mandatory.
+> 
+> Well, v4.1 support for DirectLPI is pretty patchy. It has just enough
+> features to make it useful.
+> 
+> > 
+> >> +	gic_data.rdists.has_rvpeid &= !!(typer & GICR_TYPER_RVPEID);
+> >> +	gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
+> >> +					   gic_data.rdists.has_rvpeid);
+> >> +
+> >> +	/* Detect non-sensical configurations */
+> >> +	if (WARN_ON_ONCE(gic_data.rdists.has_rvpeid && !gic_data.rdists.has_vlpis)) {
+> > 
+> > How feasible is the following suitation? All the redistributors in the system has
+> > vlpis=0, and only the first redistributor has rvpeid=1 (with the remaining ones
+> > rvpeid=0).If we evaluate this WARN_ON_ONCE on each call to
+> > __gic_update_rdist_properties we end up without direct LPI support, however if we
+> > evaluated this after iterating through all the redistributors then we'd end up
+> > with direct LPI support and a non-essential WARN.
+> > 
+> > Should we do the WARN after iterating through all the redistributors once we
+> > know what the final values of these flags will be, perhaps in
+> > gic_update_rdist_properties?
+> 
+> What does it gains us?
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
-Changes in v2:
-* Nothing has changed in this file
+It prevents an unnecessary WARN.
 
- .../ABI/testing/sysfs-bus-iio-light-veml6030       | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
+If the first redistributor has rvpeid=1, vlpis=0, direct_lpi=1, and the others
+have rvpeid=0, vlpis=0, direct_lpi=0. At the end of iteration, without the
+WARN if statement, you end up wth rvpeid=0, vlpis=0, direct_lpi=0. I.e. it's
+done the right thing. In this use-case the WARN doesn't achieve anything other
+than give the user a pointless WARN. If the WARN was moved to after iteration
+then the WARN wouldn't fire.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030 b/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
-new file mode 100644
-index 0000000..13589c9
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-light-veml6030
-@@ -0,0 +1,49 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_psm_available
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Provides list of valid values that can be used to activate a
-+		particular power saving mode in sensor. For ex; 1 means psm
-+		mode 1 and 2 means psm mode 2.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_psm
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Writing '1' will activate power saving mode 1 in sensor.
-+		Similarly, 2 is to activate psm mode 2 and so on.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_period_available
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		List of valid values available in multiples of integration time
-+		for which the light intensity must be above the cutoff level
-+		before interrupt is asserted. This refers to persistence values.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_either_period
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Value in multiple of integration time for which the light intensity must
-+		be above the cutoff level before interrupt is asserted.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_rising_value
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Raw threshold value from 0 to 0xffffffff. An interrupt will be asserted whenever
-+		light intensity is above this value.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/events/in_illuminance_thresh_falling_value
-+Date:		September 2019
-+KernelVersion:	5.3.1
-+Contact:	Rishi Gupta <gupt21@gmail.com>
-+Description:
-+		Raw threshold value from 0 to 0xffffffff. An interrupt will be asserted whenever
-+		light intensity is below this value.
--- 
-2.7.4
+I have no idea how likely this use-case is.
 
+> The moment we've detected any inconsistency, any
+> use of DirectLPI or VLPIs is a big nono, because the redistributors care
+> not designed to communicate with each other, and we might as well do
+> that early. Frankly, the HW should have stayed in someone's lab. The
+> only reason I have that code in is to detect the FVP model being
+> misconfigured, which is pretty easy to do
+
+Thanks,
+
+Andrew Murray
+
+> 
+> 	M.
+> -- 
+> Jazz is not dead, it just smells funny...
