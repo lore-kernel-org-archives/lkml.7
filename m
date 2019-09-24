@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14843C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1761C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D755A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95D5217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569330095;
-	bh=8KSsysVx/q+0xyDj2ErkVcGnFiZcEm9bH3hEGEzj8jE=;
+	s=default; t=1569330101;
+	bh=df/D6sR2E357CahSDkUDVlhr6AN93xmjFJvc3aDwQ/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWokYmyVqP/vxplx4D1hac84MWtFDIVsl8U3hLtKR4A/efC0lCcDhDlnfBbCVzXdr
-	 c3ZrvTF3odaCfR/RsusjjC9szGRdAFqiOW+2suzHrTd402QMx6jEhAVUsiMgHmPl1D
-	 Nbdm7apW7488NVInVAKsRw30smmvDnAgHrWBlwsg=
+	b=O9xdTSOZmzpjqlXGF7eybhgaWFtRyAdF/ayn6+/B+n3XjVkoSYjyoGsCPD+m88hAG
+	 o4k+xkfgJf0O/dpMewX1IPUInmiCFLorqjxfFzv4sUGmEA/GMNlnzHrcSvfegzyWb1
+	 0bNwPezS98GFqEE2AUn99FX9PBSrc6k5jjoDGifA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441069AbfIXNBf (ORCPT
+        id S2504995AbfIXNBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:01:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35160 "EHLO
+        Tue, 24 Sep 2019 09:01:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35166 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408233AbfIXNBe (ORCPT
+        with ESMTP id S2408301AbfIXNBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Sep 2019 09:01:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=z43OkAB95HOlKNI2nX5uTHQ1xxrOwjBrNrtUqWz6rPc=; b=J3NPHSYyFPp5qKWh7ttErnKOiR
-        T9XoDvRCGNis97j6NGlzD1ARzJKefBU1YWVRlG7PTMSrdTKVNCRVQiYhMtcb/CVWBNyiUPG0ea/mX
-        98ZOsgWUGEpZ7BcHHRwMgAKfduK0AkM4/p47jeIWlsHmFuj1txmoX4YoATOc0FIhERHLhFzKI2TT9
-        TJWYXjObdjVbSef0+4AtAS3vPAchPA80yrO8u4OpbrbqykpjMWdQp/Vrn9IZQdPRlOD3lVkvxsyof
-        7yvfA44NYsAtNDmoxBrbfpEYvka8nY9QcoT25Von9Ue93GJ+pjSFkj3+oEk7uSfNO2nyeJO5jzfHm
-        O3EJxRjQ==;
+        bh=u4xEWx22Lrj2M+bfYCnSPNEFlhzX2MJ0DeWVCcXj/Zs=; b=m5KfwHUnEfajftth2nEmu13PEH
+        dPvM05WqDEm0muFfWnsI5Ld5UWLF+kcZQpxGUXffftjBGhcE1nlYn5roZUEBWbUlNGJOGwD5Kpllq
+        f+jgISAyMhKc3v4ff982cwv3RlTom34QpR0GS7BJUamU/q1gZ1QGOW5TN8Q/dAYv0VkQ6roZQgwMY
+        kVq9PXV1hhb/nxJ/OTS3N/nu7XMhR4jxZXfeTzhZzx1kd5Dwzy+TMOLD1LzHVx849dvgBeh2ao1SZ
+        1T0q9kdlcOnEUdo9wa5KYM2y+eI8gRz4fDR5eXt8MAop5iw0Sf4TBpILqhHyHfsLcP1hAajhwQFp+
+        KIHhorqA==;
 Received: from 177.96.206.173.dynamic.adsl.gvt.net.br ([177.96.206.173] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCkRi-0000ul-3S; Tue, 24 Sep 2019 13:01:34 +0000
+        id 1iCkRi-0000um-3o; Tue, 24 Sep 2019 13:01:34 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.2)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1iCkRf-0001b4-TC; Tue, 24 Sep 2019 10:01:31 -0300
+        id 1iCkRf-0001b0-SI; Tue, 24 Sep 2019 10:01:31 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] bindings: MAINTAINERS: fix references to Allwinner LRADC
-Date:   Tue, 24 Sep 2019 10:01:30 -0300
-Message-Id: <65d8ef7ceda713e2c799f7be6b2487d350386711.1569330078.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 2/3] bindings: rename links to mason USB2/USB3 DT files
+Date:   Tue, 24 Sep 2019 10:01:29 -0300
+Message-Id: <9ca2d136a1f79c878fff1208f9b536b0b613c0d5.1569330078.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
 References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
@@ -64,28 +68,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The file got converted to yaml, but the reference at MAINTAINERS
-was not updated.
+Those files got renamed, but another DT file still points to the older
+places.
 
-Fixes: 5bf2845ece35 ("dt-bindings: input: Convert Allwinner LRADC to a schema")
+Fixes: 87a55485f2fc ("dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to yaml")
+Fixes: da86d286cce8 ("dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/amlogic,dwc3.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 65b7d9a0a44a..4bd3a13f5386 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15527,7 +15527,7 @@ SUN4I LOW RES ADC ATTACHED TABLET KEYS DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	linux-input@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-+F:	Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
- F:	drivers/input/keyboard/sun4i-lradc-keys.c
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+index b9f04e617eb7..6ffb09be7a76 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+@@ -85,8 +85,8 @@ A child node must exist to represent the core DWC2 IP block. The name of
+ the node is not important. The content of the node is defined in dwc2.txt.
  
- SUNDANCE NETWORK DRIVER
+ PHY documentation is provided in the following places:
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
++- Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
++- Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
+ 
+ Example device nodes:
+ 	usb: usb@ffe09000 {
 -- 
 2.21.0
 
