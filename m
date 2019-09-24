@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3D2C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C31C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C8721971
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FD0217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343793;
-	bh=idS9ft4PoldZTWTcbysRgHOMFEngjStNMRW5fk1OU7E=;
+	s=default; t=1569343797;
+	bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kp9d3HNfeDLEc1Ps0SycPDrQXrfuiymY0eBk/1kpo9OjCJ9kmsugyuHu0zVjfIE6j
-	 fwTOyqwE5XejxMosy9X4p+gfuS4/XvmJWl7wCMAp9aqpdHNfbyXxlY31x+mi66g+lO
-	 9fm5p9Ip3sjojH9+9pdcBpWWm65nlrAIfKoT6SPs=
+	b=Y48fPR+kwutGU/ummU52/TTRUa6Df7Mve0vxXDr72ncNYVcp7t1cnvMjNVocdQBKj
+	 BbnUZ0AHr8itgAuy8j1+8IUjtAjAYKkA9wlEF8SbKJxVrZBrMzF+lUDEA30SJZ5pvz
+	 QspNvNY7e9RanzvlcSrzGIT/Yk4rMxbHVQ3ZdHhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410637AbfIXQtv (ORCPT
+        id S2410650AbfIXQt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410616AbfIXQtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:49:45 -0400
+        id S2390677AbfIXQtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:49:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30D1D222BD;
-        Tue, 24 Sep 2019 16:49:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5BD21971;
+        Tue, 24 Sep 2019 16:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343785;
-        bh=idS9ft4PoldZTWTcbysRgHOMFEngjStNMRW5fk1OU7E=;
+        s=default; t=1569343792;
+        bh=xnovLF+3uh2WwoA52FYSiy8zjjoMSiF+mmojNkCbgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7uikIigE4yfMJp8ApQ2IQz6mdumK1jiABGO7xXf1fzujn/1ra9bm9QPhKex3gqLq
-         X7gXQpdSUV7BQtdSM/JKNRaS8ouD/Ntvzw2T4kyEj9jNEz9dpyAKNVhx7ig0tk4WqA
-         DDMYJOas4zsg0SuMAlpYvI+e9YGqhlrs3KP4vNIs=
+        b=wagG87v4g9pTJqBxynBcKlllWJn/sz7SqItoactpvosaMxqSVdVup8T/HrvpI5XHb
+         hg1EvSueyTuoPo6jENUVB8SfZUncGz9JDMHd2RlkhrB5wg9aRx+EiTi46zfh86Z4ly
+         EvHzSZNc0Y5EVJDB2lLwIr0yTfqa/9FmVANx4U8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/50] pinctrl: tegra: Fix write barrier placement in pmx_writel
-Date:   Tue, 24 Sep 2019 12:48:25 -0400
-Message-Id: <20190924164847.27780-28-sashal@kernel.org>
+Cc:     Mark Menzynski <mmenzyns@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 31/50] drm/nouveau/volt: Fix for some cards having 0 maximum voltage
+Date:   Tue, 24 Sep 2019 12:48:28 -0400
+Message-Id: <20190924164847.27780-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -62,42 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Mark Menzynski <mmenzyns@redhat.com>
 
-[ Upstream commit c2cf351eba2ff6002ce8eb178452219d2521e38e ]
+[ Upstream commit a1af2afbd244089560794c260b2d4326a86e39b6 ]
 
-pmx_writel uses writel which inserts write barrier before the
-register write.
+Some, mostly Fermi, vbioses appear to have zero max voltage. That causes Nouveau to not parse voltage entries, thus users not being able to set higher clocks.
 
-This patch has fix to replace writel with writel_relaxed followed
-by a readback and memory barrier to ensure write operation is
-completed for successful pinctrl change.
+When changing this value Nvidia driver still appeared to ignore it, and I wasn't able to find out why, thus the code is ignoring the value if it is zero.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1565984527-5272-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Signed-off-by: Mark Menzynski <mmenzyns@redhat.com>
+Reviewed-by: Karol Herbst <kherbst@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 1aba75897d147..26a3f1eb9c6bf 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -40,7 +40,9 @@ static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
- 
- static inline void pmx_writel(struct tegra_pmx *pmx, u32 val, u32 bank, u32 reg)
- {
--	writel(val, pmx->regs[bank] + reg);
-+	writel_relaxed(val, pmx->regs[bank] + reg);
-+	/* make sure pinmux register write completed */
-+	pmx_readl(pmx, bank, reg);
- }
- 
- static int tegra_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+index 7143ea4611aa3..33a9fb5ac5585 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/volt.c
+@@ -96,6 +96,8 @@ nvbios_volt_parse(struct nvkm_bios *bios, u8 *ver, u8 *hdr, u8 *cnt, u8 *len,
+ 		info->min     = min(info->base,
+ 				    info->base + info->step * info->vidmask);
+ 		info->max     = nvbios_rd32(bios, volt + 0x0e);
++		if (!info->max)
++			info->max = max(info->base, info->base + info->step * info->vidmask);
+ 		break;
+ 	case 0x50:
+ 		info->min     = nvbios_rd32(bios, volt + 0x0a);
 -- 
 2.20.1
 
