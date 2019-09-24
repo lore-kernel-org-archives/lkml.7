@@ -2,131 +2,146 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E13C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC56AC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBFE207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 12:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42BA2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XiacqyPg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b0KTt7xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441051AbfIXM5F (ORCPT
+        id S2441059AbfIXNAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 08:57:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54671 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395362AbfIXM5F (ORCPT
+        Tue, 24 Sep 2019 09:00:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35136 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436745AbfIXNAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 08:57:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so2187657wmp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 05:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1/DmXObQknZjFIbC4/FOj1i5Dz2QAyjy3j/eh6BNk5s=;
-        b=XiacqyPgYS48I6IRB9K+JhnZYkEq732MHOHnhOfzSTR5vG7l8Mo/ZexrYR2Qgk8iHj
-         bcQIZnA0gCHyaa7oP7FI7LFWqc5wx7hTpuvsJrepzfoVHjUn7jufVHBKv+XXVOMImTVT
-         7P+b4x1ofQWV8125NAsAQq1Mmt7lg2GhesP/3JMCMIwCV+JGt+lRxmg/l2hSR+RlD0VC
-         gKhUClZ/paJLp6YxUZWWP6huo+WhT3vsH1IeI7QRZexG/SSI8YNOmZEiK+OtqtHAAF2H
-         RAhUpf1hm+PyF0pxymoDrL2UCA/vzF95G//f+oB8vXNnUaYc8C6jjaNinJ9CPPRwaKLh
-         buJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1/DmXObQknZjFIbC4/FOj1i5Dz2QAyjy3j/eh6BNk5s=;
-        b=IHXuTDy+7q6kvbmH0J+yvkmELSMujQLWiR6jdkFMOglS0GE8k1ClRAskmlUZ8g7i3C
-         +C1IXerh1Tf6qmHNwOh2Hk10mwkGtwg5H0tXPc7t3f/t5PlSKD28pIK0fKubf+TvXbCu
-         xo/tKCfAG8Zc++gVbhvGLCLF0NQeswLDqvo9W+zrN1RcTgnrL17Ef9X1j64L87K0rJMn
-         aKoqaHtxZVW5vRDz2zKpatPMALesqEodwJBoIuSgpl7M7I7AVHHQDuCMAX7s41nK0EZh
-         rWOtWy8eYKGUY2xqjoIp0LHNAr9efvxWTgC5Dg3m0QyHx20dtecDSsJYUl56GzSYl3cB
-         7+qw==
-X-Gm-Message-State: APjAAAWBltWgdxbmeuyHJnE7ruTfnDeECL6S/0IirnQIPm7H8nA7tOdw
-        bzTDw/uTyQv3JGh5gIfseLCDbK8J6x3iWaUV
-X-Google-Smtp-Source: APXvYqyYtGWsIxqioTJASjcFy5Zzc9hLD7p/PurtVzfonnBcrSKOcToB8kiSL8jhJi56p+ZmwyY8pQ==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr1646256wma.43.1569329822656;
-        Tue, 24 Sep 2019 05:57:02 -0700 (PDT)
-Received: from [172.20.9.27] ([83.167.33.93])
-        by smtp.gmail.com with ESMTPSA id v11sm1820463wml.30.2019.09.24.05.57.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 05:57:01 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <20190924094942.GN2349@hirez.programming.kicks-ass.net>
- <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
- <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
- <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
- <20190924114300.GM2332@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b66cc383-ceca-b7dd-b3a3-eb998e865cea@kernel.dk>
-Date:   Tue, 24 Sep 2019 14:57:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 09:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ylrO+be3Mmt+XjMqDRomHffExbjsXGlaXweUO2EGDGw=; b=b0KTt7xaHwsu3rE54aR9vlkxp
+        aXve44h/2oq0DshKJQpyeK3clHkUTZBL2jf617MWWYi1VP+TBuo1zAw/egHbl2cQwxDjPG3n326wc
+        CBPFOUX6971a0HFnr8xPfy8sqXrUIJn6wo4ySykwm1yWMdOXLe87GZ3mral+5xdHOVraQbyzjeeOb
+        KzVVwubFdmgQvhXjsVCg9be0PiHlkfvdGwbOJ55IBt7PtAUOiH9LLyY2sucwO/r1M8Jug/sEtV+WM
+        R64nVAZkbXZWJFgPsUT218LWuQbiHCxfmkctmbYDsMotGKIMx9CCaGLAM2EriZYPUD8GziRFYqoJe
+        nyru16oqQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCkPs-00081B-C4; Tue, 24 Sep 2019 12:59:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD9EB301A7A;
+        Tue, 24 Sep 2019 14:58:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4B82120C3E176; Tue, 24 Sep 2019 14:59:36 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 14:59:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+References: <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190924114300.GM2332@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 5:43 AM, Peter Zijlstra wrote:
-> On Tue, Sep 24, 2019 at 02:11:29PM +0300, Pavel Begunkov wrote:
+On Tue, Sep 24, 2019 at 02:43:25PM +0200, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 02:25:00PM +0200, Michal Hocko wrote:
+> > On Tue 24-09-19 14:09:43, Peter Zijlstra wrote:
 > 
->> @@ -2717,15 +2757,18 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
->>   			return ret;
->>   	}
->>   
->> +	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
->> +	prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
->> +	do {
->> +		if (io_should_wake(&iowq))
->> +			break;
->> +		schedule();
->> +		if (signal_pending(current))
->> +			break;
->> +		set_current_state(TASK_INTERRUPTIBLE);
->> +	} while (1);
->> +	finish_wait(&ctx->wait, &iowq.wq);
+> > > We can push back and say we don't respect the specification because it
+> > > is batshit insane ;-)
+> > 
+> > Here is my fingers crossed.
+> > 
+> > [...]
+> > 
+> > > Now granted; there's a number of virtual devices that really don't have
+> > > a node affinity, but then, those are not hurt by forcing them onto a
+> > > random node, they really don't do anything. Like:
+> > 
+> > Do you really consider a random node a better fix than simply living
+> > with a more robust NUMA_NO_NODE which tells the actual state? Page
+> > allocator would effectivelly use the local node in that case. Any code
+> > using the cpumask will know that any of the online cpus are usable.
 > 
-> It it likely OK, but for paranoia, I'd prefer this form:
+> For the pmu devices? Yes, those 'devices' aren't actually used for
+> anything other than sysfs entries.
 > 
-> 	for (;;) {
-> 		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq, TASK_INTERRUPTIBLE);
-> 		if (io_should_wake(&iowq))
-> 			break;
-> 		schedule();
-> 		if (signal_pending(current))
-> 			break;
-> 	}
-> 	finish_wait(&ctx->wait, &iowq.wq);
-> 
-> The thing is, if we ever succeed with io_wake_function() (that CPU
-> observes io_should_wake()), but when waking here, we do not observe
-> is_wake_function() and go sleep again, we might never wake up if we
-> don't put ourselves back on the wait-list again.
+> Nothing else uses the struct device.
 
-Might be paranoia indeed, but especially after this change, we don't
-expect to make frequent roundtrips there. So better safe than sorry,
-I'll make the change.
+The below would get rid of the PMU and workqueue warnings with no
+side-effects (the device isn't used for anything except sysfs).
 
--- 
-Jens Axboe
+I'm stuck in the device code for BDIs, I can't find a sane place to set
+the node before it gets added, due to it using device_create_vargs().
 
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4f08b17d6426..2a64dcc3d70f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9965,6 +9965,7 @@ static int pmu_dev_alloc(struct pmu *pmu)
+ 	if (!pmu->dev)
+ 		goto out;
+ 
++	set_dev_node(pmu->dev, 0);
+ 	pmu->dev->groups = pmu->attr_groups;
+ 	device_initialize(pmu->dev);
+ 	ret = dev_set_name(pmu->dev, "%s", pmu->name);
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index bc2e09a8ea61..efafc4590bbe 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -5613,6 +5613,7 @@ int workqueue_sysfs_register(struct workqueue_struct *wq)
+ 	wq_dev->dev.bus = &wq_subsys;
+ 	wq_dev->dev.release = wq_device_release;
+ 	dev_set_name(&wq_dev->dev, "%s", wq->name);
++	set_dev_node(wq_dev, 0);
+ 
+ 	/*
+ 	 * unbound_attrs are created separately.  Suppress uevent until
