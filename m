@@ -6,38 +6,39 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FC9C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26262C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEB920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED03B214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503842AbfIXGnM (ORCPT
+        id S2503917AbfIXGnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:43:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:25186 "EHLO mga02.intel.com"
+        Tue, 24 Sep 2019 02:43:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:25208 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503719AbfIXGnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:43:10 -0400
+        id S2503906AbfIXGnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 02:43:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 23:43:10 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 23:43:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="203306309"
+   d="scan'208";a="203306339"
 Received: from gvt.bj.intel.com ([10.238.158.180])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2019 23:43:07 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2019 23:43:17 -0700
 From:   Tina Zhang <tina.zhang@intel.com>
 To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
+Cc:     Kechen Lu <kechen.lu@intel.com>, kraxel@redhat.com,
         zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
         zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com, yi.l.liu@intel.com
-Subject: [PATCH v6 2/6] vfio: Introduce vGPU display irq type
-Date:   Tue, 24 Sep 2019 14:41:39 +0800
-Message-Id: <20190924064143.9282-3-tina.zhang@intel.com>
+        alex.williamson@redhat.com, yi.l.liu@intel.com,
+        Tina Zhang <tina.zhang@intel.com>
+Subject: [PATCH v6 6/6] drm/i915/gvt: Add cursor plane reg update trap emulation handler
+Date:   Tue, 24 Sep 2019 14:41:43 +0800
+Message-Id: <20190924064143.9282-7-tina.zhang@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190924064143.9282-1-tina.zhang@intel.com>
 References: <20190924064143.9282-1-tina.zhang@intel.com>
@@ -46,74 +47,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
-VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display.
+From: Kechen Lu <kechen.lu@intel.com>
 
-Introduce vfio_irq_info_cap_display_plane_events capability to notify
-user space with the vGPU's plane update events
+This patch adds the cursor plane CURBASE reg update trap handler
+in order to:
 
-v3:
-- Add more description to VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ and
-  VFIO_IRQ_INFO_CAP_DISPLAY. (Alex & Gerd)
+- Deliver the cursor refresh event at each vblank emulation,
+the flip_done_event bit check is supposed to do here. If cursor
+plane updates happen, deliver the cursor refresh events.
+
+- Support the sync and async cursor plane updates and
+corresponding cursor plane flip interrupts reporting.
 
 v2:
-- Add VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ description. (Alex & Kechen)
-- Introduce vfio_irq_info_cap_display_plane_events. (Gerd & Alex)
+- As the suggestion from Zhenyu, the experiments show that
+Windows driver programs the CURBASE and CURPOS at one time as
+well as the Linux i915 driver. So only track the CURBASE is
+enough.
 
+Signed-off-by: Kechen Lu <kechen.lu@intel.com>
 Signed-off-by: Tina Zhang <tina.zhang@intel.com>
 ---
- include/uapi/linux/vfio.h | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/gpu/drm/i915/gvt/display.c   |  7 +++++++
+ drivers/gpu/drm/i915/gvt/handlers.c  | 27 ++++++++++++++++++++++++---
+ drivers/gpu/drm/i915/gvt/interrupt.c |  7 +++++++
+ drivers/gpu/drm/i915/gvt/interrupt.h |  3 +++
+ 4 files changed, 41 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index aa6850f1daef..2946a028b0c3 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -476,6 +476,44 @@ struct vfio_irq_info_cap_type {
- 	__u32 subtype;  /* type specific */
- };
+diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gvt/display.c
+index 9acde0bdd5f4..12a03c3b9051 100644
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -401,6 +401,7 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
+ 		[PIPE_C] = PIPE_C_VBLANK,
+ 	};
+ 	int pri_flip_event = SKL_FLIP_EVENT(pipe, PLANE_PRIMARY);
++	int cur_flip_event = CURSOR_A_FLIP_DONE + pipe;
+ 	int event;
+ 	u64 eventfd_signal_val = 0;
  
-+/* vGPU IRQ TYPE */
-+#define VFIO_IRQ_TYPE_GFX			(1)
+@@ -416,6 +417,9 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
+ 		if (event == pri_flip_event)
+ 			eventfd_signal_val |= DISPLAY_PRI_REFRESH_EVENT_VAL;
+ 
++		if (event == cur_flip_event)
++			eventfd_signal_val |= DISPLAY_CUR_REFRESH_EVENT_VAL;
 +
-+/* sub-types for VFIO_IRQ_TYPE_GFX */
-+/*
-+ * vGPU device display refresh interrupt request. This irq asking for
-+ * a user space display refresh, covers all display updates events,
-+ * i.e. user space can stop the display update timer and fully depend
-+ * on getting the notification if an update is needed.
-+ */
-+#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ	(1)
+ 		intel_vgpu_trigger_virtual_event(vgpu, event);
+ 	}
+ 
+@@ -427,6 +431,9 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
+ 
+ 		if (event == PLANE_PRIMARY)
+ 			eventfd_signal_val |= DISPLAY_PRI_REFRESH_EVENT_VAL;
 +
-+/*
-+ * Display capability of reporting display refresh interrupt events.
-+ * This gives user space the capability to identify different display
-+ * updates events of the display refresh interrupt request.
-+ *
-+ * When notified by VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ, user space can
-+ * use the eventfd counter value to identify which plane has been
-+ * updated.
-+ *
-+ * Note that there might be some cases like counter_value >
-+ * (cur_event_val + pri_event_val), if notifications haven't been
-+ * handled on time in user mode. These cases can be handled as all
-+ * plane updated case or signle plane updated case depending on the
-+ * value.
-+ *
-+ * cur_event_val: eventfd counter value for cursor plane change event.
-+ * pri_event_val: eventfd counter value for primary plane change event.
-+ */
-+#define VFIO_IRQ_INFO_CAP_DISPLAY	2
++		if (event == PLANE_CURSOR)
++			eventfd_signal_val |= DISPLAY_CUR_REFRESH_EVENT_VAL;
+ 	}
+ 
+ 	if (eventfd_signal_val)
+diff --git a/drivers/gpu/drm/i915/gvt/handlers.c b/drivers/gpu/drm/i915/gvt/handlers.c
+index e5a022c2e7bb..deb1bf5ba028 100644
+--- a/drivers/gpu/drm/i915/gvt/handlers.c
++++ b/drivers/gpu/drm/i915/gvt/handlers.c
+@@ -769,6 +769,27 @@ static int pri_surf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
+ 	return 0;
+ }
+ 
++#define CURBASE_TO_PIPE(offset) \
++	calc_index(offset, _CURABASE, _CURBBASE, 0, CURBASE(PIPE_C))
 +
-+struct vfio_irq_info_cap_display_plane_events {
-+	struct vfio_info_cap_header header;
-+	__u64 cur_event_val;
-+	__u64 pri_event_val;
-+};
++static int cur_surf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
++		void *p_data, unsigned int bytes)
++{
++	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
++	u32 pipe = CURBASE_TO_PIPE(offset);
++	int event = CURSOR_A_FLIP_DONE + pipe;
 +
- /**
-  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
-  *
++	write_vreg(vgpu, offset, p_data, bytes);
++
++	if (vgpu_vreg_t(vgpu, CURCNTR(pipe)) & PLANE_CTL_ASYNC_FLIP) {
++		intel_vgpu_trigger_virtual_event(vgpu, event);
++		set_bit(PLANE_CURSOR, vgpu->display.async_flip_event[pipe]);
++	} else
++		set_bit(event, vgpu->irq.flip_done_event[pipe]);
++
++	return 0;
++}
++
+ #define SPRSURF_TO_PIPE(offset) \
+ 	calc_index(offset, _SPRA_SURF, _SPRB_SURF, 0, SPRSURF(PIPE_C))
+ 
+@@ -1990,9 +2011,9 @@ static int init_generic_mmio_info(struct intel_gvt *gvt)
+ 	MMIO_D(CURPOS(PIPE_B), D_ALL);
+ 	MMIO_D(CURPOS(PIPE_C), D_ALL);
+ 
+-	MMIO_D(CURBASE(PIPE_A), D_ALL);
+-	MMIO_D(CURBASE(PIPE_B), D_ALL);
+-	MMIO_D(CURBASE(PIPE_C), D_ALL);
++	MMIO_DH(CURBASE(PIPE_A), D_ALL, NULL, cur_surf_mmio_write);
++	MMIO_DH(CURBASE(PIPE_B), D_ALL, NULL, cur_surf_mmio_write);
++	MMIO_DH(CURBASE(PIPE_C), D_ALL, NULL, cur_surf_mmio_write);
+ 
+ 	MMIO_D(CUR_FBC_CTL(PIPE_A), D_ALL);
+ 	MMIO_D(CUR_FBC_CTL(PIPE_B), D_ALL);
+diff --git a/drivers/gpu/drm/i915/gvt/interrupt.c b/drivers/gpu/drm/i915/gvt/interrupt.c
+index 11accd3e1023..8e43490c88d6 100644
+--- a/drivers/gpu/drm/i915/gvt/interrupt.c
++++ b/drivers/gpu/drm/i915/gvt/interrupt.c
+@@ -113,6 +113,9 @@ static const char * const irq_name[INTEL_GVT_EVENT_MAX] = {
+ 	[SPRITE_A_FLIP_DONE] = "Sprite Plane A flip done",
+ 	[SPRITE_B_FLIP_DONE] = "Sprite Plane B flip done",
+ 	[SPRITE_C_FLIP_DONE] = "Sprite Plane C flip done",
++	[CURSOR_A_FLIP_DONE] = "Cursor Plane A flip done",
++	[CURSOR_B_FLIP_DONE] = "Cursor Plane B flip done",
++	[CURSOR_C_FLIP_DONE] = "Cursor Plane C flip done",
+ 
+ 	[PCU_THERMAL] = "PCU Thermal Event",
+ 	[PCU_PCODE2DRIVER_MAILBOX] = "PCU pcode2driver mailbox event",
+@@ -593,6 +596,10 @@ static void gen8_init_irq(
+ 		SET_BIT_INFO(irq, 4, SPRITE_A_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_A);
+ 		SET_BIT_INFO(irq, 4, SPRITE_B_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_B);
+ 		SET_BIT_INFO(irq, 4, SPRITE_C_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_C);
++
++		SET_BIT_INFO(irq, 6, CURSOR_A_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_A);
++		SET_BIT_INFO(irq, 6, CURSOR_B_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_B);
++		SET_BIT_INFO(irq, 6, CURSOR_C_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_C);
+ 	}
+ 
+ 	/* GEN8 interrupt PCU events */
+diff --git a/drivers/gpu/drm/i915/gvt/interrupt.h b/drivers/gpu/drm/i915/gvt/interrupt.h
+index 5313fb1b33e1..158f1c7a23f2 100644
+--- a/drivers/gpu/drm/i915/gvt/interrupt.h
++++ b/drivers/gpu/drm/i915/gvt/interrupt.h
+@@ -92,6 +92,9 @@ enum intel_gvt_event_type {
+ 	SPRITE_A_FLIP_DONE,
+ 	SPRITE_B_FLIP_DONE,
+ 	SPRITE_C_FLIP_DONE,
++	CURSOR_A_FLIP_DONE,
++	CURSOR_B_FLIP_DONE,
++	CURSOR_C_FLIP_DONE,
+ 
+ 	PCU_THERMAL,
+ 	PCU_PCODE2DRIVER_MAILBOX,
 -- 
 2.17.1
 
