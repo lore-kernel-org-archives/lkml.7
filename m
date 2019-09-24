@@ -2,99 +2,285 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D269C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38966C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547FF2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569345130;
-	bh=SRE4w45g2rUmKQrrhnWYkWFb0+EjC7R6yTgfc4Pc+Es=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=02HtOMlno6vmnZXX4xDMw3mMYtf6TqimunG7Qvfe2fGQEFGFvLy27MkIOXicH1hK3
-	 STqcBudSKoCVTw+tgdGJD1GeQjjd9NmW3C7/Rb341qKWcanL3MOBL343PMFTmMnUEQ
-	 R4JGVx5ZAqn0Pq7ucQDyp/Mb+Ek7jxBU2NxPFYAk=
+	by mail.kernel.org (Postfix) with ESMTP id F3416207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394751AbfIXRMJ (ORCPT
+        id S2406745AbfIXRPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389586AbfIXRMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:12:09 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 24 Sep 2019 13:15:10 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53780 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395139AbfIXRPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:15:09 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 20EA23C057C;
+        Tue, 24 Sep 2019 19:15:05 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id s8tPHFbTrZBf; Tue, 24 Sep 2019 19:14:59 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 494E521841
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 17:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569345128;
-        bh=SRE4w45g2rUmKQrrhnWYkWFb0+EjC7R6yTgfc4Pc+Es=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Cul4lPj43R8SyZJQUrm1p46lCQuMZI9UnsJcDgpnHzZJ8uDFW8mskgD538ujFAp7r
-         GMQjnCrwIiJv5CpFT5sD2o9WeddqpRNSJZ+ZvBu1++0hAreStOeIqgualI3wNRokzO
-         FJFSzQhe72b1eUfPKiXabbR3dq929RWk06sPT5YY=
-Received: by mail-wm1-f43.google.com with SMTP id 7so1038922wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 10:12:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAU4Zp3VVSxIr5mgrIDaZv9o2gu5mCE3JV/+hOW9AvxbbuB41aW5
-        hQT6vAJVq/ZefZdgr2lIfNS700ms4gK5rGexnZLCtw==
-X-Google-Smtp-Source: APXvYqz3Q0HHqCyDvH+elSspozaob5vsw8VZ7sTVeqI9f4cRrzEBFK5bbTHm3tCuCwTdatbEuC0akEIkOQ4fshlQF84=
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr1303822wma.161.1569345126773;
- Tue, 24 Sep 2019 10:12:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190920131907.6886-1-christian.brauner@ubuntu.com> <20190924064420.6353-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20190924064420.6353-1-christian.brauner@ubuntu.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 24 Sep 2019 10:11:55 -0700
-X-Gmail-Original-Message-ID: <CALCETrUdjCZ2tyGHuYi0TOQDtxEDAYdv-17=-5MKpfzFdiPNMw@mail.gmail.com>
-Message-ID: <CALCETrUdjCZ2tyGHuYi0TOQDtxEDAYdv-17=-5MKpfzFdiPNMw@mail.gmail.com>
-Subject: Re: [PATCH v1] seccomp: simplify secure_computing()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 2CBB73C04C0;
+        Tue, 24 Sep 2019 19:14:59 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 24 Sep
+ 2019 19:14:58 +0200
+Date:   Tue, 24 Sep 2019 19:14:53 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>
+CC:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-um@lists.infradead.org, Andrew Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Drewry <wad@chromium.org>, X86 ML <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH V1 1/1] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Message-ID: <20190924171453.GA1804@vmlxhi-102.adit-jv.com>
+References: <20190918144138.24839-1-balasubramani_vivekanandan@mentor.com>
+ <20190918144138.24839-2-balasubramani_vivekanandan@mentor.com>
+ <alpine.DEB.2.21.1909232041080.1934@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909232041080.1934@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:44 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> Afaict, the struct seccomp_data argument to secure_computing() is unused
-> by all current callers. So let's remove it.
-> The argument was added in [1]. It was added because having the arch
-> supply the syscall arguments used to be faster than having it done by
-> secure_computing() (cf. Andy's comment in [2]). This is not true anymore
-> though.
->
-> /* References */
-> [1]: 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
-> [2]: https://lore.kernel.org/r/CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com
->
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Will Drewry <wad@chromium.org>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: x86@kernel.org
+On Mon, Sep 23, 2019 at 09:51:54PM +0200, Thomas Gleixner wrote:
+> On Wed, 18 Sep 2019, Balasubramani Vivekanandan wrote:
+> > 
+> > When there are no more cpus subscribed to broadcast, the timer callback
+> > might not set the expiry time for hrtimer. Therefore the callback timer
+> > function is modified to set the state of broadcast clock to
+> > CLOCK_EVT_STATE_ONESHOT_STOPPED which in turn will set the expiry time
+> > of hrtimer to KTIME_MAX.
+> 
+> That's an ugly layering violation, really.
+> 
+> Aside of that the whole try to cancel logic and the comment that the
+> hrtimer cannot be armed from within the callback is wrong. All of this can
+> go way.
+> 
+> Find a completely untested patch below [1]
+> 
+> Thanks,
+> 
+> 	tglx
+> 
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+jFTR, for the sake of anyone who lives on older kernels and happen to
+deal with the same issue as reported by Balasubramani in this thread,
+after enabling cpuidle [2-3] on R-Car H3ULCB (which seems to be a hard
+prerequisite for seeing this issue reproduced), I got below [4,5,6]
+backtraces on recent v5.3-12025-g4c07e2ddab5b using various intermittent
+stress-ng loads. I believe they portray the issue reported by Bala.
+
+I was not able to reproduce the RCU stalls after applying [1].
+
+[1] https://lkml.org/lkml/2019/9/23/803
+[2] https://patchwork.kernel.org/patch/10769701/
+    ("[v2,1/5] arm64: dts: r8a7795: Add cpuidle support for CA57 cores")
+[3] https://patchwork.kernel.org/patch/10769689/
+    ("[v2,2/5] arm64: dts: r8a7795: Add cpuidle support for CA53 cores")
+
+[4] RCU stall #1 reproduced on v5.3-12025-g4c07e2ddab5b + patches [2-3]
+
+[  701.628630] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[  701.635259] rcu:     1-...!: (0 ticks this GP) idle=5b4/0/0x0 softirq=178953/178953 fqs=0 last_accelerate: c1a9/209c, Nonlazy posted: ..D
+[  701.648195] rcu:     3-...!: (667 GPs behind) idle=1a0/0/0x0 softirq=188640/188641 fqs=0 last_accelerate: c1a6/20a0, Nonlazy posted: .LD
+[  701.660666] rcu:     5-...!: (0 ticks this GP) idle=674/0/0x0 softirq=39323/39323 fqs=0 last_accelerate: c380/20a0, Nonlazy posted: ..D
+[  701.673046] rcu:     6-...!: (0 ticks this GP) idle=628/0/0x0 softirq=27147/27147 fqs=0 last_accelerate: c00c/20a0, Nonlazy posted: ..D
+[  701.685419]  (detected by 2, t=25012 jiffies, g=392945, q=968)
+[  701.691487] Task dump for CPU 1:
+[  701.694873] swapper/1       R  running task        0     0      1 0x00000028
+[  701.702227] Call trace:
+[  701.704822]  __switch_to+0x2c4/0x2e8
+[  701.708578]  num_spec.70129+0x177e7d/0x1d336c
+[  701.713130] Task dump for CPU 3:
+[  701.716514] swapper/3       R  running task        0     0      1 0x00000028
+[  701.723865] Call trace:
+[  701.726445]  __switch_to+0x2c4/0x2e8
+[  701.730192]  0x3
+[  701.732140] Task dump for CPU 5:
+[  701.735524] swapper/5       R  running task        0     0      1 0x00000028
+[  701.742874] Call trace:
+[  701.745455]  __switch_to+0x2c4/0x2e8
+[  701.749204]  num_spec.70129+0x177e7d/0x1d336c
+[  701.753756] Task dump for CPU 6:
+[  701.757139] swapper/6       R  running task        0     0      1 0x00000028
+[  701.764489] Call trace:
+[  701.767070]  __switch_to+0x2c4/0x2e8
+[  701.770819]  num_spec.70129+0x177e7d/0x1d336c
+[  701.775391] rcu: rcu_preempt kthread starved for 25068 jiffies! g392945 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=5
+[  701.786394] rcu: RCU grace-period kthread stack dump:
+[  701.791652] rcu_preempt     I    0    10      2 0x00000028
+[  701.797369] Call trace:
+[  701.799944]  __switch_to+0x2c4/0x2e8
+[  701.803688]  __schedule+0xe1c/0xf58
+[  701.807337]  schedule+0xc0/0x104
+[  701.810721]  schedule_timeout+0x298/0x6ec
+[  701.814911]  rcu_gp_kthread+0xf8c/0xf94
+[  701.818923]  kthread+0x1c4/0x1dc
+[  701.822304]  ret_from_fork+0x10/0x18
+[  701.826061] Kernel panic - not syncing: RCU Stall
+[  701.830964] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.3.0+ #18
+[  701.837201] Hardware name: Renesas H3ULCB Kingfisher board based on r8a7795 ES2.0+ (DT)
+[  701.845503] Call trace:
+[  701.848072]  dump_backtrace+0x0/0x1ec
+[  701.851893]  show_stack+0x24/0x30
+[  701.855361]  dump_stack+0xcc/0x128
+[  701.858915]  panic+0x288/0x5a4
+[  701.862112]  panic_on_rcu_stall+0x2c/0x34
+[  701.866293]  rcu_sched_clock_irq+0xe2c/0x1554
+[  701.870835]  update_process_times+0x34/0x60
+[  701.875196]  tick_sched_handle+0x80/0x98
+[  701.879286]  tick_sched_timer+0x64/0xbc
+[  701.883289]  __hrtimer_run_queues+0x5c8/0xb94
+[  701.887829]  hrtimer_interrupt+0x1ec/0x454
+[  701.892107]  arch_timer_handler_phys+0x40/0x58
+[  701.896737]  handle_percpu_devid_irq+0x170/0x6f4
+[  701.901548]  generic_handle_irq+0x3c/0x54
+[  701.905729]  __handle_domain_irq+0x114/0x118
+[  701.910178]  gic_handle_irq+0x70/0xac
+[  701.913999]  el1_irq+0xbc/0x180
+[  701.917289]  __asan_load8+0x40/0xb0
+[  701.920934]  tick_check_broadcast_expired+0x70/0x8c
+[  701.926011]  cpu_idle_poll+0x1ec/0x380
+[  701.929925]  do_idle+0x188/0x354
+[  701.933301]  cpu_startup_entry+0x28/0x2c
+[  701.937396]  secondary_start_kernel+0x344/0x374
+[  701.942184] SMP: stopping secondary CPUs
+[  701.946316] Dumping ftrace buffer:
+[  701.950694]    (ftrace buffer empty)
+[  701.954445] Kernel Offset: disabled
+[  701.958093] CPU features: 0x0002,21006004
+[  701.962274] Memory Limit: none
+[  701.965552] ---[ end Kernel panic - not syncing: RCU Stall ]---
+
+[5] RCU stall #2 reproduced on v5.3-12025-g4c07e2ddab5b + patches [2-3]
+
+[ 1193.212038] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:max-time=5 run; sleep 5; done                                                                                                                                    
+[ 1193.218757] rcu:     4-...!: (0 ticks this GP) idle=17c/0/0x0 softirq=130361/130361 fqs=1 last_accelerate: 9cdc/a0d9, Nonlazy posted: .LD
+[ 1193.231958]  (detected by 3, t=25021 jiffies, g=774405, q=58539)
+[ 1193.238238] Task dump for CPU 4:
+[ 1193.241641] swapper/4       R  running task        0     0      1 0x00000028
+[ 1193.249021] Call trace:
+[ 1193.251631]  __switch_to+0x2c4/0x2e8
+[ 1193.255395]  0x1fffe000db4d0fe4
+[ 1193.258720] rcu: rcu_preempt kthread starved for 7974 jiffies! g774405 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=4
+[ 1193.270900] rcu: RCU grace-period kthread stack dump:
+[ 1193.276542] rcu_preempt     I    0    10      2 0x00000028
+[ 1193.282278] Call trace:
+[ 1193.284864]  __switch_to+0x2c4/0x2e8
+[ 1193.288619]  __schedule+0xe1c/0xf58
+[ 1193.292278]  schedule+0xc0/0x104
+[ 1193.295671]  schedule_timeout+0x298/0x6ec
+[ 1193.299875]  rcu_gp_kthread+0xf8c/0xf94
+[ 1193.303901]  kthread+0x1c4/0x1dc
+[ 1193.307295]  ret_from_fork+0x10/0x18
+[ 1193.311069] Kernel panic - not syncing: RCU Stall
+[ 1193.315986] CPU: 3 PID: 2892 Comm: bash Not tainted 5.3.0+ #18
+[ 1193.322056] Hardware name: Renesas H3ULCB Kingfisher board based on r8a7795 ES2.0+ (DT)
+[ 1193.330372] Call trace:
+[ 1193.332951]  dump_backtrace+0x0/0x1ec
+[ 1193.336782]  show_stack+0x24/0x30
+[ 1193.340259]  dump_stack+0xcc/0x128
+[ 1193.343822]  panic+0x288/0x5a4
+[ 1193.347026]  panic_on_rcu_stall+0x2c/0x34
+[ 1193.351217]  rcu_sched_clock_irq+0xe2c/0x1554
+[ 1193.355770]  update_process_times+0x34/0x60
+[ 1193.360141]  tick_sched_handle+0x80/0x98
+[ 1193.364240]  tick_sched_timer+0x64/0xbc
+[ 1193.368252]  __hrtimer_run_queues+0x5c8/0xb94
+[ 1193.372804]  hrtimer_interrupt+0x1ec/0x454
+[ 1193.377092]  arch_timer_handler_phys+0x40/0x58
+[ 1193.381734]  handle_percpu_devid_irq+0x170/0x6f4
+[ 1193.386558]  generic_handle_irq+0x3c/0x54
+[ 1193.390749]  __handle_domain_irq+0x114/0x118
+[ 1193.395208]  gic_handle_irq+0x70/0xac
+[ 1193.399037]  el1_irq+0xbc/0x180
+[ 1193.402333]  lock_acquire+0x154/0x39c
+[ 1193.406164]  _raw_spin_lock+0x4c/0x88
+[ 1193.409997]  set_close_on_exec+0x44/0x1ac
+[ 1193.414190]  do_fcntl+0x578/0xbf4
+[ 1193.417664]  __arm64_sys_fcntl+0xa4/0xdc
+[ 1193.421767]  el0_svc_common.constprop.0+0x158/0x1f8
+[ 1193.426854]  el0_svc_handler+0x94/0xa0
+[ 1193.430775]  el0_svc+0x8/0xc
+[ 1193.433878] SMP: stopping secondary CPUs
+[ 1193.438059] Dumping ftrace buffer:
+[ 1193.442613]    (ftrace buffer empty)
+[ 1193.446373] Kernel Offset: disabled
+[ 1193.450028] CPU features: 0x0002,21006004
+[ 1193.454217] Memory Limit: none
+[ 1193.457508] ---[ end Kernel panic - not syncing: RCU Stall ]---
+
+[6] RCU stall #3 reproduced on v5.3-12025-g4c07e2ddab5b + patches [2-3]
+
+[66194.249069] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[66194.255718] rcu:     7-...!: (0 ticks this GP) idle=b34/0/0x0 softirq=1969905/1969905 fqs=1 last_accelerate: 36d8/7727, Nonlazy posted: .LD
+[66194.268853]  (detected by 2, t=25021 jiffies, g=8936349, q=98599)
+[66194.275195] Task dump for CPU 7:
+[66194.278585] swapper/7       R  running task        0     0      1 0x00000028
+[66194.285941] Call trace:
+[66194.288537]  __switch_to+0x2c4/0x2e8
+[66194.292298]  num_spec.70129+0x177e7d/0x1d336c
+[66194.296872] rcu: rcu_preempt kthread starved for 16505 jiffies! g8936349 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=7
+[66194.307968] rcu: RCU grace-period kthread stack dump:
+[66194.313228] rcu_preempt     I    0    10      2 0x00000028
+[66194.318949] Call trace:
+[66194.321527]  __switch_to+0x2c4/0x2e8
+[66194.325275]  __schedule+0xe1c/0xf58
+[66194.328926]  schedule+0xc0/0x104
+[66194.332310]  schedule_timeout+0x298/0x6ec
+[66194.336502]  rcu_gp_kthread+0xf8c/0xf94
+[66194.340516]  kthread+0x1c4/0x1dc
+[66194.343900]  ret_from_fork+0x10/0x18
+[66194.347664] Kernel panic - not syncing: RCU Stall
+[66194.352574] CPU: 2 PID: 17232 Comm: stress-ng-cpu Not tainted 5.3.0+ #18
+[66194.359535] Hardware name: Renesas H3ULCB Kingfisher board based on r8a7795 ES2.0+ (DT)
+[66194.367848] Call trace:
+[66194.370428]  dump_backtrace+0x0/0x1ec
+[66194.374256]  show_stack+0x24/0x30
+[66194.377730]  dump_stack+0xcc/0x128
+[66194.381288]  panic+0x288/0x5a4
+[66194.384493]  panic_on_rcu_stall+0x2c/0x34
+[66194.388680]  rcu_sched_clock_irq+0xe2c/0x1554
+[66194.393229]  update_process_times+0x34/0x60
+[66194.397595]  tick_sched_handle+0x80/0x98
+[66194.401691]  tick_sched_timer+0x64/0xbc
+[66194.405700]  __hrtimer_run_queues+0x5c8/0xb94
+[66194.410246]  hrtimer_interrupt+0x1ec/0x454
+[66194.414528]  arch_timer_handler_phys+0x40/0x58
+[66194.419167]  handle_percpu_devid_irq+0x170/0x6f4
+[66194.423990]  generic_handle_irq+0x3c/0x54
+[66194.428178]  __handle_domain_irq+0x114/0x118
+[66194.432630]  gic_handle_irq+0x70/0xac
+[66194.436454]  el0_irq_naked+0x50/0x5c
+[66194.440261] SMP: stopping secondary CPUs
+[66194.444571] Dumping ftrace buffer:
+[66194.449132]    (ftrace buffer empty)
+[66194.452890] Kernel Offset: disabled
+[66194.456538] CPU features: 0x0002,21006004
+[66194.460719] Memory Limit: none
+[66194.463997] ---[ end Kernel panic - not syncing: RCU Stall ]---
+
+-- 
+Best Regards,
+Eugeniu
