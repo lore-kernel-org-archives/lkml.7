@@ -2,160 +2,104 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D2C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E52C4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62097207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F6B207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y143tXX9"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="JK8xERef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407993AbfIXRsO (ORCPT
+        id S2408154AbfIXRwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:48:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407478AbfIXRsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:48:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O0nfraiEUV4+QwMHxI+w0Nqu6sGkpxkc5IfF1hY76dw=; b=Y143tXX9kDfyXXoQ1ev6DHsff
-        v66sqrTzaimx4sYNL42VqpTPYVELDY9PC3OIJccapnXjzE2EA3Ye9vx5A1fk0lip0vP9VTh9/V1Z9
-        RiX97vLtrfObCCGA65q35ZdjGiFzU8rSdRxvGKDJleXJgK96RycEITOlNgFePt+EjgIz+ZkfREFFl
-        s7or14br+DOWQt3F2qHMNWyI4srGBY7pJVGJcmpVp+O+rYuEP0WNTu29JcVdOLTbiRv8UOL88H4x1
-        nQSVEvCjhu8opzz9vWZsF59/DJrk7uoduthG3Aar32FWrOEaiUEv/40agGW2CYS+kCKmo4kumewtx
-        nNGCKAEfQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCov3-0002iQ-PN; Tue, 24 Sep 2019 17:48:09 +0000
-Date:   Tue, 24 Sep 2019 10:48:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: drop mmap_sem before calling balance_dirty_pages()
- in write fault
-Message-ID: <20190924174809.GH1855@bombadil.infradead.org>
-References: <20190924171518.26682-1-hannes@cmpxchg.org>
+        Tue, 24 Sep 2019 13:52:21 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:36225 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732017AbfIXRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 13:52:21 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id CoyziGLdmN5I9Coz0iV9ND; Tue, 24 Sep 2019 11:52:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1569347539; bh=H/XOP2fKipCtKvfVrIfB/bod/HsAwHO9dwoqUJh3Vmw=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=JK8xERefjpCMRSd429miCFrrPAEMqXvG/eOfsrhP21bvGjR7/bTgkx2zBM/slmxrB
+         XVupk5r/vRq5mX/5OkaGevz1bbdF9Z9dWm32zfn/mI+t/LCKQh3HiBugU6Li/TpQ6V
+         iPL1xRLPly4FCqem7gAPprOWEPZY5E2wOyOnRm5633W0jeQ43VdR73C+Ezgb31TUEd
+         FPIMIcpTQPbBZlAr8vaJ1mFztMP6P+sM3qw7jwhZZB0D20FkT/iPQkgry4CVaJ3zRA
+         FFMOOwW1C4YCJHrJ0Ps0Ekq11/PeM5VrHZ5s2nd77wNUesc/AWaGTkYxyGMJAx5zK7
+         T/2xJmFqRS8JA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=aatUQebYAAAA:8 a=aCwPpCUuJDWdtZRKGx0A:9 a=CjuIK1q_8ugA:10
+ a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Mel Gorman'" <mgorman@techsingularity.net>
+Cc:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>, <x86@kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <matt@codeblueprint.co.uk>, <viresh.kumar@linaro.org>,
+        <juri.lelli@redhat.com>, <pjt@google.com>,
+        <vincent.guittot@linaro.org>, <qperret@qperret.net>,
+        <dietmar.eggemann@arm.com>, <srinivas.pandruvada@linux.intel.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <bp@suse.de>, <lenb@kernel.org>, <rjw@rjwysocki.net>
+References: <20190909024216.5942-1-ggherdovich@suse.cz> <20190909024216.5942-2-ggherdovich@suse.cz> <000e01d568b5$87de9be0$979bd3a0$@net> <000301d56a76$0022e630$0068b290$@net> <1568730313.3329.1.camel@suse.cz> <001a01d56ef8$7abb07c0$70311740$@net> <20190924080608.GA3321@techsingularity.net>
+In-Reply-To: <20190924080608.GA3321@techsingularity.net>
+Subject: RE: [PATCH 1/2] x86,sched: Add support for frequency invariance
+Date:   Tue, 24 Sep 2019 10:52:13 -0700
+Message-ID: <000b01d57300$cf611ce0$6e2356a0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924171518.26682-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVyrvSM5wisEN5wR+e/x84tTXNN3QAT9lPw
+X-CMAE-Envelope: MS4wfCgcBy1c7Po5AHQoWI4xadnUF/6gDYl0DmdDkj0h/8f4Q6rS7PSt42oPKQSlXfJ9s13UoXpUp1M/R616MMHftQmbwg36GhHPFSOnX4fBItc4C39OKmOd
+ WhHWONSXcUUwmjncbyI4PSkyKoQ3F2HaXDMIyU5OFnXzGVvlAGWsYEcBVDWk0u48H+yIxb0oI5nHzWYD0ITXVq3vPukQHinPr+XFkuVCWbIkqV1OnADoPFgr
+ i1wfnArLathDVIo3TSLlVlHEDPRWuhfIGwdBonbgEhjQZkVTytEgrFQPQLoFws8tsPEPPteNTH+iVkZMxtyFEtV/IuQDmVWKYn35OOuppbpBCwnTDjEPybHK
+ Oz/p+kFPqTONaNjcI7SQLqHj9O8kjsi0cCph8O56W38wP13ZL9Ka3N7gfe5q+1q9FHT81skToQB8QN1lTf2uoLmxQFGzYN9xdCARBYat8yIbhXzS6SertJ81
+ dtuVNyipLJhKs5cI3vaOkrtktZyg1JtMgL/wxQjcT/K9RLpOVgmrefxrOjM6XyTdF9WHjWRYuFriVeXy5KQq+haxglv4q06f8hl667VWt4go+H6aUkav5dZ8
+ X0MEUZrain0CWdhSqqMHl+O7WSL2nnLGk2reA/pHNpAUL4LH4d2X9UU74J0cYRsEVLoZbz/GFmWIY+mD7creLKyPHr1FKuY5R4GU3OqyYTGyoaVeVsEqUwop
+ 4RZjsyBUDpuTqja3p+3ANNu+ijV3va9/nrqM9qSiXwsCixmdNr652Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 01:15:18PM -0400, Johannes Weiner wrote:
-> +static int fault_dirty_shared_page(struct vm_fault *vmf)
+On 2019.09.24 01:06 Mel Gorman wrote:
+> On Thu, Sep 19, 2019 at 07:42:29AM -0700, Doug Smythies wrote:
+>> On 2019.09.17 07:25 Giovanni Gherdovich wrote:
+>>>On Wed, 2019-09-11 at 08:28 -0700, Doug Smythies wrote:
+>>> [...]
+> 
 
-vm_fault_t, shirley?
+> Hence, I think this patchset should be considered on its own merits.
 
-> @@ -2239,16 +2241,36 @@ static void fault_dirty_shared_page(struct vm_area_struct *vma,
->  	mapping = page_rmapping(page);
->  	unlock_page(page);
->  
-> +	if (!page_mkwrite)
-> +		file_update_time(vma->vm_file);
-> +
-> +	/*
-> +	 * Throttle page dirtying rate down to writeback speed.
-> +	 *
-> +	 * mapping may be NULL here because some device drivers do not
-> +	 * set page.mapping but still dirty their pages
-> +	 *
-> +	 * Drop the mmap_sem before waiting on IO, if we can. The file
-> +	 * is pinning the mapping, as per above.
-> +	 */
->  	if ((dirtied || page_mkwrite) && mapping) {
-> -		/*
-> -		 * Some device drivers do not set page.mapping
-> -		 * but still dirty their pages
-> -		 */
-> +		struct file *fpin = NULL;
-> +
-> +		if ((vmf->flags &
-> +		     (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
-> +		    FAULT_FLAG_ALLOW_RETRY) {
-> +			fpin = get_file(vma->vm_file);
-> +			up_read(&vma->vm_mm->mmap_sem);
-> +			ret = VM_FAULT_RETRY;
-> +		}
-> +
->  		balance_dirty_pages_ratelimited(mapping);
-> +
-> +		if (fpin)
-> +			fput(fpin);
->  	}
->  
-> -	if (!page_mkwrite)
-> -		file_update_time(vma->vm_file);
-> +	return ret;
->  }
+Agree. 
 
-I'm not a fan of moving file_update_time() to _before_ the
-balance_dirty_pages call.  Also, this is now the third place that needs
-maybe_unlock_mmap_for_io, see
-https://lore.kernel.org/linux-mm/20190917120852.x6x3aypwvh573kfa@box/
+> I think the patch is fine and should be merged with the main caveat being
+> that some CPU families may need to use a different calculation to account
+> for turbo boost which is a per-arch and per-cpu-family decision.
 
-How about:
+Agree.
 
-+	struct file *fpin = NULL;
+> What, if anything, should change in this patchset before it can be merged?
 
- 	if ((dirtied || page_mkwrite) && mapping) {
-		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
- 		balance_dirty_pages_ratelimited(mapping);
-	}
-+
-+	if (fpin) {
-+		file_update_time(fpin);
-+		fput(fpin);
-+		return VM_FAULT_RETRY;
-+	}
+Nothing, and apologies for the tangential discussion.
 
- 	if (!page_mkwrite)
- 		file_update_time(vma->vm_file);
-+	return 0;
- }
+> Is that an acked-by?
 
->  /*
-> @@ -2491,6 +2513,7 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
->  	__releases(vmf->ptl)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
-> +	int ret = VM_FAULT_WRITE;
+Absolutely, if I am worthy of ack'ing then:
 
-vm_fault_t again.
+Acked-by: Doug Smythies <dsmythies@telus.net>
 
-> @@ -3576,7 +3599,6 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
->  static vm_fault_t do_fault(struct vm_fault *vmf)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
-> -	struct mm_struct *vm_mm = vma->vm_mm;
->  	vm_fault_t ret;
->  
->  	/*
-> @@ -3617,7 +3639,12 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
->  
->  	/* preallocated pagetable is unused: free it */
->  	if (vmf->prealloc_pte) {
-> -		pte_free(vm_mm, vmf->prealloc_pte);
-> +		/*
-> +		 * XXX: Accessing vma->vm_mm now is not safe. The page
-> +		 * fault handler may have dropped the mmap_sem a long
-> +		 * time ago. Only s390 derefs that parameter.
-> +		 */
-> +		pte_free(vma->vm_mm, vmf->prealloc_pte);
+... Doug
 
-I'm confused.  This code looks like it was safe before (as it was caching
-vma->vm_mm in a local variable), and now you've made it unsafe ... ?
+
