@@ -2,325 +2,232 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B2C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4582AC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85117214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D25A20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 17:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSebsSO/"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="l3C7UHNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502029AbfIXRdp (ORCPT
+        id S2407763AbfIXRfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 13:33:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53720 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbfIXRdp (ORCPT
+        Tue, 24 Sep 2019 13:35:11 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:28692 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730690AbfIXRfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 13:33:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so1090768wmd.3;
-        Tue, 24 Sep 2019 10:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=HL3nBQDa4lmsZ40hrcqORRbh16WnQqTv5FW3aHhR0IM=;
-        b=jSebsSO//kdiCOtQmaNr4EREjkjGfflpbUGnxEmkBi4lkxdim6C/43IlZ58rip/u0h
-         Oo1b+tUEgIQzM8T2uK9dvvWGkfPnySb9e93dJGAwK4Nwh1ecqJ+mKk1mnPfThkCPaYid
-         ZY47+fqvtIMRPmkXQnxerMFzEy6BJXM8DMvSvnQ3YhKoWPq1p42kQ/OD/3x7hDXc9Smt
-         ZFHKzQFWxKagACWla3a6do7SKHWcOGWvGOhDISHgwag50Umyh+LOQHFU/PiP1iNEAOTo
-         Uv6DcrHyGEMZi9VfAnPVxp12G/zcrbrBSwFpzIfA2WZcnxw4ZknlHY8U00hixhJx0g0g
-         Uz3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=HL3nBQDa4lmsZ40hrcqORRbh16WnQqTv5FW3aHhR0IM=;
-        b=sWD4UikPjmzQ5bBhcgD/+Z2EzItzJsbW7T8Cp3+hUBH4UlaHOx6p/LiyrAYYvc29+A
-         0K9SD96isuNY0eybGbb+uGkBgFYkfs4XeMFC7uw6kAGJorm2QGy9SaxMwveyFZHwGMoD
-         KI/Q2ayk3YDDtW0h9AjwO84heV/fSQ515G02es934k3tyrT2tjd3Mm2DoleoYnuzXLu2
-         ZqUpipus7tRV8mWr7lHovxWHjcdl9EkVl+2l6jPqWKj/aWccgIBpqRizYOVvs1kYkT1A
-         I6P7J800wefWvCZjKLMSBtf64JKfljV2Zh2pBZ2CJsc7nl+xVvPFFMJ7qEs2xDm+5pWD
-         abtg==
-X-Gm-Message-State: APjAAAXDJEajlkXAswcztW1CtaRM4RKOdTV5YyaMiQ4K9G3qjsLweIIH
-        VU7syEonBYOmG59sef/WJpTVmTCyMg9trA==
-X-Google-Smtp-Source: APXvYqwo70g8wI1S6kU9LHEbJWGrwC1+/hN9zzEW5VvE7e+jUEmKE7DIHRTLqwH+24lKeDF/rTMcWg==
-X-Received: by 2002:a7b:c5c2:: with SMTP id n2mr1343263wmk.20.1569346421133;
-        Tue, 24 Sep 2019 10:33:41 -0700 (PDT)
-Received: from [192.168.8.32] (lneuilly-656-1-59-14.w80-11.abo.wanadoo.fr. [80.11.63.14])
-        by smtp.gmail.com with ESMTPSA id t8sm2115327wrx.76.2019.09.24.10.33.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2019 10:33:40 -0700 (PDT)
-To:     Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
- <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <20190924094942.GN2349@hirez.programming.kicks-ass.net>
- <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
- <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
- <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
- <da86ec56-5f14-536d-2d43-2cc9e118d2a7@kernel.dk>
- <6228b13d-5ef6-e83e-b5dc-7a157013d43f@gmail.com>
- <a0a0cddf-c5ae-43b0-5445-0bd55e4b7c45@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-Message-ID: <79fa9cc2-e0cc-922f-89d3-9ace59abb2e8@gmail.com>
-Date:   Tue, 24 Sep 2019 20:33:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 24 Sep 2019 13:35:10 -0400
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8OHMPVc027933;
+        Tue, 24 Sep 2019 18:35:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=dpJwzAPXmBpI/Z8VFke+ya2k2FRPMeUTDY5Spj0JTE8=;
+ b=l3C7UHNV648cGAH6rwG87Mvh7tBQ5DUe6cSnEp2vqguKfrwseVo4QnOKQqZJq5VADX+t
+ FMnwQ0hxHT7NWqPTMnqomGhAoFcAOxDhfUrQl1gcL6vFQp86GbYd4AWkKtIgVmMb9ZCD
+ F8fHrBZlqxiFzBrQnkupLXeQftZEKaZ0LlcwpaQqbiha3tiAmcX3hO9FNFTfikCF8hyQ
+ woOMpapuZFtfOOFgLhrdTDcbjJWKwnS9O6EzzJ52AqErnMBUb6jNTH1w2nPQDfAthel3
+ 6JgZsA3Gth/RCK0hlA3XAyf+gp0+uDf3Ug7YJBzhcXCBzdvhebV2xW3OLrMBA4yWs36x ig== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 2v73qb4raq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Sep 2019 18:35:04 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x8OHWqBw032396;
+        Tue, 24 Sep 2019 13:35:03 -0400
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2v73vpcdnm-1;
+        Tue, 24 Sep 2019 13:35:03 -0400
+Received: from [172.29.170.83] (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
+        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 4147E1FC72;
+        Tue, 24 Sep 2019 17:35:03 +0000 (GMT)
+Subject: Re: [PATCH] epoll: simplify ep_poll_safewake() for
+ CONFIG_DEBUG_LOCK_ALLOC
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <normalperson@yhbt.net>
+References: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+ <a07adc0e-590e-623c-3c80-e28af39bd19c@akamai.com>
+ <1b26e25fcc0e6c54cbdb9e66dade17db@suse.de>
+From:   Jason Baron <jbaron@akamai.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
+ 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
+ JeQ7iQ==
+Message-ID: <04b08b78-6348-d592-ca2e-f718955bcc68@akamai.com>
+Date:   Tue, 24 Sep 2019 13:34:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a0a0cddf-c5ae-43b0-5445-0bd55e4b7c45@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="KjsOFZNQZgDGRZ0oueXrNbphZGMqnJqQT"
+In-Reply-To: <1b26e25fcc0e6c54cbdb9e66dade17db@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909240151
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-24_07:2019-09-23,2019-09-24 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1909240151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---KjsOFZNQZgDGRZ0oueXrNbphZGMqnJqQT
-Content-Type: multipart/mixed; boundary="r65atvubWzdmf9a3jrU1ajgP3OUE5c9JO";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <79fa9cc2-e0cc-922f-89d3-9ace59abb2e8@gmail.com>
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
- <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <20190924094942.GN2349@hirez.programming.kicks-ass.net>
- <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
- <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
- <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
- <da86ec56-5f14-536d-2d43-2cc9e118d2a7@kernel.dk>
- <6228b13d-5ef6-e83e-b5dc-7a157013d43f@gmail.com>
- <a0a0cddf-c5ae-43b0-5445-0bd55e4b7c45@kernel.dk>
-In-Reply-To: <a0a0cddf-c5ae-43b0-5445-0bd55e4b7c45@kernel.dk>
 
---r65atvubWzdmf9a3jrU1ajgP3OUE5c9JO
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 24/09/2019 16:13, Jens Axboe wrote:
-> On 9/24/19 5:23 AM, Pavel Begunkov wrote:
->>> Yep that should do it, and saves 8 bytes of stack as well.
+On 9/23/19 3:23 PM, Roman Penyaev wrote:
+> On 2019-09-23 17:43, Jason Baron wrote:
+>> On 9/4/19 4:22 PM, Jason Baron wrote:
+>>> Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
+>>> ep_call_nested() in order to pass the correct subclass argument to
+>>> spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
+>>> checks for epoll depth and loops that are already verified when doing
+>>> EPOLL_CTL_ADD. This mirrors a conversion that was done for
+>>> !CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
+>>> ep_call_nested() from ep_eventpoll_poll()")
 >>>
->>> BTW, did you test my patch, this one or the previous? Just curious if=
- it
->>> worked for you.
+>>> Signed-off-by: Jason Baron <jbaron@akamai.com>
+>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>>> Cc: Roman Penyaev <rpenyaev@suse.de>
+>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Eric Wong <normalperson@yhbt.net>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> ---
+>>>  fs/eventpoll.c | 36 +++++++++++++-----------------------
+>>>  1 file changed, 13 insertions(+), 23 deletions(-)
 >>>
->> Not yet, going to do that tonight
->=20
-> Thanks! For reference, the final version is below. There was still a
-> signal mishap in there, now it should all be correct afaict.
->=20
->=20
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 9b84232e5cc4..d2a86164d520 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2768,6 +2768,38 @@ static int io_ring_submit(struct io_ring_ctx *ct=
-x, unsigned int to_submit,
->  	return submit;
->  }
-> =20
-> +struct io_wait_queue {
-> +	struct wait_queue_entry wq;
-> +	struct io_ring_ctx *ctx;
-> +	unsigned to_wait;
-> +	unsigned nr_timeouts;
-> +};
-> +
-> +static inline bool io_should_wake(struct io_wait_queue *iowq)
-> +{
-> +	struct io_ring_ctx *ctx =3D iowq->ctx;
-> +
-> +	/*
-> +	 * Wake up if we have enough events, or if a timeout occured since we=
-
-> +	 * started waiting. For timeouts, we always want to return to userspa=
-ce,
-> +	 * regardless of event count.
-> +	 */
-> +	return io_cqring_events(ctx->rings) >=3D iowq->to_wait ||
-> +			atomic_read(&ctx->cq_timeouts) !=3D iowq->nr_timeouts;
-> +}
-> +
-> +static int io_wake_function(struct wait_queue_entry *curr, unsigned in=
-t mode,
-> +			    int wake_flags, void *key)
-> +{
-> +	struct io_wait_queue *iowq =3D container_of(curr, struct io_wait_queu=
-e,
-> +							wq);
-> +
-> +	if (!io_should_wake(iowq))
-> +		return -1;
-
-It would try to schedule only the first task in the wait list. Is that th=
-e
-semantic you want?
-E.g. for waiters=3D[32,8] and nr_events =3D=3D 8, io_wake_function() retu=
-rns
-after @32, and won't wake up the second one.=20
-
-> +
-> +	return autoremove_wake_function(curr, mode, wake_flags, key);
-> +}
-> +
->  /*
->   * Wait until events become available, if we don't already have some. =
-The
->   * application must reap them itself, as they reside on the shared cq =
-ring.
-> @@ -2775,8 +2807,16 @@ static int io_ring_submit(struct io_ring_ctx *ct=
-x, unsigned int to_submit,
->  static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
->  			  const sigset_t __user *sig, size_t sigsz)
->  {
-> +	struct io_wait_queue iowq =3D {
-> +		.wq =3D {
-> +			.private	=3D current,
-> +			.func		=3D io_wake_function,
-> +			.entry		=3D LIST_HEAD_INIT(iowq.wq.entry),
-> +		},
-> +		.ctx		=3D ctx,
-> +		.to_wait	=3D min_events,
-> +	};
->  	struct io_rings *rings =3D ctx->rings;
-> -	unsigned nr_timeouts;
->  	int ret;
-> =20
->  	if (io_cqring_events(rings) >=3D min_events)
-> @@ -2795,15 +2835,20 @@ static int io_cqring_wait(struct io_ring_ctx *c=
-tx, int min_events,
->  			return ret;
->  	}
-> =20
-> -	nr_timeouts =3D atomic_read(&ctx->cq_timeouts);
-> -	/*
-> -	 * Return if we have enough events, or if a timeout occured since
-> -	 * we started waiting. For timeouts, we always want to return to
-> -	 * userspace.
-> -	 */
-> -	ret =3D wait_event_interruptible(ctx->wait,
-> -				io_cqring_events(rings) >=3D min_events ||
-> -				atomic_read(&ctx->cq_timeouts) !=3D nr_timeouts);
-> +	iowq.nr_timeouts =3D atomic_read(&ctx->cq_timeouts);
-> +	do {
-> +		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq,
-> +						TASK_INTERRUPTIBLE);
-> +		if (io_should_wake(&iowq))
-> +			break;
-> +		schedule();
-> +		if (signal_pending(current)) {
-> +			ret =3D -ERESTARTSYS;
-> +			break;
-> +		}
-> +	} while (1);
-> +	finish_wait(&ctx->wait, &iowq.wq);
-> +
->  	restore_saved_sigmask_unless(ret =3D=3D -ERESTARTSYS);
->  	if (ret =3D=3D -ERESTARTSYS)
->  		ret =3D -EINTR;
->=20
-
---=20
-Yours sincerely,
-Pavel Begunkov
+>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>> index d7f1f50..a9b2737 100644
+>>> --- a/fs/eventpoll.c
+>>> +++ b/fs/eventpoll.c
+>>> @@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls
+>>> *ncalls,
+>>>   */
+>>>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>>>
+>>> -static struct nested_calls poll_safewake_ncalls;
+>>> -
+>>> -static int ep_poll_wakeup_proc(void *priv, void *cookie, int
+>>> call_nests)
+>>> -{
+>>> -    unsigned long flags;
+>>> -    wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
+>>> -
+>>> -    spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
+>>> -    wake_up_locked_poll(wqueue, EPOLLIN);
+>>> -    spin_unlock_irqrestore(&wqueue->lock, flags);
+>>> -
+>>> -    return 0;
+>>> -}
+>>> +static DEFINE_PER_CPU(int, wakeup_nest);
+>>>
+>>>  static void ep_poll_safewake(wait_queue_head_t *wq)
+>>>  {
+>>> -    int this_cpu = get_cpu();
+>>> -
+>>> -    ep_call_nested(&poll_safewake_ncalls,
+>>> -               ep_poll_wakeup_proc, NULL, wq, (void *) (long)
+>>> this_cpu);
+>>> +    unsigned long flags;
+>>> +    int subclass;
+>>>
+>>> -    put_cpu();
+>>> +    local_irq_save(flags);
+>>> +    preempt_disable();
+>>> +    subclass = __this_cpu_read(wakeup_nest);
+>>> +    spin_lock_nested(&wq->lock, subclass + 1);
+>>> +    __this_cpu_inc(wakeup_nest);
+>>> +    wake_up_locked_poll(wq, POLLIN);
+>>> +    __this_cpu_dec(wakeup_nest);
+>>> +    spin_unlock(&wq->lock);
+>>> +    local_irq_restore(flags);
+>>> +    preempt_enable();
+>>>  }
+> 
+> What if reduce number of lines with something as the following:
+> 
+>    int this_cpu = get_cpu();
+>    subclass = __this_cpu_inc_return(wakeup_nest);
+>    spin_lock_irqsave_nested(&wq->lock, flags, subclass);
+>    wake_up_locked_poll(wq, POLLIN);
+>    spin_unlock_irqrestore(&wq->lock, flags);
+>    __this_cpu_dec(wakeup_nest);
+>    put_cpu();
+> 
+> Other than that looks good to me.
+> 
+> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+> 
+> -- 
+> Roman
 
 
---r65atvubWzdmf9a3jrU1ajgP3OUE5c9JO--
+Hi,
 
---KjsOFZNQZgDGRZ0oueXrNbphZGMqnJqQT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I put the local_irq_save(flags), call there first so that there wouldn't
+be any nesting. For example, in your sequence, there could be an irq
+after the  __this_cpu_inc_return(), that could end up back here.
 
------BEGIN PGP SIGNATURE-----
+I still can use __this_cpu_inc_return() to simplify things a bit.
 
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2KU2oACgkQWt5b1Glr
-+6Um5A/+PKLpKzJ52j00idkAD3cdkJZzyTNZCBBXIDRN0BVSQV9duDe/R+fcHjWV
-r6fX4XrH3z1znlCtneeoVil9Ob9VRPvLDSj3z1pW+p/U42qZPpPyijVshHotWYRT
-d5HJxB3Eo73NngWpAPS1W2H2QRpAn9TXAQYhhZoo8yLYuUW7OPl3IiBARfEukZsW
-CzeA01LiNcp+uSZGwRBNSnjm7Guv6H4tLZWgTUQCvOxdXAbN5FTXTdVMl5NrfnHh
-Da3m8m92fvLjN92pv2UgYO/iP1c9h7SqM8CZ2HU9jRnKorJKr3gv1ArxtFVBuXXb
-NKwCQvHWTRUr/2AfRfAPpKSrTH3/0/bgx+Y7p+EAIttUhbs6/1fjzVLfUzbSrWwm
-y+9b09JyJua/iCC5KQe7h7uvLikEGwiMCRJyb+AlM8IZPeEtTIsmcEM9lDvhdUWE
-al7a78RB25OJY3/Jc5IhjNRjZHQwHaXxlOPjb50ZPFmcfJu0HeBeDA+bVJt6YkvJ
-A9UHuOL6OEspbdggnmTGPD3MAIWnKWYymOEbCT0IjOq/RL2HQaF2dSO3FJBAMz1I
-0egeyuu0ZeFAUR8aDU1dwOZJNLZBYPyPl8PXf/drs74ssDcjOP8XAiyTiuwPWeNw
-TsdtpgHVv6tJrb8UBWp2XSq55kkTMHRmvULfAgFptojE7S/GpFE=
-=JR0g
------END PGP SIGNATURE-----
+Thanks,
 
---KjsOFZNQZgDGRZ0oueXrNbphZGMqnJqQT--
+-Jason
+
