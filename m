@@ -1,104 +1,110 @@
 Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BC5C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC32C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5CC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F21214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569331184;
+	bh=u0HmXDBbS1XLqbBh7GuYFZeBzmIdZYGqwfp3L0tHfpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rs8CWsiLZGq5YA+gdMfMB+A1hKJ0NGCY6WFdXyDMjcLv1iux6HuzRszh7k1b8zYu1
+	 B+aFF+/gtznu0DUTzzvMIWVq9R7LmaeCDteBC/dPkijtOfbhhJCFUZ+yeNJxK8cB4c
+	 OuRUg355+jB5zPK1vJ8YdYWjNKwRfCVslNnOEJqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504944AbfIXNT2 (ORCPT
+        id S2505034AbfIXNTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:19:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48864 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfIXNT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:19:28 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 13EB23B708;
-        Tue, 24 Sep 2019 13:19:28 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-6.phx2.redhat.com [10.3.117.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB04D1001B30;
-        Tue, 24 Sep 2019 13:19:23 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     linux-audit@redhat.com
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: ntp audit spew.
-Date:   Tue, 24 Sep 2019 09:19:23 -0400
-Message-ID: <2130348.JY4ctgmguH@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-References: <20190923155041.GA14807@codemonkey.org.uk> <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+        Tue, 24 Sep 2019 09:19:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50486 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2505018AbfIXNTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:19:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D8F48AE34;
+        Tue, 24 Sep 2019 13:19:40 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 15:19:39 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190924131939.GS23050@dhcp22.suse.cz>
+References: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 24 Sep 2019 13:19:28 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, September 23, 2019 12:14:14 PM EDT Paul Moore wrote:
-> On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> 
-wrote:
-> > I have some hosts that are constantly spewing audit messages like so:
+On Tue 24-09-19 14:59:36, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 02:43:25PM +0200, Peter Zijlstra wrote:
+> > On Tue, Sep 24, 2019 at 02:25:00PM +0200, Michal Hocko wrote:
+> > > On Tue 24-09-19 14:09:43, Peter Zijlstra wrote:
 > > 
-> > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset
-> > old=2543677901372 new=2980866217213 [46897.591184] audit: type=1333
-> > audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
-> > [48850.604005] audit: type=1333 audit(1569252241.675:222): op=offset
-> > old=1850302393317 new=3190241577926 [48850.604008] audit: type=1333
-> > audit(1569252241.675:223): op=freq old=-2436281764244 new=-2413071187316
-> > [49926.567270] audit: type=1333 audit(1569253317.638:224): op=offset
-> > old=2453141035832 new=2372389610455 [49926.567273] audit: type=1333
-> > audit(1569253317.638:225): op=freq old=-2413071187316 new=-2403561671476
+> > > > We can push back and say we don't respect the specification because it
+> > > > is batshit insane ;-)
+> > > 
+> > > Here is my fingers crossed.
+> > > 
+> > > [...]
+> > > 
+> > > > Now granted; there's a number of virtual devices that really don't have
+> > > > a node affinity, but then, those are not hurt by forcing them onto a
+> > > > random node, they really don't do anything. Like:
+> > > 
+> > > Do you really consider a random node a better fix than simply living
+> > > with a more robust NUMA_NO_NODE which tells the actual state? Page
+> > > allocator would effectivelly use the local node in that case. Any code
+> > > using the cpumask will know that any of the online cpus are usable.
 > > 
-> > This gets emitted every time ntp makes an adjustment, which is apparently
-> > very frequent on some hosts.
+> > For the pmu devices? Yes, those 'devices' aren't actually used for
+> > anything other than sysfs entries.
 > > 
-> > 
-> > Audit isn't even enabled on these machines.
-> > 
-> > # auditctl -l
-> > No rules
+> > Nothing else uses the struct device.
 > 
-> [NOTE: added linux-audit to the CC line]
-> 
-> There is an audit mailing list, please CC it when you have audit
-> concerns/questions/etc.
-> 
-> What happens when you run 'auditctl -a never,task'? 
+> The below would get rid of the PMU and workqueue warnings with no
+> side-effects (the device isn't used for anything except sysfs).
 
-Actually, "-e 0" should turn it off. There is a general problem where systemd 
-turns on auditing just because it can. The above rule just makes audit 
-processes inauditable, but does not affect the kernel originating events.
-
--Steve
-
-> That *should*
-> silence those messages as the audit_ntp_log() function has the
-> requisite audit_dummy_context() check.  FWIW, this is the distro
-> default for many (most? all?) distros; for example, check
-> /etc/audit/audit.rules on a stock Fedora system.  A more selective
-> configuration could simply exclude the TIME_ADJNTPVAL record (type
-> 1333) from the records that the kernel emits.
-> 
-> We could also add a audit_enabled check at the top of
-> audit_ntp_log()/__audit_ntp_log(), but I imagine some of that depends
-> on the various security requirements (they can be bizzare and I can't
-> say I'm up to date on all those - Steve Grubb should be able to
-> comment on that).
-
-
-
-
+Hardcoding to 0 is simply wrong, if the node0 is cpuless for example...
+-- 
+Michal Hocko
+SUSE Labs
