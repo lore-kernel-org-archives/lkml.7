@@ -2,76 +2,101 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D93C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C30C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C48320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WxfFkCSv"
+	by mail.kernel.org (Postfix) with ESMTP id 8EB4520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409592AbfIXNuP (ORCPT
+        id S2409639AbfIXNu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:50:15 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:55843 "EHLO frisell.zx2c4.com"
+        Tue, 24 Sep 2019 09:50:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46622 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfIXNuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:50:15 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 4888bebe;
-        Tue, 24 Sep 2019 13:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=V5uxGnCTUhNAnRktrNC2jwCDhAo=; b=WxfFkC
-        SvZ6oQtgWyhpdQFEC27viS5d0Znh1e9eyEEdZ602mZSdouvvR8Jn48nv7FhYsmKe
-        R5IN5yq0h/QLYHUM476O76xzY1fVBpZpiFdPUw0zq+qXV6+5hvj3LqL0e+IPypte
-        CNy95ik+sdX2+ESFM4HuMfVsnlSpoaeTNsCZwm77dqMjDpIbb76rCvJmFvmKrkYU
-        mneGxRg8U48I9t1NvcYieCDo37ebLcDbOgK+AX5fxy0iJ5YWJntdc5xMUizEjg2X
-        PsNIWN5SrVMfMSXzzUiqhkagu/Iec37l4kh9sU1gkhjg3e9d1KmrB56ltI9RZ/Qb
-        mQIDZX2AUcA7m5hg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ad92a611 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Sep 2019 13:04:35 +0000 (UTC)
-Received: by mail-ot1-f45.google.com with SMTP id y39so1512645ota.7;
-        Tue, 24 Sep 2019 06:50:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAXr8cwE1t1EL2V2Rs9iuxVMeKgAWDeko3cUDRcgORqnBSoeb8uK
-        zKdInBsdloWil+PuEwUIl1VRjFvEs8QYw0RymEE=
-X-Google-Smtp-Source: APXvYqxhjyyZtdQ1jPkoocQ2RBFHJqNTYK/8voSdw785snav/9xtFXMs5ge5NC5iVBpBRGv+e0gGcRBgltcy/qptyRU=
-X-Received: by 2002:a05:6830:20cd:: with SMTP id z13mr1933474otq.243.1569333011999;
- Tue, 24 Sep 2019 06:50:11 -0700 (PDT)
+        id S1727500AbfIXNu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 09:50:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 54E9210DCC92;
+        Tue, 24 Sep 2019 13:50:56 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83A07608C2;
+        Tue, 24 Sep 2019 13:50:49 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 09:50:46 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Dave Jones <davej@codemonkey.org.uk>, linux-audit@redhat.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: ntp audit spew.
+Message-ID: <20190924135046.kkt5hntbjpcampwr@madcap2.tricolour.ca>
+References: <20190923155041.GA14807@codemonkey.org.uk>
+ <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+ <20190923210021.5vfc2fo4wopennj5@madcap2.tricolour.ca>
+ <CAHC9VhQPvS7mfmeomRLJ+SyXk=tZprSJQ9Ays3qr=+rqd=L16Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190924073615.31704-1-Jason@zx2c4.com> <20190924.145257.2013712373872209531.davem@davemloft.net>
- <CAHmME9oqRg9L+wdhOra=UO3ypuy9N82DHVrbDJDgLpxSmS-rHQ@mail.gmail.com> <20190924.153008.1663682877890370513.davem@davemloft.net>
-In-Reply-To: <20190924.153008.1663682877890370513.davem@davemloft.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 24 Sep 2019 15:49:59 +0200
-X-Gmail-Original-Message-ID: <CAHmME9oL7qP=pGnXRT1hmPmRpQ1_0r__vHkuBe-LbfgZTEMV_g@mail.gmail.com>
-Message-ID: <CAHmME9oL7qP=pGnXRT1hmPmRpQ1_0r__vHkuBe-LbfgZTEMV_g@mail.gmail.com>
-Subject: Re: [PATCH] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on
- suppress rule
-To:     David Miller <davem@davemloft.net>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQPvS7mfmeomRLJ+SyXk=tZprSJQ9Ays3qr=+rqd=L16Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 24 Sep 2019 13:50:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 3:30 PM David Miller <davem@davemloft.net> wrote
-> I'm asking you to make a non-wireguard test that triggers the problem.
-Oh, gotcha. No problem.
+On 2019-09-23 23:01, Paul Moore wrote:
+> On Mon, Sep 23, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-09-23 12:14, Paul Moore wrote:
+> > > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
+> > > >
+> > > > I have some hosts that are constantly spewing audit messages like so:
+> > > >
+> > > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
+> > > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
+> >
+> > Odd.  It appears these two above should have the same serial number and
+> > should be accompanied by a syscall record.  It appears that it has no
+> > context to update to connect the two records.  Is it possible it is not
+> > being called in a task context?  If that were the case though, I'd
+> > expect audit_dummy_context() to return 1...
+> 
+> Yeah, I'm a little confused with these messages too.  As you pointed
+> out, the different serial numbers imply that the audit_context is NULL
+> and if the audit_context is NULL I would have expected it to fail the
+> audit_dummy_context() check in audit_ntp_log().  I'm looking at this
+> with tired eyes at the moment, so I'm likely missing something, but I
+> just don't see it right now ...
+> 
+> What is even more confusing is that I don't see this issue on my test systems.
+> 
+> > Checking audit_enabled should not be necessary but might fix the
+> > problem, but still not explain why we're getting these records.
+> 
+> I'd like to understand why this is happening before we start changing the code.
 
->
-> Or would you like a situation you're interested in to break from time
-> to time.
-My test suite should catch it in the future now that it's there, so I'm fine.
+Absolutely.
 
-> Jason, please don't be difficult about this and write a proper test
-> case just like I would ask anyone else fixing bugs like this to write.
-I'm not being difficult. I just thought you didn't see what the test
-case I linked to actually was. I have no qualms about reimplementing
-it with the dummy interface, for a v2 of this patch. Coming your way
-shortly.
+This looks like a similar issue to the AUDIT_NETFILTER_CFG issue where
+we get a lone record unconnected to a syscall when one of the netfilter
+table initialization (ipv4 filter) is linked into the kernel rather than
+compiled as a module, so it is run in kernel context at boot rather than
+in user context as a module load later.  This is why I ask if it is
+being run by a kernel thread rather than a user task, perhaps using a
+syscall function call internally.
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
