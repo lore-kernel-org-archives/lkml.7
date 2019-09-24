@@ -2,109 +2,78 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DB1C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A21C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B372146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7435217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410780AbfIXVQI convert rfc822-to-8bit (ORCPT
+        id S2410875AbfIXVTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:16:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32964 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410672AbfIXVQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:16:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 14:16:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="189483403"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Sep 2019 14:16:06 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 24 Sep 2019 14:16:06 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.232]) with mapi id 14.03.0439.000;
- Tue, 24 Sep 2019 14:16:05 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     "Hall, Christopher S" <christopher.s.hall@intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Richard Cochran <richardcochran@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Topic: [PATCH v4 2/2] PTP: add support for one-shot output
-Thread-Index: AQHVaGiJVAygg13ZgEaRBcEK9JTjfKc7SaLQgACGwQD//5gpUA==
-Date:   Tue, 24 Sep 2019 21:16:05 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB58968D3696@ORSMSX121.amr.corp.intel.com>
-References: <20190911061622.774006-1-felipe.balbi@linux.intel.com>
- <20190911061622.774006-2-felipe.balbi@linux.intel.com>
- <02874ECE860811409154E81DA85FBB58968D24E2@ORSMSX121.amr.corp.intel.com>
- <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
-In-Reply-To: <B79D786B7111A34A8CF09F833429C493BCA528D5@ORSMSX109.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDE2ZmE1ZmEtNGUzYS00NmYwLWJlNmItMmY5NDk3MWI3NzdhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMU9zdnY5ZXBRSFdkcnByV0R5aFFkNHJCWTNBY0dmSEFzXC9yUHlTSnV1WVwvVlwvZm9SdnlON2srODFaRE1CM3czQyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 24 Sep 2019 17:19:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58134 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406468AbfIXVTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 17:19:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 83BA2AC84;
+        Tue, 24 Sep 2019 21:19:32 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>, dsterba@suse.cz,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+ <20190923171710.GN2751@twin.jikos.cz> <20190923175146.GT2229799@magnolia>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <172b2ed8-f260-6041-5e10-502d1c91f88c@suse.cz>
+Date:   Tue, 24 Sep 2019 23:19:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190923175146.GT2229799@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Hall, Christopher S
-> Sent: Tuesday, September 24, 2019 1:24 PM
-> To: Keller, Jacob E <jacob.e.keller@intel.com>; Felipe Balbi
-> <felipe.balbi@linux.intel.com>; Richard Cochran <richardcochran@gmail.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH v4 2/2] PTP: add support for one-shot output
+On 9/23/19 7:51 PM, Darrick J. Wong wrote:
+> On Mon, Sep 23, 2019 at 07:17:10PM +0200, David Sterba wrote:
+>> On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
+>>> So if anyone thinks this is a good idea, please express it (preferably
+>>> in a formal way such as Acked-by), otherwise it seems the patch will be
+>>> dropped (due to a private NACK, apparently).
 > 
-> Good catch on the terminology. This is an API that produces edges not pulses.
-> This flag causes the PEROUT ioctl to ignore the period argument and produce a
-> single edge. Currently, the igb driver implements the same function, but uses
-> a "magic" invalid period specification to signal that the period argument
-> should be ignored (use_freq == 0):
+> Oh, I didn't realize  ^^^^^^^^^^^^ that *some* of us are allowed the
+> privilege of gutting a patch via private NAK without any of that open
+> development discussion incovenience. <grumble>
 > 
-> 		if (on && ((ns <= 70000000LL) || (ns == 125000000LL) ||
-> 			   (ns == 250000000LL) || (ns == 500000000LL))) {
-> 			if (ns < 8LL)
-> 				return -EINVAL;
-> 			use_freq = 1;
-> 		}
+> As far as XFS is concerned I merged Dave's series that checks the
+> alignment of io memory allocations and falls back to vmalloc if the
+> alignment won't work, because I got tired of scrolling past the endless
+> discussion and bug reports and inaction spanning months.
 
-From my understanding, the use_freq = 0 is intended to perform a clock using the target time registers with an interrupt to re-trigger the next toggle.
-
-If you use a frequency not supported by freqout, it will result in an interrupt that re-toggles the target time, not a single edge.
-
-> 
-> The proposal is to support this function without magic period specifications
-> using an explicit flag instead. An example use case is pulse-per-second
-> output. While PPS is periodic, time-aware GPIO is driven by (an
-> unadjustable) Always Running Timer (ART). It's necessary to schedule each
-> edge in software to produce PPS synced with system time.
-> 
-> Chris
-
-Oh, so "one shot" will simply toggle the clock output once. I see.
-
-So this won't really work for generating a pulse per second, and we would possibly still want an API for that?
-
-Thanks,
-Jake
+I think it's a big fail of kmalloc API that you have to do that, and
+especially with vmalloc, which has the overhead of setting up page
+tables, and it's a waste for allocation requests smaller than page size.
+I wish we could have nice things.
