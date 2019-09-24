@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED06C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0155C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833D621906
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B579217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343704;
-	bh=Z1FFPx6rPMa1a37d/+3Howuwq5SBIclNgoWtIm1mxP8=;
+	s=default; t=1569343715;
+	bh=2w4J4EU+vkn9b/OZxn8whPVPfDR0AZ6c1hgoTTdibcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fcShE1NAa4WKNN9TWtCyyvVwqL9AVQNU5bVhlHJ3mFRN9ICTsdxjSRLHWN+alDel3
-	 Om13SYVEzsyRUFl+VHeuQWQWj9ycUICbfhY1ROx/U38rNASBSg8iZdy0ExL8jQPc6i
-	 yrJTz2gbAAX5UrzcU4X+a643a6sFWu4H/jpfdpjE=
+	b=yI6lA+V5bBG9IuzEbZj3htX8kYxhaOyOufRNoDFo7hTgt7I6zIHhFkjpya4JDQ2Wf
+	 OiXu7iyCA7SwinrDGA9owM5tLP3x0oAc3odtrqIw2smc+19UIWHTKqMvHsDn7n3kJU
+	 vdUKKcfpkEGFFZHw7c7VtFKHpCb4ssYh+q5Flnp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410494AbfIXQsY (ORCPT
+        id S2410529AbfIXQse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36956 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410244AbfIXQqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:23 -0400
+        id S2410512AbfIXQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 043AE21783;
-        Tue, 24 Sep 2019 16:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FD2121971;
+        Tue, 24 Sep 2019 16:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343582;
-        bh=Z1FFPx6rPMa1a37d/+3Howuwq5SBIclNgoWtIm1mxP8=;
+        s=default; t=1569343712;
+        bh=2w4J4EU+vkn9b/OZxn8whPVPfDR0AZ6c1hgoTTdibcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QfqeW5JLa1G89W8g6/JcGY23xbnPVEL4FEhFnLwSmUK0Qp1+TiHImgfk1tr+edzZu
-         P8IPlPWvZs4qWPtrIefZOfkrttvw0x38HHPozl1pxFZOJ0rHqjGnxvC7LIRzdlxGgu
-         7lDAkCMnbtQ451G9iko9K3XlHg0gdhDH1XdWWig8=
+        b=MckfMuyK1T+OOoJm58AK6bNGd7WHzLzvJwXCd7TB0jLw5EEcdADvc2YbAh0qAKOkN
+         ATEw99YD8F3LA2k5Abmr2QyCMAN2MFpeA1oJkjKtFtLwjjALNBsbLNhUjc3tx2R/CK
+         K291nWbGHkiqWQVDW5DYygZZaOt/TAnodmvOZak8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 15/70] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
-Date:   Tue, 24 Sep 2019 12:44:54 -0400
-Message-Id: <20190924164549.27058-15-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 62/70] clk: Make clk_bulk_get_all() return a valid "id"
+Date:   Tue, 24 Sep 2019 12:45:41 -0400
+Message-Id: <20190924164549.27058-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,43 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
+[ Upstream commit 7f81c2426587b34bf73e643c1a6d080dfa14cf8a ]
 
-In radeon_connector_set_property(), there is an if statement on line 743
-to check whether connector->encoder is NULL:
-    if (connector->encoder)
+The adreno driver expects the "id" field of the returned clk_bulk_data
+to be filled in with strings from the clock-names property.
 
-When connector->encoder is NULL, it is used on line 755:
-    if (connector->encoder->crtc)
+But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
+receives a list of bogus pointers instead.
 
-Thus, a possible null-pointer dereference may occur.
+Zero-initialize the "id" field and attempt to populate with strings from
+the clock-names property to resolve both these issues.
 
-To fix this bug, connector->encoder is checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
+Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
+Cc: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lkml.kernel.org/r/20190913024029.2640-1-bjorn.andersson@linaro.org
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-bulk.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index de1745adccccb..c7f2e073a82fd 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -752,7 +752,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
+diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
+index 06499568cf076..db5096fa9a170 100644
+--- a/drivers/clk/clk-bulk.c
++++ b/drivers/clk/clk-bulk.c
+@@ -18,10 +18,13 @@ static int __must_check of_clk_bulk_get(struct device_node *np, int num_clks,
+ 	int ret;
+ 	int i;
  
- 		radeon_encoder->output_csc = val;
+-	for (i = 0; i < num_clks; i++)
++	for (i = 0; i < num_clks; i++) {
++		clks[i].id = NULL;
+ 		clks[i].clk = NULL;
++	}
  
--		if (connector->encoder->crtc) {
-+		if (connector->encoder && connector->encoder->crtc) {
- 			struct drm_crtc *crtc  = connector->encoder->crtc;
- 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
- 
+ 	for (i = 0; i < num_clks; i++) {
++		of_property_read_string_index(np, "clock-names", i, &clks[i].id);
+ 		clks[i].clk = of_clk_get(np, i);
+ 		if (IS_ERR(clks[i].clk)) {
+ 			ret = PTR_ERR(clks[i].clk);
 -- 
 2.20.1
 
