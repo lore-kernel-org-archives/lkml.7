@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E03C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE6C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2E82054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DA82054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344228;
-	bh=P+lHs+riG0EDUfKFNMgXrIoSQvmWTKxTqzK5otPhaIU=;
+	s=default; t=1569344233;
+	bh=eQQX1mrwjoz4wTwPLvSAkqRdOPfl9X+kxA550T8b/II=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKDoW31TNIaw6UTr2HdFWHZHWGfn3wyEveiHYTuQlPBJDg9FH0DNEnFzLHb+4d7iz
-	 zBNgCdl9ILR1f82kl/xr+tAzFeAjLuiahC4jH+ti5G63Dd7+k9JKEexNwqGf5UddCp
-	 svv5pgRqrMWYBYJWw0IqjUzASzKZQL5V+k3XCJLg=
+	b=LLW6YJGTFU4ILmAHvKvsrPFLNx3SMjAIe7mjDtWa4gl62byG4xx8GtzA2SVSHz5/g
+	 dHLs7KYFEu4Bh1OWYyZFyZtHa0aRfFBlqWruRECwSQrWZQG1/eQdhfzWD7peBNTyTI
+	 SYHFJ1xNWsEmj3YWUFDfyiX+aXZA/MnFO+B4nn+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407133AbfIXQ5H (ORCPT
+        id S2410176AbfIXQs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410205AbfIXQtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:49:04 -0400
+        id S1731013AbfIXQsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:48:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C1A21906;
-        Tue, 24 Sep 2019 16:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B06221D7E;
+        Tue, 24 Sep 2019 16:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343743;
-        bh=P+lHs+riG0EDUfKFNMgXrIoSQvmWTKxTqzK5otPhaIU=;
+        s=default; t=1569343732;
+        bh=eQQX1mrwjoz4wTwPLvSAkqRdOPfl9X+kxA550T8b/II=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxpSuxWZdBZEFziMcxkxvejcCkNIyvBTYavYstz60hcoggzB3o9xJr7dKkVVIZbIp
-         9SqmRx92Hl7WwhJIyj/64JO628ZqEevlMmUguL/D4rapRYn6lJ5HG5IxGFaqMsCtFY
-         FaBmRQ47V6tqmgnqkQl7NZobO1KpO2BLVc+axEfo=
+        b=aAkS63XNwZoegXuRfTRkGwdD/8V1m5kr+V7izCMt2zGDRrjIy1cgybWdjFdbAlR4F
+         K2EwiGv4tvv7ST/2qm4LVs+t1c5hdeYCij3G9ArDhMiAkRV4dW2OW2zjoohbCn7AG8
+         GElqFksapJpF5fpDuHBvaJjehjcR0XC+5Bxsovt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 09/50] drm/radeon: Fix EEH during kexec
-Date:   Tue, 24 Sep 2019 12:48:06 -0400
-Message-Id: <20190924164847.27780-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/50] drm/bridge: adv7511: Attach to DSI host at probe time
+Date:   Tue, 24 Sep 2019 12:47:59 -0400
+Message-Id: <20190924164847.27780-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164847.27780-1-sashal@kernel.org>
 References: <20190924164847.27780-1-sashal@kernel.org>
@@ -60,45 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+From: Matt Redfearn <matt.redfearn@thinci.com>
 
-[ Upstream commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6 ]
+[ Upstream commit 83f35bc3a852f1c3892c7474998c5cec707c7ba3 ]
 
-During kexec some adapters hit an EEH since they are not properly
-shut down in the radeon_pci_shutdown() function. Adding
-radeon_suspend_kms() fixes this issue.
+In contrast to all of the DSI panel drivers in drivers/gpu/drm/panel
+which attach to the DSI host via mipi_dsi_attach() at probe time, the
+ADV7533 bridge device does not. Instead it defers this to the point that
+the upstream device connects to its bridge via drm_bridge_attach().
+The generic Synopsys MIPI DSI host driver does not register it's own
+drm_bridge until the MIPI DSI has attached. But it does not call
+drm_bridge_attach() on the downstream device until the upstream device
+has attached. This leads to a chicken and the egg failure and the DRM
+pipeline does not complete.
+Since all other mipi_dsi_device drivers call mipi_dsi_attach() in
+probe(), make the adv7533 mipi_dsi_device do the same. This ensures that
+the Synopsys MIPI DSI host registers it's bridge such that it is
+available for the upstream device to connect to.
 
-Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190627151740.2277-1-matt.redfearn@thinci.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 2a7977a23b31c..25b5407c74b5a 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -364,11 +364,19 @@ radeon_pci_remove(struct pci_dev *pdev)
- static void
- radeon_pci_shutdown(struct pci_dev *pdev)
- {
-+	struct drm_device *ddev = pci_get_drvdata(pdev);
-+
- 	/* if we are running in a VM, make sure the device
- 	 * torn down properly on reboot/shutdown
- 	 */
- 	if (radeon_device_is_virtual())
- 		radeon_pci_remove(pdev);
-+
-+	/* Some adapters need to be suspended before a
-+	* shutdown occurs in order to prevent an error
-+	* during kexec.
-+	*/
-+	radeon_suspend_kms(ddev, true, true, false);
- }
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index e7ddd3e3db920..807827bd910e5 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -874,9 +874,6 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
+ 				 &adv7511_connector_helper_funcs);
+ 	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
  
- static int radeon_pmops_suspend(struct device *dev)
+-	if (adv->type == ADV7533)
+-		ret = adv7533_attach_dsi(adv);
+-
+ 	if (adv->i2c_main->irq)
+ 		regmap_write(adv->regmap, ADV7511_REG_INT_ENABLE(0),
+ 			     ADV7511_INT0_HPD);
+@@ -1222,8 +1219,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+ 	drm_bridge_add(&adv7511->bridge);
+ 
+ 	adv7511_audio_init(dev, adv7511);
++
++	if (adv7511->type == ADV7533) {
++		ret = adv7533_attach_dsi(adv7511);
++		if (ret)
++			goto err_remove_bridge;
++	}
++
+ 	return 0;
+ 
++err_remove_bridge:
++	drm_bridge_remove(&adv7511->bridge);
+ err_unregister_cec:
+ 	i2c_unregister_device(adv7511->i2c_cec);
+ 	if (adv7511->cec_clk)
 -- 
 2.20.1
 
