@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BDC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B625C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA7F2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9A72054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344052;
-	bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
+	s=default; t=1569344060;
+	bh=wykaysPxuwQ0fYQrbjSrqse1BzOP7BsJuJ3GBhpQirg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALZupY4MfYTSOnyB12qP2KE00GuBuU5T93aBpzEykoP7VsHgfEDFSd5tRgonY66My
-	 Roe7vG9uCn4bPe28Fl092ipb9rlyyX6kqPk+6KSDtD0Ex+d0sh23yopVxOkXqTX+3q
-	 W37iaXenwvr33u+ldvx9SGVF1t8PR4uVWGZyL6u8=
+	b=R2deks0sFzyKxtpFMTk+oW1TFvDTqoZStQRGHV/iKk7R/3SOmkI04HW6+xKrFhd+u
+	 UPuKoEg9de/duBVKfeceuWt3CUFzbgAJTH+s37v6r6HilCCEhWlzDPyVOnSOFsHL+1
+	 92PU8UYJrsIka+e9G1brayu3i3vAYQknhgFojVkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406643AbfIXQyL (ORCPT
+        id S2406635AbfIXQyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437937AbfIXQwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:52:22 -0400
+        id S2410878AbfIXQwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:52:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B56A9222C9;
-        Tue, 24 Sep 2019 16:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52620222C2;
+        Tue, 24 Sep 2019 16:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343941;
-        bh=TkRXmpHdZvwNp4jqEj1dbBI2v217kXfJTlu2W7Axhqk=;
+        s=default; t=1569343938;
+        bh=wykaysPxuwQ0fYQrbjSrqse1BzOP7BsJuJ3GBhpQirg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJsdbNdi79P0wBTBBLCVDfWLC+YAfi7e8WAM36oD0KvI1HT19NxypjIUHYxPfnRtL
-         NYTi/bWStnQE8M5qbBbF+we1/eRcOif4ZNq2UML+Ic5BwEMWMtvUL/DzeojNA3r8kH
-         62Z2FqXQHyyuNze/fcNhrY0jU0wPYhNwqSrcaclo=
+        b=upbGk47vWe4TMcyYewDNTGY5BxBvYqwaiNFEko27K8hlXVlLfT1RTJXAmlWjFlgzV
+         3IYM7UtoxXgzOm5Dhn+StILs6xwH1hra8P29GzWxEbz6YF4cKaSNvCYYFc9+HIq0cm
+         axSpa0UzfvKzpUViszfBi0e7hVpnV0IQZuobrwuY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>, Guo Zeng <Guo.Zeng@csr.com>,
-        Barry Song <Baohua.Song@csr.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/14] clk: sirf: Don't reference clk_init_data after registration
-Date:   Tue, 24 Sep 2019 12:52:03 -0400
-Message-Id: <20190924165214.28857-5-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 02/14] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Tue, 24 Sep 2019 12:52:00 -0400
+Message-Id: <20190924165214.28857-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165214.28857-1-sashal@kernel.org>
 References: <20190924165214.28857-1-sashal@kernel.org>
@@ -59,72 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit af55dadfbce35b4f4c6247244ce3e44b2e242b84 ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-Cc: Guo Zeng <Guo.Zeng@csr.com>
-Cc: Barry Song <Baohua.Song@csr.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190731193517.237136-6-sboyd@kernel.org
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, connector->encoder is checked before being used.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sirf/clk-common.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sirf/clk-common.c b/drivers/clk/sirf/clk-common.c
-index 77e1e2491689b..edb7197cc4b4d 100644
---- a/drivers/clk/sirf/clk-common.c
-+++ b/drivers/clk/sirf/clk-common.c
-@@ -298,9 +298,10 @@ static u8 dmn_clk_get_parent(struct clk_hw *hw)
- {
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	u32 cfg = clkc_readl(clk->regofs);
-+	const char *name = clk_hw_get_name(hw);
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index c6bf378534f83..bebcef2ce6b88 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -758,7 +758,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
  
- 	/* parent of io domain can only be pll3 */
--	if (strcmp(hw->init->name, "io") == 0)
-+	if (strcmp(name, "io") == 0)
- 		return 4;
+ 		radeon_encoder->output_csc = val;
  
- 	WARN_ON((cfg & (BIT(3) - 1)) > 4);
-@@ -312,9 +313,10 @@ static int dmn_clk_set_parent(struct clk_hw *hw, u8 parent)
- {
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	u32 cfg = clkc_readl(clk->regofs);
-+	const char *name = clk_hw_get_name(hw);
- 
- 	/* parent of io domain can only be pll3 */
--	if (strcmp(hw->init->name, "io") == 0)
-+	if (strcmp(name, "io") == 0)
- 		return -EINVAL;
- 
- 	cfg &= ~(BIT(3) - 1);
-@@ -354,7 +356,8 @@ static long dmn_clk_round_rate(struct clk_hw *hw, unsigned long rate,
- {
- 	unsigned long fin;
- 	unsigned ratio, wait, hold;
--	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
-+	const char *name = clk_hw_get_name(hw);
-+	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
- 
- 	fin = *parent_rate;
- 	ratio = fin / rate;
-@@ -376,7 +379,8 @@ static int dmn_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	struct clk_dmn *clk = to_dmnclk(hw);
- 	unsigned long fin;
- 	unsigned ratio, wait, hold, reg;
--	unsigned bits = (strcmp(hw->init->name, "mem") == 0) ? 3 : 4;
-+	const char *name = clk_hw_get_name(hw);
-+	unsigned bits = (strcmp(name, "mem") == 0) ? 3 : 4;
- 
- 	fin = parent_rate;
- 	ratio = fin / rate;
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
 -- 
 2.20.1
 
