@@ -2,76 +2,151 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD596C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2981C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B2421655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hTPOCPlO"
+	by mail.kernel.org (Postfix) with ESMTP id 958382168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569341033;
+	bh=WoXmQkQtjofuTNXBQTpYOdHbEC75k3E21PyCVIN1q38=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Ee6L46JdadDgW0mzjaNzCWZGCdr9TKkg4S0b1NxCA46Rozx/rmgpfkUsy4p15Gkvv
+	 3HFYkW59ynitdTT7Tk5cjkkqaJb2wm9v5KalAVk6vaG0lukdMtRf8rfIHD9dzH+2xr
+	 nwyi8MVmgphGToq4B7ggF0VZgSkRzIouS7RzNl5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391547AbfIXQBx (ORCPT
+        id S2438098AbfIXQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:01:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54852 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389811AbfIXQBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:01:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7SWbyCAQLuz6lSXDStLcWsYGPgqqeowRge5xr8uYsYk=; b=hTPOCPlOG8v9AjgWCto7xh7LO
-        pCLwqJ4CwHLSWmzfmQU/lefdid+uLQ81f52vXuS178ovKik3aKpmWbxTHgBS55owRz3nCY8f79MJi
-        Gh4QimWzglQxojPE3Qk0QOBTmCv7DcZN6c23Eq1E4iGkFIR33OT++XIJvx7YxPdX/VmpwEwt+3eKk
-        MYtF/YvnlQh/NrPe7ulDLx7Yrp//ohasgDuAW1TT9M0vS/IprfkO3i8PWNz9SklP03BEPXyUT4ehT
-        mAnECDFUcguH8vJVJtnzMc4YbbB5gzFpw+FJIa4tA0+KE7l1Cr9tkD6DXCVc5RqAcmizz+9fV8k/o
-        iDjr3GUWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCnFy-0004n0-9r; Tue, 24 Sep 2019 16:01:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 24 Sep 2019 12:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391013AbfIXQDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:03:52 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [170.225.9.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4F90D3053E9;
-        Tue, 24 Sep 2019 18:00:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 01C2529E510A5; Tue, 24 Sep 2019 18:01:35 +0200 (CEST)
-Date:   Tue, 24 Sep 2019 18:01:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@suse.de, lenb@kernel.org, rjw@rjwysocki.net,
-        x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
-        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
-        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
-        qperret@qperret.net, dietmar.eggemann@arm.com
-Subject: Re: [PATCH 0/2] Add support for frequency invariance for (some) x86
-Message-ID: <20190924160135.GM2369@hirez.programming.kicks-ass.net>
-References: <20190909024216.5942-1-ggherdovich@suse.cz>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC34A214DA;
+        Tue, 24 Sep 2019 16:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569341031;
+        bh=WoXmQkQtjofuTNXBQTpYOdHbEC75k3E21PyCVIN1q38=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=OZIVQjjU2b3/+JzjUfyjcAzZyDHaoWVrIpISe+YKpkIv6lRwZFSD+Pl/Bai4izCeM
+         HQLxz9UvuHbRjbbF+IIXjOTbZxb7Emx7DQaQ1OQCLJMCB953/1EPCKH9lX6IHGUnTa
+         GpCU7uEV2pNOiGmXtjR8Q95gTe4ZG1fgNhoeclv4=
+Date:   Tue, 24 Sep 2019 09:03:48 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@01.org,
+        kbuild-all@01.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [rcu:dev.2019.09.23a 62/77] kernel/rcu/tree.c:2882
+ kfree_call_rcu() warn: inconsistent returns 'irqsave:flags'.
+Message-ID: <20190924160348.GF2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20190924080510.GL20699@kadam>
+ <CAEXW_YQYDom3AwWR1AUSCw5VvFzc6KrBH0KbuTvhkJ3OoxBfCg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190909024216.5942-1-ggherdovich@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEXW_YQYDom3AwWR1AUSCw5VvFzc6KrBH0KbuTvhkJ3OoxBfCg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 04:42:14AM +0200, Giovanni Gherdovich wrote:
-> This is a resend with of Peter Zijlstra's patch to support frequency
-> scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
-> and included performance test results. If Peter doesn't mind, I'm slapping my
-> name on it :)
+On Tue, Sep 24, 2019 at 08:15:12AM -0400, Joel Fernandes wrote:
+> On Tue, Sep 24, 2019 at 4:05 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.09.23a
+> > head:   97de53b94582c208ee239178b208b8e8b9472585
+> > commit: 39676bb72323718a9e7bab1ba9c4a68319a96f62 [62/77] rcu: Add support for debug_objects debugging for kfree_rcu()
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> >
+> > smatch warnings:
+> > kernel/rcu/tree.c:2882 kfree_call_rcu() warn: inconsistent returns 'irqsave:flags'.
+> >   Locked on:   line 2867
+> >   Unlocked on: line 2882
+> >
+> > git remote add rcu https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+> > git remote update rcu
+> > git checkout 39676bb72323718a9e7bab1ba9c4a68319a96f62
+> > vim +2882 kernel/rcu/tree.c
+> >
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2850) void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2851) {
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2852)        unsigned long flags;
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2853)        struct kfree_rcu_cpu *krcp;
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2854)
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2855)        head->func = func;
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2856)
+> > 87970ccf5a9125 Paul E. McKenney        2019-09-19  2857         local_irq_save(flags);  // For safely calling this_cpu_ptr().
+> >                                                                 ^^^^^^^^^^^^^^^^^^^^^
+> > IRQs disabled.
+> >
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2858)        krcp = this_cpu_ptr(&krc);
+> > ff8db005e371cb Paul E. McKenney        2019-09-19  2859         if (krcp->initialized)
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2860)                spin_lock(&krcp->lock);
+> > 5f5046cc15d514 Joel Fernandes (Google  2019-08-05  2861)
+> > 87970ccf5a9125 Paul E. McKenney        2019-09-19  2862         // Queue the object but don't yet schedule the batch.
+> > 39676bb7232371 Joel Fernandes (Google  2019-09-22  2863)        if (debug_rcu_head_queue(head)) {
+> > 39676bb7232371 Joel Fernandes (Google  2019-09-22  2864)                // Probable double kfree_rcu(), just leak.
+> > 39676bb7232371 Joel Fernandes (Google  2019-09-22  2865)                WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+> > 39676bb7232371 Joel Fernandes (Google  2019-09-22  2866)                          __func__, head);
+> > 39676bb7232371 Joel Fernandes (Google  2019-09-22  2867)                return;
+> >
+> > Need to re-enable before returning.
+> 
+> Right. At this point the system has a bug anyway since it is a
+> double-free. But yes, no reason to introduce more bugs. Will fix.
+> Thank you, Dan!
 
-That is fine; all I did was write some code, you did the hard part and
-made it 'work' :-)
+What Joel said!
+
+As long as I am doing several other reports anyway...
+
+How does the to-be-squashed patch below look?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 39af4c08038a8a6a7b1c9804fdd2c1921d583222
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Tue Sep 24 09:02:00 2019 -0700
+
+    squash! rcu: Add support for debug_objects debugging for kfree_rcu()
+    
+    [ paulmck: Fix IRQ per kbuild test robot <lkp@intel.com> feedback. ]
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 921daa7..edb7539 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2870,7 +2870,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 		// Probable double kfree_rcu(), just leak.
+ 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+ 			  __func__, head);
+-		return;
++		goto unlock_return;
+ 	}
+ 	head->func = func;
+ 	head->next = krcp->head;
+@@ -2883,6 +2883,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+ 	}
+ 
++unlock_return:
+ 	if (krcp->initialized)
+ 		spin_unlock(&krcp->lock);
+ 	local_irq_restore(flags);
