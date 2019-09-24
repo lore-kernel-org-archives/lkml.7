@@ -2,269 +2,203 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5D4C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB1AC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3752E214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7CD20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503884AbfIXGnQ (ORCPT
+        id S2409151AbfIXGo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:43:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:25186 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503719AbfIXGnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:43:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Sep 2019 23:43:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
-   d="scan'208";a="203306318"
-Received: from gvt.bj.intel.com ([10.238.158.180])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2019 23:43:10 -0700
-From:   Tina Zhang <tina.zhang@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com, yi.l.liu@intel.com
-Subject: [PATCH v6 3/6] drm/i915/gvt: Register vGPU display event irq
-Date:   Tue, 24 Sep 2019 14:41:40 +0800
-Message-Id: <20190924064143.9282-4-tina.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190924064143.9282-1-tina.zhang@intel.com>
-References: <20190924064143.9282-1-tina.zhang@intel.com>
+        Tue, 24 Sep 2019 02:44:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37201 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393206AbfIXGo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 02:44:28 -0400
+Received: from [89.27.154.14] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iCeYj-0000tF-CA; Tue, 24 Sep 2019 06:44:25 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     christian.brauner@ubuntu.com
+Cc:     keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        luto@kernel.org, oleg@redhat.com, tglx@linutronix.de,
+        wad@chromium.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH v1] seccomp: simplify secure_computing()
+Date:   Tue, 24 Sep 2019 08:44:20 +0200
+Message-Id: <20190924064420.6353-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gvt-g emulates and injects the vGPU's display interrupts in kernel
-space. However the dma-buf based framebuffer consumer in the user
-land (e.g. Qemu vfio/display) may also need to be notified by this
-event.
+Afaict, the struct seccomp_data argument to secure_computing() is unused
+by all current callers. So let's remove it.
+The argument was added in [1]. It was added because having the arch
+supply the syscall arguments used to be faster than having it done by
+secure_computing() (cf. Andy's comment in [2]). This is not true anymore
+though.
 
-Register the display irq as VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ to
-each vGPU, so that the display interrupt event can be delivered to
-userspace through eventfd.
+/* References */
+[1]: 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
+[2]: https://lore.kernel.org/r/CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com
 
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: x86@kernel.org
 ---
- drivers/gpu/drm/i915/gvt/display.c   | 10 +++-
- drivers/gpu/drm/i915/gvt/display.h   |  3 ++
- drivers/gpu/drm/i915/gvt/gvt.h       |  2 +
- drivers/gpu/drm/i915/gvt/hypercall.h |  1 +
- drivers/gpu/drm/i915/gvt/kvmgt.c     | 71 ++++++++++++++++++++++++++++
- drivers/gpu/drm/i915/gvt/mpt.h       | 17 +++++++
- 6 files changed, 102 insertions(+), 2 deletions(-)
+/* v1 */
+- Borislav Petkov <bp@alien8.de>:
+  - provide context for the arg addition to secure_computing() in the
+    commit message
 
-diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gvt/display.c
-index e1c313da6c00..1a0a4ae4826e 100644
---- a/drivers/gpu/drm/i915/gvt/display.c
-+++ b/drivers/gpu/drm/i915/gvt/display.c
-@@ -506,16 +506,22 @@ void intel_vgpu_clean_display(struct intel_vgpu *vgpu)
- int intel_vgpu_init_display(struct intel_vgpu *vgpu, u64 resolution)
+/* v0 */
+Link: https://lore.kernel.org/r/20190920131907.6886-1-christian.brauner@ubuntu.com
+---
+ arch/arm/kernel/ptrace.c              | 2 +-
+ arch/arm64/kernel/ptrace.c            | 2 +-
+ arch/parisc/kernel/ptrace.c           | 2 +-
+ arch/s390/kernel/ptrace.c             | 4 ++--
+ arch/um/kernel/skas/syscall.c         | 2 +-
+ arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
+ include/linux/seccomp.h               | 6 +++---
+ 7 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 324352787aea..b606cded90cd 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
+ 
+ 	/* Do seccomp after ptrace; syscall may have changed. */
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ #else
+ 	/* XXX: remove this once OABI gets fixed */
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 3cf3b135027e..010a835302d3 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
+index 9f6ff7bc06f9..f8c07dcbfb49 100644
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index ad71132374f0..ed80bdfbf5fe 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ long arch_ptrace(struct task_struct *child, long request,
+ 		 unsigned long addr, unsigned long data)
  {
- 	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
-+	int ret;
+-	ptrace_area parea; 
++	ptrace_area parea;
+ 	int copied, ret;
  
- 	intel_vgpu_init_i2c_edid(vgpu);
+ 	switch (request) {
+@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
  
- 	if (IS_SKYLAKE(dev_priv) || IS_KABYLAKE(dev_priv) ||
- 	    IS_COFFEELAKE(dev_priv))
--		return setup_virtual_dp_monitor(vgpu, PORT_D, GVT_DP_D,
-+		ret = setup_virtual_dp_monitor(vgpu, PORT_D, GVT_DP_D,
- 						resolution);
- 	else
--		return setup_virtual_dp_monitor(vgpu, PORT_B, GVT_DP_B,
-+		ret = setup_virtual_dp_monitor(vgpu, PORT_B, GVT_DP_B,
- 						resolution);
-+
-+	if (ret == 0)
-+		intel_gvt_hypervisor_register_display_irq(vgpu);
-+
-+	return ret;
- }
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL)) {
++	if (secure_computing()) {
+ 		/* seccomp failures shouldn't expose any additional code. */
+ 		return -1;
+ 	}
+diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
+index 44bb10785075..fc37259d5971 100644
+--- a/arch/um/kernel/skas/syscall.c
++++ b/arch/um/kernel/skas/syscall.c
+@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
+ 		goto out;
  
- /**
-diff --git a/drivers/gpu/drm/i915/gvt/display.h b/drivers/gpu/drm/i915/gvt/display.h
-index a87f33e6a23c..ba07fbef9194 100644
---- a/drivers/gpu/drm/i915/gvt/display.h
-+++ b/drivers/gpu/drm/i915/gvt/display.h
-@@ -112,6 +112,9 @@
- #define SBI_ADDR_OFFSET_SHIFT           16
- #define SBI_ADDR_OFFSET_MASK            (0xffff << SBI_ADDR_OFFSET_SHIFT)
+ 	/* Do the seccomp check after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		goto out;
  
-+#define DISPLAY_PRI_REFRESH_EVENT_VAL		(1UL << 56)
-+#define DISPLAY_CUR_REFRESH_EVENT_VAL		(1UL << 48)
-+
- struct intel_vgpu_sbi_register {
- 	unsigned int offset;
- 	u32 value;
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
-index b47c6acaf9c0..8008047d026c 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.h
-+++ b/drivers/gpu/drm/i915/gvt/gvt.h
-@@ -201,6 +201,8 @@ struct intel_vgpu {
- 		struct mdev_device *mdev;
- 		struct vfio_region *region;
- 		int num_regions;
-+		struct vfio_irq *irq;
-+		int num_irqs;
- 		struct eventfd_ctx *intx_trigger;
- 		struct eventfd_ctx *msi_trigger;
+ 	syscall = UPT_SYSCALL_NR(r);
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index e7c596dea947..b10cbf71a8cc 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
+ 	 */
+ 	regs->orig_ax = syscall_nr;
+ 	regs->ax = -ENOSYS;
+-	tmp = secure_computing(NULL);
++	tmp = secure_computing();
+ 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
+ 		warn_bad_vsyscall(KERN_DEBUG, regs,
+ 				  "seccomp tried to change syscall nr or ip");
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 84868d37b35d..03583b6d1416 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -33,10 +33,10 @@ struct seccomp {
  
-diff --git a/drivers/gpu/drm/i915/gvt/hypercall.h b/drivers/gpu/drm/i915/gvt/hypercall.h
-index 4862fb12778e..be33f20f3bc1 100644
---- a/drivers/gpu/drm/i915/gvt/hypercall.h
-+++ b/drivers/gpu/drm/i915/gvt/hypercall.h
-@@ -68,6 +68,7 @@ struct intel_gvt_mpt {
- 			     bool map);
- 	int (*set_opregion)(void *vgpu);
- 	int (*set_edid)(void *vgpu, int port_num);
-+	int (*register_display_irq)(void *vgpu);
- 	int (*get_vfio_device)(void *vgpu);
- 	void (*put_vfio_device)(void *vgpu);
- 	bool (*is_valid_gfn)(unsigned long handle, unsigned long gfn);
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index 343d79c1cb7e..269506300310 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -78,6 +78,19 @@ struct vfio_region {
- 	void				*data;
- };
- 
-+struct intel_vgpu_irqops {
-+	int (*add_capability)(struct intel_vgpu *vgpu,
-+			   struct vfio_info_cap *caps);
-+};
-+
-+struct vfio_irq {
-+	u32	type;
-+	u32	subtype;
-+	u32	flags;
-+	u32	count;
-+	const struct intel_vgpu_irqops *ops;
-+};
-+
- struct vfio_edid_region {
- 	struct vfio_region_gfx_edid vfio_edid_regs;
- 	void *edid_blob;
-@@ -635,6 +648,59 @@ static int kvmgt_set_edid(void *p_vgpu, int port_num)
- 	return ret;
- }
- 
-+static int add_display_irq_capability(struct intel_vgpu *vgpu,
-+			   struct vfio_info_cap *caps)
-+{
-+	struct vfio_irq_info_cap_display_plane_events cap = {
-+		.header.id = VFIO_IRQ_INFO_CAP_DISPLAY,
-+		.header.version = 1,
-+		.cur_event_val = DISPLAY_CUR_REFRESH_EVENT_VAL,
-+		.pri_event_val = DISPLAY_PRI_REFRESH_EVENT_VAL,
-+	};
-+
-+	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
-+}
-+
-+
-+static const struct intel_vgpu_irqops intel_vgpu_irqops_display = {
-+	.add_capability = add_display_irq_capability,
-+};
-+
-+static int intel_vgpu_register_irq(struct intel_vgpu *vgpu,
-+				   unsigned int type, unsigned int subtype,
-+				   u32 count, u32 flags,
-+				   const struct intel_vgpu_irqops *ops)
-+{
-+	struct vfio_irq *irq;
-+
-+	irq = krealloc(vgpu->vdev.irq,
-+			(vgpu->vdev.num_irqs + 1) * sizeof(*irq),
-+			GFP_KERNEL);
-+	if (!irq)
-+		return -ENOMEM;
-+
-+	vgpu->vdev.irq = irq;
-+	vgpu->vdev.irq[vgpu->vdev.num_irqs].type = type;
-+	vgpu->vdev.irq[vgpu->vdev.num_irqs].subtype = subtype;
-+	vgpu->vdev.irq[vgpu->vdev.num_irqs].count = count;
-+	vgpu->vdev.irq[vgpu->vdev.num_irqs].flags = flags;
-+	vgpu->vdev.irq[vgpu->vdev.num_irqs].ops = ops;
-+	vgpu->vdev.num_irqs++;
-+	return 0;
-+}
-+
-+static int kvmgt_register_display_irq(void *p_vgpu)
-+{
-+	struct intel_vgpu *vgpu = (struct intel_vgpu *)p_vgpu;
-+
-+	intel_vgpu_register_irq(vgpu, VFIO_IRQ_TYPE_GFX,
-+				VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ,
-+				1,
-+				VFIO_IRQ_INFO_MASKABLE | VFIO_IRQ_INFO_EVENTFD,
-+				&intel_vgpu_irqops_display);
-+	return 0;
-+}
-+
- static void kvmgt_put_vfio_device(void *vgpu)
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+ extern int __secure_computing(const struct seccomp_data *sd);
+-static inline int secure_computing(const struct seccomp_data *sd)
++static inline int secure_computing(void)
  {
- 	if (WARN_ON(!((struct intel_vgpu *)vgpu)->vdev.vfio_device))
-@@ -1833,6 +1899,10 @@ static void kvmgt_detach_vgpu(void *p_vgpu)
- 	vgpu->vdev.num_regions = 0;
- 	kfree(vgpu->vdev.region);
- 	vgpu->vdev.region = NULL;
-+
-+	vgpu->vdev.num_irqs = 0;
-+	kfree(vgpu->vdev.irq);
-+	vgpu->vdev.irq = NULL;
+ 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
+-		return  __secure_computing(sd);
++		return  __secure_computing(NULL);
+ 	return 0;
  }
+ #else
+@@ -59,7 +59,7 @@ struct seccomp { };
+ struct seccomp_filter { };
  
- static int kvmgt_inject_msi(unsigned long handle, u32 addr, u16 data)
-@@ -2046,6 +2116,7 @@ static struct intel_gvt_mpt kvmgt_mpt = {
- 	.dma_unmap_guest_page = kvmgt_dma_unmap_guest_page,
- 	.set_opregion = kvmgt_set_opregion,
- 	.set_edid = kvmgt_set_edid,
-+	.register_display_irq = kvmgt_register_display_irq,
- 	.get_vfio_device = kvmgt_get_vfio_device,
- 	.put_vfio_device = kvmgt_put_vfio_device,
- 	.is_valid_gfn = kvmgt_is_valid_gfn,
-diff --git a/drivers/gpu/drm/i915/gvt/mpt.h b/drivers/gpu/drm/i915/gvt/mpt.h
-index 0f9440128123..abf4a69920d3 100644
---- a/drivers/gpu/drm/i915/gvt/mpt.h
-+++ b/drivers/gpu/drm/i915/gvt/mpt.h
-@@ -330,6 +330,23 @@ static inline int intel_gvt_hypervisor_set_edid(struct intel_vgpu *vgpu,
- 	return intel_gvt_host.mpt->set_edid(vgpu, port_num);
- }
- 
-+/**
-+ * intel_gvt_hypervisor_set_irq - register vgpu specific irq
-+ * @vgpu: a vGPU
-+ * @port_num: display port number
-+ *
-+ * Returns:
-+ * Zero on success, negative error code if failed.
-+ */
-+static inline int intel_gvt_hypervisor_register_display_irq(
-+						struct intel_vgpu *vgpu)
-+{
-+	if (!intel_gvt_host.mpt->register_display_irq)
-+		return 0;
-+
-+	return intel_gvt_host.mpt->register_display_irq(vgpu);
-+}
-+
- /**
-  * intel_gvt_hypervisor_get_vfio_device - increase vfio device ref count
-  * @vgpu: a vGPU
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-static inline int secure_computing(struct seccomp_data *sd) { return 0; }
++static inline int secure_computing(void) { return 0; }
+ #else
+ static inline void secure_computing_strict(int this_syscall) { return; }
+ #endif
 -- 
-2.17.1
+2.23.0
 
