@@ -2,79 +2,209 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D821C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C3AC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B15F20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDE220673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sbw/n9Bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439157AbfIXQF6 (ORCPT
+        id S2406804AbfIXQLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:05:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34736 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438777AbfIXQF6 (ORCPT
+        Tue, 24 Sep 2019 12:11:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39347 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388230AbfIXQLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:05:58 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iCnK6-0006K0-L0; Tue, 24 Sep 2019 18:05:54 +0200
-Date:   Tue, 24 Sep 2019 18:05:54 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
-Message-ID: <20190924160554.5esplbmnzm4q4tew@linutronix.de>
-References: <20190911165729.11178-1-swood@redhat.com>
- <20190911165729.11178-4-swood@redhat.com>
- <20190917075943.qsaakyent4dxjkq4@linutronix.de>
- <779eddcc937941e65659a11b1867c6623a2c8890.camel@redhat.com>
- <404575720cf24765e66020f15ce75352f08a0ddb.camel@redhat.com>
- <20190923175233.yub32stn3xcwkaml@linutronix.de>
- <20190924112155.rxeyksetgqmer3pg@linutronix.de>
- <55dc19fcc44b2e658b71f68206306c8310335564.camel@redhat.com>
- <20190924152514.enzeuoo5a6o3mgqu@linutronix.de>
- <1a2234884e55e5ee6df5f32f828a99c1b248933f.camel@redhat.com>
+        Tue, 24 Sep 2019 12:11:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so1574870pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 09:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qyTnNnxb8TJ7gNF/VD8MxVSVpiu+tvEw7TRp8mh/P70=;
+        b=Sbw/n9Bl63pQKBOQbIUgIrw80Hqa0wGekdewr2/bo4VXF0gLYmWvZAHTcPxCGu9NSB
+         0tR0WMz8rNqXHizIQimiUYEJ9Z5ftVquXRvlbhkZ++qXZLaWQNALCnax9AIVeHQ4sInm
+         U+VIQ9193IuEz06aaEn+vo6kwJz7rS/uRNQv8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qyTnNnxb8TJ7gNF/VD8MxVSVpiu+tvEw7TRp8mh/P70=;
+        b=Wmi2dyAoffUlflstJwxWp7Lt3HOT47ycPaTcozF21icSmZ49VfMEAAaqrpWrj8lDeg
+         46F4P1HhtEunB2imSglRj8CnY88XJ1PmOqi/xf8Nmgy9Ceevq8mKqiMH4B4Z0lpL3A0s
+         PJGq6O7DP6yGzRsnuW8iJvc/Ryz3jXlynsBo+eXaWSq7nPzb8aEltkucdIEiKRxI5Lck
+         9QuongSpo0ryE3ndr017F2xaCIvtRJxBWFxow3ko0rLeImCO52N5cOnGWeJbu2oX0aTz
+         kuYGpPwGbV4X6dFAkwwszOgROvXwRk0rqBerLxThx+jgSr15DD0ljXtHt6zUg/DTswxx
+         7Hhw==
+X-Gm-Message-State: APjAAAU51CdNtLGp//7pTz5WKxzn8F718/COe6N/dMqf6F8X1UuV6OC4
+        vwTO8DXoXxOZaGqbd94eW85DwobElhs=
+X-Google-Smtp-Source: APXvYqx1aOIENeCSah08MVTYFrD/NuAxr0V017MpiWVqy3TIvXWY1n8ZumQkO1CM5um9w8XxVf0x/g==
+X-Received: by 2002:a63:5f47:: with SMTP id t68mr3945078pgb.363.1569341480924;
+        Tue, 24 Sep 2019 09:11:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 64sm2096771pfx.31.2019.09.24.09.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 09:11:20 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 09:11:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs: Use make invocation's -j argument for
+ parallelism
+Message-ID: <201909240910.D6E5C767D1@keescook>
+References: <201909191438.C00E6DB@keescook>
+ <20190922140331.3ffe8604@lwn.net>
+ <201909231537.0FC0474C@keescook>
+ <87pnjqtbft.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1a2234884e55e5ee6df5f32f828a99c1b248933f.camel@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87pnjqtbft.fsf@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-24 10:47:36 [-0500], Scott Wood wrote:
-> When the stop machine finishes it will do a wake_up_process() via
-> complete().  Since this does not pass WF_LOCK_SLEEPER, saved_state will be
-> cleared, and you'll have TASK_RUNNING when you get to other_func() and
-> schedule(), regardless of whether CPU1 sends wake_up() -- so this change
-> doesn't actually accomplish anything.
+On Tue, Sep 24, 2019 at 10:12:22AM +0300, Jani Nikula wrote:
+> On Mon, 23 Sep 2019, Kees Cook <keescook@chromium.org> wrote:
+> > On Sun, Sep 22, 2019 at 02:03:31PM -0600, Jonathan Corbet wrote:
+> >> On Thu, 19 Sep 2019 14:44:37 -0700
+> >> Kees Cook <keescook@chromium.org> wrote:
+> >> 
+> >> > While sphinx 1.7 and later supports "-jauto" for parallelism, this
+> >> > effectively ignores the "-j" flag used in the "make" invocation, which
+> >> > may cause confusion for build systems. Instead, extract the available
+> >> 
+> >> What sort of confusion might we expect?  Or, to channel akpm, "what are the
+> >> user-visible effects of this bug"?
+> >
+> > When I run "make htmldocs -j16" with a pre-1.7 sphinx, it is not
+> > parallelized. When I run "make htmldocs -j8" with 1.7+ sphinx, it uses
+> > all my CPUs instead of 8. :)
+> 
+> To be honest, part of the solution should be to require Sphinx 1.8 or
+> later. Even Debian stable has it. If your distro doesn't have it
+> (really?), using the latest Sphinx in a virtual environment should be a
+> matter of:
+> 
+> $ python3 -m venv .venv
+> $ . .venv/bin/activate
+> (.venv) $ pip install sphinx sphinx_rtd_theme
+> (.venv) $ make htmldocs
 
-True, I completely missed that part.
+I don't mind having sphinx 1.8 (I did, in fact, already update it), but
+that still doesn't solve the whole problem: my -j argument is being
+ignored...
 
-> While as noted in the other thread I don't think these spurious wakeups are
-> a huge problem, we could avoid them by doing stop_one_cpu_nowait() and then
-> schedule() without messing with task state.  Since we're stopping our own
-> cpu, it should be guaranteed that the stopper has finished by the time we
-> exit schedule().
+-Kees
 
-I remember loosing a state can be a problem. Lets say it is not "just"
-TASK_UNINTERRUPTIBLE -> TASK_RUNNING which sounds harmless but it is
-__TASK_TRACED and you lose it as part of unlocking siglock.
+> 
+> BR,
+> Jani.
+> 
+> 
+> >
+> >> > +	-j $(shell python3 $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
+> >> 
+> >> This (and the shebang line in the script itself) will cause the docs build
+> >> to fail on systems lacking Python 3.  While we have talked about requiring
+> >> Python 3 for the docs build, we have not actually taken that step yet.  We
+> >> probably shouldn't sneak it in here.  I don't see anything in the script
+> >> that should require a specific Python version, so I think it should be
+> >> tweaked to be version-independent and just invoke "python".
+> >
+> > Ah, no problem. I can fix this. In a quick scan it looked like sphinx
+> > was python3, but I see now that's just my install. :)
+> >
+> >> >  	-b $2 \
+> >> >  	-c $(abspath $(srctree)/$(src)) \
+> >> >  	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
+> >> > diff --git a/scripts/jobserver-count b/scripts/jobserver-count
+> >> > new file mode 100755
+> >> > index 000000000000..ff6ebe6b0194
+> >> > --- /dev/null
+> >> > +++ b/scripts/jobserver-count
+> >> > @@ -0,0 +1,53 @@
+> >> > +#!/usr/bin/env python3
+> >> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> >> 
+> >> By license-rules.rst, this should be GPL-2.0+
+> >
+> > Whoops, thanks.
+> >
+> >> > +# Extract and prepare jobserver file descriptors from envirnoment.
+> >> > +try:
+> >> > +	# Fetch the make environment options.
+> >> > +	flags = os.environ['MAKEFLAGS']
+> >> > +
+> >> > +	# Look for "--jobserver=R,W"
+> >> > +	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
+> >> > +
+> >> > +	# Parse out R,W file descriptor numbers and set them nonblocking.
+> >> > +	fds = opts[0].split("=", 1)[1]
+> >> > +	reader, writer = [nonblock(int(x)) for x in fds.split(",", 1)]
+> >> > +except:
+> >> 
+> >> So I have come to really dislike bare "except" clauses; I've seen them hide
+> >> too many bugs.  In this case, perhaps it's justified, but still ... it bugs
+> >> me ...
+> >
+> > Fair enough. I will adjust this (and the later instance).
+> >
+> >> 
+> >> > +	# Any failures here should result in just using the default
+> >> > +	# specified parallelism.
+> >> > +	print(default)
+> >> > +	sys.exit(0)
+> >> > +
+> >> > +# Read out as many jobserver slots as possible.
+> >> > +jobs = b""
+> >> > +while True:
+> >> > +	try:
+> >> > +		slot = os.read(reader, 1)
+> >> > +		jobs += slot
+> >> > +	except:
+> >> 
+> >> This one, I think, should be explicit; anything other than EWOULDBLOCK
+> >> indicates a real problem, right?
+> >> 
+> >> > +		break
+> >> > +# Return all the reserved slots.
+> >> > +os.write(writer, jobs)
+> >> 
+> >> You made writer nonblocking, so it seems plausible that we could leak some
+> >> slots here, no?  Does writer really need to be nonblocking?
+> >
+> > Good point. I will fix this too.
+> >
+> >> 
+> >> > +# If the jobserver was (impossibly) full or communication failed, use default.
+> >> > +if len(jobs) < 1:
+> >> > +	print(default)
+> >> > +
+> >> > +# Report available slots (with a bump for our caller's reserveration).
+> >> > +print(len(jobs) + 1)
+> >> 
+> >> The last question I have is...why is it that we have to do this complex
+> >> dance rather than just passing the "-j" option through directly to sphinx?
+> >> That comes down to the "confusion" mentioned at the top, I assume.  It
+> >> would be good to understand that?
+> >
+> > There is no method I have found to discover the -j option's contents
+> > (intentionally so, it seems) from within make. :(
+> 
+> -- 
+> Jani Nikula, Intel Open Source Graphics Center
 
-> -Scott
-
-Sebastian
+-- 
+Kees Cook
