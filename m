@@ -2,52 +2,55 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D397C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23530C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6E421D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD12222C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343591;
-	bh=dXXxvyawUMeDoaswKiyAYsPJuKQ8K9wRRXyxMJV1ypw=;
+	s=default; t=1569343596;
+	bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=doGEWeHBfP4lLFf8gYViTg97C9CYJ7rdFGOKZLOE08AS5OMfH3THnFZ9vImVlnUkN
-	 naTR+DeDG2ytnEa+7Wl3A0qPVrc4zvTHLlXfBcsExclrfWX7/9u9NTAbNVk/KQuZI/
-	 0c/GIddDLblyANX/LUhhO1wdDqP/fG8bfnkCVZUg=
+	b=oHqm6U5ETC31yJnQnZiLSn0SZ+5Vnq/ObfmYUvaQHp1/YXZtRCyI50a2s7mpf9+sB
+	 Xdgr3kIOolQOMmNt13x0qNM3XsPVyTb9Hr5JlMlF8S755coXgUbn65UVB7USwg0bPg
+	 lThgYz1uCI5TWD2gyR5mA7QyZ0TlIZq/HTEXh0PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410324AbfIXQqa (ORCPT
+        id S2633251AbfIXQqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410209AbfIXQqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:22 -0400
+        id S2406156AbfIXQqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C0A21848;
-        Tue, 24 Sep 2019 16:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C4121D82;
+        Tue, 24 Sep 2019 16:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343581;
-        bh=dXXxvyawUMeDoaswKiyAYsPJuKQ8K9wRRXyxMJV1ypw=;
+        s=default; t=1569343590;
+        bh=11lJkN1wtJ5AhK02O4kXnVotVpGg6k+q3v4S5ecZOKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USIyDQhf2398nfYpFzovDgYAJhiqHr8DyCsUQm9Y0yVhBuh2/soJ+DWVnmOI6zfiA
-         CUGdArqlvGCaWMrfj8JVphEWDLk+CUGx38t7i8qoUZGF6rhmW//zeaP3RSQpAzs5vp
-         6I+NVffi9naFuJg4y2Z/oBuJkeQkHewAoLn75rZI=
+        b=UZMIUdCyU+CRU+yZbSTPmGlFHjDvAUiY7/pEuFw9LTbVpNxTa/YLdkOh5YEt5e5XC
+         P9cHa9RPRHPEHWl37Zypss9Y2d1VEcFP1K2gOecC6bCcW5OWy70KLcP5Tv8KC4Ou1n
+         xz3Zb9uNN4sJCTSqqt7lIm9jn440yiSbqYtuNJhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 14/70] drm/radeon: Fix EEH during kexec
-Date:   Tue, 24 Sep 2019 12:44:53 -0400
-Message-Id: <20190924164549.27058-14-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Joel Savitz <jsavitz@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 17/70] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Date:   Tue, 24 Sep 2019 12:44:56 -0400
+Message-Id: <20190924164549.27058-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -60,45 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6 ]
+[ Upstream commit 0df3e42167caaf9f8c7b64de3da40a459979afe8 ]
 
-During kexec some adapters hit an EEH since they are not properly
-shut down in the radeon_pci_shutdown() function. Adding
-radeon_suspend_kms() fixes this issue.
+When building with -Wsometimes-uninitialized, clang warns:
 
-Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
+used uninitialized whenever 'for' loop exits because its condition is
+false [-Wsometimes-uninitialized]
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
+here
+        if (fndit)
+            ^~~~~
+drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
+it is always true
+        for (j = 0; j < entries; j++) {
+                    ^~~~~~~~~~~
+drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
+'fndit' to silence this warning
+        int j, fndit;
+                    ^
+                     = 0
+
+fndit is only used to gate a sprintf call, which can be moved into the
+loop to simplify the code and eliminate the local variable, which will
+fix this warning.
+
+Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Acked-by: Joel Savitz <jsavitz@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/504
+Link: https://lore.kernel.org/r/20190603221157.58502-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 2e96c886392bd..60ee51edd7823 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -344,11 +344,19 @@ radeon_pci_remove(struct pci_dev *pdev)
- static void
- radeon_pci_shutdown(struct pci_dev *pdev)
- {
-+	struct drm_device *ddev = pci_get_drvdata(pdev);
-+
- 	/* if we are running in a VM, make sure the device
- 	 * torn down properly on reboot/shutdown
- 	 */
- 	if (radeon_device_is_virtual())
- 		radeon_pci_remove(pdev);
-+
-+	/* Some adapters need to be suspended before a
-+	* shutdown occurs in order to prevent an error
-+	* during kexec.
-+	*/
-+	radeon_suspend_kms(ddev, true, true, false);
- }
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index bcd5d357ca238..c3899ee1db995 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 	struct of_drc_info drc;
+ 	const __be32 *value;
+ 	char cell_drc_name[MAX_DRC_NAME_LEN];
+-	int j, fndit;
++	int j;
  
- static int radeon_pmops_suspend(struct device *dev)
+ 	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+ 	if (info == NULL)
+@@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 
+ 		/* Should now know end of current entry */
+ 
+-		if (my_index > drc.last_drc_index)
+-			continue;
+-
+-		fndit = 1;
+-		break;
++		/* Found it */
++		if (my_index <= drc.last_drc_index) {
++			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
++				my_index);
++			break;
++		}
+ 	}
+-	/* Found it */
+-
+-	if (fndit)
+-		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
+-			my_index);
+ 
+ 	if (((drc_name == NULL) ||
+ 	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
 -- 
 2.20.1
 
