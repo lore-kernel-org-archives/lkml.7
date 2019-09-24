@@ -2,103 +2,102 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9717C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5BAC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8289521655
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHJ1UGr+"
+	by mail.kernel.org (Postfix) with ESMTP id 0236B21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 19:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441809AbfIXTA4 (ORCPT
+        id S2441820AbfIXTC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 15:00:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38670 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfIXTA4 (ORCPT
+        Tue, 24 Sep 2019 15:02:26 -0400
+Received: from atlmailgw1.ami.com ([63.147.10.40]:45895 "EHLO
+        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436864AbfIXTC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 15:00:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so7117125iom.5;
-        Tue, 24 Sep 2019 12:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/poXcNaPImsCkHOsb+IHz5eVbMSJsczlFsct2m7oOgc=;
-        b=sHJ1UGr+A5LvATOEjqybLlMDMbqFel8di7dayKOPx29Eq4zK27NF6UK61rwXBgsVS8
-         ExvK/uGFmCIem6mJf6kDaCQHrK9znWnzSrGVx7ZFlR8FaTy5PNI7OkBRqMErhI7G6ylc
-         lRzUNSWihhvzFiExeDyjpZpO0NiW9VSiLSvJoDTyeuTlrifxOkTqM8jr1JQ188OE8+cT
-         DrzKZy08l9YqSJke2WvzO4iUxr+6ObioHkazKnkgqjMV08uGMSsOAfAc+sOROOHnK8Ze
-         13vCc6G82L4dBo9XVWvaV1WMJrL0FLVmor3AFyXIB9OkMqcwcebvN6Wx1Y/he54s8kQC
-         DC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/poXcNaPImsCkHOsb+IHz5eVbMSJsczlFsct2m7oOgc=;
-        b=nb4XFH41V025S11tGnuMmfPLHltLG67ZL0Th6oXR2JWrvCyzIah+ozud5CVK+jWfFX
-         yzpFgMqsuOa50WBeutI07ZFFDgTP6q5zCEFuJu9dW2+DBb8rAUbR2Pt5hg0J4ae+dYY1
-         moykb9gKw9bv2kSjFQKl2ZrOKmmRZKpCUjqO9B/49GQLJZ5LXRADakoDl4K3/06NYC0G
-         YwoWwMiYfCIWHVvhyYrYLOSKaCUvsbbhCpXysl2iILaJMxHSjjXsRav4VeGIR1otYg/M
-         7trS9AqWN0UxZbEspsBHjGm4bctWorSSaMsNRLdF/TeG3ky5BM4suww4o2xHuRK1tTqf
-         KMgw==
-X-Gm-Message-State: APjAAAV6oL8vCn2XN1UPTpOBYcsqBocVZlUQCRzv79bf5FtN1acKwxvT
-        oR9V+x28lFiahLNY6SiBUsK1hp5PKSw4LYubFyg=
-X-Google-Smtp-Source: APXvYqy/VoYXHn8FHc4GUb/SVvX9H/ShxuZ2vA5n7J/xs1YmNhW/qWGzu14sSS7Rn1ed3AM95fvhp3hDB5tF927bIYs=
-X-Received: by 2002:a05:6638:3a5:: with SMTP id z5mr307586jap.95.1569351654867;
- Tue, 24 Sep 2019 12:00:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190923134449.22326-1-aford173@gmail.com> <20190923134449.22326-2-aford173@gmail.com>
- <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 24 Sep 2019 14:00:43 -0500
-Message-ID: <CAHCN7xJy4=gdSz5Thhy_be-NNFhf4FaJ=iv8=F3sXbPwaQu1xA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 24 Sep 2019 15:02:26 -0400
+X-AuditID: ac1060b2-791ff700000017bd-ff-5d8a68404e3e
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id 08.08.06077.0486A8D5; Tue, 24 Sep 2019 15:02:24 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 24 Sep 2019 15:02:24 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>
+CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [v1, 0/1] gpio: dts: aspeed: Add SGPIO driver 
+Date:   Tue, 24 Sep 2019 15:02:19 -0400
+Message-ID: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA01RbUgTYRznubvdztHsuoQeVoosjCjSVqGPJKVEcB/F+lSJHnm50XzpfCnr
+        g8sy3coaZmhruiUbkY2sDXHMhjbFlshsrcxe7G1BoyBbapKbvbgR+O33yv8HfwpnDISMUpVX
+        80I5p5aTEsJGF+u35Sp1hdubLRAZe20kcgUo9Of7AEALgwYRWmodFaMGzxiJ5jrHCGQa8YlQ
+        ZGIJR23RWxiyBydF6NwdH44cpihAAZeRRJ5rboCsL/wYmvmhxVCje0SMpto0JHK/nQW5Sezz
+        JpeYtXXZABuY9ONsZLEVsDNTjWLWHx7FWXuPlmTfTD4gWW9HhGD13UOAdVjq2YmOm4BdOjsv
+        Zr3tCwQ7a0/JX31IklPCq1W1vJCxp1iitFraQGULeSrQ+AvXgNeEDiRQkN4Fr3Z/+YclFEO7
+        MBjubMHiZBjAi94QuZwi6U3Q7TDGjCT6CoBmY2eM4HSfCPYPNYiWU2vpLGgKBmKYoNPg/L3R
+        GJbSe6Gzz0vG76XAlz4tHtfXwMfXP8V24DSED0OhmM7QyfCVJ4jF86nw8+UgoQeJhhUVw4qK
+        GWA9gOGq1WWcSl16UpHOlanSj1aU2UH8f3YnOO/P8gCMAh4AKVyeJDVs0BUy0hKu7jQvVBQJ
+        NWq+ygPWU4R8nfS27ecRhi7lqvnjPF/JC/9djEqQacDwxoxexpk8cUx4ZzloLowmfG0/PJix
+        g8scNhE3dHefmMc/fNT7Cuqd2vL8tCZZbZQKrrogO3NpwDVtPZCdkmidy1lUhkBX2Dq+uWUq
+        /H48kr4vdXd2c10IZNa0Wi9mPRM08Gnl2KOtuvt5I+4T7umdClfRt/0Kx+/2vIL+WTlRpeQU
+        W3ChivsLN7AWs60CAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 1:56 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Sep 23, 2019 at 8:45 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > This patch adds documentation of device tree bindings for the WVGA panel
-> > Logic PD Type 28 display.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V2:  Use YAML instead of TXT for binding
->
-> Fails to build with 'make dt_binding_check':
->
-> https://patchwork.ozlabs.org/patch/1166057/
->
-> Looks like a tab character used perhaps.
+Hello,
 
-I am not familiar with yaml.  I thought I copied an existing file but
-apparently it didn't work.  Is there a recommended editor that know
-this markup language?  Better yet, is there a script I can run to
-convert a text file to the yaml?
+This short series introduce the Kconfig, Makefile, and dts for the 
+Aspeed AST2500 SGPIO controller. This is the last patch set.
+Please review.
 
-adam
->
-> Rob
+[v1]: Initial commit
+
+The related SGPIO driver has been accepted and merged into v5.4:
+_http://patchwork.ozlabs.org/patch/1150357/
+
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+Thanks!
+Hongwei Zhang (1):
+  gpio: dts: aspeed: Add SGPIO driver
+
+ arch/arm/Kconfig                 |  2 ++
+ arch/arm/boot/dts/aspeed-g5.dtsi | 16 +++++++++++++++-
+ drivers/gpio/Kconfig             |  8 ++++++++
+ drivers/gpio/Makefile            |  1 +
+ 4 files changed, 26 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
