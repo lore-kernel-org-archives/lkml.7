@@ -2,113 +2,204 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57001C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3FDC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21AD6207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16AF207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxctM/Tk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n1cLxsIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbfIXVk6 (ORCPT
+        id S2391647AbfIXVnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:40:58 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35391 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbfIXVk6 (ORCPT
+        Tue, 24 Sep 2019 17:43:07 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45380 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388876AbfIXVnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:40:58 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m7so3467021lji.2;
-        Tue, 24 Sep 2019 14:40:56 -0700 (PDT)
+        Tue, 24 Sep 2019 17:43:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 41so2865919oti.12
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 14:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XLiq4XMb5jpJuPtXafRR0vUQWEgS1Nd2j0UWbBZvLBQ=;
-        b=fxctM/TkIRYaNpPm4/5bKV6Wn4LhKOi+e0tf9ofeZAhiqlT1tWbcZVgFJG9t/04dS0
-         U8HTWnksBs88olDZHxqdlsjRIdMvllD78Af1RFmpp9/mpFZD8zbcokoBu8U0a+duScW3
-         KTQbZnW1vPBZTkCKXhbW1HmoBoSDxImowfYtxAdNkCBWKdxY9QGxLfN6wcz/iLS9SLGC
-         +Ls0W5huwikvM+MQ2dMZffO1f510/E1U4wGzRmJr3po40y4OR0SAUgyId8mNbtm91w2i
-         7ccKYMuYhgT1G1Vpu7QBniO8HjHmDyWJsPfd2iCgpQE+P565TQn25XArhlKpf3eKbb1t
-         1Ahw==
+        bh=jo7KMnGMlw2EvAK40FDpAYQt3DwapEeHVln6qFxCGxc=;
+        b=n1cLxsIkHizCYgb2WjgS0IzXBOYov55QakxHt2w7cMSxtO6/WOAI3QHFpbjnP68FJw
+         6uj1aWqVq/ixtT8dS7UqH5u57arqiPIDo+F29J1QZCkkR2aEpPUxYfYtO7pnxID+TNH7
+         81C57L6h5RLkN74ENS4D9y+V8sE3x623d4Seo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XLiq4XMb5jpJuPtXafRR0vUQWEgS1Nd2j0UWbBZvLBQ=;
-        b=QLtvat6xCjJUyzIFGE+VSPhn+pnq8PKsniVM1Q7L5aABO+xqTbq4NYnOYJvuu53/Zm
-         cEQ2qMp6v9LyeI1FoXbQDmR7vKOmo3DzsDgaz1b6LzsIhT2vuUBD3XxifeIASKvEu/Tc
-         vHyIyIEtqUbeAh9fYMjt1eLUdtO3nkQj1gTlU0VrGBN6TxekWawd5nGBadBiuL292j1L
-         aJc9teCkdKGiVHxmQyOGz7C/Y8xfxS1MuVieb09ESvT9ImmqEhGtSkLcKyFCHT9H7AaQ
-         CM//pM7X7Gq6B233p0lIw+98PddTYBAfkF3Vz8dRnzflQdV3gtZo6AwSVN7JtzAeveOc
-         jRQQ==
-X-Gm-Message-State: APjAAAV0II/p/CIq8CZLI2SFzk1vp4Zam+yZF0Ft/vdA4FvuZPetopHr
-        +M1Orf5RHV8M455otlskCtofFDDTdxiNgkrd0Wg=
-X-Google-Smtp-Source: APXvYqwvjObhZebZica4yLKpK98PNVQXKIHyyQIJ7qAdLf4eBIjf6sc5zJjL/1t+2QTDXnWtmkpH8UjQxNslor/jCgc=
-X-Received: by 2002:a2e:1409:: with SMTP id u9mr3535129ljd.162.1569361255800;
- Tue, 24 Sep 2019 14:40:55 -0700 (PDT)
+        bh=jo7KMnGMlw2EvAK40FDpAYQt3DwapEeHVln6qFxCGxc=;
+        b=Vps82Q8+CxeMLLOSXf4+R3q3BxdjTnYhKhhyFlrSdygcCBi94eSioNU5V4zLGg/N7B
+         8YfPrHEYiz+7TUdKiDXORJtaG8QFXXWt/20M+lJ54RpWV5/CMpEWRvf0KMhNKun+tQnw
+         b+/g6+BWDNm/XDgUFNUedK4wTX9QHsC8ujZUUWhzpBH/52Scz1Ht0lqHEOc7puF9NVu4
+         8q+zsHokqnwLVgolLFXBcHKqs7nnB/uzTH3C4tz9F9Z45rzVANV211Si3lcuXuRiR5gP
+         9z3Wuc9AW8IpJbOmU6a07iy2Gbwzj02JT3I16A3dgr+q7wdK53hcSG1jZ9R1t6U0ddHV
+         OPnw==
+X-Gm-Message-State: APjAAAVq8FVz/3murbbF1LUBbHg60j8ctqxpA8QJmJp7Rx0MYSSkiRkF
+        PwLxzdakB3CH63dkphrL1oEwp/Vk3kE=
+X-Google-Smtp-Source: APXvYqwIq7IdYpkLXWaEcWrmFVrEK6Xzrjx5wIkAtYR1qNP/jVnI8kmf7r1albt4jbfx9E9G+IVdOQ==
+X-Received: by 2002:a9d:3675:: with SMTP id w108mr3842883otb.75.1569361383704;
+        Tue, 24 Sep 2019 14:43:03 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id v24sm907954ote.23.2019.09.24.14.43.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 14:43:03 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id w144so3057623oia.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 14:43:03 -0700 (PDT)
+X-Received: by 2002:aca:da87:: with SMTP id r129mr2005270oig.177.1569361382496;
+ Tue, 24 Sep 2019 14:43:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190920194533.5886-1-christophe.jaillet@wanadoo.fr> <388f335a-a9ae-7230-1713-a1ecb682fecf@datenfreihafen.org>
-In-Reply-To: <388f335a-a9ae-7230-1713-a1ecb682fecf@datenfreihafen.org>
-From:   Xue Liu <liuxuenetmail@gmail.com>
-Date:   Tue, 24 Sep 2019 23:40:21 +0200
-Message-ID: <CAJuUDwtWJgo7PHJR4kBpQ9mGamTMEaPZBNOZcL3mWFwwZ-zOmw@mail.gmail.com>
-Subject: Re: [PATCH] ieee802154: mcr20a: simplify a bit 'mcr20a_handle_rx_read_buf_complete()'
-To:     Stefan Schmidt <stefan@datenfreihafen.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "alex. aring" <alex.aring@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wpan - ML <linux-wpan@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
+References: <20190924203716.209420-1-campello@chromium.org>
+In-Reply-To: <20190924203716.209420-1-campello@chromium.org>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Tue, 24 Sep 2019 15:42:51 -0600
+X-Gmail-Original-Message-ID: <CAHX4x874q6smw3SSdUL1a7jvqBWfN2QaA3Z++fK+krAG_+=vTQ@mail.gmail.com>
+Message-ID: <CAHX4x874q6smw3SSdUL1a7jvqBWfN2QaA3Z++fK+krAG_+=vTQ@mail.gmail.com>
+Subject: Re: [PATCH v5] platform/chrome: wilco_ec: Add debugfs test_event file
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Duncan Laurie <dlaurie@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Sep 2019 at 13:52, Stefan Schmidt <stefan@datenfreihafen.org> wrote:
->
-> Hello Xue.
->
-> On 20.09.19 21:45, Christophe JAILLET wrote:
-> > Use a 'skb_put_data()' variant instead of rewritting it.
-> > The __skb_put_data variant is safe here. It is obvious that the skb can
-> > not overflow. It has just been allocated a few lines above with the same
-> > 'len'.
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> >  drivers/net/ieee802154/mcr20a.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
-> > index 17f2300e63ee..8dc04e2590b1 100644
-> > --- a/drivers/net/ieee802154/mcr20a.c
-> > +++ b/drivers/net/ieee802154/mcr20a.c
-> > @@ -800,7 +800,7 @@ mcr20a_handle_rx_read_buf_complete(void *context)
-> >       if (!skb)
-> >               return;
-> >
-> > -     memcpy(skb_put(skb, len), lp->rx_buf, len);
-> > +     __skb_put_data(skb, lp->rx_buf, len);
-> >       ieee802154_rx_irqsafe(lp->hw, skb, lp->rx_lqi[0]);
-> >
-> >       print_hex_dump_debug("mcr20a rx: ", DUMP_PREFIX_OFFSET, 16, 1,
-> >
->
-> Could you please review and ACK this? If you are happy I will take it
-> through my tree.
->
-> regards
-> Stefan Schmidt
+Thanks Daniel, looks even better.
 
-Acked-by: Xue Liu <liuxuenetmail@gmail.com>
+On Tue, Sep 24, 2019 at 2:37 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> This change introduces a new debugfs file 'test_event' that when written
+> to causes the EC to generate a test event.
+> This adds a second sub cmd for the test event, and pulls out send_ec_cmd
+> to be a common helper between h1_gpio_get and test_event_set.
+>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
 
---
+Reviewed-by: Nick Crews <ncrews@chromium.org>
+
+> ---
+> Changes for v2:
+>   - Cleaned up and added comments.
+>   - Renamed and updated function signature from write_to_mailbox to
+>     send_ec_cmd.
+> Changes for v3:
+>   - Switched NULL format string to empty format string
+>   - Renamed val parameter on send_ec_cmd to out_val
+> Changes for v4:
+>   - Provided a format string to avoid -Wformat-zero-length warning
+> Changes for v5:
+>   - Updated commit message to include more implementation details
+>   - Restored removed empty line between functions
+>
+>  drivers/platform/chrome/wilco_ec/debugfs.c | 47 +++++++++++++++++-----
+>  1 file changed, 37 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+> index 8d65a1e2f1a3..df5a5f6c3ec6 100644
+> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
+> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+> @@ -160,29 +160,29 @@ static const struct file_operations fops_raw = {
+>
+>  #define CMD_KB_CHROME          0x88
+>  #define SUB_CMD_H1_GPIO                0x0A
+> +#define SUB_CMD_TEST_EVENT     0x0B
+>
+> -struct h1_gpio_status_request {
+> +struct ec_request {
+>         u8 cmd;         /* Always CMD_KB_CHROME */
+>         u8 reserved;
+> -       u8 sub_cmd;     /* Always SUB_CMD_H1_GPIO */
+> +       u8 sub_cmd;
+>  } __packed;
+>
+> -struct hi_gpio_status_response {
+> +struct ec_response {
+>         u8 status;      /* 0 if allowed */
+> -       u8 val;         /* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
+> +       u8 val;
+>  } __packed;
+>
+> -static int h1_gpio_get(void *arg, u64 *val)
+> +static int send_ec_cmd(struct wilco_ec_device *ec, u8 sub_cmd, u8 *out_val)
+>  {
+> -       struct wilco_ec_device *ec = arg;
+> -       struct h1_gpio_status_request rq;
+> -       struct hi_gpio_status_response rs;
+> +       struct ec_request rq;
+> +       struct ec_response rs;
+>         struct wilco_ec_message msg;
+>         int ret;
+>
+>         memset(&rq, 0, sizeof(rq));
+>         rq.cmd = CMD_KB_CHROME;
+> -       rq.sub_cmd = SUB_CMD_H1_GPIO;
+> +       rq.sub_cmd = sub_cmd;
+>
+>         memset(&msg, 0, sizeof(msg));
+>         msg.type = WILCO_EC_MSG_LEGACY;
+> @@ -196,13 +196,38 @@ static int h1_gpio_get(void *arg, u64 *val)
+>         if (rs.status)
+>                 return -EIO;
+>
+> -       *val = rs.val;
+> +       *out_val = rs.val;
+>
+>         return 0;
+>  }
+>
+> +/**
+> + * h1_gpio_get() - Gets h1 gpio status.
+> + * @arg: The wilco EC device.
+> + * @val: BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL
+> + */
+> +static int h1_gpio_get(void *arg, u64 *val)
+> +{
+> +       return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
+> +}
+> +
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
+>
+> +/**
+> + * test_event_set() - Sends command to EC to cause an EC test event.
+> + * @arg: The wilco EC device.
+> + * @val: unused.
+> + */
+> +static int test_event_set(void *arg, u64 val)
+> +{
+> +       u8 ret;
+> +
+> +       return send_ec_cmd(arg, SUB_CMD_TEST_EVENT, &ret);
+> +}
+> +
+> +/* Format is unused since it is only required for get method which is NULL */
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_test_event, NULL, test_event_set, "%llu\n");
+> +
+>  /**
+>   * wilco_ec_debugfs_probe() - Create the debugfs node
+>   * @pdev: The platform device, probably created in core.c
+> @@ -226,6 +251,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
+>         debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
+>         debugfs_create_file("h1_gpio", 0444, debug_info->dir, ec,
+>                             &fops_h1_gpio);
+> +       debugfs_create_file("test_event", 0200, debug_info->dir, ec,
+> +                           &fops_test_event);
+>
+>         return 0;
+>  }
+> --
+> 2.23.0.351.gc4317032e6-goog
+>
