@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036FBC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C84C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE14F217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72937217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344378;
-	bh=ZFiPp8ngyxu+/Da+Enw9S3iTkIS4pdRuux3QPVR7nWQ=;
+	s=default; t=1569344382;
+	bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNBMu0bSdNnJarOVbCYObbAAh0wk2Oe4Z56piGwnebK63/gCvf8xnEmFcp8CcjUpj
-	 O+4j2JzvnWZQuI12UAed8YmgvjjgCZHdBzKQDoXDWD8WKOHd7zpUERR198z87OHVwE
-	 dI31ueI+J7fZJ385RpJVbHocMRl4RGCWBFHZykt4=
+	b=2HRs0WbFpffSi1D8N9eBrjNc+el/D6lqqrh8sy368ZHCmiIWaH2GhLjRLi1Doj8ZT
+	 QoSjotXvuVINCQ6T3PmDkD5RfF/muIaIkpOudRA8Dy0mvWxbUbsJ0Vpdja40EndWTQ
+	 PQn+Z6VSvsjuclpVjYGm674mpGmr99zet4LybbBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438235AbfIXQ7h (ORCPT
+        id S2410150AbfIXQqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:59:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37936 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392277AbfIXQq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:58 -0400
+        id S2410101AbfIXQqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648B420673;
-        Tue, 24 Sep 2019 16:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE25721971;
+        Tue, 24 Sep 2019 16:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343618;
-        bh=ZFiPp8ngyxu+/Da+Enw9S3iTkIS4pdRuux3QPVR7nWQ=;
+        s=default; t=1569343605;
+        bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P5dY2TuVJLd4QSkI33uDfX7zPrT+e0KH+3vYmtQKSMVwKg3cggxj1EovZk0S13jSH
-         8nRP0eULFQl3+iZYcMcrDlob6XLeZZUMKQ91abVppW469H0S7JGIknxo7MLd5ZFrVZ
-         Sbyi16lLcRFwpYckvd3gAiVfoLAYvRUVsW1iRZbc=
+        b=MRPCvoZtwil7J0f2gx2gSTM9b9M1LLJExs+HEirODLqZeQNx8cqBhNV7PqkGxyOgc
+         jZON0LQ4hT5BxudfNXSvfwj2HnrIogo/PpHGgYm803Yub/wPGlGD8kw4aHWvrbO4F7
+         CjrUDxP9X2JVgiHS1BoIyDtYSA++5z+7eY+J0aVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 29/70] clk: meson: axg-audio: Don't reference clk_init_data after registration
-Date:   Tue, 24 Sep 2019 12:45:08 -0400
-Message-Id: <20190924164549.27058-29-sashal@kernel.org>
+Cc:     Lewis Huang <Lewis.Huang@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Eric Yang <eric.yang2@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 24/70] drm/amd/display: reprogram VM config when system resume
+Date:   Tue, 24 Sep 2019 12:45:03 -0400
+Message-Id: <20190924164549.27058-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -61,50 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Lewis Huang <Lewis.Huang@amd.com>
 
-[ Upstream commit 1610dd79d0f6202c5c1a91122255fa598679c13a ]
+[ Upstream commit e5382701c3520b3ed66169a6e4aa6ce5df8c56e0 ]
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+[Why]
+The vm config will be clear to 0 when system enter S4. It will
+cause hubbub didn't know how to fetch data when system resume.
+The flip always pending because earliest_inuse_address and
+request_address are different.
 
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190731193517.237136-4-sboyd@kernel.org
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+[How]
+Reprogram VM config when system resume
+
+Signed-off-by: Lewis Huang <Lewis.Huang@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/axg-audio.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-index 8028ff6f66107..db0b73d53551d 100644
---- a/drivers/clk/meson/axg-audio.c
-+++ b/drivers/clk/meson/axg-audio.c
-@@ -992,15 +992,18 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 0a7adc2925e35..191f5757ded1f 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2016,6 +2016,14 @@ void dc_set_power_state(
+ 		dc_resource_state_construct(dc, dc->current_state);
  
- 	/* Take care to skip the registered input clocks */
- 	for (i = AUD_CLKID_DDR_ARB; i < data->hw_onecell_data->num; i++) {
-+		const char *name;
+ 		dc->hwss.init_hw(dc);
 +
- 		hw = data->hw_onecell_data->hws[i];
- 		/* array might be sparse */
- 		if (!hw)
- 			continue;
- 
-+		name = hw->init->name;
++#ifdef CONFIG_DRM_AMD_DC_DCN2_0
++		if (dc->hwss.init_sys_ctx != NULL &&
++			dc->vm_pa_config.valid) {
++			dc->hwss.init_sys_ctx(dc->hwseq, dc, &dc->vm_pa_config);
++		}
++#endif
 +
- 		ret = devm_clk_hw_register(dev, hw);
- 		if (ret) {
--			dev_err(dev, "failed to register clock %s\n",
--				hw->init->name);
-+			dev_err(dev, "failed to register clock %s\n", name);
- 			return ret;
- 		}
- 	}
+ 		break;
+ 	default:
+ 		ASSERT(dc->current_state->stream_count == 0);
 -- 
 2.20.1
 
