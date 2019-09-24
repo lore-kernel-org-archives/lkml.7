@@ -2,200 +2,291 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61640C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A575C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2151F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAE92146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 13:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lGBchQR8"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="J+rM1NRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441092AbfIXNNn (ORCPT
+        id S2441107AbfIXNOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 09:13:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35722 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440971AbfIXNNn (ORCPT
+        Tue, 24 Sep 2019 09:14:55 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:39178 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441096AbfIXNOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 09:13:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v8so1900058wrt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 06:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8DKNKBcYPFJX7gcFM6fla2nCDZ7tXWQVJSYaXdG56A8=;
-        b=lGBchQR8d3kN6JhJQ9MVaKL2lR1I8m5zgXBjPBV6qID/LajCYPB8pbwPTaxkOA/iI8
-         SXERodTB9XgfGda/UryUoMa1L0vA6n/F9z99rU9Mj4UPvK8x+pZAg+P453ct3pM4AVWr
-         46RlBuG0FYJbYVwLKYShyBeGNnDsEL/SnYLV0ywyIs2bnY5U5V6C4us+rYspD9wGIKjc
-         FzCk/Om3E3iUDesiFC8oMzr7DnBea2NwIauJdXWDRE4MhwqAZXX4G19Cll6lu4X50vjT
-         fBlx9QSPm5M29db64H3kGOHLIugDBtN8QXTr5MRMV3XvoD2VQHVDaC7c7XuKJo77Ec9B
-         1qVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8DKNKBcYPFJX7gcFM6fla2nCDZ7tXWQVJSYaXdG56A8=;
-        b=GjsRDHpEwyq6poibelmrJxvkkce+AtyKFXUBqKiKAM0spSw3fMSwE8oRLKKUxMiKLs
-         ZSfeXB3czwTe96WR58NH/roWqT5cInPlwSHfcX0e6W06Ug4pDYYkJQXFVwm+xJEpeCrR
-         NIwqXmSBy8ZAwLimkqa0kD0oWMezWoiJmI5Q7EzK/l5ZDNMr819RUyqMrF5J8VLHwaD8
-         Ny8FjzWPRvQRtJvenWvZX58+gk4/DGJ80VYEJwPrMdL2hVCV78V4dbMvvg2FLQ55PO5C
-         RTpGI1AwFtG/5CVrqJ60rvNOImDB4I1rXnUrZAZkVFjFMAXPW4WUtY94U+hp93Mil7jb
-         wPDQ==
-X-Gm-Message-State: APjAAAUjuCEKWezStapjmXAZ+HYgz/kGtlm7x/z0uqNoBoVhfNVBoGo0
-        UL3Yqw6x/r8hAGfzQKwqYZ284LPg4daaab6N
-X-Google-Smtp-Source: APXvYqzMgXXfQ2e8P0JfGMx58UK24q+b8F7dgRRDyNxYQMxAEMG1nmN+c1auG9UeGmxqbIKhXmsJVw==
-X-Received: by 2002:adf:a499:: with SMTP id g25mr2348289wrb.204.1569330819743;
-        Tue, 24 Sep 2019 06:13:39 -0700 (PDT)
-Received: from [172.20.9.27] ([83.167.33.93])
-        by smtp.gmail.com with ESMTPSA id p7sm2529419wma.34.2019.09.24.06.13.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 06:13:39 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
- <20190923083549.GA42487@gmail.com>
- <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
- <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
- <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
- <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
- <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
- <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
- <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
- <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
- <20190924094942.GN2349@hirez.programming.kicks-ass.net>
- <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
- <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
- <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
- <da86ec56-5f14-536d-2d43-2cc9e118d2a7@kernel.dk>
- <6228b13d-5ef6-e83e-b5dc-7a157013d43f@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a0a0cddf-c5ae-43b0-5445-0bd55e4b7c45@kernel.dk>
-Date:   Tue, 24 Sep 2019 15:13:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Sep 2019 09:14:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id A025627E0CFA;
+        Tue, 24 Sep 2019 15:14:53 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id YU6-2rdQqUH4; Tue, 24 Sep 2019 15:14:53 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id F2D7F27E0D98;
+        Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F2D7F27E0D98
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1569330893;
+        bh=CHfhYsclsYqLuOF6BzFzIy+z4FP4HoLkxVz/AeE0Hh8=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=J+rM1NRxzoBhlzAks7Nh+ovgBqFfQHEs+ky+bjjCpaXWGU7lNq7jIz/yx/3xiy4PI
+         mvv+CQd7q/SYPxXktwBOAUkyayhys6mmI6VdfHGuJT2WqiAD6UKtAJnY1FAkWG90GD
+         iC6/txNSLiLTEICrPC7pDm4rDmmh2K8R75RdVA1E=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Umz9pB2D1A72; Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
+Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DB3E327E0CFA;
+        Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
+Date:   Tue, 24 Sep 2019 15:14:52 +0200 (CEST)
+From:   Marta Rybczynska <mrybczyn@kalray.eu>
+To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <786558932.78398145.1569330892814.JavaMail.zimbra@kalray.eu>
+Subject: [PATCH v3] nvme: allow 64-bit results in passthru commands
 MIME-Version: 1.0
-In-Reply-To: <6228b13d-5ef6-e83e-b5dc-7a157013d43f@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
+Thread-Index: tWaLpLj02BVn+M3V8YsXMTlR7z2yLA==
+Thread-Topic: nvme: allow 64-bit results in passthru commands
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 5:23 AM, Pavel Begunkov wrote:
->> Yep that should do it, and saves 8 bytes of stack as well.
->>
->> BTW, did you test my patch, this one or the previous? Just curious if it
->> worked for you.
->>
-> Not yet, going to do that tonight
+It is not possible to get 64-bit results from the passthru commands,
+what prevents from getting for the Capabilities (CAP) property value.
 
-Thanks! For reference, the final version is below. There was still a
-signal mishap in there, now it should all be correct afaict.
+As a result, it is not possible to implement IOL's NVMe Conformance
+test 4.3 Case 1 for Fabrics targets [1] (page 123).
 
+This issue has been already discussed [2], but without a solution.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9b84232e5cc4..d2a86164d520 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2768,6 +2768,38 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
- 	return submit;
+This patch solves the problem by adding new ioctls with a new
+passthru structure, including 64-bit results. The older ioctls stay
+unchanged.
+
+[1] https://www.iol.unh.edu/sites/default/files/testsuites/nvme/UNH-IOL_NVMe_Conformance_Test_Suite_v11.0.pdf
+[2] http://lists.infradead.org/pipermail/linux-nvme/2018-June/018791.html
+
+Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
+---
+ drivers/nvme/host/core.c        | 108 ++++++++++++++++++++++++++++++++++------
+ include/uapi/linux/nvme_ioctl.h |  23 +++++++++
+ 2 files changed, 115 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 1ede176..ac6a787 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -856,7 +856,7 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
+ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		struct nvme_command *cmd, void __user *ubuffer,
+ 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
+-		u32 meta_seed, u32 *result, unsigned timeout)
++		u32 meta_seed, u64 *result, unsigned timeout)
+ {
+ 	bool write = nvme_is_write(cmd);
+ 	struct nvme_ns *ns = q->queuedata;
+@@ -897,7 +897,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 	else
+ 		ret = nvme_req(req)->status;
+ 	if (result)
+-		*result = le32_to_cpu(nvme_req(req)->result.u32);
++		*result = le64_to_cpu(nvme_req(req)->result.u64);
+ 	if (meta && !ret && !write) {
+ 		if (copy_to_user(meta_buffer, meta, meta_len))
+ 			ret = -EFAULT;
+@@ -1344,6 +1344,54 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	struct nvme_command c;
+ 	unsigned timeout = 0;
+ 	u32 effects;
++	u64 result;
++	int status;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
++	if (copy_from_user(&cmd, ucmd, sizeof(cmd)))
++		return -EFAULT;
++	if (cmd.flags)
++		return -EINVAL;
++
++	memset(&c, 0, sizeof(c));
++	c.common.opcode = cmd.opcode;
++	c.common.flags = cmd.flags;
++	c.common.nsid = cpu_to_le32(cmd.nsid);
++	c.common.cdw2[0] = cpu_to_le32(cmd.cdw2);
++	c.common.cdw2[1] = cpu_to_le32(cmd.cdw3);
++	c.common.cdw10 = cpu_to_le32(cmd.cdw10);
++	c.common.cdw11 = cpu_to_le32(cmd.cdw11);
++	c.common.cdw12 = cpu_to_le32(cmd.cdw12);
++	c.common.cdw13 = cpu_to_le32(cmd.cdw13);
++	c.common.cdw14 = cpu_to_le32(cmd.cdw14);
++	c.common.cdw15 = cpu_to_le32(cmd.cdw15);
++
++	if (cmd.timeout_ms)
++		timeout = msecs_to_jiffies(cmd.timeout_ms);
++
++	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
++	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
++			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
++			(void __user *)(uintptr_t)cmd.metadata,
++			cmd.metadata_len, 0, &result, timeout);
++	nvme_passthru_end(ctrl, effects);
++
++	if (status >= 0) {
++		if (put_user(result, &ucmd->result))
++			return -EFAULT;
++	}
++
++	return status;
++}
++
++static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++			struct nvme_passthru_cmd64 __user *ucmd)
++{
++	struct nvme_passthru_cmd64 cmd;
++	struct nvme_command c;
++	unsigned timeout = 0;
++	u32 effects;
+ 	int status;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+@@ -1414,6 +1462,41 @@ static void nvme_put_ns_from_disk(struct nvme_ns_head *head, int idx)
+ 		srcu_read_unlock(&head->srcu, idx);
  }
  
-+struct io_wait_queue {
-+	struct wait_queue_entry wq;
-+	struct io_ring_ctx *ctx;
-+	unsigned to_wait;
-+	unsigned nr_timeouts;
++static bool is_ctrl_ioctl(unsigned int cmd)
++{
++	if (cmd == NVME_IOCTL_ADMIN_CMD || cmd == NVME_IOCTL_ADMIN64_CMD)
++		return true;
++	if (is_sed_ioctl(cmd))
++		return true;
++	return false;
++}
++
++static int nvme_handle_ctrl_ioctl(struct nvme_ns *ns, unsigned int cmd,
++				  void __user *argp,
++				  struct nvme_ns_head *head,
++				  int srcu_idx)
++{
++	struct nvme_ctrl *ctrl = ns->ctrl;
++	int ret;
++
++	nvme_get_ctrl(ns->ctrl);
++	nvme_put_ns_from_disk(head, srcu_idx);
++
++	switch (cmd) {
++	case NVME_IOCTL_ADMIN_CMD:
++		ret = nvme_user_cmd(ctrl, NULL, argp);
++		break;
++	case NVME_IOCTL_ADMIN64_CMD:
++		ret = nvme_user_cmd64(ctrl, NULL, argp);
++		break;
++	default:
++		ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
++		break;
++	}
++	nvme_put_ctrl(ctrl);
++	return ret;
++}
++
+ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 		unsigned int cmd, unsigned long arg)
+ {
+@@ -1431,20 +1514,8 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 	 * seperately and drop the ns SRCU reference early.  This avoids a
+ 	 * deadlock when deleting namespaces using the passthrough interface.
+ 	 */
+-	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
+-		struct nvme_ctrl *ctrl = ns->ctrl;
+-
+-		nvme_get_ctrl(ns->ctrl);
+-		nvme_put_ns_from_disk(head, srcu_idx);
+-
+-		if (cmd == NVME_IOCTL_ADMIN_CMD)
+-			ret = nvme_user_cmd(ctrl, NULL, argp);
+-		else
+-			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
+-
+-		nvme_put_ctrl(ctrl);
+-		return ret;
+-	}
++	if (is_ctrl_ioctl(cmd))
++		return nvme_handle_ctrl_ioctl(ns, cmd, argp, head, srcu_idx);
+ 
+ 	switch (cmd) {
+ 	case NVME_IOCTL_ID:
+@@ -1457,6 +1528,9 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case NVME_IOCTL_SUBMIT_IO:
+ 		ret = nvme_submit_io(ns, argp);
+ 		break;
++	case NVME_IOCTL_IO64_CMD:
++		ret = nvme_user_cmd64(ns->ctrl, ns, argp);
++		break;
+ 	default:
+ 		if (ns->ndev)
+ 			ret = nvme_nvm_ioctl(ns, cmd, arg);
+@@ -2847,6 +2921,8 @@ static long nvme_dev_ioctl(struct file *file, unsigned int cmd,
+ 	switch (cmd) {
+ 	case NVME_IOCTL_ADMIN_CMD:
+ 		return nvme_user_cmd(ctrl, NULL, argp);
++	case NVME_IOCTL_ADMIN64_CMD:
++		return nvme_user_cmd64(ctrl, NULL, argp);
+ 	case NVME_IOCTL_IO_CMD:
+ 		return nvme_dev_user_cmd(ctrl, argp);
+ 	case NVME_IOCTL_RESET:
+diff --git a/include/uapi/linux/nvme_ioctl.h b/include/uapi/linux/nvme_ioctl.h
+index 1c215ea..e168dc5 100644
+--- a/include/uapi/linux/nvme_ioctl.h
++++ b/include/uapi/linux/nvme_ioctl.h
+@@ -45,6 +45,27 @@ struct nvme_passthru_cmd {
+ 	__u32	result;
+ };
+ 
++struct nvme_passthru_cmd64 {
++	__u8	opcode;
++	__u8	flags;
++	__u16	rsvd1;
++	__u32	nsid;
++	__u32	cdw2;
++	__u32	cdw3;
++	__u64	metadata;
++	__u64	addr;
++	__u32	metadata_len;
++	__u32	data_len;
++	__u32	cdw10;
++	__u32	cdw11;
++	__u32	cdw12;
++	__u32	cdw13;
++	__u32	cdw14;
++	__u32	cdw15;
++	__u32	timeout_ms;
++	__u64	result;
 +};
 +
-+static inline bool io_should_wake(struct io_wait_queue *iowq)
-+{
-+	struct io_ring_ctx *ctx = iowq->ctx;
-+
-+	/*
-+	 * Wake up if we have enough events, or if a timeout occured since we
-+	 * started waiting. For timeouts, we always want to return to userspace,
-+	 * regardless of event count.
-+	 */
-+	return io_cqring_events(ctx->rings) >= iowq->to_wait ||
-+			atomic_read(&ctx->cq_timeouts) != iowq->nr_timeouts;
-+}
-+
-+static int io_wake_function(struct wait_queue_entry *curr, unsigned int mode,
-+			    int wake_flags, void *key)
-+{
-+	struct io_wait_queue *iowq = container_of(curr, struct io_wait_queue,
-+							wq);
-+
-+	if (!io_should_wake(iowq))
-+		return -1;
-+
-+	return autoremove_wake_function(curr, mode, wake_flags, key);
-+}
-+
- /*
-  * Wait until events become available, if we don't already have some. The
-  * application must reap them itself, as they reside on the shared cq ring.
-@@ -2775,8 +2807,16 @@ static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
- static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			  const sigset_t __user *sig, size_t sigsz)
- {
-+	struct io_wait_queue iowq = {
-+		.wq = {
-+			.private	= current,
-+			.func		= io_wake_function,
-+			.entry		= LIST_HEAD_INIT(iowq.wq.entry),
-+		},
-+		.ctx		= ctx,
-+		.to_wait	= min_events,
-+	};
- 	struct io_rings *rings = ctx->rings;
--	unsigned nr_timeouts;
- 	int ret;
+ #define nvme_admin_cmd nvme_passthru_cmd
  
- 	if (io_cqring_events(rings) >= min_events)
-@@ -2795,15 +2835,20 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			return ret;
- 	}
+ #define NVME_IOCTL_ID		_IO('N', 0x40)
+@@ -54,5 +75,7 @@ struct nvme_passthru_cmd {
+ #define NVME_IOCTL_RESET	_IO('N', 0x44)
+ #define NVME_IOCTL_SUBSYS_RESET	_IO('N', 0x45)
+ #define NVME_IOCTL_RESCAN	_IO('N', 0x46)
++#define NVME_IOCTL_ADMIN64_CMD	_IOWR('N', 0x47, struct nvme_passthru_cmd64)
++#define NVME_IOCTL_IO64_CMD	_IOWR('N', 0x48, struct nvme_passthru_cmd64)
  
--	nr_timeouts = atomic_read(&ctx->cq_timeouts);
--	/*
--	 * Return if we have enough events, or if a timeout occured since
--	 * we started waiting. For timeouts, we always want to return to
--	 * userspace.
--	 */
--	ret = wait_event_interruptible(ctx->wait,
--				io_cqring_events(rings) >= min_events ||
--				atomic_read(&ctx->cq_timeouts) != nr_timeouts);
-+	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
-+	do {
-+		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq,
-+						TASK_INTERRUPTIBLE);
-+		if (io_should_wake(&iowq))
-+			break;
-+		schedule();
-+		if (signal_pending(current)) {
-+			ret = -ERESTARTSYS;
-+			break;
-+		}
-+	} while (1);
-+	finish_wait(&ctx->wait, &iowq.wq);
-+
- 	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 	if (ret == -ERESTARTSYS)
- 		ret = -EINTR;
-
+ #endif /* _UAPI_LINUX_NVME_IOCTL_H */
 -- 
-Jens Axboe
+1.8.3.1
 
