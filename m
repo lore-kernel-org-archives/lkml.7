@@ -2,99 +2,118 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED89C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C96DC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDE320835
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E4A20820
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 00:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="egZhZal+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503609AbfIXAQl (ORCPT
+        id S2503614AbfIXATG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 20:16:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34694 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503595AbfIXAQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 20:16:40 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36ABCC049E32
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 00:16:40 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id b6so29002wrx.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Sep 2019 17:16:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0UXLU1GiG9GRzblHITT/kKxOAXLFHZe9KDWnxtoZOGA=;
-        b=kRWcJ9/uhSrlIhoLJqlN0nfq2MrECl4XBtLSKKmbwvi8vNxqPmjq9QRiQ7eImcWPaC
-         o3DcsJlCHiiXJUqr7GgIRvBjhGeNy+BXFsdKPxaXfCKj27HNyjI05/oCgOt6DMruMHKl
-         3/c7jrn1H62SmmezF3Xf9CiZoo1BTdFraSXYC18sKwt9o7mLPXoBBGQju/m09vm+TRLa
-         pvoMADsqr7APCF5eyKQ7w09XAhFEtdjqD9NyzePNxjWgVwNDSojCn/xChNRBUeAiU9cY
-         QeSRiDix055rPC1bruJZBJ8TtwY/xKvIoW0EU3fBqZwV+z7Hv9k2/Yl1cRVzQVd4QyoL
-         Q1sA==
-X-Gm-Message-State: APjAAAW+PiGH8yJLkqmNQHb7sl40gaqaUzYZe4rvH0EcJA73eQaV8PyB
-        aQvoinxJmQSlsiBMmEr6NzZ/VkJFZfmlCQxEtavJ0715mtbTi2t3pcM3StA7tKxPso1ufmHfIi1
-        QtBGPVWslC2GkBRmKJ3up9wGG
-X-Received: by 2002:a1c:7c08:: with SMTP id x8mr160868wmc.140.1569284198725;
-        Mon, 23 Sep 2019 17:16:38 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzuhYEIpCLaIhhJwLlMrVqI8HUjBy2gaKWE6B54jqPQVSetTSpKm+thCwJsN4HqBygNpzUWyQ==
-X-Received: by 2002:a1c:7c08:: with SMTP id x8mr160853wmc.140.1569284198377;
-        Mon, 23 Sep 2019 17:16:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id s12sm48776wra.82.2019.09.23.17.16.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Sep 2019 17:16:37 -0700 (PDT)
-Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-To:     Andrea Arcangeli <aarcange@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-16-aarcange@redhat.com>
- <87o8zb8ik1.fsf@vitty.brq.redhat.com>
- <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
- <20190923190514.GB19996@redhat.com> <20190923202349.GL18195@linux.intel.com>
- <20190923210838.GA23063@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b58d2305-284f-8652-a0f3-380b26642fe0@redhat.com>
-Date:   Tue, 24 Sep 2019 02:16:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Sep 2019 20:19:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40430 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729276AbfIXATF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 20:19:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O047WW193144;
+        Tue, 24 Sep 2019 00:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=CYnernZqxWUzUsnsA+ryrZNCCZdIPViU9+VB3OeyCag=;
+ b=egZhZal+XCur2Gx8ugLu5eQkb80AVHe/EFGCeaH3n5L4JUoBpU8u2+VXNPdDmu1c7d2n
+ ZHvoo2G46k20tXpJSVbgbZ6pLeEzATdKYjZU5ZKfgqPS91dByk2kHkPeGl17wEAPRmjO
+ 8/klkfIV7JS33yTO5CT0zqwogc6CDoMdKW56Vh7RQfzCAGg8rdT7KJyebgdzDxXHSeD+
+ uhBLH/UO12TqldyR7QitubAnT7tRJHmQxg1i9p6SK1+Gk+2+Zf/1FLP+CF/Vfh7n40Ms
+ wzlHYHRrqBq/KrqlpgfVEESREhHKtEScPfMLz2VyAhADYsGV6fW72CzxUSJ7DKrkhQ+k cw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v5cgqt5qt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 00:18:53 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8O093nm152425;
+        Tue, 24 Sep 2019 00:18:53 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2v6yvhvg0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 00:18:53 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8O0IniH023008;
+        Tue, 24 Sep 2019 00:18:49 GMT
+Received: from [10.182.71.192] (/10.182.71.192)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Sep 2019 17:18:48 -0700
+Subject: Re: [PATCH 1/1] MAINTAINERS: add Yanjun to FORCEDETH maintainers list
+To:     rain.1986.08.12@gmail.com, mchehab+samsung@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org, robh@kernel.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190923143746.4310-1-rain.1986.08.12@gmail.com>
+From:   Zhu Yanjun <yanjun.zhu@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <b227d9ea-d393-23f3-51c2-9de28678943f@oracle.com>
+Date:   Tue, 24 Sep 2019 08:23:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190923210838.GA23063@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190923143746.4310-1-rain.1986.08.12@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909230207
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9389 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909230207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/09/19 23:08, Andrea Arcangeli wrote:
-> The two most attractive options to me remains what I already have
-> implemented under #ifdef CONFIG_RETPOLINE with direct calls
-> (optionally replacing the "if" with a small "switch" still under
-> CONFIG_RETPOLINE if we give up the prioritization of the checks), or
-> the replacement of kvm_vmx_exit_handlers with a switch() as suggested
-> by Vitaly which would cleanup some code.
-> 
-> The intermediate solution that makes "const" work, has the cons of
-> forcing to parse EXIT_REASON_VMCLEAR and the other vmx exit reasons
-> twice, first through a pointer to function (or another if or switch
-> statement) then with a second switch() statement.
 
-I agree.  I think the way Andrea did it in his patch may not the nicest
-but is (a bit surprisingly) the easiest and most maintainable.
+On 2019/9/23 22:37, rain.1986.08.12@gmail.com wrote:
+> From: Rain River <rain.1986.08.12@gmail.com>
+>
+> Yanjun has been spending quite a lot of time fixing bugs
+> in FORCEDETH source code. I'd like to add Yanjun to maintainers
+> list.
+>
+> Signed-off-by: Rain River <rain.1986.08.12@gmail.com>
 
-Paolo
+Acked-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+
+Thanks a lot.
+
+Zhu Yanjun
+
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a400af0501c9..336ad8fe8b60 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -643,6 +643,7 @@ F:	drivers/net/ethernet/alacritech/*
+>   
+>   FORCEDETH GIGABIT ETHERNET DRIVER
+>   M:	Rain River <rain.1986.08.12@gmail.com>
+> +M:	Zhu Yanjun <yanjun.zhu@oracle.com>
+>   L:	netdev@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/net/ethernet/nvidia/*
