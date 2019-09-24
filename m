@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB9AC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D538C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B35217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F0F217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344078;
-	bh=lyaSHlybl3saQoS0Vm8qn2d3taxZeJAkBJEs05fm3uA=;
+	s=default; t=1569344082;
+	bh=z9UtvtB1+9egErQtQisaNM4KXdtr1rv4rpMpXyL4+Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STJZy3dC1Em9dxULgVgE4gzlG74DSeOIO404V0iH+375Nq507OLl84rtCJbD3XuX1
-	 B5PmMgG8Kkb+LlVkGpfSAN03gNNQu2E2Wjk5gM48Six29Co7TsNFsrMeU+cpxWULRS
-	 ReKQnWfKEC5nCezmOCkmFN01IW4s0M3eAxgteoIo=
+	b=tKykRf2e5IUQHoW3YkACAHGWiwmGJ90ul2MyY1I3R7Zggjcgl5RUcImvwGch2qzlQ
+	 jJoDfzmybCGL7DQmn7XdiEXG3ZHlCvtB4G8W8r6U0z3ni2VgOJLJeKYpBPLNqhfnT1
+	 4p4pclBN2OygGX38sBfQJME0A7iDxgrft+VeixbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404998AbfIXQvz (ORCPT
+        id S2406022AbfIXQvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:51:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410947AbfIXQv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:29 -0400
+        id S2410868AbfIXQvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF19F222BD;
-        Tue, 24 Sep 2019 16:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0FF21850;
+        Tue, 24 Sep 2019 16:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343888;
-        bh=lyaSHlybl3saQoS0Vm8qn2d3taxZeJAkBJEs05fm3uA=;
+        s=default; t=1569343878;
+        bh=z9UtvtB1+9egErQtQisaNM4KXdtr1rv4rpMpXyL4+Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQXLV6uyTh8k9HkcwwqRf1soenR+hoGu/rJYUogHOxW+CX70S/OpZqRWZ0nWs276K
-         P4GF1lMOvpVmdJ7CX36ZI/NKbAWVlLwczCK+xWZ9PKy6RTOKwH+oxw8nQbx9flvf7g
-         ddBb9ckjpE1/iYNi5vYdooPqrTYAGg8VFJNprOL8=
+        b=cocEoBzWiQFBpf+IEuiCgz0pjQc7lVRM6mLk+pZRE54LtBOjLoYh9fK69PV2oo23r
+         nmYcIXWoEBZOVVd0grYPn9KIErM7LwFQspcUe4YLPH9cFg8BfYuLrNDip4kZWRhlOS
+         GwSPJdmmxqzKZkEh66rUDwB/O0RYpW6R1daZEjuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Jan Palus <jpalus@fastmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 27/28] scsi: core: Reduce memory required for SCSI logging
-Date:   Tue, 24 Sep 2019 12:50:30 -0400
-Message-Id: <20190924165031.28292-27-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 23/28] powerpc/64s/exception: machine check use correct cfar for late handler
+Date:   Tue, 24 Sep 2019 12:50:26 -0400
+Message-Id: <20190924165031.28292-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
 References: <20190924165031.28292-1-sashal@kernel.org>
@@ -64,109 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit dccc96abfb21dc19d69e707c38c8ba439bba7160 ]
+[ Upstream commit 0b66370c61fcf5fcc1d6901013e110284da6e2bb ]
 
-The data structure used for log messages is so large that it can cause a
-boot failure. Since allocations from that data structure can fail anyway,
-use kmalloc() / kfree() instead of that data structure.
+Bare metal machine checks run an "early" handler in real mode before
+running the main handler which reports the event.
 
-See also https://bugzilla.kernel.org/show_bug.cgi?id=204119.
-See also commit ded85c193a39 ("scsi: Implement per-cpu logging buffer") # v4.0.
+The main handler runs exactly as a normal interrupt handler, after the
+"windup" which sets registers back as they were at interrupt entry.
+CFAR does not get restored by the windup code, so that will be wrong
+when the handler is run.
 
-Reported-by: Jan Palus <jpalus@fastmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Jan Palus <jpalus@fastmail.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Restore the CFAR to the saved value before running the late handler.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190802105709.27696-8-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_logging.c | 48 +++----------------------------------
- include/scsi/scsi_dbg.h     |  2 --
- 2 files changed, 3 insertions(+), 47 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/scsi_logging.c b/drivers/scsi/scsi_logging.c
-index bd70339c1242e..03d9855a6afd7 100644
---- a/drivers/scsi/scsi_logging.c
-+++ b/drivers/scsi/scsi_logging.c
-@@ -16,57 +16,15 @@
- #include <scsi/scsi_eh.h>
- #include <scsi/scsi_dbg.h>
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index 43cde6c602795..cdc53fd905977 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -464,6 +464,10 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
+ 	RFI_TO_USER_OR_KERNEL
+ 9:
+ 	/* Deliver the machine check to host kernel in V mode. */
++BEGIN_FTR_SECTION
++	ld	r10,ORIG_GPR3(r1)
++	mtspr	SPRN_CFAR,r10
++END_FTR_SECTION_IFSET(CPU_FTR_CFAR)
+ 	MACHINE_CHECK_HANDLER_WINDUP
+ 	b	machine_check_pSeries
  
--#define SCSI_LOG_SPOOLSIZE 4096
--
--#if (SCSI_LOG_SPOOLSIZE / SCSI_LOG_BUFSIZE) > BITS_PER_LONG
--#warning SCSI logging bitmask too large
--#endif
--
--struct scsi_log_buf {
--	char buffer[SCSI_LOG_SPOOLSIZE];
--	unsigned long map;
--};
--
--static DEFINE_PER_CPU(struct scsi_log_buf, scsi_format_log);
--
- static char *scsi_log_reserve_buffer(size_t *len)
- {
--	struct scsi_log_buf *buf;
--	unsigned long map_bits = sizeof(buf->buffer) / SCSI_LOG_BUFSIZE;
--	unsigned long idx = 0;
--
--	preempt_disable();
--	buf = this_cpu_ptr(&scsi_format_log);
--	idx = find_first_zero_bit(&buf->map, map_bits);
--	if (likely(idx < map_bits)) {
--		while (test_and_set_bit(idx, &buf->map)) {
--			idx = find_next_zero_bit(&buf->map, map_bits, idx);
--			if (idx >= map_bits)
--				break;
--		}
--	}
--	if (WARN_ON(idx >= map_bits)) {
--		preempt_enable();
--		return NULL;
--	}
--	*len = SCSI_LOG_BUFSIZE;
--	return buf->buffer + idx * SCSI_LOG_BUFSIZE;
-+	*len = 128;
-+	return kmalloc(*len, GFP_ATOMIC);
- }
- 
- static void scsi_log_release_buffer(char *bufptr)
- {
--	struct scsi_log_buf *buf;
--	unsigned long idx;
--	int ret;
--
--	buf = this_cpu_ptr(&scsi_format_log);
--	if (bufptr >= buf->buffer &&
--	    bufptr < buf->buffer + SCSI_LOG_SPOOLSIZE) {
--		idx = (bufptr - buf->buffer) / SCSI_LOG_BUFSIZE;
--		ret = test_and_clear_bit(idx, &buf->map);
--		WARN_ON(!ret);
--	}
--	preempt_enable();
-+	kfree(bufptr);
- }
- 
- static inline const char *scmd_name(const struct scsi_cmnd *scmd)
-diff --git a/include/scsi/scsi_dbg.h b/include/scsi/scsi_dbg.h
-index 04e0679767f63..2b5dfae782722 100644
---- a/include/scsi/scsi_dbg.h
-+++ b/include/scsi/scsi_dbg.h
-@@ -6,8 +6,6 @@ struct scsi_cmnd;
- struct scsi_device;
- struct scsi_sense_hdr;
- 
--#define SCSI_LOG_BUFSIZE 128
--
- extern void scsi_print_command(struct scsi_cmnd *);
- extern size_t __scsi_format_command(char *, size_t,
- 				   const unsigned char *, size_t);
 -- 
 2.20.1
 
