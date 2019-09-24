@@ -2,110 +2,144 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B0C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D902BC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF2120673
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A858B21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:12:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AnhHD+VH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409759AbfIXQMW (ORCPT
+        id S2409777AbfIXQM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:12:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:33296 "EHLO foss.arm.com"
+        Tue, 24 Sep 2019 12:12:58 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33926 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388230AbfIXQMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:12:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EAE91570;
-        Tue, 24 Sep 2019 09:12:21 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C9623F694;
-        Tue, 24 Sep 2019 09:12:20 -0700 (PDT)
-Subject: Re: [PATCH] sched: fix migration to invalid cpu in
- __set_cpus_allowed_ptr
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        shikemeng <shikemeng@huawei.com>, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
- <1568535662-14956-1-git-send-email-shikemeng@huawei.com>
- <5dfd4844-6c36-3b8d-203b-564d7ad7103d@arm.com>
- <40680310-60b3-589a-d0e8-b4dd723db10a@arm.com>
- <1d8e6aab-5258-494c-c4cd-1802eda34d59@arm.com>
- <706581c9-e4ee-967d-b010-4798afd2245e@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <ada6743c-a212-39ef-f206-fc81ed4492ef@arm.com>
-Date:   Tue, 24 Sep 2019 17:12:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2388230AbfIXQM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:12:57 -0400
+Received: from zn.tnic (p200300EC2F0DB700CDA5DCD899733FA6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:b700:cda5:dcd8:9973:3fa6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6437E1EC03F6;
+        Tue, 24 Sep 2019 18:12:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569341576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=W577OKhXs7McAt+1hRM93NGDWmaU/qKgednaLVKc6wY=;
+        b=AnhHD+VHe0wWGjWlq8g9iL8/9jTsEwZW/rZOKxnFH+1DJd9iuWJSY0suk+bPu7AEFOD53A
+        4VdXtrnEvH3QVVupbwQgWvEfnNTIzHll8WOr5Y9vysGTPnDxyfvp+7k0VFTjpTHEd5ftEY
+        njcE1E8sd5M4rAFOx8DH1K4D1vh6/Qw=
+Date:   Tue, 24 Sep 2019 18:13:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v22 04/24] x86/cpu/intel: Detect SGX supprt
+Message-ID: <20190924161301.GI19317@zn.tnic>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-5-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <706581c9-e4ee-967d-b010-4798afd2245e@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190903142655.21943-5-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/2019 15:09, Dietmar Eggemann wrote:
-> On 9/23/19 6:06 PM, Valentin Schneider wrote:
->> On 23/09/2019 16:43, Dietmar Eggemann wrote:
->>> I'm not sure that CONFIG_DEBUG_PER_CPU_MAPS=y will help you here.
->>>
->>> __set_cpus_allowed_ptr(...)
->>> {
->>>     ...
->>>     dest_cpu = cpumask_any_and(...)
->>>     ...
->>> }
->>>
->>> With:
->>>
->>> #define cpumask_any_and(mask1, mask2) cpumask_first_and((mask1), (mask2))
->>> #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p),
->>> (src2p))
->>>
->>> cpumask_next_and() is called with n = -1 and in this case does not
->>> invoke cpumask_check().
->>>
->>
->> It won't warn here because it's still a valid return value, but it should
->> warn in the cpumask_test_cpu() that follows (in is_cpu_allowed()) because
->> it would be passed a value >= nr_cpu_ids. So at the very least this config
->> does catch cpumask_any*() return values being blindly passed to
->> cpumask_test_cpu().
+On Tue, Sep 03, 2019 at 05:26:35PM +0300, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> OK, I see and agree.
+> When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
+> opcodes are available. Otherwise, all the SGX related capabilities.
 > 
-> But IMHO, we still don't call cpumask_test_cpu(dest_cpu, ...), right.
+> In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
+> enclave are read-only. This way the feature bit reflects the level that
+> Linux supports the launch control.
 > 
-> What the patch fixes is that it closes the window between two reads of
-> cpu_active_mask in which cpuhp can potentially punch a hole into the
-> cpu_active_mask.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/intel.c | 39 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> If p is not running or queued and it's state is unequal to TASK_WAKING,
-> a 'dest_cpu == nr_cpu_ids' goes unnoticed.
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 8d6d92ebeb54..777ea63b4f85 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -623,6 +623,42 @@ static void detect_tme(struct cpuinfo_x86 *c)
+>  	c->x86_phys_bits -= keyid_bits;
+>  }
+>  
+> +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
+> +{
+> +	unsigned long long fc;
+> +
+> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
+> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
+> +		pr_err_once("sgx: The feature control MSR is not locked\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
+> +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
+> +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
+> +		pr_info_once("sgx: The launch control MSRs are not writable\n");
+> +		goto err_msrs_rdonly;
+> +	}
+> +
+> +	return;
+> +
+> +err_unsupported:
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX);
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
+> +
+> +err_msrs_rdonly:
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
+> +}
+> +
+>  static void init_cpuid_fault(struct cpuinfo_x86 *c)
+>  {
+>  	u64 msr;
+> @@ -760,6 +796,9 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	if (cpu_has(c, X86_FEATURE_TME))
+>  		detect_tme(c);
+>  
+> +	if (IS_ENABLED(CONFIG_INTEL_SGX) && cpu_has(c, X86_FEATURE_SGX))
+> +		detect_sgx(c);
 
-In this case we don't need to force it off to another CPU, since that will
-get sorted out at its next wakeup. However, the patch still catches that
-, since it does an early
+Looks to me like this should run only once on the BSP instead of on
+every CPU. The pr_*_once things above are a good sign for that, I'd say.
 
-if (dest_cpu >= nr_cpu_ids) {
-        ret = -EINVAL;
-        goto out;
+If so, define your own ->c_bsp_init function and run that from there
+instead.
 
-and that's regardless of the task's state.
+-- 
+Regards/Gruss,
+    Boris.
 
-> Otherwise we see an 'unable
-> to handle kernel paging request' or 'unable to handle page fault for
-> address' bug in migration_cpu_stop() or move_queued_task().
-> 
-> Do I miss something?
-> 
-> [...]
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
