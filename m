@@ -2,156 +2,173 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67056C4320D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721ACC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378292146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569312442;
-	bh=Im7PHHGrX2Z+PkdSUGWeE0IFxKAERkSjh493Ofv0CtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FKPP2X0Af/Uy0AW0lcXJoVAVaBO9We9he/Q3fnUOAY7vLLPz5J49Hnm9U08GrW6xC
-	 VJJY18ScY4IeZPj+TdXBknr3YivwHzIHupGmfa4XAGvj0Q45eeAra+0atwCo64oeTa
-	 K0zK/9ekUy8LhC0R7TJ2F4MwRnlgB6six5+Iii6U=
+	by mail.kernel.org (Postfix) with ESMTP id 459102146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 08:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hEEPKBhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504050AbfIXIHV (ORCPT
+        id S2438913AbfIXIIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 04:07:21 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:39257 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503934AbfIXIHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:07:21 -0400
-Received: by mail-wm1-f52.google.com with SMTP id v17so941991wml.4;
-        Tue, 24 Sep 2019 01:07:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vazoaJV8w6hXBuGcHHYiuY1lqVoAb/qasD3kvGZNtoI=;
-        b=uwCe+JBkx/ianOrarr5XVh4sVtM2bN6EOy+rywel/DgCMbKDeRGoYF/Xw3zeBsFpsW
-         DTBS5YcoSYMo0oqgUu/4UvAbDLfXBUIPzxqL04w59l641+pNI3bkxWcr25lW+PXUQUUw
-         qz3gvAq8LVvdl+JvBvycCQn3XEgIK6D4qBX5H6+AdRsw8VhCwyMpjE6PDT3Qb5DfvW1W
-         Qny1dsWGmnuAukL9pDGcUAmAemxjsvfQHnd6z9lqhAkTkBXR1NXaHaYCblYRBkgX4+1y
-         rH79Uzm6qLFpe87ltCEk/8C79pSQ0Nf6hIWtrn0RwjF4lO6WW0CnbY+4w4FqryAwgnKe
-         5mEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vazoaJV8w6hXBuGcHHYiuY1lqVoAb/qasD3kvGZNtoI=;
-        b=OSpLFa+xymHzVpQMHhpt8f5O2dtpCqE7MtvH/aitA5mm7pdPg//HrTvalXoldiHSu3
-         pCbWvYQWYGPK3kHQcJOuN+7LyDq5GuitrE16NBNd87NY2AEDpzB7oEKj4fQR93gMDMye
-         hki3oXZ0uGC38dmDCEW6OuxvqN5DEuB/g3NQVN7XkaXFl5+hlcNHGe80vfzmFtiH+N/+
-         +zE0cYvTJesAgHH4l3Zx4ScRzJK9HtaeQTf3OccJX8QtocfCnCg1+qDy+KIrUM6gGuVt
-         HVN5wolIWEgs0m0VnrzyL6GaWN7gBxnso0mP4ygQfChuY4l/QX61DElyL25HJh+jOGht
-         Os4w==
-X-Gm-Message-State: APjAAAXkmRwDSjlGMwTGc8BgL+QqpcQSijameoDkZkHm9/ZNu/WVEueF
-        iuOqBddKwBbmKOGHfHu2+D0=
-X-Google-Smtp-Source: APXvYqyf1JKKGJC2wktTnx0Kdyy1fK1Sztzy0S3aKXmkFcSCQG/+ODXjdnuIcUAnsJWuuUp6KcUU3g==
-X-Received: by 2002:a7b:c10b:: with SMTP id w11mr1504702wmi.108.1569312437903;
-        Tue, 24 Sep 2019 01:07:17 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id d9sm2118700wrf.62.2019.09.24.01.07.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 01:07:17 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 10:07:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Tim.Bird@sony.com
-Cc:     torvalds@linux-foundation.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, broonie@kernel.org,
-        jarkko.sakkinen@linux.intel.com, anders.roxell@linaro.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.4-rc1
-Message-ID: <20190924080715.GA63699@gmail.com>
-References: <be8059f4-8e8f-cd18-0978-a9c861f6396b@linuxfoundation.org>
- <CAHk-=wgs+UoZWfHGENWSVBd57Z-Vp0Nqe68R6wkDb5zF+cfvDg@mail.gmail.com>
- <CAKRRn-edxk9Du70A27V=d3Na73fh=fVvGEVsQRGROrQm05YRrA@mail.gmail.com>
- <CAFd5g45ROPm-1SD5cD772gqESaP3D8RbBhSiJXZzbaA+2hFdHA@mail.gmail.com>
- <CAHk-=wgMuNLBhJR_nFHrpViHbz2ErQ-fJV6B9o0+wym+Wk+r0w@mail.gmail.com>
- <20190922112555.GB122003@gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF977BB784@USCULXMSG01.am.sony.com>
+        Tue, 24 Sep 2019 04:08:18 -0400
+Received: from mout.web.de ([212.227.15.4]:49247 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436523AbfIXIIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:08:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569312482;
+        bh=5UUB7nBISPCMR8MLkZQo563E2CTK7plA3+JuTrsQPlU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=hEEPKBhivbXBokJZPSixHFQyrwbGDoTQfOUMwaSxHAT+mm73WXm1wk+J0XjHaBXAR
+         fqrJifb6ER1xWqCtVT/c3fxnMrRIIiXiGSno3JlXkqT+FBBRJYFxvjtTrVBz1jpaTx
+         m7kYHgHNuH+TBbxdB1g+/DN4wjPrT5OCjPPvB9DQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.71.162]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M6Dve-1hxcnA2BeE-00yDJX; Tue, 24
+ Sep 2019 10:08:02 +0200
+Subject: Re: sched: make struct task_struct::state 32-bit
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julia Lawall <julia.lawall@lip6.fr>
+References: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+ <7e3e784c-e8e6-f9ba-490f-ec3bf956d96b@web.de>
+ <0c4dcb91-4830-0013-b8c6-64b9e1ce47d4@arm.com>
+ <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <af969579-116c-fba7-fd32-15a876ac0445@web.de>
+Date:   Tue, 24 Sep 2019 10:07:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BB784@USCULXMSG01.am.sony.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <32d65b15-1855-e7eb-e9c4-81560fab62ea@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gdWTto7J1BLMzpuLsjXkxMpm9JPQANR6lT0+Gi8LVIYwwvcnmCB
+ wbRC8Aq7YkXsjPF2BrDnR9s/c6qPEEeWSZK/1z0lz52lbZhqTmxMIlxXHOnRhiYfG5sQtoQ
+ FwqPHD58FJBBWWLkgBF6+0ELov+JPZgWu/8tcNRcWkjWo+IVraNRuisxGf/B+KkFlahpWIz
+ 8h+zWSyzIgQs9I7ijaaeg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:axxi6oXRmys=:x4mHB2rn9HIwxjm/+2t7zx
+ F1NrtiZgELzy2ru7iCxdt4NWKcGpGGjPsVpGg8+16qutpm0DWxghSB/AXMPHdJBFv332Hh1Vb
+ PT7SQ7NNJ+cIwPLJ5/SCW9E9keRAkmt1EyMCNy2gN91IKJFEswwEJ0MmC7+/cfjfCFsIEp6pJ
+ FLKEG3th06O4BcFH8mqUF9Mk4vWFLAyKc4IAj9KPFUt52E88JzUorbGFyke7DxbVSNwlWGRmd
+ 335yNlorr+YGfDVj0M7VGzOXfmdyK/rJYLlXc52IO7MSuwslC2MYJTko88PnGyQ+/+QfCyApC
+ EntibQqhHBCyVM5ev/ZHr9rVu8zwj57bXWJ699bXDBgazEIswXQyyihh4mbJ4ecIVkoFl6zS/
+ cmxBNk4APQ06Nkwb0sN06cnrenzVEypb4td+1BnXd/fC93T0aJEqvSdc+khMwrsfS46p3iBh1
+ Dj/iHl0ASgnP7MZxzb3RukBHlJBf6p2O2kKB004Qj2B+0e1dGistXv+swgJ12UOJETuqvAm5l
+ qPmCXhUb8nv7iEJcl2Q1sYYlegwEqaVo2Zp9r1fDY1TFN2OurCMZhS9mF/ifkxvL+2XjT4pkq
+ jmIC43UcGojXxpC8CMkTJB5B35KhuI0zPlAI8WwIUHGGIou7SrQYfzRxpZJr5Q2rYWNd6LlS1
+ wtkwa2yF+Zab/WaSEEdbyG49wgbEzyfLNSPWscRO3DxAVNSSI5NUfgsV8+gf7FvTGFV7Sa70F
+ Gb9yZFcwP8MbIsaC7DRzl5OCJ1vqXTurImDFjGp95IRRCW7Qp7Vnegr0rpBQU+FJSxm8ci/U1
+ AuG8PMOB6Gf6MZXYSAFURWupW33l69XI9GojX2CvRivO6UaD+tFtqRrQuVzFwFQ0Ok/zs1nuY
+ ogEE5QDEKFNi+dWpAnx9GbB1/ThpKJnD7hOGMZCSTnrSYMxUkOnb98c78kYM+RuZWSt0+GgAo
+ OpqtSr0JhRztyLJDymLPBkgF6xliV49tYmmc5M+Gv+favKnyfoTs4tEQlR79y/G6fSRHfMHFU
+ KB1tngPzCRERXJi5gE/qlFIVq6PQdxebZZXRI+GHpuIECb8p3VI4kFiblW4qezbxEVS77nryq
+ IzBd3+9e1OyF3NzrLITHCQ8g3zZCgCqD7XCvxGbTmEfHFB+aFVOnETsmB9L3rRk7kJS2spFvm
+ nA1BDxjDD0G0bT53sK5dPzMc/2dAyNrR9YFqfCAKWIzVYKPGNcudBkVPMA2oBfj2TejziW80d
+ hoed+CDCFa7ucCxSpJghlOwp/KfxX/t8n/+xfb924K9fDBc4oTMisWxIOUzs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> // FIXME: current not recognized as task_struct*, fixhack with regexp
+> identifier current =3D~ "^current$";
 
-* Tim.Bird@sony.com <Tim.Bird@sony.com> wrote:
+Would you really like to use a regular expression for finding a single wor=
+d?
 
-> > -----Original Message-----
-> > From: Ingo Molnar on Sunday, September 22, 2019 1:26 AM
-> > 
-> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > 
-> > > On Fri, Sep 20, 2019 at 9:35 AM Brendan Higgins
-> > > <brendanhiggins@google.com> wrote:
-> > > >
-> > > > Sorry about that. I am surprised that none of the other reviewers
-> > > > brought this up.
-> > >
-> > > I think I'm "special".
-> > >
-> > > There was some other similar change a few years ago, which I
-> > > absolutely hated because of how it broke autocomplete for me. Very few
-> > > other people seemed to react to it.
-> > 
-> > FWIW, I am obsessively sensitive to autocomplete and overall source code
-> > file hieararchy and nomenclature details as well, so it's not just you.
-> > 
-> > Beyond the muscle memory aspect, nonsensical naming and inanely flat file
-> > hierarchies annoy kernel developers and makes it harder for newbies to
-> > understand the kernel source as well.
-> > 
-> > The less clutter, the more organization, the better - and there's very
-> > few valid technical reasons to add any new files or directories to the
-> > top level directory - we should probably *remove* quite a few.
-> > 
-> > For example 'firmware/' was recently moved to drivers/firmware/, and in a
-> > similar fashion about a third of the remaining 22 directories should
-> > probably be moved too:
-> > 
-> >   drwxr-xr-x    arch
-> >   drwxr-xr-x    block
-> >   drwxr-xr-x    certs           # move to build/certs/ dir
-> >   drwxr-xr-x    crypto          # move to kernel/crypto/ or security/crypto/
-> >   drwxr-xr-x    Documentation
-> >   drwxr-xr-x    drivers
-> >   drwxr-xr-x    fs
-> >   drwxr-xr-x    include
-> >   drwxr-xr-x    init
-> >   drwxr-xr-x    ipc             # move to kernel/ipc/
-> >   drwxr-xr-x    kernel
-> >   drwxr-xr-x    lib
-> >   drwxr-xr-x    LICENSES
-> >   drwxr-xr-x    mm
-> >   drwxr-xr-x    net
-> >   drwxr-xr-x    samples         # move to Documentation/samples/
-> >   drwxr-xr-x    scripts         # move to build/scripts/
-> 
-> This one seems like it would break a lot of workflows, and contributor
-> muscle memory and scripts.  get_maintainer.pl and checkpatch.pl
-> are probably in quite a few people's scripts.
-> 
-> Also, I'm not sure '/build' is the right destination for this.  There
-> are a lot more things in there than just build scripts.  If you really
-> want to remove the top level 'scripts', it might be best to put
-> the  scripts from top-level '/scripts' into '/tools/scripts', which is
-> mostly empty now.
 
-Agreed - I'll leave it alone for now, because you are right that it's 
-widely used.
+> identifier state_var;
+> position pos;
+> @@
+>
+> (
+>   p->state & state_var@pos
+> |
+>   current->state & state_var@pos
+> |
 
-Thanks,
+I see further opportunities to make such a SmPL disjunction more succinct.
 
-	Ingo
+*
+( ( \( p \| current \) ) -> state & state_var@pos
+|
+=E2=80=A6
+
+* How do you think about to work with a SmPL constraint
+  for a metavariable with the type =E2=80=9Cbinary operator=E2=80=9D?
+
+
+>   set_current_state(state_var@pos)
+> |
+>   set_special_state(state_var@pos)
+
+| \( set_current_state \| set_special_state \) (state_var@pos)
+
+
+> |
+>   signal_pending_state(state_var@pos, p)
+> |
+>   signal_pending_state(state_var@pos, current)
+
+| signal_pending_state(state_var@pos, \( p \| current \) )
+
+
+Regards,
+Markus
