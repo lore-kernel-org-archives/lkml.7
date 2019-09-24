@@ -2,140 +2,123 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AADBC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8546CC432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2730C214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F59205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 11:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DM/bGaSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409581AbfIXLOj (ORCPT
+        id S2409594AbfIXLQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 07:14:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44972 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408253AbfIXLOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:14:39 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B58B3DE0F
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:14:38 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id o188so786242wmo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 04:14:38 -0700 (PDT)
+        Tue, 24 Sep 2019 07:16:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32979 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409582AbfIXLQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:16:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so881093pls.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 04:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2Gdf6rrJ78JFoK3177iA9xPZfiz710O7xq5kze1mYLg=;
+        b=DM/bGaSF9mTkDWPUrP+tKjpzReekozk0vkcwm/qn5A4/7oLsirebrYcD+OTSGmkuSv
+         z2d9hoyqAZAfu/YYM9y+K5hvJTXv9gJjL1pRBixF2avzT5VnY1jIXwBbvSK2reOHj59m
+         nlmHWqveukUqFqTXlo3lv7CpU5fN40GjlF4IO9jDoez0QDcBxlm+E9UJJx2jMVaqSAj8
+         hLwTdGi8YYVcyOnXC61izqAfBVs5PGmi5NzDsNT32fP3UlQpieXAhWh2C4OV9j6r62hg
+         ev22L1hfSXGb/4xi+7uKPUXX3TyIpnLlVnZxstl+QzepJeWBP/2MotvhO9sCUSKc4J5X
+         lTfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ZdoM44ufwDkWEhL4uEThga8TobA9sHKPa7iHd5/kxt0=;
-        b=OgBO5NVF7F/lzy2csv9dDN3oeIgYC1z+DEK5mlW1aQIDPN31yz5Y+EpFIBGAcPv9nI
-         DAp0bYEwqXw99FLjNnHS9fDuxFuM8QUlIp+6yyKqAOxaUL92PWGTrGEHkiy9Xq44f8qG
-         vsbfl3Bd5RXfwOw+yUlzgPvNxWbRS4/RVgw+jANPxw0/ELDaA4CDY1xoApkPYSL9c/xj
-         HL1mUThmSGXOhp6WJjHEQ/4psps5kDR5DgpJUJnSHKrIy5yuQiZ9MoFT6hRXvVENc62H
-         AQzYx+P6P8gQ/9fOGP0fLRmtmj4LcPq/xqcJsdwF9hKmHFWIix6awDo1wB6pN+fBTAVA
-         2A+Q==
-X-Gm-Message-State: APjAAAUZzS2nWnXOeTeiqv6mVzRAmwAslO7GNxQVriyh9TAKhpA10MkO
-        AwGhkWM9hIQyG4P8x6LRVPmsmFgrycHFlmUX5XRvCMnSal1GJF305693qYELHWutJnQwUMvN5S4
-        JVHFfegNC9M87EjeiZpfp1bGt
-X-Received: by 2002:adf:8444:: with SMTP id 62mr1828114wrf.202.1569323676842;
-        Tue, 24 Sep 2019 04:14:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwJh41RD/VBo8haBgTH86yUTbGiVKEXV1JDna/o+beXlpMs9ip/EXIL9i2ajRjTs5I33Y5p/g==
-X-Received: by 2002:adf:8444:: with SMTP id 62mr1828095wrf.202.1569323676581;
-        Tue, 24 Sep 2019 04:14:36 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id s9sm1073218wme.36.2019.09.24.04.14.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 04:14:35 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Suleiman Souhlal <suleiman@google.com>
-Cc:     John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        rkrcmar@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        Tomasz Figa <tfiga@google.com>
-Subject: Re: [RFC 2/2] x86/kvmclock: Use host timekeeping.
-In-Reply-To: <CABCjUKDPa1wrvp5zrjCa0tAQUO5UuFNgc00Z5kt_7rgakjApDw@mail.gmail.com>
-References: <20190920062713.78503-1-suleiman@google.com> <20190920062713.78503-3-suleiman@google.com> <87woe38538.fsf@vitty.brq.redhat.com> <CABCjUKDPa1wrvp5zrjCa0tAQUO5UuFNgc00Z5kt_7rgakjApDw@mail.gmail.com>
-Date:   Tue, 24 Sep 2019 13:14:35 +0200
-Message-ID: <87ftkm7xpg.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2Gdf6rrJ78JFoK3177iA9xPZfiz710O7xq5kze1mYLg=;
+        b=Q2ZR9jxRh/mGkSDmC121yc+e6wfqJYeDXQc5epan3iROMvEIXCp99rvS3rx/YfJHSu
+         rIAxQB6Bg8pWz/IQp+o5Lm53LgNKyT7Ylqwcv9rwhlwByfLJWjV7xj3HVd72iwE0btVb
+         P3mChEe7dHeAfaSyPrQXAgGRK/5URkM1EUQgfx3X8nRAjPEDU63LvNE1VWfWOZaArDm5
+         C9qWHsZ3bc1izKGszr14bhUPrUkvFOdDa2MiqbcJ/Mrj+imV1Gr+ffA2OIMWSH53zXqK
+         J/tm5PG0Dkh1OgBCMyy/RpuKfBf/piryG5ShD6Ch5HN5SWOrnTOodIoTh8za5RsWzVjo
+         aKyA==
+X-Gm-Message-State: APjAAAVO3A7bSKkn9WJferLGVb3ETV9dYp0eC5v/02B3mfimwvfeHdSK
+        cBZL+LXWNJ3eyws08TolVQuqkMno/PTNug==
+X-Google-Smtp-Source: APXvYqxwQZmXXwg08lPwE0Q+7ai01Po6hJAh0bDY6pnXE34tW+a5hjtWjo8g12BFudEkOz4yVBz/NA==
+X-Received: by 2002:a17:902:8207:: with SMTP id x7mr2410456pln.147.1569323759815;
+        Tue, 24 Sep 2019 04:15:59 -0700 (PDT)
+Received: from ?IPv6:2600:380:8419:743e:a9a6:f93b:f300:79e6? ([2600:380:8419:743e:a9a6:f93b:f300:79e6])
+        by smtp.gmail.com with ESMTPSA id v3sm2123221pfn.18.2019.09.24.04.15.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 04:15:58 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Optimise io_uring completion waiting
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a4996ae7-ac0a-447b-49b2-7e96275aad29@kernel.dk>
+ <20190923083549.GA42487@gmail.com>
+ <c15b2d54-c722-8fb4-266f-b589c1a21aa5@gmail.com>
+ <df612e90-8999-0085-d2d6-4418e044e429@gmail.com>
+ <731b2087-7786-5374-68ff-8cba42f0cd68@kernel.dk>
+ <759b9b48-1de3-1d43-3e39-9c530bfffaa0@kernel.dk>
+ <43244626-9cfd-0c0b-e7a1-878363712ef3@gmail.com>
+ <f2608e3d-bb4e-9984-79e8-a2ab4f855c7f@kernel.dk>
+ <b999490f-6138-b685-5472-5cd1843b747d@kernel.dk>
+ <ed37058b-ee96-7d44-1dc7-d2c48e2ac23f@kernel.dk>
+ <20190924094942.GN2349@hirez.programming.kicks-ass.net>
+ <6f935fb9-6ebd-1df1-0cd0-69e34a16fa7e@kernel.dk>
+ <29e6e06e-351f-c19d-ed7c-51f30c9ca887@kernel.dk>
+ <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <da86ec56-5f14-536d-2d43-2cc9e118d2a7@kernel.dk>
+Date:   Tue, 24 Sep 2019 13:15:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <08193e07-6f05-a496-492d-06ed8ce3aea1@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suleiman Souhlal <suleiman@google.com> writes:
-
-> On Fri, Sep 20, 2019 at 10:33 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On 9/24/19 5:11 AM, Pavel Begunkov wrote:
+> On 24/09/2019 13:34, Jens Axboe wrote:
+>> On 9/24/19 4:13 AM, Jens Axboe wrote:
+>>> On 9/24/19 3:49 AM, Peter Zijlstra wrote:
+>>>> On Tue, Sep 24, 2019 at 10:36:28AM +0200, Jens Axboe wrote:
+>>>>
+>>>>> +struct io_wait_queue {
+>>>>> +	struct wait_queue_entry wq;
+>>>>> +	struct io_ring_ctx *ctx;
+>>>>> +	struct task_struct *task;
+>>>>
+>>>> wq.private is where the normal waitqueue stores the task pointer.
+>>>>
+>>>> (I'm going to rename that)
+>>>
+>>> If you do that, then we can just base the io_uring parts on that.
 >>
->> Suleiman Souhlal <suleiman@google.com> writes:
+>> Just took a quick look at it, and ran into block/kyber-iosched.c that
+>> actually uses the private pointer for something that isn't a task
+>> struct...
 >>
->> > When CONFIG_KVMCLOCK_HOST_TIMEKEEPING is enabled, and the host
->> > supports it, update our timekeeping parameters to be the same as
->> > the host. This lets us have our time synchronized with the host's,
->> > even in the presence of host NTP or suspend.
->> >
->> > When enabled, kvmclock uses raw tsc instead of pvclock.
->> >
->> > When enabled, syscalls that can change time, such as settimeofday(2)
->> > or adj_timex(2) are disabled in the guest.
->> >
->> > Signed-off-by: Suleiman Souhlal <suleiman@google.com>
->> > ---
->> >  arch/x86/Kconfig                |   9 +++
->> >  arch/x86/include/asm/kvmclock.h |   2 +
->> >  arch/x86/kernel/kvmclock.c      | 127 +++++++++++++++++++++++++++++++-
->> >  kernel/time/timekeeping.c       |  21 ++++++
->> >  4 files changed, 155 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> > index 4195f44c6a09..37299377d9d7 100644
->> > --- a/arch/x86/Kconfig
->> > +++ b/arch/x86/Kconfig
->> > @@ -837,6 +837,15 @@ config PARAVIRT_TIME_ACCOUNTING
->> >  config PARAVIRT_CLOCK
->> >       bool
->> >
->> > +config KVMCLOCK_HOST_TIMEKEEPING
->> > +     bool "kvmclock uses host timekeeping"
->> > +     depends on KVM_GUEST
->> > +     ---help---
->> > +       Select this option to make the guest use the same timekeeping
->> > +       parameters as the host. This means that time will be almost
->> > +       exactly the same between the two. Only works if the host uses "tsc"
->> > +       clocksource.
->> > +
->>
->> I'd also like to speak up against this config, it is confusing. In case
->> the goal is to come up with a TSC-based clock for guests which will
->> return the same as clock_gettime() on the host (or, is the goal to just
->> have the same reading for all guests on the host?) I'd suggest we create
->> a separate (from KVMCLOCK) clocksource (mirroring host timekeeper) and
->> guests will be free to pick the one they like.
->
-> Fair enough. I'll do that in the next version of the patch.
->
-> The goal is to have a guest clock that gives the same
-> clock_gettime(CLOCK_MONOTONIC) as the host.
->
+> 
+> Let reuse autoremove_wake_function anyway. Changed a bit your patch:
 
-KVMCLOCK has lots of legacy derived from times when TSC synchronization
-was not a given (I heard that this is still sometimes problematic with
-multi-socket systems but oh well). If I was to design a new clock I'd
-probably mirror Hyper-V's TSC page clocksource invalidating the page
-when host timekeeper values are updated (and making guest spin).
+Yep that should do it, and saves 8 bytes of stack as well.
 
-The tricky part with this approach is probably tsc scaling/tsc
-offsetting which is still going to be controlled by kvmclock (so the
-guest has no option to read 'pure TSC'). As an alternative, you can make
-kvmclock un-pluggable so when it's not enabled TSC frequency/offset can
-remain intact. You can, of course, try to update timekeeper values to
-match the new frequency/offset every time they change but rounding
-errors may bite.
+BTW, did you test my patch, this one or the previous? Just curious if it
+worked for you.
 
 -- 
-Vitaly
+Jens Axboe
+
