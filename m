@@ -2,158 +2,132 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A54C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB554C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C70207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569350525;
-	bh=zovrfxXTCXEz4cMUoX9mIiF4vFkLEfgI/P1RvhcdI1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i2wXFzCkx6/TL5ltSbatacizfVe+ccyPdfyGpLAujp3F4fgX6pnTxAdQhQRCtczUh
-	 3XIcv/PgKblF17EhEfPPhnPGu0SafQPk5hTjPzyL0tw+8aE83gX4jtmKehtWiMIwCr
-	 u09rJFsbeVWnU2MubmA92D4PSuMWg/TBFk8EkF+k=
+	by mail.kernel.org (Postfix) with ESMTP id 7123A207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 18:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="QCPl+ZB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437118AbfIXSmE (ORCPT
+        id S2438480AbfIXSpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 14:42:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46120 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394900AbfIXSmE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:42:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o18so3081362wrv.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 11:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ISPO/AdmT/vPer3JNCi0kThZy7EET6XmBvMXw6pXH4o=;
-        b=es1HpChF5Q47KfIsEicqeAtDsopSvJ+4zOAel7rrRYoBZKQ07DNFw11V9mBadcfaoA
-         xEzs2zqthXQmM5NmYsDcZDdSQ3uslyZGCzDFSWCZxmYMBQmlRYFNMe4pyNu71ZPzpAFq
-         8x/WPTrgXSyVzGmzaiEQRmHnaW6p8YXpLWmNFhSjiZeOqw9GYGG35YJhyJhC7dx0i03y
-         dNe6DcQn49VDsT+aAntE2+h/zSzIZzw14jnF0stxfBz0OiEE8Hm5XxwehSytosQJ7qK4
-         U3VBnqkRP9UwPA4f9hXt5tSRd8iigzxNOQrlySFXIl8CtDIIqcIVvGm8eCmXlMZqxpXf
-         MWGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ISPO/AdmT/vPer3JNCi0kThZy7EET6XmBvMXw6pXH4o=;
-        b=EtWb1WBCWZi7WmimGfzTrafKzaiE0baUnfptGhv4gc4MPZpTFLvG6B3gIW7EP/PXho
-         +RBLBsDLxzVNT0WHQoRf3lXd1VJ7EKKI8E4WeWAv2JuzMnUf/vlmYx3rGHhcDyL7Asyh
-         LC5kIHkLV89uDzQ86z+0WFae+VZj4kTuUVQNNhO5tfNvGjfGewHlH8JoH867qKj00I9S
-         nhK24cxIM2AxkswgWQhimex1fJmDYvRVIYuJ8HqDpviCwnNBNyxAZ3PR1w6zuUfSnSQe
-         6WlaBWGZDLI1gND3bLMkhmjN5WSxtg2pSdsH7A0PhOW73cpD7yoCoer6lb8+1YYbgSta
-         wCYg==
-X-Gm-Message-State: APjAAAVzzrsAzJsahy/KTwc+s/cKZ1tLY/xSxU85qbEuQTQGuoaBK0ZL
-        IWJ6VnrUV6jR4OpkEQfl6Ac=
-X-Google-Smtp-Source: APXvYqx6RlpwpfehKhghQUcsF13wy520VK0Tewkg7bpEfVt5Uy1r0ELEpGMmuuTAZZeqNyx39i5R0w==
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr3871455wrj.30.1569350521976;
-        Tue, 24 Sep 2019 11:42:01 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q192sm1559690wme.23.2019.09.24.11.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 11:42:01 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 20:41:59 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [Tree, v2] De-clutter the top level directory, move ipc/ =>
- kernel/ipc/, samples/ => Documentation/samples/ and sound/ => drivers/sound/
-Message-ID: <20190924184159.GA47127@gmail.com>
-References: <20190922115247.GA2679387@kroah.com>
- <20190923200818.GA116090@gmail.com>
- <20190924113135.GA82089@gmail.com>
- <874l11u30y.fsf@x220.int.ebiederm.org>
+        Tue, 24 Sep 2019 14:45:42 -0400
+Received: from mail-eopbgr150117.outbound.protection.outlook.com ([40.107.15.117]:30949
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390679AbfIXSpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:45:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L7KoiophkT0Iipz0/pehmMSOxR1VNgVLZdZjbbQGvdllKnz93h642D2pU/wPDtFSPZqkgjuqpqlmaMRHWw0DTudUq8RjfLE64WY8gjxZxq5pzrAFxAGvfoRVh1QIKppluDG4UbLC24hgfmjV0wA5AbleJroN8gy7aLl/lae6PbW+PFB5tr6f2rbs1G3x6ZSvhXt3taiTLuQh0Jm3zClggajAZ/mXYXPsnkoh114vIm7dNDpMDP8wvHMafvztCSvpukgztnLJk6ynh/i9BP+J0fOFCKYjJ3zN+PTWOkVXjcvgeLKAE1Y13qxWZ2HhS/QICSJ0RQwti2hzLr4PsEatOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t3izBidAxn+vMjw5NYV2o7GWThZ/wGRpYi2HLmt9714=;
+ b=J09/WXb3rNBfJ1ijT0WfDrpy1DTZzzUCCXK0fbOe0hx0Q6eDpalyn9c6f0BXGuzD+I41WgVnIkPl+e1bldfMlwpNoPQaP5vClQqIrwdMSyDE8f6Uw/OZfBAp0o+aoEi9CBcFxJ3SmWlFdxhOIREMg3TF+82IBtQFnAj+457l6Hg0Y/2vW08emr1oBpV1D5UnIK/SIgGt9XCZh+nYSzQLhb3cVjLnIm54fC8f+La+IQ4Suyt2tOEUDZgTbWMZvqosAi4cwPQJ08ISAMLKF1na4w0UFs8PSarh0GPpy5YCeqPbOIccJ3ziFz2pJv7pWykUF50fWiNLkjnt/sIgm254LA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t3izBidAxn+vMjw5NYV2o7GWThZ/wGRpYi2HLmt9714=;
+ b=QCPl+ZB1R0bKSFO0oUN9f/5yd0ubaSGBadEn7VNiSjpF7+XpivjF3F2x2nD+RYQz8t3MKt2/s8fXnrp+rnCxHpE1luXZIyXLHN8bEWZ6Sdw0MlwPc0d/s749uwm20MLehETp4KRN7iPR+PCW5SITygD9Y1/+r0a3dzOmlz2X7+0=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2847.eurprd07.prod.outlook.com (10.173.70.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Tue, 24 Sep 2019 18:45:38 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.013; Tue, 24 Sep 2019
+ 18:45:38 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+CC:     Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/7] can: rx-offload: continue on error
+Thread-Topic: [PATCH 1/7] can: rx-offload: continue on error
+Thread-Index: AQHVcwhCgRg367Eiu0mUgNTGybynuQ==
+Date:   Tue, 24 Sep 2019 18:45:38 +0000
+Message-ID: <20190924184437.10607-2-jhofstee@victronenergy.com>
+References: <20190924184437.10607-1-jhofstee@victronenergy.com>
+In-Reply-To: <20190924184437.10607-1-jhofstee@victronenergy.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2001:1c01:3bc5:4e00:c415:8ca2:43df:451e]
+x-clientproxiedby: AM0PR05CA0062.eurprd05.prod.outlook.com
+ (2603:10a6:208:be::39) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 831b48af-d289-4e34-e504-08d7411f646d
+x-ms-traffictypediagnostic: VI1PR0701MB2847:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0701MB28477A5A9A9DA7CFD6843FB3C0840@VI1PR0701MB2847.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0170DAF08C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(39850400004)(346002)(136003)(396003)(189003)(199004)(81156014)(86362001)(2906002)(2351001)(14454004)(305945005)(478600001)(8676002)(2501003)(36756003)(7736002)(6116002)(25786009)(8936002)(50226002)(81166006)(46003)(76176011)(11346002)(66476007)(6506007)(6916009)(446003)(102836004)(186003)(2616005)(4744005)(1076003)(6486002)(66946007)(64756008)(486006)(476003)(66556008)(66446008)(5660300002)(54906003)(71200400001)(71190400001)(14444005)(5640700003)(6436002)(52116002)(386003)(4326008)(256004)(316002)(99286004)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2847;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rnzeSONcOL3+zeHGHhT9JawLaAVOBUb/S2kKw6de6dI2c9enh7ynOJ8Tiu5V73brF/p7B1rZH6hFuhkAuqZawM/8Qz2ce1tzWwI1GDIPZ2M2d0+dfQjjaGqE5UZn+el4msRvxhfQw8hdGjqGspZeYmJAVCmXM66yFzkjA8kNfI8hZK3+kIspc7w7/Dpjp/quyYurV3+sY0XTUFLAJmGRUoMEgpyujwIJYFwuXUS+/y+B3U3NCvjmzNVsWsc7hrdI9iSU7mgkhsd7XFiHxemFd2f1rWB30roW9eqquyoKS6893I1MBlWMYnzLjl5bqU2kaBospgE6oHfGTPsI57rLZM0vxZynW8C5+nFgBE+vjZNvA2VOFbZoXLhrB0CCuDQlKJDV1X8utGtBrizP21OG7TAHgwPV9PooxWsQuU/ajEk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874l11u30y.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 831b48af-d289-4e34-e504-08d7411f646d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 18:45:38.3318
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uxXy8/7x37aT6eP0T5EBgFj6tz6+6POZNJ+6CJyl1nUEJp03O9/RyFIajJPCgAWpUkMwDStu5KVn+5vUl6aySWjABMlOOAHsFmshx5P64tA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2847
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While can_rx_offload_offload_one will call mailbox_read to discard
+the mailbox in case of an error, can_rx_offload_irq_offload_timestamp
+bails out in the error case. Since it is typically called from a while
+loop, all message will eventually be discarded. So lets continue on
+error instead to discard them directly.
 
-* Eric W. Biederman <ebiederm@xmission.com> wrote:
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+---
+ drivers/net/can/rx-offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Ingo Molnar <mingo@kernel.org> writes:
-> 
-> >  - Split it into finer grained steps (3 instead of 2 patches per 
-> >    movement), for easier review and bisection testing:
-> >
-> >      toplevel: Move ipc/ to kernel/ipc/: move the files
-> >      toplevel: Move ipc/ to kernel/ipc/: adjust the build system
-> >      toplevel: Move ipc/ to kernel/ipc/: adjust comments and documentation
-> 
-> Can we not mess with ipc/ please.
-> 
-> I know that will mess with my muscle memory and I don't see the point.
-> Especially as long as it is named ipc and not sysvipc.
-> 
-> A half cleanup really looks worse than a real cleanup.
-> 
-> SysV IPC really is a side car on the kernel and on unix in general
-> and having the directory structure reflect that seems completely sensible.
+diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
+index e6a668ee7730..39df41280e2d 100644
+--- a/drivers/net/can/rx-offload.c
++++ b/drivers/net/can/rx-offload.c
+@@ -158,7 +158,7 @@ int can_rx_offload_irq_offload_timestamp(struct can_rx_=
+offload *offload, u64 pen
+=20
+ 		skb =3D can_rx_offload_offload_one(offload, i);
+ 		if (!skb)
+-			break;
++			continue;
+=20
+ 		__skb_queue_add_sort(&skb_queue, skb, can_rx_offload_compare);
+ 	}
+--=20
+2.17.1
 
-While such objections are I think valid for scripts/, the situation is 
-very different for ipc/:
-
- - ipc/ is a tiny subsystem of just ~9k lines of code, and it's in the 
-   top level directory for historical reasons.
-
- - ipc/ is an established subsystem of old interfaces with comparatively 
-   very few changes these days: there were just about 16 commits added in 
-   the last 12 months that changed the code and had 'ipc' in the title. 
-   Somewhat ironically, the biggest commit of all was a "system call 
-   renaming" commit:
-
-     275f22148e87: ipc: rename old-style shmctl/semctl/msgctl syscalls
-     14 files changed, 137 insertions(+), 62 deletions(-)
-
-   Many of the remaining 15 commits were simple in nature - and there 
-   were 9 different authors, i.e. the per author frequency of changes for 
-   ipc/ is even lower: around one per year for those 9 developers who are 
-   interested in ipc/ changes. I doubt there's much muscle memory even 
-   for them as a result.
-
- - The 'muscle memory' argument has to be weighted by probability of 
-   interest (linecount), probability of change (frequency of commits) and 
-   number of authors. These factors add up to a very low change frequency 
-   for ipc/. We've moved and consolidated much, much bigger and higher 
-   frequency subsystems in the recent past, such as kernel/sched/ or 
-   kernel/locking/.
-
- - The ipc/ location is arguably random and idiosynchratic - it's a 
-   leftover from old times nobody really bothered to clean up - but that 
-   fact shouldn't be a permanent barrier IMO.
-
- - While uncluttering the top level directory for aesthethic and 
-   documentation reasons is one technical factor, there's another reason 
-   for my ipc/ movement: I have the secret hope to be able to move init/ 
-   to kernel/init/ as well, in which case there's a big muscle memory 
-   advantage for the future: 'i<tab>' would expand to include/ in a 
-   single step! :-) Now *that* is perhaps the highest frequency muscle 
-   memory location in the kernel. ;-)
-
-Or looking at it from another angle: if we applied your ipc/ benchmark 
-then basically almost *nothing* could be moved from the toplevel 
-directory or any other location, pretty much *ever*.
-
-Thanks,
-
-	Ingo
