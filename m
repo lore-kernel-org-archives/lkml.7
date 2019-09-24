@@ -2,1252 +2,364 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D23C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848D8C432C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BD9214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5582146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 21:30:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc/0dNMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfIXV3N (ORCPT
+        id S1731864AbfIXVaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 17:29:13 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46796 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbfIXV3N (ORCPT
+        Tue, 24 Sep 2019 17:30:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37512 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbfIXVaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 17:29:13 -0400
-Received: by mail-io1-f72.google.com with SMTP id t11so5278221ioc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 14:29:10 -0700 (PDT)
+        Tue, 24 Sep 2019 17:30:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so3719171wro.4;
+        Tue, 24 Sep 2019 14:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E7Mha1NoRjN8EbkILeu/xMHK3yWGNSQvglgYQtw7CH8=;
+        b=cc/0dNMj4Be0MuGC4RrWPQoxP7vRn5GJktrvs5aSiiNSq4KvFWsviGHNVEHUj/Uznm
+         c/Ku5Q+gWZyPSHt7EnrNWhYNhqUGgkfLMfMo9HBPPqAO+KuPfj1n3ONyhZCR77ji+an1
+         iXp704bRR+CqGkuaFE7JipilteLn7TEboM5Z3maHJ/trXpR+tYbSlLwxv2oYnt6OCkda
+         G14MOfU0tCa2uaEdjUUONcZODXdMWr9euHrBIKbZehKkbLEzY54V4UqecsTb84xCTjlO
+         bWN9tGM1Uc6b1nefdfrEoBVh2Aa4Wo4raoLc4ImgH//wILrqkujiYjlQUOXSR93f5loW
+         bmqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mS845iILd2BseKwn2omvPzHxzOiYhHBoI9CSHpIk/Rk=;
-        b=Q6QRNzpqruawhMg96bispLm9YrnKRK+3aHLnjvxwONnd2z8S5hFIewmkIB5Pq+qNxy
-         RV+2TJqQpwxx1rw2zg9yh++So8ASlh7dZL3UwBFbmDccsFmjGHlC+ArdrXNe1F9YDY/V
-         7sG2+EVdg7cIjyVg6zEh2IHlXW7xDy5HX1C7+tfH8Rtf0yu28d5XMFfPXz8mJqGQ2qJo
-         7QkmBjSN2hTX17ct3xb9zoPlfHOH6XXQVt5o9ouLTR3iOs4ZFq430bp3IaqbVSW53Z7/
-         gDs/gKMZW6+dAo3mF+YnrG2vQhmLI9vuZg93YJonaWj1B6vWPUwGpLJOcNv2qaJneQY9
-         /85g==
-X-Gm-Message-State: APjAAAVm3xB0R0OevYGNY32RTvC9qLW/lQhwYDuJnonIaCJx3FUmqinE
-        T4E8YduGCRT5TLw3EhD/vb4vyAdq/EQi3XSuktuBT9uRWHcV
-X-Google-Smtp-Source: APXvYqy1GcvgrKf5bcUIFo92L39a7t8pfjpMNGfFfpE2TaUD3xKk50O26lreHGYluOFoMULqiOXTMTEsdDtgCawv7B3O0+Rbc4GL
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E7Mha1NoRjN8EbkILeu/xMHK3yWGNSQvglgYQtw7CH8=;
+        b=mUP/h6ZwjAphTr+Jw7oJG8gLbJG2eWwfn/GzLQJ2cUTcDNFmerm2elqNgiGi5I9akQ
+         n5DKfH5gMi/Vojtqi6/c1KBsykjaqphCXNahEYaOgVdWug/uT4tUC2qwqdj1QlVwcPlb
+         6MkttJ8IYHMbiEdhdPSw8N+CwigCvRp7t6MBP1mDXP5ALF1fbNJlKtqQuNHKBuAXE1wF
+         RlIyqAE+NGnBJOQx1SnkPshPwNo3q6EQ8bLVH8RNGiN3Oi9x15i+jERaiWeqGwQ7jixa
+         6Jgz0L0caDFUIAvn3l8jEihruMbOzrwHzSdQ9bo9jk94toVzcsB1aHcrLGFFBdO7pr9t
+         oPSQ==
+X-Gm-Message-State: APjAAAVwwTgAEcUWPxxvvVpEr41gVoW6qjgiTiaTDix2YG8sVZufkinX
+        inGMrJRyiZpvL/Yd2eBBrGbKKLlv
+X-Google-Smtp-Source: APXvYqwSu3nlN1qniQ7awiMez5TCRjXkCdPmoVmS1w0aUl94O0OCUuEfdjoqa8ntpQvNbNB/fjbCRw==
+X-Received: by 2002:a5d:408c:: with SMTP id o12mr4988616wrp.312.1569360611138;
+        Tue, 24 Sep 2019 14:30:11 -0700 (PDT)
+Received: from [192.168.1.19] (bfw157.neoplus.adsl.tpnet.pl. [83.28.60.157])
+        by smtp.gmail.com with ESMTPSA id a3sm2053981wmc.3.2019.09.24.14.30.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Sep 2019 14:30:10 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] leds: remove PAGE_SIZE limit of
+ /sys/class/leds/<led>/trigger
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+References: <1568387004-3802-1-git-send-email-akinobu.mita@gmail.com>
+ <1568387004-3802-2-git-send-email-akinobu.mita@gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <54d4debc-470a-86f6-e43c-f51f1c7913e0@gmail.com>
+Date:   Tue, 24 Sep 2019 23:30:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7a06:: with SMTP id h6mr5123580iom.231.1569360548967;
- Tue, 24 Sep 2019 14:29:08 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 14:29:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000bf1e50593533a38@google.com>
-Subject: memory leak in copy_net_ns
-From:   syzbot <syzbot+3b3296d032353c33184b@syzkaller.appspotmail.com>
-To:     a.p.zijlstra@chello.nl, acme@redhat.com, andi@firstfloor.org,
-        davem@davemloft.net, dhowells@redhat.com, dsahern@gmail.com,
-        jakub.kicinski@netronome.com, johannes.berg@intel.com,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        nicolas.dichtel@6wind.com, syzkaller-bugs@googlegroups.com,
-        tyhicks@canonical.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <1568387004-3802-2-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Greg,
 
-syzbot found the following crash on:
+Akinobu seems to have addressed all issues that have been
+raised regarding this patch. I'd be happy to have your ack before
+applying it.
 
-HEAD commit:    5ad18b2e Merge branch 'siginfo-linus' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1239e6a0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=13fb75d3ba8bfd9
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b3296d032353c33184b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116c6a87a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14587d10600000
+Best regards,
+Jacek Anaszewski
 
-The bug was bisected to:
+On 9/13/19 5:03 PM, Akinobu Mita wrote:
+> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> However, the size of this file is limited to PAGE_SIZE because of the
+> limitation for sysfs attribute.
+> 
+> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+> and which trigger is currently activated.
+> 
+> We work around it here by converting /sys/class/leds/<led>/trigger to
+> binary attribute, which is not limited by length. This is _not_ good
+> design, do not copy it.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>  drivers/leds/led-class.c    |  8 ++--
+>  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
+>  drivers/leds/leds.h         |  6 +++
+>  include/linux/leds.h        |  5 ---
+>  4 files changed, 79 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4793e77..8b5a1d1 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *dev,
+>  static DEVICE_ATTR_RO(max_brightness);
+>  
+>  #ifdef CONFIG_LEDS_TRIGGERS
+> -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store);
+> -static struct attribute *led_trigger_attrs[] = {
+> -	&dev_attr_trigger.attr,
+> +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
+> +static struct bin_attribute *led_trigger_bin_attrs[] = {
+> +	&bin_attr_trigger,
+>  	NULL,
+>  };
+>  static const struct attribute_group led_trigger_group = {
+> -	.attrs = led_trigger_attrs,
+> +	.bin_attrs = led_trigger_bin_attrs,
+>  };
+>  #endif
+>  
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 8d11a5e..ed5a311 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/rwsem.h>
+>  #include <linux/leds.h>
+>  #include <linux/slab.h>
+> +#include <linux/mm.h>
+>  #include "leds.h"
+>  
+>  /*
+> @@ -26,9 +27,11 @@ LIST_HEAD(trigger_list);
+>  
+>   /* Used by LED Class */
+>  
+> -ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+> -		const char *buf, size_t count)
+> +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+> +			  struct bin_attribute *bin_attr, char *buf,
+> +			  loff_t pos, size_t count)
+>  {
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>  	struct led_trigger *trig;
+>  	int ret = count;
+> @@ -64,39 +67,84 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+>  	mutex_unlock(&led_cdev->led_access);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL_GPL(led_trigger_store);
+> +EXPORT_SYMBOL_GPL(led_trigger_write);
+>  
+> -ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
+> -		char *buf)
+> +__printf(4, 5)
+> +static int led_trigger_snprintf(char *buf, size_t size, bool query,
+> +				const char *fmt, ...)
+> +{
+> +	va_list args;
+> +	int i;
+> +
+> +	va_start(args, fmt);
+> +	if (query)
+> +		i = vsnprintf(NULL, 0, fmt, args);
+> +	else
+> +		i = vscnprintf(buf, size, fmt, args);
+> +	va_end(args);
+> +
+> +	return i;
+> +}
+> +
+> +static int led_trigger_format(char *buf, size_t size, bool query,
+> +			      struct led_classdev *led_cdev)
+>  {
+> -	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>  	struct led_trigger *trig;
+> -	int len = 0;
+> +	int len = led_trigger_snprintf(buf, size, query, "%s",
+> +				       led_cdev->trigger ? "none" : "[none]");
+> +
+> +	list_for_each_entry(trig, &trigger_list, next_trig) {
+> +		bool hit = led_cdev->trigger &&
+> +			!strcmp(led_cdev->trigger->name, trig->name);
+> +
+> +		len += led_trigger_snprintf(buf + len, size - len, query,
+> +					    " %s%s%s", hit ? "[" : "",
+> +					    trig->name, hit ? "]" : "");
+> +	}
+> +
+> +	len += led_trigger_snprintf(buf + len, size - len, query, "\n");
+> +
+> +	return len;
+> +}
+> +
+> +/*
+> + * It was stupid to create 10000 cpu triggers, but we are stuck with it now.
+> + * Don't make that mistake again. We work around it here by creating binary
+> + * attribute, which is not limited by length. This is _not_ good design, do not
+> + * copy it.
+> + */
+> +ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+> +			struct bin_attribute *attr, char *buf,
+> +			loff_t pos, size_t count)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +	void *data;
+> +	int len;
+>  
+>  	down_read(&triggers_list_lock);
+>  	down_read(&led_cdev->trigger_lock);
+>  
+> -	if (!led_cdev->trigger)
+> -		len += scnprintf(buf+len, PAGE_SIZE - len, "[none] ");
+> +	len = led_trigger_format(NULL, 0, true, led_cdev);
+> +	data = kvmalloc(len + 1, GFP_KERNEL);
+> +	if (data)
+> +		len = led_trigger_format(data, len + 1, false, led_cdev);
+>  	else
+> -		len += scnprintf(buf+len, PAGE_SIZE - len, "none ");
+> +		len = -ENOMEM;
+>  
+> -	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (led_cdev->trigger && !strcmp(led_cdev->trigger->name,
+> -							trig->name))
+> -			len += scnprintf(buf+len, PAGE_SIZE - len, "[%s] ",
+> -					 trig->name);
+> -		else
+> -			len += scnprintf(buf+len, PAGE_SIZE - len, "%s ",
+> -					 trig->name);
+> -	}
+>  	up_read(&led_cdev->trigger_lock);
+>  	up_read(&triggers_list_lock);
+>  
+> -	len += scnprintf(len+buf, PAGE_SIZE - len, "\n");
+> +	if (len < 0)
+> +		return len;
+> +
+> +	len = memory_read_from_buffer(buf, count, &pos, data, len);
+> +
+> +	kvfree(data);
+> +
+>  	return len;
+>  }
+> -EXPORT_SYMBOL_GPL(led_trigger_show);
+> +EXPORT_SYMBOL_GPL(led_trigger_read);
+>  
+>  /* Caller must ensure led_cdev->trigger_lock held */
+>  int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
+> index 47b2294..a0ee33c 100644
+> --- a/drivers/leds/leds.h
+> +++ b/drivers/leds/leds.h
+> @@ -23,6 +23,12 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
+>  				enum led_brightness value);
+>  void led_set_brightness_nosleep(struct led_classdev *led_cdev,
+>  				enum led_brightness value);
+> +ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+> +			struct bin_attribute *attr, char *buf,
+> +			loff_t pos, size_t count);
+> +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+> +			struct bin_attribute *bin_attr, char *buf,
+> +			loff_t pos, size_t count);
+>  
+>  extern struct rw_semaphore leds_list_lock;
+>  extern struct list_head leds_list;
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index fd2eb7c..33ae825 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -290,11 +290,6 @@ struct led_trigger {
+>  #define led_trigger_get_led(dev)	((struct led_classdev *)dev_get_drvdata((dev)))
+>  #define led_trigger_get_drvdata(dev)	(led_get_trigger_data(led_trigger_get_led(dev)))
+>  
+> -ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+> -			const char *buf, size_t count);
+> -ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
+> -			char *buf);
+> -
+>  /* Registration functions for complex triggers */
+>  extern int led_trigger_register(struct led_trigger *trigger);
+>  extern void led_trigger_unregister(struct led_trigger *trigger);
+> 
 
-commit 195bc0f8443d8d564ae95d2e9c19ac0edfd647c3
-Author: Namhyung Kim <namhyung@kernel.org>
-Date:   Tue Sep 13 07:45:50 2016 +0000
-
-     perf ui/stdio: Rename print_hierarchy_header()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16162df0600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15162df0600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11162df0600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3b3296d032353c33184b@syzkaller.appspotmail.com
-Fixes: 195bc0f8443d ("perf ui/stdio: Rename print_hierarchy_header()")
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.400s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.390s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.220s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.220s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.470s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.460s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.290s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.290s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.550s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.540s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.370s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.370s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.620s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.610s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.440s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.440s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.690s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.680s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.510s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.510s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.760s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.750s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.580s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.580s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.840s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.830s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.660s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.660s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff8881175007e0 (size 32):
-   comm "syz-executor902", pid 7069, jiffies 4294944350 (age 28.910s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cfb2080 (size 96):
-   comm "syz-executor902", pid 7069, jiffies 4294944351 (age 28.900s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 50 4d bc 82 ff ff ff ff  ........PM......
-     00 00 00 00 00 00 00 00 00 39 bc 82 ff ff ff ff  .........9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-BUG: memory leak
-unreferenced object 0xffff888115e047c0 (size 32):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.730s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000a83ed741>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000a83ed741>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000a83ed741>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000a83ed741>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000059fc92b9>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000059fc92b9>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000059fc92b9>] net_alloc net/core/net_namespace.c:398 [inline]
-     [<0000000059fc92b9>] copy_net_ns+0xb2/0x220 net/core/net_namespace.c:445
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-     [<00000000f4c5f2c8>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<0000000038550184>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ccd4e80 (size 96):
-   comm "syz-executor902", pid 7079, jiffies 4294944368 (age 28.730s)
-   hex dump (first 32 bytes):
-     02 00 00 00 00 00 00 00 c0 4d bc 82 ff ff ff ff  .........M......
-     00 00 00 00 00 00 00 00 70 39 bc 82 ff ff ff ff  ........p9......
-   backtrace:
-     [<00000000b0b6ab9a>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000b0b6ab9a>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000b0b6ab9a>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<00000000b0b6ab9a>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<00000000f96917f7>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<00000000f96917f7>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-     [<0000000032c54692>] kmalloc_node include/linux/slab.h:590 [inline]
-     [<0000000032c54692>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-     [<00000000cdbb5464>] kvmalloc include/linux/mm.h:648 [inline]
-     [<00000000cdbb5464>] kvzalloc include/linux/mm.h:656 [inline]
-     [<00000000cdbb5464>] allocate_hook_entries_size+0x3b/0x60  
-net/netfilter/core.c:61
-     [<00000000ca33d229>] nf_hook_entries_grow+0xae/0x270  
-net/netfilter/core.c:128
-     [<000000003b071c4d>] __nf_register_net_hook+0x9a/0x170  
-net/netfilter/core.c:337
-     [<00000000d9c14042>] nf_register_net_hook+0x34/0xc0  
-net/netfilter/core.c:464
-     [<000000004119a586>] nf_register_net_hooks+0x53/0xc0  
-net/netfilter/core.c:480
-     [<000000004957a648>] __ip_vs_init+0xe8/0x170  
-net/netfilter/ipvs/ip_vs_core.c:2280
-     [<0000000044bb7165>] ops_init+0x4c/0x160 net/core/net_namespace.c:137
-     [<000000002d8e331b>] setup_net+0xde/0x230 net/core/net_namespace.c:323
-     [<000000003547ad16>] copy_net_ns+0x123/0x220  
-net/core/net_namespace.c:458
-     [<00000000a9d74bbc>] create_new_namespaces+0x141/0x2a0  
-kernel/nsproxy.c:103
-     [<000000008047d645>] unshare_nsproxy_namespaces+0x7f/0x100  
-kernel/nsproxy.c:202
-     [<000000005993ea6e>] ksys_unshare+0x236/0x490 kernel/fork.c:2674
-     [<0000000019417e75>] __do_sys_unshare kernel/fork.c:2742 [inline]
-     [<0000000019417e75>] __se_sys_unshare kernel/fork.c:2740 [inline]
-     [<0000000019417e75>] __x64_sys_unshare+0x16/0x20 kernel/fork.c:2740
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
