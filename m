@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CFAC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF9AC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1D42054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DB021BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343968;
-	bh=V6xVQoeu2fDcplB1iBbsCGRGy308EHq5ck/SPjxZkyc=;
+	s=default; t=1569343971;
+	bh=debV8m1HFniLLAjBqARcfZtbmq+y6eVu67OgxUFykKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGmINZ5TfMXQGbYNXzod0Cic0y8D0/D5haZtbJDLAJV6fsHMlnF/VVC6E5h4zGC3M
-	 i2TAo/F6lqYGYvtQkZoZA4T5dmc2TzcIgggiave4+BnjRhyN1wYQ36Vzp9om4NXCfB
-	 LiuAj4DpZ8ypZv3JGcwq0xfj9tjQPmlXmxFpZIjU=
+	b=wNpoqTpvfXDYxZ5LGXnrHPmES0PIxWkDjg/qrJBSQW8tE/5CKZ9tQKlecTmytfHZl
+	 SPzxFQbV0G2GC/hkqjkTTvz9XQ777KpBo4tZwQcuBDvXgBdIqifSXKZKxbKwIhxJTO
+	 5IfBbAZ3kDy6CXhN+ghj9nUujUahxZB02jxRL/2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441766AbfIXQwr (ORCPT
+        id S2633383AbfIXQwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441544AbfIXQvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:51:03 -0400
+        id S2410814AbfIXQvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5865721655;
-        Tue, 24 Sep 2019 16:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EC83214AF;
+        Tue, 24 Sep 2019 16:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343862;
-        bh=V6xVQoeu2fDcplB1iBbsCGRGy308EHq5ck/SPjxZkyc=;
+        s=default; t=1569343859;
+        bh=debV8m1HFniLLAjBqARcfZtbmq+y6eVu67OgxUFykKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFdhV1QxYk/AYhM1ceWL6mRMvSPa/XmdXu5+QT4uwRrM5JFtjDNTmHKLxY28QlB/U
-         1xS4b/Yft+ynAWenU5QhRnBD8vhv6Xw1lEprhHzkQ3XDdUcbp2wa06sOHiSHMbD754
-         ymlCOmRAs2ecABlkI7ZZs1xitNELgwCfkIRirB04=
+        b=tyEMXY2gNwFrayQE/rNEil0uDKDXTKhSNRGA2V+FNrKBs+pwGzkYItgnnthUj3fS0
+         wLSPSxMwkuJ8Kph9YcAKnTKtgKZjVTiP0fb9xqqoIxZRaqy2lGBqj9ZDjq+sSCw7kW
+         cRp9wbdtTqCROzD+S50qGZhQfAR313oU1mfFa86U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 17/28] powerpc/64s/radix: Remove redundant pfn_pte bitop, add VM_BUG_ON
-Date:   Tue, 24 Sep 2019 12:50:20 -0400
-Message-Id: <20190924165031.28292-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/28] powerpc/futex: Fix warning: 'oldval' may be used uninitialized in this function
+Date:   Tue, 24 Sep 2019 12:50:19 -0400
+Message-Id: <20190924165031.28292-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
 References: <20190924165031.28292-1-sashal@kernel.org>
@@ -60,62 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 6bb25170d7a44ef0ed9677814600f0785e7421d1 ]
+[ Upstream commit 38a0d0cdb46d3f91534e5b9839ec2d67be14c59d ]
 
-pfn_pte is never given a pte above the addressable physical memory
-limit, so the masking is redundant. In case of a software bug, it
-is not obviously better to silently truncate the pfn than to corrupt
-the pte (either one will result in memory corruption or crashes),
-so there is no reason to add this to the fast path.
+We see warnings such as:
+  kernel/futex.c: In function 'do_futex':
+  kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+     return oldval == cmparg;
+                   ^
+  kernel/futex.c:1651:6: note: 'oldval' was declared here
+    int oldval, ret;
+        ^
 
-Add VM_BUG_ON to catch cases where the pfn is invalid. These would
-catch the create_section_mapping bug fixed by a previous commit.
+This is because arch_futex_atomic_op_inuser() only sets *oval if ret
+is 0 and GCC doesn't see that it will only use it when ret is 0.
 
-  [16885.256466] ------------[ cut here ]------------
-  [16885.256492] kernel BUG at arch/powerpc/include/asm/book3s/64/pgtable.h:612!
-  cpu 0x0: Vector: 700 (Program Check) at [c0000000ee0a36d0]
-      pc: c000000000080738: __map_kernel_page+0x248/0x6f0
-      lr: c000000000080ac0: __map_kernel_page+0x5d0/0x6f0
-      sp: c0000000ee0a3960
-     msr: 9000000000029033
-    current = 0xc0000000ec63b400
-    paca    = 0xc0000000017f0000   irqmask: 0x03   irq_happened: 0x01
-      pid   = 85, comm = sh
-  kernel BUG at arch/powerpc/include/asm/book3s/64/pgtable.h:612!
-  Linux version 5.3.0-rc1-00001-g0fe93e5f3394
-  enter ? for help
-  [c0000000ee0a3a00] c000000000d37378 create_physical_mapping+0x260/0x360
-  [c0000000ee0a3b10] c000000000d370bc create_section_mapping+0x1c/0x3c
-  [c0000000ee0a3b30] c000000000071f54 arch_add_memory+0x74/0x130
+Anyway, the non-zero ret path is an error path that won't suffer from
+setting *oval, and as *oval is a local var in futex_atomic_op_inuser()
+it will have no impact.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: reword change log slightly]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190724084638.24982-5-npiggin@gmail.com
+Link: https://lore.kernel.org/r/86b72f0c134367b214910b27b9a6dd3321af93bb.1565774657.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/futex.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 4dd13b503dbbd..5f37d8c3b4798 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -555,8 +555,10 @@ static inline int pte_present(pte_t pte)
-  */
- static inline pte_t pfn_pte(unsigned long pfn, pgprot_t pgprot)
- {
--	return __pte((((pte_basic_t)(pfn) << PAGE_SHIFT) & PTE_RPN_MASK) |
--		     pgprot_val(pgprot));
-+	VM_BUG_ON(pfn >> (64 - PAGE_SHIFT));
-+	VM_BUG_ON((pfn << PAGE_SHIFT) & ~PTE_RPN_MASK);
-+
-+	return __pte(((pte_basic_t)pfn << PAGE_SHIFT) | pgprot_val(pgprot));
- }
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index 1a944c18c5390..3c7d859452294 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -59,8 +59,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
  
- static inline unsigned long pte_pfn(pte_t pte)
+ 	pagefault_enable();
+ 
+-	if (!ret)
+-		*oval = oldval;
++	*oval = oldval;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
