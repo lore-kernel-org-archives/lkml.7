@@ -2,184 +2,191 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA87C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD053C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9976B2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 06:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="resra2lV"
+	by mail.kernel.org (Postfix) with ESMTP id 7B7992054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 07:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394376AbfIXG6t (ORCPT
+        id S2394788AbfIXHAW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 02:58:49 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39696 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391570AbfIXG6s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 02:58:48 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190924065846euoutp01c8e96b95fa89beda6d59dd97540aba43~HTZvPo2-D0946209462euoutp01F
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 06:58:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190924065846euoutp01c8e96b95fa89beda6d59dd97540aba43~HTZvPo2-D0946209462euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569308326;
-        bh=aq9XbIpzYJihPII+PQlWYW1WHkf9Luv6KUkeBe0PpI8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=resra2lV8+CzgYv48w+/igASv5uRwex8C0aCtnOIGKkI8qotw+qdpwAPfwodaNXsu
-         lbgKXDuEr52cvJSWe/01E6yCTMFEemkm3eEHv5DTEq5aCPRS2Pk4PbE/WoOsV1+B2f
-         GfBfzlXOmJXgO2uNw66y8t9LJLsCibcSI27FpOj0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190924065845eucas1p2eed9befdeb1225c1c6933ee0ab389359~HTZuZ3Nwc1521715217eucas1p2S;
-        Tue, 24 Sep 2019 06:58:45 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 33.EF.04374.5AEB98D5; Tue, 24
-        Sep 2019 07:58:45 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190924065845eucas1p24cf39a480197c691c1acd24e98e1da14~HTZuAw6jR1521715217eucas1p2R;
-        Tue, 24 Sep 2019 06:58:45 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190924065845eusmtrp1cf084ba16d5de804b00e1025a05dcae6~HTZt_E4aU2143421434eusmtrp1j;
-        Tue, 24 Sep 2019 06:58:45 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-4d-5d89bea500ac
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 41.E7.04166.5AEB98D5; Tue, 24
-        Sep 2019 07:58:45 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190924065844eusmtip1dcb3ab16975d9d7d7ef6e8df337418ea~HTZtaHRrg1194611946eusmtip1J;
-        Tue, 24 Sep 2019 06:58:44 +0000 (GMT)
-Subject: Re: [RFT v4 5/8] ARM: dts: exynos: Remove MCT subnode for interrupt
- map on Exynos4412
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <21fdac03-cb35-34eb-c48e-52985377aa16@samsung.com>
-Date:   Tue, 24 Sep 2019 08:58:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190923161411.9236-5-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
+        Tue, 24 Sep 2019 03:00:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6192 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394328AbfIXHAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:00:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 00:00:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
+   d="scan'208";a="179391239"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga007.jf.intel.com with ESMTP; 24 Sep 2019 00:00:21 -0700
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 00:00:20 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 00:00:20 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.23]) with mapi id 14.03.0439.000;
+ Tue, 24 Sep 2019 15:00:16 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
+Thread-Topic: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
+Thread-Index: AQHVcgo/pYehEUSjBUSa7tc1tTv1E6c5H56AgAAQYQCAATS/kA==
+Date:   Tue, 24 Sep 2019 07:00:15 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122715.53de79d0@jacob-builder>
+ <20190923202552.GA21816@araj-mobl1.jf.intel.com>
+In-Reply-To: <20190923202552.GA21816@araj-mobl1.jf.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djP87pL93XGGmxYaGhxa905Vot5n2Ut
-        5h8BMvofv2a2OH9+A7vFpsfXWC0u75rDZjHj/D4mi6XXLzJZtO49wm7R/vQls8XmTVOZHXg8
-        1sxbw+ixaVUnm8eda3vYPN6dO8fusXlJvUffllWMHp83yQWwR3HZpKTmZJalFunbJXBltE78
-        xV7wgK/i8WGLBsaZ3F2MnBwSAiYSe3Y+Yuti5OIQEljBKPF120ko5wujxI1vl1ggnM+MEs8n
-        L2SFabn4/SkzRGI5o8TfDc+hqt4ySrw5cpQZpEpYIEFi1u9VTCAJEYHJzBL7D69kA0kwC+hK
-        TH/3BqyITcBQouttF1icV8BOor2/kQXEZhFQldjW8ZkdxBYViJW49+M4M0SNoMTJmU+Aajg4
-        OIHO+NqfDjFSXmL72znMELa4xK0n88H2SgjcYpc4//MOI8TZLhJtqydCvSAs8er4FnYIW0bi
-        9OQeFoiGZkaJh+fWskM4PYwSl5tmQHVbSxw+fpEVZDOzgKbE+l36EGFHiR9/HjCBhCUE+CRu
-        vBWEOIJPYtK26cwQYV6JjjYhiGo1iVnH18GtPXjhEvMERqVZSD6bheSdWUjemYWwdwEjyypG
-        8dTS4tz01GLjvNRyveLE3OLSvHS95PzcTYzANHb63/GvOxj3/Uk6xCjAwajEwwsMzFgh1sSy
-        4srcQ4wSHMxKIrybtNpihXhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgt
-        gskycXBKNTDulNM14xaVzbzclB4Xw5Z2SPFDwC4PnVOR+aq9dzZW/ejLvvP385XHpr/imyfw
-        TTcsNDDQOH1a4Fl3dmrYiYPcV4R1/l/tCeQW/v9wr5iM3e/gKbsM53Pw+HZJPKy99j7gE6fH
-        h0V3My58SmdtvHDTvc3oeE/xsYvL0lzT13I0CHs+f5/8cZ8SS3FGoqEWc1FxIgDEfphzXwMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xu7pL93XGGjQ8ErO4te4cq8W8z7IW
-        848AGf2PXzNbnD+/gd1i0+NrrBaXd81hs5hxfh+TxdLrF5ksWvceYbdof/qS2WLzpqnMDjwe
-        a+atYfTYtKqTzePOtT1sHu/OnWP32Lyk3qNvyypGj8+b5ALYo/RsivJLS1IVMvKLS2yVog0t
-        jPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyWif+Yi94wFfx+LBFA+NM7i5GTg4J
-        AROJi9+fMncxcnEICSxllGjadIoRIiEjcXJaAyuELSzx51oXG4gtJPCaUeJ1SwiILSyQIDHr
-        9yomEFtEYCqzxM1LtSA2s4CuxPR3b6CGbmSUOLlvEztIgk3AUKLrLcQgXgE7ifb+RhYQm0VA
-        VWJbx2egGg4OUYFYiU17zSBKBCVOznzCAhLmBDr0a386xHgziXmbHzJD2PIS29/OgbLFJW49
-        mc80gVFoFpLuWUhaZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAiN127Ofm
-        HYyXNgYfYhTgYFTi4QW6NlaINbGsuDL3EKMEB7OSCO8mrbZYId6UxMqq1KL8+KLSnNTiQ4ym
-        QK9NZJYSTc4HJpO8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2M
-        xu/lExt9L/+v1K/a/v3Mg5PM7EqtzMqidmd6L3AzeieZu86xuPY6SOLk55Aaldlxlm2xB62V
-        pr31WWsUudlBLYpx8sqjfDuC1oZx5D9NXa1y4Y7HX844OQGf6ws9UnxM1Ewm+San35/M9IWl
-        h5VT3/TARW/HkkaXSX9WNB89p7CRLazhsKwSS3FGoqEWc1FxIgB4fpBv7gIAAA==
-X-CMS-MailID: 20190924065845eucas1p24cf39a480197c691c1acd24e98e1da14
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190923161447epcas2p49a72596974a4ba294a734ef8ad8bbad1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190923161447epcas2p49a72596974a4ba294a734ef8ad8bbad1
-References: <20190923161411.9236-1-krzk@kernel.org>
-        <CGME20190923161447epcas2p49a72596974a4ba294a734ef8ad8bbad1@epcas2p4.samsung.com>
-        <20190923161411.9236-5-krzk@kernel.org>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDI0MDY1ZmQtZmVkMS00OWIxLTk1M2MtMzk1Mzg4YzU2Njk0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSkNrektGMXluVWZ1a1wvRkhnUm1mbVpcLzBTSUQyMHkyWFhoUlZvaG5BYThiRDVVV09tK3YrbU5sU3VIc2FsT2JQIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Raj, Ashok
+> Sent: Tuesday, September 24, 2019 4:26 AM
+> 
+> Hi Jacob
+> 
+> On Mon, Sep 23, 2019 at 12:27:15PM -0700, Jacob Pan wrote:
+> > >
+> > > In VT-d 3.0, scalable mode is introduced, which offers two level
+> > > translation page tables and nested translation mode. Regards to
+> > > GIOVA support, it can be simplified by 1) moving the GIOVA support
+> > > over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
+> > > 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using
+> pIOMMU
+> > > second level for GPA->HPA translation, and 4) enable nested (a.k.a.
+> > > dual stage) translation in host. Compared with current shadow GIOVA
+> > > support, the new approach is more secure and software is simplified
+> > > as we only need to flush the pIOMMU IOTLB and possible device-IOTLB
+> > > when an IOVA mapping in vIOMMU is torn down.
+> > >
+> > >      .-----------.
+> > >      |  vIOMMU   |
+> > >      |-----------|                 .-----------.
+> > >      |           |IOTLB flush trap |   QEMU    |
+> > >      .-----------.    (unmap)      |-----------|
+> > >      | GVA->GPA  |---------------->|           |
+> > >      '-----------'                 '-----------'
 
-On 23.09.2019 18:14, Krzysztof Kozlowski wrote:
-> Multi Core Timer node has interrupts routed to two different parents -
-> GIC and combiner.  This was modeled with a interrupt-map within a
-> subnode but can be expressed in an easier and more common way, directly
-> in the node itself.
->
-> Tested on Odroid U3 (Exynos4412).
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+GVA should be replaced by GIOVA in all the figures.
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > >      |           |                       |
+> > >      '-----------'                       |
+> > >            <------------------------------
+> > >            |      VFIO/IOMMU
+> > >            |  cache invalidation and
+> > >            | guest gpd bind interfaces
+> > >            v
+> > For vSVA, the guest PGD bind interface will mark the PASID as guest
+> > PASID and will inject page request into the guest. In FL gIOVA case, I
+> > guess we are assuming there is no page fault for GIOVA. I will need to
+> > add a flag in the gpgd bind such that any PRS will be auto responded
+> > with invalid.
+> 
+> Is there real need to enforce this? I'm not sure if there is any
+> limitation in the spec, and if so, can the guest check that instead?
 
-Works fine on Trats2 board.
+Whether to allow page fault is not usage specific (GIOVA, GVA, etc.).
+It's really about the device capability and IOMMU capability. VT-d
+allows page fault on both levels. So we don't need enforce it. 
 
-> ---
->
-> Changes since v3:
-> 1. Use interrupts-extended instead of interrupts-map.
-> ---
->   arch/arm/boot/dts/exynos4412.dtsi | 19 +++++--------------
->   1 file changed, 5 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index 8b6d5875c75d..9b5fb4e54d7c 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -246,22 +246,13 @@
->   		timer@10050000 {
->   			compatible = "samsung,exynos4412-mct";
->   			reg = <0x10050000 0x800>;
-> -			interrupt-parent = <&mct_map>;
-> -			interrupts = <0>, <1>, <2>, <3>, <4>;
->   			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
->   			clock-names = "fin_pll", "mct";
-> -
-> -			mct_map: mct-map {
-> -				#interrupt-cells = <1>;
-> -				#address-cells = <0>;
-> -				#size-cells = <0>;
-> -				interrupt-map =
-> -					<0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-> -					<1 &combiner 12 5>,
-> -					<2 &combiner 12 6>,
-> -					<3 &combiner 12 7>,
-> -					<4 &gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
-> -			};
-> +			interrupts-extended = <&gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-> +					      <&combiner 12 5>,
-> +					      <&combiner 12 6>,
-> +					      <&combiner 12 7>,
-> +					      <&gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
->   		};
->   
->   		watchdog: watchdog@10060000 {
+btw in the future we may need an interface to tell VFIO whether a
+ device is 100% DMA-faultable thus pinning can be avoided. But for 
+now I'm not sure how such knowledge can be retrieved w/o device 
+specific knowledge. PCI PRI capability only indicates that the device 
+supports page fault, but not that the device enables page fault on 
+its every DMA access. Maybe we need a new bit in PRI capability for
+such purpose.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> 
+> Also i believe the idea is to overcommit PASID#0 such uses. Thought
+> we had a capability to expose this to the vIOMMU as well. Not sure if this
+> is already documented, if not should be up in the next rev.
+> 
+> 
+> >
+> > Also, native use of IOVA FL map is not to be supported? i.e. IOMMU API
+> > and DMA API for native usage will continue to be SL only?
+> > >      .-----------.
+> > >      |  pIOMMU   |
+> > >      |-----------|
+> > >      .-----------.
+> > >      | GVA->GPA  |<---First level
+> > >      '-----------'
+> > >      | GPA->HPA  |<---Scond level
+> 
+> s/Scond/Second
+> 
+> > >      '-----------'
+> > >      '-----------'
+> > >
+> > > This patch series only aims to achieve the first goal, a.k.a using
 
+first goal? then what are other goals? I didn't spot such information.
+
+Also earlier you mentioned the new approach (nested) is more secure
+than shadowing. why?
+
+> > > first level translation for IOVA mappings in vIOMMU. I am sending
+> > > it out for your comments. Any comments, suggestions and concerns are
+> > > welcomed.
+> > >
+> >
+> >
+> > > Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+> > > Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+> > > Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
+> > > Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > > Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+> > >
+> > > Lu Baolu (4):
+> > >   iommu/vt-d: Move domain_flush_cache helper into header
+> > >   iommu/vt-d: Add first level page table interfaces
+> > >   iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+> > >   iommu/vt-d: Identify domains using first level page table
+> > >
+> > >  drivers/iommu/Makefile             |   2 +-
+> > >  drivers/iommu/intel-iommu.c        | 142 ++++++++++--
+> > >  drivers/iommu/intel-pgtable.c      | 342
+> > > +++++++++++++++++++++++++++++ include/linux/intel-iommu.h        |
+> > > 31 ++- include/trace/events/intel_iommu.h |  60 +++++
+> > >  5 files changed, 553 insertions(+), 24 deletions(-)
+> > >  create mode 100644 drivers/iommu/intel-pgtable.c
+> > >
+> >
+> > [Jacob Pan]
