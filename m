@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C84C432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7069CC4320D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72937217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429FE20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569344382;
-	bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
+	s=default; t=1569344386;
+	bh=bvp7U6owBiuRrjazjNW9vjE9/ElqnQAHUf39IoJDf2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2HRs0WbFpffSi1D8N9eBrjNc+el/D6lqqrh8sy368ZHCmiIWaH2GhLjRLi1Doj8ZT
-	 QoSjotXvuVINCQ6T3PmDkD5RfF/muIaIkpOudRA8Dy0mvWxbUbsJ0Vpdja40EndWTQ
-	 PQn+Z6VSvsjuclpVjYGm674mpGmr99zet4LybbBQ=
+	b=yFNBgLa8RYkCmk+nriBlTfR2N/AIldnWZuzVxURY02ZSxXSQqs6nHSMHkBIF/WJ+u
+	 mNkXC0djmxs0ZhymA6jBkxXhmz2RyLaHfW7xIQ2FLqtaF24s3JJrjwOmvv0PBYtH5v
+	 LUgI4+JR449edn8wZ2MifOpEoGG4meLwqxjMCeaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410150AbfIXQqy (ORCPT
+        id S2633266AbfIXQqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410101AbfIXQqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:46:46 -0400
+        id S2390285AbfIXQqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:46:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE25721971;
-        Tue, 24 Sep 2019 16:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D24E121D7C;
+        Tue, 24 Sep 2019 16:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343605;
-        bh=QA3A+3Ww5ZMOklyCmgg4fHcKDk+6JhqJYNEF2E2pmg8=;
+        s=default; t=1569343592;
+        bh=bvp7U6owBiuRrjazjNW9vjE9/ElqnQAHUf39IoJDf2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRPCvoZtwil7J0f2gx2gSTM9b9M1LLJExs+HEirODLqZeQNx8cqBhNV7PqkGxyOgc
-         jZON0LQ4hT5BxudfNXSvfwj2HnrIogo/PpHGgYm803Yub/wPGlGD8kw4aHWvrbO4F7
-         CjrUDxP9X2JVgiHS1BoIyDtYSA++5z+7eY+J0aVY=
+        b=zVg2XOEZf6ttAanKUllibUZlxtEAplTBJEi9DZAgRtJ7kHI6+RUH4UF0CFZ0qqnDZ
+         kY98wIWBzy0QU17/Z3XqrUd7JkGFbkjzHWTBvk7L9kGT1u1YVzrGM+amQTIlDUAJjl
+         0pDO7J3EYciUFWviuYTfBeVW3Un76dWTTNl7hbgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lewis Huang <Lewis.Huang@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Eric Yang <eric.yang2@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 24/70] drm/amd/display: reprogram VM config when system resume
-Date:   Tue, 24 Sep 2019 12:45:03 -0400
-Message-Id: <20190924164549.27058-24-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 19/70] ipmi_si: Only schedule continuously in the thread in maintenance mode
+Date:   Tue, 24 Sep 2019 12:44:58 -0400
+Message-Id: <20190924164549.27058-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190924164549.27058-1-sashal@kernel.org>
 References: <20190924164549.27058-1-sashal@kernel.org>
@@ -61,48 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lewis Huang <Lewis.Huang@amd.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit e5382701c3520b3ed66169a6e4aa6ce5df8c56e0 ]
+[ Upstream commit 340ff31ab00bca5c15915e70ad9ada3030c98cf8 ]
 
-[Why]
-The vm config will be clear to 0 when system enter S4. It will
-cause hubbub didn't know how to fetch data when system resume.
-The flip always pending because earliest_inuse_address and
-request_address are different.
+ipmi_thread() uses back-to-back schedule() to poll for command
+completion which, on some machines, can push up CPU consumption and
+heavily tax the scheduler locks leading to noticeable overall
+performance degradation.
 
-[How]
-Reprogram VM config when system resume
+This was originally added so firmware updates through IPMI would
+complete in a timely manner.  But we can't kill the scheduler
+locks for that one use case.
 
-Signed-off-by: Lewis Huang <Lewis.Huang@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Instead, only run schedule() continuously in maintenance mode,
+where firmware updates should run.
+
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/char/ipmi/ipmi_si_intf.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 0a7adc2925e35..191f5757ded1f 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2016,6 +2016,14 @@ void dc_set_power_state(
- 		dc_resource_state_construct(dc, dc->current_state);
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index f124a2d2bb9f5..92a89c8290aa4 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -221,6 +221,9 @@ struct smi_info {
+ 	 */
+ 	bool irq_enable_broken;
  
- 		dc->hwss.init_hw(dc);
++	/* Is the driver in maintenance mode? */
++	bool in_maintenance_mode;
 +
-+#ifdef CONFIG_DRM_AMD_DC_DCN2_0
-+		if (dc->hwss.init_sys_ctx != NULL &&
-+			dc->vm_pa_config.valid) {
-+			dc->hwss.init_sys_ctx(dc->hwseq, dc, &dc->vm_pa_config);
+ 	/*
+ 	 * Did we get an attention that we did not handle?
+ 	 */
+@@ -1007,11 +1010,20 @@ static int ipmi_thread(void *data)
+ 		spin_unlock_irqrestore(&(smi_info->si_lock), flags);
+ 		busy_wait = ipmi_thread_busy_wait(smi_result, smi_info,
+ 						  &busy_until);
+-		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
++		if (smi_result == SI_SM_CALL_WITHOUT_DELAY) {
+ 			; /* do nothing */
+-		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+-			schedule();
+-		else if (smi_result == SI_SM_IDLE) {
++		} else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait) {
++			/*
++			 * In maintenance mode we run as fast as
++			 * possible to allow firmware updates to
++			 * complete as fast as possible, but normally
++			 * don't bang on the scheduler.
++			 */
++			if (smi_info->in_maintenance_mode)
++				schedule();
++			else
++				usleep_range(100, 200);
++		} else if (smi_result == SI_SM_IDLE) {
+ 			if (atomic_read(&smi_info->need_watch)) {
+ 				schedule_timeout_interruptible(100);
+ 			} else {
+@@ -1019,8 +1031,9 @@ static int ipmi_thread(void *data)
+ 				__set_current_state(TASK_INTERRUPTIBLE);
+ 				schedule();
+ 			}
+-		} else
++		} else {
+ 			schedule_timeout_interruptible(1);
 +		}
-+#endif
-+
- 		break;
- 	default:
- 		ASSERT(dc->current_state->stream_count == 0);
+ 	}
+ 	return 0;
+ }
+@@ -1198,6 +1211,7 @@ static void set_maintenance_mode(void *send_info, bool enable)
+ 
+ 	if (!enable)
+ 		atomic_set(&smi_info->req_events, 0);
++	smi_info->in_maintenance_mode = enable;
+ }
+ 
+ static void shutdown_smi(void *send_info);
 -- 
 2.20.1
 
