@@ -2,119 +2,98 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEC5C432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB62C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A015214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:24:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bC4zjM/q"
+	by mail.kernel.org (Postfix) with ESMTP id 485322146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 22:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569364713;
+	bh=9SBeTOSbULmiFqoG4YjKk9u2jWvbRynHaxfnaPUXVWo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1QumsSTfDv9e9JW6xLdhY35BBwj12oy968h+mpCsuJADXW5S9Fg1XBIITvyaR2rsG
+	 mSAnJYqkVELFP9YNM3VXuhJz5fOjrIHt0ahn6atLidGIRTrPokojcr+0R3+vWRS95m
+	 V2BGJTLkucBdPcwgOunbwAO3Fban5p1q29yNnj64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442027AbfIXWYI (ORCPT
+        id S2410833AbfIXWic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 18:24:08 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55694 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410649AbfIXWYH (ORCPT
+        Tue, 24 Sep 2019 18:38:32 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45412 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389629AbfIXWic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 18:24:07 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a6so2110786wma.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:24:04 -0700 (PDT)
+        Tue, 24 Sep 2019 18:38:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r134so2627780lff.12
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xfRFVkwkZkzLU7wLRDGsHMd8P8PHN/2mWFJxcO4s7yQ=;
-        b=bC4zjM/qQley88yoN1EN4Khq52YC1EVZnPVnorS8QVonyQije6SNxXsss+W1BCmGm9
-         QW8mDw4yWhAVxFZkbCH+fGd1m2Sv8k5TBQC277KT/58VgiPO3scryeuWGQ7YPbkQ4lFk
-         1PlP+6vLAbi2aDsCK51nH+idhJcdxrYGYdjIw=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=90Q+eXMjNvFFuPrMWBbl3/f3JdViBcTYUczXFgEA6fY=;
+        b=M0dmwTrsklIGws4kec6f2o+YuDHRLxHqB8mnf+ZjLpSHn2z41biSEEnbbQ4ulG2QKl
+         zgjM8Sxa8KzwBByQmS1aUcgWEJJ8vr0fJiZS2v/v9Q8VGNBsvrDWW6dVSylnAo6i1hA5
+         d5GqmmE2XYq6jDFMbF8B0/1swDJifG9Vi/p9Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xfRFVkwkZkzLU7wLRDGsHMd8P8PHN/2mWFJxcO4s7yQ=;
-        b=A5MO6wrUZZJ1wjp1jnua3ylGlGNEYevpd2pEpeNC2Ctynr34O/VfN+lXDwnTJOZG4w
-         DXR2yN2+cCHFAtVVuFkuCUbZpE/aNnLbyxhodTZL2ajP6gXGvSQacuetPUQ872/Agn3i
-         /v9kJtQPF/WzjBpoGxAjH5+43rs7cqhmD3up9YKhGtxj+ogCRyov6sd70tKf6lksRG9+
-         1rwjuXDQSANJyqabcj//lMvfm0M+LxyW7c8LEXj5IoJkdr79VAaFKbN0gqcatjVxTWAa
-         SN8ZvcuTdFNSh8i5ZP11P8OvyzJZFO2AZff+I9cQhDWouTh+8oAMeR/FigflvsiW3EgV
-         2InQ==
-X-Gm-Message-State: APjAAAVHsVF6cu7X/SuczCADJAOSrBw0jRuegNGOY18cStDTq0bLymn0
-        TwgnEtCkX/hvhSESbyPicsuwuQ==
-X-Google-Smtp-Source: APXvYqygBR89fKBdCAQmPjpAqiV1ouU4IH0prxfGmTO/KT1bW4/bbP1SDFUrQEK1nfCjt9ckb/vW8g==
-X-Received: by 2002:a1c:7509:: with SMTP id o9mr2944752wmc.21.1569363843889;
-        Tue, 24 Sep 2019 15:24:03 -0700 (PDT)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 94sm1749646wrk.92.2019.09.24.15.23.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 15:24:02 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Icarus Chau <icarus.chau@broadcom.com>,
-        Shivaraj Shetty <sshetty1@broadcom.com>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <20190830125626.GC2870@ninjato>
- <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
- <20190831094940.GA1138@kunai>
- <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
- <20190904213745.GG23608@ninjato>
- <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
- <20190924185757.GA1538@kunai>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <e00520d8-5367-83a5-9c17-d2d8b0c983c3@broadcom.com>
-Date:   Tue, 24 Sep 2019 15:23:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=90Q+eXMjNvFFuPrMWBbl3/f3JdViBcTYUczXFgEA6fY=;
+        b=CDKbrDpjsN3ZAUvayJXikpBUYhM3r4aFi850v4OR9PUpolXHxMy7E3b30H6xnBO+oJ
+         ldVYVnFZImI4zHQfbAzzRnaMyymDmoNLpOvMGaLwlBWrWt4Pvo0q80YI4mOXsgyo/42W
+         ajQDNOOpkoYu2T6or9mo7qFMevUkPW4La8NPSc5WE1USbjc70+u8/TWrTm9TLbn4eH//
+         Ezgjn45wNEpkqyl4NndYlyh+Oyl03nfm1jPmEoYmvW+yX+gLRQ6YAl30BS7sCsbg8W3V
+         dKK1jUU9T/4Z9qOSip1DyolzBYLE62zGv5hG5ofvZjF6A3RuVF5djO7KTqdlky3RFfMG
+         d+Fg==
+X-Gm-Message-State: APjAAAXtqD4Bn1r7/m5L2hHYxoMJqxT/7frtJZU2B3uzGiFR0/ltaVEH
+        i1Nl+Gixw2GlCAeOoODCDTuRBhrX4OA=
+X-Google-Smtp-Source: APXvYqzYoYBY3/Kj72L5w4KgDpy2VP8xH1LuOCswnK9upAAR9uTNqUs1jzVw+gIT5M++TYdxbkHxYQ==
+X-Received: by 2002:ac2:48af:: with SMTP id u15mr3441886lfg.75.1569364709288;
+        Tue, 24 Sep 2019 15:38:29 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id g3sm789485ljj.59.2019.09.24.15.38.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id u3so2629430lfl.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
+X-Received: by 2002:a19:f204:: with SMTP id q4mr3298645lfh.29.1569364706199;
+ Tue, 24 Sep 2019 15:38:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190924185757.GA1538@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190923223612.gJ-_DTlay%akpm@linux-foundation.org> <20190924074744.GA23050@dhcp22.suse.cz>
+In-Reply-To: <20190924074744.GA23050@dhcp22.suse.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 24 Sep 2019 15:38:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiTDTXMco-_LF2Wf5J7awz3BenB1JrkqJM3mPMr7y951Q@mail.gmail.com>
+Message-ID: <CAHk-=wiTDTXMco-_LF2Wf5J7awz3BenB1JrkqJM3mPMr7y951Q@mail.gmail.com>
+Subject: Re: [patch 066/134] mm/memory_hotplug.c: add a bounds check to check_hotplug_memory_range()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        alastair@d-silva.org, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>, ira.weiny@intel.com,
+        Jason Gunthorpe <jgg@ziepe.ca>, logang@deltatee.com,
+        mm-commits@vger.kernel.org, osalvador@suse.com,
+        pasha.tatashin@soleen.com, Wei Yang <richard.weiyang@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 24, 2019 at 12:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> Isn't this rushed a bit? I've had a review feedback just yesterday
+> http://lkml.kernel.org/r/20190923122513.GO6016@dhcp22.suse.cz and had
+> some concerns.
 
+Ok dropped.
 
-On 9/24/19 11:57 AM, Wolfram Sang wrote:
-> 
->> In my opinion, it's probably better to continue to support master_xfer in
->> our driver (with obvious limitations), in order to allow i2ctransfer (or any
->> apps that use I2C RDWR) to continue to work.
->>
->> What do you think?
-> 
-> Yes, don't break it for users. We should have paid more attention to it
-> in the beginning. But, while not ideal, it is not such a big deal to
-> keep it like this.
-> 
-> Thanks for your investigations!
-> 
+That means I need to drop "mm/memremap.c: add a bounds check in
+devm_memremap_pages()" too, which depends on it.
 
-Thanks, Wolfram.
-
-Let's please continue with the review process on the current patch then?
-
-Note the patch was already internally reviewed by me.
-
-Please help to review it and let us know if there's any change that 
-needs to be made?
-
-Regards,
-
-Ray
+           Linus
