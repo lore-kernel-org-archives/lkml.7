@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCBAC432C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4613EC432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E9921BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C87421D80
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 16:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569343923;
-	bh=Y1mU3yamgEEqPOt5jB7Oj42CunCeU8jAvCNAfpFIBAk=;
+	s=default; t=1569343928;
+	bh=eIVYCmBoQuGrbToR78lQuZGyISQWFjO/9AvUGHo61Xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDudsRnJhwODVOeVLwk+5araLFye4My54dCYkQp+/NX7TP8VIspuFvF1+FtL/NMbD
-	 G5WIANwF8b0E5DVinGondPqE2FydpdXLjJpliNOnqUgVedpBWN/s/06dpsibrpnA8O
-	 INCFlhUWuhE2jNQiKVTo/NXQGXdeJNVnAsSFhivw=
+	b=GHN59tAhSoKIW61R/9yee+agjrCaOU2+Sr/3+I0zcx9djzUol2CQiUgy/SMefqMfh
+	 IPjCkhlSM5GDS1+pcj5xqXzHrd4k/5D7iZd/agkLp5FrpmWzOtX7KV075YcABYUVui
+	 joZr2DIlfOoFb95qL0xoDJecaTEbGoc4QDZL4FO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441573AbfIXQwB (ORCPT
+        id S2441589AbfIXQwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 12:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
+        Tue, 24 Sep 2019 12:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410809AbfIXQu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:50:58 -0400
+        id S2411155AbfIXQvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 12:51:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B8A2054F;
-        Tue, 24 Sep 2019 16:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623BF222BF;
+        Tue, 24 Sep 2019 16:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343857;
-        bh=Y1mU3yamgEEqPOt5jB7Oj42CunCeU8jAvCNAfpFIBAk=;
+        s=default; t=1569343899;
+        bh=eIVYCmBoQuGrbToR78lQuZGyISQWFjO/9AvUGHo61Xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q/7B9NZfPuIGGVALebUlHyT7yzFMOy6KGgm6hzsyR/QGZ6JraG8IqelFvrhgYEqL6
-         T0EGFPQhUNMd8FhV2hPmdghb+LCiHq/3oocjyPfAhVrorOWVe3ib5SghOaNFN/VNOa
-         Pz4Pez8sJI5yiUlmrw8qF4zWbk70t7gTcuPmD3JA=
+        b=sFavR0qzCmfQoNuoZYR+q0Y45cwANtxx6Zuvpd2HZuZEjo2VS0rLfKPWvGdOC4ol0
+         WFoZoPfWYqZp5ZwV3bLz8aUGssL8/GwI/L+OjgIOv2w7/TW1vKzm6MVs6PVQ46V3Hw
+         TVbWxL+b3wmcd+GmVajQfijvUdw3qAHGX6W5ToPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 15/28] powerpc/rtas: use device model APIs and serialization during LPM
-Date:   Tue, 24 Sep 2019 12:50:18 -0400
-Message-Id: <20190924165031.28292-15-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 04/19] gpu: drm: radeon: Fix a possible null-pointer dereference in radeon_connector_set_property()
+Date:   Tue, 24 Sep 2019 12:51:15 -0400
+Message-Id: <20190924165130.28625-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190924165031.28292-1-sashal@kernel.org>
-References: <20190924165031.28292-1-sashal@kernel.org>
+In-Reply-To: <20190924165130.28625-1-sashal@kernel.org>
+References: <20190924165130.28625-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,94 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit a6717c01ddc259f6f73364779df058e2c67309f8 ]
+[ Upstream commit f3eb9b8f67bc28783eddc142ad805ebdc53d6339 ]
 
-The LPAR migration implementation and userspace-initiated cpu hotplug
-can interleave their executions like so:
+In radeon_connector_set_property(), there is an if statement on line 743
+to check whether connector->encoder is NULL:
+    if (connector->encoder)
 
-1. Set cpu 7 offline via sysfs.
+When connector->encoder is NULL, it is used on line 755:
+    if (connector->encoder->crtc)
 
-2. Begin a partition migration, whose implementation requires the OS
-   to ensure all present cpus are online; cpu 7 is onlined:
+Thus, a possible null-pointer dereference may occur.
 
-     rtas_ibm_suspend_me -> rtas_online_cpus_mask -> cpu_up
+To fix this bug, connector->encoder is checked before being used.
 
-   This sets cpu 7 online in all respects except for the cpu's
-   corresponding struct device; dev->offline remains true.
+This bug is found by a static analysis tool STCheck written by us.
 
-3. Set cpu 7 online via sysfs. _cpu_up() determines that cpu 7 is
-   already online and returns success. The driver core (device_online)
-   sets dev->offline = false.
-
-4. The migration completes and restores cpu 7 to offline state:
-
-     rtas_ibm_suspend_me -> rtas_offline_cpus_mask -> cpu_down
-
-This leaves cpu7 in a state where the driver core considers the cpu
-device online, but in all other respects it is offline and
-unused. Attempts to online the cpu via sysfs appear to succeed but the
-driver core actually does not pass the request to the lower-level
-cpuhp support code. This makes the cpu unusable until the cpu device
-is manually set offline and then online again via sysfs.
-
-Instead of directly calling cpu_up/cpu_down, the migration code should
-use the higher-level device core APIs to maintain consistent state and
-serialize operations.
-
-Fixes: 120496ac2d2d ("powerpc: Bring all threads online prior to migration/hibernation")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190802192926.19277-2-nathanl@linux.ibm.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 1643e9e536557..141d192c69538 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -874,15 +874,17 @@ static int rtas_cpu_state_change_mask(enum rtas_cpu_state state,
- 		return 0;
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index c5e1aa5f1d8ea..efa875120071a 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -764,7 +764,7 @@ static int radeon_connector_set_property(struct drm_connector *connector, struct
  
- 	for_each_cpu(cpu, cpus) {
-+		struct device *dev = get_cpu_device(cpu);
-+
- 		switch (state) {
- 		case DOWN:
--			cpuret = cpu_down(cpu);
-+			cpuret = device_offline(dev);
- 			break;
- 		case UP:
--			cpuret = cpu_up(cpu);
-+			cpuret = device_online(dev);
- 			break;
- 		}
--		if (cpuret) {
-+		if (cpuret < 0) {
- 			pr_debug("%s: cpu_%s for cpu#%d returned %d.\n",
- 					__func__,
- 					((state == UP) ? "up" : "down"),
-@@ -971,6 +973,8 @@ int rtas_ibm_suspend_me(u64 handle)
- 	data.token = rtas_token("ibm,suspend-me");
- 	data.complete = &done;
+ 		radeon_encoder->output_csc = val;
  
-+	lock_device_hotplug();
-+
- 	/* All present CPUs must be online */
- 	cpumask_andnot(offline_mask, cpu_present_mask, cpu_online_mask);
- 	cpuret = rtas_online_cpus_mask(offline_mask);
-@@ -1002,6 +1006,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 				__func__);
- 
- out:
-+	unlock_device_hotplug();
- 	free_cpumask_var(offline_mask);
- 	return atomic_read(&data.error);
- }
+-		if (connector->encoder->crtc) {
++		if (connector->encoder && connector->encoder->crtc) {
+ 			struct drm_crtc *crtc  = connector->encoder->crtc;
+ 			const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+ 			struct radeon_crtc *radeon_crtc = to_radeon_crtc(crtc);
 -- 
 2.20.1
 
