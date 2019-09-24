@@ -2,407 +2,508 @@ Return-Path: <SRS0=YpA9=XT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D158DC432C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D755C432C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D426207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7248207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Sep 2019 02:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fp7PeXjc"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ZI/S6/A3";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ZI/S6/A3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408512AbfIXCNc (ORCPT
+        id S2408525AbfIXCNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Sep 2019 22:13:32 -0400
-Received: from mail-eopbgr00065.outbound.protection.outlook.com ([40.107.0.65]:52037
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Mon, 23 Sep 2019 22:13:50 -0400
+Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:8672
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729136AbfIXCNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Sep 2019 22:13:32 -0400
+        id S1729136AbfIXCNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Sep 2019 22:13:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VtOvIKTEM9Kdx1cv1gDjPRGAeLlDy+xXsM2fNqbAC6g=;
+ b=ZI/S6/A3I04AlFWrw8aHHuX9AU87it9D5UiFOFSSn7lQd+Xp5+ikgTJSwK+vAb2IqFRiHC2eTzD2g0pze2tECqTSca/HrSzfXlUELvUrAlDs1kexN4xno5gFfggfB8lHfNZlPpaeYvS9N1wulam69pfdNvdbSceEdvb/DKJAW+U=
+Received: from VI1PR08CA0193.eurprd08.prod.outlook.com (2603:10a6:800:d2::23)
+ by VI1PR08MB3261.eurprd08.prod.outlook.com (2603:10a6:803:3d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Tue, 24 Sep
+ 2019 02:13:41 +0000
+Received: from AM5EUR03FT064.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::208) by VI1PR08CA0193.outlook.office365.com
+ (2603:10a6:800:d2::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2284.20 via Frontend
+ Transport; Tue, 24 Sep 2019 02:13:41 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT064.mail.protection.outlook.com (10.152.17.53) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2284.25 via Frontend Transport; Tue, 24 Sep 2019 02:13:39 +0000
+Received: ("Tessian outbound 96594883d423:v31"); Tue, 24 Sep 2019 02:13:36 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f9fc6ec848561296
+X-CR-MTA-TID: 64aa7808
+Received: from 9a22645dec10.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.6.57])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id A61F15E7-E877-4E10-9C2D-84779960E7AC.1;
+        Tue, 24 Sep 2019 02:13:30 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2057.outbound.protection.outlook.com [104.47.6.57])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9a22645dec10.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 24 Sep 2019 02:13:30 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MPINZWVOoWj6L7qJGmwuYj4fDSMGyjdLBJS428po8EUZcDm6eaQcWFbmQ8pYRsuJFNUIwpSTOnHVbEvkVmr84tnEjPgZIV6Vdqm1Ss9Nv8xhPBV3iXhcpUDMP/vu+HfYw+W5AFFISoeNTgaAFV2UcJjX+eXTM/M78ROdDDeMd+41m6Fu8bI4A5RPUWgYE8zJWtghD0K4lMuXH2VL7PGILGtWMgfqJT0DztQWCpmcRgcjZ3GRQZZ3hgKYgRy90neEHI2Gn9JcFsWNhm4HBaUj9cAu9kjon13Wa7z5k2Vy0g2CVdz0giZxAUfS9kfSYwW2NjLNh21jNDQ3hYYRn35xTQ==
+ b=jMjQFyqsIgSnpZYBDiUyi19CwGbJLhcKpAFjAzMnNLfyk6F06oA8rHKfWGaQ819W60cI0ZdYBThve4SEje9SpCrUpeSk7iAKwEGFnXENJu8Y/sCpNG3l7OkqxHTLhuqcBImBKUbRcj6o3iXRiwkdXRFrkO3OQRVJW6NWMdQe6ggNzgWfGyV+F1MpdyapQEzQ7bnjJBSgzVZ/2YbanZDgNErVL8eYpmixSFotQKHmQnIbvU4vJsDhs3YvlRLTLiTrKVQwDcW0xKB1qAg96NTJgYQ+k7yiLI9xlDJdrPxixIi+4aSmtLh+tAFaXW+vZ537kBHCTX/Zq3xM0PKnC7XE2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Qn9SgfGdzcInfFwmxBRN9+cdpFYQOYVDO9X8UI7YXE=;
- b=Z2t1i232EVNiPTXODm4tTJ3rqrdrj7xPOqfEvcjrQiF3oOMympolRdztz5EzyuvwwSepry3Kzid+DPPpPO9BJulgPQGa1Ne0YBAylSSIMwUW4CWdJeaGBW0PcvYNNxcYyl12Amf2sBKGZeG1oJl+chOMgGGUlSfydLB4JLMcTty1wQCiCJyE0xwk7CwZR3J6LbYbPAKmZIszidurMoJXX5lEH/m7MrdDxZgkPVxBaaYMkQBsb3BRffPUtPjEPzRyZxq9oOBO0xqVb55Xpqi2zs/2uj5RBVD3s/vyQjRu13PZzAOPEwyeS8fzzljmZtVng0CrqdMtK9/OM75DMh1P/w==
+ bh=VtOvIKTEM9Kdx1cv1gDjPRGAeLlDy+xXsM2fNqbAC6g=;
+ b=SN9WQphpvP+ypgoBY4yyg+eKWVBWlxnqa6n8cQojZXxQuvSK+6PD7yx39RBU94ZxdLoG/BBCytTzjtYWKZOpbxNpT/JozoaDXYV6P5Z4wFCkhlCdA52fbWR+KjRV7mosm6qSXZFxKfkrLuCpnlJ5ffgbA8/BVEgn+cL6vdi5iXd+65hK3xAEeWpFhsxHolxqflvJrGRoJ5EG4Tuhu8SLbUw2dJMd4fnjXnNpXigZTiop5dI4At4t+BpmzxXLS4NXzn7rL70oysuvCQzIyfwKj/qfdQQ6jJNZbOtH2ca1wtnV6dmZlOHdNCcbTOXFC1OQBLl1+GqUSyPPvfOmo3Qgvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Qn9SgfGdzcInfFwmxBRN9+cdpFYQOYVDO9X8UI7YXE=;
- b=Fp7PeXjcIXdkQYomk8G9t2LeN9xmWdyK6kcjRvlxYlQFvoR9PXEJqHBpvlW25iyGkRx7prnrP0xQYmffdu0nrJrt8YUq4cV893m3PajrAoASFPo6v/XIFAEkZqmrGzDMcWjLoMDi7llj9F43iJygKAP6EaVMiAVBsIzNASy3mrc=
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com (52.134.122.155) by
- VI1PR04MB5165.eurprd04.prod.outlook.com (20.177.50.206) with Microsoft SMTP
+ bh=VtOvIKTEM9Kdx1cv1gDjPRGAeLlDy+xXsM2fNqbAC6g=;
+ b=ZI/S6/A3I04AlFWrw8aHHuX9AU87it9D5UiFOFSSn7lQd+Xp5+ikgTJSwK+vAb2IqFRiHC2eTzD2g0pze2tECqTSca/HrSzfXlUELvUrAlDs1kexN4xno5gFfggfB8lHfNZlPpaeYvS9N1wulam69pfdNvdbSceEdvb/DKJAW+U=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5120.eurprd08.prod.outlook.com (20.179.30.75) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Tue, 24 Sep 2019 02:13:23 +0000
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::a587:f9f1:d9ae:8c18]) by VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::a587:f9f1:d9ae:8c18%3]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 02:13:23 +0000
-From:   Andy Tang <andy.tang@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>, Zhang Rui <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>
-CC:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] thermal: qoriq: add thermal monitor unit version 2
- support
-Thread-Topic: [PATCH] thermal: qoriq: add thermal monitor unit version 2
- support
-Thread-Index: AQHVcnXWupvKczIDFkuunx7Bo4bZO6c6DDcQgAAJcQCAAACNsA==
-Date:   Tue, 24 Sep 2019 02:13:23 +0000
-Message-ID: <VI1PR04MB4333F3A5B22F602E8FF07EDFF3840@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190604025114.46085-1-andy.tang@nxp.com>
-         <VI1PR04MB433382A830BE0857134ABF5BF3D50@VI1PR04MB4333.eurprd04.prod.outlook.com>
-         <VI1PR04MB4333D4FAA6F25AD30CADF0D4F3A20@VI1PR04MB4333.eurprd04.prod.outlook.com>
-         <VI1PR04MB433332B34EF758457365AE91F3850@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <d4c45941ef2ebbc4ac11ce199e3e8ae527a34df9.camel@intel.com>
- <DB3PR0402MB3916F5DFF6D2C35FEFEA9F4DF5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <VI1PR04MB433348B8439722437A40D22AF3840@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <DB3PR0402MB39160E59ABDA280C0416AD6AF5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39160E59ABDA280C0416AD6AF5840@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ 15.20.2284.20; Tue, 24 Sep 2019 02:13:27 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
+ 02:13:27 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Topic: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Index: AQHVb5fml3iiEtk+MEOqXjNduhm+kKc5MiiAgADp5IA=
+Date:   Tue, 24 Sep 2019 02:13:27 +0000
+Message-ID: <20190924021313.GA15776@jamwan02-TSP300>
+References: <20190920094329.17513-1-lowry.li@arm.com>
+ <20190923121604.jqi6ewln27yvdajw@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20190923121604.jqi6ewln27yvdajw@DESKTOP-E1NTVVP.localdomain>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=andy.tang@nxp.com; 
-x-originating-ip: [119.31.174.73]
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0007.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::19) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9d699307-e7cc-43d4-b50b-08d74094c6f9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5165;
-x-ms-traffictypediagnostic: VI1PR04MB5165:|VI1PR04MB5165:
+X-MS-Office365-Filtering-Correlation-Id: 69931e9f-8748-4ec0-cc87-08d74094d069
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5120;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5120:|VE1PR08MB5120:|VI1PR08MB3261:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB516577B6D511B1473AC9B785F3840@VI1PR04MB5165.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+X-Microsoft-Antispam-PRVS: <VI1PR08MB3261BAE6C5F5D35D37142AB1B3840@VI1PR08MB3261.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:8273;
 x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(366004)(346002)(396003)(13464003)(199004)(189003)(7736002)(8676002)(66946007)(76116006)(30864003)(5660300002)(3846002)(110136005)(2501003)(6116002)(66066001)(54906003)(52536014)(229853002)(81166006)(316002)(66556008)(66446008)(64756008)(66476007)(478600001)(2906002)(305945005)(14454004)(44832011)(11346002)(76176011)(25786009)(486006)(6246003)(7696005)(14444005)(256004)(86362001)(53546011)(8936002)(446003)(99286004)(476003)(4326008)(6436002)(55016002)(33656002)(186003)(102836004)(26005)(81156014)(74316002)(9686003)(71190400001)(71200400001)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5165;H:VI1PR04MB4333.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(396003)(376002)(366004)(39860400002)(346002)(199004)(189003)(71190400001)(486006)(66556008)(229853002)(64756008)(14454004)(446003)(66946007)(54906003)(476003)(4326008)(3846002)(6116002)(11346002)(305945005)(81166006)(81156014)(66476007)(102836004)(8936002)(55236004)(386003)(6506007)(186003)(8676002)(71200400001)(478600001)(1076003)(26005)(52116002)(30864003)(6636002)(99286004)(5660300002)(6436002)(33656002)(14444005)(33716001)(256004)(6486002)(7736002)(6512007)(6246003)(58126008)(25786009)(76176011)(316002)(6862004)(9686003)(66446008)(2906002)(86362001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5120;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jyfUhyJNBgbrgQd+LlOTmtdTerecgwv3g3pvNRDgI/KniyMIjx6VCfvTyBAzCi1d3GxOS0PSFOxIuPgCTLRIMUhA1amGbgafW6ZsUNXasBWMa2sykgEpdkz704BsqT/IULH6C0DvToPF/8nu1HfbXH7dWETq1BNqdHtxq5kSAxLY3z+wva7x6/DuQg0BhESsJGV257pbygIa3b3KI6kw00hUIm5ggFOweWP5iO6S6Oa72CRvUSbyGxwAdJGUC6Rg8BVStJgaqEc5wp3SZubxXr/B77AictGMJpq/81+D9hZrx9EBrUeYKK+r3hGXow1wR3s9VveUVojPYIQ19qJh4ZKwIAbVrnQQbapjIRvRIY5EzyeNe6IplX3JjM9PE0DvSJ6mQRWVVX+U3lB1RQLIoiTEuQy+nrIyGSXd4lDfZco=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: tBs03Fr3VxbSQ4oGHvkeAMtXrJEjxIt7/91cMm4n8J1hVaf3lKgLG3DnNk97+J4wRUkPZhSkBE5sCaNrIjujciefsI2uH29KblCEgpOsSX0QrEtM4/lgNMIJa0Jc31k9M+ml+HHFmVso/6lszNnxr1HGyVPly58Q/4P5cx2OOK9K4oLOHDWDt86iDWaxfpjB488osGcaVt0GkKPDAmFWaLeicDJQ0y5YrLq6N1zduyBObpLQhtxZeXOQAw3p3qisFCkOWXtUMOXfaTPiEJHfTL0+M7v/SGMOKyx6yfTcXCphiHfqZGSMYLuKLbd5J1cGq0kDb7VTXYjqzhPi4fie/5hUSNceSHj2NdyKCO9Z7NIg4YG7idCdArL549uHOXsfEavUE3MtVRK5AWQKTuUn6qgQsFmxRVLVlu7ctLxRIRE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7ED7DFFAB9B0149AE56555BAB00E8BC@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d699307-e7cc-43d4-b50b-08d74094c6f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 02:13:23.2256
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5120
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT064.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(346002)(376002)(39860400002)(396003)(199004)(189003)(50466002)(22756006)(54906003)(66066001)(30864003)(2906002)(186003)(229853002)(8936002)(46406003)(26005)(76176011)(86362001)(8746002)(70206006)(70586007)(99286004)(102836004)(6486002)(478600001)(81156014)(8676002)(14444005)(6246003)(5660300002)(47776003)(26826003)(81166006)(33656002)(386003)(6506007)(36906005)(25786009)(6862004)(446003)(7736002)(6512007)(9686003)(356004)(11346002)(486006)(476003)(126002)(6636002)(63350400001)(316002)(1076003)(23726003)(76130400001)(58126008)(336012)(33716001)(97756001)(14454004)(4326008)(305945005)(3846002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3261;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 00e768a5-9978-462b-34c8-08d74094c8e5
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3261;
+NoDisclaimer: True
+X-Forefront-PRVS: 0170DAF08C
+X-Microsoft-Antispam-Message-Info: brj1AZxCWCwC8YP6QwIZtqMRZCkNqLDyjHJqzdfmDlqCY355RoHGdJC0nf6vKLb21MQTU1DO0X1bTg2GNrvL84cARC6Je7EsfqiCt1Pwa0eSEJFE5qLjEjE5WDbPL16LUgeUIV7pEx4Dnta542fMZVeX+2TqRMShp+nADcDJ0u1rzkcAO3K7jfOY7pe6F/QfCztqckacUOOSTHxnT/tZL23GUD4mqEcLDwZ3OFatnJzyBGJ/xa60wVxQ32FJ6NlbY3C7VlRFzyeW03qYJJrZyo6pzMzypfyXA/Ex9T2r/FPStBEAVe2B+6mrEOQYtqbiyl17Tb/xx2vkmkySICuBRKst5OUku+B/gHljJX8dM8SeohBCXTEiL2Jad97bXzYEVTHm+IvpJnp8aZLp1C6RG6VVxH2r0B0mex23tJqzOLc=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2019 02:13:39.1576
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1200/wcYAzRWnBXmX74trUwf0qcajO0bga2BpjWX/1gv7SOAL4M552yrjXOqrxtMuuR+7BlH9rvJ9JA0VZiZeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5165
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69931e9f-8748-4ec0-cc87-08d74094d069
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5zb24sDQoNClBvaW50cyBhcmUgdGFrZW4uIFdpbGwgc2VuZCBvdXQgdGhlIG5leHQgdmVy
-c2lvbi4NCg0KVGhhbmtzLA0KQW5keQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-IEZyb206IEFuc29uIEh1YW5nDQo+IFNlbnQ6IDIwMTnlubQ55pyIMjTml6UgMTA6MTENCj4gVG86
-IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBaaGFuZyBSdWkgPHJ1aS56aGFuZ0BpbnRl
-bC5jb20+Ow0KPiBlZHViZXp2YWxAZ21haWwuY29tDQo+IENjOiBkYW5pZWwubGV6Y2Fub0BsaW5h
-cm8ub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47DQo+IGxpbnV4LXBtQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BB
-VENIXSB0aGVybWFsOiBxb3JpcTogYWRkIHRoZXJtYWwgbW9uaXRvciB1bml0IHZlcnNpb24gMg0K
-PiBzdXBwb3J0DQo+IA0KPiBIaSwgQW5keQ0KPiANCj4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSB0
-aGVybWFsOiBxb3JpcTogYWRkIHRoZXJtYWwgbW9uaXRvciB1bml0IHZlcnNpb24NCj4gPiAyIHN1
-cHBvcnQNCj4gPg0KPiA+IEhpIEFuc29uLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIHJldmll
-dy4gUGxlYXNlIHNlZSBteSByZXBseSBpbmxpbmUuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiA+ID4gU2VudDogMjAxOeW5
-tDnmnIgyNOaXpSA5OjE3DQo+ID4gPiBUbzogWmhhbmcgUnVpIDxydWkuemhhbmdAaW50ZWwuY29t
-PjsgQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT47DQo+ID4gPiBlZHViZXp2YWxAZ21haWwu
-Y29tDQo+ID4gPiBDYzogZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsgTGVvIExpIDxsZW95YW5n
-LmxpQG54cC5jb20+Ow0KPiA+ID4gbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSB0aGVybWFsOiBx
-b3JpcTogYWRkIHRoZXJtYWwgbW9uaXRvciB1bml0DQo+ID4gPiB2ZXJzaW9uDQo+ID4gPiAyIHN1
-cHBvcnQNCj4gPiA+DQo+ID4gPiBIaSwgQW5keQ0KPiA+ID4NCj4gPiA+DQo+ID4gPiA+IE9uIE1v
-biwgMjAxOS0wOS0yMyBhdCAwOToyNCArMDAwMCwgQW5keSBUYW5nIHdyb3RlOg0KPiA+ID4gPiA+
-IEhpIFJ1aSwgRWR1YmV6dmFsLA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gV291bGQgeW91IHBsZWFz
-ZSByZXZpZXcgdGhpcyBwYXRjaD8NCj4gPiA+ID4gPg0KPiA+ID4gPiBDQyBBbnNvbiBIdWFuZy4N
-Cj4gPiA+ID4gSSdkIHByZWZlciBhbGwgdGhlIHFvcmlxIHRoZXJtYWwgcGF0Y2hlcyBnbyB0aHJv
-dWdoIGhpcyByZXZpZXcgZmlyc3QuDQo+ID4gPiA+DQo+ID4gPiA+IHRoYW5rcywNCj4gPiA+ID4g
-cnVpDQo+ID4gPiA+DQo+ID4gPiA+ID4gQlIsDQo+ID4gPiA+ID4gQW5keQ0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+ID4gRnJvbTog
-QW5keSBUYW5nDQo+ID4gPiA+ID4gPiBTZW50OiAyMDE55bm0OOaciDI55pelIDE2OjM4DQo+ID4g
-PiA+ID4gPiBUbzogJ2VkdWJlenZhbEBnbWFpbC5jb20nIDxlZHViZXp2YWxAZ21haWwuY29tPjsN
-Cj4gPiA+ID4gPiA+ICdydWkuemhhbmdAaW50ZWwuY29tJw0KPiA+ID4gPiA+ID4gPHJ1aS56aGFu
-Z0BpbnRlbC5jb20+DQo+ID4gPiA+ID4gPiBDYzogJ2RhbmllbC5sZXpjYW5vQGxpbmFyby5vcmcn
-IDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPjsNCj4gPiA+ID4gPiA+IExlbyBMaSA8bGVveWFu
-Zy5saUBueHAuY29tPjsgJ2xpbnV4LXBtQHZnZXIua2VybmVsLm9yZycNCj4gPiA+ID4gPiA+IDxs
-aW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc+OyAnbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZycN
-Cj4gPiA+ID4gPiA+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiA+ID4gPiA+ID4g
-U3ViamVjdDogUkU6IFtQQVRDSF0gdGhlcm1hbDogcW9yaXE6IGFkZCB0aGVybWFsIG1vbml0b3Ig
-dW5pdA0KPiA+ID4gPiA+ID4gdmVyc2lvbiAyIHN1cHBvcnQNCj4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiBIaSBSdWksIEVkdWJlenZhbCwNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBBbG1vc3Qg
-dGhyZWUgbW9udGhlcyBwYXNzZWQsIEkgaGF2ZSBub3QgZ290IHlvdXIgY29tbWVudHMgZnJvbQ0K
-PiA+IHlvdS4NCj4gPiA+ID4gPiA+IENvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2sgYXQgdGhp
-cyBwYXRjaD8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBCUiwNCj4gPiA+ID4gPiA+IEFuZHkN
-Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4gPiA+ID4gPiA+IEZyb206IEFuZHkgVGFuZw0KPiA+ID4gPiA+ID4gPiBTZW50OiAyMDE55bm0
-OOaciDbml6UgMTA6NTcNCj4gPiA+ID4gPiA+ID4gVG86IGVkdWJlenZhbEBnbWFpbC5jb207IHJ1
-aS56aGFuZ0BpbnRlbC5jb20NCj4gPiA+ID4gPiA+ID4gQ2M6IGRhbmllbC5sZXpjYW5vQGxpbmFy
-by5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gPiA+ID4gPiA+ID4gbGludXgt
-cG1Admdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+
-ID4gPiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIHRoZXJtYWw6IHFvcmlxOiBhZGQgdGhlcm1hbCBt
-b25pdG9yDQo+ID4gPiA+ID4gPiA+IHVuaXQgdmVyc2lvbg0KPiA+ID4gPiA+ID4gPiAyIHN1cHBv
-cnQNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gQW55IGNvbW1lbnRzPw0KPiA+ID4gPiA+
-ID4gPg0KPiA+ID4gPiA+ID4gPiBCUiwNCj4gPiA+ID4gPiA+ID4gQW5keQ0KPiA+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4g
-PiA+ID4gRnJvbTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gPiA+ID4g
-PiA+ID4gU2VudDogMjAxOeW5tDbmnIg05pelIDEwOjUxDQo+ID4gPiA+ID4gPiA+ID4gVG86IGVk
-dWJlenZhbEBnbWFpbC5jb207IHJ1aS56aGFuZ0BpbnRlbC5jb20NCj4gPiA+ID4gPiA+ID4gPiBD
-YzogZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsgTGVvIExpDQo+ID4gPiA+ID4gPiA+ID4gPGxl
-b3lhbmcubGlAbnhwLmNvbT47IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gPiA+
-ID4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmR5IFRhbmcNCj4gPiA+ID4gPiA+
-ID4gPiA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gPiA+ID4gPiA+ID4gU3ViamVjdDogW1BBVENI
-XSB0aGVybWFsOiBxb3JpcTogYWRkIHRoZXJtYWwgbW9uaXRvciB1bml0DQo+ID4gPiA+ID4gPiA+
-ID4gdmVyc2lvbiAyIHN1cHBvcnQNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IFRo
-ZXJtYWwgTW9uaXRvciBVbml0IHYyIGlzIGludHJvZHVjZWQgb24gbmV3IExheXNjYXBlIFNvQy4N
-Cj4gPiA+ID4gPiA+ID4gPiBDb21wYXJlZCB0byB2MSwgVE1VdjIgaGFzIGEgbGl0dGxlIGRpZmZl
-cmVudCByZWdpc3Rlcg0KPiA+ID4gPiA+ID4gPiA+IGxheW91dCBhbmQgZGlnaXRhbCBvdXRwdXQg
-aXMgZmFpcmx5IGxpbmVhci4NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+ID4gPiA+ID4g
-PiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiA+ICBkcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5j
-IHwgMTIyDQo+ID4gPiA+ID4gPiA+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0N
-Cj4gPiA+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDk4IGluc2VydGlvbnMoKyksIDI0IGRl
-bGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMNCj4gPiA+ID4gPiA+ID4gPiBiL2RyaXZl
-cnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMgaW5kZXgNCj4gPiA+ID4gPiA+ID4gPiAzYjVmNWIz
-ZmIxYmMuLjBkZjZkZmRkZjgwNA0KPiA+ID4gPiA+ID4gPiA+IDEwMDY0NA0KPiA+ID4gPiA+ID4g
-PiA+IC0tLSBhL2RyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMNCj4gPiA+ID4gPiA+ID4g
-PiArKysgYi9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+ID4gPiA+ID4gPiA+ID4g
-QEAgLTEzLDYgKzEzLDE1IEBADQo+ID4gPiA+ID4gPiA+ID4gICNpbmNsdWRlICJ0aGVybWFsX2Nv
-cmUuaCINCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ICAjZGVmaW5lIFNJVEVTX01B
-WAkxNg0KPiA+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIFRNUl9ESVNBQkxFCTB4MA0KPiA+ID4gPiA+
-ID4gPiA+ICsjZGVmaW5lIFRNUl9NRQkJMHg4MDAwMDAwMA0KPiA+ID4gPiA+ID4gPiA+ICsjZGVm
-aW5lIFRNUl9BTFBGCTB4MGMwMDAwMDANCj4gPiA+ID4gPiA+ID4gPiArI2RlZmluZSBUTVJfQUxQ
-Rl9WMgkweDAzMDAwMDAwDQo+ID4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgVE1UTUlSX0RFRkFVTFQJ
-MHgwMDAwMDAwZg0KPiA+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIFRJRVJfRElTQUJMRQkweDANCj4g
-PiA+ID4gPiA+ID4gPiArI2RlZmluZSBURVVNUjBfVjIJMHg1MTAwOUMwMA0KPiA+ID4NCj4gPiA+
-IEJldHRlciB0byB1c2UgZWl0aGVyIGxvd2VyIGNhc2Ugb3IgY2FwaXRhbCBsZXR0ZXIgZm9yIGFs
-bCBtYWNybw0KPiA+ID4gZGVmaW5pdGlvbnMsIHNvbWUgYXJlIGxvd2VyIGNhc2UgYW5kIHNvbWUg
-YXJlIGNhcGl0YWwgbGV0dGVyIGxvb2sNCj4gPiA+IGxpa2UgTk9UDQo+ID4gYWxpZ25lZC4NCj4g
-PiBJIGFsd2F5cyB1c2UgY2FwaXRhbCBsZXR0ZXIgdG8gZGVmaW5lIGEgbWFjcm8uDQo+ID4gRGlk
-IEkgdXNlIGxvd2VyIGxldHRlciBzb21ld2hlcmU/DQo+IA0KPiBJIG1lYW50IGJlbG93Og0KPiAN
-Cj4gKyNkZWZpbmUgVE1UTUlSX0RFRkFVTFQJMHgwMDAwMDAwZg0KPiArI2RlZmluZSBURVVNUjBf
-VjIJMHg1MTAwOUMwMA0KPiANCj4gJ2YnIGlzIGxvd2VyIGNhc2Ugd2hpbGUgJ0MnIGlzIGNhcGl0
-YWwgbGV0dGVyLg0KPiANCj4gPg0KPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiArI2RlZmluZSBUTVVf
-VkVSMQkweDENCj4gPiA+ID4gPiA+ID4gPiArI2RlZmluZSBUTVVfVkVSMgkweDINCj4gPiA+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ICAvKg0KPiA+ID4gPiA+ID4gPiA+ICAgKiBRb3JJUSBU
-TVUgUmVnaXN0ZXJzDQo+ID4gPiA+ID4gPiA+ID4gQEAgLTIzLDE3ICszMiw1NSBAQCBzdHJ1Y3Qg
-cW9yaXFfdG11X3NpdGVfcmVncyB7DQo+ID4gPiA+ID4gPiA+ID4gIAl1OCByZXMwWzB4OF07DQo+
-ID4gPiA+ID4gPiA+ID4gIH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtc3Ry
-dWN0IHFvcmlxX3RtdV9yZWdzIHsNCj4gPiA+ID4gPiA+ID4gPiArc3RydWN0IHFvcmlxX3RtdV9y
-ZWdzX3YyIHsNCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0bXI7CQkvKiBNb2RlIFJlZ2lzdGVyICov
-DQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgdHNyOwkJLyogU3RhdHVzIFJlZ2lzdGVyICovDQo+ID4g
-PiA+ID4gPiA+ID4gKwl1MzIgdG1zcjsJCS8qIG1vbml0b3Igc2l0ZSByZWdpc3RlciAqLw0KPiA+
-ID4gPiA+ID4gPiA+ICsJdTMyIHRtdG1pcjsJCS8qIFRlbXBlcmF0dXJlIG1lYXN1cmVtZW50DQo+
-ID4gPiA+ID4gPiA+ID4gaW50ZXJ2YWwgUmVnaXN0ZXINCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
-PiAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJdTggcmVzMFsweDEwXTsNCj4gPiA+ID4gPiA+ID4gPiAr
-CXUzMiB0aWVyOwkJLyogSW50ZXJydXB0IEVuYWJsZSBSZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4g
-PiA+ICsJdTMyIHRpZHI7CQkvKiBJbnRlcnJ1cHQgRGV0ZWN0IFJlZ2lzdGVyICovDQo+ID4gPiA+
-ID4gPiA+ID4gKwl1OCByZXMxWzB4OF07DQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgdGlpc2NyOwkJ
-LyogaW50ZXJydXB0IGltbWVkaWF0ZSBzaXRlDQo+ID4gPiA+ID4gPiA+ID4gY2FwdHVyZSByZWdp
-c3RlciAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRpYXNjcjsJCS8qIGludGVycnVwdCBhdmVy
-YWdlIHNpdGUNCj4gPiA+ID4gPiA+ID4gPiBjYXB0dXJlIHJlZ2lzdGVyICovDQo+ID4gPiA+ID4g
-PiA+ID4gKwl1MzIgdGljc2NyOwkJLyogSW50ZXJydXB0IENyaXRpY2FsIFNpdGUNCj4gPiA+ID4g
-PiA+ID4gPiBDYXB0dXJlIFJlZ2lzdGVyICovDQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgcmVzMjsN
-Cj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0bWh0Y3I7CQkvKiBtb25pdG9yIGhpZ2ggdGVtcGVyYXR1
-cmUNCj4gPiA+ID4gPiA+ID4gPiBjYXB0dXJlIHJlZ2lzdGVyICovDQo+ID4gPiA+ID4gPiA+ID4g
-Kwl1MzIgdG1sdGNyOwkJLyogbW9uaXRvciBsb3cgdGVtcGVyYXR1cmUNCj4gPiA+ID4gPiA+ID4g
-PiBjYXB0dXJlIHJlZ2lzdGVyICovDQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgdG1ydHJjcjsJLyog
-bW9uaXRvciByaXNpbmcgdGVtcGVyYXR1cmUgcmF0ZQ0KPiA+ID4gPiA+ID4gPiA+IGNhcHR1cmUg
-cmVnaXN0ZXINCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJ
-dTMyIHRtZnRyY3I7CS8qIG1vbml0b3IgZmFsbGluZyB0ZW1wZXJhdHVyZSByYXRlDQo+ID4gPiA+
-ID4gPiA+ID4gY2FwdHVyZSByZWdpc3Rlcg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICovDQo+
-ID4gPiA+ID4gPiA+ID4gKwl1MzIgdG1odGl0cjsJLyogSGlnaCBUZW1wZXJhdHVyZSBJbW1lZGlh
-dGUgVGhyZXNob2xkDQo+ID4gPiA+ID4gPiA+ID4gKi8NCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0
-bWh0YXRyOwkvKiBIaWdoIFRlbXBlcmF0dXJlIEF2ZXJhZ2UgVGhyZXNob2xkDQo+ID4gPiA+ID4g
-PiA+ID4gKi8NCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0bWh0YWN0cjsJLyogSGlnaCBUZW1wZXJh
-dHVyZSBBdmVyYWdlIENyaXQNCj4gPiA+ID4gPiA+ID4gPiBUaHJlc2hvbGQgKi8NCj4gPiA+ID4g
-PiA+ID4gPiArCXUzMiByZXMzOw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRtbHRpdHI7CS8qIG1v
-bml0b3IgbG93IHRlbXBlcmF0dXJlIGltbWVkaWF0ZQ0KPiA+ID4gPiA+ID4gPiA+IHRocmVzaG9s
-ZCAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRtbHRhdHI7CS8qIG1vbml0b3IgbG93IHRlbXBl
-cmF0dXJlIGF2ZXJhZ2UNCj4gPiA+ID4gPiA+ID4gPiB0aHJlc2hvbGQNCj4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiByZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRtbHRhY3RyOwkv
-KiBtb25pdG9yIGxvdyB0ZW1wZXJhdHVyZSBhdmVyYWdlDQo+ID4gPiA+ID4gPiA+ID4gY3JpdGlj
-YWwNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiB0aHJlc2hvbGQgKi8NCj4gPiA+ID4gPiA+ID4g
-PiArCXUzMiByZXM0Ow0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRtcnRyY3RyOwkvKiBtb25pdG9y
-IHJpc2luZyB0ZW1wZXJhdHVyZSByYXRlDQo+ID4gPiA+ID4gPiA+ID4gY3JpdGljYWwgdGhyZXNo
-b2xkDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKi8NCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0
-bWZ0cmN0cjsJLyogbW9uaXRvciBmYWxsaW5nIHRlbXBlcmF0dXJlIHJhdGUNCj4gPiA+ID4gPiA+
-ID4gPiBjcml0aWNhbA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IHRocmVzaG9sZCovDQo+ID4g
-PiA+ID4gPiA+ID4gKwl1OCByZXM1WzB4OF07DQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgdHRjZmdy
-OwkvKiBUZW1wZXJhdHVyZSBDb25maWd1cmF0aW9uIFJlZ2lzdGVyDQo+ID4gPiA+ID4gPiA+ID4g
-Ki8NCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0c2NmZ3I7CS8qIFNlbnNvciBDb25maWd1cmF0aW9u
-IFJlZ2lzdGVyICovDQo+ID4gPiA+ID4gPiA+ID4gKwl1OCByZXM2WzB4NzhdOw0KPiA+ID4gPiA+
-ID4gPiA+ICsJc3RydWN0IHFvcmlxX3RtdV9zaXRlX3JlZ3Mgc2l0ZVtTSVRFU19NQVhdOw0KPiA+
-ID4gPiA+ID4gPiA+ICsJdTggcmVzN1sweDlmOF07DQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgaXBi
-cnIwOwkJLyogSVAgQmxvY2sgUmV2aXNpb24gUmVnaXN0ZXIgMA0KPiA+ID4gPiA+ID4gPiA+ICov
-DQo+ID4gPiA+ID4gPiA+ID4gKwl1MzIgaXBicnIxOwkJLyogSVAgQmxvY2sgUmV2aXNpb24gUmVn
-aXN0ZXIgMQ0KPiA+ID4gPiA+ID4gPiA+ICovDQo+ID4gPiA+ID4gPiA+ID4gKwl1OCByZXM4WzB4
-MzAwXTsNCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB0ZXVtcjA7DQo+ID4gPiA+ID4gPiA+ID4gKwl1
-MzIgdGV1bXIxOw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHRldW1yMjsNCj4gPiA+ID4gPiA+ID4g
-PiArCXUzMiByZXM5Ow0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHR0cmNyWzRdOwkvKiBUZW1wZXJh
-dHVyZSBSYW5nZSBDb250cm9sIFJlZ2lzdGVyDQo+ID4gPiA+ID4gPiA+ID4gKi8NCj4gPiA+ID4g
-PiA+ID4gPiArfTsNCj4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gK3N0cnVjdCBx
-b3JpcV90bXVfcmVnc192MSB7DQo+ID4gPiA+ID4gPiA+ID4gIAl1MzIgdG1yOwkJLyogTW9kZSBS
-ZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4gPiA+IC0jZGVmaW5lIFRNUl9ESVNBQkxFCTB4MA0KPiA+
-ID4gPiA+ID4gPiA+IC0jZGVmaW5lIFRNUl9NRQkJMHg4MDAwMDAwMA0KPiA+ID4gPiA+ID4gPiA+
-IC0jZGVmaW5lIFRNUl9BTFBGCTB4MGMwMDAwMDANCj4gPiA+ID4gPiA+ID4gPiAgCXUzMiB0c3I7
-CQkvKiBTdGF0dXMgUmVnaXN0ZXIgKi8NCj4gPiA+ID4gPiA+ID4gPiAgCXUzMiB0bXRtaXI7CQkv
-KiBUZW1wZXJhdHVyZSBtZWFzdXJlbWVudA0KPiA+ID4gPiA+ID4gPiA+IGludGVydmFsIFJlZ2lz
-dGVyDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKi8NCj4gPiA+ID4gPiA+ID4gPiAtI2RlZmlu
-ZSBUTVRNSVJfREVGQVVMVAkweDAwMDAwMDBmDQo+ID4gPiA+ID4gPiA+ID4gIAl1OCByZXMwWzB4
-MTRdOw0KPiA+ID4gPiA+ID4gPiA+ICAJdTMyIHRpZXI7CQkvKiBJbnRlcnJ1cHQgRW5hYmxlIFJl
-Z2lzdGVyICovDQo+ID4gPiA+ID4gPiA+ID4gLSNkZWZpbmUgVElFUl9ESVNBQkxFCTB4MA0KPiA+
-ID4gPiA+ID4gPiA+ICAJdTMyIHRpZHI7CQkvKiBJbnRlcnJ1cHQgRGV0ZWN0IFJlZ2lzdGVyICov
-DQo+ID4gPiA+ID4gPiA+ID4gIAl1MzIgdGlzY3I7CQkvKiBJbnRlcnJ1cHQgU2l0ZSBDYXB0dXJl
-DQo+ID4gPiA+ID4gPiA+ID4gUmVnaXN0ZXIgKi8NCj4gPiA+ID4gPiA+ID4gPiAgCXUzMiB0aWNz
-Y3I7CQkvKiBJbnRlcnJ1cHQgQ3JpdGljYWwgU2l0ZQ0KPiA+ID4gPiA+ID4gPiA+IENhcHR1cmUg
-UmVnaXN0ZXIgKi8NCj4gPiA+ID4gPiA+ID4gPiBAQCAtNTMsMTAgKzEwMCw3IEBAIHN0cnVjdCBx
-b3JpcV90bXVfcmVncyB7DQo+ID4gPiA+ID4gPiA+ID4gIAl1MzIgaXBicnIwOwkJLyogSVAgQmxv
-Y2sgUmV2aXNpb24gUmVnaXN0ZXIgMA0KPiA+ID4gPiA+ID4gPiA+ICovDQo+ID4gPiA+ID4gPiA+
-ID4gIAl1MzIgaXBicnIxOwkJLyogSVAgQmxvY2sgUmV2aXNpb24gUmVnaXN0ZXIgMQ0KPiA+ID4g
-PiA+ID4gPiA+ICovDQo+ID4gPiA+ID4gPiA+ID4gIAl1OCByZXM2WzB4MzEwXTsNCj4gPiA+ID4g
-PiA+ID4gPiAtCXUzMiB0dHIwY3I7CQkvKiBUZW1wZXJhdHVyZSBSYW5nZSAwIENvbnRyb2wNCj4g
-PiA+ID4gPiA+ID4gPiBSZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4gPiA+IC0JdTMyIHR0cjFjcjsJ
-CS8qIFRlbXBlcmF0dXJlIFJhbmdlIDEgQ29udHJvbA0KPiA+ID4gPiA+ID4gPiA+IFJlZ2lzdGVy
-ICovDQo+ID4gPiA+ID4gPiA+ID4gLQl1MzIgdHRyMmNyOwkJLyogVGVtcGVyYXR1cmUgUmFuZ2Ug
-MiBDb250cm9sDQo+ID4gPiA+ID4gPiA+ID4gUmVnaXN0ZXIgKi8NCj4gPiA+ID4gPiA+ID4gPiAt
-CXUzMiB0dHIzY3I7CQkvKiBUZW1wZXJhdHVyZSBSYW5nZSAzIENvbnRyb2wNCj4gPiA+ID4gPiA+
-ID4gPiBSZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4gPiA+ICsJdTMyIHR0cmNyWzRdOwkJLyogVGVt
-cGVyYXR1cmUgUmFuZ2UgQ29udHJvbA0KPiA+ID4gPiA+ID4gPiA+IFJlZ2lzdGVyICovDQo+ID4g
-PiA+ID4gPiA+ID4gIH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAgc3RydWN0
-IHFvcmlxX3RtdV9kYXRhOw0KPiA+ID4gPiA+ID4gPiA+IEBAIC03MSw3ICsxMTUsOSBAQCBzdHJ1
-Y3QgcW9yaXFfc2Vuc29yIHsgIH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAg
-c3RydWN0IHFvcmlxX3RtdV9kYXRhIHsNCj4gPiA+ID4gPiA+ID4gPiAtCXN0cnVjdCBxb3JpcV90
-bXVfcmVncyBfX2lvbWVtICpyZWdzOw0KPiA+ID4gPiA+ID4gPiA+ICsJaW50IHZlcjsNCj4gPiA+
-ID4gPiA+ID4gPiArCXN0cnVjdCBxb3JpcV90bXVfcmVnc192MSBfX2lvbWVtICpyZWdzOw0KPiA+
-ID4gPiA+ID4gPiA+ICsJc3RydWN0IHFvcmlxX3RtdV9yZWdzX3YyIF9faW9tZW0gKnJlZ3YyOw0K
-PiA+ID4NCj4gPiA+IHJlZ3YyIC0+IHJlZ3NfdjIgPw0KPiA+IE9LDQo+ID4NCj4gPiA+DQo+ID4g
-PiA+ID4gPiA+ID4gIAlib29sIGxpdHRsZV9lbmRpYW47DQo+ID4gPiA+ID4gPiA+ID4gIAlzdHJ1
-Y3QgcW9yaXFfc2Vuc29yCSpzZW5zb3JbU0lURVNfTUFYXTsNCj4gPiA+ID4gPiA+ID4gPiAgfTsN
-Cj4gPiA+ID4gPiA+ID4gPiBAQCAtMTExLDcgKzE1Nyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QN
-Cj4gPiA+ID4gPiA+ID4gPiB0aGVybWFsX3pvbmVfb2ZfZGV2aWNlX29wcyB0bXVfdHpfb3BzID0g
-eyAgc3RhdGljIGludA0KPiA+ID4gPiA+ID4gPiA+IHFvcmlxX3RtdV9yZWdpc3Rlcl90bXVfem9u
-ZShzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpICB7DQo+ID4g
-PiA+ID4gPiA+ID4gIAlzdHJ1Y3QgcW9yaXFfdG11X2RhdGEgKnFkYXRhID0NCj4gcGxhdGZvcm1f
-Z2V0X2RydmRhdGEocGRldik7DQo+ID4gPiA+ID4gPiA+ID4gLQlpbnQgaWQsIHNpdGVzID0gMDsN
-Cj4gPiA+ID4gPiA+ID4gPiArCWludCBpZCwgc2l0ZXMgPSAwLCBzdjIgPSAwOw0KPiA+ID4NCj4g
-PiA+IEkgZGlkIE5PVCBzZWUgJ3NpdGVzJyBhbmQgJ3N2MicgdXNlZCB0b2dldGhlciBpbiBiZWxv
-dyBjb2RlLCB3aHkgTk9UDQo+ID4gPiBqdXN0IHVzZSAnc2l0ZXMnIGZvciBib3RoIFYxIGFuZCBW
-Mj8NCj4gPiBZZWFoLCB1c2luZyBvbmUgdmFyaWFibGUgaXMgYmV0dGVyLg0KPiA+DQo+ID4gPg0K
-PiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gIAlmb3IgKGlkID0gMDsgaWQgPCBTSVRF
-U19NQVg7IGlkKyspIHsNCj4gPiA+ID4gPiA+ID4gPiAgCQlxZGF0YS0+c2Vuc29yW2lkXSA9IGRl
-dm1fa3phbGxvYygmcGRldi0+ZGV2LCBAQA0KPiA+ID4gPiA+ID4gPiA+IC0xMzAsMTINCj4gPiA+
-ID4gPiA+ID4gPiArMTc2LDI0IEBAIHN0YXRpYyBpbnQgcW9yaXFfdG11X3JlZ2lzdGVyX3RtdV96
-b25lKHN0cnVjdA0KPiA+ID4gPiA+ID4gPiA+ICtwbGF0Zm9ybV9kZXZpY2UNCj4gPiA+ID4gPiA+
-ID4gPiAqcGRldikNCj4gPiA+ID4gPiA+ID4gPiAgCQkJCXJldHVybiBQVFJfRVJSKHFkYXRhLQ0K
-PiA+ID4gPiA+ID4gPiA+ID5zZW5zb3JbaWRdLT50emQpOw0KPiA+ID4gPiA+ID4gPiA+ICAJCX0N
-Cj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IC0JCXNpdGVzIHw9IDB4MSA8PCAoMTUg
-LSBpZCk7DQo+ID4gPiA+ID4gPiA+ID4gKwkJaWYgKHFkYXRhLT52ZXIgPT0gVE1VX1ZFUjEpDQo+
-ID4gPiA+ID4gPiA+ID4gKwkJCXNpdGVzIHw9IDB4MSA8PCAoMTUgLSBpZCk7DQo+ID4gPiA+ID4g
-PiA+ID4gKwkJZWxzZQ0KPiA+ID4gPiA+ID4gPiA+ICsJCQlzdjIgfD0gMHgxIDw8IGlkOw0KPiA+
-ID4gPiA+ID4gPiA+ICAJfQ0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gIAkvKiBF
-bmFibGUgbW9uaXRvcmluZyAqLw0KPiA+ID4gPiA+ID4gPiA+IC0JaWYgKHNpdGVzICE9IDApDQo+
-ID4gPiA+ID4gPiA+ID4gLQkJdG11X3dyaXRlKHFkYXRhLCBzaXRlcyB8IFRNUl9NRSB8IFRNUl9B
-TFBGLA0KPiA+ID4gPiA+ID4gPiA+ICZxZGF0YS0+cmVncy0+dG1yKTsNCj4gPiA+ID4gPiA+ID4g
-PiArCWlmIChxZGF0YS0+dmVyID09IFRNVV9WRVIxKSB7DQo+ID4gPiA+ID4gPiA+ID4gKwkJaWYg
-KHNpdGVzICE9IDApDQo+ID4gPiA+ID4gPiA+ID4gKwkJCXRtdV93cml0ZShxZGF0YSwgc2l0ZXMg
-fCBUTVJfTUUgfA0KPiA+ID4gPiA+ID4gPiA+IFRNUl9BTFBGLA0KPiA+ID4gPiA+ID4gPiA+ICsJ
-CQkJCSZxZGF0YS0+cmVncy0+dG1yKTsNCj4gPiA+ID4gPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4g
-PiA+ID4gPiA+ID4gKwkJaWYgKHN2MiAhPSAwKSB7DQo+ID4gPiA+ID4gPiA+ID4gKwkJCXRtdV93
-cml0ZShxZGF0YSwgc3YyLCAmcWRhdGEtPnJlZ3YyLQ0KPiA+ID4gPiA+ID4gPiA+ID50bXNyKTsN
-Cj4gPiA+ID4gPiA+ID4gPiArCQkJdG11X3dyaXRlKHFkYXRhLCBUTVJfTUUgfCBUTVJfQUxQRl9W
-MiwNCj4gPiA+ID4gPiA+ID4gPiArCQkJCQkmcWRhdGEtPnJlZ3YyLT50bXIpOw0KPiA+ID4gPiA+
-ID4gPiA+ICsJCX0NCj4gPiA+ID4gPiA+ID4gPiArCX0NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiA+ICAJcmV0dXJuIDA7DQo+ID4gPiA+ID4gPiA+ID4gIH0NCj4gPiA+ID4gPiA+ID4g
-PiBAQCAtMTQ4LDE2ICsyMDYsMjAgQEAgc3RhdGljIGludA0KPiA+ID4gPiA+ID4gPiA+IHFvcmlx
-X3RtdV9jYWxpYnJhdGlvbihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gPiA+
-ID4gPiA+ICAJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+
-ID4gPiA+ID4gPiA+ICAJc3RydWN0IHFvcmlxX3RtdV9kYXRhICpkYXRhID0NCj4gPiA+ID4gPiA+
-ID4gPiBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiA+IC0JaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KG5wLCAiZnNsLHRtdS1y
-YW5nZSIsDQo+ID4gPiA+ID4gPiA+ID4gcmFuZ2UsIDQpKSB7DQo+ID4gPiA+ID4gPiA+ID4gLQkJ
-ZGV2X2VycigmcGRldi0+ZGV2LCAibWlzc2luZyBjYWxpYnJhdGlvbg0KPiA+ID4gPiA+ID4gPiA+
-IHJhbmdlLlxuIik7DQo+ID4gPiA+ID4gPiA+ID4gLQkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gPiA+
-ID4gPiA+ID4gKwlsZW4gPSBvZl9wcm9wZXJ0eV9jb3VudF91MzJfZWxlbXMobnAsICJmc2wsdG11
-LXJhbmdlIik7DQo+ID4gPiA+ID4gPiA+ID4gKwlpZiAobGVuID09IC1FTk9EQVRBIHx8IGxlbiA9
-PSAtRUlOVkFMIHx8IGxlbiA+IDQpIHsNCj4gPiA+DQo+ID4gPiBDYW4gd2UganVzdCBjaGVjayB0
-aGUgImxlbiA8IDAgfHwgbGVuID4gNCIgPw0KPiA+IE9LLg0KPiA+DQo+ID4gPg0KPiA+ID4gPiA+
-ID4gPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImludmFsaWQgcmFuZ2UgZGF0YS5cbiIpOw0K
-PiA+ID4gPiA+ID4gPiA+ICsJCXJldHVybiBsZW47DQo+ID4gPiA+ID4gPiA+ID4gIAl9DQo+ID4g
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtCS8qIEluaXQgdGVtcGVyYXR1cmUgcmFuZ2Ug
-cmVnaXN0ZXJzICovDQo+ID4gPiA+ID4gPiA+ID4gLQl0bXVfd3JpdGUoZGF0YSwgcmFuZ2VbMF0s
-ICZkYXRhLT5yZWdzLT50dHIwY3IpOw0KPiA+ID4gPiA+ID4gPiA+IC0JdG11X3dyaXRlKGRhdGEs
-IHJhbmdlWzFdLCAmZGF0YS0+cmVncy0+dHRyMWNyKTsNCj4gPiA+ID4gPiA+ID4gPiAtCXRtdV93
-cml0ZShkYXRhLCByYW5nZVsyXSwgJmRhdGEtPnJlZ3MtPnR0cjJjcik7DQo+ID4gPiA+ID4gPiA+
-ID4gLQl0bXVfd3JpdGUoZGF0YSwgcmFuZ2VbM10sICZkYXRhLT5yZWdzLT50dHIzY3IpOw0KPiA+
-ID4gPiA+ID4gPiA+ICsJdmFsID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkobnAsICJmc2ws
-dG11LXJhbmdlIiwNCj4gPiA+ID4gPiA+ID4gPiByYW5nZSwgbGVuKTsNCj4gPiA+ID4gPiA+ID4g
-PiArCWlmICh2YWwgIT0gMCkgew0KPiA+ID4gPiA+ID4gPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRl
-diwgImludmFsaWQgcmFuZ2UgZGF0YS5cbiIpOw0KPiA+ID4NCj4gPiA+IFRoZSBlcnJvciBsb2cg
-aXMgc2FtZSBhcyBmYWlsdXJlIG9mIGdldHRpbmcgcmFuZ2UgZGF0YSBjb3VudCwgc28NCj4gPiA+
-IHdvdWxkIGl0IGJlIGJldHRlciB0byBjaGFuZ2UgdGhlIGxvZyB0byAiZmFpbGVkIHRvIHJlYWQg
-cmFuZ2UgZGF0YSIgaGVyZT8NCj4gPiBZZWFoLCBiZXR0ZXIuDQo+ID4NCj4gPiA+DQo+ID4gPiA+
-ID4gPiA+ID4gKwkJcmV0dXJuIHZhbDsNCj4gPiA+ID4gPiA+ID4gPiArCX0NCj4gPiA+ID4gPiA+
-ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gKwlmb3IgKGkgPSAwOyBpIDwgbGVuOyBpKyspDQo+ID4g
-PiA+ID4gPiA+ID4gKwkJdG11X3dyaXRlKGRhdGEsIHJhbmdlW2ldLCAmZGF0YS0+cmVncy0NCj4g
-PiA+ID4gPiA+ID4gPiA+dHRyY3JbaV0pOw0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
-ID4gIAljYWxpYnJhdGlvbiA9IG9mX2dldF9wcm9wZXJ0eShucCwgImZzbCx0bXUtDQo+ID4gPiA+
-ID4gPiA+ID4gY2FsaWJyYXRpb24iLCAmbGVuKTsNCj4gPiA+ID4gPiA+ID4gPiAgCWlmIChjYWxp
-YnJhdGlvbiA9PSBOVUxMIHx8IGxlbiAlIDgpIHsgQEAgLTE4MSw3ICsyNDMsMTINCj4gPiA+ID4g
-PiA+ID4gPiBAQCBzdGF0aWMgdm9pZCBxb3JpcV90bXVfaW5pdF9kZXZpY2Uoc3RydWN0IHFvcmlx
-X3RtdV9kYXRhDQo+ICpkYXRhKQ0KPiA+ID4gPiA+ID4gPiA+ICAJdG11X3dyaXRlKGRhdGEsIFRJ
-RVJfRElTQUJMRSwgJmRhdGEtPnJlZ3MtPnRpZXIpOw0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiA+ID4gIAkvKiBTZXQgdXBkYXRlX2ludGVydmFsICovDQo+ID4gPiA+ID4gPiA+ID4gLQl0
-bXVfd3JpdGUoZGF0YSwgVE1UTUlSX0RFRkFVTFQsICZkYXRhLT5yZWdzLT50bXRtaXIpOw0KPiA+
-ID4gPiA+ID4gPiA+ICsJaWYgKGRhdGEtPnZlciA9PSBUTVVfVkVSMSkgew0KPiA+ID4gPiA+ID4g
-PiA+ICsJCXRtdV93cml0ZShkYXRhLCBUTVRNSVJfREVGQVVMVCwgJmRhdGEtPnJlZ3MtDQo+ID4g
-PiA+ID4gPiA+ID4gPnRtdG1pcik7DQo+ID4gPiA+ID4gPiA+ID4gKwl9IGVsc2Ugew0KPiA+ID4g
-PiA+ID4gPiA+ICsJCXRtdV93cml0ZShkYXRhLCBUTVRNSVJfREVGQVVMVCwgJmRhdGEtPnJlZ3Yy
-LQ0KPiA+ID4gPiA+ID4gPiA+ID50bXRtaXIpOw0KPiA+ID4gPiA+ID4gPiA+ICsJCXRtdV93cml0
-ZShkYXRhLCBURVVNUjBfVjIsICZkYXRhLT5yZWd2Mi0NCj4gPiA+ID4gPiA+ID4gPiA+dGV1bXIw
-KTsNCj4gPiA+ID4gPiA+ID4gPiArCX0NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
-ICAJLyogRGlzYWJsZSBtb25pdG9yaW5nICovDQo+ID4gPiA+ID4gPiA+ID4gIAl0bXVfd3JpdGUo
-ZGF0YSwgVE1SX0RJU0FCTEUsICZkYXRhLT5yZWdzLT50bXIpOyBAQA0KPiA+ID4gPiA+ID4gPiA+
-IC0xOTAsNg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICsyNTcsNw0KPiA+ID4gPiA+ID4gPiBA
-QA0KPiA+ID4gPiA+ID4gPiA+IHN0YXRpYyB2b2lkIHFvcmlxX3RtdV9pbml0X2RldmljZShzdHJ1
-Y3QgcW9yaXFfdG11X2RhdGENCj4gPiA+ID4gPiA+ID4gPiAqZGF0YSkgc3RhdGljIGludCBxb3Jp
-cV90bXVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gew0KPiA+ID4gPiA+
-ID4gPiA+ICAJaW50IHJldDsNCj4gPiA+ID4gPiA+ID4gPiArCXUzMiB2ZXI7DQo+ID4gPiA+ID4g
-PiA+ID4gIAlzdHJ1Y3QgcW9yaXFfdG11X2RhdGEgKmRhdGE7DQo+ID4gPiA+ID4gPiA+ID4gIAlz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+ID4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ID4gPiBAQCAtMjE0LDYgKzI4MiwxMiBAQCBzdGF0aWMgaW50IHFvcmlx
-X3RtdV9wcm9iZShzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gcGxhdGZvcm1f
-ZGV2aWNlDQo+ID4gPiA+ID4gPiA+ID4gKnBkZXYpDQo+ID4gPiA+ID4gPiA+ID4gIAkJZ290byBl
-cnJfaW9tYXA7DQo+ID4gPiA+ID4gPiA+ID4gIAl9DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+ID4gPiArCS8qIHZlcnNpb24gcmVnaXN0ZXIgb2Zmc2V0IGF0OiAweGJmOCBvbiBib3RoIHYx
-IGFuZCB2Mg0KPiA+ID4gPiA+ID4gPiA+ICovDQo+ID4gPiA+ID4gPiA+ID4gKwl2ZXIgPSB0bXVf
-cmVhZChkYXRhLCAmZGF0YS0+cmVncy0+aXBicnIwKTsNCj4gPiA+ID4gPiA+ID4gPiArCWRhdGEt
-PnZlciA9ICh2ZXIgPj4gOCkgJiAweGZmOw0KPiA+ID4gPiA+ID4gPiA+ICsJaWYgKGRhdGEtPnZl
-ciA9PSBUTVVfVkVSMikNCj4gPiA+ID4gPiA+ID4gPiArCQlkYXRhLT5yZWd2MiA9ICh2b2lkIF9f
-aW9tZW0gKilkYXRhLT5yZWdzOw0KPiA+ID4NCj4gPiA+IFNvIHRoZSBWMiBoYXMgc2FtZSByZWdp
-c3RlciBiYXNlIGFkZHJlc3MgYXMgVjE/IElmIHllcywgdGhlbiBJIHRoaW5rDQo+ID4gPiBubyBu
-ZWVkIHRvIGNoZWNrIHRoZSB2ZXJzaW9uIGhlcmUsIGp1c3QgYXNzaWduIFYyJ3MgcmVnIHRvIGVx
-dWFsIHRvDQo+ID4gPiBWMSdzDQo+ID4gc2hvdWxkIGJlIE9LPw0KPiA+IEZvciBhbnkgb25lIHNw
-ZWNpZmljIHNvYywgVE1VIG11c3QgYmUgdjEgb3IgdjIuIFNvIGJhc2ljYWxseSBvbmx5DQo+ID4g
-dXNpbmcgcmVndjEgb3IgcmVndjIgaXMgZW5vdWdoLg0KPiA+IEhlcmUgYm90aCByZWd2MSBhbmQg
-cmVndjIgYXJlIHVzZWQgYW5kIGFyZSBhc3NpZ25lZCB0byB0aGUgc2FtZSBiYXNlDQo+ID4gYWRk
-cmVzcy4NCj4gPg0KPiA+IEkgdXNlIHJlZ3YxIHRvIGFjY2VzcyB0aGUgY29tbW9uIHJlZ2lzdGVy
-cyBmb3IgYm90aCByZWd2MSBhbmQgcmVndjIuDQo+ID4gSSB1c2UgcmVndjIgdG8gYWNjZXNzIHRo
-ZSByZWdpc3RlcnMgdGhhdCBhcmUgc3BlY2lmaWMgdG8gcmVndjIuDQo+ID4gSW4gdGhpcyB3YXks
-IEkgY2FuIHJldXNlIHRoZSBjdXJyZW50IHJlZ2lzdGVyIHJlYWQvd3JpdGUgY29kZSBhbmQgb25s
-eQ0KPiA+IHVwZGF0ZSB0aGUgY29kZSBmb3IgcmVndjIgYWNjZXNzLg0KPiANCj4gT0ssIG1ha2Ug
-c2Vuc2UuDQo+IA0KPiBBbnNvbi4NCg==
+On Mon, Sep 23, 2019 at 12:16:12PM +0000, Brian Starkey wrote:
+> Hi Lowry,
+>=20
+> On Fri, Sep 20, 2019 at 09:43:47AM +0000, Lowry Li (Arm Technology China)=
+ wrote:
+> > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> >=20
+> > Sets color_depth according to connector->bpc.
+> > Adds a new optional DT attribute "color-format" to represent a
+> > preferred color formats for a specific pipeline, and the select order
+> > is:
+> > 	YCRCB420 > YCRCB422 > YCRCB444 > RGB444
+> > The color-format can be anyone of these 4 format, one color-format not
+> > only represent one format, but also include the lower formats, like
+> >=20
+> > color-format         preferred_color_formats
+> > YCRCB420        YCRCB420 > YCRCB422 > YCRCB444 > RGB444
+> > YCRCB422        YCRCB422 > YCRCB444 > RGB444
+> > YCRCB444        YCRCB444 > RGB444
+> > RGB444          RGB444
+> >=20
+> > Then the final color_format is calculated by 3 steps:
+> > 1. calculate HW available formats.
+> >   avail_formats =3D connector_color_formats & improc->color_formats;
+> > 2. filter out un-preferred format.
+> >   avail_formats &=3D preferred_color_formats;
+> > 3. select the final format according to the preferred order.
+> >   color_format =3D BIT(__fls(aval_formats));
+>=20
+> Is there a specific use-case for the DT property for selecting color
+> format?
+
+Hi Brian:
+
+Since one monitor can support mutiple color-formats, this DT property
+supply a way for user to select a specific one from this supported
+color-formats.
+
+> I think in general the color format should be determined according to
+> the rules in the CEA spec. There's also the drm_mode_is_420_only()
+> helper we can use to determine if YCBCR420 must be used. For the cases
+> where it's optional, I think we can default to RGB444.
+
+Yes, This selection depends on the real connector supported_color-formats,
+I think you misunderstand this DT, this DT color-format is not for
+specifying a real output format. but a way or select order for how to
+select the final output format from the mutiple color-formats of a connecto=
+r.
+
+Like the DT color-format is "YCRCR420", it indicates a select order:
+  YUV420 > YUV422 > YUV444 > RGB444
+
+We use this order to select the final output-format.
+
+> > Then the final color_format is calculated by 3 steps:
+> > 1. calculate HW available formats.
+> >   avail_formats =3D connector_color_formats & improc->color_formats;
+
+NOTE: this connector_color_formats is
+drm_connector->display_info.color_formats.
+
+> > 2. filter out un-preferred format.
+> >   avail_formats &=3D preferred_color_formats;
+> > 3. select the final format according to the preferred order.
+> >   color_format =3D BIT(__fls(aval_formats));
+
+__fls here is used for selecting as order.
+
+>
+> Thanks,
+> -Brian
+>=20
+> >=20
+> > Changes since v1:
+> > Rebased to the drm-misc-next branch.
+> >=20
+> > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > ---
+> >  .../arm/display/komeda/d71/d71_component.c    | 15 ++++++++-
+> >  .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 27 ++++++++++++++++
+> >  .../gpu/drm/arm/display/komeda/komeda_dev.c   | 32 ++++++++++++++++++-
+> >  .../gpu/drm/arm/display/komeda/komeda_kms.h   |  2 ++
+> >  .../drm/arm/display/komeda/komeda_pipeline.h  |  3 ++
+> >  .../display/komeda/komeda_pipeline_state.c    | 31 ++++++++++++++++++
+> >  .../arm/display/komeda/komeda_wb_connector.c  |  5 +++
+> >  7 files changed, 113 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/d=
+rivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > index c3d29c0b051b..7b374a3b911e 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > @@ -944,13 +944,26 @@ static void d71_improc_update(struct komeda_compo=
+nent *c,
+> >  {
+> >  	struct komeda_improc_state *st =3D to_improc_st(state);
+> >  	u32 __iomem *reg =3D c->reg;
+> > -	u32 index;
+> > +	u32 index, mask =3D 0, ctrl =3D 0;
+> > =20
+> >  	for_each_changed_input(state, index)
+> >  		malidp_write32(reg, BLK_INPUT_ID0 + index * 4,
+> >  			       to_d71_input_id(state, index));
+> > =20
+> >  	malidp_write32(reg, BLK_SIZE, HV_SIZE(st->hsize, st->vsize));
+> > +	malidp_write32(reg, IPS_DEPTH, st->color_depth);
+> > +
+> > +	mask |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422 | IPS_CTRL_CHD420;
+> > +
+> > +	/* config color format */
+> > +	if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB420)
+> > +		ctrl |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422 | IPS_CTRL_CHD420;
+> > +	else if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB422)
+> > +		ctrl |=3D IPS_CTRL_YUV | IPS_CTRL_CHD422;
+> > +	else if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB444)
+> > +		ctrl |=3D IPS_CTRL_YUV;
+> > +
+> > +	malidp_write32_mask(reg, BLK_CONTROL, mask, ctrl);
+> >  }
+> > =20
+> >  static void d71_improc_dump(struct komeda_component *c, struct seq_fil=
+e *sf)
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers=
+/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > index 624d257da20f..38d5cb20e908 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > @@ -18,6 +18,33 @@
+> >  #include "komeda_dev.h"
+> >  #include "komeda_kms.h"
+> > =20
+> > +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> > +				  u32 *color_depths, u32 *color_formats)
+> > +{
+> > +	struct drm_connector *conn;
+> > +	struct drm_connector_state *conn_st;
+> > +	u32 conn_color_formats =3D ~0u;
+> > +	int i, min_bpc =3D 31, conn_bpc =3D 0;
+> > +
+> > +	for_each_new_connector_in_state(crtc_st->state, conn, conn_st, i) {
+> > +		if (conn_st->crtc !=3D crtc_st->crtc)
+> > +			continue;
+> > +
+> > +		conn_bpc =3D conn->display_info.bpc ? conn->display_info.bpc : 8;
+> > +		conn_color_formats &=3D conn->display_info.color_formats;
+> > +
+> > +		if (conn_bpc < min_bpc)
+> > +			min_bpc =3D conn_bpc;
+> > +	}
+> > +
+> > +	/* connector doesn't config any color_format, use RGB444 as default *=
+/
+> > +	if (conn_color_formats =3D=3D 0)
+> > +		conn_color_formats =3D DRM_COLOR_FORMAT_RGB444;
+> > +
+> > +	*color_depths =3D GENMASK(conn_bpc, 0);
+> > +	*color_formats =3D conn_color_formats;
+> > +}
+> > +
+> >  static void komeda_crtc_update_clock_ratio(struct komeda_crtc_state *k=
+crtc_st)
+> >  {
+> >  	u64 pxlclk, aclk;
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/=
+gpu/drm/arm/display/komeda/komeda_dev.c
+> > index 9cbcd56e54cd..bee4633cdd9f 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> > @@ -113,12 +113,34 @@ static struct attribute_group komeda_sysfs_attr_g=
+roup =3D {
+> >  	.attrs =3D komeda_sysfs_entries,
+> >  };
+> > =20
+> > +static int to_color_format(const char *str)
+> > +{
+> > +	int format;
+> > +
+> > +	if (!strncmp(str, "RGB444", 7)) {
+> > +		format =3D DRM_COLOR_FORMAT_RGB444;
+> > +	} else if (!strncmp(str, "YCRCB444", 9)) {
+> > +		format =3D DRM_COLOR_FORMAT_YCRCB444;
+> > +	} else if (!strncmp(str, "YCRCB422", 9)) {
+> > +		format =3D DRM_COLOR_FORMAT_YCRCB422;
+> > +	} else if (!strncmp(str, "YCRCB420", 9)) {
+> > +		format =3D DRM_COLOR_FORMAT_YCRCB420;
+> > +	} else {
+> > +		DRM_WARN("invalid color_format: %s, please set it to RGB444, YCRCB44=
+4, YCRCB422 or YCRCB420\n",
+> > +			 str);
+> > +		format =3D DRM_COLOR_FORMAT_RGB444;
+> > +	}
+> > +
+> > +	return format;
+> > +}
+> > +
+> >  static int komeda_parse_pipe_dt(struct komeda_dev *mdev, struct device=
+_node *np)
+> >  {
+> >  	struct komeda_pipeline *pipe;
+> >  	struct clk *clk;
+> >  	u32 pipe_id;
+> > -	int ret =3D 0;
+> > +	int ret =3D 0, color_format;
+> > +	const char *str;
+> > =20
+> >  	ret =3D of_property_read_u32(np, "reg", &pipe_id);
+> >  	if (ret !=3D 0 || pipe_id >=3D mdev->n_pipelines)
+> > @@ -133,6 +155,14 @@ static int komeda_parse_pipe_dt(struct komeda_dev =
+*mdev, struct device_node *np)
+> >  	}
+> >  	pipe->pxlclk =3D clk;
+> > =20
+> > +	/* fetch DT configured color-format, if not set, use RGB444 */
+> > +	if (!of_property_read_string(np, "color-format", &str))
+> > +		color_format =3D to_color_format(str);
+> > +	else
+> > +		color_format =3D DRM_COLOR_FORMAT_RGB444;
+> > +
+> > +	pipe->improc->preferred_color_formats =3D (color_format << 1) - 1;
+> > +
+> >  	/* enum ports */
+> >  	pipe->of_output_links[0] =3D
+> >  		of_graph_get_remote_node(np, KOMEDA_OF_PORT_OUTPUT, 0);
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/=
+gpu/drm/arm/display/komeda/komeda_kms.h
+> > index 45c498e15e7a..456f3c435719 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> > @@ -166,6 +166,8 @@ static inline bool has_flip_h(u32 rot)
+> >  		return !!(rotation & DRM_MODE_REFLECT_X);
+> >  }
+> > =20
+> > +void komeda_crtc_get_color_config(struct drm_crtc_state *crtc_st,
+> > +				  u32 *color_depths, u32 *color_formats);
+> >  unsigned long komeda_crtc_get_aclk(struct komeda_crtc_state *kcrtc_st)=
+;
+> > =20
+> >  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms, struct komeda_d=
+ev *mdev);
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/dri=
+vers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > index a7a84e66549d..910d279ae48d 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > @@ -315,6 +315,8 @@ struct komeda_splitter_state {
+> >  struct komeda_improc {
+> >  	struct komeda_component base;
+> >  	u32 supported_color_formats;  /* DRM_RGB/YUV444/YUV420*/
+> > +	/* the preferred order is from MSB to LSB YUV420 --> RGB444 */
+> > +	u32 preferred_color_formats;
+> >  	u32 supported_color_depths; /* BIT(8) | BIT(10)*/
+> >  	u8 supports_degamma : 1;
+> >  	u8 supports_csc : 1;
+> > @@ -323,6 +325,7 @@ struct komeda_improc {
+> > =20
+> >  struct komeda_improc_state {
+> >  	struct komeda_component_state base;
+> > +	u8 color_format, color_depth;
+> >  	u16 hsize, vsize;
+> >  };
+> > =20
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c=
+ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > index ea26bc9c2d00..5526731f5a33 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > @@ -743,6 +743,7 @@ komeda_improc_validate(struct komeda_improc *improc=
+,
+> >  		       struct komeda_data_flow_cfg *dflow)
+> >  {
+> >  	struct drm_crtc *crtc =3D kcrtc_st->base.crtc;
+> > +	struct drm_crtc_state *crtc_st =3D &kcrtc_st->base;
+> >  	struct komeda_component_state *c_st;
+> >  	struct komeda_improc_state *st;
+> > =20
+> > @@ -756,6 +757,36 @@ komeda_improc_validate(struct komeda_improc *impro=
+c,
+> >  	st->hsize =3D dflow->in_w;
+> >  	st->vsize =3D dflow->in_h;
+> > =20
+> > +	if (drm_atomic_crtc_needs_modeset(crtc_st)) {
+> > +		u32 output_depths, output_formats;
+> > +		u32 avail_depths, avail_formats;
+> > +
+> > +		komeda_crtc_get_color_config(crtc_st, &output_depths,
+> > +					     &output_formats);
+> > +
+> > +		avail_depths =3D output_depths & improc->supported_color_depths;
+> > +		if (avail_depths =3D=3D 0) {
+> > +			DRM_DEBUG_ATOMIC("No available color depths, conn depths: 0x%x & di=
+splay: 0x%x\n",
+> > +					 output_depths,
+> > +					 improc->supported_color_depths);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		avail_formats =3D output_formats &
+> > +				improc->supported_color_formats &
+> > +				improc->preferred_color_formats;
+> > +		if (avail_formats =3D=3D 0) {
+> > +			DRM_DEBUG_ATOMIC("No available color_formats, conn formats 0x%x & d=
+isplay: 0x%x & preferred: 0x%x\n",
+> > +					 output_formats,
+> > +					 improc->supported_color_formats,
+> > +					 improc->preferred_color_formats);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		st->color_depth =3D __fls(avail_depths);
+> > +		st->color_format =3D BIT(__fls(avail_formats));
+> > +	}
+> > +
+> >  	komeda_component_add_input(&st->base, &dflow->input, 0);
+> >  	komeda_component_set_output(&dflow->input, &improc->base, 0);
+> > =20
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b=
+/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> > index 617e1f7b8472..49e5469ba48e 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> > @@ -142,6 +142,7 @@ static int komeda_wb_connector_add(struct komeda_km=
+s_dev *kms,
+> >  	struct komeda_dev *mdev =3D kms->base.dev_private;
+> >  	struct komeda_wb_connector *kwb_conn;
+> >  	struct drm_writeback_connector *wb_conn;
+> > +	struct drm_display_info *info;
+> >  	u32 *formats, n_formats =3D 0;
+> >  	int err;
+> > =20
+> > @@ -171,6 +172,10 @@ static int komeda_wb_connector_add(struct komeda_k=
+ms_dev *kms,
+> > =20
+> >  	drm_connector_helper_add(&wb_conn->base, &komeda_wb_conn_helper_funcs=
+);
+> > =20
+> > +	info =3D &kwb_conn->base.base.display_info;
+> > +	info->bpc =3D __fls(kcrtc->master->improc->supported_color_depths);
+> > +	info->color_formats =3D kcrtc->master->improc->supported_color_format=
+s;
+> > +
+> >  	kcrtc->wb_conn =3D kwb_conn;
+> > =20
+> >  	return 0;
+> > --=20
+> > 2.17.1
+> >=20
