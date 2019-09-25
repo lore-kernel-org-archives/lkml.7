@@ -2,56 +2,84 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88674C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5E1C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F182146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F870222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437495AbfIYOcN (ORCPT
+        id S2437543AbfIYOcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:32:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:50982 "EHLO foss.arm.com"
+        Wed, 25 Sep 2019 10:32:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61657 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437142AbfIYOcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:32:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C507728;
-        Wed, 25 Sep 2019 07:32:12 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FB9E3F59C;
-        Wed, 25 Sep 2019 07:32:12 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 15:32:10 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jeremy Cline <jcline@redhat.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: kmemleak: DEBUG_KMEMLEAK_EARLY_LOG_SIZE changed
- names
-Message-ID: <20190925143209.GE7042@arrakis.emea.arm.com>
-References: <20190925143114.19698-1-jcline@redhat.com>
+        id S2437443AbfIYOcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:32:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 07:32:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="340424041"
+Received: from kmakows-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.225])
+  by orsmga004.jf.intel.com with ESMTP; 25 Sep 2019 07:32:05 -0700
+Date:   Wed, 25 Sep 2019 17:32:04 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        nhorman@redhat.com, npmccallum@redhat.com,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>
+Subject: Re: [PATCH v22 00/24] Intel SGX foundations
+Message-ID: <20190925143204.GE19638@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
+ <20190914134136.GG9560@linux.intel.com>
+ <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
+ <20190916052349.GA4556@linux.intel.com>
+ <CALCETrWDLX68Vi4=9Dicq9ATmJ5mv36bzrc02heNYaHaBeWumQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925143114.19698-1-jcline@redhat.com>
+In-Reply-To: <CALCETrWDLX68Vi4=9Dicq9ATmJ5mv36bzrc02heNYaHaBeWumQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 02:31:14PM +0000, Jeremy Cline wrote:
-> Commit c5665868183f ("mm: kmemleak: use the memory pool for early
-> allocations") renamed CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE to
-> CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE. Update the documentation reference
-> to reflect that.
+On Tue, Sep 24, 2019 at 10:20:09AM -0700, Andy Lutomirski wrote:
+> > I think either can be considered post-upstreaming.
 > 
-> Signed-off-by: Jeremy Cline <jcline@redhat.com>
+> Indeed, as long as the overall API is actually compatible with these
+> types of restrictions.
 
-I forgot about this. Thanks.
+I include LSM changes to the follow up versions of the patch set.  This
+is done to help verify that the API is compatible (or make it easy to
+review).
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+I think they should be merged only after SGX is in the upstream beause
+this will make testing and reviewing smaller details of the changes less
+edgy the for LSM maintainers when one can just grab the LSM changes and
+try them out with the mainline.
+
+/Jarkko
