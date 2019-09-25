@@ -2,102 +2,74 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322E7C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7339DC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0314120872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDiO+gjy"
+	by mail.kernel.org (Postfix) with ESMTP id 53F0F214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbfIYBJ0 (ORCPT
+        id S2388961AbfIYBLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 21:09:26 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34243 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729301AbfIYBJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 21:09:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id q1so9297898ion.1;
-        Tue, 24 Sep 2019 18:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0qoaoTDAjRV29/UL580IFfKdGNsaStRuKRBigYtB0Zw=;
-        b=XDiO+gjyS7ZVsjg7msFnLhyFFBifyXv3e7YuA3S6LsPIm+8Wm37b9Gx8ir5s2nvTEE
-         4CLtRlQ18hwpJ7WQbnedU4td+QeEpmuPlGo8iPpA8JFC/e9cfHiPSDj8bkE0mym+xH5s
-         4o3Zt70Jlode9tlxU5oXVwPBof8gM/I+vLHCDo84ahQPitOYoSQrd2i6rcTJDXVK7Atz
-         ORAsK7Ib2JFx+DjrQEqPv3cwxUx0x6lskcMNMi1HJUGE2PzXATJtJZdp5TMa6nUtYYe4
-         q3j/BwK/beAJiJOxYZXAHCLoiU9l+AkSlOUa1jCfzF8vlUjqGcyLYutabpPk4BxCj/cj
-         ZehA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0qoaoTDAjRV29/UL580IFfKdGNsaStRuKRBigYtB0Zw=;
-        b=RluUCqx/kzvc27gPOsFc1F+gqSdxOJF8jM3NiLs1i9oAgu31KEVHI+IoDnOGM8KUTN
-         rppCFGmEyr/ZmXvwvmU4k22yfCf0CQeCnyZgBRdUYUUfcQ6TzH2RTdtrtd2shW/EJ98p
-         vMiRoGW0xDlTA5X+ZM/603f6hzcdo8xP7wMiorfG8ovN0f5e4DxMoa730R3CifrTp4K7
-         ZgqQHK4dygKiLaU5GxbHVXC1B26wEtDZR8es+1IgVx76Eo41cpQGte0tJSxnqoJHbLbs
-         TMfv0rgyo19HiVL4DNL4qMdqa+Wn5gJJPHNLRpLzISnz/lqPT0r6mxjg/bVkkfWJdEIV
-         gayQ==
-X-Gm-Message-State: APjAAAVmfxGJu8JH2iLE/aD+9IgqjZPez8OKwu48c7TaLcR03ucEXbJr
-        7MP3njJoh8j0hnhTEXHmluA=
-X-Google-Smtp-Source: APXvYqyJQw60nnXBo8IOkvNVJN5i5TE00dngvI5i7TZeFj+UTu8cmYUDSUY34+1t7gWd3XgLI+tSow==
-X-Received: by 2002:a6b:f319:: with SMTP id m25mr6676370ioh.33.1569373764944;
-        Tue, 24 Sep 2019 18:09:24 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id l13sm23532ilq.56.2019.09.24.18.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 18:09:24 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: prevent memory leak
-Date:   Tue, 24 Sep 2019 20:09:07 -0500
-Message-Id: <20190925010912.27513-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 24 Sep 2019 21:11:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47679 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387402AbfIYBLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 21:11:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 18:11:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
+   d="scan'208";a="188634031"
+Received: from wujunyox-mobl3.ger.corp.intel.com (HELO localhost) ([10.249.38.101])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Sep 2019 18:11:15 -0700
+Date:   Wed, 25 Sep 2019 04:11:15 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [Patch v6 4/4] KEYS: trusted: Move TPM2 trusted keys code
+Message-ID: <20190925011115.GA3503@linux.intel.com>
+References: <1568630064-14887-1-git-send-email-sumit.garg@linaro.org>
+ <1568630064-14887-5-git-send-email-sumit.garg@linaro.org>
+ <20190917181415.GA8472@linux.intel.com>
+ <20190917181507.GB8472@linux.intel.com>
+ <CAFA6WYMbUGQ6+-XvR9_qSc=oVe1QSTg4kB-+y6rBmQLq+B6skg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYMbUGQ6+-XvR9_qSc=oVe1QSTg4kB-+y6rBmQLq+B6skg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In alloc_sgtable if alloc_page fails, along with releasing previously
-allocated pages, the allocated table should be released too.
+On Wed, Sep 18, 2019 at 11:53:08AM +0530, Sumit Garg wrote:
+> No worries :). I will send next version of patch-set.
+> 
+> FYI, I will be travelling for Linaro Connect next week so you could
+> expect some delays in my responses.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 1 +
- 1 file changed, 1 insertion(+)
+These patches will go to v5.5. There is nothing to rush.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index 5c8602de9168..87421807e040 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -646,6 +646,7 @@ static struct scatterlist *alloc_sgtable(int size)
- 				if (new_page)
- 					__free_page(new_page);
- 			}
-+			kfree(table);
- 			return NULL;
- 		}
- 		alloc_size = min_t(int, size, PAGE_SIZE);
--- 
-2.17.1
-
+/Jarkko
