@@ -2,120 +2,191 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA1BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005D6C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6433E206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F1F206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX4N++Il"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e4OsdQH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbfIYXxO (ORCPT
+        id S2387499AbfIYXze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:53:14 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:41757 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733311AbfIYXxO (ORCPT
+        Wed, 25 Sep 2019 19:55:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33464 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfIYXze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:53:14 -0400
-Received: by mail-yb1-f195.google.com with SMTP id x4so104068ybo.8;
-        Wed, 25 Sep 2019 16:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cyFQHO0gt5mJktt3yKr7R9c1YLgMmxQPz4clIN4BByc=;
-        b=NX4N++Ilhb/J+QxCl+m9OQKuUep7vJMws423VnLxrI+JJZb5igg7Ogezjt8G6BXZ37
-         eBuYE2PXNvyxQncoy1SlWgggQP4mi/THz6D4OzUqZnWQK1horxAdXZaOv0iqYoJeqhqq
-         jxopXY9GPAAub44F6/pzw4LBObdtDZhYX13loPzxMGZ1Qxe22MtqUpkBmCdMgwKIKSxc
-         CV9AhCou7Ps3aYHlF4I74Pu/uipvq+O9ZBi7ZXJn/yUlpRhWC4hTw6xpKG1Z/q2pj11M
-         ak/wzvln0BXE9SykOMtCUYfrpjvB7tD67nt9VFxZtw+Xv2iz/Kq9JQqBpfXAdUFGGeIv
-         LHcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cyFQHO0gt5mJktt3yKr7R9c1YLgMmxQPz4clIN4BByc=;
-        b=S51a3Q5Tie8aR1s3lI3DDSfDTLsS5AGWn4QvMFgyHpQGRC/gvII3LV11SUOcH7+6+9
-         qv+z5coNj5/rHPJv1aQ5r+gC7LD5tA6am47Ne4t+TLCZPAL81m8mrO/WJ5BCLalsJQcU
-         L8ziLIKFSwbaaLw1mHYhxRYA98ciddUGXMMDFiMqal+PedaRBiLp6e/OUUkcIz/xema+
-         FsgaptI0fkuyexUTiHHJ20qfwQYrjEyIj3fyVnLUSgsNfHgxj+ZzzpuOheVDzTRndhO1
-         dp6Xb79WWVPofuxgYLz7FZaceOAknogQ4Ys4YA4wMahHwF1wzSn7uBIofDs9qhakGc6o
-         M6ag==
-X-Gm-Message-State: APjAAAUuV7VCviXIrVtnvYRSO1PsP3wYpDt9/oqcVwVCcJADoTFxuKAA
-        jBlPxwgMk4pWIOiz/lUCbtc=
-X-Google-Smtp-Source: APXvYqyCs6ReFo44FRjG9X8YZDHHS+am/bMANP6oopGV1Zd787odaVvfpd//Pc4OS1/U5biQgJ7CJg==
-X-Received: by 2002:a25:a469:: with SMTP id f96mr185130ybi.23.1569455593438;
-        Wed, 25 Sep 2019 16:53:13 -0700 (PDT)
-Received: from icarus (072-189-084-142.res.spectrum.com. [72.189.84.142])
-        by smtp.gmail.com with ESMTPSA id x145sm77056ywx.2.2019.09.25.16.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 16:53:12 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 19:53:10 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        jic23@jic23.retrosnub.co.uk
-Cc:     jic23@kernel.org, alexandre.torgue@st.com,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: stm32-timer-cnt: fix a kernel-doc warning
-Message-ID: <20190925235310.GD14133@icarus>
-References: <1568809323-26079-1-git-send-email-fabrice.gasnier@st.com>
- <20190925234927.GB14133@icarus>
+        Wed, 25 Sep 2019 19:55:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PNsGsb154963;
+        Wed, 25 Sep 2019 23:55:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=g4/xuxSmWl76M0e2JgrpaUXPD+Ns9UygHRa/6EFUfgQ=;
+ b=e4OsdQH0vRejMjXJgbgajX8o7UJcErvjofKPUCO5ViQcTpTaaWisjcli8oWDiRyQbo+o
+ ctz+97WWWFJesUrBOYtNTTNK/J5kxIZKNL7jl9YHRI5VRMSWP4Lo1XPixWqwBhItUaK8
+ i8SA1SzNgClRS++bW1Myf41x8AcdlR+OtpNQz98TIfeXch+n0VX57IGL7iI5eQ5Pm9R0
+ 0CqytJhMH9scVr6IKMsFHRewyni2J2bMMhtdrXmUBElPvdwH72rJFNVSkfTLiUJJAZ15
+ 7Y0nayMn20a0QqAM2jT30naZOJtNYrDo00lG0e54OhP+5edrthg01V2qi3cn5LbR9Gf0 Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v5b9tyxsk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 23:55:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PNsAvJ015460;
+        Wed, 25 Sep 2019 23:55:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2v82qaumma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 23:55:18 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PNtHdB027924;
+        Wed, 25 Sep 2019 23:55:17 GMT
+Received: from dhcp-10-132-91-76.usdhcp.oraclecorp.com (/10.132.91.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Sep 2019 16:55:17 -0700
+Subject: Re: [PATCH] KVM: nVMX: cleanup and fix host 64-bit mode checks
+To:     Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
+ <CALMp9eTBPTnsRDipdGDgmugWgfFEjQ2wd_9-JY0ZeM9YG2fBjg@mail.gmail.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <3460bd57-6fdd-f73c-9ce0-c97d4cc85f63@oracle.com>
+Date:   Wed, 25 Sep 2019 16:55:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190925234927.GB14133@icarus>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALMp9eTBPTnsRDipdGDgmugWgfFEjQ2wd_9-JY0ZeM9YG2fBjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909250196
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909250196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 07:49:27PM -0400, William Breathitt Gray wrote:
-> On Wed, Sep 18, 2019 at 02:22:03PM +0200, Fabrice Gasnier wrote:
-> > Fix the following warning when documentation is built:
-> > drivers/counter/stm32-timer-cnt.c:37: warning: cannot understand function
-> > prototype: 'enum stm32_count_function'
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> >  drivers/counter/stm32-timer-cnt.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-> > index 644ba18..e425dd1 100644
-> > --- a/drivers/counter/stm32-timer-cnt.c
-> > +++ b/drivers/counter/stm32-timer-cnt.c
-> > @@ -28,7 +28,7 @@ struct stm32_timer_cnt {
-> >  };
-> >  
-> >  /**
-> > - * stm32_count_function - enumerates stm32 timer counter encoder modes
-> > + * enum stm32_count_function - enumerates stm32 timer counter encoder modes
-> >   * @STM32_COUNT_SLAVE_MODE_DISABLED: counts on internal clock when CEN=1
-> >   * @STM32_COUNT_ENCODER_MODE_1: counts TI1FP1 edges, depending on TI2FP2 level
-> >   * @STM32_COUNT_ENCODER_MODE_2: counts TI2FP2 edges, depending on TI1FP1 level
-> > -- 
-> > 2.7.4
-> 
-> Fixes: 597f55e3f36c ("counter: stm32-lptimer: add counter device")
-> 
-> Jonathan, please pick this fix up through IIO.
-> 
-> Thanks,
-> 
-> William Breathitt Gray
 
-Sorry, that's the wrong Fixes line. Here's the right one:
 
-Fixes: ad29937e206f ("counter: Add STM32 Timer quadrature encoder")
+On 09/25/2019 09:47 AM, Jim Mattson wrote:
+> On Wed, Sep 25, 2019 at 9:34 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>> KVM was incorrectly checking vmcs12->host_ia32_efer even if the "load
+>> IA32_EFER" exit control was reset.  Also, some checks were not using
+>> the new CC macro for tracing.
+>>
+>> Cleanup everything so that the vCPU's 64-bit mode is determined
+>> directly from EFER_LMA and the VMCS checks are based on that, which
+>> matches section 26.2.4 of the SDM.
+>>
+>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Cc: Jim Mattson <jmattson@google.com>
+>> Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+>> Fixes: 5845038c111db27902bc220a4f70070fe945871c
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> ---
+>>   arch/x86/kvm/vmx/nested.c | 53 ++++++++++++++++++++---------------------------
+>>   1 file changed, 22 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>> index 70d59d9304f2..e108847f6cf8 100644
+>> --- a/arch/x86/kvm/vmx/nested.c
+>> +++ b/arch/x86/kvm/vmx/nested.c
+>> @@ -2664,8 +2664,26 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
+>>              CC(!kvm_pat_valid(vmcs12->host_ia32_pat)))
+>>                  return -EINVAL;
+>>
+>> -       ia32e = (vmcs12->vm_exit_controls &
+>> -                VM_EXIT_HOST_ADDR_SPACE_SIZE) != 0;
+>> +#ifdef CONFIG_X86_64
+>> +       ia32e = !!(vcpu->arch.efer & EFER_LMA);
+>> +#else
+>> +       if (CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE))
+>> +               return -EINVAL;
+> This check is redundant, since it is checked in the else block below.
 
-William Breathitt Gray
+Should we be re-using is_long_mode() instead of duplicating the code ?
+
+>
+>> +
+>> +       ia32e = false;
+>> +#endif
+>> +
+>> +       if (ia32e) {
+>> +               if (CC(!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) ||
+>> +                   CC(!(vmcs12->host_cr4 & X86_CR4_PAE)))
+>> +                       return -EINVAL;
+>> +       } else {
+>> +               if (CC(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) ||
+>> +                   CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
+>> +                   CC(vmcs12->host_cr4 & X86_CR4_PCIDE) ||
+>> +                   CC(((vmcs12->host_rip) >> 32) & 0xffffffff))
+> The mask shouldn't be necessary.
+>
+>> +                       return -EINVAL;
+>> +       }
+>>
+>>          if (CC(vmcs12->host_cs_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
+>>              CC(vmcs12->host_ss_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
+>> @@ -2684,35 +2702,8 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
+>>              CC(is_noncanonical_address(vmcs12->host_gs_base, vcpu)) ||
+>>              CC(is_noncanonical_address(vmcs12->host_gdtr_base, vcpu)) ||
+>>              CC(is_noncanonical_address(vmcs12->host_idtr_base, vcpu)) ||
+>> -           CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)))
+>> -               return -EINVAL;
+>> -
+>> -       if (!(vmcs12->host_ia32_efer & EFER_LMA) &&
+>> -           ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
+>> -           (vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE))) {
+>> -               return -EINVAL;
+>> -       }
+>> -
+>> -       if ((vmcs12->host_ia32_efer & EFER_LMA) &&
+>> -           !(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) {
+>> -               return -EINVAL;
+>> -       }
+>> -
+>> -       if (!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
+>> -           ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
+>> -           (vmcs12->host_cr4 & X86_CR4_PCIDE) ||
+>> -           (((vmcs12->host_rip) >> 32) & 0xffffffff))) {
+>> -               return -EINVAL;
+>> -       }
+>> -
+>> -       if ((vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
+>> -           ((!(vmcs12->host_cr4 & X86_CR4_PAE)) ||
+>> -           (is_noncanonical_address(vmcs12->host_rip, vcpu)))) {
+>> -               return -EINVAL;
+>> -       }
+>> -#else
+>> -       if (vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE ||
+>> -           vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)
+>> +           CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)) ||
+>> +           CC(is_noncanonical_address(vmcs12->host_rip, vcpu)))
+>>                  return -EINVAL;
+>>   #endif
+>>
+>> --
+>> 1.8.3.1
+>>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+
