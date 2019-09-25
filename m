@@ -2,196 +2,171 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92280C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20264C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B6C21D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F4121D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfIYVW4 (ORCPT
+        id S1726103AbfIYVYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:22:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44633 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfIYVW4 (ORCPT
+        Wed, 25 Sep 2019 17:24:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39466 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfIYVYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:22:56 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m13so7190254ljj.11;
-        Wed, 25 Sep 2019 14:22:54 -0700 (PDT)
+        Wed, 25 Sep 2019 17:24:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id s17so189356plp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 14:24:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U610o8DhX8dPtXlasTMJnSiR0eXeLZTVnrwXIEiOEPo=;
-        b=Qx8FKvmTMGfUSHUo/RUf3UuUnv6EQWp2vaJ4FO36OKbvRIWvZNzYGwyxp+/+JyxQq+
-         6JH4RfIWjBqEW+mMsqh6p5KYWAGKXaadK6Y0y00aXiNLQYDQbirITA9dv74WpThMrEZF
-         LmFw/mLZYE4/7Lw5HTo5gFcRtOHxDc37j+SD3FwCWe5RE2tBknGxr4uL9nouRo534XIz
-         xZHtk21TaAiywWCcLnREgHJk24I4d+bv7sABoMm2l7JDWHc20MMfXHJ0fylbJqE0Xz+1
-         iYb0Ro3pQWhFcHABKAvmqGs9UqqVF7Zdne/+PUfBePP2SjwBSrp4D2nCKLi+Slzw1/6P
-         BnrA==
-X-Gm-Message-State: APjAAAXekmSYKzoOHE/Brr6tErCT3gKr9+9Xb3d6J3unC/WORYPAbGTU
-        BxBXQXydk8TKdUf03VtpNxzJ+VUwpcrPTqrwxmA=
-X-Google-Smtp-Source: APXvYqyBY16qcMqD0X8eEUYTs58uMslOWYDq9eAWjL6JvfhkAcnE4rCuNMhhk3pBQNWxSFrIp2pWUuL3gOp/77CtKZ4=
-X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr238583lje.90.1569446140921;
- Wed, 25 Sep 2019 14:15:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190920135137.10052-1-ricardo@ribalda.com> <20190920135137.10052-8-ricardo@ribalda.com>
- <20190925092552.okhiq5nweujjuk7q@uno.localdomain>
-In-Reply-To: <20190925092552.okhiq5nweujjuk7q@uno.localdomain>
-From:   Ricardo Ribalda Delgado <ricardo@ribalda.com>
-Date:   Wed, 25 Sep 2019 23:15:19 +0200
-Message-ID: <CAPybu_3ma+oPPzgQ39fjGtZrSLxPuLRC2crvFe0cERGYZfzwuw@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Bg76ABOLDvzkhoqAzUmInH7lsqAvMASqxxpTEuCtlfU=;
+        b=WTwPVO6S4t2va3vTVCZXQG367+QFTu0AHA+S+xz1qDl4Gdfrhk37YRG0GNI8GxP/7y
+         6hsxPIbNgILPT+0lStBktrn1cnRPCvFnBSvQ1kXkCyF0UPiUq92Y9VFb52OnqSBzZPXg
+         SAMaj+g5Nbx/9L7I6vtbqbjy0v4JSZBKfOEOIzVD2BzbDTofJbmueeaN2Z0TS3Pf1s9A
+         i4i5UOEelZNWkjpdvp1yUvAV3f+lg5VIPQSB5zW17ZQogQn2Qjc34Uptdj+MJCTKiIy3
+         G1K5gTL7fMCavU/WZMyAMcjZWp9E0gj2RsAaoL9PZy7gNV/GLBBz8BBZzBEzoVCeWZnT
+         hlOg==
+X-Gm-Message-State: APjAAAWrcgNy56Tyg2DuWVtKf4rDhvHHuET0sX40ja/HL7WOEsCXQhEK
+        TRjqhuNx87r9NTEX/zwDQT/14g==
+X-Google-Smtp-Source: APXvYqzV3+50+lIHsJuDERolqp33oVDd9PnCnXIDA8KlRQf10bOdvBbQaagf0eDhLQIEFnn5zkKabw==
+X-Received: by 2002:a17:902:b40b:: with SMTP id x11mr133569plr.87.1569446658383;
+        Wed, 25 Sep 2019 14:24:18 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id q204sm5011083pfc.11.2019.09.25.14.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 14:24:17 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 14:24:17 -0700 (PDT)
+X-Google-Original-Date: Wed, 25 Sep 2019 14:24:16 PDT (-0700)
+Subject:     Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+In-Reply-To: <20190925131252.19359-1-robh@kernel.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     robh@kernel.org
+Message-ID: <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo
-
-Thanks for the review
-
-On Wed, Sep 25, 2019 at 11:24 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+On Wed, 25 Sep 2019 06:12:52 PDT (-0700), robh@kernel.org wrote:
+> Fix the errors in the RiscV CPU DT schema:
 >
-> Hi Ricardo,
+> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
 >
-> On Fri, Sep 20, 2019 at 03:51:37PM +0200, Ricardo Ribalda Delgado wrote:
-> > From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> >
-> > According to the product brief, the unit cell size is 1120 nanometers^2.
-> >
-> > https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  drivers/media/i2c/imx214.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> > index 159a3a604f0e..57562e20c4ca 100644
-> > --- a/drivers/media/i2c/imx214.c
-> > +++ b/drivers/media/i2c/imx214.c
-> > @@ -47,6 +47,7 @@ struct imx214 {
-> >       struct v4l2_ctrl *pixel_rate;
-> >       struct v4l2_ctrl *link_freq;
-> >       struct v4l2_ctrl *exposure;
-> > +     struct v4l2_ctrl *unit_size;
-> >
-> >       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
-> >
-> > @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
-> >       static const s64 link_freq[] = {
-> >               IMX214_DEFAULT_LINK_FREQ,
-> >       };
-> > +     struct v4l2_area unit_size = {
-> > +             .width = 1120,
-> > +             .height = 1120,
-> > +     };
-> > +     union v4l2_ctrl_ptr p_def = {
-> > +             .p_area = &unit_size,
-> > +     };
-> >       int ret;
-> >
-> >       ret = imx214_parse_fwnode(dev);
-> > @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
-> >                                            V4L2_CID_EXPOSURE,
-> >                                            0, 3184, 1, 0x0c70);
-> >
-> > +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-> > +                                                    NULL,
-> > +                                                    V4L2_CID_UNIT_CELL_SIZE,
-> > +                                                    p_def);
-> >       ret = imx214->ctrls.error;
-> >       if (ret) {
-> >               dev_err(&client->dev, "%s control init failed (%d)\n",
+> Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+>  - Add timebase-frequency to simulator example.
 >
-> Would something like this scale? I'm a bit bothered by the need of
-> declaring v4l2_ctrl_ptr structure just to set a field there in
-> drivers.
-
-I have implemented the interface that Hans proposed on
-https://www.mail-archive.com/linux-media@vger.kernel.org/msg149901.html
-
-I thik Hans prefers this way to avoid castings, which can end in a lot
-of "here be dragoons" :)
-
-
+>  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
 >
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 57562e20c4ca..a00d8fa481c2 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -953,9 +953,6 @@ static int imx214_probe(struct i2c_client *client)
->                 .width = 1120,
->                 .height = 1120,
->         };
-> -       union v4l2_ctrl_ptr p_def = {
-> -               .p_area = &unit_size,
-> -       };
->         int ret;
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> index b261a3015f84..eb0ef19829b6 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -24,15 +24,17 @@ description: |
 >
->         ret = imx214_parse_fwnode(dev);
-> @@ -1040,7 +1037,7 @@ static int imx214_probe(struct i2c_client *client)
->         imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
->                                                        NULL,
->                                                        V4L2_CID_UNIT_CELL_SIZE,
-> -                                                      p_def);
-> +                                                      &unit_size);
->         ret = imx214->ctrls.error;
->         if (ret) {
->                 dev_err(&client->dev, "%s control init failed (%d)\n",
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index f626f9983408..4a2648bee6f5 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -2681,18 +2681,26 @@ EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
->  /* Helper function for standard compound controls */
->  struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
->                                 const struct v4l2_ctrl_ops *ops, u32 id,
-> -                               const union v4l2_ctrl_ptr p_def)
-> +                               void *defval)
->  {
->         const char *name;
->         enum v4l2_ctrl_type type;
->         u32 flags;
->         s64 min, max, step, def;
-> +       union v4l2_ctrl_ptr p_def;
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - sifive,rocket0
+> -          - sifive,e5
+> -          - sifive,e51
+> -          - sifive,u54-mc
+> -          - sifive,u54
+> -          - sifive,u5
+> -      - const: riscv
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - sifive,rocket0
+> +              - sifive,e5
+> +              - sifive,e51
+> +              - sifive,u54-mc
+> +              - sifive,u54
+> +              - sifive,u5
+> +          - const: riscv
+> +      - const: riscv    # Simulator only
+>      description:
+>        Identifies that the hart uses the RISC-V instruction set
+>        and identifies the type of the hart.
+> @@ -67,8 +69,6 @@ properties:
+>        lowercase to simplify parsing.
 >
->         v4l2_ctrl_fill(id, &name, &type, &min, &max, &step, &def, &flags);
->         if (type < V4L2_CTRL_COMPOUND_TYPES) {
->                 handler_set_err(hdl, -EINVAL);
->                 return NULL;
->         }
-> +
-> +       switch ((u32)type) {
-> +       case V4L2_CTRL_TYPE_AREA:
-> +               p_def.p_area = defval;
-> +               break;
-> +       }
-> +
->         return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
->                              min, max, step, def, NULL, 0,
->                              flags, NULL, NULL, p_def, NULL);
->
-> However, due to my limitied understanding of the control framework, I
-> cannot tell how many cases the newly introduced switch should
-> handle...
->
-> > --
-> > 2.23.0
-> >
+>    timebase-frequency:
+> -    type: integer
+> -    minimum: 1
+>      description:
+>        Specifies the clock frequency of the system timer in Hz.
+>        This value is common to all harts on a single system image.
+> @@ -102,9 +102,9 @@ examples:
+>      cpus {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> -        timebase-frequency = <1000000>;
+>          cpu@0 {
+>                  clock-frequency = <0>;
+> +                timebase-frequency = <1000000>;
+>                  compatible = "sifive,rocket0", "riscv";
+>                  device_type = "cpu";
+>                  i-cache-block-size = <64>;
+> @@ -120,6 +120,7 @@ examples:
+>          };
+>          cpu@1 {
+>                  clock-frequency = <0>;
+> +                timebase-frequency = <1000000>;
+>                  compatible = "sifive,rocket0", "riscv";
+>                  d-cache-block-size = <64>;
+>                  d-cache-sets = <64>;
+> @@ -153,6 +154,7 @@ examples:
+>                  device_type = "cpu";
+>                  reg = <0>;
+>                  compatible = "riscv";
+> +                timebase-frequency = <1000000>;
+>                  riscv,isa = "rv64imafdc";
+>                  mmu-type = "riscv,sv48";
+>                  interrupt-controller {
 
+Looking at this spec
 
+    https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
 
--- 
-Ricardo Ribalda
+section 3.7 says
+
+    Properties that have identical values across cpu nodes may be placed in the 
+    /cpus node instead. A client program must
+    first examine a specific cpu node, but if an expected property is not found 
+    then it should look at the parent /cpus node.
+    This results in a less verbose representation of properties which are 
+    identical across all CPUs.
+
+I can never figure out if I'm looking at the right DT specifications so it's 
+possible that is defunct, I just bring this up because we've got an outstanding 
+bug in our port where we're not respecting what section 3.7 says and are only 
+looking at /cpus/timebase-frequency instead of /cpus/cpu@*/timebase-frequency, 
+and I'm wondering if the fix should allow for looking at 
+/cpus/timebase-frequency or just not bother.
