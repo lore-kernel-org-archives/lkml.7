@@ -2,118 +2,119 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F69C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E050C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C1F20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E7D20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ak9p/uPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442603AbfIYIUk (ORCPT
+        id S2442717AbfIYIVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:20:40 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:41443 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437303AbfIYIUk (ORCPT
+        Wed, 25 Sep 2019 04:21:53 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53461 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405820AbfIYIVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:20:40 -0400
-Received: from uno.localdomain (host71-63-dynamic.19-79-r.retail.telecomitalia.it [79.19.63.71])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 37F5B200007;
-        Wed, 25 Sep 2019 08:20:35 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 10:22:12 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 2/7] Documentation: v4l2_ctrl_new_std_compound
-Message-ID: <20190925082203.b2phkyrvfyv6imfv@uno.localdomain>
-References: <20190920135137.10052-1-ricardo@ribalda.com>
- <20190920135137.10052-3-ricardo@ribalda.com>
+        Wed, 25 Sep 2019 04:21:53 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i16so3985470wmd.3;
+        Wed, 25 Sep 2019 01:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=07HHxynuwRX2AxzUmWOs5TTpHN0wbdYgczfuCjqhEZU=;
+        b=Ak9p/uPdzo8AlUpi4OGQdDIrmxSxm62rMBBWaO/s7BUHwNjtkWnd5KXLjlshIU977b
+         6kPFYUOLqqX4PxCwkShjXzPA/xNBr7niko/DpV2taGZ88o6XNaSwedn9icLXa2q1s+S8
+         2OgPmjWhJjbu9bQ2h/zhbCMU/maQYodYHCCzteFRKTuIqhmuJN+9r0XgWqbBxko4GEs5
+         fEOju1qOVh3WOwYSM912MivsN5fpIPHO0usWKYQxV6XpnpIDQQtY5W+GximZSjy7KuzG
+         OgyXV/HGvAMYEQG6ZA/DTG8xHVlkIBETsEzXFKHFeAblTjm/ShALTbSpEt4sPjuxgCgy
+         buig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=07HHxynuwRX2AxzUmWOs5TTpHN0wbdYgczfuCjqhEZU=;
+        b=DRyne32u3rIxRJN2XvWrq8KzjO6+42NgnhUJRnJqeHiWxr1TyRa+nMzj99iLt7YPUk
+         cyX6WjXc4+NmHMwI941xBaXesrf6SB4C3YNg1HgYZaP64GLMQ3PQM1bPMpSFTlTIpLqA
+         p+17vV1Dyh7cCVzNlPtmd3laTqFVNYVe/HD6SFZzjQ3ZIegOVWO6RXqmfohMQpvCSOvf
+         82i8J0QZKJjn+k9Tw4mIMW5ih+D8TmZy/zgLQiIBea7smFVvPJKzxYUX36DF3kH0PPQw
+         UsbA0b4ivPBh7E4dumxPjI29sRPFt83FOSEACpjmVAcwN9BqbabnEMMivFphAy3ybNje
+         YsaQ==
+X-Gm-Message-State: APjAAAVToA8XfEvAL8VXeGzhye5kApNvdeaGxLznaoPkKl9b9I8zkz+m
+        TQzobv65SfHbqKqHwnk32lk=
+X-Google-Smtp-Source: APXvYqzeqND3xSEL3Da/l7gOEPtiJolvl2AIQAGTg92Aa1V9ScGXZTZ+ghAc45AHbJu35hyNRLlQBw==
+X-Received: by 2002:a7b:cd11:: with SMTP id f17mr6066933wmj.12.1569399711322;
+        Wed, 25 Sep 2019 01:21:51 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b62sm2753407wmc.13.2019.09.25.01.21.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 25 Sep 2019 01:21:50 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 10:21:49 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
+ Inspiron 10xx
+Message-ID: <20190925082149.yjhmmb64i4h6sddi@pali>
+References: <156824368856.28378.14511879419677114177@WARFSTATION>
+ <20190912073358.n5bxqosowhky5uhb@pali>
+ <156882055514.9370.16951540573597044820@WARFSTATION>
+ <20190922134323.mowwoyeuqoalpwsg@pali>
+ <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
+ <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="btb5z6ghh37wnht7"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190920135137.10052-3-ricardo@ribalda.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday 25 September 2019 11:07:35 Andy Shevchenko wrote:
+> On Mon, Sep 23, 2019 at 4:24 PM <Mario.Limonciello@dell.com> wrote:
+> > > From: Pali Rohár <pali.rohar@gmail.com>
+> > > Sent: Sunday, September 22, 2019 8:43 AM
+> > > To: Pacien TRAN-GIRARD
+> > > Cc: Matthew Garrett; Darren Hart; Andy Shevchenko; platform-driver-
+> > > x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> > > Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
+> > > Inspiron 10xx
+> 
+> > > We need to wait what Mario wrote about this particular problem.
+> > >
+> >
+> > I agree an Inspiron is unlikely to be updated 9 years later.  I think the right thing
+> > to do in this instance is to blacklist this particular platform in kernel driver.
+> 
+> Does it mean you are okay with the proposed patch? Can you give your tag then?
 
---btb5z6ghh37wnht7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+I would rather use different name as kbd_phantom_backlight. E.g.
+lbd_broken_backlight or something which indicates non-working / disabled
+support.
 
-Hi Ricardo,
+Also in commit message is written that problem is with KBD_LED_OFF_TOKEN
+and KBD_LED_ON_TOKEN tokens, but proposed patch does not blacklist these
+tokens, but rather turn off whole kbd functionality. So proposed patch
+does not patch commit message, nor explain it.
 
-On Fri, Sep 20, 2019 at 03:51:32PM +0200, Ricardo Ribalda Delgado wrote:
-> Function for initializing compound controls with a default value.
->
-> Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
-> ---
->  Documentation/media/kapi/v4l2-controls.rst | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
-> index ebe2a55908be..b20800cae3f2 100644
-> --- a/Documentation/media/kapi/v4l2-controls.rst
-> +++ b/Documentation/media/kapi/v4l2-controls.rst
-> @@ -140,6 +140,15 @@ Menu controls with a driver specific menu are added by calling
->                         const struct v4l2_ctrl_ops *ops, u32 id, s32 max,
->                         s32 skip_mask, s32 def, const char * const *qmenu);
->
-> +Standard compound controls can be added by calling
-
-Standard compound controls with a driver provided default value can be..
-
-Or is it un-necessary to re-state it?
-
-In any case:
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-  j
-> +:c:func:`v4l2_ctrl_new_std_compound`:
-> +
-> +.. code-block:: c
-> +
-> +       struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
-> +                       const struct v4l2_ctrl_ops *ops, u32 id,
-> +                       const union v4l2_ctrl_ptr p_def);
-> +
->  Integer menu controls with a driver specific menu can be added by calling
->  :c:func:`v4l2_ctrl_new_int_menu`:
->
-> --
-> 2.23.0
->
-
---btb5z6ghh37wnht7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2LI7QACgkQcjQGjxah
-Vjy76A/+O7gynK7SxMnxPjAsEGPHX4n74gChYAocM0BjU3hXxUh3SAlWkNrV0VFF
-Yyz6OkuPrsxXOEwx6h089M/UXZ8bVwkaSJIvNSao1s24JIGhFyb0Dfm+TmrkfbMB
-unXa3V+sBI1vZ+Ffxm78IfCGr4+N6XF7PoR7FAmryR0PsI9kaUlGvceg172yNhQb
-k0hkzMOekKpg5GqT7drbeppwxNxzx9KCVh1W7PVE95oCArn36KFth09ioS2n72km
-C/myu8IhTEejmBo3/W9V7YoR+4WPeROznHTvi1vAM/7SbQYMq8aOay3BdhZyht/i
-AES5m5HdziOPemI5DU/KxkA6w6uFYAHhw33Q5EO0atkDGs4Wcqv/L6Plz0MjeFaK
-uB/I1Js8KYmyPtKelUOyR6OPtyidtb8DpA4Uc003c0I620QfRiO0NFQqOj6RMM9d
-kywskULvat+FDqYq4AUiEBIa0doqv5xtQQNGuK7xfR2RlVBYV5/p9g/3XPAPiDOM
-X9NnG75spbml6zS7c/TXbdIk2Bmso4qZZUpxgeTQvCHiUo7MWKvyjFPJRin0W9Ll
-4R1eoaINHWVDgDe+Krrh2FQdZPgJxPBCkBjJBoiLe7HFPWh/FFzect+RPn7Mjp5S
-OOlRL+n3kaaxXAlIAMbtlTmsLsvKM0ESza/zM/26mGK7kq90a+k=
-=OKwy
------END PGP SIGNATURE-----
-
---btb5z6ghh37wnht7--
+-- 
+Pali Rohár
+pali.rohar@gmail.com
