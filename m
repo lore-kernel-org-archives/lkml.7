@@ -2,145 +2,95 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986E4C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0976CC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741E820872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAA020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VoBkfX9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442785AbfIYIfa (ORCPT
+        id S2442803AbfIYIgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:35:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34386 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442770AbfIYIfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:35:30 -0400
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A48E311A24
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:35:29 +0000 (UTC)
-Received: by mail-pf1-f199.google.com with SMTP id v6so3472933pfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 01:35:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CBc45OeQcvvswm6VllW/DcLsxnRal5m6t5OBDsogK1c=;
-        b=OKaIEdDu1pOw/RICa7BWKEgRP2A9TCrSGuMHGcMAoBo3I0d+iQd2++OifI/SLoirge
-         DxFYvX8YhQ860+VZz+9u/PmwbHj9fyK716KgZY3yxoda0eh/20L7NKHkPewQ/fdlVuvQ
-         /dG197l0E/NztYk3AssiW9EkbxdgFp6CxOv5MzwY/+ZemQaLCo5fUh7n9f/ImQDytl02
-         As9cBs51trvrHxDPqSu/27w4XPun1dS/xOyNOJMsVm5/hlL6jX+JOOEViSAUvI5/OnOO
-         CEHCuF3AzyX9bWDNWaASmn5T0BF3JB2fJkrdtsbWVaBoCvLMwsz7ABTVy1JUsEfgVfQs
-         ZysA==
-X-Gm-Message-State: APjAAAXfeayiRbjkKlTs5iFMRQoxxtS+B4wXjPe1gZuK57EDO44jxow6
-        50PDumuGLvj7dzbvL78PX2zXecmeCNXV4jtqOX/bzGqKNCPXNoZlDYI/J1uHV5851ClAQkZ3wCr
-        DXAbnzo4Fz2VkDtuOa1PqFt8B
-X-Received: by 2002:a17:90a:a613:: with SMTP id c19mr5107209pjq.11.1569400529148;
-        Wed, 25 Sep 2019 01:35:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwTwI2GBx3mYJA7q4j7DwyuCNyNYODVb5K7FYMon6YtcWvF63UgXcbRm5MG2PYtVak+7eQfkA==
-X-Received: by 2002:a17:90a:a613:: with SMTP id c19mr5107183pjq.11.1569400528844;
-        Wed, 25 Sep 2019 01:35:28 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x6sm9264648pfd.53.2019.09.25.01.35.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 01:35:27 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 16:35:16 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-Message-ID: <20190925083516.GQ28074@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190923203102.GB21816@araj-mobl1.jf.intel.com>
- <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
- <20190925043050.GK28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
- <20190925052402.GM28074@xz-x1>
- <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
+        Wed, 25 Sep 2019 04:36:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47878 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437903AbfIYIgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:36:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qY25nh7ft7xVLg9CJpkhKTMkEGk7+Lk26TG1nt2SkhY=; b=VoBkfX9U18C/zs886+AEon/jz
+        P8rwaJyJUSaktSTe86iBPd0eBgthTknvrTbwTpUBOuWHhmEZqmAITl1A0E7pa7U5ttEI5mrWcs9o4
+        p4+fDC/V3M2a7wy9dKkPgP+TnuzpeTYzt/qzNSUXjyw6yW/81muGQ5GjgXgcZhJl5NxibaKkmzPui
+        Gzbv1UPwm2+G48V6a/5upaH/pv1sR3cER+i16a7znZ9Xqj2BQPIf7FboFrBLfcaS1vBBQvX0pQf7E
+        jXk2p5sUusUWVcfBJ91JEh92ht0Wz8O9LH/eQ6ciz2xzpX9IXOUs7BnDAB5+pXhClmFrsi0CMhyhv
+        QqT4AlKXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iD2mF-0006SO-Rx; Wed, 25 Sep 2019 08:36:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 18B5D305E1F;
+        Wed, 25 Sep 2019 10:35:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D7818203E4FB5; Wed, 25 Sep 2019 10:35:57 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 10:35:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 0/5] hugetlbfs: Disable PMD sharing for large systems
+Message-ID: <20190925083557.GA4553@hirez.programming.kicks-ass.net>
+References: <20190911150537.19527-1-longman@redhat.com>
+ <20190913015043.GF27547@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190913015043.GF27547@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 07:32:48AM +0000, Tian, Kevin wrote:
-> > From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
-> > Sent: Wednesday, September 25, 2019 2:52 PM
+On Fri, Sep 13, 2019 at 11:50:43AM +1000, Dave Chinner wrote:
+> On Wed, Sep 11, 2019 at 04:05:32PM +0100, Waiman Long wrote:
+> > A customer with large SMP systems (up to 16 sockets) with application
+> > that uses large amount of static hugepages (~500-1500GB) are experiencing
+> > random multisecond delays. These delays was caused by the long time it
+> > took to scan the VMA interval tree with mmap_sem held.
 > > 
-> > Hi Peter and Kevin,
+> > To fix this problem while perserving existing behavior as much as
+> > possible, we need to allow timeout in down_write() and disabling PMD
+> > sharing when it is taking too long to do so. Since a transaction can
+> > involving touching multiple huge pages, timing out for each of the huge
+> > page interactions does not completely solve the problem. So a threshold
+> > is set to completely disable PMD sharing if too many timeouts happen.
 > > 
-> > On 9/25/19 1:24 PM, Peter Xu wrote:
-> > > On Wed, Sep 25, 2019 at 04:38:31AM +0000, Tian, Kevin wrote:
-> > >>> From: Peter Xu [mailto:peterx@redhat.com]
-> > >>> Sent: Wednesday, September 25, 2019 12:31 PM
-> > >>>
-> > >>> On Tue, Sep 24, 2019 at 09:38:53AM +0800, Lu Baolu wrote:
-> > >>>>>> intel_mmmap_range(domain, addr, end, phys_addr, prot)
-> > >>>>>
-> > >>>>> Maybe think of a different name..? mmmap seems a bit weird :-)
-> > >>>>
-> > >>>> Yes. I don't like it either. I've thought about it and haven't
-> > >>>> figured out a satisfied one. Do you have any suggestions?
-> > >>>
-> > >>> How about at least split the word using "_"?  Like "mm_map", then
-> > >>> apply it to all the "mmm*" prefixes.  Otherwise it'll be easily
-> > >>> misread as mmap() which is totally irrelevant to this...
-> > >>>
-> > >>
-> > >> what is the point of keeping 'mm' here? replace it with 'iommu'?
-> > >
-> > > I'm not sure of what Baolu thought, but to me "mm" makes sense itself
-> > > to identify this from real IOMMU page tables (because IIUC these will
-> > > be MMU page tables).  We can come up with better names, but IMHO
-> > > "iommu" can be a bit misleading to let people refer to the 2nd level
-> > > page table.
-> > 
-> > "mm" represents a CPU (first level) page table;
-> > 
-> > vs.
-> > 
-> > "io" represents an IOMMU (second level) page table.
-> > 
+> > The first 4 patches of this 5-patch series adds a new
+> > down_write_timedlock() API which accepts a timeout argument and return
+> > true is locking is successful or false otherwise. It works more or less
+> > than a down_write_trylock() but the calling thread may sleep.
 > 
-> IOMMU first level is not equivalent to CPU page table, though you can
-> use the latter as the first level (e.g. in SVA). Especially here you are
-> making IOVA->GPA as the first level, which is not CPU page table.
-> 
-> btw both levels are for "io" i.e. DMA purposes from VT-d p.o.v. They
-> are just hierarchical structures implemented by VT-d, with slightly
-> different format.
+> Just on general principle, this is a non-starter. If a lock is being
+> held too long, then whatever the lock is protecting needs fixing.
+> Adding timeouts to locks and sysctls to tune them is not a viable
+> solution to address latencies caused by algorithm scalability
+> issues.
 
-Regarding to the "slightly different format", do you mean the
-extended-accessed bit?
-
-Even if there are differences, they do look very similar.  If you see
-the same chap 9.7 table, the elements are exactly called PTE, PDE,
-PDPE, and so on - they're named exactly the same as MMU page tables.
-With that, IMHO it still sounds reasonable if we want to relate this
-"1st level iommu page table" with the existing MMU page table using
-the "mm" prefix...
-
-Regards,
-
--- 
-Peter Xu
+I'm very much agreeing here. Lock functions with timeouts are a sign of
+horrific design.
