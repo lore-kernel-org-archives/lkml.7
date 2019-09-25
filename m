@@ -2,156 +2,284 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14608C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AABC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3432054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nF3zC9zO"
+	by mail.kernel.org (Postfix) with ESMTP id 498902054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393512AbfIYHhW (ORCPT
+        id S2393610AbfIYHj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:37:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38720 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392973AbfIYHhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:37:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=de5nn/eSh/M6SfFOgTwUQaAn196rLscasGKtD5AUuUs=; b=nF3zC9zOKMeYOwaM5E9MTgulD
-        fRQB/uFnc0EG2pJZT4t4cBrswF5dlPePWEXSJGj4I0AkeuCU1jlCs0BklqrxF5dsJqx/825QDldMT
-        3HrJtOxS3kUQ6xuCegEDWM1ZszdRP4yGpmAZZatq7p0KZs8LfT4FWOY1vxbGPczM03BSTbGk8jXuj
-        DxWSHmMXinYQDTKoPK8ZNPgfX4i5MeGpntXTy8u4v27rX2ETeKQKqTxN54jEwzPk8SUrnaMyVGzeY
-        /NTC3qi7RSPVjpxirIQOxBJdwD3+0PgOzpeic1Rm9OUkPq/45Z/TFbnLe/Myejll2yLbrCQs2kTb3
-        zNrZ8KVgw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iD1qy-0003zh-FA; Wed, 25 Sep 2019 07:36:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8BCDD3012CF;
-        Wed, 25 Sep 2019 09:35:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7027A200D2661; Wed, 25 Sep 2019 09:36:43 +0200 (CEST)
-Date:   Wed, 25 Sep 2019 09:36:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>, mpe@ellerman.id.au
-Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
-Message-ID: <20190925073643.GA4536@hirez.programming.kicks-ass.net>
-References: <20190903074718.GT2386@hirez.programming.kicks-ass.net>
- <87k1apqqgk.fsf@x220.int.ebiederm.org>
- <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
- <874l1tp7st.fsf@x220.int.ebiederm.org>
- <CAHk-=wjvyRJEdativFqqGGxzSgWnc-m7b+B04iQBMcZV4uM=hA@mail.gmail.com>
- <20190903200603.GW2349@hirez.programming.kicks-ass.net>
- <20190903213218.GG4125@linux.ibm.com>
- <87r24umryu.fsf@x220.int.ebiederm.org>
- <20190906070736.GR2349@hirez.programming.kicks-ass.net>
- <87woehek20.fsf@x220.int.ebiederm.org>
+        Wed, 25 Sep 2019 03:39:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60314 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390395AbfIYHj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:39:28 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6E828121AB5A8C424FF1;
+        Wed, 25 Sep 2019 15:39:26 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 15:39:21 +0800
+Subject: Re: [PATCH V3] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     Wei Yang <richardw.yang@linux.intel.com>,
+        <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
+        <dan.j.williams@intel.com>, <david@redhat.com>, <cai@lca.pw>,
+        <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <e836da55-19f7-e505-7f2a-5f790d61b912@huawei.com>
+ <20190925073239.GD1857@linux.ibm.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <2899afd4-1501-d3e7-72fd-de94fa84cd80@huawei.com>
+Date:   Wed, 25 Sep 2019 15:39:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87woehek20.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190925073239.GD1857@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 07:22:15AM -0500, Eric W. Biederman wrote:
 
-> Let me see if I can explain my confusion in terms of task_numa_compare.
+
+On 2019/9/25 15:32, Mike Rapoport wrote:
+> On Wed, Sep 25, 2019 at 03:18:43PM +0800, Yunfeng Ye wrote:
+>> sparse_buffer_init() use memblock_alloc_try_nid_raw() to allocate memory
+>> for page management structure, if memory allocation fails from specified
+>> node, it will fall back to allocate from other nodes.
+>>
+>> Normally, the page management structure will not exceed 2% of the total
+>> memory, but a large continuous block of allocation is needed. In most
+>> cases, memory allocation from the specified node will success always,
+>> but a node memory become highly fragmented will fail. we expect to
+>> allocate memory base section rather than by allocating a large block of
+>> memory from other NUMA nodes
+>>
+>> Add memblock_alloc_exact_nid_raw() for this situation, which allocate
+>> boot memory block on the exact node. If a large contiguous block memory
+>> allocate fail in sparse_buffer_init(), it will fall back to allocate
+>> small block memory base section.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 > 
-> The function task_numa_comare now does:
+> One nit below, otherwise
 > 
-> 	rcu_read_lock();
-> 	cur = rcu_dereference(dst_rq->curr);
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Then it proceeds to examine a few fields of cur.
+ok.
+
+>> ---
+>> v2 -> v3:
+>>  - use "bool exact_nid" instead of "int need_exact_nid"
+>>  - remove the comment "without panicking"
+>>
+>> v1 -> v2:
+>>  - use memblock_alloc_exact_nid_raw() rather than using a flag
+>>
+>>  include/linux/memblock.h |  3 +++
+>>  mm/memblock.c            | 65 ++++++++++++++++++++++++++++++++++++++++--------
+>>  mm/sparse.c              |  2 +-
+>>  3 files changed, 58 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index f491690..b38bbef 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -358,6 +358,9 @@ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
+>>  					 MEMBLOCK_ALLOC_ACCESSIBLE);
+>>  }
+>>
+>> +void *memblock_alloc_exact_nid_raw(phys_addr_t size, phys_addr_t align,
+>> +				 phys_addr_t min_addr, phys_addr_t max_addr,
+>> +				 int nid);
+>>  void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
+>>  				 phys_addr_t min_addr, phys_addr_t max_addr,
+>>  				 int nid);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 7d4f61a..0de9d83 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -1323,12 +1323,13 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+>>   * @start: the lower bound of the memory region to allocate (phys address)
+>>   * @end: the upper bound of the memory region to allocate (phys address)
+>>   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+>> + * @exact_nid: control the allocation fall back to other nodes
+>>   *
+>>   * The allocation is performed from memory region limited by
+>>   * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
+>>   *
+>> - * If the specified node can not hold the requested memory the
+>> - * allocation falls back to any node in the system
+>> + * If the specified node can not hold the requested memory and @exact_nid
+>> + * is zero, the allocation falls back to any node in the system
 > 
-> 	cur->flags;
->         cur->cpus_ptr;
->         cur->numa_group;
->         cur->numa_faults[];
->         cur->total_numa_faults;
->         cur->se.cfs_rq;
+>      ^ is false  ;-)
 > 
-> My concern here is the ordering between setting rq->curr and and setting
-> those other fields.  If we read values of those fields that were not
-> current when we set cur than I think task_numa_compare would give an
-> incorrect answer.
+sorry my negligence, thanks.
 
-That code is explicitly without serialization. One memory barrier isn't
-going to make any difference what so ever.
-
-Specifically, those numbers will change _after_ we make it current, not
-before.
-
-> From what I can see pick_next_task_fair does not mess with any of
-> the fields that task_numa_compare uses.  So the existing memory barrier
-> should be more than sufficient for that case.
-
-There should not be, but even if there is, load-balancing in general
-(very much including the NUMA balancing) is completely unserialized and
-prone to reading stale data at all times.
-
-This is on purpose; it minimizes the interference of load-balancing, and
-if we make a 'wrong' choice, the next pass can fix it up.
-
-> So I think I just need to write up a patch 4/3 that replaces the my
-> "rcu_assign_pointer(rq->curr, next)" with "RCU_INIT_POINTER(rq->curr,
-> next)".  And includes a great big comment to that effect.
+>>   *
+>>   * For systems with memory mirroring, the allocation is attempted first
+>>   * from the regions with mirroring enabled and then retried from any
+>> @@ -1342,7 +1343,8 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+>>   */
+>>  static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>>  					phys_addr_t align, phys_addr_t start,
+>> -					phys_addr_t end, int nid)
+>> +					phys_addr_t end, int nid,
+>> +					bool exact_nid)
+>>  {
+>>  	enum memblock_flags flags = choose_memblock_flags();
+>>  	phys_addr_t found;
+>> @@ -1365,7 +1367,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>>  	if (found && !memblock_reserve(found, size))
+>>  		goto done;
+>>
+>> -	if (nid != NUMA_NO_NODE) {
+>> +	if (nid != NUMA_NO_NODE && !exact_nid) {
+>>  		found = memblock_find_in_range_node(size, align, start,
+>>  						    end, NUMA_NO_NODE,
+>>  						    flags);
+>> @@ -1413,7 +1415,8 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+>>  					     phys_addr_t start,
+>>  					     phys_addr_t end)
+>>  {
+>> -	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE);
+>> +	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE,
+>> +					false);
+>>  }
+>>
+>>  /**
+>> @@ -1432,7 +1435,7 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+>>  phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid)
+>>  {
+>>  	return memblock_alloc_range_nid(size, align, 0,
+>> -					MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>> +					MEMBLOCK_ALLOC_ACCESSIBLE, nid, false);
+>>  }
+>>
+>>  /**
+>> @@ -1442,6 +1445,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+>>   * @min_addr: the lower bound of the memory region to allocate (phys address)
+>>   * @max_addr: the upper bound of the memory region to allocate (phys address)
+>>   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+>> + * @exact_nid: control the allocation fall back to other nodes
+>>   *
+>>   * Allocates memory block using memblock_alloc_range_nid() and
+>>   * converts the returned physical address to virtual.
+>> @@ -1457,7 +1461,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+>>  static void * __init memblock_alloc_internal(
+>>  				phys_addr_t size, phys_addr_t align,
+>>  				phys_addr_t min_addr, phys_addr_t max_addr,
+>> -				int nid)
+>> +				int nid, bool exact_nid)
+>>  {
+>>  	phys_addr_t alloc;
+>>
+>> @@ -1469,11 +1473,13 @@ static void * __init memblock_alloc_internal(
+>>  	if (WARN_ON_ONCE(slab_is_available()))
+>>  		return kzalloc_node(size, GFP_NOWAIT, nid);
+>>
+>> -	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
+>> +	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid,
+>> +					exact_nid);
+>>
+>>  	/* retry allocation without lower limit */
+>>  	if (!alloc && min_addr)
+>> -		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid);
+>> +		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid,
+>> +						exact_nid);
+>>
+>>  	if (!alloc)
+>>  		return NULL;
+>> @@ -1482,6 +1488,43 @@ static void * __init memblock_alloc_internal(
+>>  }
+>>
+>>  /**
+>> + * memblock_alloc_exact_nid_raw - allocate boot memory block on the exact node
+>> + * without zeroing memory
+>> + * @size: size of memory block to be allocated in bytes
+>> + * @align: alignment of the region and block's size
+>> + * @min_addr: the lower bound of the memory region from where the allocation
+>> + *	  is preferred (phys address)
+>> + * @max_addr: the upper bound of the memory region from where the allocation
+>> + *	      is preferred (phys address), or %MEMBLOCK_ALLOC_ACCESSIBLE to
+>> + *	      allocate only from memory limited by memblock.current_limit value
+>> + * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+>> + *
+>> + * Public function, provides additional debug information (including caller
+>> + * info), if enabled. Does not zero allocated memory.
+>> + *
+>> + * Return:
+>> + * Virtual address of allocated memory block on success, NULL on failure.
+>> + */
+>> +void * __init memblock_alloc_exact_nid_raw(
+>> +			phys_addr_t size, phys_addr_t align,
+>> +			phys_addr_t min_addr, phys_addr_t max_addr,
+>> +			int nid)
+>> +{
+>> +	void *ptr;
+>> +
+>> +	memblock_dbg("%s: %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa %pS\n",
+>> +		     __func__, (u64)size, (u64)align, nid, &min_addr,
+>> +		     &max_addr, (void *)_RET_IP_);
+>> +
+>> +	ptr = memblock_alloc_internal(size, align,
+>> +					   min_addr, max_addr, nid, true);
+>> +	if (ptr && size > 0)
+>> +		page_init_poison(ptr, size);
+>> +
+>> +	return ptr;
+>> +}
+>> +
+>> +/**
+>>   * memblock_alloc_try_nid_raw - allocate boot memory block without zeroing
+>>   * memory and without panicking
+>>   * @size: size of memory block to be allocated in bytes
+>> @@ -1512,7 +1555,7 @@ void * __init memblock_alloc_try_nid_raw(
+>>  		     &max_addr, (void *)_RET_IP_);
+>>
+>>  	ptr = memblock_alloc_internal(size, align,
+>> -					   min_addr, max_addr, nid);
+>> +					   min_addr, max_addr, nid, false);
+>>  	if (ptr && size > 0)
+>>  		page_init_poison(ptr, size);
+>>
+>> @@ -1547,7 +1590,7 @@ void * __init memblock_alloc_try_nid(
+>>  		     __func__, (u64)size, (u64)align, nid, &min_addr,
+>>  		     &max_addr, (void *)_RET_IP_);
+>>  	ptr = memblock_alloc_internal(size, align,
+>> -					   min_addr, max_addr, nid);
+>> +					   min_addr, max_addr, nid, false);
+>>  	if (ptr)
+>>  		memset(ptr, 0, size);
+>>
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index 72f010d..1a06471 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -475,7 +475,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+>>  	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+>>  	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
+>>  	sparsemap_buf =
+>> -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+>> +		memblock_alloc_exact_nid_raw(size, PAGE_SIZE,
+>>  						addr,
+>>  						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>>  	sparsemap_buf_end = sparsemap_buf + size;
+>> -- 
+>> 2.7.4
+>>
 > 
-> 
-> 
-> Now maybe I am wrong.  Maybe we can afford to see data that was changed
-> before the task became rq->curr in task_numa_compare.  But I don't think
-> so.  I really think it is that full memory barrier just a bit earlier
-> in __schedule that is keeping us safe.
-> 
-> Am I wrong?
 
-Not in so far that we now both seem to agree on using
-RCU_INIT_POINTER(); but we're still disagreeing on why.
-
-My argument is that since we can already obtain any task_struct pointer
-through find_task_by_vpid() and friends, any access to its individual
-members must already have serialzation rules (or explicitly none, as for
-load-balancing).
-
-I'm viewing this as just another variant of find_task_by_vpid(), except
-we index by CPU instead of PID. There can be changes to task_struct
-between to invocations of find_task_by_vpid(), any user will have to
-somehow deal with that. This is no different.
-
-Take for instance p->cpus_ptr, it has very specific serialzation rules
-(which that NUMA balancer thing blatantly ignores), as do a lot of other
-task_struct fields.
-
-The memory barrier in question isn't going to help with any of that.
-
-Specifically, if we care about the consistency of the numbers changed by
-pick_next_task(), we must acquire rq->lock (of course, once we do that,
-we can immediately use rq->curr without further RCU use).
