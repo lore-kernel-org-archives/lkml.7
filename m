@@ -4,72 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7C4C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDDCC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3111E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF752146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437892AbfIYOi1 (ORCPT
+        id S2437904AbfIYOjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:38:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:51116 "EHLO foss.arm.com"
+        Wed, 25 Sep 2019 10:39:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50530 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391511AbfIYOi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:38:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B030E28;
-        Wed, 25 Sep 2019 07:38:25 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C0C33F59C;
-        Wed, 25 Sep 2019 07:38:22 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 15:38:20 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Jia He <justin.he@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
-Subject: Re: [PATCH v9 1/3] arm64: cpufeature: introduce helper
- cpu_has_hw_af()
-Message-ID: <20190925143820.GF7042@arrakis.emea.arm.com>
-References: <20190925025922.176362-1-justin.he@arm.com>
- <20190925025922.176362-2-justin.he@arm.com>
+        id S2391511AbfIYOjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:39:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 07:39:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="272983997"
+Received: from kmakows-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.225])
+  by orsmga001.jf.intel.com with ESMTP; 25 Sep 2019 07:38:55 -0700
+Date:   Wed, 25 Sep 2019 17:38:53 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Haim Cohen <haim.cohen@intel.com>
+Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
+ Control hardware bits
+Message-ID: <20190925143853.GF19638@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
+ <20190924155232.GG19317@zn.tnic>
+ <20190925140903.GA19638@linux.intel.com>
+ <20190925141058.GB19638@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925025922.176362-2-justin.he@arm.com>
+In-Reply-To: <20190925141058.GB19638@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:59:20AM +0800, Jia He wrote:
-> We unconditionally set the HW_AFDBM capability and only enable it on
-> CPUs which really have the feature. But sometimes we need to know
-> whether this cpu has the capability of HW AF. So decouple AF from
-> DBM by new helper cpu_has_hw_af().
+On Wed, Sep 25, 2019 at 05:10:58PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Sep 25, 2019 at 05:09:03PM +0300, Jarkko Sakkinen wrote:
+> > > > [1] Intel SDM: 38.1.4 Intel SGX Launch Control Configuration
+> > > > 
+> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > > Co-developed-by: Haim Cohen <haim.cohen@intel.com>
+> > > > Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > 
+> > > This time checkpatch is right:
+> > > 
+> > > WARNING: Missing Signed-off-by: line by nominal patch author 'Kai Huang <kai.huang@linux.intel.com>'
+> > > 
+> > > And looking at the SOB chain, sounds like people need to make up their
+> > > mind about authorship...
+> > 
+> > I'll make myself the sole author for this one as 98% of the effort in
+> > this patch is really the commit message, which I rewrote for v22, and 2%
+> > are the code changes (mechanical, peek at SDM).  This patch was squashed
+> > from three patches, all like one line changes, and Kai was author of one
+> > of them.
+> > 
+> > The next version will thus have only my SOB and author information will
+> > be changed. I doubt anyone will complain if I do that.
 > 
-> Signed-off-by: Jia He <justin.he@arm.com>
-> Suggested-by: Suzuki Poulose <Suzuki.Poulose@arm.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
+> I'll take the same action also for "x86/cpufeatures: x86/msr: Add Intel
+> SGX hardware bits"
 
-Which bug did the kbuild robot actually report? I'd drop this line.
+I put to both:
 
--- 
-Catalin
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+And changed author to me.
+
+/Jarkko
