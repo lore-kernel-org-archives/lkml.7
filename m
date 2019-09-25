@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE6AC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA198C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E57207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08E2207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="RuBZqIvu"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Eoq43qJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfIYRpC (ORCPT
+        id S1727364AbfIYRpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:45:02 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39059 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfIYRpC (ORCPT
+        Wed, 25 Sep 2019 13:45:36 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:42419 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfIYRpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:45:02 -0400
-Received: by mail-yw1-f67.google.com with SMTP id n11so2367852ywn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:45:01 -0700 (PDT)
+        Wed, 25 Sep 2019 13:45:36 -0400
+Received: by mail-yw1-f65.google.com with SMTP id i207so2364829ywc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=poorly.run; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=OwXWZPnQzf3XInXWmq5k6gcPq0axL7VeZ/2pUkeIAO0=;
-        b=RuBZqIvukahNvS2RWkJSSIoSGRWT90uYjmjps6VQ1ybNW3AYnanSdd4620DHDwc/yF
-         N2132Z2o6rc0ScIkepSll+PIIr1lBpgU29MoUPbGETeSuqTivFQslAQAH3+AqGym/YQv
-         n226t8zfFzSifU9oPn5hVQKYfolEPuSacs9PkqBS5iZD08BM2dPV1TC94ONamhSa5CGx
-         mlRTN2p8fN432g8cr9uFNmhwLjYFWInOrA6u5wZ30Cv4BbNR1jZuP7+ShVrWs4RDvU6l
-         Pji0dM4YDZn9YVYfraDmMuLmKvlrLRDMGMSb6X4tfcFD8bEEsPdl0MYISqAv1F0Lzjo3
-         Q/IA==
+        bh=OHVvzelA+uTT0vqtBbcthTQGTZf18Jq4ZMdyM4vKKZU=;
+        b=Eoq43qJcz4SJgYYeUj+gyezjfjzs7Qm+Cu5GqJc716NpshVeHQnj9dI+LxTTuOEgGp
+         bCjFNu6mP5Gep2i1UT4sEjF/PMjtC+ZvEyzZiVfwlu5tc1i11q+tj9hGgioti7PG6CY2
+         mZkGUUb/SS+B/frYGIr25We6zLL1MpVt09xXtUathb+YXmb1WTJ8BMUbWKIb0kFx2H3/
+         /U6F1n0zm3nhrWoBbUm4emctarTkSCMuA0Tp2Gp15VfvkuX7vzu5d6VLLcI/gOvEAsI1
+         DnmPlOBm8SiNx+FU7evnY6IEc195qBCAfa6NneYJtmCAXy/daBA2dPWge4KZObulAKDi
+         DuBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=OwXWZPnQzf3XInXWmq5k6gcPq0axL7VeZ/2pUkeIAO0=;
-        b=CYHOZNeen0mQVPGXXYz5CLtkivuxc+8W9ZliNtiei8C4SfXEMzXlrnBxRBb26JJyoH
-         uEVs3JudySeA8g7LQ5SFWGmWfUnwIml9QfIwkvlSju4jsc2LrVvZDJfjna15YIAUaZcq
-         WJN0yWJvQPZOiaOR06wPjj+yRqovr0r9S0cv/JTtpFXoeIK4U8eY6UE1TD1/jz/lQNen
-         HdEagrcuhXDBvmn4+ywxh7FcY7OY9T0OCrbuJ5+hxQm2SOvvEeRJQmv6WH4X5PbLqsLB
-         nmb/vpKVf8Y5UXbYTsalAnM2P/Bya9kgns14/2du8+R2oYBFg/hpRwgCzy2UKzteGpOm
-         A+VA==
-X-Gm-Message-State: APjAAAWg2Sh2vBorpaGk3tVEjlYtQMOg35kqZYHUyCs9i7H4l1mxqiTS
-        51nxKD9PmKd4MCA9T49h/AmXUg==
-X-Google-Smtp-Source: APXvYqxiTwnx/w47MoIffPeZy27M224makbmCx5nzSH8a736vVNBtE4G47Q7IhV/AMkoZsqLvj+jkQ==
-X-Received: by 2002:a81:6589:: with SMTP id z131mr6316271ywb.262.1569433501520;
-        Wed, 25 Sep 2019 10:45:01 -0700 (PDT)
+        bh=OHVvzelA+uTT0vqtBbcthTQGTZf18Jq4ZMdyM4vKKZU=;
+        b=ZmrZ0hPydVKlEtlW59wV3MI4QogJ6cW5rlcdKTTiZKwV0NGc5FGuTlyBnksYUiQmsn
+         udW7Zpx9NrL+UglNm2n4bPdnbw25EnY/E6Uu1MIn6IKeJyquhWXTgh1oUVbFRMUmT86c
+         Mo8rhnoVBoaAcDXlRr0uW/tVFMWmQZ+XwUuj9sJrRmO3YIG3dHEizmygQxATZeM2i3Mz
+         1AHAAgMyQ/mPHfXmKedSsNiCrglnfi+KDyu0VrphyNksnXKK5kKd8VuytUE+BIuc2ajx
+         aNyInm627h38STN4AUuS/pKPSyiFYcnp3rSZOVettnKEuwAnEG1Ay1s5pVl1B7jjWOv1
+         rhSA==
+X-Gm-Message-State: APjAAAWIDhVxgTUKZQ9IFJ168NkgRmF2/dBilbhANGW56EZ+CIt3LXpB
+        6ClstIt/d7ATuW1Zh8InWX3CZA==
+X-Google-Smtp-Source: APXvYqwdQF5TZmOn2Waf8wCW11wDqQSX9XejhvOETf2AyAc5oHiV2g3hW8Lg8NybKbf1QT554XdCIw==
+X-Received: by 2002:a81:3b09:: with SMTP id i9mr6724791ywa.166.1569433534992;
+        Wed, 25 Sep 2019 10:45:34 -0700 (PDT)
 Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id 189sm1371215ywa.47.2019.09.25.10.45.00
+        by smtp.gmail.com with ESMTPSA id a20sm1413804ywl.76.2019.09.25.10.45.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 10:45:00 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 13:45:00 -0400
+        Wed, 25 Sep 2019 10:45:34 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 13:45:34 -0400
 From:   Sean Paul <sean@poorly.run>
 To:     Lyude Paul <lyude@redhat.com>
 Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
@@ -66,96 +66,57 @@ Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         Imre Deak <imre.deak@intel.com>,
         Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
         <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/27] drm/dp_mst: Move link address dumping into a
- function
-Message-ID: <20190925174500.GB218215@art_vandelay>
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/27] drm/dp_mst: Get rid of list clear in
+ destroy_connector_work
+Message-ID: <20190925174534.GC218215@art_vandelay>
 References: <20190903204645.25487-1-lyude@redhat.com>
- <20190903204645.25487-2-lyude@redhat.com>
+ <20190903204645.25487-3-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903204645.25487-2-lyude@redhat.com>
+In-Reply-To: <20190903204645.25487-3-lyude@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:45:39PM -0400, Lyude Paul wrote:
-> Makes things easier to read.
+On Tue, Sep 03, 2019 at 04:45:40PM -0400, Lyude Paul wrote:
+> This seems to be some leftover detritus from before the port/mstb kref
+> cleanup and doesn't do anything anymore, so get rid of it.
 > 
 > Cc: Juston Li <juston.li@intel.com>
 > Cc: Imre Deak <imre.deak@intel.com>
 > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
 > Cc: Harry Wentland <hwentlan@amd.com>
-> Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 > Signed-off-by: Lyude Paul <lyude@redhat.com>
 
 Reviewed-by: Sean Paul <sean@poorly.run>
 
 > ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 35 ++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 12 deletions(-)
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 82add736e17d..36db66a0ddb1 100644
+> index 36db66a0ddb1..3054ec622506 100644
 > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -2103,6 +2103,28 @@ static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
->  	mutex_unlock(&mgr->qlock);
->  }
+> @@ -3760,8 +3760,6 @@ static void drm_dp_destroy_connector_work(struct work_struct *work)
+>  		list_del(&port->next);
+>  		mutex_unlock(&mgr->destroy_connector_lock);
 >  
-> +static void
-> +drm_dp_dump_link_address(struct drm_dp_link_address_ack_reply *reply)
-> +{
-> +	struct drm_dp_link_addr_reply_port *port_reply;
-> +	int i;
-> +
-> +	for (i = 0; i < reply->nports; i++) {
-> +		port_reply = &reply->ports[i];
-> +		DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n",
-> +			      i,
-> +			      port_reply->input_port,
-> +			      port_reply->peer_device_type,
-> +			      port_reply->port_number,
-> +			      port_reply->dpcd_revision,
-> +			      port_reply->mcs,
-> +			      port_reply->ddps,
-> +			      port_reply->legacy_device_plug_status,
-> +			      port_reply->num_sdp_streams,
-> +			      port_reply->num_sdp_stream_sinks);
-> +	}
-> +}
-> +
->  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  				     struct drm_dp_mst_branch *mstb)
->  {
-> @@ -2128,18 +2150,7 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  			DRM_DEBUG_KMS("link address nak received\n");
->  		} else {
->  			DRM_DEBUG_KMS("link address reply: %d\n", txmsg->reply.u.link_addr.nports);
-> -			for (i = 0; i < txmsg->reply.u.link_addr.nports; i++) {
-> -				DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n", i,
-> -				       txmsg->reply.u.link_addr.ports[i].input_port,
-> -				       txmsg->reply.u.link_addr.ports[i].peer_device_type,
-> -				       txmsg->reply.u.link_addr.ports[i].port_number,
-> -				       txmsg->reply.u.link_addr.ports[i].dpcd_revision,
-> -				       txmsg->reply.u.link_addr.ports[i].mcs,
-> -				       txmsg->reply.u.link_addr.ports[i].ddps,
-> -				       txmsg->reply.u.link_addr.ports[i].legacy_device_plug_status,
-> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_streams,
-> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_stream_sinks);
-> -			}
-> +			drm_dp_dump_link_address(&txmsg->reply.u.link_addr);
+> -		INIT_LIST_HEAD(&port->next);
+> -
+>  		mgr->cbs->destroy_connector(mgr, port->connector);
 >  
->  			drm_dp_check_mstb_guid(mstb, txmsg->reply.u.link_addr.guid);
->  
+>  		drm_dp_port_teardown_pdt(port, port->pdt);
 > -- 
 > 2.21.0
 > 
