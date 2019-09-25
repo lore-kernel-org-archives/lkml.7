@@ -2,119 +2,125 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7D1C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5484C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CE321D82
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmY/xOXe"
+	by mail.kernel.org (Postfix) with ESMTP id 7B70121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569395303;
+	bh=6NEvIRTofMvxx5KQe9KgC2Xh1O/df+OTgZqV9a7ij0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EtfW/uIH0AM7GQPn6KEJJ+hSyyJLyA65q277f9rBx6QbI215KiicWEZ3GYMgMk8sS
+	 PWiUuOYPkz5qn16j0R/HyDSlH1ey4+WJvmE/eW8m8G7+DcV89kfiGVh0n5Nfq/CZ85
+	 yiSWa20u0qk4HjN9iRmva3ve61MJM7wNCD2M0tGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442447AbfIYHDd (ORCPT
+        id S2442463AbfIYHIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:03:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41782 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442434AbfIYHDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:03:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q7so2811179pfh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QtDjGuT6GYExoPUWAryXx0/SjRXtIy1CTdSczN1NQCM=;
-        b=RmY/xOXe2eKL26y3uj55F1Fit+H+0WrrZaOHcLMNCDSNoi2kMXrhnE0ucEForuiEA+
-         JyRluTVi28yl+sTJGSRelaPvSKuza6Hk+Q9GRAPSRoAwq1VWLfr4h3eTKtsojFr+xrG8
-         zaY9vImby+VTXEwcWMmtB7mGhtQcEn/Gbn+gOrIIVg6zcpp/o2JX2j313Dln/oC0dVVe
-         dwrSa+J5kDasv/Awru0qA99xL8YL5AZEQYzOpVkazBCDdADqsEzMLVdWX8iGhVjqi5wq
-         IYNJJ7jeetpPukK/+WzB7j4TGb2RgEWr7x1WdwwyLnhmEJcVT6h0hfP3bpj7kkLXXnLb
-         GK1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QtDjGuT6GYExoPUWAryXx0/SjRXtIy1CTdSczN1NQCM=;
-        b=eAiQ+0cFoheFBKZryd9rCINGs4GqnFRokB3kd2c8/oFl1jGpfZZI1DKHJgk2SLGS8N
-         /fM94UcNNBl0+4rYUBmBfn5NfFnXOlLWDvVCECr0QOD5v9Gd7xDwoJ8JgU1qAjU2mwCT
-         7NGKqxMosZKWD14d1wekgxph8iS1cFwCfC5vZg5cMvQ1zWpHKfx4SrKrEkAdqtQ9nmfz
-         Mz/O35Wg/v2boAoqhKzCQoYlnCGka+nqnRXZD+nUc3YhcGbZwCMqitXXkhph+c+OwRFg
-         6OS5wUT86jV0wtY/FOkQugD4RI/B+VktsQqAUxuPVmfdJeywEbqrZ8U2HmrRQ89yo5RK
-         OyBw==
-X-Gm-Message-State: APjAAAUc9irMvdIpur5cvCgjcQoEaZb+PKjP3R1FqjwkIcpmvjv7WEYY
-        273bvTGHZfN1utEaqbfvta/vC15Ujt8=
-X-Google-Smtp-Source: APXvYqwK0vMFcB0zMbrgYeYbjpMtEMvsl5ew0HFiuRMmFs5VRtF6LUvKhv2I9PfhGnJ3lD3U/s/nHg==
-X-Received: by 2002:a17:90a:fa02:: with SMTP id cm2mr4735395pjb.133.1569395011749;
-        Wed, 25 Sep 2019 00:03:31 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t3sm1541054pje.7.2019.09.25.00.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 00:03:31 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: c630: Enable adsp, cdsp and mpss
-Date:   Wed, 25 Sep 2019 00:03:28 -0700
-Message-Id: <20190925070328.13554-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Wed, 25 Sep 2019 03:08:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52198 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405152AbfIYHIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:08:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EF702AF5A;
+        Wed, 25 Sep 2019 07:08:19 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 09:08:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+Message-ID: <20190925070817.GH23050@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <20190904205522.GA9871@redhat.com>
+ <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+ <20190909193020.GD2063@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909193020.GD2063@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the firmware-name for the adsp, cdsp and mpss and enable the
-nodes.
+Let me revive this thread as there was no follow up.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Mon 09-09-19 21:30:20, Michal Hocko wrote:
+[...]
+> I believe it would be the best to start by explaining why we do not see
+> the same problem with order-0 requests. We do not enter the slow path
+> and thus the memory reclaim if there is any other node to pass through
+> watermakr as well right? So essentially we are relying on kswapd to keep
+> nodes balanced so that allocation request can be satisfied from a local
+> node. We do have kcompactd to do background compaction. Why do we want
+> to rely on the direct compaction instead? What is the fundamental
+> difference?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index ded120d3aef5..d3c841628d66 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -20,6 +20,11 @@
- 	};
- };
+I am especially interested about this part. The more I think about this
+the more I am convinced that the underlying problem really is in the pre
+mature fallback in the fast path. Does the almost-patch below helps your
+workload? It effectively reduces the fast path for higher order
+allocations to the local/requested node. The justification is that
+watermark check might be too strict for those requests as it is primary
+order-0 oriented. Low watermark target simply has no meaning for the
+higher order requests AFAIU. The min-low gap is giving kswapd a chance
+to balance and be more local node friendly while we do not have anything
+like that in compaction.
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ff5484fdbdf9..09036cf55fca 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4685,7 +4685,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+ {
+ 	struct page *page;
+ 	unsigned int alloc_flags = ALLOC_WMARK_LOW;
+-	gfp_t alloc_mask; /* The gfp_t that was actually used for allocation */
++	gfp_t fastpath_mask, alloc_mask; /* The gfp_t that was actually used for allocation */
+ 	struct alloc_context ac = { };
  
-+&adsp_pas {
-+	firmware-name = "qcom/c630/qcadsp850.mbn";
-+	status = "okay";
-+};
-+
- &apps_rsc {
- 	pm8998-rpmh-regulators {
- 		compatible = "qcom,pm8998-rpmh-regulators";
-@@ -229,6 +234,11 @@
- 	status = "disabled";
- };
+ 	/*
+@@ -4698,7 +4698,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+ 	}
  
-+&cdsp_pas {
-+	firmware-name = "qcom/c630/qccdsp850.mbn";
-+	status = "okay";
-+};
-+
- &gcc {
- 	protected-clocks = <GCC_QSPI_CORE_CLK>,
- 			   <GCC_QSPI_CORE_CLK_SRC>,
-@@ -296,6 +306,10 @@
- 	};
- };
+ 	gfp_mask &= gfp_allowed_mask;
+-	alloc_mask = gfp_mask;
++	fastpath_mask = alloc_mask = gfp_mask;
+ 	if (!prepare_alloc_pages(gfp_mask, order, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
+ 		return NULL;
  
-+&mss_pil {
-+	firmware-name = "qcom/c630/qcdsp1v2850.mbn", "qcom/c630/qcdsp2850.mbn";
-+};
-+
- &qup_i2c12_default {
- 	drive-strength = <2>;
- 	bias-disable;
+@@ -4710,8 +4710,17 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+ 	 */
+ 	alloc_flags |= alloc_flags_nofragment(ac.preferred_zoneref->zone, gfp_mask);
+ 
+-	/* First allocation attempt */
+-	page = get_page_from_freelist(alloc_mask, order, alloc_flags, &ac);
++	/*
++	 * First allocation attempt. If we have a high order allocation then do not fall
++	 * back to a remote node just based on the watermark check on the requested node
++	 * because compaction might easily free up a requested order and then it would be
++	 * better to simply go to the slow path.
++	 * TODO: kcompactd should help here but nobody has woken it up unless we hit the
++	 * slow path so we might need some tuning there as well.
++	 */
++	if (order && (gfp_mask & __GFP_DIRECT_RECLAIM))
++		fastpath_mask |= __GFP_THISNODE;
++	page = get_page_from_freelist(fastpath_mask, order, alloc_flags, &ac);
+ 	if (likely(page))
+ 		goto out;
+ 
 -- 
-2.18.0
-
+Michal Hocko
+SUSE Labs
