@@ -2,131 +2,150 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC13C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DC6C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74429207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9253B21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pwS9sX18"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pcv6NTvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443127AbfIYRlc (ORCPT
+        id S2443137AbfIYRld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:41:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58586 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443057AbfIYRla (ORCPT
+        Wed, 25 Sep 2019 13:41:33 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50780 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443107AbfIYRl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:41:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfHkm055232;
-        Wed, 25 Sep 2019 12:41:17 -0500
+        Wed, 25 Sep 2019 13:41:29 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfEiP029452;
+        Wed, 25 Sep 2019 12:41:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569433277;
-        bh=rE1raxC4CYcOMBpyDcOR0IFq0FY0PvxtcY0Jb3Au5oc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pwS9sX18bOWcE+7+tfpICmUYcGy/BGbBD6V2iaOnd/ffcrzzYEkgrvGcMU3zCc9sp
-         sleN9lp67S7y381PR7LtvphYdF5OA6lXEsbRhYgpWpPs0g5GaXhWgMlfKaRVcVmrKK
-         LwnMPlMGDhH6tLPjGla59pA7CmwBMOUAdjb8AtbE=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8PHfHwR048357
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 25 Sep 2019 12:41:17 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1569433274;
+        bh=saG1qiWu8GrejbxOinZJfusKmJXkN8e5NleZ7JLxNDw=;
+        h=From:To:CC:Subject:Date;
+        b=pcv6NTvJCxhCNkmIK8236OuNdQ5d7gQNMj0Jct6/aE/DWuJTv2G2+OYYfBJI8ZkXN
+         h9v33q3aMdBrh/7QPv7XfRtws1ArCzHn7ij9mSrfOhjKEDaK+sM6Y/viOqWBwShuY1
+         l9aQ4I88Q4plOTfNd6dnGF1Px5f4DC9xq170/t2w=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfEVV018179;
+        Wed, 25 Sep 2019 12:41:14 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
- Sep 2019 12:41:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 12:41:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 25 Sep 2019 12:41:10 -0500
+ Frontend Transport; Wed, 25 Sep 2019 12:41:14 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfGrg129626;
-        Wed, 25 Sep 2019 12:41:17 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfE4h073729;
+        Wed, 25 Sep 2019 12:41:14 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Dan Murphy <dmurphy@ti.com>, <linus.walleij@linaro.org>,
+        <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v9 11/15] ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
-Date:   Wed, 25 Sep 2019 12:46:12 -0500
-Message-ID: <20190925174616.3714-12-dmurphy@ti.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Subject: [PATCH v9 00/15] Multicolor Framework
+Date:   Wed, 25 Sep 2019 12:46:01 -0500
+Message-ID: <20190925174616.3714-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20190925174616.3714-1-dmurphy@ti.com>
-References: <20190925174616.3714-1-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accomodate the multicolor framework.  In addition to the
-accomodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+Hello
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
----
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+For those I have added to this patchset this is a new LED framework that will
+group monochrome LEDs into a directory under the parent LED class device. I have
+CC'd you on this because you maintain a device tree file that contains one of
+the devices affected by this change.  Most notably the change is to add the
+reg property to each LED child node to denote the output channel that the node
+is to use.  This not only is required for the Multicolor framework but also gives
+flexibilty in DT design to be able to not be bound to sequential channel
+numbering.
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index e8d800fec637..cafc99fce1ba 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -257,29 +257,35 @@
- 		reg = <0x30>;
- 		clock-mode = /bits/ 8 <1>;
- 		status = "disabled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 
- 		chan0 {
- 			chan-name = "R";
- 			led-cur = /bits/ 8 <0x20>;
- 			max-cur = /bits/ 8 <0x60>;
-+			reg = <0>;
- 		};
- 
- 		chan1 {
- 			chan-name = "G";
- 			led-cur = /bits/ 8 <0x20>;
- 			max-cur = /bits/ 8 <0x60>;
-+			reg = <1>;
- 		};
- 
- 		chan2 {
- 			chan-name = "B";
- 			led-cur = /bits/ 8 <0x20>;
- 			max-cur = /bits/ 8 <0x60>;
-+			reg = <2>;
- 		};
- 
- 		chan3 {
- 			chan-name = "W";
- 			led-cur = /bits/ 8 <0x0>;
- 			max-cur = /bits/ 8 <0x0>;
-+			reg = <3>;
- 		};
- 	};
- 
+There are many changes from v8 to this patchset from Jacek's comments.
+v8 series
+https://lore.kernel.org/patchwork/project/lkml/list/?series=411331
+
+Most notably
+Removal of get/set_brightness ops
+Dereferencing the monochrome LED intensity from the multicolor structure as
+opposed to the ops.
+Update for LP55xx DT properties to include the reg property to identify the
+output channel for multicolor and non-multicolor use cases.  This also allows
+HW designers to skip output channels if they desire.
+Updated the corresponding affect device tree files to add the reg property
+Checkpatch error fixes for the lp55xx common
+
+These changes were tested using the LP50xx evms and LP5523 EVM connected to a
+BeagleBone black device.
+
+Dan
+
+Dan Murphy (15):
+  leds: multicolor: Add sysfs interface definition
+  dt: bindings: Add multicolor class dt bindings documention
+  dt-bindings: leds: Add multicolor ID to the color ID list
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt: bindings: lp55xx: Be consistent in the document with LED
+  dt: bindings: lp55xx: Update binding for Multicolor Framework
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Update the lp55xx to use the multi color framework
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  35 +
+ .../bindings/leds/leds-class-multicolor.txt   |  98 +++
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 105 ++-
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  96 +++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |   6 +
+ arch/arm/boot/dts/omap3-n900.dts              |  11 +
+ arch/arm/boot/dts/ste-href.dtsi               |  10 +
+ drivers/leds/Kconfig                          |  22 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 220 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 767 ++++++++++++++++++
+ drivers/leds/leds-lp5523.c                    |  32 +-
+ drivers/leds/leds-lp55xx-common.c             | 172 +++-
+ drivers/leds/leds-lp55xx-common.h             |  11 +
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          |  74 ++
+ include/linux/platform_data/leds-lp55xx.h     |   6 +
+ 20 files changed, 1771 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
 -- 
 2.22.0.214.g8dca754b1e
 
