@@ -2,184 +2,178 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F06C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1A6C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B30A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oHS3VjAE"
+	by mail.kernel.org (Postfix) with ESMTP id 7EF8E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439747AbfIYP3X (ORCPT
+        id S2439761AbfIYPaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:29:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44259 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbfIYP3W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:29:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i18so7433283wru.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LbH1JRsE5gNzk5r+HOai2FAWFvIqOQyEdzFA3kJ7aIM=;
-        b=oHS3VjAECmGmMqMZ3iEEidrVarDdrXO6OQ9B7/lbkNCoLhAtpnb1Yk/NTBHjx+kTPJ
-         P32IgqhLdOTctj8lS60GThdHB4sZlozMGmTKJMFC37QVH2QOMP7QYMqIxa4vucJO6Dio
-         8iascMWvSwkXYVF2LYTiIPq6zSOUMljmzKaZyylnlc8fbWRGODlHQgYQa0PaSQwtKtN1
-         QM0/HSEeH8R3YJO4jNj/QOfrtMTrzjwlALTFY3FyOiCvE+eeYLkylRKW+G804eKFFXTY
-         M1Deq29dgXgl05zKwgTGMJ5rvZzb/KUtf+WACyL4JRVq8T5iHvl+TqtPI0rA0nNZpsrR
-         cmfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LbH1JRsE5gNzk5r+HOai2FAWFvIqOQyEdzFA3kJ7aIM=;
-        b=h0NIgq2NTyygq/LoZbbKcH3mGcIYLjeiSRD9/fc5P0oFdr+7PipZSzTct9ulRFvgUh
-         rMFg+HygvRF+H8GOXTCGdTSoxXHHp0ZaCY5omtKZCH1GMd+H66Xb3b6MtjGXDF5HIY+E
-         ao2q70ri+hlFUnyalT5wW/7dqaiQ/DQpYn1rAdgcq5NV0ThEY7zkl4wB7+Qu2x+hI3eI
-         vyYSdYWZnozL27Q/UBRriuwDMYpFRkvbqm0DPdcXe9coKLNhtbc4T/o+T30FsUAS+8B4
-         eVGI3vAfJ2MJ2kB3j5rV2D7IJxlln32U5X9VD05u0j2/UjtyCPEaaT+Zna0eUYTm9qQc
-         uM6A==
-X-Gm-Message-State: APjAAAVhN09zaRMsaBrDgy7YLAwHJohR7NQ7tlO4hLsKnRUK0cH8OaK6
-        LFGo9mr2uoTc+WgdB34HjoU8wspesC83Crmbk8/ZPQ==
-X-Google-Smtp-Source: APXvYqyYWffK09yJ7cnY0gJYYdcBl2WjFnmEgGos4uhahh/oCQSf21nPqCg5cjdbAff0Y+/eZcRAh8goLL+TeDOlrbY=
-X-Received: by 2002:adf:fe88:: with SMTP id l8mr9484640wrr.32.1569425359779;
- Wed, 25 Sep 2019 08:29:19 -0700 (PDT)
+        Wed, 25 Sep 2019 11:30:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57058 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727381AbfIYPaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:30:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 86EB3ACA5;
+        Wed, 25 Sep 2019 15:30:12 +0000 (UTC)
+Message-ID: <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Date:   Wed, 25 Sep 2019 17:30:10 +0200
+In-Reply-To: <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+         <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+         <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+         <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Jc6/4bVbm9VDLL08SmH3"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-References: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
-In-Reply-To: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 25 Sep 2019 17:29:08 +0200
-Message-ID: <CAKv+Gu-dd5=TJ62GtCvZ5iPTRjqjSpPwx-oNQJ2dv9ZBHB0c8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] efi: Add efi_memmap_free() to free EFI memory map
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 at 11:17, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->
-> In efi_fake_memmap(), the commit 20b1e22d01a4 ("x86/efi: Don't allocate
-> memmap through memblock after mm_init()") replace memblock_alloc() with
-> efi_memmap_alloc(), but there is no matching modification of
-> memblock_free() when early_memremap() fail.
->
-> Fix this by adding efi_memmap_free() to instead of memblock_free().
->
-> Fixes: 20b1e22d01a4 ("x86/efi: Don't allocate memmap through memblock after mm_init()")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 
-What happens if you try to call efi_memmap_free() /after/ slab has
-become available on an allocation that was created before?
+--=-Jc6/4bVbm9VDLL08SmH3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/firmware/efi/fake_mem.c |  2 +-
->  drivers/firmware/efi/memmap.c   | 34 ++++++++++++++++++++++++++++++++++
->  include/linux/efi.h             |  1 +
->  3 files changed, 36 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> index 9501edc..c2f69f6 100644
-> --- a/drivers/firmware/efi/fake_mem.c
-> +++ b/drivers/firmware/efi/fake_mem.c
-> @@ -65,7 +65,7 @@ void __init efi_fake_memmap(void)
->         new_memmap = early_memremap(new_memmap_phy,
->                                     efi.memmap.desc_size * new_nr_map);
->         if (!new_memmap) {
-> -               memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
-> +               efi_memmap_free(new_memmap_phy, new_nr_map);
->                 return;
->         }
->
-> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-> index 38b686c..35dc189 100644
-> --- a/drivers/firmware/efi/memmap.c
-> +++ b/drivers/firmware/efi/memmap.c
-> @@ -18,6 +18,11 @@ static phys_addr_t __init __efi_memmap_alloc_early(unsigned long size)
->         return memblock_phys_alloc(size, SMP_CACHE_BYTES);
->  }
->
-> +static void __init __efi_memmap_free_early(phys_addr_t addr, unsigned long size)
-> +{
-> +       memblock_free(addr, size);
-> +}
-> +
->  static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
->  {
->         unsigned int order = get_order(size);
-> @@ -29,6 +34,15 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
->         return PFN_PHYS(page_to_pfn(p));
->  }
->
-> +static void __init __efi_memmap_free_late(phys_addr_t addr, unsigned long size)
-> +{
-> +       unsigned int order = get_order(size);
-> +       struct page *p = pfn_to_page(PHYS_PFN(addr));
-> +
-> +       if (p)
-> +               __free_pages(p, order);
-> +}
-> +
->  /**
->   * efi_memmap_alloc - Allocate memory for the EFI memory map
->   * @num_entries: Number of entries in the allocated map.
-> @@ -50,6 +64,26 @@ phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
->  }
->
->  /**
-> + * efi_memmap_free - Free memory for the EFI memory map
-> + * @addr: Physical address of the EFI memory map to be freed.
-> + * @num_entries: Number of the EFI memory map entries.
-> + *
-> + * Depending on whether mm_init() has already been invoked or not,
-> + * either memblock or "normal" page free is used.
-> + */
-> +void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries)
-> +{
-> +       unsigned long size = num_entries * efi.memmap.desc_size;
-> +
-> +       if (slab_is_available()) {
-> +               __efi_memmap_free_late(addr, size);
-> +
-> +               return;
-> +       }
-> +       __efi_memmap_free_early(addr, size);
-> +}
-> +
-> +/**
->   * __efi_memmap_init - Common code for mapping the EFI memory map
->   * @data: EFI memory map data
->   * @late: Use early or late mapping function?
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index bd38370..8bb741a 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1057,6 +1057,7 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
->  extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
->
->  extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
-> +extern void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries);
->  extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
->  extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
->  extern void __init efi_memmap_unmap(void);
-> --
-> 1.8.3.1
->
+On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
+> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
+> > On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> > > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> > > <nsaenzjulienne@suse.de> wrote:
+> > > > Hi All,
+> > > > this series tries to address one of the issues blocking us from
+> > > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact tha=
+t
+> > > > devices not represented in DT which sit behind a PCI bus fail to ge=
+t the
+> > > > bus' DMA addressing constraints.
+> > > >=20
+> > > > This is due to the fact that of_dma_configure() assumes it's receiv=
+ing a
+> > > > DT node representing the device being configured, as opposed to the=
+ PCIe
+> > > > bridge node we currently pass. This causes the code to directly jum=
+p
+> > > > into PCI's parent node when checking for 'dma-ranges' and misses
+> > > > whatever was set there.
+> > > >=20
+> > > > To address this I create a new API in OF - inspired from Robin Murp=
+hys
+> > > > original proposal[2] - which accepts a bus DT node as it's input in
+> > > > order to configure a device's DMA constraints. The changes go deep =
+into
+> > > > of/address.c's implementation, as a device being having a DT node
+> > > > assumption was pretty strong.
+> > > >=20
+> > > > On top of this work, I also cleaned up of_dma_configure() removing =
+its
+> > > > redundant arguments and creating an alternative function for the sp=
+ecial
+> > > > cases
+> > > > not applicable to either the above case or the default usage.
+> > > >=20
+> > > > IMO the resulting functions are more explicit. They will probably
+> > > > surface some hacky usages that can be properly fixed as I show with=
+ the
+> > > > DT fixes on the Layerscape platform.
+> > > >=20
+> > > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver =
+and
+> > > > on a Seattle AMD board.
+> > >=20
+> > > Humm, I've been working on this issue too. Looks similar though yours
+> > > has a lot more churn and there's some other bugs I've found.
+> >=20
+> > That's good news, and yes now that I see it, some stuff on my series is
+> > overly
+> > complicated. Specially around of_translate_*().
+> >=20
+> > On top of that, you removed in of_dma_get_range():
+> >=20
+> > -	/*
+> > -	 * At least empty ranges has to be defined for parent node if
+> > -	 * DMA is supported
+> > -	 */
+> > -	if (!ranges)
+> > -		break;
+> >=20
+> > Which I assumed was bound to the standard and makes things easier.
+> >=20
+> > > Can you test out this branch[1]. I don't have any h/w needing this,
+> > > but wrote a unittest and tested with modified QEMU.
+> >=20
+> > I reviewed everything, I did find a minor issue, see the patch attached=
+.
+>=20
+> WRT that patch, the original intent of "force_dma" was purely to=20
+> consider a device DMA-capable regardless of the presence of=20
+> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF=
+=20
+> device has always been bogus - magic paravirt devices which appear out=
+=20
+> of nowhere and expect to be treated as genuine DMA masters are a=20
+> separate problem that we haven't really approached yet.
+
+I agree it's clearly abusing the function. I have no problem with the behav=
+iour
+change if it's OK with you.
+
+Robin, have you looked into supporting multiple dma-ranges? It's the next t=
+hing
+we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in th=
+e
+works already.
+
+Regards,
+Nicolas
+
+
+--=-Jc6/4bVbm9VDLL08SmH3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2LiAIACgkQlfZmHno8
+x/7J7Af+NrtcYkM0WphLDC8n2KXI1Rofej10z7b8lAcPZvn586CNcayUtga34+e3
+jMIOwHl9qzzFJrgAT9FoyDjkcJ0gfVWKSzQYB798pTOVEND7LdUsHH0ZNqNqf4YM
+yRmNNvCpZi+i83aeetAQjPoMUeDjKU0dMCX7oEzfvlrmxi4YRx59jcOfIbaqr2Hg
+SGipuOc97V/so7VcwvypG9xeYU/zTeZ0wFoQzT7X4OdEUp4uBAgHoeou4kez1gSy
+27EmZX8DU3l7YbWTM5SBP13uDcQ0I2y25cjjy55r4gBm+zQYdGCuh3oHbdOvyws/
+xjAYrC9sFk3+VCjuPTn9CTbfyDqZ8A==
+=9rW4
+-----END PGP SIGNATURE-----
+
+--=-Jc6/4bVbm9VDLL08SmH3--
+
