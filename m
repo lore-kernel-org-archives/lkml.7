@@ -2,404 +2,246 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1857CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9735EC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0EC21D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696D72082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634103AbfIYI2p convert rfc822-to-8bit (ORCPT
+        id S2634118AbfIYI3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:28:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:32148 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436488AbfIYI2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:28:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 01:28:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="179749639"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga007.jf.intel.com with ESMTP; 25 Sep 2019 01:28:39 -0700
-Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 01:28:38 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx124.amr.corp.intel.com (10.18.125.39) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 01:28:38 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.235]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 16:28:35 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "idos@mellanox.com" <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>
-Subject: RE: [PATCH V2 2/8] mdev: class id support
-Thread-Topic: [PATCH V2 2/8] mdev: class id support
-Thread-Index: AQHVct+7DlVP09a1X0OvNOSnqEdmvKc8D6SA
-Date:   Wed, 25 Sep 2019 08:28:35 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F6AE@SHSMSX104.ccr.corp.intel.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
- <20190924135332.14160-3-jasowang@redhat.com>
-In-Reply-To: <20190924135332.14160-3-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDU2ZDFkZDQtNjk3NS00YzkwLWEwMGItYWZkOTA5ODRjODVhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTm5nQlNodlwvQVpaK0VGN21hdTl1WmVoUUdSUlZJcmxyQlUxdGhXNldqNSsrTkVKK0RZTmxmMnhFUWpGOGQ5djQifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 25 Sep 2019 04:29:06 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58917 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634104AbfIYI3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:29:06 -0400
+X-Originating-IP: 79.19.63.71
+Received: from uno.localdomain (host71-63-dynamic.19-79-r.retail.telecomitalia.it [79.19.63.71])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 5FBCB240002;
+        Wed, 25 Sep 2019 08:29:02 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 10:30:43 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/7] media: add V4L2_CTRL_TYPE_AREA control type
+Message-ID: <20190925083043.7dt6f7hahmoap3vt@uno.localdomain>
+References: <20190920135137.10052-1-ricardo@ribalda.com>
+ <20190920135137.10052-4-ricardo@ribalda.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jnyrvndesrd5u7p5"
+Content-Disposition: inline
+In-Reply-To: <20190920135137.10052-4-ricardo@ribalda.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jason Wang
-> Sent: Tuesday, September 24, 2019 9:53 PM
-> 
-> Mdev bus only supports vfio driver right now, so it doesn't implement
-> match method. But in the future, we may add drivers other than vfio,
-> the first driver could be virtio-mdev. This means we need to add
-> device class id support in bus match method to pair the mdev device
-> and mdev driver correctly.
-> 
-> So this patch adds id_table to mdev_driver and class_id for mdev
-> parent with the match method for mdev bus.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+
+--jnyrvndesrd5u7p5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Ricardo,
+
+On Fri, Sep 20, 2019 at 03:51:33PM +0200, Ricardo Ribalda Delgado wrote:
+> This type contains the width and the height of a rectangular area.
+>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
 > ---
->  Documentation/driver-api/vfio-mediated-device.rst |  3 +++
->  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
->  drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
->  drivers/vfio/mdev/mdev_core.c                     |  7 +++++++
->  drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
->  drivers/vfio/mdev/mdev_private.h                  |  1 +
->  drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
->  include/linux/mdev.h                              |  8 ++++++++
->  include/linux/mod_devicetable.h                   |  8 ++++++++
->  samples/vfio-mdev/mbochs.c                        |  1 +
->  samples/vfio-mdev/mdpy.c                          |  1 +
->  samples/vfio-mdev/mtty.c                          |  1 +
->  13 files changed, 53 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst
-> b/Documentation/driver-api/vfio-mediated-device.rst
-> index 25eb7d5b834b..a5bdc60d62a1 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -102,12 +102,14 @@ structure to represent a mediated device's
-> driver::
->        * @probe: called when new device created
->        * @remove: called when device removed
->        * @driver: device driver structure
-> +      * @id_table: the ids serviced by this driver
->        */
->       struct mdev_driver {
->  	     const char *name;
->  	     int  (*probe)  (struct device *dev);
->  	     void (*remove) (struct device *dev);
->  	     struct device_driver    driver;
-> +	     const struct mdev_class_id *id_table;
->       };
-> 
->  A mediated bus driver for mdev should use this structure in the function
-> calls
-> @@ -165,6 +167,7 @@ register itself with the mdev core driver::
->  	extern int  mdev_register_device(struct device *dev,
->  	                                 const struct mdev_parent_ops *ops);
-> 
-> +
->  However, the mdev_parent_ops structure is not required in the function
-> call
->  that a driver should use to unregister itself with the mdev core driver::
-> 
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 23aa3e50cbf8..f793252a3d2a 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj,
-> struct mdev_device *mdev)
->  		     dev_name(mdev_dev(mdev)));
->  	ret = 0;
-> 
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  out:
->  	return ret;
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 21 ++++++++++++++
+>  include/media/v4l2-ctrls.h           | 41 ++++++++++++++++++++++++++++
+>  include/uapi/linux/videodev2.h       |  6 ++++
+>  3 files changed, 68 insertions(+)
+>
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 219d8aeefa20..b9a46f536406 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -1678,6 +1678,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+>  	void *p = ptr.p + idx * ctrl->elem_size;
+> +	struct v4l2_area *area;
+>
+>  	switch ((u32)ctrl->type) {
+>  	case V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS:
+> @@ -1753,6 +1754,11 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  		zero_padding(p_vp8_frame_header->entropy_header);
+>  		zero_padding(p_vp8_frame_header->coder_state);
+>  		break;
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		area = p;
+> +		if (!area->width || !area->height)
+> +			return -EINVAL;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -2427,6 +2433,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		elem_size = sizeof(struct v4l2_area);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> @@ -4116,6 +4125,18 @@ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
 >  }
-> diff --git a/drivers/s390/cio/vfio_ccw_ops.c
-> b/drivers/s390/cio/vfio_ccw_ops.c
-> index f0d71ab77c50..d258ef1fedb9 100644
-> --- a/drivers/s390/cio/vfio_ccw_ops.c
-> +++ b/drivers/s390/cio/vfio_ccw_ops.c
-> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject
-> *kobj, struct mdev_device *mdev)
->  			   private->sch->schid.ssid,
->  			   private->sch->schid.sch_no);
-> 
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  	return 0;
->  }
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c
-> b/drivers/s390/crypto/vfio_ap_ops.c
-> index 5c0f53c6dde7..2cfd96112aa0 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj,
-> struct mdev_device *mdev)
->  	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
->  	mutex_unlock(&matrix_dev->lock);
-> 
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  	return 0;
->  }
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c
-> b/drivers/vfio/mdev/mdev_core.c
-> index b558d4cfd082..8764cf4a276d 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev,
-> void *data)
->  }
->  EXPORT_SYMBOL(mdev_set_drvdata);
-> 
-> +void mdev_set_class_id(struct mdev_device *mdev, u16 id)
+>  EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_string);
+>
+> +int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+> +			    const struct v4l2_area *area)
 > +{
-> +	mdev->class_id = id;
-> +}
-> +EXPORT_SYMBOL(mdev_set_class_id);
+> +	lockdep_assert_held(ctrl->handler->lock);
 > +
->  struct device *mdev_dev(struct mdev_device *mdev)
+> +	/* It's a driver bug if this happens. */
+> +	WARN_ON(ctrl->type != V4L2_CTRL_TYPE_AREA);
+> +	memcpy(ctrl->p_new.p_area, area, sizeof(*area));
+> +	return set_ctrl(NULL, ctrl, 0);
+> +}
+> +EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_area);
+> +
+>  void v4l2_ctrl_request_complete(struct media_request *req,
+>  				struct v4l2_ctrl_handler *main_hdl)
 >  {
->  	return &mdev->dev;
-> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device
-> *dev, void *data)
->   * mdev_register_device : Register a device
->   * @dev: device structure representing parent device.
->   * @ops: Parent device operation structure to be registered.
-> + * @id: device id.
-
-class id.
-
->   *
->   * Add device to list of registered parent devices.
->   * Returns a negative value on error, otherwise 0.
-> diff --git a/drivers/vfio/mdev/mdev_driver.c
-> b/drivers/vfio/mdev/mdev_driver.c
-> index 0d3223aee20b..b7c40ce86ee3 100644
-> --- a/drivers/vfio/mdev/mdev_driver.c
-> +++ b/drivers/vfio/mdev/mdev_driver.c
-> @@ -69,8 +69,22 @@ static int mdev_remove(struct device *dev)
->  	return 0;
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 4b356df850a1..746969559ef3 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -50,6 +50,7 @@ struct poll_table_struct;
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+> + * @p_area:			Pointer to an area.
+>   * @p:				Pointer to a compound value.
+>   */
+>  union v4l2_ctrl_ptr {
+> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> +	struct v4l2_area *p_area;
+>  	void *p;
+>  };
+>
+> @@ -1085,6 +1087,45 @@ static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+>  	return rval;
 >  }
-> 
-> +static int mdev_match(struct device *dev, struct device_driver *drv)
-> +{
-> +	unsigned int i;
-> +	struct mdev_device *mdev = to_mdev_device(dev);
-> +	struct mdev_driver *mdrv = to_mdev_driver(drv);
-> +	const struct mdev_class_id *ids = mdrv->id_table;
-> +
-> +	for (i = 0; ids[i].id; i++)
-> +		if (ids[i].id == mdev->class_id)
-> +			return 1;
-> +	return 0;
-> +}
-> +
->  struct bus_type mdev_bus_type = {
->  	.name		= "mdev",
-> +	.match		= mdev_match,
->  	.probe		= mdev_probe,
->  	.remove		= mdev_remove,
->  };
-> diff --git a/drivers/vfio/mdev/mdev_private.h
-> b/drivers/vfio/mdev/mdev_private.h
-> index 7d922950caaf..c65f436c1869 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -33,6 +33,7 @@ struct mdev_device {
->  	struct kobject *type_kobj;
->  	struct device *iommu_device;
->  	bool active;
-> +	u16 class_id;
->  };
-> 
->  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c
-> b/drivers/vfio/mdev/vfio_mdev.c
-> index 30964a4e0a28..fd2a4d9a3f26 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
->  	vfio_del_group_dev(dev);
->  }
-> 
-> +static struct mdev_class_id id_table[] = {
-> +	{ MDEV_ID_VFIO },
-> +	{ 0 },
-> +};
-> +
->  static struct mdev_driver vfio_mdev_driver = {
->  	.name	= "vfio_mdev",
->  	.probe	= vfio_mdev_probe,
->  	.remove	= vfio_mdev_remove,
-> +	.id_table = id_table,
->  };
-> 
->  static int __init vfio_mdev_init(void)
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..3974650c074f 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -118,6 +118,7 @@ struct mdev_type_attribute
-> mdev_type_attr_##_name =		\
->   * @probe: called when new device created
->   * @remove: called when device removed
->   * @driver: device driver structure
-> + * @id_table: the ids serviced by this driver.
->   *
->   **/
->  struct mdev_driver {
-> @@ -125,12 +126,14 @@ struct mdev_driver {
->  	int  (*probe)(struct device *dev);
->  	void (*remove)(struct device *dev);
->  	struct device_driver driver;
-> +	const struct mdev_class_id *id_table;
->  };
-> 
->  #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
-> 
->  void *mdev_get_drvdata(struct mdev_device *mdev);
->  void mdev_set_drvdata(struct mdev_device *mdev, void *data);
-> +void mdev_set_class_id(struct mdev_device *mdev, u16 id);
->  const guid_t *mdev_uuid(struct mdev_device *mdev);
-> 
->  extern struct bus_type mdev_bus_type;
-> @@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct
-> mdev_device *mdev);
->  struct device *mdev_dev(struct mdev_device *mdev);
->  struct mdev_device *mdev_from_dev(struct device *dev);
-> 
-> +enum {
-> +	MDEV_ID_VFIO = 1,
-> +	/* New entries must be added here */
-> +};
-> +
->  #endif /* MDEV_H */
-> diff --git a/include/linux/mod_devicetable.h
-> b/include/linux/mod_devicetable.h
-> index 5714fd35a83c..f32c6e44fb1a 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -821,4 +821,12 @@ struct wmi_device_id {
->  	const void *context;
->  };
-> 
+>
 > +/**
-> + * struct mdev_class_id - MDEV device class identifier
-> + * @id: Used to identify a specific class of device, e.g vfio-mdev device.
+> + * __v4l2_ctrl_s_ctrl_area() - Unlocked variant of v4l2_ctrl_s_ctrl_area().
+> + *
+> + * @ctrl:	The control.
+> + * @area:	The new area.
+> + *
+> + * This sets the control's new area safely by going through the control
+> + * framework. This function assumes the control's handler is already locked,
+> + * allowing it to be used from within the &v4l2_ctrl_ops functions.
+> + *
+> + * This function is for area type controls only.
 > + */
-> +struct mdev_class_id {
-> +	__u16 id;
+> +int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+> +			    const struct v4l2_area *area);
+> +
+> +/**
+> + * v4l2_ctrl_s_ctrl_area() - Helper function to set a control's area value
+> + *	 from within a driver.
+> + *
+> + * @ctrl:	The control.
+> + * @s:		The new area.
+> + *
+> + * This sets the control's new area safely by going through the control
+> + * framework. This function will lock the control's handler, so it cannot be
+> + * used from within the &v4l2_ctrl_ops functions.
+> + *
+> + * This function is for area type controls only.
+> + */
+> +static inline int v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+> +					const struct v4l2_area *area)
+> +{
+> +	int rval;
+> +
+> +	v4l2_ctrl_lock(ctrl);
+> +	rval = __v4l2_ctrl_s_ctrl_area(ctrl, area);
+> +	v4l2_ctrl_unlock(ctrl);
+> +
+> +	return rval;
+> +}
+
+Newline maybe?
+
+>  /* Internal helper functions that deal with control events. */
+>  extern const struct v4l2_subscribed_event_ops v4l2_ctrl_sub_ev_ops;
+>
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 530638dffd93..b3c0961b62a0 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -422,6 +422,11 @@ struct v4l2_fract {
+>  	__u32   denominator;
+>  };
+>
+> +struct v4l2_area {
+> +	__u32   width;
+> +	__u32   height;
 > +};
 > +
->  #endif /* LINUX_MOD_DEVICETABLE_H */
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-> index ac5c8c17b1ff..8a8583c892b2 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	mbochs_reset(mdev);
-> 
->  	mbochs_used_mbytes += type->mbytes;
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  	return 0;
-> 
->  err_mem:
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-> index cc86bf6566e4..88d7e76f3836 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	mdpy_reset(mdev);
-> 
->  	mdpy_count++;
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  	return 0;
->  }
-> 
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> index 92e770a06ea2..4e0735143b69 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -770,6 +770,7 @@ static int mtty_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	list_add(&mdev_state->next, &mdev_devices_list);
->  	mutex_unlock(&mdev_list_lock);
-> 
-> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->  	return 0;
->  }
-> 
-> --
-> 2.19.1
+>  /**
+>    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+>    *
+> @@ -1720,6 +1725,7 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	V4L2_CTRL_TYPE_AREA          = 0x0106,
 
+I'll let Hans comment on these two bits as I don't know if that's
+adding a new control type is right or not.
+
+Have my R-b for the rest though:
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+   j
+
+
+>  };
+>
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> --
+> 2.23.0
+>
+
+--jnyrvndesrd5u7p5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2LJbIACgkQcjQGjxah
+VjxKgg//YkjUPQFoVLRgpwIkRCKS3WyvGnGUT0Jl30rhHMCesM9MQAIZJV9W9Tx7
+jOGbXZxefjvbljeqFVmwABuEgH9RcIT3fM2Dm5GMYhl8ycLlJrODscg4A1rCyMNW
+c9t+mjU+bd4R0bUstcTvbU93xgQjhzDv7D8+ACiNJsDyUEEn21w1tgTM/0eVI/ln
+jwdr+EjiFgL6J9om5W1eagTNgx7oBjVGdV90ehlB7ZYPOy2fiC/08J3eRCuhpM+h
+84M3TztKOCxtPjo7wZC/GFSp19OTCtEnAOc4hTG/8kCLTn5S8CKgJiE4D+AxPPlG
+TtSZNle8G32o+2uEVhGJi4t30OowZbZiGp1wYVM/PHr1eEIIgxdOyqAa7srKMtbA
+zRDToS2ajS5qm9j66s5XDC3++tbhiXxwTdP+fWyxhf8diCBWvQIZX+vuAIbZp3NI
+MfKQyBJHHAS013SL+9C0BwnHS6fAGSvOJEXleMF/DoUTJDlJGS76en9vS/GDyIOZ
+7lE8pYa8eu3uS1ZOyACQRsyOKjDhfWQQIqvbWC5E62FAV8gr8qo22FaEAMC+4JWw
+hWVPmqe9Yv+7q5p7+XqVZKisnIaDU59XhK1HZRd6t2XI4LHuL8OJz7bGPbaizAjo
+JxdEf/GpH4qOLmazO4IyBYZ7svTJIDEUkKIJ97Ywiwpub/6Yk2U=
+=5xeq
+-----END PGP SIGNATURE-----
+
+--jnyrvndesrd5u7p5--
