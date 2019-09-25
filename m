@@ -2,115 +2,155 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2FDC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5767C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5960222BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569388026;
-	bh=c5/d+TL32DDKR4zrZOhj8g4B4tFDujkoeIXaSUevUvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WpBezNfY88QfBYysu+dYDORkqQzSE9LGeYeyVS8CfZF8TtZwtuZvb3xOhJt4t7Pwx
-	 wZWfbfaOa5BqCddB1tBvDNk/rzgFtX+qAE4XmsM0QkmmJsLYyJBh/8XwQpHdLuP8fJ
-	 7GR6LOq7HEtwOGyfTlebiE18yFN0//HuktSRqcSo=
+	by mail.kernel.org (Postfix) with ESMTP id BCD0621D81
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442282AbfIYFHE (ORCPT
+        id S2411726AbfIYFJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437141AbfIYFHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:07:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75FEC21D81;
-        Wed, 25 Sep 2019 05:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569388023;
-        bh=c5/d+TL32DDKR4zrZOhj8g4B4tFDujkoeIXaSUevUvw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ViHccNiZ6k3Rm7Iga397cVf8P0Rx9fHMwGdF/Zv2tZTM/Dz3hUpUSfOlSJ4dDUyVU
-         9YzXzJsiRTP7WgVEp2VSy7FPNpStI7x5CVBW51tA36tpWdjDqdkid1P2USN6YRJ95M
-         ByQdf5th2sxiFO7aIYvf9S8EYS/HGdz8D20LyNmY=
-Date:   Wed, 25 Sep 2019 07:06:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Roman Kiryanov <rkir@google.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform: goldfish: Allow goldfish virtual platform
- drivers for RISCV
-Message-ID: <20190925050653.GA1337454@kroah.com>
-References: <20190925042912.119553-1-anup.patel@wdc.com>
- <20190925042912.119553-2-anup.patel@wdc.com>
- <20190925044308.GA1245729@kroah.com>
- <CAAhSdy1Z09tpNtfS10gL5BXJ=1wydLy4nmtFyKQenAPDSyTLTQ@mail.gmail.com>
+        Wed, 25 Sep 2019 01:09:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:33213 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392206AbfIYFJI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:09:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id g15so7259830ioc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:09:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=BIbTCCCavfBu7vSAONti3XrFYv20buWCS4jbSRUec3o=;
+        b=D9yR6wzu3985LQA7LsLUJDkcVyqdjdt/BmN62dcd+rSs6W4PHQqTc30jtDxSTqqSTo
+         up7V6+FqF77OApNmeV8fYn+NOpJwQzFy0Rx3mkOuhopu+4fHJGixEJE95pGGDrMmOCNI
+         bN3/r7O9nsMOsTnekKKU9LAGwZcSjEAZW3MqwHRqSSDxefQXJqTzukQkX52ZnwXxqet1
+         8ouP49YNsBQMM7SodGy2Ls3x9RuyFna25Hy5TC4KX0RhiPDLstkqgxE6Il2WMcQB0lEl
+         Lah7BvtXu2573oyggAGJOGFPYyApllyme2GrHHSMat/m3WLLcVG5Xmn1SaIgLh4XdOYY
+         fqdA==
+X-Gm-Message-State: APjAAAVsMdeDYopZx1nS1tuBQvV7tDeMMjSAuanhL8Cw2jcA7WKgTqOp
+        j2ZM2Dwz0sFIKjG5f/z2kQkIbCSG1NhnU5r/1W0TjKQdzzam
+X-Google-Smtp-Source: APXvYqyzEWR89LxNgxDoF47i1h/7OJTIpGxPi8I2h9ZqeeslrJ/DgF3mMDQXP9CPOgEjdSccRU2WxAuIOtsv9bM4SM9zUTMPZd9M
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy1Z09tpNtfS10gL5BXJ=1wydLy4nmtFyKQenAPDSyTLTQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a6b:8e57:: with SMTP id q84mr7080450iod.41.1569388147132;
+ Tue, 24 Sep 2019 22:09:07 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 22:09:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000067302059359a78e@google.com>
+Subject: INFO: trying to register non-static key in finish_writeback_work
+From:   syzbot <syzbot+21875b598ddcdc309b28@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:30:00AM +0530, Anup Patel wrote:
-> On Wed, Sep 25, 2019 at 10:13 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Sep 25, 2019 at 04:30:03AM +0000, Anup Patel wrote:
-> > > We will be using some of the Goldfish virtual platform devices (such
-> > > as RTC) on QEMU RISC-V virt machine so this patch enables goldfish
-> > > kconfig option for RISC-V architecture.
-> > >
-> > > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > > ---
-> > >  drivers/platform/goldfish/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/platform/goldfish/Kconfig b/drivers/platform/goldfish/Kconfig
-> > > index 77b35df3a801..0ba825030ffe 100644
-> > > --- a/drivers/platform/goldfish/Kconfig
-> > > +++ b/drivers/platform/goldfish/Kconfig
-> > > @@ -1,7 +1,7 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  menuconfig GOLDFISH
-> > >       bool "Platform support for Goldfish virtual devices"
-> > > -     depends on X86_32 || X86_64 || ARM || ARM64 || MIPS
-> > > +     depends on X86_32 || X86_64 || ARM || ARM64 || MIPS || RISCV
-> >
-> > Why does this depend on any of these?  Can't we just have:
-> 
-> May be Goldfish drivers were compile tested/tried on these architectures only.
+Hello,
 
-True, but that does not mean a driver should only have a specific list
-of arches.  This should only be needed if you _know_ it doesn't work on
-a specific arch, not the other way around.
+syzbot found the following crash on:
 
-> > >       depends on HAS_IOMEM
-> >
-> > And that's it?
-> 
-> I think it should be just "depends on HAS_IOMEM && HAS_DMA" just like
-> VirtIO MMIO. Agree ??
+HEAD commit:    b41dae06 Merge tag 'xfs-5.4-merge-7' of git://git.kernel.o..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17d19a7e600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dfcf592db22b9132
+dashboard link: https://syzkaller.appspot.com/bug?extid=21875b598ddcdc309b28
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fcf1a1600000
 
-No idea, but if that's what  is needed for building, then sure :)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+21875b598ddcdc309b28@syzkaller.appspotmail.com
 
-thanks,
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 2603 Comm: kworker/u4:4 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:881 [inline]
+  register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1190
+  __lock_acquire+0xf4/0x4e70 kernel/locking/lockdep.c:3837
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
+  __wake_up+0xe/0x10 kernel/sched/wait.c:142
+  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
+  wb_do_writeback fs/fs-writeback.c:2030 [inline]
+  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 2603 Comm: kworker/u4:4 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
+Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
+85 0b 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
+RSP: 0018:ffff8880a1dc7a90 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff888079642000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 1ffffffff138d60e RDI: 0000000000000000
+RBP: ffff8880a1dc7ae8 R08: ffffffffffffffe8 R09: ffff8880a1dc7b38
+R10: ffffed10143b8f4b R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e620020 CR3: 00000000a3f3e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __wake_up_common_lock+0xea/0x150 kernel/sched/wait.c:123
+  __wake_up+0xe/0x10 kernel/sched/wait.c:142
+  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
+  wb_do_writeback fs/fs-writeback.c:2030 [inline]
+  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace a54dff274d7cf269 ]---
+RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
+Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
+85 0b 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
+RSP: 0018:ffff8880a1dc7a90 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff888079642000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 1ffffffff138d60e RDI: 0000000000000000
+RBP: ffff8880a1dc7ae8 R08: ffffffffffffffe8 R09: ffff8880a1dc7b38
+R10: ffffed10143b8f4b R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e620020 CR3: 00000000a3f3e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-greg k-h
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
