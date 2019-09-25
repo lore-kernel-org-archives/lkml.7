@@ -2,116 +2,197 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CC0C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B2FC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C81F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3480421655
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pSeFfacP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411543AbfIYD1t (ORCPT
+        id S2411553AbfIYDaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 23:27:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2714 "EHLO huawei.com"
+        Tue, 24 Sep 2019 23:30:19 -0400
+Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:3655
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406280AbfIYD1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 23:27:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0548C48A6231B1F8B4AB;
-        Wed, 25 Sep 2019 11:27:44 +0800 (CST)
-Received: from [127.0.0.1] (10.177.224.82) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
- 11:27:35 +0800
-Subject: Re: [PATCH xfstests v2] overlay: Enable character device to be the
- base fs partition
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     <guaneryu@gmail.com>, <amir73il@gmail.com>,
-        <david.oberhollenzer@sigma-star.at>, <ebiggers@google.com>,
-        <yi.zhang@huawei.com>, <fstests@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1569376448-53998-1-git-send-email-chengzhihao1@huawei.com>
- <20190925030550.GA9913@magnolia> <20190925031733.GB9913@magnolia>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <46aa2daf-4c4a-ea74-2300-bb32fdfbdbcc@huawei.com>
-Date:   Wed, 25 Sep 2019 11:27:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        id S2406280AbfIYDaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 23:30:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bZ86yfn+5qa7pJ/RBVfkGSEPeA15lfSQw/xW/PSiDYT0+3qh0HIFtr9QLjJjoFR1K02h+QkdJp5AYTpIPU5RHfIE8nh4U8Z6Qqu6wBf4kP1/Dd7XaX4T/j6nlk1QtnfvR08J+JCh/g9XvXGc0PyndUc/YpeqLZkw0A5KEjIMYZ0Vz8k72IrF/PB7TJHpMrp7m7AXcyvDQjFGpWjlMPTgEAwfCZ6zyxce/hWcKVMpKGPHG17/unHbFUUG2uyERwYl1fZmMOAkJjXTlgMiwcZ+0HwSuspf7Em0C4kVTmxuW5G4OF6UV6A2ugERuPEN9L8DRs65cOkdr29AOj/CCL3EKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnGcQDmeCtgFmkIlcEFzRwG/zbzs95WlNuDD3tNtmo4=;
+ b=GIvj+zul34dTvQzANx6GmvpaFSToId/KKQeLVK3iOTgxVoil3aiV0wG0maRoN/lh38hplemBeWf2jqXcLnayN/N9WgLcyEskq5id8+Ed/WMyW9lWRAqbITSpg9GVDJcGdJm8SllILAxbpBpkxRaVpBcCJc+rsZ1LTvQseOYuzHk4LWvj2ejwXihzwcmrKwm2TM7t6IiXW1BSW9Gjq80iWqFzu6s4A4vJnCZ6uR5Us+iiAkgxVvEbBkjiLmUe4Z+E/9DEhTQR4U+3CtP/+bNiZhCHYbxraSsuyBaB6OYjnD5utV+86Wc7qYHMrp0SXWJr6ih4QcECaC0nTyhXBjtrXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnGcQDmeCtgFmkIlcEFzRwG/zbzs95WlNuDD3tNtmo4=;
+ b=pSeFfacPf/iXRTq/BemJnfi4IH8eX1+pHasQZneHuMgjhA8Mrih6R2n6VGvniv4kdUb+QaGxCS+tGqnclsrF37zykOr+vGGiF8zCIVscv2UbZKRvWlnTKLigPCV/xEaLfUtFun5cZnTmIG3bq1UwuCVjafsLlX5UqL5qlRiFFk8=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4138.eurprd04.prod.outlook.com (52.134.108.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.22; Wed, 25 Sep 2019 03:30:12 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 03:30:12 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Thread-Topic: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Thread-Index: AQHVcoOnab7d5ysBNkWsXmY0PrfSuKc6/L+AgAC3JZCAAAkFAIAAANMg
+Date:   Wed, 25 Sep 2019 03:30:12 +0000
+Message-ID: <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78874108-a8a2-4278-837f-08d74168ace2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4138;
+x-ms-traffictypediagnostic: DB7PR04MB4138:|DB7PR04MB4138:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4138F2D49457DFDA316F74968F870@DB7PR04MB4138.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(199004)(189003)(66446008)(2906002)(305945005)(476003)(74316002)(6116002)(4326008)(81166006)(8676002)(64756008)(3846002)(66066001)(66476007)(76116006)(14454004)(99286004)(81156014)(14444005)(6246003)(66556008)(66946007)(6636002)(86362001)(33656002)(256004)(7736002)(5660300002)(7696005)(55016002)(26005)(486006)(6436002)(229853002)(2501003)(102836004)(8936002)(446003)(54906003)(186003)(9686003)(52536014)(478600001)(44832011)(316002)(110136005)(6506007)(11346002)(25786009)(76176011)(71200400001)(71190400001)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4138;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Imeb2s67+hrLJSOAeOCAajPt9gYM9nIIj5gO5y25R6Wwaym58w1y9InU4ik6vQvrBJJU3MH8z2IxjjRoWUoxjpCUezH5T+Y9P9np2duXmC+CRRf5fsjpPfIUmAG2fdwyOdGSi8ZbRJeYSGY2QZdnrDUZTv0QSDioQOkk6YyGoRWPhnEELUJED8STCN8Mk3hM5R+z7tiL9Ps+4FF0ytuEhr98eKLR0CzDl4m5D5zZnkKdGFZB1DiSws8wSa/xXrBJAvNVDXJP+bdeypE5G0vVArXOM77Xdz0Gqq457+WnvBrAfqC1z9HZmleNbhA2BE8P+chX+Iaf4Zc/B+Rqq+Vp51AvRUfIMoLieyJoRBwGZJnKWTr/GQiZCgNNbobEaCnUbJiBMbfqMTtXHZnyqydk7gkqKX1hF4vfev/hN6xPFKE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190925031733.GB9913@magnolia>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.224.82]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78874108-a8a2-4278-837f-08d74168ace2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 03:30:12.8095
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MD1in9LD/8zv+UxBRy4b0yTClkW5uWGiC5d2Sq1IPWCVN3HzO48nsgO5lbyniVSvxfyB2SgcrSvNjuWfPqzXfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are indeed many '-b' options in xfstests. I only confirmed the line of overlay test. Other -b test options I need to reconfirm later.
-
-ÔÚ 2019/9/25 11:17, Darrick J. Wong Ð´µÀ:
-> On Tue, Sep 24, 2019 at 08:05:50PM -0700, Darrick J. Wong wrote:
->> On Wed, Sep 25, 2019 at 09:54:08AM +0800, Zhihao Cheng wrote:
->>> There is a message in _supported_fs():
->>>     _notrun "not suitable for this filesystem type: $FSTYP"
->>> for when overlay usecases are executed on a chararcter device based base
->>
->> You can do that?
->>
->> What does that even look like?
-> 
-> OH, ubifs.  Ok.
-> 
-> /me wonders if there are more places in xfstests with test -b that needs
-> fixing...
-> 
-> --D
-> 
->> --D
->>
->>> fs. _overay_config_override() detects that the current base fs partition
->>> is not a block device, and FSTYP won't be overwritten as 'overlay' before
->>> executing usecases which results in all overlay usecases become 'notrun'.
->>> In addition, all generic usecases are based on base fs rather than overlay.
->>>
->>> We want to rewrite FSTYP to 'overlay' before running the usecases. To do
->>> this, we need to add additional character device judgments for TEST_DEV
->>> and SCRATCH_DEV in _overay_config_override().
->>>
->>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
->>> ---
->>>  common/config | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/common/config b/common/config
->>> index 4c86a49..a22acdb 100644
->>> --- a/common/config
->>> +++ b/common/config
->>> @@ -550,7 +550,7 @@ _overlay_config_override()
->>>  	#    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
->>>  	#    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
->>>  	#    overlayfs base and mount dirs inside base fs mount.
->>> -	[ -b "$TEST_DEV" ] || return 0
->>> +	[ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
->>>  
->>>  	# Config file may specify base fs type, but we obay -overlay flag
->>>  	[ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
->>> @@ -570,7 +570,7 @@ _overlay_config_override()
->>>  	export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
->>>  	export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
->>>  
->>> -	[ -b "$SCRATCH_DEV" ] || return 0
->>> +	[ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
->>>  
->>>  	# Store original base fs vars
->>>  	export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
->>> -- 
->>> 2.7.4
->>>
-> 
-> .
-> 
+> > > >
+> > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata
+> > > > A-008646 on LS1021A
+> > > >
+> > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > ---
+> > > > Change in v3:
+> > > > 	- rename property name
+> > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > >
+> > > > Change in v2:
+> > > > 	- update desc of the property 'fsl,rcpm-scfg'
+> > > >
+> > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > ++++++++++++++
+> > > >  1 file changed, 14 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
+> > > >  Optional properties:
+> > > >   - little-endian : RCPM register block is Little Endian. Without i=
+t RCPM
+> > > >     will be Big Endian (default case).
+> > > > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC
+> > > > + LS1021A,
+> > >
+> > > You probably should mention this is related to a hardware issue on
+> > > LS1021a and only needed on LS1021a.
+> > Okay, got it, thanks, I will add this in v4.
+> > >
+> > > > +   Must include n + 1 entries (n =3D #fsl,rcpm-wakeup-cells, such =
+as:
+> > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entr=
+ies).
+> > >
+> > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC=
+.
+> > > However you are defining an offset to scfg registers here.  Why
+> > > these two are related?  The length here should actually be related
+> > > to the #address-cells of the soc/.  But since this is only needed
+> > > for LS1021, you can
+> > just make it 3.
+> > I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device
+> > node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
+> > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
+> > But because of the hardware issue on LS1021A, I need store the value
+> > of IPPDEXPCR registers to an alt address. So I defining an offset to
+> > scfg registers, then RCPM driver get an abosolute address from offset,
+> > RCPM driver write the value of IPPDEXPCR registers to these abosolute
+> > addresses(backup the value of IPPDEXPCR registers).
+>=20
+> I understand what you are trying to do.  The problem is that the new
+> fsl,ippdexpcr-alt-addr property contains a phandle and an offset.  The si=
+ze
+> of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/* SCFG_SPARE=
+CR8 */
+>=20
+> > >
+> > > > +   The first entry must be a link to the SCFG device node.
+> > > > +   The non-first entry must be offset of registers of SCFG.
+> > > >
+> > > >  Example:
+> > > >  The RCPM node for T4240:
+> > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > >  	};
+> > > >
+> > > > +The RCPM node for LS1021A:
+> > > > +	rcpm: rcpm@1ee2140 {
+> > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
+> > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
+> > > > SCFG_SPARECR8 */
+> > > > +	};
+> > > > +
+> > > > +
+> > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> > > >  -------------------------------------------
+> > > >  Required fsl,rcpm-wakeup property should be added to a device
+> > > > node if the device
+> > > > --
+> > > > 2.17.1
 
