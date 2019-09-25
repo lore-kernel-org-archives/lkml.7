@@ -2,202 +2,115 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C223DC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC74C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B5F21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F43208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="gTi2p0HM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbfIYXZ5 (ORCPT
+        id S1728217AbfIYX1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:25:57 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47290 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfIYXZ5 (ORCPT
+        Wed, 25 Sep 2019 19:27:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47072 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbfIYX1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:25:57 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 35C86363302;
-        Thu, 26 Sep 2019 09:25:50 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iDGfN-0006ta-8u; Thu, 26 Sep 2019 09:25:49 +1000
-Date:   Thu, 26 Sep 2019 09:25:49 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-Message-ID: <20190925232549.GG804@dread.disaster.area>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
- <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
- <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
- <20190924073940.GM6636@dread.disaster.area>
- <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
- <20190925071854.GC804@dread.disaster.area>
- <aeede806-db6b-3e94-3fed-60af5481e0d3@yandex-team.ru>
+        Wed, 25 Sep 2019 19:27:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e17so122573ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9sqCXdxl+Of7jf6rJsO8rQ0SGF0MvqeTX3//lE6sq48=;
+        b=gTi2p0HMuFn+258nhleL02ZvNEY402U9LWCy+tdYU2Sk6btSfKw/0ugF12eXEQMJDD
+         AiCUx2NMw7R2DUnRcunLUwriIwf9m41Jih9BtKp8M0EHefP2r6DzFrUAGM7LRzQBKG6V
+         D5qHVcJgrSgHazrW0ieVDxpwzxQmX4JftqmeGr7jsTQ2Jf6wNBm8ptZr84U/ix/TNddQ
+         LaFAdntoNdWv4qcPbmmGTKSyXOnItU2ydsiZdwDgwyXzcn/Du2bLeosUtPqaBdKbbdz8
+         8ReWy4Tx7TCiwaWLV6F9ULLUyVDiw+SQx3kT8FV4RIWv59mFrauIHVcU5yZdQicd/cy0
+         0zAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9sqCXdxl+Of7jf6rJsO8rQ0SGF0MvqeTX3//lE6sq48=;
+        b=YXfUyy39CDZ/8+oQbArS0pLftYhQwKjh/rt6ycMaREIuK+8Fqvz8X2zoZ4qIOL+G/i
+         t84tRSJ42wMBRjCCsQiWFKqENu5TiO6uRqBav+uOGqRkqHQ/cprSM3m39k7PH03AGj6m
+         pRRSRiLlo7aVPjFDil+2a7lckL9NMj4jzZoqY3CE6eTOotTKu8OwbfYYsPTfghd7P/ki
+         cel9QPGRSWlTBm8AGbwCqCi6o8HwK9oiYyN0MfwFeM2lVE6EnbXuO1NOSXQnkHarXxpD
+         E55vmRGMCaKcl2+K7UYIBsiJ59A+wmBKY0jZF3n8J8BvZuzEgBE3fILxwDNqDS83jiz1
+         RTyg==
+X-Gm-Message-State: APjAAAVFT9ijr0pzASr36RO+W3W4m31APKJS9Ll4zjTSmw5uW7SmnYBB
+        G3g6hZ6qzThfYmaagx1cZlskqMdOX+ybabP/U44e
+X-Google-Smtp-Source: APXvYqz+rc3PxdRkC9XVh7Yo8Mkknz6GnwWo3ELRdvf9CffUm4W0C9Axdhbp4gFE431jFa9hhWXIevuLhkMI2c4paW4=
+X-Received: by 2002:a2e:890c:: with SMTP id d12mr490009lji.85.1569454047520;
+ Wed, 25 Sep 2019 16:27:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aeede806-db6b-3e94-3fed-60af5481e0d3@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=60IASA-pC0RNppBcC7sA:9 a=Zsu9e8Xf_pQmunjS:21
-        a=CjuIK1q_8ugA:10 a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190925221009.15523-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190925221009.15523-1-navid.emamdoost@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 25 Sep 2019 19:27:16 -0400
+Message-ID: <CAHC9VhR+4pZObDz7kG+rxnox2ph4z_wpZdyOL=WmdnRvdQNH9A@mail.gmail.com>
+Subject: Re: [PATCH] genetlink: prevent memory leak in netlbl_unlabel_defconf
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 11:15:30AM +0300, Konstantin Khlebnikov wrote:
-> On 25/09/2019 10.18, Dave Chinner wrote:
-> > On Tue, Sep 24, 2019 at 12:00:17PM +0300, Konstantin Khlebnikov wrote:
-> > > On 24/09/2019 10.39, Dave Chinner wrote:
-> > > > On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
-> > > > > On 23/09/2019 17.52, Tejun Heo wrote:
-> > > > > > Hello, Konstantin.
-> > > > > > 
-> > > > > > On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
-> > > > > > > With vm.dirty_write_behind 1 or 2 files are written even faster and
-> > > > > > 
-> > > > > > Is the faster speed reproducible?  I don't quite understand why this
-> > > > > > would be.
-> > > > > 
-> > > > > Writing to disk simply starts earlier.
-> > > > 
-> > > > Stupid question: how is this any different to simply winding down
-> > > > our dirty writeback and throttling thresholds like so:
-> > > > 
-> > > > # echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
-> > > > 
-> > > > to start background writeback when there's 100MB of dirty pages in
-> > > > memory, and then:
-> > > > 
-> > > > # echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
-> > > > 
-> > > > So that writers are directly throttled at 200MB of dirty pages in
-> > > > memory?
-> > > > 
-> > > > This effectively gives us global writebehind behaviour with a
-> > > > 100-200MB cache write burst for initial writes.
-> > > 
-> > > Global limits affect all dirty pages including memory-mapped and
-> > > randomly touched. Write-behind aims only into sequential streams.
-> > 
-> > There are  apps that do sequential writes via mmap()d files.
-> > They should do writebehind too, yes?
-> 
-> I see no reason for that. This is different scenario.
+On Wed, Sep 25, 2019 at 6:10 PM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
+>
+> In netlbl_unlabel_defconf if netlbl_domhsh_add_default fails the
+> allocated entry should be released.
+>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  net/netlabel/netlabel_unlabeled.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-It is?
+It is worth noting that netlbl_unlabel_defconf() is only called during
+kernel boot by netlbl_init() and if netlbl_unlabel_defconf() returns
+an error code the system panics, so this isn't currently a very
+practical concern.
 
-> Mmap have no clear signal about "end of write", only page fault at
-> beginning. Theoretically we could implement similar sliding window and
-> start writeback on consequent page faults.
+That said, netlbl_unlabel_defconf() *should* clean up here just on
+principal if nothing else.
 
-sequential IO doing pwrite() in a loop has no clear signal about
-"end of write", either. It's exactly the same as doing a memset(0)
-on a mmap()d region to zero the file. i.e. the write doesn't stop
-until EOF is reached...
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-> But applications who use memory mapped files probably knows better what
-> to do with this data. I prefer to leave them alone for now.
+> diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
+> index d2e4ab8d1cb1..c63ec480ee4e 100644
+> --- a/net/netlabel/netlabel_unlabeled.c
+> +++ b/net/netlabel/netlabel_unlabeled.c
+> @@ -1541,8 +1541,10 @@ int __init netlbl_unlabel_defconf(void)
+>         entry->family = AF_UNSPEC;
+>         entry->def.type = NETLBL_NLTYPE_UNLABELED;
+>         ret_val = netlbl_domhsh_add_default(entry, &audit_info);
+> -       if (ret_val != 0)
+> +       if (ret_val != 0) {
+> +               kfree(entry);
+>                 return ret_val;
+> +       }
+>
+>         netlbl_unlabel_acceptflg_set(1, &audit_info);
+>
+> --
+> 2.17.1
+>
 
-By that argument, we shouldn't have readahead for mmap() access or
-even read-around for page faults. We can track read and write faults
-exactly for mmap(), so if you are tracking sequential page dirtying
-for writebehind we can do that jsut as easily for mmap (via
-->page_mkwrite) as we can for write() IO.
 
-> > > > ANd, really such strict writebehind behaviour is going to cause all
-> > > > sorts of unintended problesm with filesystems because there will be
-> > > > adverse interactions with delayed allocation. We need a substantial
-> > > > amount of dirty data to be cached for writeback for fragmentation
-> > > > minimisation algorithms to be able to do their job....
-> > > 
-> > > I think most sequentially written files never change after close.
-> > 
-> > There are lots of apps that write zeros to initialise and allocate
-> > space, then go write real data to them. Database WAL files are
-> > commonly initialised like this...
-> 
-> Those zeros are just bunch of dirty pages which have to be written.
-> Sync and memory pressure will do that, why write-behind don't have to?
-
-Huh? IIUC, the writebehind flag is a global behaviour flag for the
-kernel - everything does writebehind or nothing does it, right?
-
-Hence if you turn on writebehind, the writebehind will write the
-zeros to disk before real data can be written. We no longer have
-zeroing as something that sits in the cache until it's overwritten
-with real data - that file now gets written twice and it delays the
-application from actually writing real data until the zeros are all
-on disk.
-
-strict writebehind without the ability to burst temporary/short-term
-data/state into the cache is going to cause a lot of performance
-regressions in applications....
-
-> > > Except of knowing final size of huge files (>16Mb in my patch)
-> > > there should be no difference for delayed allocation.
-> > 
-> > There is, because you throttle the writes down such that there is
-> > only 16MB of dirty data in memory. Hence filesystems will only
-> > typically allocate in 16MB chunks as that's all the delalloc range
-> > spans.
-> > 
-> > I'm not so concerned for XFS here, because our speculative
-> > preallocation will handle this just fine, but for ext4 and btrfs
-> > it's going to interleave the allocate of concurrent streaming writes
-> > and fragment the crap out of the files.
-> > 
-> > In general, the smaller you make the individual file writeback
-> > window, the worse the fragmentation problems gets....
-> 
-> AFAIR ext4 already preallocates extent beyond EOF too.
-
-Only via fallocate(), not for delayed allocation.
-
-> > > Probably write behind could provide hint about streaming pattern:
-> > > pass something like "MSG_MORE" into writeback call.
-> > 
-> > How does that help when we've only got dirty data and block
-> > reservations up to EOF which is no more than 16MB away?
-> 
-> Block allocator should interpret this flags as "more data are
-> expected" and preallocate extent bigger than data and beyond EOF.
-
-Can't do that: delayed allocation is a 2-phase operation that is not
-seperable from the context that is dirtying the pages. The space
-is _accounted as used_ during the write() context, but the _physical
-allocation_ of that space is done in the writeback context. We
-cannot reserve more space in the writeback context, because we may
-already be at ENOSPC by the time writeback comes along. Hence
-writeback must already have all the space it needs to write back the
-dirty pages in memory already accounted as used space before it
-starts running physical allocations.
-
-IOWs, we cannot magically allocate more space than was reserved for
-the data being written in because of some special flag from the
-writeback code. That way lies angry users because we lost their
-data due to ENOSPC issues in writeback.
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+paul moore
+www.paul-moore.com
