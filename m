@@ -2,109 +2,127 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92294C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4F3C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A2621D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AE52146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fb1Ahtlg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hu3jazJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505146AbfIYQTb (ORCPT
+        id S2387827AbfIYQ1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:19:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40090 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502025AbfIYQTb (ORCPT
+        Wed, 25 Sep 2019 12:27:06 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38546 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732803AbfIYQ1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:19:31 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so250205iof.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:19:30 -0700 (PDT)
+        Wed, 25 Sep 2019 12:27:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l21so3646436edr.5;
+        Wed, 25 Sep 2019 09:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pYuFsTmE9qWC6u6KXdDEvLyMfNpvMHyP60GEDsXUFKQ=;
-        b=Fb1Ahtlgvzzd8Vr99WuUx1Ti9C44tJPTP98esoLjIYV+yybzKVwfcUMpFjq6/3iQXn
-         Gs7et3XahZMUcOb6zgaYc3p/ypxRlvlve6v/mmSexYqQFfxJFFlIsKnuYmiICrxE9iM0
-         jctEYuPeeMIjOGI8HRctYZ+L0mARkO4rSxMVQXqBvVcEsniJ4dvBtN9/hASws7T4jxhY
-         Ifg8pGkIiQ0vsFeDD8VQOZziZ7DqmzLadUCD8aZrPY7sb81kZrYgh2eN5Ge0OkEKkE6M
-         bM7jEBGX/IXghm/B3jCz7UiwlkHjj4GEyWL6S3Q52v8eFE5IxaCrqcLXz+o32jnACUif
-         UhFw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+Kf9hn93bVYZrlXSfMDSlr/mbW/U/UaPgHwruad4IfQ=;
+        b=Hu3jazJhr8bfs8oWmIbbhJVAnoTr793yhYViKFnPqhtjf2B3dHLr1oYLFE+X5ok1YN
+         xyk7tbfScIGQcnVnHc6j3ScJa5jqlhn7Dov4EEgjw852Hu2iw+Fz98IhfhLIf2EZPrxz
+         a7SXxbAIPLJ1dOFSZ9EnKd3DiySqio5TxtzpadfyjmxcSz6aJMCzex/RMJEH8aHpDFWa
+         7EePeY0zH4WY2J2eAr4VYBRb5LaA2bHhiWNkSoVBOGuZnTy+VeGIwQL5P7tAUP2549ac
+         RUWvzWBeiJ9/d/ynPv7/QPLT/+QF5XZu15lyFj+k7P+ABxryvcvBOnYW5hBaabOFDNFA
+         cGUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pYuFsTmE9qWC6u6KXdDEvLyMfNpvMHyP60GEDsXUFKQ=;
-        b=diTtYQPxiP/8L+eUv8ZqaMtMAGZ5IaYITBnUCnk6Dvhi07RAzCK5/DOv8Zq2GbWVJS
-         joxu1sx/pyjYjykgbXTRuQGQqGYFWHgYnEvzZIIaQe7VaEX+ZQvtfP67pgDDMmHHpa2k
-         v9jsc1yKxW7KOnxBK8fp1r+ewJwEa1/QdIQRTK10mSPUV8+usr4JufF4InU+dCA+OOcx
-         /R2MkgJvtCemltHQSvKtKXl2mc72LOcKWvTmUwzKUCytPkL5z9bMrfNXAOxu5+FuDr44
-         Hux6rHFeXQfqL2rpT6JLn1WE7y25HisFudJGQHfVDsRXGvGQzkWmBziMYMdwW96CDoIz
-         72Ug==
-X-Gm-Message-State: APjAAAXezwqcoLmQhN4R8/xvYcH3zco07gwErkoJBIBCi3cCECWOH4+1
-        y09warvyGMb4PCqe85uHWCQ=
-X-Google-Smtp-Source: APXvYqz3f5RaWcSwUBFX1RIICB2l1fWSvdzbPKCmBKFRAUbUiAOdy3nLr+2xYAn/o7Dx+Yce2bbyGw==
-X-Received: by 2002:a5e:8f01:: with SMTP id c1mr174946iok.148.1569428370298;
-        Wed, 25 Sep 2019 09:19:30 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id v70sm270115ilk.58.2019.09.25.09.19.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+Kf9hn93bVYZrlXSfMDSlr/mbW/U/UaPgHwruad4IfQ=;
+        b=MmB5EGahmd6g6FQaXZqtTqx22CRiB38GvsOwIXlK+FbJjjcaW02RPTtVBGqBM/pufX
+         d969dvX59LV47i7z0Jqb4hFUhPHXcv2eoRe5MBi5EO9nQJdn64AgBBfJLICxQYvmXqfz
+         j7mR67C4BZL9IuhBBv4Rt6nCShQFczBjQgVa5BplVIuwama9mqXzibTIOHQU5T7g1lyS
+         pm9m0ywpuIdEGi/qQ8TUCSn9STLDO4yE8RzdR8p3lZWu6tw66Nqmv79Dr0vLMzsRLjvc
+         szJNux4K66YxSYOSV8bwK8cXz4p/SgzE0iL7znMX3LRChkhXmdvgQ4z/LZY2SFuc2Dym
+         0P6A==
+X-Gm-Message-State: APjAAAV5UuodjMaPkZPuZu+78X8ry8Pz8MiIXu8fsvQ9FMc0NTV0sAEg
+        y9V6SoOiUHDPMVEX1qKMRTE=
+X-Google-Smtp-Source: APXvYqwsFPU0lvrsUmak9UXNUaAHaVaLkkJTDjkX+a7IIfjcv1CUu6jPL9gJOVmYaq5xeJ1xwBdcKg==
+X-Received: by 2002:a17:906:5fc4:: with SMTP id k4mr78627ejv.300.1569428824597;
+        Wed, 25 Sep 2019 09:27:04 -0700 (PDT)
+Received: from localhost.localdomain ([185.107.117.129])
+        by smtp.gmail.com with ESMTPSA id g15sm1094346edp.0.2019.09.25.09.27.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 09:19:29 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: Intel: Skylake: prevent memory leak in snd_skl_parse_uuids
-Date:   Wed, 25 Sep 2019 11:19:19 -0500
-Message-Id: <20190925161922.22479-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 25 Sep 2019 09:27:03 -0700 (PDT)
+Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
+        by localhost.localdomain with esmtp (Exim 4.92.1)
+        (envelope-from <jekhor@gmail.com>)
+        id 1iDA8G-0000yO-Ic; Wed, 25 Sep 2019 19:27:12 +0300
+Date:   Wed, 25 Sep 2019 19:27:12 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ Micro-B and Type-C variants
+Message-ID: <20190925162712.GA3653@jeknote.loshitsa1.net>
+References: <20190920223356.6622-1-jekhor@gmail.com>
+ <20190920223356.6622-2-jekhor@gmail.com>
+ <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com>
+ <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In snd_skl_parse_uuids if allocation for module->instance_id fails, the
-allocated memory for module shoulde be released. I changes the
-allocation for module to use devm_kzalloc to be resource_managed
-allocation and avoid the release in error path.
+On Wed, Sep 25, 2019 at 06:02:22PM +0300, Andy Shevchenko wrote:
+> On Sat, Sep 21, 2019 at 9:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> > On 21-09-2019 00:33, Yauhen Kharuzhy wrote:
+> > > Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
+> > > hardware has Type-C connector and register related devices described as
+> > > I2C connections in the _CRS resource.
+> > >
+> > > There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
+> > > USB connector exists. It has INT33FE device in the DSDT table but
+> > > there are only two I2C connection described: PMIC and BQ27452 battery
+> > > fuel gauge.
+> > >
+> > > Splitting existing INT33FE driver allow to maintain code for USB Micro-B
+> > > (or AB) connector variant separately and make it simpler.
+> > >
+> > > Split driver to intel_cht_int33fe_common.c and
+> > > intel_cht_int33fe_{microb,typec}.c. Compile all this sources to one .ko
+> > > module to make user experience easier.
+> > >
+> > > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> >
+> > This version still works for me on my typec device:
+> >
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > The code also looks good to me:
+> >
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> 
+> By some reason it doesn't apply.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v2:
-	- Changed the allocation for module from kzalloc to devm_kzalloc
----
- sound/soc/intel/skylake/skl-sst-utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have checked, and have no issues when applying this patch to the current
+torvalds/master and linux-next/master branches (351c8a09b00b and 9e88347dedd8
+commit IDs).
 
-diff --git a/sound/soc/intel/skylake/skl-sst-utils.c b/sound/soc/intel/skylake/skl-sst-utils.c
-index d43cbf4a71ef..ac37f04b0eea 100644
---- a/sound/soc/intel/skylake/skl-sst-utils.c
-+++ b/sound/soc/intel/skylake/skl-sst-utils.c
-@@ -284,7 +284,7 @@ int snd_skl_parse_uuids(struct sst_dsp *ctx, const struct firmware *fw,
- 	 */
- 
- 	for (i = 0; i < num_entry; i++, mod_entry++) {
--		module = kzalloc(sizeof(*module), GFP_KERNEL);
-+		module = devm_kzalloc(ctx->dev, sizeof(*module), GFP_KERNEL);
- 		if (!module) {
- 			ret = -ENOMEM;
- 			goto free_uuid_list;
+
 -- 
-2.17.1
-
+Yauhen Kharuzhy
