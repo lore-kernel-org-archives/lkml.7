@@ -2,155 +2,137 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5767C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48219C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD0621D81
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE1921D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569388189;
+	bh=gHFew4ppnNaOlzmq+kgbBFdU6FZm03u4DtWDendF5Us=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JyxXG5hPS0PNGJ5TjTsFbMswMH3odJ+hzdX5JvpwHd+mo8iq/pflCXFUEQYN6rFTj
+	 q6szGt6x+JvvcHWC2f0lzp8lKdkwq6MOXvK8FpTS0NOJi2rBe1kEnYKf3Mfnnf/1bI
+	 +hd4Ycm88V5aO4gWCLEDXbJ7aSUTv23T2DCfQdn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411726AbfIYFJI (ORCPT
+        id S2411735AbfIYFJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:09:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:33213 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392206AbfIYFJI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:09:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id g15so7259830ioc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:09:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=BIbTCCCavfBu7vSAONti3XrFYv20buWCS4jbSRUec3o=;
-        b=D9yR6wzu3985LQA7LsLUJDkcVyqdjdt/BmN62dcd+rSs6W4PHQqTc30jtDxSTqqSTo
-         up7V6+FqF77OApNmeV8fYn+NOpJwQzFy0Rx3mkOuhopu+4fHJGixEJE95pGGDrMmOCNI
-         bN3/r7O9nsMOsTnekKKU9LAGwZcSjEAZW3MqwHRqSSDxefQXJqTzukQkX52ZnwXxqet1
-         8ouP49YNsBQMM7SodGy2Ls3x9RuyFna25Hy5TC4KX0RhiPDLstkqgxE6Il2WMcQB0lEl
-         Lah7BvtXu2573oyggAGJOGFPYyApllyme2GrHHSMat/m3WLLcVG5Xmn1SaIgLh4XdOYY
-         fqdA==
-X-Gm-Message-State: APjAAAVsMdeDYopZx1nS1tuBQvV7tDeMMjSAuanhL8Cw2jcA7WKgTqOp
-        j2ZM2Dwz0sFIKjG5f/z2kQkIbCSG1NhnU5r/1W0TjKQdzzam
-X-Google-Smtp-Source: APXvYqyzEWR89LxNgxDoF47i1h/7OJTIpGxPi8I2h9ZqeeslrJ/DgF3mMDQXP9CPOgEjdSccRU2WxAuIOtsv9bM4SM9zUTMPZd9M
-MIME-Version: 1.0
-X-Received: by 2002:a6b:8e57:: with SMTP id q84mr7080450iod.41.1569388147132;
- Tue, 24 Sep 2019 22:09:07 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 22:09:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000067302059359a78e@google.com>
-Subject: INFO: trying to register non-static key in finish_writeback_work
-From:   syzbot <syzbot+21875b598ddcdc309b28@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 25 Sep 2019 01:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392206AbfIYFJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:09:48 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E455D21D81;
+        Wed, 25 Sep 2019 05:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569388187;
+        bh=gHFew4ppnNaOlzmq+kgbBFdU6FZm03u4DtWDendF5Us=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f5G4ZUOPIOm64T8crHOsnywcoq3HAPlSMotkwsydM/SLxLCl0vTk6I2EPmuHA2Xs4
+         Wh+cCQ7jneSwuUBy9O3I1y9h4k0pM4t35UMXD1YyCToWiQN8AHvkf5OPSdRUWR6lZ/
+         L4tGbyZW1xVZqUuS4LuRaPg+aNzfd4iYHk+FaLrs=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3] arm64: use generic free_initrd_mem()
+Date:   Wed, 25 Sep 2019 08:09:40 +0300
+Message-Id: <1569388180-28274-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-syzbot found the following crash on:
+arm64 calls memblock_free() for the initrd area in its implementation of
+free_initrd_mem(), but this call has no actual effect that late in the boot
+process. By the time initrd is freed, all the reserved memory is managed by
+the page allocator and the memblock.reserved is unused, so the only purpose
+of the memblock_free() call is to keep track of initrd memory for debugging
+and accounting.
 
-HEAD commit:    b41dae06 Merge tag 'xfs-5.4-merge-7' of git://git.kernel.o..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d19a7e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dfcf592db22b9132
-dashboard link: https://syzkaller.appspot.com/bug?extid=21875b598ddcdc309b28
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fcf1a1600000
+Without the memblock_free() call the only difference between arm64 and the
+generic versions of free_initrd_mem() is the memory poisoning.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+21875b598ddcdc309b28@syzkaller.appspotmail.com
+Move memblock_free() call to the generic code, enable it there
+for the architectures that define ARCH_KEEP_MEMBLOCK and use the generic
+implementaion of free_initrd_mem() on arm64.
 
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 2603 Comm: kworker/u4:4 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  assign_lock_key kernel/locking/lockdep.c:881 [inline]
-  register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1190
-  __lock_acquire+0xf4/0x4e70 kernel/locking/lockdep.c:3837
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
-  wb_do_writeback fs/fs-writeback.c:2030 [inline]
-  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 2603 Comm: kworker/u4:4 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
-Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
-85 0b 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
-RSP: 0018:ffff8880a1dc7a90 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff888079642000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 1ffffffff138d60e RDI: 0000000000000000
-RBP: ffff8880a1dc7ae8 R08: ffffffffffffffe8 R09: ffff8880a1dc7b38
-R10: ffffed10143b8f4b R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2e620020 CR3: 00000000a3f3e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __wake_up_common_lock+0xea/0x150 kernel/sched/wait.c:123
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  finish_writeback_work.isra.0+0xf6/0x120 fs/fs-writeback.c:168
-  wb_do_writeback fs/fs-writeback.c:2030 [inline]
-  wb_workfn+0x34f/0x11e0 fs/fs-writeback.c:2070
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace a54dff274d7cf269 ]---
-RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
-Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
-85 0b 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
-RSP: 0018:ffff8880a1dc7a90 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff888079642000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 1ffffffff138d60e RDI: 0000000000000000
-RBP: ffff8880a1dc7ae8 R08: ffffffffffffffe8 R09: ffff8880a1dc7b38
-R10: ffffed10143b8f4b R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2e620020 CR3: 00000000a3f3e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+v3:
+* fix powerpc build
+
+v2: 
+* add memblock_free() to the generic free_initrd_mem()
+* rebase on the current upstream
+
+
+ arch/arm64/mm/init.c | 12 ------------
+ init/initramfs.c     |  5 +++++
+ 2 files changed, 5 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 45c00a5..87a0e3b 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -580,18 +580,6 @@ void free_initmem(void)
+ 	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+ }
+ 
+-#ifdef CONFIG_BLK_DEV_INITRD
+-void __init free_initrd_mem(unsigned long start, unsigned long end)
+-{
+-	unsigned long aligned_start, aligned_end;
+-
+-	aligned_start = __virt_to_phys(start) & PAGE_MASK;
+-	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
+-	memblock_free(aligned_start, aligned_end - aligned_start);
+-	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-}
+-#endif
+-
+ /*
+  * Dump out memory limit information on panic.
+  */
+diff --git a/init/initramfs.c b/init/initramfs.c
+index c47dad0..3d61e13 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/utime.h>
+ #include <linux/file.h>
++#include <linux/memblock.h>
+ 
+ static ssize_t __init xwrite(int fd, const char *p, size_t count)
+ {
+@@ -531,6 +532,10 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
+ {
+ 	free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
+ 			"initrd");
++
++#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
++	memblock_free(__pa(start), end - start);
++#endif
+ }
+ 
+ #ifdef CONFIG_KEXEC_CORE
+-- 
+2.7.4
+
