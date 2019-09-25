@@ -2,69 +2,75 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24E5C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D56C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E5D205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355AF205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436791AbfIYOQO (ORCPT
+        id S2436844AbfIYOQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:16:14 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:50721 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436608AbfIYOQL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:16:11 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iD85R-0000Dd-JA; Wed, 25 Sep 2019 15:16:09 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iD85Q-00065l-TW; Wed, 25 Sep 2019 15:16:08 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 4/4] arm: arch_timer: include <asm/arch_timer.h>
-Date:   Wed, 25 Sep 2019 15:16:04 +0100
-Message-Id: <20190925141604.23364-4-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190925141604.23364-1-ben.dooks@codethink.co.uk>
-References: <20190925141604.23364-1-ben.dooks@codethink.co.uk>
+        Wed, 25 Sep 2019 10:16:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60022 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436799AbfIYOQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:16:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 07:16:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="340420625"
+Received: from kmakows-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.225])
+  by orsmga004.jf.intel.com with ESMTP; 25 Sep 2019 07:16:10 -0700
+Date:   Wed, 25 Sep 2019 17:16:09 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v22 03/24] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
+Message-ID: <20190925141609.GC19638@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-4-jarkko.sakkinen@linux.intel.com>
+ <20190924160442.GH19317@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924160442.GH19317@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arch_timer_arch_init is defined in <asm/arch_timer.h> so include
-that to fix the following sparse error:
+On Tue, Sep 24, 2019 at 06:04:42PM +0200, Borislav Petkov wrote:
+> > +	/*
+> > +	 * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
+> > +	 * access is allowed by the PTE but not the EPCM.  This usually happens
+> > +	 * when the EPCM is yanked out from under us, e.g. by hardware after a
+> > +	 * suspend/resume cycle.  In any case, software, i.e. the kernel, can't
+> > +	 * fix the source of the fault as the EPCM can't be directly modified
+> > +	 * by software.  Handle the fault as an access error in order to signal
+> > +	 * userspace, e.g. so that userspace can rebuild their enclave(s), even
+> 
+> s/, e.g.//
 
-arch/arm/kernel/arch_timer.c:31:12: warning: symbol 'arch_timer_arch_init' was not declared. Should it be static?
+Thanks I fixed this in my tree. Also, quite many sentences seem that have
+two spacebars after the end of sentence. I fixed those too.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
- arch/arm/kernel/arch_timer.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/kernel/arch_timer.c b/arch/arm/kernel/arch_timer.c
-index c125582de2e7..b5e217907686 100644
---- a/arch/arm/kernel/arch_timer.c
-+++ b/arch/arm/kernel/arch_timer.c
-@@ -10,6 +10,7 @@
- #include <linux/errno.h>
- 
- #include <asm/delay.h>
-+#include <asm/arch_timer.h>
- 
- #include <clocksource/arm_arch_timer.h>
- 
--- 
-2.23.0
-
+/Jarkko
