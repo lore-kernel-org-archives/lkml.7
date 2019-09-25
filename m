@@ -2,93 +2,98 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6BFC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4191C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7590620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8798E21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569386594;
+	bh=FPVmGPrYYDxTgtdfOX0PBlOpovVgOyA6Wv0QHZ2LQCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Io1vwSG0cDK/p8NE9iFcpMDs8D4WFky+DMHSB76chaxG/qygiuOzE4kGcKKmlj0qq
+	 exIocXKg04TrP/XWHHdHBvHNfhRu92JGvZDrRpnn/Ma7Q/VeW01Hs1tWLZfkT2hjfz
+	 qt0nlMb8YZiCtHSDQk2CyjVrIHwOQg87bI5sHNDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392563AbfIYEif (ORCPT
+        id S1731838AbfIYEnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 00:38:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14675 "EHLO mga06.intel.com"
+        Wed, 25 Sep 2019 00:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfIYEif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 00:38:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 21:38:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
-   d="scan'208";a="218860750"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2019 21:38:34 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 24 Sep 2019 21:38:34 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 24 Sep 2019 21:38:33 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.23]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 12:38:32 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Peter Xu <peterx@redhat.com>, Lu Baolu <baolu.lu@linux.intel.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: RE: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
- interfaces
-Thread-Topic: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
- interfaces
-Thread-Index: AQHVcgpDf16VDDZMQk6x5RWfK5mI2qc5MXAAgABWBICAAcJfAIAAh6Ig
-Date:   Wed, 25 Sep 2019 04:38:31 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190923203102.GB21816@araj-mobl1.jf.intel.com>
- <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
- <20190925043050.GK28074@xz-x1>
-In-Reply-To: <20190925043050.GK28074@xz-x1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzQ2YjFmYTQtN2U3ZS00MGI3LThiZjAtMTllNDY5ZWQ3NDk4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicDZcL3hYOGtZT3JCSEMzcERMQ3VHWnlLM09aRlZXS1BhM3dmbE14MmxrY2xBYzZcL3hKeHBEYjRUeEtXbGE2Q29wIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1729881AbfIYEnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 00:43:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2FD820665;
+        Wed, 25 Sep 2019 04:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569386591;
+        bh=FPVmGPrYYDxTgtdfOX0PBlOpovVgOyA6Wv0QHZ2LQCI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AToNlkIjelKwVWSqOH35u56iky0Z6S9mEKdcJHHdVRQAjFKaO2NGd8xNXCAWhm+0u
+         /dO/iFbMspl59BL4EAOF5DCEjnC6gNVRQapjOhRPgjsXRhxbP5v8dPqAwqFfv8v3d4
+         8/6t1Waa6H29cEMVtN4k1i/U6ijDqHL2SYAMK4PY=
+Date:   Wed, 25 Sep 2019 06:43:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Roman Kiryanov <rkir@google.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform: goldfish: Allow goldfish virtual platform
+ drivers for RISCV
+Message-ID: <20190925044308.GA1245729@kroah.com>
+References: <20190925042912.119553-1-anup.patel@wdc.com>
+ <20190925042912.119553-2-anup.patel@wdc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925042912.119553-2-anup.patel@wdc.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBQZXRlciBYdSBbbWFpbHRvOnBldGVyeEByZWRoYXQuY29tXQ0KPiBTZW50OiBXZWRu
-ZXNkYXksIFNlcHRlbWJlciAyNSwgMjAxOSAxMjozMSBQTQ0KPiANCj4gT24gVHVlLCBTZXAgMjQs
-IDIwMTkgYXQgMDk6Mzg6NTNBTSArMDgwMCwgTHUgQmFvbHUgd3JvdGU6DQo+ID4gPiA+IGludGVs
-X21tbWFwX3JhbmdlKGRvbWFpbiwgYWRkciwgZW5kLCBwaHlzX2FkZHIsIHByb3QpDQo+ID4gPg0K
-PiA+ID4gTWF5YmUgdGhpbmsgb2YgYSBkaWZmZXJlbnQgbmFtZS4uPyBtbW1hcCBzZWVtcyBhIGJp
-dCB3ZWlyZCA6LSkNCj4gPg0KPiA+IFllcy4gSSBkb24ndCBsaWtlIGl0IGVpdGhlci4gSSd2ZSB0
-aG91Z2h0IGFib3V0IGl0IGFuZCBoYXZlbid0DQo+ID4gZmlndXJlZCBvdXQgYSBzYXRpc2ZpZWQg
-b25lLiBEbyB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbnM/DQo+IA0KPiBIb3cgYWJvdXQgYXQgbGVh
-c3Qgc3BsaXQgdGhlIHdvcmQgdXNpbmcgIl8iPyAgTGlrZSAibW1fbWFwIiwgdGhlbg0KPiBhcHBs
-eSBpdCB0byBhbGwgdGhlICJtbW0qIiBwcmVmaXhlcy4gIE90aGVyd2lzZSBpdCdsbCBiZSBlYXNp
-bHkNCj4gbWlzcmVhZCBhcyBtbWFwKCkgd2hpY2ggaXMgdG90YWxseSBpcnJlbGV2YW50IHRvIHRo
-aXMuLi4NCj4gDQoNCndoYXQgaXMgdGhlIHBvaW50IG9mIGtlZXBpbmcgJ21tJyBoZXJlPyByZXBs
-YWNlIGl0IHdpdGggJ2lvbW11Jz8NCg0KVGhhbmtzDQpLZXZpbg0K
+On Wed, Sep 25, 2019 at 04:30:03AM +0000, Anup Patel wrote:
+> We will be using some of the Goldfish virtual platform devices (such
+> as RTC) on QEMU RISC-V virt machine so this patch enables goldfish
+> kconfig option for RISC-V architecture.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  drivers/platform/goldfish/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/goldfish/Kconfig b/drivers/platform/goldfish/Kconfig
+> index 77b35df3a801..0ba825030ffe 100644
+> --- a/drivers/platform/goldfish/Kconfig
+> +++ b/drivers/platform/goldfish/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menuconfig GOLDFISH
+>  	bool "Platform support for Goldfish virtual devices"
+> -	depends on X86_32 || X86_64 || ARM || ARM64 || MIPS
+> +	depends on X86_32 || X86_64 || ARM || ARM64 || MIPS || RISCV
+
+Why does this depend on any of these?  Can't we just have:
+
+>  	depends on HAS_IOMEM
+
+And that's it?
+
+thanks,
+
+greg k-h
