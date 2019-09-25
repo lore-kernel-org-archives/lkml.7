@@ -2,91 +2,111 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4645AC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F67C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E88021D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:03:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MoYk9zg8";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="X+uzUSLd"
+	by mail.kernel.org (Postfix) with ESMTP id D4A4B21D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407239AbfIYODw (ORCPT
+        id S2407256AbfIYOFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:03:52 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59952 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405102AbfIYODv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:03:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 56AE38EE175;
-        Wed, 25 Sep 2019 07:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1569420230;
-        bh=wgQLAhQ0gpMYuJqIxafxVyPJc5xPW8c1DYEePcqkeJU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MoYk9zg8Do4chGVdWYcE0CzTP4WxSWWl2MmooufUyNgrNOggM6gv8+5ym91rluB01
-         T9zP9EU/8mHdQL7K0Yaubf5zjl97Mnl6uxrU2SiOCil4kfpDfsBjsnePZHqaXjHKmR
-         abdVTqnGv4Bzttn3OX7EPkAg2DkpyBAYnW/hSS1A=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bz3oqnN4PUpl; Wed, 25 Sep 2019 07:03:49 -0700 (PDT)
-Received: from [9.232.197.57] (unknown [129.33.253.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 25 Sep 2019 10:05:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:22962 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730549AbfIYOFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:05:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 462748EE0E9;
-        Wed, 25 Sep 2019 07:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1569420229;
-        bh=wgQLAhQ0gpMYuJqIxafxVyPJc5xPW8c1DYEePcqkeJU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=X+uzUSLdrthDd94MjAzzF/mQ+tu0lWcZNyf+zUIDja9t9EKsDz6oiJ/ZNG2gvKiEa
-         yfskMWikzGLvJpq0Z7unefkclRQmKdUr8VxwuFWgizbKwabVGz66yaXjpvy2PbbRDR
-         NAD/asi2+/1w5ZWBs/mGZPl6OIj7w1j2DytR14BI=
-Message-ID: <1569420226.3642.24.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Wed, 25 Sep 2019 10:03:46 -0400
-In-Reply-To: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
-References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C77AC01D36C;
+        Wed, 25 Sep 2019 14:05:38 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C86FF5D9CC;
+        Wed, 25 Sep 2019 14:05:37 +0000 (UTC)
+Subject: Re: [BACKPORT 4.14.y v3 1/3] locking/lockdep: Add debug_locks check
+ in __lock_downgrade()
+To:     Baolin Wang <baolin.wang@linaro.org>, stable@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com
+Cc:     arnd@arndb.de, orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1569405445.git.baolin.wang@linaro.org>
+ <4ac2e84637ceaf5ec67cfc11ad58c489778693a8.1569405445.git.baolin.wang@linaro.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <87e81724-9f1a-8716-5b4f-f2aac6f25c5a@redhat.com>
+Date:   Wed, 25 Sep 2019 10:05:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <4ac2e84637ceaf5ec67cfc11ad58c489778693a8.1569405445.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 25 Sep 2019 14:05:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-25 at 16:48 +0300, Jarkko Sakkinen wrote:
-[...]
-> +	data_page = alloc_page(GFP_HIGHUSER);
-> +	if (!data_page)
-> +		return -ENOMEM;
+On 9/25/19 6:01 AM, Baolin Wang wrote:
+> From: Waiman Long <longman@redhat.com>
+>
+> [Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf]
+>
+> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+> warning right after a previous lockdep warning. It is likely that the
+> previous warning turned off lock debugging causing the lockdep to have
+> inconsistency states leading to the lock downgrade warning.
+>
+> Fix that by add a check for debug_locks at the beginning of
+> __lock_downgrade().
+>
+> Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+> Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  kernel/locking/lockdep.c |    3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 565005a..5c370c6 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3650,6 +3650,9 @@ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
+>  	unsigned int depth;
+>  	int i;
+>  
+> +	if (unlikely(!debug_locks))
+> +		return 0;
 > +
-> +	data_ptr = kmap(data_page);
+>  	depth = curr->lockdep_depth;
+>  	/*
+>  	 * This function is about (re)setting the class of a held lock,
 
-I don't think this is such a good idea.  On 64 bit it's no different
-from GFP_KERNEL and on 32 bit where we do have highmem, kmap space is
-at a premium, so doing a highmem allocation + kmap is more wasteful of
-resources than simply doing GFP_KERNEL.  In general, you should only do
-GFP_HIGHMEM if the page is going to be mostly used by userspace, which
-really isn't the case here.
+Apparently, there are 2 such patches in the upstream kernel - commit
+513e1073d52e55b8024b4f238a48de7587c64ccf and
+71492580571467fb7177aade19c18ce7486267f5. These are probably caused by
+the fact that there are 2 places in the code that can match the hunks.
+Anyway, this looks like it is applying to the wrong function. It should
+be applied to __lock_downgrade. Though it shouldn't harm if it is
+applied to the wrong function.
 
-James
+Cheers,
+Longman
 
