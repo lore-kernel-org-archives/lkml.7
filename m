@@ -2,461 +2,244 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466B9C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB152C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8DA2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569422509;
-	bh=dFEQSY9oAAoapGwh7MZPPhc8b9taZNucXKtM3CmK+AA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xVAh/NHh3ZNm5Z4xMQkGrF9fA2Edi/wuoA2fR3GdxvBFfG5Ohb4yJ21wW0uLVisCs
-	 WkBx127I3etpAqhX2BbVxDxziSoUjmGa8nQehQjLbskBGyYAguGKq0BahtkvGRZDlg
-	 21w+Md6IhrbAOXN7bvirIbbQxtKcKWLu+mz3LdD0=
+	by mail.kernel.org (Postfix) with ESMTP id 8CCF821D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437944AbfIYOls (ORCPT
+        id S2437994AbfIYOmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:41:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:51254 "EHLO foss.arm.com"
+        Wed, 25 Sep 2019 10:42:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:51280 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437125AbfIYOls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:41:48 -0400
+        id S2437125AbfIYOmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:42:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BD351000;
-        Wed, 25 Sep 2019 07:41:47 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00F963F59C;
-        Wed, 25 Sep 2019 07:41:45 -0700 (PDT)
-Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER)
- allocation
-To:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-11-maz@kernel.org>
- <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
-Date:   Wed, 25 Sep 2019 15:41:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B9AC1000;
+        Wed, 25 Sep 2019 07:42:14 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBB273F59C;
+        Wed, 25 Sep 2019 07:42:11 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 15:42:09 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jia He <justin.he@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
+Subject: Re: [PATCH v9 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20190925144209.GG7042@arrakis.emea.arm.com>
+References: <20190925025922.176362-1-justin.he@arm.com>
+ <20190925025922.176362-4-justin.he@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925025922.176362-4-justin.he@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/09/2019 14:04, Zenghui Yu wrote:
-> Hi Marc,
+On Wed, Sep 25, 2019 at 10:59:22AM +0800, Jia He wrote:
+> When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
+> will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 > 
-> Some questions about this patch, mostly to confirm that I would
-> understand things here correctly.
+> Below call trace is from arm64 do_page_fault for debugging purpose
+> [  110.016195] Call trace:
+> [  110.016826]  do_page_fault+0x5a4/0x690
+> [  110.017812]  do_mem_abort+0x50/0xb0
+> [  110.018726]  el1_da+0x20/0xc4
+> [  110.019492]  __arch_copy_from_user+0x180/0x280
+> [  110.020646]  do_wp_page+0xb0/0x860
+> [  110.021517]  __handle_mm_fault+0x994/0x1338
+> [  110.022606]  handle_mm_fault+0xe8/0x180
+> [  110.023584]  do_page_fault+0x240/0x690
+> [  110.024535]  do_mem_abort+0x50/0xb0
+> [  110.025423]  el0_da+0x20/0x24
 > 
-> On 2019/9/24 2:25, Marc Zyngier wrote:
->> GICv4.1 defines a new VPE table that is potentially shared between
->> both the ITSs and the redistributors, following complicated affinity
->> rules.
->>
->> To make things more confusing, the programming of this table at
->> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
->> for something completely different.
->>
->> The code flow is somewhat complexified by the need to respect the
->> affinities required by the HW, meaning that tables can either be
->> inherited from a previously discovered ITS or redistributor.
->>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
+> The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
+> [ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
 > 
-> [...]
+> As told by Catalin: "On arm64 without hardware Access Flag, copying from
+> user will fail because the pte is old and cannot be marked young. So we
+> always end up with zeroed page after fork() + CoW for pfn mappings. we
+> don't always have a hardware-managed access flag on arm64."
 > 
->> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct its_node *its,
->>   	return indirect;
->>   }
->>   
->> +static u32 compute_common_aff(u64 val)
->> +{
->> +	u32 aff, clpiaff;
->> +
->> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
->> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
->> +
->> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
->> +}
->> +
->> +static u32 compute_its_aff(struct its_node *its)
->> +{
->> +	u64 val;
->> +	u32 svpet;
->> +
->> +	/*
->> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
->> +	 * the resulting affinity. We then use that to see if this match
->> +	 * our own affinity.
->> +	 */
->> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
->> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
->> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
->> +	return compute_common_aff(val);
->> +}
->> +
->> +static struct its_node *find_sibbling_its(struct its_node *cur_its)
->> +{
->> +	struct its_node *its;
->> +	u32 aff;
->> +
->> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
->> +		return NULL;
->> +
->> +	aff = compute_its_aff(cur_its);
->> +
->> +	list_for_each_entry(its, &its_nodes, entry) {
->> +		u64 baser;
->> +
->> +		if (!is_v4_1(its) || its == cur_its)
->> +			continue;
->> +
->> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->> +			continue;
->> +
->> +		if (aff != compute_its_aff(its))
->> +			continue;
->> +
->> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->> +		baser = its->tables[2].val;
->> +		if (!(baser & GITS_BASER_VALID))
->> +			continue;
->> +
->> +		return its;
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->>   static void its_free_tables(struct its_node *its)
->>   {
->>   	int i;
->> @@ -2004,6 +2066,15 @@ static int its_alloc_tables(struct its_node *its)
->>   			break;
->>   
->>   		case GITS_BASER_TYPE_VCPU:
->> +			if (is_v4_1(its)) {
->> +				struct its_node *sibbling;
->> +
->> +				if ((sibbling = find_sibbling_its(its))) {
->> +					its->tables[2] = sibbling->tables[2];
+> This patch fix it by calling pte_mkyoung. Also, the parameter is
+> changed because vmf should be passed to cow_user_page()
 > 
-> This means thst the vPE table is shared between ITSs which are under the
-> same affinity group?
+> Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
+> in case there can be some obscure use-case.(by Kirill)
+> 
+> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> 
+> Signed-off-by: Jia He <justin.he@arm.com>
+> Reported-by: Yibo Cai <Yibo.Cai@arm.com>
 
-That's indeed what this is trying to do...
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
-> Don't we need to set GITS_BASER (by its_setup_baser()) here to tell this
-> ITS where the vPE table lacates?
-
-Absolutely. This is a bug. I didn't spot it as my model only has a
-single ITS.
-
+>  mm/memory.c | 99 +++++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 84 insertions(+), 15 deletions(-)
 > 
->> +					continue;
->> +				}
->> +			}
->> +
->>   			indirect = its_parse_indirect_baser(its, baser,
->>   							    psz, &order,
->>   							    ITS_MAX_VPEID_BITS);
->> @@ -2025,6 +2096,212 @@ static int its_alloc_tables(struct its_node *its)
->>   	return 0;
->>   }
->>   
->> +static u64 inherit_vpe_l1_table_from_its(void)
->> +{
->> +	struct its_node *its;
->> +	u64 val;
->> +	u32 aff;
->> +
->> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
->> +	aff = compute_common_aff(val);
->> +
->> +	list_for_each_entry(its, &its_nodes, entry) {
->> +		u64 baser;
->> +
->> +		if (!is_v4_1(its))
->> +			continue;
->> +
->> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->> +			continue;
->> +
->> +		if (aff != compute_its_aff(its))
->> +			continue;
->> +
->> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->> +		baser = its->tables[2].val;
->> +		if (!(baser & GITS_BASER_VALID))
->> +			continue;
->> +
->> +		/* We have a winner! */
->> +		val  = GICR_VPROPBASER_4_1_VALID;
->> +		if (baser & GITS_BASER_INDIRECT)
->> +			val |= GICR_VPROPBASER_4_1_INDIRECT;
->> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
->> +				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
->> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
->> +				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e2bb51b6242e..a0a381b36ff2 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
+>  					2;
+>  #endif
+>  
+> +#ifndef arch_faults_on_old_pte
+> +static inline bool arch_faults_on_old_pte(void)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  static int __init disable_randmaps(char *s)
+>  {
+>  	randomize_va_space = 0;
+> @@ -2140,32 +2147,82 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
+>  	return same;
+>  }
+>  
+> -static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
+> +static inline bool cow_user_page(struct page *dst, struct page *src,
+> +				 struct vm_fault *vmf)
+>  {
+> +	bool ret;
+> +	void *kaddr;
+> +	void __user *uaddr;
+> +	bool force_mkyoung;
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	unsigned long addr = vmf->address;
+> +
+>  	debug_dma_assert_idle(src);
+>  
+> +	if (likely(src)) {
+> +		copy_user_highpage(dst, src, addr, vma);
+> +		return true;
+> +	}
+> +
+>  	/*
+>  	 * If the source page was a PFN mapping, we don't have
+>  	 * a "struct page" for it. We do a best-effort copy by
+>  	 * just copying from the original user address. If that
+>  	 * fails, we just zero-fill it. Live with it.
+>  	 */
+> -	if (unlikely(!src)) {
+> -		void *kaddr = kmap_atomic(dst);
+> -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
+> +	kaddr = kmap_atomic(dst);
+> +	uaddr = (void __user *)(addr & PAGE_MASK);
+> +
+> +	/*
+> +	 * On architectures with software "accessed" bits, we would
+> +	 * take a double page fault, so mark it accessed here.
+> +	 */
+> +	force_mkyoung = arch_faults_on_old_pte() && !pte_young(vmf->orig_pte);
+> +	if (force_mkyoung) {
+> +		pte_t entry;
+> +
+> +		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+> +		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+> +			/*
+> +			 * Other thread has already handled the fault
+> +			 * and we don't need to do anything. If it's
+> +			 * not the case, the fault will be triggered
+> +			 * again on the same address.
+> +			 */
+> +			ret = false;
+> +			goto pte_unlock;
+> +		}
+> +
+> +		entry = pte_mkyoung(vmf->orig_pte);
+> +		if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
+> +			update_mmu_cache(vma, addr, vmf->pte);
+> +	}
+>  
+> +	/*
+> +	 * This really shouldn't fail, because the page is there
+> +	 * in the page tables. But it might just be unreadable,
+> +	 * in which case we just give up and fill the result with
+> +	 * zeroes.
+> +	 */
+> +	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+>  		/*
+> -		 * This really shouldn't fail, because the page is there
+> -		 * in the page tables. But it might just be unreadable,
+> -		 * in which case we just give up and fill the result with
+> -		 * zeroes.
+> +		 * Give a warn in case there can be some obscure
+> +		 * use-case
+>  		 */
+> -		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
+> -			clear_page(kaddr);
+> -		kunmap_atomic(kaddr);
+> -		flush_dcache_page(dst);
+> -	} else
+> -		copy_user_highpage(dst, src, va, vma);
+> +		WARN_ON_ONCE(1);
+> +		clear_page(kaddr);
+> +	}
+> +
+> +	ret = true;
+> +
+> +pte_unlock:
+> +	if (force_mkyoung)
+> +		pte_unmap_unlock(vmf->pte, vmf->ptl);
+> +	kunmap_atomic(kaddr);
+> +	flush_dcache_page(dst);
+> +
+> +	return ret;
+>  }
+>  
+>  static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
+> @@ -2318,7 +2375,19 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  				vmf->address);
+>  		if (!new_page)
+>  			goto oom;
+> -		cow_user_page(new_page, old_page, vmf->address, vma);
+> +
+> +		if (!cow_user_page(new_page, old_page, vmf)) {
+> +			/*
+> +			 * COW failed, if the fault was solved by other,
+> +			 * it's fine. If not, userspace would re-fault on
+> +			 * the same address and we will handle the fault
+> +			 * from the second attempt.
+> +			 */
+> +			put_page(new_page);
+> +			if (old_page)
+> +				put_page(old_page);
+> +			return 0;
+> +		}
+>  	}
+>  
+>  	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
+> -- 
+> 2.17.1
 > 
-> I remember the spec says,
-> GITS_BASER2 "points to" the ITS *vPE table*, which provides mappings
-> from the vPEID to target Redistributor and associated vpt address.
-> In GICv4.1 GICR_VPROPBASER "points to" the *vPE Configuration table*,
-> which stores the locations of each vPE's LPI configuration and pending
-> table.
-> 
-> And the code here says, if we can find an ITS (which is under the same
-> CommonLPIAff group with this Redistributor) has already been probed and
-> allocated an vPE table, then use this vPE table as this Redist's vPE
-> Configuration table.
-> So I infer that in GICv4.1, *vPE table* and *vPE Configuration table*
-> are actually the same concept?  And this table is shared between ITSs
-> and Redists which are under the same affinity group?
-> Please fix me if I have any misunderstanding.
 
-Indeed. The whole idea is that ITSs and RDs can share a vPE table if
-they are in the same affinity group (such as a socket, for example).
-This is what is missing from v4.0 where the ITS knows about vPEs, but
-doesn't know about residency. With that in place, the HW is able to do a
-lot more for us.
-
-> 
->> +		val |= FIELD_PREP(GICR_VPROPBASER_SHAREABILITY_MASK,
->> +				  FIELD_GET(GITS_BASER_SHAREABILITY_MASK, baser));
->> +		val |= FIELD_PREP(GICR_VPROPBASER_INNER_CACHEABILITY_MASK,
->> +				  FIELD_GET(GITS_BASER_INNER_CACHEABILITY_MASK, baser));
->> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
->> +
->> +		return val;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
->> +{
->> +	u32 aff;
->> +	u64 val;
->> +	int cpu;
->> +
->> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
->> +	aff = compute_common_aff(val);
->> +
->> +	for_each_possible_cpu(cpu) {
->> +		void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
->> +		u32 tmp;
->> +
->> +		if (!base || cpu == smp_processor_id())
->> +			continue;
->> +
->> +		val = gic_read_typer(base + GICR_TYPER);
->> +		tmp = compute_common_aff(val);
->> +		if (tmp != aff)
->> +			continue;
->> +
->> +		/*
->> +		 * At this point, we have a victim. This particular CPU
->> +		 * has already booted, and has an affinity that matches
->> +		 * ours wrt CommonLPIAff. Let's use its own VPROPBASER.
->> +		 * Make sure we don't write the Z bit in that case.
->> +		 */
->> +		val = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
->> +		val &= ~GICR_VPROPBASER_4_1_Z;
->> +
->> +		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
->> +
->> +		return val;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int allocate_vpe_l1_table(void)
->> +{
->> +	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
->> +	u64 val, esz, gpsz, npg, pa;
->> +	unsigned int psz = SZ_64K;
->> +	unsigned int np, epp;
->> +	struct page *page;
->> +
->> +	if (!gic_rdists->has_rvpeid)
->> +		return 0;
->> +
->> +	/*
->> +	 * if VPENDBASER.Valid is set, disable any previously programmed
->> +	 * VPE by setting PendingLast while clearing Valid. This has the
->> +	 * effect of making sure no doorbell will be generated and we can
->> +	 * then safely clear VPROPBASER.Valid.
->> +	 */
->> +	if (gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER) & GICR_VPENDBASER_Valid)
->> +		gits_write_vpendbaser(GICR_VPENDBASER_PendingLast,
->> +				      vlpi_base + GICR_VPENDBASER);
->> +
->> +	/*
->> +	 * If we can inherit the configuration from another RD, let's do
->> +	 * so. Otherwise, we have to go through the allocation process. We
->> +	 * assume that all RDs have the exact same requirements, as
->> +	 * nothing will work otherwise.
->> +	 */
->> +	val = inherit_vpe_l1_table_from_rd(&gic_data_rdist()->vpe_table_mask);
->> +	if (val & GICR_VPROPBASER_4_1_VALID)
->> +		goto out;
->> +
->> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
-> 
-> I think we should check the allocation failure here.
-
-Sure.
-
-> 
->> +
->> +	val = inherit_vpe_l1_table_from_its();
->> +	if (val & GICR_VPROPBASER_4_1_VALID)
->> +		goto out;
->> +
->> +	/* First probe the page size */
->> +	val = FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, GIC_PAGE_SIZE_64K);
->> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
->> +	val = gits_read_vpropbaser(vlpi_base + GICR_VPROPBASER);
->> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
->> +
->> +	switch (gpsz) {
->> +	default:
->> +		gpsz = GIC_PAGE_SIZE_4K;
->> +		/* fall through */
->> +	case GIC_PAGE_SIZE_4K:
->> +		psz = SZ_4K;
->> +		break;
->> +	case GIC_PAGE_SIZE_16K:
->> +		psz = SZ_16K;
->> +		break;
->> +	case GIC_PAGE_SIZE_64K:
->> +		psz = SZ_64K;
->> +		break;
->> +	}
->> +
->> +	/*
->> +	 * Start populating the register from scratch, including RO fields
->> +	 * (which we want to print in debug cases...)
->> +	 */
->> +	val = 0;
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, gpsz);
->> +	esz = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val);
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ENTRY_SIZE, esz);
-> 
-> 'esz' seems always be 0 here?
-
-Yup, that's broken. Not sure what I had in mind here. esz (element size)
-should be extracted before resetting val, and ORed back in the register
-copy for debug purposes.
-
-> 
->> +
->> +	/* How many entries per GIC page? */
->> +	esz++;
->> +	epp = psz / (esz * SZ_8);
->> +
->> +	/*
->> +	 * If we need more than just a single L1 page, flag the table
->> +	 * as indirect and compute the number of required L1 pages.
->> +	 */
->> +	if (epp < ITS_MAX_VPEID) {
->> +		int nl2;
->> +
->> +		gic_rdists->flags |= RDIST_FLAGS_VPE_INDIRECT;
->> +		val |= GICR_VPROPBASER_4_1_INDIRECT;
->> +
->> +		/* Number of L2 pages required to cover the VPEID space */
->> +		nl2 = DIV_ROUND_UP(ITS_MAX_VPEID, epp);
->> +
->> +		/* Number of L1 pages to point to the L2 pages */
->> +		npg = DIV_ROUND_UP(nl2 * SZ_8, psz);
->> +	} else {
->> +		npg = 1;
->> +	}
->> +
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, npg);
->> +
->> +	/* Right, that's the number of CPU pages we need for L1 */
->> +	np = DIV_ROUND_UP(npg * psz, PAGE_SIZE);
->> +
->> +	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %lld\n",
->> +		 np, npg, psz, epp, esz);
->> +	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
->> +	if (!page)
->> +		return -ENOMEM;
->> +
->> +	gic_data_rdist()->vpe_l1_page = page;
->> +	pa = virt_to_phys(page_address(page));
->> +	WARN_ON(!IS_ALIGNED(pa, psz));
->> +
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR, pa >> 12);
->> +	val |= GICR_VPROPBASER_RaWb;
->> +	val |= GICR_VPROPBASER_InnerShareable;
->> +	val |= GICR_VPROPBASER_4_1_Z;
->> +	val |= GICR_VPROPBASER_4_1_VALID;
->> +
->> +out:
->> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
->> +	cpumask_set_cpu(smp_processor_id(), gic_data_rdist()->vpe_table_mask);
->> +
->> +	pr_debug("CPU%d: VPROPBASER = %llx %*pbl\n",
->> +		 smp_processor_id(), val,
->> +		 cpumask_pr_args(gic_data_rdist()->vpe_table_mask));
->> +
->> +	return 0;
->> +}
->> +
->>   static int its_alloc_collections(struct its_node *its)
->>   {
->>   	int i;
->> @@ -2224,7 +2501,7 @@ static void its_cpu_init_lpis(void)
->>   	val |= GICR_CTLR_ENABLE_LPIS;
->>   	writel_relaxed(val, rbase + GICR_CTLR);
->>   
->> -	if (gic_rdists->has_vlpis) {
->> +	if (gic_rdists->has_vlpis && !gic_rdists->has_rvpeid) {
->>   		void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
->>   
->>   		/*
->> @@ -2248,6 +2525,16 @@ static void its_cpu_init_lpis(void)
->>   		WARN_ON(val & GICR_VPENDBASER_Dirty);
->>   	}
->>   
->> +	if (allocate_vpe_l1_table()) {
->> +		/*
->> +		 * If the allocation has failed, we're in massive trouble.
->> +		 * Disable direct injection, and pray that no VM was
->> +		 * already running...
->> +		 */
->> +		gic_rdists->has_rvpeid = false;
->> +		gic_rdists->has_vlpis = false;
->> +	}
->> +
->>   	/* Make sure the GIC has seen the above */
->>   	dsb(sy);
->>   out:
-
-Thanks for having had a look!
-
-        M.
 -- 
-Jazz is not dead, it just smells funny...
+Catalin
