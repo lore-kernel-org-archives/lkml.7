@@ -2,115 +2,193 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC74C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50853C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F43208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="gTi2p0HM"
+	by mail.kernel.org (Postfix) with ESMTP id 19A33208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569454166;
+	bh=Ogg+uhTUXRNcF6bTJQEM/wrb2sVSMMLx7Q3Fdy6eWac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=twIJTucz+vhZWlV/hfH6EcYXa0KStxQce4veBRM3Yc7SjJZyPbig22tSSTv7UP/nU
+	 vMEZBNBkayIirx90BRUv3Hz+iX6uMe4twkho1aUC1O4qJf6zzN0rbSG+AK0UMLaXSh
+	 bmmfrQcJsLsVa4JaDhPsw+lZsvZbg4m2blc3/IG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfIYX1c (ORCPT
+        id S1731722AbfIYX3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:27:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47072 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbfIYX1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:27:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e17so122573ljf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9sqCXdxl+Of7jf6rJsO8rQ0SGF0MvqeTX3//lE6sq48=;
-        b=gTi2p0HMuFn+258nhleL02ZvNEY402U9LWCy+tdYU2Sk6btSfKw/0ugF12eXEQMJDD
-         AiCUx2NMw7R2DUnRcunLUwriIwf9m41Jih9BtKp8M0EHefP2r6DzFrUAGM7LRzQBKG6V
-         D5qHVcJgrSgHazrW0ieVDxpwzxQmX4JftqmeGr7jsTQ2Jf6wNBm8ptZr84U/ix/TNddQ
-         LaFAdntoNdWv4qcPbmmGTKSyXOnItU2ydsiZdwDgwyXzcn/Du2bLeosUtPqaBdKbbdz8
-         8ReWy4Tx7TCiwaWLV6F9ULLUyVDiw+SQx3kT8FV4RIWv59mFrauIHVcU5yZdQicd/cy0
-         0zAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9sqCXdxl+Of7jf6rJsO8rQ0SGF0MvqeTX3//lE6sq48=;
-        b=YXfUyy39CDZ/8+oQbArS0pLftYhQwKjh/rt6ycMaREIuK+8Fqvz8X2zoZ4qIOL+G/i
-         t84tRSJ42wMBRjCCsQiWFKqENu5TiO6uRqBav+uOGqRkqHQ/cprSM3m39k7PH03AGj6m
-         pRRSRiLlo7aVPjFDil+2a7lckL9NMj4jzZoqY3CE6eTOotTKu8OwbfYYsPTfghd7P/ki
-         cel9QPGRSWlTBm8AGbwCqCi6o8HwK9oiYyN0MfwFeM2lVE6EnbXuO1NOSXQnkHarXxpD
-         E55vmRGMCaKcl2+K7UYIBsiJ59A+wmBKY0jZF3n8J8BvZuzEgBE3fILxwDNqDS83jiz1
-         RTyg==
-X-Gm-Message-State: APjAAAVFT9ijr0pzASr36RO+W3W4m31APKJS9Ll4zjTSmw5uW7SmnYBB
-        G3g6hZ6qzThfYmaagx1cZlskqMdOX+ybabP/U44e
-X-Google-Smtp-Source: APXvYqz+rc3PxdRkC9XVh7Yo8Mkknz6GnwWo3ELRdvf9CffUm4W0C9Axdhbp4gFE431jFa9hhWXIevuLhkMI2c4paW4=
-X-Received: by 2002:a2e:890c:: with SMTP id d12mr490009lji.85.1569454047520;
- Wed, 25 Sep 2019 16:27:27 -0700 (PDT)
+        Wed, 25 Sep 2019 19:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfIYX3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:29:25 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53AFD21D7E;
+        Wed, 25 Sep 2019 23:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569454163;
+        bh=Ogg+uhTUXRNcF6bTJQEM/wrb2sVSMMLx7Q3Fdy6eWac=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0jz1v3MjS3mMCH8E6uViwYWmbwPNI1iTIFvCgg2g+HqOWPkCtIOwT01xXy6cy/+il
+         keRrKEhT6RTgKwp14lw2Eo27EFSeq6flnQMyNKfJ3UqFtnZfyWPEkzwWxmIDzaMkSQ
+         lRLbhLNprKDr74pstGkHjAsyUs3aUShzL9/yKEn0=
+Received: by mail-qt1-f172.google.com with SMTP id c3so565995qtv.10;
+        Wed, 25 Sep 2019 16:29:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXwf0Jay7qCqhlkl094s/SAvIIu6c6L71afaRhWYx5VkEwZd8lL
+        c76XSTDZzxAMSVrgJ0JJv2nWkzieldLLZTOW4Q==
+X-Google-Smtp-Source: APXvYqyVnFfKD4/M5dyzxw92n4hx9dvyADlYPxaSGLejDMBQ+TSPDAwfcMApLzsyRir8CgdchHqVSeqSR5dpXSyyVWI=
+X-Received: by 2002:ac8:444f:: with SMTP id m15mr1101854qtn.110.1569454162399;
+ Wed, 25 Sep 2019 16:29:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190925221009.15523-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190925221009.15523-1-navid.emamdoost@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 25 Sep 2019 19:27:16 -0400
-Message-ID: <CAHC9VhR+4pZObDz7kG+rxnox2ph4z_wpZdyOL=WmdnRvdQNH9A@mail.gmail.com>
-Subject: Re: [PATCH] genetlink: prevent memory leak in netlbl_unlabel_defconf
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190925131252.19359-1-robh@kernel.org> <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e>
+In-Reply-To: <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 25 Sep 2019 18:29:10 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
+Message-ID: <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:10 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
+On Wed, Sep 25, 2019 at 4:24 PM Palmer Dabbelt <palmer@sifive.com> wrote:
 >
-> In netlbl_unlabel_defconf if netlbl_domhsh_add_default fails the
-> allocated entry should be released.
+> On Wed, 25 Sep 2019 06:12:52 PDT (-0700), robh@kernel.org wrote:
+> > Fix the errors in the RiscV CPU DT schema:
+> >
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> >
+> > Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
+> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > Cc: Albert Ou <aou@eecs.berkeley.edu>
+> > Cc: linux-riscv@lists.infradead.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v2:
+> >  - Add timebase-frequency to simulator example.
+> >
+> >  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
+> >  1 file changed, 14 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > index b261a3015f84..eb0ef19829b6 100644
+> > --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > @@ -24,15 +24,17 @@ description: |
+> >
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - sifive,rocket0
+> > -          - sifive,e5
+> > -          - sifive,e51
+> > -          - sifive,u54-mc
+> > -          - sifive,u54
+> > -          - sifive,u5
+> > -      - const: riscv
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - sifive,rocket0
+> > +              - sifive,e5
+> > +              - sifive,e51
+> > +              - sifive,u54-mc
+> > +              - sifive,u54
+> > +              - sifive,u5
+> > +          - const: riscv
+> > +      - const: riscv    # Simulator only
+> >      description:
+> >        Identifies that the hart uses the RISC-V instruction set
+> >        and identifies the type of the hart.
+> > @@ -67,8 +69,6 @@ properties:
+> >        lowercase to simplify parsing.
+> >
+> >    timebase-frequency:
+> > -    type: integer
+> > -    minimum: 1
+> >      description:
+> >        Specifies the clock frequency of the system timer in Hz.
+> >        This value is common to all harts on a single system image.
+> > @@ -102,9 +102,9 @@ examples:
+> >      cpus {
+> >          #address-cells = <1>;
+> >          #size-cells = <0>;
+> > -        timebase-frequency = <1000000>;
+> >          cpu@0 {
+> >                  clock-frequency = <0>;
+> > +                timebase-frequency = <1000000>;
+> >                  compatible = "sifive,rocket0", "riscv";
+> >                  device_type = "cpu";
+> >                  i-cache-block-size = <64>;
+> > @@ -120,6 +120,7 @@ examples:
+> >          };
+> >          cpu@1 {
+> >                  clock-frequency = <0>;
+> > +                timebase-frequency = <1000000>;
+> >                  compatible = "sifive,rocket0", "riscv";
+> >                  d-cache-block-size = <64>;
+> >                  d-cache-sets = <64>;
+> > @@ -153,6 +154,7 @@ examples:
+> >                  device_type = "cpu";
+> >                  reg = <0>;
+> >                  compatible = "riscv";
+> > +                timebase-frequency = <1000000>;
+> >                  riscv,isa = "rv64imafdc";
+> >                  mmu-type = "riscv,sv48";
+> >                  interrupt-controller {
 >
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  net/netlabel/netlabel_unlabeled.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-
-It is worth noting that netlbl_unlabel_defconf() is only called during
-kernel boot by netlbl_init() and if netlbl_unlabel_defconf() returns
-an error code the system panics, so this isn't currently a very
-practical concern.
-
-That said, netlbl_unlabel_defconf() *should* clean up here just on
-principal if nothing else.
-
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
-> index d2e4ab8d1cb1..c63ec480ee4e 100644
-> --- a/net/netlabel/netlabel_unlabeled.c
-> +++ b/net/netlabel/netlabel_unlabeled.c
-> @@ -1541,8 +1541,10 @@ int __init netlbl_unlabel_defconf(void)
->         entry->family = AF_UNSPEC;
->         entry->def.type = NETLBL_NLTYPE_UNLABELED;
->         ret_val = netlbl_domhsh_add_default(entry, &audit_info);
-> -       if (ret_val != 0)
-> +       if (ret_val != 0) {
-> +               kfree(entry);
->                 return ret_val;
-> +       }
+> Looking at this spec
 >
->         netlbl_unlabel_acceptflg_set(1, &audit_info);
+>     https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
 >
-> --
-> 2.17.1
+> section 3.7 says
 >
+>     Properties that have identical values across cpu nodes may be placed in the
+>     /cpus node instead. A client program must
+>     first examine a specific cpu node, but if an expected property is not found
+>     then it should look at the parent /cpus node.
+>     This results in a less verbose representation of properties which are
+>     identical across all CPUs.
 
+The cpu sections of the spec are certainly not perfect. They are
+largely from PPC with only the most obviously things wrong fixed...
 
--- 
-paul moore
-www.paul-moore.com
+> I can never figure out if I'm looking at the right DT specifications so it's
+> possible that is defunct,
+
+Why? What's not clear which one to look at? If you start at
+devicetree.org the above is where you end up.
+
+> I just bring this up because we've got an outstanding
+> bug in our port where we're not respecting what section 3.7 says and are only
+> looking at /cpus/timebase-frequency instead of /cpus/cpu@*/timebase-frequency,
+> and I'm wondering if the fix should allow for looking at
+> /cpus/timebase-frequency or just not bother.
+
+It's perfectly fine for some deviation for each arch or being more
+restrictive. For Arm, we've generally gone the direction of everything
+goes into the cpu nodes. So tell me what you want, I just need the
+warnings gone.
+
+Rob
