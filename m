@@ -2,99 +2,114 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE7C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280C6C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B7F20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED33F21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRgnktXh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koGSocao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfIYWKU (ORCPT
+        id S1728848AbfIYWKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:10:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44090 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727735AbfIYWKU (ORCPT
+        Wed, 25 Sep 2019 18:10:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44232 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbfIYWKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:10:20 -0400
-Received: by mail-io1-f67.google.com with SMTP id j4so954776iog.11;
-        Wed, 25 Sep 2019 15:10:20 -0700 (PDT)
+        Wed, 25 Sep 2019 18:10:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id j4so957658iog.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=O0oSKhXEOzcFKjIBbLlMltGKt1P3oZHAsL4yEuhL7wA=;
-        b=XRgnktXh+11PNGpyISrs+IVtdJnkKTtOPaDxUCJNdaLB9LEVgJ2Z5AyhKg+go7pqTj
-         Djhi4R+afAv+OOE0dR6LXgvYFwrYfurYDD4wStjOBcqhkd11b+SkHow8OyxUSCPjgBCb
-         lq8nkYcn49Jy6UEBRDBO+5s6LqmGGU802zAuVAH6zmGz8fOPWdDeu1rqs7MsaQ/V3B3s
-         yq5d2sY7H5eekfgzEtN4niRLbLYgj08nONboPeQ2FuuRyIHwlJ8ojgzkIEQoJPbZTYJH
-         rzsXKt2PBl5tf23F8YVHIlPTMuGOCC4DVTojNQQzQxFya6MNaR6rDr6VqP0L3agM/XFT
-         m5+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gWrtMO/1hZ/o86Hyus1zQo+xeKnPuBEenuj+vizXnyo=;
+        b=koGSocaoGdmmz2EAifg+USVuephOpKxacLGEobTQDZHxSK8IPRGIsHXPLo6+ji3M02
+         he/qi3ePlQUkYeQETTqk6AZqfafzx33eWntchMyfmH1i41z911ZRRnr2h55zLnAH5DhU
+         Lk0XXvyS1BLAy2Cwap8ZXQ8O3zH7LAUKwTky6dCiToae2EpAvzExqPX+0L911zwFJktD
+         bk8OgO6YJl2QwKvw9+mZEEWeACNFH03tolWaXQUwHtYrbqL+bvuZT7CgPAZvmRZJ3pic
+         +96DCQ7muxwH9sOoNIVQ7UCzL5I3RRD7yVBokZLVs97ENcqyAmMFESn8KH5hGlFskgu4
+         gs6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O0oSKhXEOzcFKjIBbLlMltGKt1P3oZHAsL4yEuhL7wA=;
-        b=eIs5EvdSfD0es0QAGNz2GGNdaoCYYr+7t4PV1WU9e0SEeBq84c1Ny7zYcvR60o+vvv
-         zdV/jUrDvAyM7VgJihX3OeFNHOHn/O1cdZB+06INYeWHLTJ/hRy+E7M18CrWfBls20Ze
-         A4B9drxcqcfAY6iynAWQohljdvLK4FjU4XFxHeyLCiwWdPchFBeQ0JT/QeIrZ2qbos36
-         fZSULq3bF0mS3H6++7ODCuHXC/OSg1bg4AKo9djGNvBTx6IF7VZeYEBzhjsY46oODQ8X
-         U/z1bNLaS/hmIo8f18RMjsKWtNxptqbdDYabunn5JKv0Vk/fUclqdIq/ByhpJmdY8Wo5
-         bAVA==
-X-Gm-Message-State: APjAAAV4AAWZiot73Z+CAdZCjWF9gvZzT6Szm3L0oWi1a256AP91JgiX
-        4HEIkRsp56gnx0y0YheYFew=
-X-Google-Smtp-Source: APXvYqySrKwE7cmfckFerADDb8snKLOdGcDCCwiOFB8XYIPL/o6gqCx5rXBJqY7/wY/i3GBjpA6nxw==
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr270445iop.36.1569449419584;
-        Wed, 25 Sep 2019 15:10:19 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id q17sm58357ile.5.2019.09.25.15.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 15:10:19 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] genetlink: prevent memory leak in netlbl_unlabel_defconf
-Date:   Wed, 25 Sep 2019 17:10:08 -0500
-Message-Id: <20190925221009.15523-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gWrtMO/1hZ/o86Hyus1zQo+xeKnPuBEenuj+vizXnyo=;
+        b=Fd8f2xqwe8CffgpEPZExxmaHKeF5nfS4WUsnkdQaI22HVX5CZOKQWY54gCJPJ55VNm
+         Zifr8zHOe5h/4lqXGc7irYk9W78Y+FnCvsfHs5tvkFJ/+M+H4+V4o02NIXY4yGA794KM
+         945PbY31gRV6hBvZ8MF7p2Bu0ve4fKwQYs51BlZbhXf4NhDIr/dyq7GeS0jLHqLoI9Cg
+         w0gfjISXV0sI0da9VWcEApekbUABZtyGbM7kVPw7BtsnoYkQUJ4lkxGwqJtuZdM/47f1
+         FnHS4waC7djBK6Rxt+YAtjQOdJ3aCUcljAEbc89R9lniB9f8S64QIL2+T10v38bUBARF
+         pFmw==
+X-Gm-Message-State: APjAAAV5tteaKlQVcUx+C4AYzhLS9/vXi5hAYAHwnZrTkVRAs8aRIZ9q
+        2HOXCIPSaFLrrdkYpR96vG+B7Uf8uyapP0jk9FWtOQ==
+X-Google-Smtp-Source: APXvYqw7QpmXVqKEg5vShGZiPGspkFNybObjpkFqQvNP5oupXedhZJ240Iitpdpp2r68VTNCQn/h86Bi/pJJmifkXTE=
+X-Received: by 2002:a92:5ad1:: with SMTP id b78mr7934ilg.118.1569449449584;
+ Wed, 25 Sep 2019 15:10:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190925213721.21245-1-bigeasy@linutronix.de> <20190925213721.21245-3-bigeasy@linutronix.de>
+In-Reply-To: <20190925213721.21245-3-bigeasy@linutronix.de>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 25 Sep 2019 15:10:38 -0700
+Message-ID: <CALMp9eSc__WyxA9Zswt8pNYJ6vSiWBV+itLvcW--q=yWRfZe-Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: x86: Expose CLZERO and XSAVEERPTR to the guest
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In netlbl_unlabel_defconf if netlbl_domhsh_add_default fails the
-allocated entry should be released.
+On Wed, Sep 25, 2019 at 2:37 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> I was surprised to see that the guest reported `fxsave_leak' while the
+> host did not. After digging deeper I noticed that the bits are simply
+> masked out during enumeration.
+> The XSAVEERPTR feature is actually a bug fix on AMD which means the
+> kernel can disable a workaround.
+> While here, I've seen that CLZERO is also masked out. This opcode is
+> unprivilged so exposing it to the guest should not make any difference.
+>
+> Pass CLZERO and XSAVEERPTR to the guest if available on the host.
+>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/x86/kvm/cpuid.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 22c2720cd948e..0ae9194d0f4d2 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -473,6 +473,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>
+>         /* cpuid 0x80000008.ebx */
+>         const u32 kvm_cpuid_8000_0008_ebx_x86_features =
+> +               F(CLZERO) | F(XSAVEERPTR) |
+>                 F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+>                 F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
+>
+> --
+> 2.23.0
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- net/netlabel/netlabel_unlabeled.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
-index d2e4ab8d1cb1..c63ec480ee4e 100644
---- a/net/netlabel/netlabel_unlabeled.c
-+++ b/net/netlabel/netlabel_unlabeled.c
-@@ -1541,8 +1541,10 @@ int __init netlbl_unlabel_defconf(void)
- 	entry->family = AF_UNSPEC;
- 	entry->def.type = NETLBL_NLTYPE_UNLABELED;
- 	ret_val = netlbl_domhsh_add_default(entry, &audit_info);
--	if (ret_val != 0)
-+	if (ret_val != 0) {
-+		kfree(entry);
- 		return ret_val;
-+	}
- 
- 	netlbl_unlabel_acceptflg_set(1, &audit_info);
- 
--- 
-2.17.1
-
+Didn't someone just post "[PATCH] kvm: x86: Enumerate support for
+CLZERO instruction" yesterday? :-)
