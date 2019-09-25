@@ -4,96 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A46C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAD2C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2798721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F8F21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393600AbfIYVGN (ORCPT
+        id S2393631AbfIYVJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:06:13 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35868 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393576AbfIYVFX (ORCPT
+        Wed, 25 Sep 2019 17:09:07 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45078 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393339AbfIYVIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:05:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f19so170984plr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 14:05:21 -0700 (PDT)
+        Wed, 25 Sep 2019 17:08:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r134so21875lff.12;
+        Wed, 25 Sep 2019 14:08:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=gUT7L2UjxufsVBOfcfjfvQD60hO6N2xeQ8FpCxr2BGs=;
-        b=lkvkK0eXSS0wUFMxVd1nEbRN60Km8P2uLg31anz8EGZOQiScuqdVSbRtbmWhz0bSKq
-         o9NutbzfaatWRmcMY7/Jd/Ri0q1BSyjq3V56oavrMmm0rJUqv70M9UC8DYJsnUFkkJkQ
-         S3tJfqeu4pdEbEjCBqa0kI62SqMDFTbxu9tM6KdI5/e5GaAJLzUHxgbdK859yqoHCnic
-         J9817IQ7aaq/FSrCfKYeWfy7OCypfPB3lf39Kaul6IVANXn2Pwn2rHAvycXgRvtUUm8o
-         Vli/CFZihYhgT/DYy4vgqJi6XPwc1IvmLj+HjaqRRhJqxqSSExt42m9eGCk98p9Do2Iq
-         ZIpQ==
-X-Gm-Message-State: APjAAAWHozh7cazbz7Glc8fq1HPO2ujrYcwA2bTIfh8cG/oevTn5mlbU
-        rhS6JMu9D1ud2OfZwLSpugHdgA==
-X-Google-Smtp-Source: APXvYqy3cdkMgg0isteeXigHPCd6gHDI1dxPmb1QD+beG2Jb9fWSTndwNiR0j1qEnTRyndocyS3IVQ==
-X-Received: by 2002:a17:902:7085:: with SMTP id z5mr56136plk.57.1569445520447;
-        Wed, 25 Sep 2019 14:05:20 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id l189sm486896pgd.46.2019.09.25.14.05.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 14:05:19 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 14:05:19 -0700 (PDT)
-X-Google-Original-Date: Wed, 25 Sep 2019 13:56:27 PDT (-0700)
-Subject:     Re: [PATCH 04/32] riscv: Use pr_warn instead of pr_warning
-In-Reply-To: <20190920062544.180997-5-wangkefeng.wang@huawei.com>
-CC:     joe@perches.com, akpm@linux-foundation.org, mingo@redhat.com,
-        davem@davemloft.net, acme@redhat.com, apw@canonical.com,
-        peterz@infradead.org, ast@kernel.org, daniel@iogearbox.net,
-        Greg KH <gregkh@linuxfoundation.org>,
-        sergey.senozhatsky@gmail.com, pmladek@suse.com,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        wangkefeng.wang@huawei.com,
-        Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     wangkefeng.wang@huawei.com
-Message-ID: <mhng-77b10aea-889e-40f5-a698-b47d44ba606c@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=srW9jBTOOY6Th2zbYsONLADra93j3oABkghJfbLyUPY=;
+        b=XYuoKhZqedpq8sYEBJYkgFPF0k0NUft9dXLLdBuPWJBSWoUb4+UzJihCF7cBTV+dWH
+         89CFldB8HceKSpX2HJEzXGmkZxzBDZFOES10b3lgcTk9fjBh2bImNZ6E7vng1kBnohW9
+         WHVgD61kncJxb6/jPze8aEzNeY3wO+4TyjB4fTPA6fJNzDU9qK77Uld/keu0aOhD5VGW
+         f2OJ16ZEUVobIPR8oPwGL5rpJou/3zRY4iGNNiFD95ZhRL7goOxjNAcmATWDJddFWSRT
+         D2F7ss0dJZHifVBmbRDt4oN4lkRtUZpxIK+GGLqJD+TKPZYeGvjWO5Zl8Ziv7+3Xci3o
+         Lw1w==
+X-Gm-Message-State: APjAAAWxYmL5OlzXX/KiqJNaLfIADaOCNh85hnGx+H/bwS7HoAeOL4jr
+        rTZtULx2TnaSrzq2U6hMJ79IYjjyU+Ic8fWoCvA=
+X-Google-Smtp-Source: APXvYqx8uJU34gat2jj05a1JtfX2WAWEdWsZn7Myiddypxd4/D7fMgMYWcUSz0KVljn/0TFlPUSXHjp6/AlOkmR803Y=
+X-Received: by 2002:ac2:4427:: with SMTP id w7mr16466lfl.143.1569445708615;
+ Wed, 25 Sep 2019 14:08:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190920135137.10052-1-ricardo@ribalda.com> <20190920135137.10052-5-ricardo@ribalda.com>
+ <20190925083421.ronwsvmqeu5quxpx@uno.localdomain>
+In-Reply-To: <20190925083421.ronwsvmqeu5quxpx@uno.localdomain>
+From:   Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Date:   Wed, 25 Sep 2019 23:08:11 +0200
+Message-ID: <CAPybu_3Q7S+t4SbxAM5NS4gFsAv532=O=w-+rH_fmah_5WWz4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 4/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Sep 2019 23:25:16 PDT (-0700), wangkefeng.wang@huawei.com wrote:
-> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
-> pr_warning"), removing pr_warning so all logging messages use a
-> consistent <prefix>_warn style. Let's do it.
->
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  arch/riscv/kernel/module.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-> index 70bb94ae61c5..b7401858d872 100644
-> --- a/arch/riscv/kernel/module.c
-> +++ b/arch/riscv/kernel/module.c
-> @@ -315,8 +315,8 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
->  			/* Ignore unresolved weak symbol */
->  			if (ELF_ST_BIND(sym->st_info) == STB_WEAK)
->  				continue;
-> -			pr_warning("%s: Unknown symbol %s\n",
-> -				   me->name, strtab + sym->st_name);
-> +			pr_warn("%s: Unknown symbol %s\n",
-> +				me->name, strtab + sym->st_name);
->  			return -ENOENT;
->  		}
+Hi Jacopo
 
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
+On Wed, Sep 25, 2019 at 10:32 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Ricardo,
+>
+> On Fri, Sep 20, 2019 at 03:51:34PM +0200, Ricardo Ribalda Delgado wrote:
+> > From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> >
+> > A struct v4l2_area containing the width and the height of a rectangular
+> > area.
+> >
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > index a3d56ffbf4cc..33aff21b7d11 100644
+> > --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> > @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
+> >        - n/a
+> >        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
+> >       quantization matrices for stateless video decoders.
+> > +    * - ``V4L2_CTRL_TYPE_AREA``
+> > +      - n/a
+> > +      - n/a
+> > +      - n/a
+> > +      - A struct :c:type:`v4l2_area`, containing the width and the height
+> > +        of a rectangular area. Units depend on the use case.
+>
+> I recall Hans too was in favour of having min, max and step defined
+> (and applied to both width and height).
+>
+He changed his mind :)
 
-I'm assuming this is going in through some other tree, LMK if that's not the 
-case.
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg150103.html
+
+
+> Really a minor issue from my side, feel free to keep it the way it is
+> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+>
+> Thanks
+>    j
+> >      * - ``V4L2_CTRL_TYPE_H264_SPS``
+> >        - n/a
+> >        - n/a
+> > --
+> > 2.23.0
+> >
+
+
+
+-- 
+Ricardo Ribalda
