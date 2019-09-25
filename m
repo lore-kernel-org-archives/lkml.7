@@ -2,117 +2,269 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D24DC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFC0C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4F921D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="E8oKqEdy"
+	by mail.kernel.org (Postfix) with ESMTP id DD2DB21A4A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411406AbfIYFAQ (ORCPT
+        id S2411694AbfIYFAh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:00:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35332 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392987AbfIYFAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:00:16 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y21so2809076wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qCjUe0hDGDhMjnECf1F2ZQdV6LWs8J93Rkhj1cQXHGo=;
-        b=E8oKqEdyG0bLy1YbJxVkgMWG5q1T851YJJLeEfwLZBcBzm/Z/rJFURALxIbiMzCeC6
-         q4vrrUEPF7pfaObZleGRa4FaCj45G3Ud97aVzTOTTvst/+YIL/jQAVb+Ufw72IsVoVrO
-         SDfYjZS5eKmEAeURuNg31P2jNvK3iguYv/xX2yw9wlsqE/Q9AAEaXDq3XkJw7typ0Sil
-         KghJ4psNwURfLM98alBol1KgNc2xz7kwEbDt9qoJ1b+MjSh/y4Z+nGfiuKHZWX5Hw+Ru
-         Sx/fwESJyNav3DjbOeDTzBG/ItKImxkNKo3AcmrAl6rDzni/9Yf2SaQlB7nJc3jwflHT
-         BkMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qCjUe0hDGDhMjnECf1F2ZQdV6LWs8J93Rkhj1cQXHGo=;
-        b=IH4uKbLRECCBKCBv5oSb+Jc0OzGhLnmV7hUGwrd4NojOmAq+AeTy/AwntyAECEh0VC
-         IRh93o9WHNIIhkpqo4A0P1kRg+qTyiOwoPk2YPDGMA8JcMQDa+/Y2n5DAKKpYCo05JnK
-         l6zYLY2ZoSzGKzbcDuQkNw25otJRpgKfGeyWg1NOrSYQsVPggSWMKxcsgYBuwnImSBI/
-         r+JfFyAHjYyq+Karr3OB/fz4ZVfjMDU7vR4SbV/DUAS2ihNLS0FiXzARfqn36PZl81HW
-         +lJHYKBhyPrGW/ZOPagB5HI+0niC0akW976fOGaKVyrR/k0ICfHHxLvwvfBw2SoOsdAD
-         to4g==
-X-Gm-Message-State: APjAAAV6Z85WV713RZFsZKsoJccW6T/u8WQCZ2m+JjGn90hhmdwr+UCo
-        fxbqpK8LUgtY78ITvRBMbDd8FeJDLtg7S5EAyo4q7w==
-X-Google-Smtp-Source: APXvYqy1vkOuGEDqTNg8aNO4jpgMMXEuZMX6RWQpVXhNioHmNHB+PBavw+PntxSsQx8Rbkok2+C/qrGdOpdJ96+qhew=
-X-Received: by 2002:a1c:5451:: with SMTP id p17mr4901443wmi.103.1569387612159;
- Tue, 24 Sep 2019 22:00:12 -0700 (PDT)
+        Wed, 25 Sep 2019 01:00:37 -0400
+Received: from mga11.intel.com ([192.55.52.93]:30416 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392901AbfIYFAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:00:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 22:00:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
+   d="scan'208";a="389099359"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Sep 2019 22:00:36 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 22:00:36 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 24 Sep 2019 22:00:36 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.195]) with mapi id 14.03.0439.000;
+ Wed, 25 Sep 2019 13:00:34 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yi Sun <yi.y.sun@linux.intel.com>
+Subject: RE: [RFC PATCH 3/4] iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+Thread-Topic: [RFC PATCH 3/4] iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+Thread-Index: AQHVcgpE6R/hKdlXw06opjb4d97sh6c719ng
+Date:   Wed, 25 Sep 2019 05:00:34 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F0B7@SHSMSX104.ccr.corp.intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-4-baolu.lu@linux.intel.com>
+In-Reply-To: <20190923122454.9888-4-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTNkM2FjODUtYzVhNC00NDdlLWFkOTUtMDhkMjMxOWNmZDQyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRGsya0RFYkw5b01DV2tWQkFMeG1TTmwwUVdFWm90bTlPWjdYUSt4YmdQand0XC9ON1wvM1FDNWh1SzVnVWtZUXRaIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190925042912.119553-1-anup.patel@wdc.com> <20190925042912.119553-2-anup.patel@wdc.com>
- <20190925044308.GA1245729@kroah.com>
-In-Reply-To: <20190925044308.GA1245729@kroah.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 25 Sep 2019 10:30:00 +0530
-Message-ID: <CAAhSdy1Z09tpNtfS10gL5BXJ=1wydLy4nmtFyKQenAPDSyTLTQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform: goldfish: Allow goldfish virtual platform
- drivers for RISCV
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Roman Kiryanov <rkir@google.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:13 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Sep 25, 2019 at 04:30:03AM +0000, Anup Patel wrote:
-> > We will be using some of the Goldfish virtual platform devices (such
-> > as RTC) on QEMU RISC-V virt machine so this patch enables goldfish
-> > kconfig option for RISC-V architecture.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > ---
-> >  drivers/platform/goldfish/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/goldfish/Kconfig b/drivers/platform/goldfish/Kconfig
-> > index 77b35df3a801..0ba825030ffe 100644
-> > --- a/drivers/platform/goldfish/Kconfig
-> > +++ b/drivers/platform/goldfish/Kconfig
-> > @@ -1,7 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  menuconfig GOLDFISH
-> >       bool "Platform support for Goldfish virtual devices"
-> > -     depends on X86_32 || X86_64 || ARM || ARM64 || MIPS
-> > +     depends on X86_32 || X86_64 || ARM || ARM64 || MIPS || RISCV
->
-> Why does this depend on any of these?  Can't we just have:
+> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
+> Sent: Monday, September 23, 2019 8:25 PM
+> 
+> If a dmar domain has DOMAIN_FLAG_FIRST_LEVEL_TRANS bit set
+> in its flags, IOMMU will use the first level page table for
+> translation. Hence, we need to map or unmap addresses in the
+> first level page table.
+> 
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Liu Yi L <yi.l.liu@intel.com>
+> Cc: Yi Sun <yi.y.sun@linux.intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 94 ++++++++++++++++++++++++++++++++-
+> ----
+>  1 file changed, 82 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 9cfe8098d993..103480016010 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -168,6 +168,11 @@ static inline unsigned long virt_to_dma_pfn(void
+> *p)
+>  	return page_to_dma_pfn(virt_to_page(p));
+>  }
+> 
+> +static inline unsigned long dma_pfn_to_addr(unsigned long pfn)
+> +{
+> +	return pfn << VTD_PAGE_SHIFT;
+> +}
+> +
+>  /* global iommu list, set NULL for ignored DMAR units */
+>  static struct intel_iommu **g_iommus;
+> 
+> @@ -307,6 +312,9 @@ static int hw_pass_through = 1;
+>   */
+>  #define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
+> 
+> +/* Domain uses first level translation for DMA remapping. */
+> +#define DOMAIN_FLAG_FIRST_LEVEL_TRANS		BIT(2)
+> +
+>  #define for_each_domain_iommu(idx, domain)			\
+>  	for (idx = 0; idx < g_num_of_iommus; idx++)		\
+>  		if (domain->iommu_refcnt[idx])
+> @@ -552,6 +560,11 @@ static inline int domain_type_is_si(struct
+> dmar_domain *domain)
+>  	return domain->flags & DOMAIN_FLAG_STATIC_IDENTITY;
+>  }
+> 
+> +static inline int domain_type_is_flt(struct dmar_domain *domain)
+> +{
+> +	return domain->flags & DOMAIN_FLAG_FIRST_LEVEL_TRANS;
+> +}
+> +
+>  static inline int domain_pfn_supported(struct dmar_domain *domain,
+>  				       unsigned long pfn)
+>  {
+> @@ -1147,8 +1160,15 @@ static struct page *domain_unmap(struct
+> dmar_domain *domain,
+>  	BUG_ON(start_pfn > last_pfn);
+> 
+>  	/* we don't need lock here; nobody else touches the iova range */
+> -	freelist = dma_pte_clear_level(domain, agaw_to_level(domain-
+> >agaw),
+> -				       domain->pgd, 0, start_pfn, last_pfn,
+> NULL);
+> +	if (domain_type_is_flt(domain))
+> +		freelist = intel_mmunmap_range(domain,
+> +					       dma_pfn_to_addr(start_pfn),
+> +					       dma_pfn_to_addr(last_pfn + 1));
+> +	else
+> +		freelist = dma_pte_clear_level(domain,
+> +					       agaw_to_level(domain->agaw),
+> +					       domain->pgd, 0, start_pfn,
+> +					       last_pfn, NULL);
 
-May be Goldfish drivers were compile tested/tried on these architectures only.
+what about providing an unified interface at the caller side, then having 
+the level differentiated within the interface?
 
->
-> >       depends on HAS_IOMEM
->
-> And that's it?
+> 
+>  	/* free pgd */
+>  	if (start_pfn == 0 && last_pfn == DOMAIN_MAX_PFN(domain->gaw))
+> {
+> @@ -2213,9 +2233,10 @@ static inline int hardware_largepage_caps(struct
+> dmar_domain *domain,
+>  	return level;
+>  }
+> 
+> -static int __domain_mapping(struct dmar_domain *domain, unsigned long
+> iov_pfn,
+> -			    struct scatterlist *sg, unsigned long phys_pfn,
+> -			    unsigned long nr_pages, int prot)
+> +static int
+> +__domain_mapping_dma(struct dmar_domain *domain, unsigned long
+> iov_pfn,
+> +		     struct scatterlist *sg, unsigned long phys_pfn,
+> +		     unsigned long nr_pages, int prot)
+>  {
+>  	struct dma_pte *first_pte = NULL, *pte = NULL;
+>  	phys_addr_t uninitialized_var(pteval);
+> @@ -2223,13 +2244,6 @@ static int __domain_mapping(struct
+> dmar_domain *domain, unsigned long iov_pfn,
+>  	unsigned int largepage_lvl = 0;
+>  	unsigned long lvl_pages = 0;
+> 
+> -	BUG_ON(!domain_pfn_supported(domain, iov_pfn + nr_pages - 1));
+> -
+> -	if ((prot & (DMA_PTE_READ|DMA_PTE_WRITE)) == 0)
+> -		return -EINVAL;
+> -
+> -	prot &= DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP;
+> -
+>  	if (!sg) {
+>  		sg_res = nr_pages;
+>  		pteval = ((phys_addr_t)phys_pfn << VTD_PAGE_SHIFT) |
+> prot;
+> @@ -2328,6 +2342,62 @@ static int __domain_mapping(struct
+> dmar_domain *domain, unsigned long iov_pfn,
+>  	return 0;
+>  }
+> 
+> +static int
+> +__domain_mapping_mm(struct dmar_domain *domain, unsigned long
+> iov_pfn,
+> +		    struct scatterlist *sg, unsigned long phys_pfn,
+> +		    unsigned long nr_pages, int prot)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!sg)
+> +		return intel_mmmap_range(domain,
+> dma_pfn_to_addr(iov_pfn),
+> +					 dma_pfn_to_addr(iov_pfn +
+> nr_pages),
+> +					 dma_pfn_to_addr(phys_pfn), prot);
+> +
+> +	while (nr_pages > 0) {
+> +		unsigned long sg_pages, phys;
+> +		unsigned long pgoff = sg->offset & ~PAGE_MASK;
+> +
+> +		sg_pages = aligned_nrpages(sg->offset, sg->length);
+> +		phys = sg_phys(sg) - pgoff;
+> +
+> +		ret = intel_mmmap_range(domain,
+> dma_pfn_to_addr(iov_pfn),
+> +					dma_pfn_to_addr(iov_pfn +
+> sg_pages),
+> +					phys, prot);
+> +		if (ret)
+> +			break;
+> +
+> +		sg->dma_address =
+> ((dma_addr_t)dma_pfn_to_addr(iov_pfn)) + pgoff;
+> +		sg->dma_length = sg->length;
+> +
+> +		nr_pages -= sg_pages;
+> +		iov_pfn += sg_pages;
+> +		sg = sg_next(sg);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int
+> +__domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+> +		 struct scatterlist *sg, unsigned long phys_pfn,
+> +		 unsigned long nr_pages, int prot)
+> +{
+> +	BUG_ON(!domain_pfn_supported(domain, iov_pfn + nr_pages - 1));
+> +
+> +	if ((prot & (DMA_PTE_READ|DMA_PTE_WRITE)) == 0)
+> +		return -EINVAL;
+> +
+> +	prot &= DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP;
+> +
+> +	if (domain_type_is_flt(domain))
+> +		return __domain_mapping_mm(domain, iov_pfn, sg,
+> +					   phys_pfn, nr_pages, prot);
+> +	else
+> +		return __domain_mapping_dma(domain, iov_pfn, sg,
+> +					    phys_pfn, nr_pages, prot);
+> +}
+> +
+>  static int domain_mapping(struct dmar_domain *domain, unsigned long
+> iov_pfn,
+>  			  struct scatterlist *sg, unsigned long phys_pfn,
+>  			  unsigned long nr_pages, int prot)
+> --
+> 2.17.1
 
-I think it should be just "depends on HAS_IOMEM && HAS_DMA" just like
-VirtIO MMIO. Agree ??
-
-Regards,
-Anup
