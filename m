@@ -2,98 +2,115 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C913C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0954C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E9C2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43052146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHadCcaY"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ODZq6RdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502032AbfIYRKX (ORCPT
+        id S2502189AbfIYRK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:10:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42583 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437796AbfIYRKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:10:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q12so3906834pff.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+jBc2CSetMNlK7QdXb0YLft4/BLzR5dJnratyqnpwHE=;
-        b=eHadCcaYhW2D4fgyLXwrkM3CMk0j1zb4CDkXBk4LduohBqguf2KqmRBoZ8Z+fDb+8+
-         MtTR+5YWcvFi35fzOzZcYm3NyY5zm1BnNm7G3g2meI318uwSrJxmdpV0TLiuwXnY2LGm
-         5GpdzeVYkQjbz79wOWkdm4uGsv3eb2OB6mX+Q9pX35COFajISsSWFajgZ76dpXYj70zU
-         JNPkBtiwPs4nCM4xFq4wrPAF8aryp3elKVtvBHc2lZ4t0lQ2jcmxkdOJrg5mVrPDfktA
-         SHRx+G8+99o7mxFh736xOQaZ8w6h5ToX2HmKHTfNP5k1WnpvTyWqFVB92bhY8L7TPqpf
-         OK4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+jBc2CSetMNlK7QdXb0YLft4/BLzR5dJnratyqnpwHE=;
-        b=HDGd+uoYpVTrjl2mX7AL0/ZU0QxmfnDNVLNZpjWmq5YGQmZWE3qrK/AXPDedRgXCY5
-         TX+Rn1RhGrQf4eX7gU9M4Hr+Wog2IfgyCyd73O9dIE6RPPGG26IAPrIxJrv4tfeQbWwq
-         5FCSGLzVgllf5+JKf5dKzZ8j/RyRCHtmmPsECplR57trzm6G2MNPHOzOdS9cSlOMhDeZ
-         U/pPQIBlC5y2LR7A0PMwvPJvwdSEY2MWngFW5TynXL6HOfq0VcX+mwpWxUjLel2x8cGy
-         DSw1LHSkftQtDaGB4bajMUvc91QuPUjZZOYoXdn6JRQ9RwdLWVsoylDt2do2gv3Qqrn0
-         AOiQ==
-X-Gm-Message-State: APjAAAVk0D228BDi35U6yDcAtgX5MPloJ8V1uMNZ7fkvM+oLxo7vtTNa
-        8Qb1PMBU+kpdXaswRIZZQNhdq/geO0U=
-X-Google-Smtp-Source: APXvYqzAuparAEMQO7ZF8eR08c9ftl3IiJj4TdNXnK9QgRrTUJly0P3EO6M20o/DqpQRZZ7wCN63KQ==
-X-Received: by 2002:a62:8683:: with SMTP id x125mr10652531pfd.108.1569431421694;
-        Wed, 25 Sep 2019 10:10:21 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([42.109.146.156])
-        by smtp.gmail.com with ESMTPSA id e192sm8613264pfh.83.2019.09.25.10.10.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Sep 2019 10:10:21 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 22:39:42 +0530
-From:   Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-To:     linux-kernel-mentees@lists.linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kernel: sched: fair: Changes data type from int to u64
-Message-ID: <20190925170931.GA23927@madhuparna-HP-Notebook>
+        Wed, 25 Sep 2019 13:10:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54264 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437796AbfIYRKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 13:10:25 -0400
+Received: from zn.tnic (p200300EC2F0BA100707709EB32B84CF4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:a100:7077:9eb:32b8:4cf4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 342BB1EC0A91;
+        Wed, 25 Sep 2019 19:10:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569431424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mla4nxBtIg9/feNWHEP9qZqx4jpzG38YzJe1TshTJgU=;
+        b=ODZq6RdWydjhNWwG0+WZCOT+YrLNPtB+Foj1KfPnS1mPdzx3S7tiuxDKCkx4KDbmPiQq5/
+        wRFACbE+3vtapDpE1Mb7fpwuLLDDeyK2uSUs/qw5Yp2LJCH/hhDvWpheu1z9IpHVxXqaFz
+        GR3PzEdy1Ccfb5TtTum3HC6LnlKdkI4=
+Date:   Wed, 25 Sep 2019 19:10:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Tri Vo <trong@android.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>,
+        George Rimar <grimar@accesssoftek.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Peter Smith <Peter.Smith@arm.com>, Rui Ueyama <ruiu@google.com>
+Subject: Re: [PATCH v2] x86, realmode: explicitly set entry via command line
+Message-ID: <20190925171025.GF3891@zn.tnic>
+References: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
+ <20190924193310.132104-1-ndesaulniers@google.com>
+ <20190925102041.GB3891@zn.tnic>
+ <CAKwvOdneE7kMupFzxZC-6c=ps_98FP+Nz88fCXQ74z90hmaaXQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKwvOdneE7kMupFzxZC-6c=ps_98FP+Nz88fCXQ74z90hmaaXQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the data type of variable overrun in the function
-sched_cfs_period_timer() from int to u64 as the return type of the
-function hrtimer_forward_now() is u64.
+On Wed, Sep 25, 2019 at 09:35:24AM -0700, Nick Desaulniers wrote:
+> Thanks for the consideration Boris.  So IIUC if the preceding sections
+> are larger than 0x1000 altogether, setting the entry there will be
+> wrong?
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, I spent some time this morning grepping to find out whether PA
+0x1000 was magical but didn't find anything. Perhaps hpa can refresh my
+memory...
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d4bbf68c3161..7c97e9704ca2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4929,7 +4929,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 	struct cfs_bandwidth *cfs_b =
- 		container_of(timer, struct cfs_bandwidth, period_timer);
- 	unsigned long flags;
--	int overrun;
-+	u64 overrun;
- 	int idle = 0;
- 	int count = 0;
- 
+> Currently, .text looks like it's currently at 0x1000 for a defconfig,
+> and I assume that could move in the case I stated above?
+
+Yes, I think we shouldn't hardcode.
+
+> $ readelf -S arch/x86/realmode/rm/realmode.elf | grep text
+>   [ 3] .text             PROGBITS        00001000 201000 000f51 00  AX
+>  0   0 4096
+> ...
+> 
+> In that case, it seems that maybe I should set the ENTRY in the linker
+> script as:
+> diff --git a/arch/x86/realmode/rm/realmode.lds.S
+> b/arch/x86/realmode/rm/realmode.lds.S
+> index 3bb980800c58..64d135d1ee63 100644
+> --- a/arch/x86/realmode/rm/realmode.lds.S
+> +++ b/arch/x86/realmode/rm/realmode.lds.S
+> @@ -11,6 +11,7 @@
+> 
+>  OUTPUT_FORMAT("elf32-i386")
+>  OUTPUT_ARCH(i386)
+> +ENTRY(pa_text_start)
+
+Well, looking at arch/x86/boot/setup.ld, it does do:
+
+ENTRY(_start)
+
+for the global _start symbol in .../boot/header.S.
+
+So you doing the respective thing in that linker script would make
+sense...
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
