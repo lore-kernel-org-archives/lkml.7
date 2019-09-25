@@ -2,175 +2,193 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C46C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F63C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E48B21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD6221D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442482AbfIYHIp (ORCPT
+        id S2442494AbfIYHJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:08:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15199 "EHLO mga07.intel.com"
+        Wed, 25 Sep 2019 03:09:17 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:47984 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442450AbfIYHIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:08:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 00:08:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="201158456"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 25 Sep 2019 00:08:40 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yi Sun <yi.y.sun@linux.intel.com>
-Subject: Re: [RFC PATCH 3/4] iommu/vt-d: Map/unmap domain with mmmap/mmunmap
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-4-baolu.lu@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F0B7@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <71b812c0-722c-8d8a-0c3f-58efab34f6b2@linux.intel.com>
-Date:   Wed, 25 Sep 2019 15:06:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2442483AbfIYHJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:09:17 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x8P76nZc015908
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Wed, 25 Sep 2019 00:07:10 -0700
+Received: from pek-jsun4-d1.corp.ad.wrs.com (128.224.155.112) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 25 Sep 2019 00:06:40 -0700
+From:   Jiwei Sun <jiwei.sun@windriver.com>
+To:     <acme@redhat.com>, <jolsa@redhat.com>, <arnaldo.melo@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <alexander.shishkin@linux.intel.com>, <mpetlan@redhat.com>,
+        <namhyung@kernel.org>, <a.p.zijlstra@chello.nl>,
+        <adrian.hunter@intel.com>, <Richard.Danter@windriver.com>,
+        <jiwei.sun@windriver.com>
+Subject: [PATCH v4] perf record: Add support for limit perf output file size
+Date:   Wed, 25 Sep 2019 15:06:37 +0800
+Message-ID: <20190925070637.13164-1-jiwei.sun@windriver.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F0B7@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The patch adds a new option to limit the output file size, then based
+on it, we can create a wrapper of the perf command that uses the option
+to avoid exhausting the disk space by the unconscious user.
 
-On 9/25/19 1:00 PM, Tian, Kevin wrote:
->> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
->> Sent: Monday, September 23, 2019 8:25 PM
->>
->> If a dmar domain has DOMAIN_FLAG_FIRST_LEVEL_TRANS bit set
->> in its flags, IOMMU will use the first level page table for
->> translation. Hence, we need to map or unmap addresses in the
->> first level page table.
->>
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> Cc: Liu Yi L <yi.l.liu@intel.com>
->> Cc: Yi Sun <yi.y.sun@linux.intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel-iommu.c | 94 ++++++++++++++++++++++++++++++++-
->> ----
->>   1 file changed, 82 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 9cfe8098d993..103480016010 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -168,6 +168,11 @@ static inline unsigned long virt_to_dma_pfn(void
->> *p)
->>   	return page_to_dma_pfn(virt_to_page(p));
->>   }
->>
->> +static inline unsigned long dma_pfn_to_addr(unsigned long pfn)
->> +{
->> +	return pfn << VTD_PAGE_SHIFT;
->> +}
->> +
->>   /* global iommu list, set NULL for ignored DMAR units */
->>   static struct intel_iommu **g_iommus;
->>
->> @@ -307,6 +312,9 @@ static int hw_pass_through = 1;
->>    */
->>   #define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
->>
->> +/* Domain uses first level translation for DMA remapping. */
->> +#define DOMAIN_FLAG_FIRST_LEVEL_TRANS		BIT(2)
->> +
->>   #define for_each_domain_iommu(idx, domain)			\
->>   	for (idx = 0; idx < g_num_of_iommus; idx++)		\
->>   		if (domain->iommu_refcnt[idx])
->> @@ -552,6 +560,11 @@ static inline int domain_type_is_si(struct
->> dmar_domain *domain)
->>   	return domain->flags & DOMAIN_FLAG_STATIC_IDENTITY;
->>   }
->>
->> +static inline int domain_type_is_flt(struct dmar_domain *domain)
->> +{
->> +	return domain->flags & DOMAIN_FLAG_FIRST_LEVEL_TRANS;
->> +}
->> +
->>   static inline int domain_pfn_supported(struct dmar_domain *domain,
->>   				       unsigned long pfn)
->>   {
->> @@ -1147,8 +1160,15 @@ static struct page *domain_unmap(struct
->> dmar_domain *domain,
->>   	BUG_ON(start_pfn > last_pfn);
->>
->>   	/* we don't need lock here; nobody else touches the iova range */
->> -	freelist = dma_pte_clear_level(domain, agaw_to_level(domain-
->>> agaw),
->> -				       domain->pgd, 0, start_pfn, last_pfn,
->> NULL);
->> +	if (domain_type_is_flt(domain))
->> +		freelist = intel_mmunmap_range(domain,
->> +					       dma_pfn_to_addr(start_pfn),
->> +					       dma_pfn_to_addr(last_pfn + 1));
->> +	else
->> +		freelist = dma_pte_clear_level(domain,
->> +					       agaw_to_level(domain->agaw),
->> +					       domain->pgd, 0, start_pfn,
->> +					       last_pfn, NULL);
-> 
-> what about providing an unified interface at the caller side, then having
-> the level differentiated within the interface?
+In order to make the perf.data parsable, we just limit the sample data
+size, since the perf.data consists of many headers and sample data and
+other data, the actual size of the recorded file will bigger than the
+setting value.
 
-Good point! I ever thought about adding some ops in struct dmar_domain,
-something like:
+Testing it:
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index ed11ef594378..1dd184f76bfb 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -489,7 +489,14 @@ struct dmar_domain {
-         struct list_head auxd;          /* link to device's auxiliary 
-list */
-         struct iova_domain iovad;       /* iova's that belong to this 
-domain */
+ # ./perf record -a -g --max-size=10M
+Couldn't synthesize bpf events.
+WARNING: The perf data has already reached the limit, stop recording!
+[ perf record: Woken up 30 times to write data ]
+[ perf record: Captured and wrote 10.233 MB perf.data (175650 samples) ]
+Terminated
 
-+       /* per domain page table and manipulation ops */
-         struct dma_pte  *pgd;           /* virtual address */
-+       int (*map)(struct dmar_domain *domain,
-+                  unsigned long addr, unsigned long end,
-+                  phys_addr_t phys_addr, int dma_prot);
-+       struct page *(*unmap)(struct dmar_domain *domain,
-+                             unsigned long addr, unsigned long end);
+ # ls -lh perf.data
+-rw------- 1 root root 11M Jul 17 14:01 perf.data
+
+ # ./perf record -a -g --max-size=10K
+WARNING: The perf data has already reached the limit, stop recording!
+Couldn't synthesize bpf events.
+[ perf record: Woken up 0 times to write data ]
+[ perf record: Captured and wrote 1.824 MB perf.data (67 samples) ]
+Terminated
+
+ # ls -lh perf.data
+-rw------- 1 root root 1.9M Jul 17 14:05 perf.data
+
+Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
+---
+v4 changes:
+  - Just show one WARNING message after reached the limit.
+
+v3 changes:
+  - add a test result
+  - add the new option to tools/perf/Documentation/perf-record.txt
+
+v2 changes:
+  - make patch based on latest Arnaldo's perf/core,
+  - display warning message when reached the limit.
+---
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              | 42 ++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index c6f9f31b6039..f1c6113fbc82 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -571,6 +571,10 @@ config terms. For example: 'cycles/overwrite/' and 'instructions/no-overwrite/'.
+ 
+ Implies --tail-synthesize.
+ 
++--max-size=<size>::
++Limit the sample data max size, <size> is expected to be a number with
++appended unit character - B/K/M/G
 +
-         int             gaw;            /* max guest address width */
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 48600c90cc7e..30904d2a3407 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -91,6 +91,7 @@ struct record {
+ 	struct switch_output	switch_output;
+ 	unsigned long long	samples;
+ 	cpu_set_t		affinity_mask;
++	unsigned long		output_max_size;	/* = 0: unlimited */
+ };
+ 
+ static volatile int auxtrace_record__snapshot_started;
+@@ -120,6 +121,12 @@ static bool switch_output_time(struct record *rec)
+ 	       trigger_is_ready(&switch_output_trigger);
+ }
+ 
++static bool record__output_max_size_exceeded(struct record *rec)
++{
++	return rec->output_max_size &&
++	       (rec->bytes_written >= rec->output_max_size);
++}
++
+ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+ 			 void *bf, size_t size)
+ {
+@@ -132,6 +139,12 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+ 
+ 	rec->bytes_written += size;
+ 
++	if (record__output_max_size_exceeded(rec)) {
++		WARN_ONCE(1, "WARNING: The perf data has already reached "
++			     "the limit, stop recording!\n");
++		raise(SIGTERM);
++	}
++
+ 	if (switch_output_size(rec))
+ 		trigger_hit(&switch_output_trigger);
+ 
+@@ -1936,6 +1949,33 @@ static int record__parse_affinity(const struct option *opt, const char *str, int
+ 	return 0;
+ }
+ 
++static int parse_output_max_size(const struct option *opt,
++				 const char *str, int unset)
++{
++	unsigned long *s = (unsigned long *)opt->value;
++	static struct parse_tag tags_size[] = {
++		{ .tag  = 'B', .mult = 1       },
++		{ .tag  = 'K', .mult = 1 << 10 },
++		{ .tag  = 'M', .mult = 1 << 20 },
++		{ .tag  = 'G', .mult = 1 << 30 },
++		{ .tag  = 0 },
++	};
++	unsigned long val;
++
++	if (unset) {
++		*s = 0;
++		return 0;
++	}
++
++	val = parse_tag_value(str, tags_size);
++	if (val != (unsigned long) -1) {
++		*s = val;
++		return 0;
++	}
++
++	return -1;
++}
++
+ static int record__parse_mmap_pages(const struct option *opt,
+ 				    const char *str,
+ 				    int unset __maybe_unused)
+@@ -2262,6 +2302,8 @@ static struct option __record_options[] = {
+ 			    "n", "Compressed records using specified level (default: 1 - fastest compression, 22 - greatest compression)",
+ 			    record__parse_comp_level),
+ #endif
++	OPT_CALLBACK(0, "max-size", &record.output_max_size,
++		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+ 	OPT_END()
+ };
+ 
+-- 
+2.20.1
 
-         /* adjusted guest address width, 0 is level 2 30-bit */
-
-So that this code could be simply like this:
-
-	freelist = domain->unmap(...);
-
-Best regards,
-Baolu
