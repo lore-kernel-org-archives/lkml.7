@@ -2,104 +2,364 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51496C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91DDC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235F42064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F42214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NUsWDkCx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mDimB9ui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633891AbfIYEIx (ORCPT
+        id S2633897AbfIYELU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 00:08:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46606 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387842AbfIYEIx (ORCPT
+        Wed, 25 Sep 2019 00:11:20 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7650 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392218AbfIYELT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 00:08:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so10027568ioo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 21:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DgSgnjbaxWMj5EbcncKq9v8Ttw8yHLS0KwIgwEmsxew=;
-        b=NUsWDkCxFK7gMFuKr6dUcowOwy4t4sfEiDCTzG2cQKkG+epD0Jl7OmNDHrpUFD8PeS
-         yY46WH918Ts0dSNCVPltPt2ud4YFEthPq7A4OKpYVzm463qiUQARSwCDeoxc71UaB1yr
-         /wEAxB+NtqEPtAb/oBhY6maErRI/iIlM9lcFj0EFCJbbi2PPk2I/x443CJXCBWmME3fQ
-         oDolG4oUPtS49ad79YFFHM03LkzN214DsmkRsuldTsPX/rI/yAdJmyGKZl8fMUBNzdZc
-         a7ZkiiGWXttbMxE+trb8xWrIa/N+/yX6kkltm6ayo5DvkYNQd2RRPeekayplLESMrdlX
-         8MOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DgSgnjbaxWMj5EbcncKq9v8Ttw8yHLS0KwIgwEmsxew=;
-        b=IpWNh8a1LAqmM1dy1rJq9ag/a8eOj9xrc07SzbF10HiBO2HZuSkvyCEnbsPkVDoPSU
-         WERkwkyEV8D2tMxpU9gxKvfG2vc3/WOZAocrCUG2oZ6Qc0UuDPMusepBFqPoAzYPwaSp
-         s4Rea9/eBL5nOS7DdhlOEULv17AEQjPcUF23TFHoHmM70gf6ZlUNjjtHY9lzWQjt5LI7
-         BtWVJYGhdqPUAn+O7wW+EBAwGi4dSVHhx80cXykohveXRI+14fUivVb86szZNXGSCwPj
-         BTCzBBLWMNID5xmyeTfokaAayO+BtH/6gdyEN1CXL/ITfafXLC1DZodLZ3DGMkJORB9N
-         leZA==
-X-Gm-Message-State: APjAAAVi0YLpXgTv3GrgkEhxF0PP2ynWYFsu8JhhNfxUxP6zJYjBuQ4R
-        rFMdT8pXBrGzeME+0gYDJ1c=
-X-Google-Smtp-Source: APXvYqy90gGyOVD0TRAjkNHow/HCuhdXE4j/Z1008BqPZZsw6LI2uDTqlfBGsjmtr3R92X/GEIygGQ==
-X-Received: by 2002:a6b:8f15:: with SMTP id r21mr8301163iod.259.1569384532039;
-        Tue, 24 Sep 2019 21:08:52 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id p81sm47949ilk.86.2019.09.24.21.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 21:08:51 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: Intel: Skylake: prevent memory leak in snd_skl_parse_uuids
-Date:   Tue, 24 Sep 2019 23:08:38 -0500
-Message-Id: <20190925040841.29141-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 25 Sep 2019 00:11:19 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d8ae8ec0000>; Tue, 24 Sep 2019 21:11:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 24 Sep 2019 21:11:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 24 Sep 2019 21:11:17 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
+ 2019 04:11:16 +0000
+Received: from [10.24.47.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
+ 2019 04:11:14 +0000
+Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
+ quirks
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>,
+        'Gustavo Pimentel' <Gustavo.Pimentel@synopsys.com>,
+        'Andrew Murray' <andrew.murray@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, 'Anvesh Salveru' <anvesh.s@samsung.com>
+References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
+ <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
+ <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
+ <00a401d56c7e$cf3abd30$6db03790$@samsung.com>
+ <20190916122400.GO9720@e119886-lin.cambridge.arm.com>
+ <DM6PR12MB4010AE07CC6F1CC60A715EE4DA8C0@DM6PR12MB4010.namprd12.prod.outlook.com>
+ <7ad2b603-49ce-e955-58c4-fba1fb5ca6c8@nvidia.com>
+ <000001d572ba$6d3040a0$4790c1e0$@samsung.com>
+ <72370258-2cbe-32d8-b444-a45b50efa3e0@nvidia.com>
+ <004c01d572d1$406882a0$c13987e0$@samsung.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <b81c8f18-7066-2a03-fe52-fb8d41e35fea@nvidia.com>
+Date:   Wed, 25 Sep 2019 09:41:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <004c01d572d1$406882a0$c13987e0$@samsung.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1569384684; bh=08dvnNNRABjGFoXxot/+rTE1i0rCM4OYSwCk0vFf5SE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mDimB9uireqHiUHq3+cFYhcaedb1cL09zrcda+BvmEuLu0kAQUZAus7GvdpV/YqnE
+         HSTLpbul5BjxsL3ymq4aiUGiJH+lElIAoyWderNDrvdFCDeZl/XxubW7GjyqCGj0p4
+         ebCxWnmu5GjmrhLC1lID+kSYPkXq3lSy08xN8K4U4WzLAP96TIjW79cs9I7CsgvKVl
+         IpFJF6zFofND5rtdlrMvbzCvrIF/VGOn1O519ThJpS7aIRR2dF9ATEuljcgoxmYqQK
+         M9oVTGEixnLHutUPgtD95cfWSnFbJ3wSBLgX/W9cJvSkUOpcAqmVddaCuqx+/m3ii2
+         LWTm1DeIvBBSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In snd_skl_parse_uuids if allocation for module->instance_id fails, the
-allocated memory for module shoulde be released.
+On 9/24/2019 5:41 PM, Pankaj Dubey wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Vidya Sagar <vidyas@nvidia.com>
+>> Sent: Tuesday, September 24, 2019 4:57 PM
+>> To: Pankaj Dubey <pankaj.dubey@samsung.com>; 'Gustavo Pimentel'
+>> <Gustavo.Pimentel@synopsys.com>; 'Andrew Murray'
+>> <andrew.murray@arm.com>
+>> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+>> 'Anvesh Salveru' <anvesh.s@samsung.com>
+>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
+>> quirks
+>>
+>> On 9/24/2019 2:58 PM, Pankaj Dubey wrote:
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Vidya Sagar <vidyas@nvidia.com>
+>>>> Sent: Thursday, September 19, 2019 4:54 PM
+>>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
+>>>> equalization quirks
+>>>>
+>>>> On 9/16/2019 6:22 PM, Gustavo Pimentel wrote:
+>>>>> On Mon, Sep 16, 2019 at 13:24:1, Andrew Murray
+>>>> <andrew.murray@arm.com>
+>>>>> wrote:
+>>>>>
+>>>>>> On Mon, Sep 16, 2019 at 04:36:33PM +0530, Pankaj Dubey wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>> -----Original Message-----
+>>>>>>>> From: Andrew Murray <andrew.murray@arm.com>
+>>>>>>>> Sent: Monday, September 16, 2019 3:46 PM
+>>>>>>>> To: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>>>>>>> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>>>>> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+>>>>>>>> lorenzo.pieralisi@arm.com; bhelgaas@google.com; Anvesh Salveru
+>>>>>>>> <anvesh.s@samsung.com>
+>>>>>>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
+>>>>>>> equalization
+>>>>>>>> quirks
+>>>>>>>>
+>>>>>>>> On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
+>>>>>>>>> From: Anvesh Salveru <anvesh.s@samsung.com>
+>>>>>>>>>
+>>>>>>>>> In some platforms, PCIe PHY may have issues which will prevent
+>>>>>>>>> linkup to happen in GEN3 or higher speed. In case equalization
+>>>>>>>>> fails, link will fallback to GEN1.
+>>>>>>>>>
+>>>>>>>>> DesignWare controller gives flexibility to disable GEN3
+>>>>>>>>> equalization completely or only phase 2 and 3 of equalization.
+>>>>>>>>>
+>>>>>>>>> This patch enables the DesignWare driver to disable the PCIe
+>>>>>>>>> GEN3 equalization by enabling one of the following quirks:
+>>>>>>>>>     - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all
+>>>>>>>>> phases
+>>>> I don't think Gen-3 equalization can be skipped altogether.
+>>>> PCIe Spec Rev 4.0 Ver 1.0 in Section-4.2.3 has the following statement.
+>>>>
+>>>> "All the Lanes that are associated with the LTSSM (i.e., those Lanes
+>>>> that are currently operational or may be operational in the future
+>>>> due to Link
+>>>> Upconfigure) must participate in the Equalization procedure"
+>>>>
+>>>> and in Section-4.2.6.4.2.1.1 it says
+>>>> "Note: A transition to Recovery.RcvrLock might be used in the case
+>>>> where the Downstream Port determines that Phase 2 and Phase 3 are not
+>>>> needed based on the platform and channel characteristics."
+>>>>
+>>>> Based on the above statements, I think it is Ok to skip only Phases
+>>>> 2&3 of equalization but not 0&1.
+>>>> I even checked with our hardware engineers and it seems
+>>>> DWC_EQUALIZATION_DISABLE is present only for debugging purpose in
+>>>> hardware simulations and shouldn't be used on real silicon otherwise it seems.
+>>>>
+>>>
+>>> In DesignWare manual we don't see any comment that this feature is for
+>> debugging purpose only.
+>> Agree and as I mentioned even I got to know about it offline.
+>>
+>>> Even if it is meant for debugging purpose, if for some reason in an SoC, Gen3/4
+>> linkup is failing due to equalization, and if disabling equalization is helping then
+>> IMO it is OK to do it.
+>> Well, I don't have specific reservations to not have it. We can use this as a fall
+>> back option.
+>>
+>>> Just to re-confirm we tested one of the NVMe device on Jatson AGX Xavier RC
+>> with equalization disabled. We do see linkup works well in GEN3. As we have
+>> added this feature as a platform-quirk so only platforms that required this
+>> feature can enable it.
+>>>
+>> Curious to know...You did it because link didn't come up with equalization
+>> enabled? or just as an experiment?
+>>
+> 
+> We did this, just as an experiment.
+Ok. Thanks for the clarification.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- sound/soc/intel/skylake/skl-sst-utils.c | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
 
-diff --git a/sound/soc/intel/skylake/skl-sst-utils.c b/sound/soc/intel/skylake/skl-sst-utils.c
-index d43cbf4a71ef..d4db64d72b2c 100644
---- a/sound/soc/intel/skylake/skl-sst-utils.c
-+++ b/sound/soc/intel/skylake/skl-sst-utils.c
-@@ -299,6 +299,7 @@ int snd_skl_parse_uuids(struct sst_dsp *ctx, const struct firmware *fw,
- 		module->instance_id = devm_kzalloc(ctx->dev, size, GFP_KERNEL);
- 		if (!module->instance_id) {
- 			ret = -ENOMEM;
-+			kfree(module);
- 			goto free_uuid_list;
- 		}
- 
--- 
-2.17.1
+> 
+>>> Snippet of lspci (from Jatson AGX Xavier RC) is given below, showing
+>>> EQ is completely disabled and GEN3 linkup
+>>> -----
+>>> 0005:01:00.0 Non-Volatile memory controller: Lite-On Technology
+>> Corporation Device 21f1 (rev 01) (prog-if 02 [NVM Express])
+>>>           Subsystem: Marvell Technology Group Ltd. Device 1093
+>>>            <snip>
+>>>                   LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L0s
+>> <512ns, L1 <64us
+>>>                           ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+>>>                   LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+>>>                           ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>>>                   LnkSta: Speed 8GT/s, Width x4, TrErr- Train- SlotClk+ DLActive-
+>> BWMgmt- ABWMgmt-
+>>>                   DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR+,
+>> OBFF Via message
+>>>                   DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+,
+>> OBFF Disabled
+>>>                   LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+>>>                            Transmit Margin: Normal Operating Range,
+>> EnterModifiedCompliance- ComplianceSOS-
+>>>                            Compliance De-emphasis: -6dB
+>>>                   LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-,
+>> EqualizationPhase1-
+>>>                            EqualizationPhase2-, EqualizationPhase3-,
+>>> LinkEqualizationRequest-
+>>> -----
+>>>> - Vidya Sagar
+>>>>
+>>>>
+>>>>>>>>>     - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization
+>>>>>>>>> phase 2 & 3
+>>>>>>>>>
+>>>>>>>>> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
+>>>>>>>>> struct.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+>>>>>>>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>>>>>>>> ---
+>>>>>>>>> Patchset v1 can be found at:
+>>>>>>>>>     - 1/2: https://urldefense.proofpoint.com/v2/url?u=https-
+>>>>
+>> 3A__lkml.org_lkml_2019_9_10_443&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg
+>>>> &r=bkWxpLoW-f-
+>>>>
+>> E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1
+>>>> Ry4ICIDaiQ&s=s_nPmMNbQFswYRxQgBkeg4H9J_0FEtzRE-0AruC5WI4&e=
+>>>>>>>>>     - 2/2:
+>>>>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lk
+>>>>>>>>> ml
+>>>>>>>>>
+>>>> _2019_9_10_444&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-
+>> f-
+>>>> E3Ed
+>>>>>>>>>
+>>>> iDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1Ry
+>>>>>>>>>
+>> 4ICIDaiQ&s=kkfdwcX6bYcLrnJSgw_GcMMGAjnDTMtN2v6svWuANpk&e=
+>>>>>>>>>
+>>>>>>>>> Changes w.r.t v1:
+>>>>>>>>>     - Squashed two patches from v1 into one as suggested by Gustavo
+>>>>>>>>>     - Addressed review comments from Andrew
+>>>>>>>>>
+>>>>>>>>>     drivers/pci/controller/dwc/pcie-designware.c | 12
+>>>>>>>>> ++++++++++++ drivers/pci/controller/dwc/pcie-designware.h |  9
+>> +++++++++
+>>>>>>>>>     2 files changed, 21 insertions(+)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>>> index 7d25102..97fb18d 100644
+>>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>>> @@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>>>>>>>>>     		break;
+>>>>>>>>>     	}
+>>>>>>>>>     	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>> val);
+>>>>>>>>> +
+>>>>>>>>> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
+>>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
+>> PCIE_PORT_GEN3_RELATED);
+>>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+>>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
+>> val);
+>>>>>>>>> +	}
+>>>>>>>>> +
+>>>>>>>>> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
+>>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
+>> PCIE_PORT_GEN3_RELATED);
+>>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+>>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
+>> val);
+>>>>>>>>> +	}
+>>>>>>>>>     }
+>>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> index ffed084..e428b62 100644
+>>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>>>> @@ -29,6 +29,10 @@
+>>>>>>>>>     #define LINK_WAIT_MAX_IATU_RETRIES	5
+>>>>>>>>>     #define LINK_WAIT_IATU			9
+>>>>>>>>>
+>>>>>>>>> +/* Parameters for GEN3 related quirks */
+>>>>>>>>> +#define DWC_EQUALIZATION_DISABLE	BIT(1)
+>>>>>>>>> +#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
+>>>>>>>>> +
+>>>>>>>>>     /* Synopsys-specific PCIe configuration registers */
+>>>>>>>>>     #define PCIE_PORT_LINK_CONTROL		0x710
+>>>>>>>>>     #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+>>>>>>>>> @@ -60,6 +64,10 @@
+>>>>>>>>>     #define PCIE_MSI_INTR0_MASK		0x82C
+>>>>>>>>>     #define PCIE_MSI_INTR0_STATUS		0x830
+>>>>>>>>>
+>>>>>>>>> +#define PCIE_PORT_GEN3_RELATED		0x890
+>>>>>>>>
+>>>>>>>> I hadn't noticed this in the previous version - what is the
+>>>>>>>> proper name
+>>>>>>> for this
+>>>>>>>> register? Does it end in _RELATED?
+>>>>>>>
+>>>>>>> As per SNPS databook the name of the register is "GEN3_RELATED_OFF".
+>>>>>>> It is port logic register so, to keep similarity with other port
+>>>>>>> logic registers in this file we named it as "PCIE_PORT_GEN3_RELATED".
+>>>>>>
+>>>>>> OK.
+>>>>>>
+>>>>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>>>>>>
+>>>>>> Also is the SNPS databook publicly available? I'd be interested in
+>>>>>> reading it.
+>>>>>
+>>>>> The databook isn't openly available, sorry.
+>>>>>
+>>>>> Gustavo
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>> Andrew Murray
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>>
+>>>>>>>> Andrew Murray
+>>>>>>>>
+>>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
+>>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
+>>>>>>>>> +
+>>>>>>>>>     #define PCIE_ATU_VIEWPORT		0x900
+>>>>>>>>>     #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>>>>>>>>>     #define PCIE_ATU_REGION_OUTBOUND	0
+>>>>>>>>> @@ -244,6 +252,7 @@ struct dw_pcie {
+>>>>>>>>>     	struct dw_pcie_ep	ep;
+>>>>>>>>>     	const struct dw_pcie_ops *ops;
+>>>>>>>>>     	unsigned int		version;
+>>>>>>>>> +	unsigned int		quirk;
+>>>>>>>>>     };
+>>>>>>>>>
+>>>>>>>>>     #define to_dw_pcie_from_pp(port) container_of((port), struct
+>>>>>>>>> dw_pcie,
+>>>>>>>>> pp)
+>>>>>>>>> --
+>>>>>>>>> 2.7.4
+>>>>>>>>>
+>>>>>>>
+>>>>>
+>>>>>
+>>>
+>>>
+> 
+> 
 
