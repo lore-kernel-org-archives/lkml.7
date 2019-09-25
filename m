@@ -2,90 +2,102 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A18AC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47A1C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F0E21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2142054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMXKM9s6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439409AbfIYPUc (ORCPT
+        id S2439411AbfIYPUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:20:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52466 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbfIYPUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:20:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:20:31 -0700
-X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
-   d="scan'208";a="183287991"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:20:30 -0700
-Message-ID: <f49df2d42d7e97b61a5e26ff4d89ede5fbe37a35.camel@linux.intel.com>
-Subject: Re: [PATCH] async: Let kfree() out of the critical area of the lock
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        bvanassche@acm.org, bhelgaas@google.com, dsterba@suse.com,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        sakari.ailus@linux.intel.com
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 25 Sep 2019 08:20:30 -0700
-In-Reply-To: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
-References: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 25 Sep 2019 11:20:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35860 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfIYPUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:20:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y19so7425166wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ih7TKOYfBLPKOMFm2CoimjQft6GV1JfCO8eV/MUJwrU=;
+        b=FMXKM9s6XrtYvQ88Ib0+IVZFHiUBU8cGTTuRi4LCBQoaPe9EksZ4oD43F2pxQVXQZ1
+         pbA+NK4hNDaFGhpkGW7uvJITGoMw6qK0nTwR4MZuYnoOpluBn9DT+oNjBgAYk+fyv1du
+         Zdz+H7/TvhBJR0EqaIagAXAWMOuMluTqkHQGmUtTnn4yjktlVDmp+M3WgiW2VFul+H0Q
+         L3NTsp9pgPhgnIsll7DTwZoFUeddgK50/oUvXP5tL/fBRZdm58k4hirAq7HfO6v6B9+l
+         9Xzzfpg1uQGivuIpIELbgh40/8G9FmACqsr8UQ3NtTymY2JEFloDxnBAq0eAoTU2HKXY
+         y2Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ih7TKOYfBLPKOMFm2CoimjQft6GV1JfCO8eV/MUJwrU=;
+        b=Ar2ngxMSVq+AGunkA+W5JCM1GJSSEX6plvDEi8gf4U4kgAggIaMjQL7iKZ1zA/puZU
+         U+5RTQ39vYpsKG4jYdBFLtiDFShcOUWHt8uBjQ7irbPrmKXEpX++MrfRfeEN8nbL9O8z
+         6UbvVMVjc6vTlXE4oGEX7Mb7LKIpu0hyszW4CXYXs3D86m0MWYXRTyljrMNDwx1wUZer
+         InfpJDqdbL/5+uqMcgfzKykYrtJ/5VjovmFny/Y7UfXjRA4wyLMdAY1L0eAyUNqGfYcZ
+         BvSG7jLDGEKEtOGDYc2v6z5btCI75d8sJgKW2s+fn4f6okaaMGe/1ab6qpoBweqfV0WD
+         UDzQ==
+X-Gm-Message-State: APjAAAVo6/3C1jZevj6Dq/Bjx/Tl0RysJo3mLZGu7VfVXqZfdsfOGyMg
+        OFUq+PDZcDb6SNCB8DtRY0NEeVGYjrD/ORGaGDwkOGv2WpE=
+X-Google-Smtp-Source: APXvYqwzNrfGTdVLE38UE68+yX95Bv3XD1XJUh1r7iu9PvauWOolAlKjz4RDxaIwvVfhnsanRYoq3o9MYYK4H87Z6Zg=
+X-Received: by 2002:adf:fe88:: with SMTP id l8mr9457664wrr.32.1569424853257;
+ Wed, 25 Sep 2019 08:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190925131241.27913-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20190925131241.27913-1-ben.dooks@codethink.co.uk>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 25 Sep 2019 17:20:41 +0200
+Message-ID: <CAKv+Gu8H6u+3Hp5HdYwoG6PwVHGK4shjC9KNsUSMRy6xQNiPoA@mail.gmail.com>
+Subject: Re: [PATCH] efi: make unexported efi_rci2_sysfs_init static
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel@lists.codethink.co.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-25 at 20:52 +0800, Yunfeng Ye wrote:
-> It's not necessary to put kfree() in the critical area of the lock, so
-> let it out.
-> 
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+On Wed, 25 Sep 2019 at 15:12, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>
+> The efi_rci2_sysfs_init() is not used outside of rci2-table.c so
+> make it static to silence the following sparse warning:
+>
+> drivers/firmware/efi/rci2-table.c:79:12: warning: symbol 'efi_rci2_sysfs_init' was not declared. Should it be static?
+>
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > ---
->  kernel/async.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/async.c b/kernel/async.c
-> index 4f9c1d6..1de270d 100644
-> --- a/kernel/async.c
-> +++ b/kernel/async.c
-> @@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
->  	list_del_init(&entry->domain_list);
->  	list_del_init(&entry->global_list);
-> 
-> -	/* 3) free the entry */
-> -	kfree(entry);
->  	atomic_dec(&entry_count);
-> -
->  	spin_unlock_irqrestore(&async_lock, flags);
-> 
-> +	/* 3) free the entry */
-> +	kfree(entry);
-> +
->  	/* 4) wake up any waiters */
->  	wake_up(&async_done);
+>  drivers/firmware/efi/rci2-table.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/rci2-table.c b/drivers/firmware/efi/rci2-table.c
+> index 3e290f96620a..76b0c354a027 100644
+> --- a/drivers/firmware/efi/rci2-table.c
+> +++ b/drivers/firmware/efi/rci2-table.c
+> @@ -76,7 +76,7 @@ static u16 checksum(void)
+>         return chksum;
 >  }
+>
+> -int __init efi_rci2_sysfs_init(void)
+> +static int __init efi_rci2_sysfs_init(void)
+>  {
+>         struct kobject *tables_kobj;
+>         int ret = -ENOMEM;
+> --
+> 2.23.0
+>
 
-It probably wouldn't hurt to update the patch description to mention that
-async_schedule_node_domain does the allocation outside of the lock, then
-takes the lock and does the list addition and entry_count increment inside
-the critical section so this is just updating the code to match that it
-seems.
+Thanks Ben.
 
-Otherwise the change itself looks safe to me, though I am not sure there
-is a performance gain to be had so this is mostly just a cosmetic patch.
-
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-
+Queued in efi/urgent
