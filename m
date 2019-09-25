@@ -2,120 +2,112 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1190C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D02C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A5321D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65B4217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c7tkPZug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633980AbfIYHcy (ORCPT
+        id S2406768AbfIYHeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:32:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32052 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405164AbfIYHcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:32:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 00:32:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="364246016"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga005.jf.intel.com with ESMTP; 25 Sep 2019 00:32:51 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 00:32:51 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.140]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 15:32:49 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Peter Xu <peterx@redhat.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: RE: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
- interfaces
-Thread-Topic: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
- interfaces
-Thread-Index: AQHVcgpDf16VDDZMQk6x5RWfK5mI2qc5MXAAgABWBICAAcJfAIAAh6Ig//+HOwCAABizAIAAjr3w
-Date:   Wed, 25 Sep 2019 07:32:48 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190923203102.GB21816@araj-mobl1.jf.intel.com>
- <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
- <20190925043050.GK28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
- <20190925052402.GM28074@xz-x1>
- <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
-In-Reply-To: <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2U4YmU0ZmUtZDYzZS00ZjE4LWExZjctMTJkMzE0OTI5ZWIwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQjAzc0c5Y3ZcL01KUnQ3QmQyR2hyUUdDVkVaY3J4TEUzcGJTZjZoYzM4MDdzcGVnXC9Kcm5MZ1RYbXNHcDZGNGVuIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 03:34:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60180 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405579AbfIYHeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:34:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8P7XsZD066421;
+        Wed, 25 Sep 2019 07:34:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=rnwCP+yK6Y5sSERIDmHzeGo5Z0sHmxxaolBxB7tcZAU=;
+ b=c7tkPZugFIf2O8S5EGXfb2sPCZIjOXyeTb15qd24WMNfj6jeFkPCMsuPHK76VntD4X7q
+ 9sjBdUPgD0AQyNO9nmuIGKC5dRsJd8sKTxrolWp9pBkO57pzDWbGSqB8b7P4eXVOG6xN
+ TyZtOkN5ztdM0V1J6mxMELDZRoYG6VN+WviPeGZqFsXK41T0h59dq0mAZXe2yy7c2ChC
+ A00huwvjQj+fasZso/Jk/s7h8OdCnBQ+/tRMPfJ39Nota9C/Lijc03GZb3bCVSxpv1Lv
+ DOHDArrEQQsfESnFmhEHGv4jA8inyWtuBiL5J0dzVynrnrTYE10rpSLLbV3J1jRFtP9h Zg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v5btq2t5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 07:34:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8P7Y3J5093490;
+        Wed, 25 Sep 2019 07:34:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2v7vnxeae8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 07:34:07 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8P7XS1M005149;
+        Wed, 25 Sep 2019 07:33:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Sep 2019 00:33:28 -0700
+Date:   Wed, 25 Sep 2019 10:33:21 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerry Lin <wahahab11@gmail.com>
+Cc:     Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>,
+        Jon Nettleton <jon.nettleton@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: olpc_dcon: fix wrong dependencies in Kconfig
+ file
+Message-ID: <20190925073321.GB27389@kadam>
+References: <20190925072533.GA18121@compute1>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925072533.GA18121@compute1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909250077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909250077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBMdSBCYW9sdSBbbWFpbHRvOmJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbV0NCj4gU2Vu
-dDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjUsIDIwMTkgMjo1MiBQTQ0KPiANCj4gSGkgUGV0ZXIg
-YW5kIEtldmluLA0KPiANCj4gT24gOS8yNS8xOSAxOjI0IFBNLCBQZXRlciBYdSB3cm90ZToNCj4g
-PiBPbiBXZWQsIFNlcCAyNSwgMjAxOSBhdCAwNDozODozMUFNICswMDAwLCBUaWFuLCBLZXZpbiB3
-cm90ZToNCj4gPj4+IEZyb206IFBldGVyIFh1IFttYWlsdG86cGV0ZXJ4QHJlZGhhdC5jb21dDQo+
-ID4+PiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAyNSwgMjAxOSAxMjozMSBQTQ0KPiA+Pj4N
-Cj4gPj4+IE9uIFR1ZSwgU2VwIDI0LCAyMDE5IGF0IDA5OjM4OjUzQU0gKzA4MDAsIEx1IEJhb2x1
-IHdyb3RlOg0KPiA+Pj4+Pj4gaW50ZWxfbW1tYXBfcmFuZ2UoZG9tYWluLCBhZGRyLCBlbmQsIHBo
-eXNfYWRkciwgcHJvdCkNCj4gPj4+Pj4NCj4gPj4+Pj4gTWF5YmUgdGhpbmsgb2YgYSBkaWZmZXJl
-bnQgbmFtZS4uPyBtbW1hcCBzZWVtcyBhIGJpdCB3ZWlyZCA6LSkNCj4gPj4+Pg0KPiA+Pj4+IFll
-cy4gSSBkb24ndCBsaWtlIGl0IGVpdGhlci4gSSd2ZSB0aG91Z2h0IGFib3V0IGl0IGFuZCBoYXZl
-bid0DQo+ID4+Pj4gZmlndXJlZCBvdXQgYSBzYXRpc2ZpZWQgb25lLiBEbyB5b3UgaGF2ZSBhbnkg
-c3VnZ2VzdGlvbnM/DQo+ID4+Pg0KPiA+Pj4gSG93IGFib3V0IGF0IGxlYXN0IHNwbGl0IHRoZSB3
-b3JkIHVzaW5nICJfIj8gIExpa2UgIm1tX21hcCIsIHRoZW4NCj4gPj4+IGFwcGx5IGl0IHRvIGFs
-bCB0aGUgIm1tbSoiIHByZWZpeGVzLiAgT3RoZXJ3aXNlIGl0J2xsIGJlIGVhc2lseQ0KPiA+Pj4g
-bWlzcmVhZCBhcyBtbWFwKCkgd2hpY2ggaXMgdG90YWxseSBpcnJlbGV2YW50IHRvIHRoaXMuLi4N
-Cj4gPj4+DQo+ID4+DQo+ID4+IHdoYXQgaXMgdGhlIHBvaW50IG9mIGtlZXBpbmcgJ21tJyBoZXJl
-PyByZXBsYWNlIGl0IHdpdGggJ2lvbW11Jz8NCj4gPg0KPiA+IEknbSBub3Qgc3VyZSBvZiB3aGF0
-IEJhb2x1IHRob3VnaHQsIGJ1dCB0byBtZSAibW0iIG1ha2VzIHNlbnNlIGl0c2VsZg0KPiA+IHRv
-IGlkZW50aWZ5IHRoaXMgZnJvbSByZWFsIElPTU1VIHBhZ2UgdGFibGVzIChiZWNhdXNlIElJVUMg
-dGhlc2Ugd2lsbA0KPiA+IGJlIE1NVSBwYWdlIHRhYmxlcykuICBXZSBjYW4gY29tZSB1cCB3aXRo
-IGJldHRlciBuYW1lcywgYnV0IElNSE8NCj4gPiAiaW9tbXUiIGNhbiBiZSBhIGJpdCBtaXNsZWFk
-aW5nIHRvIGxldCBwZW9wbGUgcmVmZXIgdG8gdGhlIDJuZCBsZXZlbA0KPiA+IHBhZ2UgdGFibGUu
-DQo+IA0KPiAibW0iIHJlcHJlc2VudHMgYSBDUFUgKGZpcnN0IGxldmVsKSBwYWdlIHRhYmxlOw0K
-PiANCj4gdnMuDQo+IA0KPiAiaW8iIHJlcHJlc2VudHMgYW4gSU9NTVUgKHNlY29uZCBsZXZlbCkg
-cGFnZSB0YWJsZS4NCj4gDQoNCklPTU1VIGZpcnN0IGxldmVsIGlzIG5vdCBlcXVpdmFsZW50IHRv
-IENQVSBwYWdlIHRhYmxlLCB0aG91Z2ggeW91IGNhbg0KdXNlIHRoZSBsYXR0ZXIgYXMgdGhlIGZp
-cnN0IGxldmVsIChlLmcuIGluIFNWQSkuIEVzcGVjaWFsbHkgaGVyZSB5b3UgYXJlDQptYWtpbmcg
-SU9WQS0+R1BBIGFzIHRoZSBmaXJzdCBsZXZlbCwgd2hpY2ggaXMgbm90IENQVSBwYWdlIHRhYmxl
-Lg0KDQpidHcgYm90aCBsZXZlbHMgYXJlIGZvciAiaW8iIGkuZS4gRE1BIHB1cnBvc2VzIGZyb20g
-VlQtZCBwLm8udi4gVGhleQ0KYXJlIGp1c3QgaGllcmFyY2hpY2FsIHN0cnVjdHVyZXMgaW1wbGVt
-ZW50ZWQgYnkgVlQtZCwgd2l0aCBzbGlnaHRseQ0KZGlmZmVyZW50IGZvcm1hdC4gVGhlIHNwZWNp
-ZmljYXRpb24gZG9lc24ndCBsaW1pdCBob3cgeW91IHVzZSB0aGVtIGZvci4NCkluIGEgaHlwb3Ro
-ZXRpY2FsIGNhc2UsIGFuIElPTU1VIG1heSBpbXBsZW1lbnQgZXhhY3RseSBzYW1lIENQVS1wYWdl
-LQ0KdGFibGUgZm9ybWF0IGFuZCBzdXBwb3J0IHBhZ2UgZmF1bHRzIGZvciBib3RoIGxldmVscy4g
-VGhlbiB5b3UgY2FuIGV2ZW4NCmxpbmsgdGhlIENQVSBwYWdlIHRhYmxlIHRvIHRoZSAybmQgbGV2
-ZWwgZm9yIHN1cmUuDQoNCk1heWJlIHdlIGp1c3QgbmFtZSBpdCBmcm9tIFZULWQgY29udGV4dCwg
-ZS5nLiBpbnRlbF9tYXBfZmlyc3RfbGV2ZWxfcmFuZ2UsDQpJbnRlbF9tYXBfc2Vjb25kX2xldmVs
-X3JhbmdlLCBhbmQgdGhlbiByZWdpc3RlciB0aGVtIGFzIGRtYXIgZG9tYWluDQpjYWxsYmFjayBh
-cyB5b3UgcmVwbGllZCBpbiBhbm90aGVyIG1haWwuDQoNClRoYW5rcw0KS2V2aW4NCg==
+On Wed, Sep 25, 2019 at 03:25:33PM +0800, Jerry Lin wrote:
+> To allow simultaneous support for XO-1 and XO-1.5.
+> This module require GPIO_CS5535 (for 1.0) and ACPI (for 1.5) now.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Jerry Lin <wahahab11@gmail.com>
+> ---
+>  drivers/staging/olpc_dcon/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/olpc_dcon/Kconfig b/drivers/staging/olpc_dcon/Kconfig
+> index 4ae271f..c2429e4 100644
+> --- a/drivers/staging/olpc_dcon/Kconfig
+> +++ b/drivers/staging/olpc_dcon/Kconfig
+> @@ -3,7 +3,7 @@ config FB_OLPC_DCON
+>  	tristate "One Laptop Per Child Display CONtroller support"
+>  	depends on OLPC && FB
+>  	depends on I2C
+> -	depends on (GPIO_CS5535 || ACPI)
+> +	depends on (GPIO_CS5535 && ACPI)
+
+Please, remove the parentheses as well.
+
+regards,
+dan carpenter
+
