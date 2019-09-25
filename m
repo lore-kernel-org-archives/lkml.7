@@ -2,118 +2,102 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA9C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3636C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7822E21D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ogaMPrR+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ogaMPrR+"
+	by mail.kernel.org (Postfix) with ESMTP id 88DA521D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442290AbfIYGYN (ORCPT
+        id S2411891AbfIYGZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:24:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45338 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404570AbfIYGYN (ORCPT
+        Wed, 25 Sep 2019 02:25:38 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:47358 "EHLO
+        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404570AbfIYGZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:24:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EA4E861197; Wed, 25 Sep 2019 06:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569392651;
-        bh=efyvQV7q7fIN6ZkOeoxT6VazF4LiJT3OJPSTTXRZbJQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ogaMPrR+nmcQbEvlzytpjir1Xy/qKVqEGmn5ROTxTq8C81BvoSE7POnTLXwIKgBgj
-         tx2zGwFW0ps/spY586xrdcflVRQUGMzPTX2cpk44BPmodH+EHNAYbeknxeheXjecJd
-         8sVlaO1xL6gSyL71OJWFVeW4BymdvSCHhuuWwUg0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 3292560128;
-        Wed, 25 Sep 2019 06:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569392651;
-        bh=efyvQV7q7fIN6ZkOeoxT6VazF4LiJT3OJPSTTXRZbJQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ogaMPrR+nmcQbEvlzytpjir1Xy/qKVqEGmn5ROTxTq8C81BvoSE7POnTLXwIKgBgj
-         tx2zGwFW0ps/spY586xrdcflVRQUGMzPTX2cpk44BPmodH+EHNAYbeknxeheXjecJd
-         8sVlaO1xL6gSyL71OJWFVeW4BymdvSCHhuuWwUg0=
+        Wed, 25 Sep 2019 02:25:38 -0400
+Received: from localhost.localdomain (p200300E9D742D21B26FCBF88D1F65952.dip0.t-ipconnect.de [IPv6:2003:e9:d742:d21b:26fc:bf88:d1f6:5952])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: stefan@datenfreihafen.org)
+        by proxima.lasnet.de (Postfix) with ESMTPSA id 4C630C1B1A;
+        Wed, 25 Sep 2019 08:25:35 +0200 (CEST)
+Subject: Re: [PATCH] ieee802154: mcr20a: simplify a bit
+ 'mcr20a_handle_rx_read_buf_complete()'
+To:     Xue Liu <liuxuenetmail@gmail.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "alex. aring" <alex.aring@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wpan - ML <linux-wpan@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190920194533.5886-1-christophe.jaillet@wanadoo.fr>
+ <388f335a-a9ae-7230-1713-a1ecb682fecf@datenfreihafen.org>
+ <CAJuUDwtWJgo7PHJR4kBpQ9mGamTMEaPZBNOZcL3mWFwwZ-zOmw@mail.gmail.com>
+From:   Stefan Schmidt <stefan@datenfreihafen.org>
+Message-ID: <7d131e76-d487-ead3-1780-6a9a7d7877a4@datenfreihafen.org>
+Date:   Wed, 25 Sep 2019 08:25:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAJuUDwtWJgo7PHJR4kBpQ9mGamTMEaPZBNOZcL3mWFwwZ-zOmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 25 Sep 2019 11:54:11 +0530
-From:   ppvk@codeaurora.org
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        vbadigan@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Andy Gross <agross@kernel.org>, linux-mmc-owner@vger.kernel.org
-Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-In-Reply-To: <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
- <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
- <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
-Message-ID: <d10c21360d4830c864374a57c491c21c@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-12 18:26, Georgi Djakov wrote:
-> Hi Pradeep,
+Hello.
+
+On 24.09.19 23:40, Xue Liu wrote:
+> On Sat, 21 Sep 2019 at 13:52, Stefan Schmidt <stefan@datenfreihafen.org> wrote:
+>>
+>> Hello Xue.
+>>
+>> On 20.09.19 21:45, Christophe JAILLET wrote:
+>>> Use a 'skb_put_data()' variant instead of rewritting it.
+>>> The __skb_put_data variant is safe here. It is obvious that the skb can
+>>> not overflow. It has just been allocated a few lines above with the same
+>>> 'len'.
+>>>
+>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>>> ---
+>>>   drivers/net/ieee802154/mcr20a.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
+>>> index 17f2300e63ee..8dc04e2590b1 100644
+>>> --- a/drivers/net/ieee802154/mcr20a.c
+>>> +++ b/drivers/net/ieee802154/mcr20a.c
+>>> @@ -800,7 +800,7 @@ mcr20a_handle_rx_read_buf_complete(void *context)
+>>>        if (!skb)
+>>>                return;
+>>>
+>>> -     memcpy(skb_put(skb, len), lp->rx_buf, len);
+>>> +     __skb_put_data(skb, lp->rx_buf, len);
+>>>        ieee802154_rx_irqsafe(lp->hw, skb, lp->rx_lqi[0]);
+>>>
+>>>        print_hex_dump_debug("mcr20a rx: ", DUMP_PREFIX_OFFSET, 16, 1,
+>>>
+>>
+>> Could you please review and ACK this? If you are happy I will take it
+>> through my tree.
+>>
+>> regards
+>> Stefan Schmidt
 > 
-> Thanks for the patch!
-> 
-> On 9/6/19 15:47, Pradeep P V K wrote:
->> Vote for the MSM bus bandwidth required by SDHC driver
->> based on the clock frequency and bus width of the card.
->> Otherwise,the system clocks may run at minimum clock speed
->> and thus affecting the performance.
->> 
->> This change is based on Georgi Djakov [RFC]
->> (https://lkml.org/lkml/2018/10/11/499)
-> 
-> I am just wondering whether do we really need to predefine the 
-> bandwidth values
-> in DT? Can't we use the computations from the above patch or is there 
-> any
-> problem with that approach?
-> 
-> Thanks,
-> Georgi
+> Acked-by: Xue Liu <liuxuenetmail@gmail.com>
 
-Hi Georgi,
 
-By using the direct required bandwidth(bw / 1000) values, it will not 
-guarantee
-that all the NOC clocks are running in the same voltage corner as 
-required,
-which is very crucial for power concern devices like Mobiles etc.
-Also, it will not guarantee that the value passed is in proper Clock 
-Plans domain
-there by effecting the requested Bandwidth.
-I think, you already aware of these consequences on using direct 
-bandwidth values for
-RPMh based devices.
+This patch has been applied to the wpan tree and will be
+part of the next pull request to net. Thanks!
 
-The value the we passed in DT will make sure that all the NOC clocks 
-between the end points
-are running in the same voltage corners as required and also it will 
-guarantee that
-the requested BW's for the clients are obtained.
-
-Hence the reason for passing the predefined bandwidth values in DT.
-
-Thanks and Regards,
-Pradeep
+regards
+Stefan Schmidt
