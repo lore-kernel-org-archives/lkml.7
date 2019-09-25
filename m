@@ -2,104 +2,202 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94038C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D934C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63383222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pX0x+D6e"
+	by mail.kernel.org (Postfix) with ESMTP id 0109420872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733205AbfIYKBK (ORCPT
+        id S2387513AbfIYKBM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:01:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44888 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732929AbfIYKBK (ORCPT
+        Wed, 25 Sep 2019 06:01:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58634 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbfIYKBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:01:10 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so2181713pll.11
+        Wed, 25 Sep 2019 06:01:11 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iD46f-0004TX-55
+        for linux-kernel@vger.kernel.org; Wed, 25 Sep 2019 10:01:09 +0000
+Received: by mail-pf1-f199.google.com with SMTP id w16so3602041pfj.9
         for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 03:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uzZ8DPf6NIW9EBVqRR0XbHjRTYj7wBRwWhdqQxzfdOc=;
-        b=pX0x+D6ebrVJDrq5zD4RO2FtBs2ewMN6Zi/1V5mPNy4/LeQD/H8OU62wxE15vOw03M
-         b1YduOzP5xSt5nCc15YWYBN54koL6AD/dhoDXbsi3wl4KeUwMInH/Vw9KM6lwLVNpeIF
-         f0pazUbc4kvNC0TrMPANcX1bLJhHUa+Kl5wNrD3uSuQu+hg/Dc260ZIBq9Lf0xPwNUyi
-         8AXPHo7/PSDtRLPf8erC0ORT5eDosl7dw0e66r5mBmCRM/QsNGjrgQHQHJ9fSLt+Mqfj
-         yvmyvSF4G4Gnv8SIMRoCZbzz3mcfYmgWut6yahdqK9jrB3ZMCwf1tlUkO+01MmyHHbZN
-         bOnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uzZ8DPf6NIW9EBVqRR0XbHjRTYj7wBRwWhdqQxzfdOc=;
-        b=jdigU3OEeKjqzDQWZBsXSXtDSw7mRtxRBy3divQh2x8/8NIzib7EtDpxdMjkbFa0qn
-         iYVOwKxur6qr02WR2QLw+XhxPO7698D4C1ybaJKS+rDvJ87z1DWDoQrVyu6/ObfMP5Hq
-         2skG8hNdSKw+CW6txwnOtTq3T8hGAtwNnOmPBG+UeliEikq2CGZUKM5nOkeSSHGJ+EL8
-         7JvJ27xCABa6ETZfo+Q6bO3eBU7a7w2UQ6BcIi27EUBLianOjsWpw1za+spYXGTJZsHO
-         x+abNO1MdOG94eSTgxy8mhXl66uT7CNx4VGEUebtUTaXAoKfxQgf8MhYL2nG4KpXeLYa
-         YFsg==
-X-Gm-Message-State: APjAAAUG4chHExNOJ2V38FznG/kRfQMPq3s+qQhtZp9qvVLZtnubVX22
-        hoKODd+SiuTdth2Jr94GVt+3WA==
-X-Google-Smtp-Source: APXvYqyZiVNZNLInx8rqubvBh27cWe1x6GJopIyzVDed+DSk7m3a79qaCZlOpAkdTjZ+xXYikJ/O2w==
-X-Received: by 2002:a17:902:d201:: with SMTP id t1mr7842966ply.337.1569405669418;
-        Wed, 25 Sep 2019 03:01:09 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id x10sm6348741pfr.44.2019.09.25.03.01.04
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Sep 2019 03:01:08 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org
-Cc:     longman@redhat.com, linux-gpio@vger.kernel.org,
-        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
-        baolin.wang@linaro.org, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y v3 0/3] Candidates from Spreadtrum 4.14 product kernel
-Date:   Wed, 25 Sep 2019 18:00:49 +0800
-Message-Id: <cover.1569405445.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qsjjdi3AsDVMQNpWMXhPgKXPZHKa39PHF7rhgE730OI=;
+        b=rRm6ghtEluu2nblGUT4VnGVSFW+Gw5j/cbmfxpEe5cf4ZXhBGV4oPUTvr9nTV7Ix/e
+         dAaKiA9wsHfAydC7s6ZBK4KtSxWKh8NQjyubfhRWJZUqggy8JxGiTk1c7qIhrY95pO/s
+         OkmQ0HCwUl91RitNP5r2IjFkTP4msStuuRJMlyYBVj2uoJHgywezKnNVysTYYANzzz0Z
+         6BLGN2J9RCC0LS0LHFelAXqzcoBF5vD0yhSGrBGFOiXqDq/IJ3Hbds59HZuojMeZxh/5
+         bK1S1YgGIzfJenqCg/fSwDvRbhLygDJkf9buaa2EyQgSIytxOyj+IoPf5BB78nEXrvW3
+         iOcA==
+X-Gm-Message-State: APjAAAX+cCpbT1mDNyCHUS3l4vr1d9Mu2MBgVR7wqNvX0PRlAIvUDbRh
+        4p1DLwl67hMrEiEJL5SIkOkvlpvSlELnkT5rVlThIm58Oo6kWIFwUrxw1S/UazBPdIrwosecz3i
+        qa0ki62A+7ueuk9HwZwuOLExB9MS6EG2/Ds+LQdFIuQ==
+X-Received: by 2002:a62:ed19:: with SMTP id u25mr8990173pfh.40.1569405667832;
+        Wed, 25 Sep 2019 03:01:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx32WbOzeHyTcRm5LkD/mic4uQBrzZt7i7Fd8cESaPmlnGAbKUaH3VegRto+H/s7U5zVgSw+A==
+X-Received: by 2002:a62:ed19:: with SMTP id u25mr8990134pfh.40.1569405667508;
+        Wed, 25 Sep 2019 03:01:07 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-54e4-e181-beb0-1245.dynamic-ip6.hinet.net (2001-b011-380f-3c42-54e4-e181-beb0-1245.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:54e4:e181:beb0:1245])
+        by smtp.gmail.com with ESMTPSA id b5sm4248775pgb.68.2019.09.25.03.01.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 03:01:06 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.13\))
+Subject: Re: Alps touchpad generates IRQ storm after S3
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <BFBB1DB9-00B6-497E-80D1-5168CF16B889@canonical.com>
+Date:   Wed, 25 Sep 2019 18:01:03 +0800
+Cc:     Xiaojian Cao <xiaojian.cao@cn.alps.com>, masaki.ota@alpsalpine.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        naoki.saito@alpsalpine.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <82884F1B-A4CD-44EF-9245-1143277484A6@canonical.com>
+References: <44F93018-5F13-4932-A5AC-9D288CDF68DD@canonical.com>
+ <TYAPR01MB30223CB8A576C7809F6382C1ECA30@TYAPR01MB3022.jpnprd01.prod.outlook.com>
+ <TYXPR01MB1470902D804A47EE72013006C8A30@TYXPR01MB1470.jpnprd01.prod.outlook.com>
+ <A118551C-A0D9-485F-91F7-44A5BE228B99@canonical.com>
+ <39b2e63e339447e8b09b2601abf3d1ba@AUSX13MPC101.AMER.DELL.COM>
+ <BFBB1DB9-00B6-497E-80D1-5168CF16B889@canonical.com>
+To:     Mario.Limonciello@dell.com
+X-Mailer: Apple Mail (2.3594.4.13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
-kernel, but missing in v4.14.146:
+Hi Xiaojian,
 
-513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
-957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
-87a2b65fc855 power: supply: sysfs: ratelimit property read error message
+> On Aug 28, 2019, at 22:43, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> Hi Mario,
+> 
+> at 21:25, <Mario.Limonciello@dell.com> <Mario.Limonciello@dell.com> wrote:
+> 
+>> KH,
+>> 
+>> Just make sure I understand details.
+>> 
+>>> Commit "HID: i2c-hid: Don't reset device upon system resume
+>> 
+>> If you revert this it's fixed on this system?
+> 
+> Yes. Once reset is used instead of  the issue is gone.
 
-[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
+Do you figure out the correct command to use here?
 
-Changes from v2:
- - Drop 2 unnecessary patches (patch 1 and patch 6) from v2 patch set.
- - Backport these patches to 4.19.y.
+Kai-Heng
 
-Changes from v1:
- - Drop 2 unnecessary patches (patch 1 and patch 4) from v1 patch set.
- - Add upstream commit id in change log for each stable patch.
-
-David Lechner (1):
-  power: supply: sysfs: ratelimit property read error message
-
-Nathan Chancellor (1):
-  pinctrl: sprd: Use define directive for sprd_pinconf_params values
-
-Waiman Long (1):
-  locking/lockdep: Add debug_locks check in __lock_downgrade()
-
- drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
- drivers/power/supply/power_supply_sysfs.c |    3 ++-
- kernel/locking/lockdep.c                  |    3 +++
- 3 files changed, 7 insertions(+), 5 deletions(-)
-
--- 
-1.7.9.5
+> 
+>> 
+>> In that commit you had mentioned if this causes problems it might be worth
+>> quirking just Raydium but commit afbb1169ed5b58cfca017e368b53e019cf285853
+>> confirmed that it helped several other systems too.
+>> 
+>> If the conclusion from this investigation this is only fixable via touchpad FW update
+>> it might be worth quirking this touchpad/touchpad FW/system combination.
+> 
+> Hopefully there’s a better solution from ALPS :)
+> 
+>> 
+>>> Also Cc Mario because this could relate to BIOS.
+>> 
+>> Also I assume this is on current stable BIOS/EC release, right?
+> 
+> Yes. The BIOS version is 1.10.1.
+> 
+> The IRQ storm stops as soon as the touchpad gets touched.
+> 
+> Kai-Heng
+> 
+>> 
+>> Thanks,
+>> 
+>>> -----Original Message-----
+>>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> Sent: Wednesday, August 28, 2019 1:58 AM
+>>> To: Xiaojian Cao
+>>> Cc: Masaki Ota; Limonciello, Mario; open list:HID CORE LAYER; Linux Kernel
+>>> Mailing List; Naoki Saito
+>>> Subject: Re: Alps touchpad generates IRQ storm after S3
+>>> 
+>>> 
+>>> [EXTERNAL EMAIL]
+>>> 
+>>> Hi Xiaojian,
+>>> 
+>>> at 14:51, Xiaojian Cao <xiaojian.cao@cn.alps.com> wrote:
+>>> 
+>>>> Hi Ota-san,
+>>>> 
+>>>> OK, we will look into it.
+>>>> 
+>>>> 
+>>>> Hi Kai-Heng,
+>>>> 
+>>>> We will try to reproduce this issue first, could you please tell me the
+>>>> target Ubuntu version?
+>>> 
+>>> It’s distro-agnostic, any distro with mainline Linux can reproduce the issue.
+>>> 
+>>> Kai-Heng
+>>> 
+>>>> Best regards,
+>>>> Jason
+>>>> 
+>>>> -----Original Message-----
+>>>> From: 太田 真喜 Masaki Ota <masaki.ota@alpsalpine.com>
+>>>> Sent: Wednesday, August 28, 2019 2:35 PM
+>>>> To: 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; Kai-Heng Feng
+>>>> <kai.heng.feng@canonical.com>
+>>>> Cc: Mario Limonciello <mario.limonciello@dell.com>; open list:HID CORE
+>>>> LAYER <linux-input@vger.kernel.org>; Linux Kernel Mailing List
+>>>> <linux-kernel@vger.kernel.org>; 斉藤 直樹 Naoki Saito
+>>>> <naoki.saito@alpsalpine.com>
+>>>> Subject: RE: Alps touchpad generates IRQ storm after S3
+>>>> 
+>>>> Hi, Kai-Heng,
+>>>> 
+>>>> Sorry, I'm not in charge of Linux task now.
+>>>> 
+>>>> Hi, XiaoJian,
+>>>> 
+>>>> Please check the following mail.
+>>>> If you have any question, please ask Kai-Heng.
+>>>> 
+>>>> Best Regards,
+>>>> Masaki Ota
+>>>> -----Original Message-----
+>>>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>>> Sent: Wednesday, August 28, 2019 3:22 PM
+>>>> To: 太田 真喜 Masaki Ota <masaki.ota@alpsalpine.com>
+>>>> Cc: Mario Limonciello <mario.limonciello@dell.com>; open list:HID CORE
+>>>> LAYER <linux-input@vger.kernel.org>; Linux Kernel Mailing List
+>>>> <linux-kernel@vger.kernel.org>
+>>>> Subject: Alps touchpad generates IRQ storm after S3
+>>>> 
+>>>> Hi Masaki,
+>>>> 
+>>>> The Alps touchpad (044E:1220) on Dell Precision 7530 causes IRQ storm
+>>>> after system suspend (S3).
+>>>> Commit "HID: i2c-hid: Don't reset device upon system resume” which solves
+>>>> the same issue for other vendors, cause the issue on Alps touchpad.
+>>>> So I’d like to know the correct command Alps touchpad expects after
+>>>> system resume.
+>>>> 
+>>>> Also Cc Mario because this could relate to BIOS.
+>>>> 
+>>>> Kai-Heng
+> 
+> 
 
