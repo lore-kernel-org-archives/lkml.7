@@ -2,188 +2,139 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED8AC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EFBC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E568320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AE72146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569431693;
-	bh=BMoxE1MS64ymoJmv2IUEa5mZb7XB3iowxnY8Rgrk+Co=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=g+1n4R7HAAnu8QBhT9AvwACudmsovATVx6+62MdHtHL8xnErelhWfn89Ko3fiEZUY
-	 BK+6tJM9G+YXOP7kEWgOAYrdEc9ulj44hKs4LymtOPq86lSwvycA8b27rwtTTcv5Si
-	 1BMKmRVt41GdQcZibJ9Ytne/oPHn8xLTT33x5cm4=
+	s=default; t=1569431699;
+	bh=89gdrktY78IgBMDt3Gfn54he9idV2JCVN2ModkkNem8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dGJAx1yqnMnGRGI8bazAuy08Rr1QcoMIQILcCSZacvrXJSrksGjBSigHMWUhYfUVj
+	 8Gn59+eMjw7kocpnH3Nv1TTK0adl+57ihU5KDTk5cuvxhDpBQuiogtoQCTve9Nqlcz
+	 jAc7eDCF9EFdv6iQ5Blwi4aOmqho20ug/I9/29OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502214AbfIYROw (ORCPT
+        id S2502235AbfIYRO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:14:52 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:40416 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2440253AbfIYROv (ORCPT
+        Wed, 25 Sep 2019 13:14:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53976 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfIYRO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:14:51 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iDAsI-0000yZ-Iz; Wed, 25 Sep 2019 19:14:46 +0200
-To:     Zenghui Yu <yuzenghui@huawei.com>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka  =?UTF-8?Q?GICR=5FVPROPBASER=29=20allocation?=
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 25 Sep 2019 13:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aLQzNm39tdIMTQRnIptN+pzSYiE/srlJQZjWMcvGrPc=; b=vIRk7UL9EyuwGru+KShQfdlrX
+        1SilWNO9Nh+evGCOaUaZNXyXXVz8E9diVHiYEX4kTwWkhyazb3ycaLvYxx6fWgy4hIV4EFbgrxnb9
+        p7x0RK3wnE5UftcSnfEDz+HhqT7F39Ftd5z7NCCf2nwYCU3G/Dvs/sVqrDa9AAK7LF1TE=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDAsQ-000812-IP; Wed, 25 Sep 2019 17:14:54 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 03BCAD01D66; Wed, 25 Sep 2019 18:14:53 +0100 (BST)
+Date:   Wed, 25 Sep 2019 10:14:52 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the risc-v-fixes tree with Linus' tree
+Message-ID: <20190925171452.GK2036@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 25 Sep 2019 18:14:46 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>
-In-Reply-To: <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-11-maz@kernel.org>
- <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
- <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
-Message-ID: <e64126d2adf7ea5fe5c75bd4bcdce6e0@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, tglx@linutronix.de, lorenzo.pieralisi@arm.com, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mEgWsss+US7fWyVR"
+Content-Disposition: inline
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-25 15:41, Marc Zyngier wrote:
-> On 25/09/2019 14:04, Zenghui Yu wrote:
->> Hi Marc,
->>
->> Some questions about this patch, mostly to confirm that I would
->> understand things here correctly.
->>
->> On 2019/9/24 2:25, Marc Zyngier wrote:
->>> GICv4.1 defines a new VPE table that is potentially shared between
->>> both the ITSs and the redistributors, following complicated 
->>> affinity
->>> rules.
->>>
->>> To make things more confusing, the programming of this table at
->>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER 
->>> register
->>> for something completely different.
->>>
->>> The code flow is somewhat complexified by the need to respect the
->>> affinities required by the HW, meaning that tables can either be
->>> inherited from a previously discovered ITS or redistributor.
->>>
->>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>> ---
->>
->> [...]
->>
->>> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct 
->>> its_node *its,
->>>   	return indirect;
->>>   }
->>>
->>> +static u32 compute_common_aff(u64 val)
->>> +{
->>> +	u32 aff, clpiaff;
->>> +
->>> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
->>> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
->>> +
->>> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
->>> +}
->>> +
->>> +static u32 compute_its_aff(struct its_node *its)
->>> +{
->>> +	u64 val;
->>> +	u32 svpet;
->>> +
->>> +	/*
->>> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
->>> +	 * the resulting affinity. We then use that to see if this match
->>> +	 * our own affinity.
->>> +	 */
->>> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
->>> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
->>> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
->>> +	return compute_common_aff(val);
->>> +}
->>> +
->>> +static struct its_node *find_sibbling_its(struct its_node 
->>> *cur_its)
->>> +{
->>> +	struct its_node *its;
->>> +	u32 aff;
->>> +
->>> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
->>> +		return NULL;
->>> +
->>> +	aff = compute_its_aff(cur_its);
->>> +
->>> +	list_for_each_entry(its, &its_nodes, entry) {
->>> +		u64 baser;
->>> +
->>> +		if (!is_v4_1(its) || its == cur_its)
->>> +			continue;
->>> +
->>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->>> +			continue;
->>> +
->>> +		if (aff != compute_its_aff(its))
->>> +			continue;
->>> +
->>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->>> +		baser = its->tables[2].val;
->>> +		if (!(baser & GITS_BASER_VALID))
->>> +			continue;
->>> +
->>> +		return its;
->>> +	}
->>> +
->>> +	return NULL;
->>> +}
->>> +
->>>   static void its_free_tables(struct its_node *its)
->>>   {
->>>   	int i;
->>> @@ -2004,6 +2066,15 @@ static int its_alloc_tables(struct its_node 
->>> *its)
->>>   			break;
->>>
->>>   		case GITS_BASER_TYPE_VCPU:
->>> +			if (is_v4_1(its)) {
->>> +				struct its_node *sibbling;
->>> +
->>> +				if ((sibbling = find_sibbling_its(its))) {
->>> +					its->tables[2] = sibbling->tables[2];
->>
->> This means thst the vPE table is shared between ITSs which are under 
->> the
->> same affinity group?
->
-> That's indeed what this is trying to do...
->
->> Don't we need to set GITS_BASER (by its_setup_baser()) here to tell 
->> this
->> ITS where the vPE table lacates?
->
-> Absolutely. This is a bug. I didn't spot it as my model only has a
-> single ITS.
 
-FWIW, I've pushed out an updated branch with this fixed as well as the 
-rest of the comments you had.
+--mEgWsss+US7fWyVR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks again,
+Hi all,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Today's linux-next merge of the risc-v-fixes tree got a conflict in:
+
+  arch/riscv/include/asm/pgtable.h
+
+between commit:
+
+  782de70c42930ba ("mm: consolidate pgtable_cache_init() and pgd_cache_init=
+()")
+
+=66rom Linus' tree and commit:
+
+  b6f2b2e600a27b7 ("RISC-V: Fix building error when CONFIG_SPARSEMEM_MANUAL=
+=3Dy")
+
+=66rom the risc-v-fixes tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc arch/riscv/include/asm/pgtable.h
+index c60123f018f50,4f4162d90586d..0000000000000
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@@ -424,18 -436,11 +436,6 @@@ extern void *dtb_early_va
+  extern void setup_bootmem(void);
+  extern void paging_init(void);
+ =20
+- #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+- #define VMALLOC_END      (PAGE_OFFSET - 1)
+- #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+-=20
+- #define FIXADDR_TOP      VMALLOC_START
+- #ifdef CONFIG_64BIT
+- #define FIXADDR_SIZE     PMD_SIZE
+- #else
+- #define FIXADDR_SIZE     PGDIR_SIZE
+- #endif
+- #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+ -static inline void pgtable_cache_init(void)
+ -{
+ -	/* No page table caches to initialize */
+ -}
+--
+  /*
+   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+
+--mEgWsss+US7fWyVR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2LoIwACgkQJNaLcl1U
+h9Ap6Qf8DT2faMTcscCRsAs0NR57fTzrUkbKVVZkwGSjhZAgaZ3cFeHpVYqlloZg
+X9KOdOG2JhrlvrYmEoyX9aKh4/c3GLs25PC3FidQG6RULOasgJvJYaO8/UDct6iz
+MEilerQKUPLlye3fyOAz45hhmDe80CLCpVFKlXHZGOilpBTrl4jfBeMEWEU24LPh
+wkLXsv4keO2e40Krgex05d7GztnQQIWLpZXlUfZmVv+2Bx6N2hLtsUfiDOLGz0hJ
+fk3CodIheoNwtIB1JARf4wvn0KsYp6krXLM+Wsd0x55jvC120BVRsxl8YknDW4LM
+ux/jkLDUkjij8WhzclqD9uvEuzlBjg==
+=EJ+I
+-----END PGP SIGNATURE-----
+
+--mEgWsss+US7fWyVR--
