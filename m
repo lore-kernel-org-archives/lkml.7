@@ -2,112 +2,232 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFFAC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAF3C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBD921D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w0GBSoOE"
+	by mail.kernel.org (Postfix) with ESMTP id 007B92146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437696AbfIYOfw (ORCPT
+        id S2437761AbfIYOgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:35:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38298 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730669AbfIYOfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:35:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PEZXQh009127;
-        Wed, 25 Sep 2019 09:35:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569422133;
-        bh=Vr6ZNVx+133zoSre+n4gSJjThy4BgNGHqTs8gT9hzm8=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=w0GBSoOEYRYazebOWPlPnNxGrvB4waTQhLzKrVh4jnqwl2BaAm18t3ONj5I72ngX9
-         2l3s1zhZuj0zW5kkraDQfyvgavj+5w6JrXj8+klm10a7dhaJnRzhoU6R3dZTf+r9yI
-         r7gBKHj7Q7B1EbDn2whKawdJT5OC71FcWbUfz2KU=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PEZW7g046462;
-        Wed, 25 Sep 2019 09:35:33 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
- Sep 2019 09:35:32 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 25 Sep 2019 09:35:25 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PEZWNs107138;
-        Wed, 25 Sep 2019 09:35:32 -0500
-Date:   Wed, 25 Sep 2019 09:37:41 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v3 6/8] media: i2c: ov2659: Add powerdown/reset gpio
- handling
-Message-ID: <20190925143741.25qn2wuyiwapsehr@ti.com>
-References: <20190924164414.21897-1-bparrot@ti.com>
- <20190924164414.21897-7-bparrot@ti.com>
- <20190925095154.GL9467@paasikivi.fi.intel.com>
+        Wed, 25 Sep 2019 10:36:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41706 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437698AbfIYOgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:36:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0D5F1ACC9;
+        Wed, 25 Sep 2019 14:36:14 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 16:36:12 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joe Perches <joe@perches.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] printf: add support for printing symbolic error codes
+Message-ID: <20190925143612.3tryimrvyfcqb2ez@pathway.suse.cz>
+References: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+ <20190917065959.5560-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190925095154.GL9467@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Wed [2019-Sep-25 12:51:54 +0300]:
-> Hi Benoit,
-> 
-> On Tue, Sep 24, 2019 at 11:44:12AM -0500, Benoit Parrot wrote:
-> > On some board it is possible that the sensor 'powerdown' and or 'reset'
-> > pin might be controlled by gpio instead of being tied.
-> > 
-> > To implement we add pm_runtime support which will handle the power
-> > up/down sequence when it is available otherwise the sensor will be
-> > powered on at module insertion/probe and powered off at module removal.
-> > 
-> > Now originally the driver assumed that the sensor would always stay
-> > powered and keep its register setting. We cannot assume this anymore, so
-> > every time we "power up" we need to re-program the initial registers
-> > configuration first. This was previously done only at probe time.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> 
-> Thanks for the update.
-> 
-> I missed the control interface is accessible also when the device is not
-> streaming, and the driver doesn't appear to power on the sensor for that,
-> leading to a failing I²C write.
-> 
-> Could you address that as well, either here or as a separate patch? E.g.
-> the smiapp driver does this.
+First, I am sorry that I replay so late. I was traveling the previous
+two weeks and was not able to follow the discussion about this patch.
 
-Yes, I missed that also.
-I'll add a check in .s_ctrl().
+I am fine with adding this feature. But I would like to do it
+a cleaner way, see below.
 
-Benoit
 
+On Tue 2019-09-17 08:59:59, Rasmus Villemoes wrote:
+> With my embedded hat on, I've made it possible to remove this.
 > 
-> -- 
-> Kind regards,
-> 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+> I've tested that the #ifdeffery in errcode.c is sufficient to make
+> this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
+> 0day bot will tell me which ones I've missed.
+
+Please, remove the above two paragraphs in the final patch. They make
+sense for review but not for git history.
+
+
+> Andrew: please consider picking this up, even if we're already in the
+> merge window. Quite a few people have said they'd like to see
+> something like this, it's a debug improvement in its own right (the
+> "ERR_PTR accidentally passed to printf" case), the printf tests pass,
+> and it's much easier to start adding (and testing) users around the
+> tree once this is in master.
+
+This change would deserve to spend some time in linux-next. Anyway,
+it is already too late for 5.4.
+
+
+> diff --git a/include/linux/errcode.h b/include/linux/errcode.h
+> new file mode 100644
+> index 000000000000..c6a4c1b04f9c
+> --- /dev/null
+> +++ b/include/linux/errcode.h
+
+The word "code" is quite ambiguous. I am not sure if it is the name or
+the number. I think that it is actually both (the relation between
+the two.
+
+Both "man 3 errno" and
+https://www.gnu.org/software/libc/manual/html_node/Checking-for-Errors.html#Checking-for-Errors
+talks about numbers and symbolic names.
+
+Please use errname or so instead of errcode everywhere.
+
+
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 5960e2980a8a..dc1b20872774 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -164,6 +164,14 @@ config DYNAMIC_DEBUG
+>  	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+>  	  information.
+>  
+> +config SYMBOLIC_ERRCODE
+
+What is the exact reason to make this configurable, please?
+
+Nobody was really against this feature. The only question
+was if it was worth the code complexity and maintenance.
+If we are going to have the code then we should use it.
+
+Then there was a concerns that it might be too big for embedded
+people. But did it come from people working on embedded kernel
+or was it just theoretical?
+
+I would personally enable it when CONFIG_PRINTK is enabled.
+We could always introduce a new config option later when
+anyone really wants to disable it.
+
+> --- /dev/null
+> +++ b/lib/errcode.c
+> @@ -0,0 +1,212 @@
+> +#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = #err
+> +static const char *codes_0[] = {
+> +	E(E2BIG),
+
+I really like the way how the array is initialized.
+
+
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 944eb50f3862..0401a2341245 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> +static void __init
+> +errptr(void)
+> +{
+> +	test("-1234", "%p", ERR_PTR(-1234));
+> +	test(FFFFS "ffffffff " FFFFS "ffffff00", "%px %px", ERR_PTR(-1), ERR_PTR(-256));
+> +#ifdef CONFIG_SYMBOLIC_ERRCODE
+> +	test("EIO EINVAL ENOSPC", "%p %p %p", ERR_PTR(-EIO), ERR_PTR(-EINVAL), ERR_PTR(-ENOSPC));
+> +	test("EAGAIN EAGAIN", "%p %p", ERR_PTR(-EAGAIN), ERR_PTR(-EWOULDBLOCK));
+
+I like that you check more values. But please split it to check
+only one value per line to make it better readable.
+
+
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137..299fce317eb3 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2111,6 +2112,31 @@ static noinline_for_stack
+>  char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  	      struct printf_spec spec)
+>  {
+> +	/*
+> +	 * If it's an ERR_PTR, try to print its symbolic
+> +	 * representation, except for %px, where the user explicitly
+> +	 * wanted the pointer formatted as a hex value.
+> +	 */
+> +	if (IS_ERR(ptr) && *fmt != 'x') {
+
+We had similar code before the commit 3e5903eb9cff70730171 ("vsprintf:
+Prevent crash when dereferencing invalid pointers"). Note that the
+original code kept the original value also for *fmt == 'K'.
+
+Anyway, the above commit tried to unify the handling of special
+values:
+
+   + use the same strings for special values
+   + check for special values only when pointer is dereferenced
+
+This patch makes it inconsistent again. I mean that the code will:
+
+   + check for (null) and (efault) only when the pointer is
+     dereferenced
+
+   + check for err codes in more situations but not in all
+     and not in %s
+
+   + use another style to print the error (uppercase without
+      brackets)
+
+
+I would like to keep it consistent. My proposal is:
+
+1. Print the plain error code name only when
+   a new %pe modifier is used. This will be useful
+   in the error messages, e.g.
+
+	void *p = ERR_PTR(-ENOMEM);
+	if (IS_ERR(foo)) {
+		pr_err("Sorry, can't do that: %pe\n", foo);
+	return PTR_ERR(foo);
+
+   would produce
+
+	Sorry, can't do that: -ENOMEM
+
+
+2. Use error code names also in check_pointer_msg() instead
+   of (efault). But put it into brackets to distinguish it
+   from the expected value, for example:
+
+      /* valid pointer */
+      phys_addr_t addr = 0xab;
+      printk("value: %pa\n", &addr);
+      /* known error code */
+      printk("value: %pa\n", ERR_PTR(-ENOMEM));
+      /* unknown error code */
+      printk("value: %pa\n", ERR_PTR(-1234));
+
+   would produce:
+
+     value: 0xab
+     value: (-ENOMEM)
+     value: (-1234)
+
+
+3. Unify the style for the null pointer:
+
+    + use (NULL) instead of (null)
+
+4. Do not use error code names for internal vsprintf error
+   to avoid confusion. For example:
+
+    + replace the one (einval) with (%piS-err) or so
+
+How does that sound, please?
+
+Best Regards,
+Petr
