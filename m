@@ -2,105 +2,374 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87745C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C12AC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58268217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:22:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPIe039+"
+	by mail.kernel.org (Postfix) with ESMTP id 620E521D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633950AbfIYFWD (ORCPT
+        id S2633963AbfIYFWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:22:03 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44612 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411744AbfIYFWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:22:03 -0400
-Received: by mail-yw1-f68.google.com with SMTP id u187so1538445ywa.11;
-        Tue, 24 Sep 2019 22:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ppXbKxF8auD4W/LlJIMC/lZP1qG5Ejh31x7zaeM9uKI=;
-        b=VPIe039+m7AxYoWqVDyLQacMNCCJkzhvGzGInpu/h+mEDw5QI1Ybckk0zCmj3ckV35
-         syacAWEMul7XpXh/UDaAu0WCXTYfAtVbSE75noobXexM88nKMk4I4gkYPoYvPjRmOsyY
-         6Rx9JZU/vZTMPrKlqxLOmGKK8Dkt8ToQt9baygQ7/UdaGXr9eeNLEr8f7fE12NUhLdfc
-         8tWNxSRIMsJuPlZJ975j2vcagUvezf89XGZcCAl1Kghv6razO1ebfPlge1IYUOQdVQMD
-         dAgUInd21o4TKID4jrVlg9aILmgbq6fwtNPn3WnZSO7NKcHyg9WcTTTFASLIJcpkhloF
-         HbSg==
+        Wed, 25 Sep 2019 01:22:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45028 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633951AbfIYFWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:22:11 -0400
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23016882EA
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 05:22:11 +0000 (UTC)
+Received: by mail-pl1-f198.google.com with SMTP id j9so2622380plk.21
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:22:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ppXbKxF8auD4W/LlJIMC/lZP1qG5Ejh31x7zaeM9uKI=;
-        b=Icl7wl+w2sa3mI+u6eDjc1YrNhkcXfdyc5DOScEnHsxDVAQUzeHTgsF3KdaFTrdPb+
-         h72gGATIM/7MWdzl4mjVSzP8rDb3DLb3RXu4dg0o7OOtg5f4x85m/fwqmg1om1w26XvN
-         wAS7I/8/2zaoF5JulxwNqir7+xjh+3ppvEb0zdrMCVQ+jCREnuLPONX+lKfUAUCUr+RF
-         3ZKQcffsiaLmKPjf8nsyIIz2kKHphKU20atRrDSPVLn874vGGZNxp8RwHL2gIRmjg0zh
-         VoEYbsg0+Coww3jjpX/d3ucsQuyDSdCOmw5tvlvKVtTrDjkROzqQkkwpHT1CK/4jQRwq
-         KrCA==
-X-Gm-Message-State: APjAAAVzzC9SESjbPrQCxL8W42BoMES0PqQntjDKPPxUVnB8ahJFnXgZ
-        q6nOEkpkNSF1xROdy3sPChjwMeSIiH+kCiO9+qY=
-X-Google-Smtp-Source: APXvYqxDgEimpwXaH1E402H5Z46G2msOuTrc/jDB2nazCZx0ghGZJr17vfvd1a8bPcXQ17ZTZ6N4OUHGrYbuPrNQevs=
-X-Received: by 2002:a81:3c4b:: with SMTP id j72mr4400502ywa.379.1569388921979;
- Tue, 24 Sep 2019 22:22:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qpstl2yJkkpj95636PfTSAxVYaG/GkSVcL8Wuku3BZk=;
+        b=bP1R39oi7KoTd4Wi77TVXLXCBsNUc33bZRHOm1e+2a5vwgF0Z0PCA4qP1BcT/TgBLr
+         qd58/CC9WiGT3J3G6SY4FSMCaYI7tY0apbV3FaWzbrHlPYwwwEuiyfO3ELI6EQ8Kp1Nu
+         zyHWvcvFR32Dym4hoo6P7OmMQWyJPf7uS7o+g58D0567KqjMOaiEm8MHYL+dNxOeBraQ
+         baBjcXyH9J30HzktAxZDTZSd8RhM2rBdzBetblZYZEDZD5ZwJC1PhJWHlr8oT5lyWXg7
+         wp8OBXzlbYFW5EyBki8ZtHlqPoRpJiAj10ydVvzcXI2N6P59ny8QLpbcDlHeE46a0gm0
+         F3wQ==
+X-Gm-Message-State: APjAAAUPE12pMwtR7Br4HEpG/hyOcKM8I7bIsVV5k1kX/+BjQoIYeFQN
+        X2rByN8Allih6QjFXJ5eBt4rSazr8wF/umwDMMdISJGl1I5wHZOd11XmwYf3fRoia8n33PgFHSI
+        wg7fAUwq+qKBottGdTCT2DWTH
+X-Received: by 2002:a65:5c0b:: with SMTP id u11mr6974910pgr.294.1569388930459;
+        Tue, 24 Sep 2019 22:22:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxVH44sOKA0TrcGiF/TYwgX91lTxmEKuAa+c51LptqDzNivQ0XTKrbkH4QTN7/cD8hPJHAv9Q==
+X-Received: by 2002:a65:5c0b:: with SMTP id u11mr6974881pgr.294.1569388930048;
+        Tue, 24 Sep 2019 22:22:10 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id y2sm5821568pfe.126.2019.09.24.22.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 22:22:09 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 13:21:57 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kevin.tian@intel.com, Yi Sun <yi.y.sun@linux.intel.com>,
+        ashok.raj@intel.com, kvm@vger.kernel.org, sanjay.k.kumar@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        yi.y.sun@intel.com
+Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
+Message-ID: <20190925052157.GL28074@xz-x1>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-3-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-References: <1569376448-53998-1-git-send-email-chengzhihao1@huawei.com>
- <20190925030550.GA9913@magnolia> <20190925031733.GB9913@magnolia> <46aa2daf-4c4a-ea74-2300-bb32fdfbdbcc@huawei.com>
-In-Reply-To: <46aa2daf-4c4a-ea74-2300-bb32fdfbdbcc@huawei.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 25 Sep 2019 08:21:50 +0300
-Message-ID: <CAOQ4uxgmCy+VyNr28UczWR3wCLdD3HN5qDk6XwBdsB_2sn0WAQ@mail.gmail.com>
-Subject: Re: [PATCH xfstests v2] overlay: Enable character device to be the
- base fs partition
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eryu Guan <guaneryu@gmail.com>,
-        David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
-        Eric Biggers <ebiggers@google.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>,
-        fstests <fstests@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190923122454.9888-3-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:27 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->
-> There are indeed many '-b' options in xfstests. I only confirmed the line of overlay test. Other -b test options I need to reconfirm later.
->
+On Mon, Sep 23, 2019 at 08:24:52PM +0800, Lu Baolu wrote:
+> This adds functions to manipulate first level page tables
+> which could be used by a scalale mode capable IOMMU unit.
+> 
+> intel_mmmap_range(domain, addr, end, phys_addr, prot)
+>  - Map an iova range of [addr, end) to the physical memory
+>    started at @phys_addr with the @prot permissions.
+> 
+> intel_mmunmap_range(domain, addr, end)
+>  - Tear down the map of an iova range [addr, end). A page
+>    list will be returned which will be freed after iotlb
+>    flushing.
+> 
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Liu Yi L <yi.l.liu@intel.com>
+> Cc: Yi Sun <yi.y.sun@linux.intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/Makefile             |   2 +-
+>  drivers/iommu/intel-pgtable.c      | 342 +++++++++++++++++++++++++++++
+>  include/linux/intel-iommu.h        |  24 +-
+>  include/trace/events/intel_iommu.h |  60 +++++
+>  4 files changed, 426 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/iommu/intel-pgtable.c
+> 
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 4f405f926e73..dc550e14cc58 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -17,7 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
+>  obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+>  obj-$(CONFIG_DMAR_TABLE) += dmar.o
+>  obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
+> -obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
+> +obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o intel-pgtable.o
+>  obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
+>  obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
+>  obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
+> diff --git a/drivers/iommu/intel-pgtable.c b/drivers/iommu/intel-pgtable.c
+> new file mode 100644
+> index 000000000000..8e95978cd381
+> --- /dev/null
+> +++ b/drivers/iommu/intel-pgtable.c
+> @@ -0,0 +1,342 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * intel-pgtable.c - Intel IOMMU page table manipulation library
 
-FWIW, I eyeballed blockdev related overlayfs common code bits
-and all I found out of order was:
+Could this be a bit misleading?  Normally I'll use "IOMMU page table"
+to refer to the 2nd level page table only, and I'm always
+understanding it as "the new IOMMU will understand MMU page table as
+the 1st level".  At least mention "IOMMU 1st level page table"?
 
-@@ -3100,7 +3100,7 @@ _require_scratch_shutdown()
-                        # SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
-                        # will be null, so check OVL_BASE_SCRATCH_DEV before
-                        # running shutdown to avoid shutting down base
-fs accidently.
--                       _notrun "$SCRATCH_DEV is not a block device"
-+                       _notrun "this test requires a valid
-\$OVL_BASE_SCRATCH_DEV as ovl base fs"
-                else
-                        src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
-                        || _notrun "Underlying filesystem does not
-support shutdown"
+> + *
+> + * Copyright (C) 2019 Intel Corporation
+> + *
+> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
+> + */
+> +
+> +#define pr_fmt(fmt)     "DMAR: " fmt
+> +#include <linux/vmalloc.h>
+> +#include <linux/mm.h>
+> +#include <linux/sched.h>
+> +#include <linux/io.h>
+> +#include <linux/export.h>
+> +#include <linux/intel-iommu.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/pgalloc.h>
+> +#include <trace/events/intel_iommu.h>
+> +
+> +#ifdef CONFIG_X86
+> +/*
+> + * mmmap: Map a range of IO virtual address to physical addresses.
 
+"... to physical addresses using MMU page table"?
 
-Zhihaho,
+Might be clearer?
 
-That's all I meant in the nit.
-The v1 commit message was perfectly fine, there was no need to change it at all.
+> + */
+> +#define pgtable_populate(domain, nm)					\
+> +do {									\
+> +	void *__new = alloc_pgtable_page(domain->nid);			\
+> +	if (!__new)							\
+> +		return -ENOMEM;						\
+> +	smp_wmb();							\
 
-Thanks,
-Amir.
+Could I ask what's this wmb used for?
+
+> +	spin_lock(&(domain)->page_table_lock);				\
+
+Is this intended to lock here instead of taking the lock during the
+whole page table walk?  Is it safe?
+
+Taking the example where nm==PTE: when we reach here how do we
+guarantee that the PMD page that has this PTE is still valid?
+
+> +	if (nm ## _present(*nm)) {					\
+> +		free_pgtable_page(__new);				\
+> +	} else {							\
+> +		set_##nm(nm, __##nm(__pa(__new) | _PAGE_TABLE));	\
+
+It seems to me that PV could trap calls to set_pte().  Then these
+could also be trapped by e.g. Xen?  Are these traps needed?  Is there
+side effect?  I'm totally not familiar with this, but just ask aloud...
+
+> +		domain_flush_cache(domain, nm, sizeof(nm##_t));		\
+> +	}								\
+> +	spin_unlock(&(domain)->page_table_lock);			\
+> +} while(0);
+> +
+> +static int
+> +mmmap_pte_range(struct dmar_domain *domain, pmd_t *pmd, unsigned long addr,
+> +		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
+> +{
+> +	pte_t *pte, *first_pte;
+> +	u64 pfn;
+> +
+> +	pfn = phys_addr >> PAGE_SHIFT;
+> +	if (unlikely(pmd_none(*pmd)))
+> +		pgtable_populate(domain, pmd);
+> +
+> +	first_pte = pte = pte_offset_kernel(pmd, addr);
+> +
+> +	do {
+> +		set_pte(pte, pfn_pte(pfn, prot));
+> +		pfn++;
+> +	} while (pte++, addr += PAGE_SIZE, addr != end);
+> +
+> +	domain_flush_cache(domain, first_pte, (void *)pte - (void *)first_pte);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +mmmap_pmd_range(struct dmar_domain *domain, pud_t *pud, unsigned long addr,
+> +		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
+> +{
+> +	unsigned long next;
+> +	pmd_t *pmd;
+> +
+> +	if (unlikely(pud_none(*pud)))
+> +		pgtable_populate(domain, pud);
+> +	pmd = pmd_offset(pud, addr);
+> +
+> +	phys_addr -= addr;
+> +	do {
+> +		next = pmd_addr_end(addr, end);
+> +		if (mmmap_pte_range(domain, pmd, addr, next,
+> +				    phys_addr + addr, prot))
+> +			return -ENOMEM;
+
+How about return the errcode of mmmap_pte_range() directly?
+
+> +	} while (pmd++, addr = next, addr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +mmmap_pud_range(struct dmar_domain *domain, p4d_t *p4d, unsigned long addr,
+> +		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
+> +{
+> +	unsigned long next;
+> +	pud_t *pud;
+> +
+> +	if (unlikely(p4d_none(*p4d)))
+> +		pgtable_populate(domain, p4d);
+> +
+> +	pud = pud_offset(p4d, addr);
+> +
+> +	phys_addr -= addr;
+> +	do {
+> +		next = pud_addr_end(addr, end);
+> +		if (mmmap_pmd_range(domain, pud, addr, next,
+> +				    phys_addr + addr, prot))
+> +			return -ENOMEM;
+
+Same.
+
+> +	} while (pud++, addr = next, addr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +mmmap_p4d_range(struct dmar_domain *domain, pgd_t *pgd, unsigned long addr,
+> +		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
+> +{
+> +	unsigned long next;
+> +	p4d_t *p4d;
+> +
+> +	if (cpu_feature_enabled(X86_FEATURE_LA57) && unlikely(pgd_none(*pgd)))
+> +		pgtable_populate(domain, pgd);
+> +
+> +	p4d = p4d_offset(pgd, addr);
+> +
+> +	phys_addr -= addr;
+> +	do {
+> +		next = p4d_addr_end(addr, end);
+> +		if (mmmap_pud_range(domain, p4d, addr, next,
+> +				    phys_addr + addr, prot))
+> +			return -ENOMEM;
+
+Same.
+
+> +	} while (p4d++, addr = next, addr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +int intel_mmmap_range(struct dmar_domain *domain, unsigned long addr,
+> +		      unsigned long end, phys_addr_t phys_addr, int dma_prot)
+> +{
+> +	unsigned long next;
+> +	pgprot_t prot;
+> +	pgd_t *pgd;
+> +
+> +	trace_domain_mm_map(domain, addr, end, phys_addr);
+> +
+> +	/*
+> +	 * There is no PAGE_KERNEL_WO for a pte entry, so let's use RW
+> +	 * for a pte that requires write operation.
+> +	 */
+> +	prot = dma_prot & DMA_PTE_WRITE ? PAGE_KERNEL : PAGE_KERNEL_RO;
+> +	BUG_ON(addr >= end);
+> +
+> +	phys_addr -= addr;
+> +	pgd = pgd_offset_pgd(domain->pgd, addr);
+> +	do {
+> +		next = pgd_addr_end(addr, end);
+> +		if (mmmap_p4d_range(domain, pgd, addr, next,
+> +				    phys_addr + addr, prot))
+> +			return -ENOMEM;
+
+Same.
+
+> +	} while (pgd++, addr = next, addr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * mmunmap: Unmap an existing mapping between a range of IO vitual address
+> + *          and physical addresses.
+> + */
+> +static struct page *
+> +mmunmap_pte_range(struct dmar_domain *domain, pmd_t *pmd,
+> +		  unsigned long addr, unsigned long end,
+> +		  struct page *freelist, bool reclaim)
+> +{
+> +	int i;
+> +	unsigned long start;
+> +	pte_t *pte, *first_pte;
+> +
+> +	start = addr;
+> +	pte = pte_offset_kernel(pmd, addr);
+> +	first_pte = pte;
+> +	do {
+> +		set_pte(pte, __pte(0));
+> +	} while (pte++, addr += PAGE_SIZE, addr != end);
+> +
+> +	domain_flush_cache(domain, first_pte, (void *)pte - (void *)first_pte);
+> +
+> +	/* Add page to free list if all entries are empty. */
+> +	if (reclaim) {
+
+Shouldn't we know whether to reclaim if with (addr, end) specified as
+long as they cover the whole range of this PMD?
+
+Also I noticed that this value right now is passed in from the very
+top of the unmap() call.  I didn't really catch the point of that...
+
+I'll have similar question to below a few places but I'll skip to
+comment after I understand this one.
+
+> +		struct page *pte_page;
+> +
+> +		pte = (pte_t *)pmd_page_vaddr(*pmd);
+> +		for (i = 0; i < PTRS_PER_PTE; i++)
+> +			if (!pte || !pte_none(pte[i]))
+> +				goto pte_out;
+> +
+> +		pte_page = pmd_page(*pmd);
+> +		pte_page->freelist = freelist;
+> +		freelist = pte_page;
+> +		pmd_clear(pmd);
+> +		domain_flush_cache(domain, pmd, sizeof(pmd_t));
+> +	}
+> +
+> +pte_out:
+> +	return freelist;
+> +}
+
+Regards,
+
+-- 
+Peter Xu
