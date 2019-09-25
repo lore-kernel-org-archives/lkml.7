@@ -2,127 +2,209 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4F3C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33170C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AE52146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hu3jazJh"
+	by mail.kernel.org (Postfix) with ESMTP id 0598B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbfIYQ1G (ORCPT
+        id S2388617AbfIYQ3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:27:06 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38546 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732803AbfIYQ1G (ORCPT
+        Wed, 25 Sep 2019 12:29:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59772 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387859AbfIYQ3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:27:06 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l21so3646436edr.5;
-        Wed, 25 Sep 2019 09:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+Kf9hn93bVYZrlXSfMDSlr/mbW/U/UaPgHwruad4IfQ=;
-        b=Hu3jazJhr8bfs8oWmIbbhJVAnoTr793yhYViKFnPqhtjf2B3dHLr1oYLFE+X5ok1YN
-         xyk7tbfScIGQcnVnHc6j3ScJa5jqlhn7Dov4EEgjw852Hu2iw+Fz98IhfhLIf2EZPrxz
-         a7SXxbAIPLJ1dOFSZ9EnKd3DiySqio5TxtzpadfyjmxcSz6aJMCzex/RMJEH8aHpDFWa
-         7EePeY0zH4WY2J2eAr4VYBRb5LaA2bHhiWNkSoVBOGuZnTy+VeGIwQL5P7tAUP2549ac
-         RUWvzWBeiJ9/d/ynPv7/QPLT/+QF5XZu15lyFj+k7P+ABxryvcvBOnYW5hBaabOFDNFA
-         cGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+Kf9hn93bVYZrlXSfMDSlr/mbW/U/UaPgHwruad4IfQ=;
-        b=MmB5EGahmd6g6FQaXZqtTqx22CRiB38GvsOwIXlK+FbJjjcaW02RPTtVBGqBM/pufX
-         d969dvX59LV47i7z0Jqb4hFUhPHXcv2eoRe5MBi5EO9nQJdn64AgBBfJLICxQYvmXqfz
-         j7mR67C4BZL9IuhBBv4Rt6nCShQFczBjQgVa5BplVIuwama9mqXzibTIOHQU5T7g1lyS
-         pm9m0ywpuIdEGi/qQ8TUCSn9STLDO4yE8RzdR8p3lZWu6tw66Nqmv79Dr0vLMzsRLjvc
-         szJNux4K66YxSYOSV8bwK8cXz4p/SgzE0iL7znMX3LRChkhXmdvgQ4z/LZY2SFuc2Dym
-         0P6A==
-X-Gm-Message-State: APjAAAV5UuodjMaPkZPuZu+78X8ry8Pz8MiIXu8fsvQ9FMc0NTV0sAEg
-        y9V6SoOiUHDPMVEX1qKMRTE=
-X-Google-Smtp-Source: APXvYqwsFPU0lvrsUmak9UXNUaAHaVaLkkJTDjkX+a7IIfjcv1CUu6jPL9gJOVmYaq5xeJ1xwBdcKg==
-X-Received: by 2002:a17:906:5fc4:: with SMTP id k4mr78627ejv.300.1569428824597;
-        Wed, 25 Sep 2019 09:27:04 -0700 (PDT)
-Received: from localhost.localdomain ([185.107.117.129])
-        by smtp.gmail.com with ESMTPSA id g15sm1094346edp.0.2019.09.25.09.27.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 09:27:03 -0700 (PDT)
-Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
-        by localhost.localdomain with esmtp (Exim 4.92.1)
-        (envelope-from <jekhor@gmail.com>)
-        id 1iDA8G-0000yO-Ic; Wed, 25 Sep 2019 19:27:12 +0300
-Date:   Wed, 25 Sep 2019 19:27:12 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
-Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
- Micro-B and Type-C variants
-Message-ID: <20190925162712.GA3653@jeknote.loshitsa1.net>
-References: <20190920223356.6622-1-jekhor@gmail.com>
- <20190920223356.6622-2-jekhor@gmail.com>
- <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com>
- <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
+        Wed, 25 Sep 2019 12:29:15 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 1AFF128A0D8
+Subject: Re: [PATCH] media: vidioc-queryctrl.rst: clarify combining READ_ONLY
+ with WRITE_ONLY
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20190925150945.27706-1-helen.koike@collabora.com>
+ <211b3d26-ffbc-3245-6613-7fd42c65cc80@xs4all.nl>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <a7e82545-141b-7496-f0f1-dadbe05565f0@collabora.com>
+Date:   Wed, 25 Sep 2019 13:29:06 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
+In-Reply-To: <211b3d26-ffbc-3245-6613-7fd42c65cc80@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 06:02:22PM +0300, Andy Shevchenko wrote:
-> On Sat, Sep 21, 2019 at 9:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 21-09-2019 00:33, Yauhen Kharuzhy wrote:
-> > > Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-> > > hardware has Type-C connector and register related devices described as
-> > > I2C connections in the _CRS resource.
-> > >
-> > > There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
-> > > USB connector exists. It has INT33FE device in the DSDT table but
-> > > there are only two I2C connection described: PMIC and BQ27452 battery
-> > > fuel gauge.
-> > >
-> > > Splitting existing INT33FE driver allow to maintain code for USB Micro-B
-> > > (or AB) connector variant separately and make it simpler.
-> > >
-> > > Split driver to intel_cht_int33fe_common.c and
-> > > intel_cht_int33fe_{microb,typec}.c. Compile all this sources to one .ko
-> > > module to make user experience easier.
-> > >
-> > > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> >
-> > This version still works for me on my typec device:
-> >
-> > Tested-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > The code also looks good to me:
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
+Hi Hans
+
+On 9/25/19 12:17 PM, Hans Verkuil wrote:
+> On 9/25/19 5:09 PM, Helen Koike wrote:
+>> Make it clear in the documentation that V4L2_CTRL_FLAG_READ_ONLY doesn't
+>> conflict with V4L2_CTRL_FLAG_WRITE_ONLY. Also make it clear that
+>> if both are combined then the control has read and write permissions.
 > 
-> By some reason it doesn't apply.
+> That doesn't look right.
+> 
+> This is the test in v4l2-compliance:
+> 
+> __u32 rw_mask = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY;
+> 
+> if ((fl & rw_mask) == rw_mask)
+> 	return fail("can't read nor write this control\n");
+> 
+> If both flags are set, then a fail is reported.
+> 
+> Did you mis-read?
+> 
+> Setting both flags makes no sense.
 
-I have checked, and have no issues when applying this patch to the current
-torvalds/master and linux-next/master branches (351c8a09b00b and 9e88347dedd8
-commit IDs).
+Maybe I misunderstood the V4L2_CTRL_TYPE_CTRL_CLASS, from v4l2-compliance:
 
+	case V4L2_CTRL_TYPE_CTRL_CLASS:
+		if (fl != (V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY))
+			return fail("invalid flags for control class\n");
 
--- 
-Yauhen Kharuzhy
+I was confused why vivid was using both flags in vivid_ctrl_class (and also the debayer patch that was following this model).
+
+Why both flags are expected when this type is used?
+
+Thanks,
+Helen
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>>
+>> ---
+>> Hi,
+>>
+>> v4l2-compliance expects both flags for read and write permissions, so I
+>> would like to make it clear in the docs.
+>> Please let me know if this is not the case.
+>>
+>> Thanks
+>> Helen
+>> ---
+>>  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>> index a3d56ffbf4cc..1d3aecdf679f 100644
+>> --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>> +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+>> @@ -500,6 +500,11 @@ See also the examples in :ref:`control`.
+>>        - 0x0004
+>>        - This control is permanently readable only. Any attempt to change
+>>  	the control will result in an ``EINVAL`` error code.
+>> +
+>> +	.. note::
+>> +
+>> +	   If combined with ``V4L2_CTRL_FLAG_WRITE_ONLY``, then both, read
+>> +	   and write are allowed.
+>>      * - ``V4L2_CTRL_FLAG_UPDATE``
+>>        - 0x0008
+>>        - A hint that changing this control may affect the value of other
+>> @@ -523,6 +528,11 @@ See also the examples in :ref:`control`.
+>>  	where writing a value will cause the device to carry out a given
+>>  	action (e. g. motor control) but no meaningful value can be
+>>  	returned.
+>> +
+>> +	.. note::
+>> +
+>> +	   If combined with ``V4L2_CTRL_FLAG_READ_ONLY``, then both, read
+>> +	   and write are allowed.
+>>      * - ``V4L2_CTRL_FLAG_VOLATILE``
+>>        - 0x0080
+>>        - This control is volatile, which means that the value of the
+>>
+> 
