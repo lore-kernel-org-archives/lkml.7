@@ -4,158 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED93C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589CFC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A9820872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D86F20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442806AbfIYIg4 (ORCPT
+        id S2442817AbfIYIhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:36:56 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53890 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404845AbfIYIg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:36:56 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6DA7A36382D;
-        Wed, 25 Sep 2019 18:36:51 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iD2n4-0001BZ-Nt; Wed, 25 Sep 2019 18:36:50 +1000
-Date:   Wed, 25 Sep 2019 18:36:50 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/15] fs: Introduce i_blocks_per_page
-Message-ID: <20190925083650.GE804@dread.disaster.area>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-3-willy@infradead.org>
+        Wed, 25 Sep 2019 04:37:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2716 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405350AbfIYIhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:37:20 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D8E29B19EFCEC1C85424;
+        Wed, 25 Sep 2019 16:37:18 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 16:37:12 +0800
+Subject: Re: [PATCH] tty:vt: Add check the return value of kzalloc to avoid
+ oops
+To:     Nicolas Pitre <nico@fluxnic.net>
+CC:     Greg KH <gregkh@linuxfoundation.org>, <penberg@cs.helsinki.fi>,
+        <jslaby@suse.com>, <textshell@uchuujin.de>, <sam@ravnborg.org>,
+        <daniel.vetter@ffwll.ch>, <mpatocka@redhat.com>,
+        <ghalat@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <yangyingliang@huawei.com>, <yuehaibing@huawei.com>,
+        <zengweilin@huawei.com>
+References: <1568884695-56789-1-git-send-email-nixiaoming@huawei.com>
+ <20190919092933.GA2684163@kroah.com>
+ <nycvar.YSQ.7.76.1909192251210.24536@knanqh.ubzr>
+ <20190920060426.GA473496@kroah.com>
+ <bee63793-e9f4-ecc4-7966-765207009c75@huawei.com>
+ <nycvar.YSQ.7.76.1909222347410.24536@knanqh.ubzr>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <0a21cb45-d67b-ac3f-7fcb-de29ca28fbeb@huawei.com>
+Date:   Wed, 25 Sep 2019 16:37:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925005214.27240-3-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=cFTJNmiEAYDDdQa2eyoA:9
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <nycvar.YSQ.7.76.1909222347410.24536@knanqh.ubzr>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:01PM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+
+
+On 2019/9/23 11:50, Nicolas Pitre wrote:
+> On Sat, 21 Sep 2019, Xiaoming Ni wrote:
 > 
-> This helper is useful for both large pages in the page cache and for
-> supporting block size larger than page size.  Convert some example
-> users (we have a few different ways of writing this idiom).
+>> @ Nicolas Pitre
+>> Can I make a v2 patch based on your advice ?
+>> Or you will submit a patch for "GFP_WONTFAIL" yourself ?
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-I'm actually working on abstrcting this code from both block size
-and page size via the helpers below. We ahve need to support block
-size > page size, and so that requires touching a bunch of all the
-same code as this patchset. I'm currently trying to combine your
-last patch set with my patchset so I can easily test allocating 64k
-page cache pages on a 64k block size filesystem on a 4k page size
-machine with XFS....
-
-/*
- * Return the chunk size we should use for page cache based operations.
- * This supports both large block sizes and variable page sizes based on the
- * restriction that order-n blocks and page cache pages are order-n file offset
- * aligned.
- *
- * This will return the inode block size for block size < page_size(page),
- * otherwise it will return page_size(page).
- */
-static inline unsigned
-iomap_chunk_size(struct inode *inode, struct page *page)
-{
-        return min_t(unsigned, page_size(page), i_blocksize(inode));
-}
-
-static inline unsigned
-iomap_chunk_bits(struct inode *inode, struct page *page)
-{
-        return min_t(unsigned, page_shift(page), inode->i_blkbits);
-}
-
-static inline unsigned
-iomap_chunks_per_page(struct inode *inode, struct page *page)
-{
-        return page_size(page) >> inode->i_blkbits;
-}
-
-Basically, the process is to convert the iomap code over to
-iterating "chunks" rather than blocks or pages, and then allocate
-a struct iomap_page according to the difference between page and
-block size....
-
-> ---
->  fs/iomap/buffered-io.c  |  4 ++--
->  fs/jfs/jfs_metapage.c   |  2 +-
->  fs/xfs/xfs_aops.c       |  8 ++++----
->  include/linux/pagemap.h | 13 +++++++++++++
->  4 files changed, 20 insertions(+), 7 deletions(-)
+> Here's a patch implementing what I had in mind. This is compile tested 
+> only.
 > 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index e25901ae3ff4..0e76a4b6d98a 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -24,7 +24,7 @@ iomap_page_create(struct inode *inode, struct page *page)
->  {
->  	struct iomap_page *iop = to_iomap_page(page);
->  
-> -	if (iop || i_blocksize(inode) == PAGE_SIZE)
-> +	if (iop || i_blocks_per_page(inode, page) <= 1)
->  		return iop;
+> ----- >8
+> 
+> Subject: [PATCH] mm: add __GFP_WONTFAIL and GFP_ONBOOT
+> 
+> Some memory allocations are very unlikely to fail during system boot.
+> Because of that, the code often doesn't bother to check for allocation
+> failure, but this gets reported anyway.
+> 
+> As an alternative to adding code to check for NULL that has almost no
+> chance of ever being exercised, let's use a GFP flag to identify those
+> cases and panic the kernel if allocation failure ever occurs.
+> 
+> Conversion of one such instance is also included.
+> 
+> Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+> 
+.....
+....
 
-That also means checks like these become:
-
-	if (iop || iomap_chunks_per_page(inode, page) <= 1)
-
-as a single file can now have multiple pages per block, a page per
-block and multiple blocks per page as the page size changes...
-
-I'd like to only have to make one pass over this code to abstract
-out page and block sizes, so I'm guessing we'll need to do some
-co-ordination here....
-
-> @@ -636,4 +636,17 @@ static inline unsigned long dir_pages(struct inode *inode)
->  			       PAGE_SHIFT;
->  }
->  
-> +/**
-> + * i_blocks_per_page - How many blocks fit in this page.
-> + * @inode: The inode which contains the blocks.
-> + * @page: The (potentially large) page.
+>  /**
+> @@ -285,6 +293,9 @@ struct vm_area_struct;
+>   * available and will not wake kswapd/kcompactd on failure. The _LIGHT
+>   * version does not attempt reclaim/compaction at all and is by default used
+>   * in page fault path, while the non-light is used by khugepaged.
 > + *
-> + * Context: Any context.
-> + * Return: The number of filesystem blocks covered by this page.
-> + */
-> +static inline
-> +unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
-> +{
-> +	return page_size(page) >> inode->i_blkbits;
-> +}
->  #endif /* _LINUX_PAGEMAP_H */
+> + * %GFP_ONBOOT is for relatively small allocations that are not expected
+> + * to fail while the system is booting.
+>   */
+>  #define GFP_ATOMIC	(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+>  #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+> @@ -300,6 +311,7 @@ struct vm_area_struct;
+>  #define GFP_TRANSHUGE_LIGHT	((GFP_HIGHUSER_MOVABLE | __GFP_COMP | \
+>  			 __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
+>  #define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+> +#define GFP_ONBOOT	(GFP_NOWAIT | __GFP_WONTFAIL)
+>  
 
-It also means that we largely don't need to touch mm headers as
-all the helpers end up being iomap specific and private...
+Isn't it better to bind GFP_ONBOOT and GFP_NOWAIT?
+Can be not GFP_NOWAIT when applying for memory at boot time
 
-Cheers,
+>  /* Convert GFP flags to their corresponding migrate type */
+>  #define GFP_MOVABLE_MASK (__GFP_RECLAIMABLE|__GFP_MOVABLE)
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ff5484fdbd..36dee09f7f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4625,6 +4625,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  fail:
+>  	warn_alloc(gfp_mask, ac->nodemask,
+>  			"page allocation failure: order:%u", order);
+> +	if (gfp_mask & __GFP_WONTFAIL) {
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Is it more intuitive to use __GFP_DIE_IF_FAIL as the flag name?
+
+> +		/*
+> +		 * The assumption was wrong. This is never supposed to happen.
+> +		 * Caller most likely won't check for a returned NULL either.
+> +		 * So the only reasonable thing to do is to pannic.
+> +		 */
+> +		panic("Failed to allocate memory despite GFP_WONTFAIL\n");
+> +	}
+>  got_pg:
+>  	return page;
+>  }
+> 
+> .
+> 
+
+thanks
+Niaoming Ni
+
