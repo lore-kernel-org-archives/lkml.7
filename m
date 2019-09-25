@@ -2,125 +2,175 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5484C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C46C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B70121D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569395303;
-	bh=6NEvIRTofMvxx5KQe9KgC2Xh1O/df+OTgZqV9a7ij0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EtfW/uIH0AM7GQPn6KEJJ+hSyyJLyA65q277f9rBx6QbI215KiicWEZ3GYMgMk8sS
-	 PWiUuOYPkz5qn16j0R/HyDSlH1ey4+WJvmE/eW8m8G7+DcV89kfiGVh0n5Nfq/CZ85
-	 yiSWa20u0qk4HjN9iRmva3ve61MJM7wNCD2M0tGk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E48B21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442463AbfIYHIW (ORCPT
+        id S2442482AbfIYHIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:08:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52198 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405152AbfIYHIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:08:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EF702AF5A;
-        Wed, 25 Sep 2019 07:08:19 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 09:08:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-Message-ID: <20190925070817.GH23050@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com>
- <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
- <20190909193020.GD2063@dhcp22.suse.cz>
+        Wed, 25 Sep 2019 03:08:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15199 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2442450AbfIYHIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:08:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 00:08:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="201158456"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 25 Sep 2019 00:08:40 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yi Sun <yi.y.sun@linux.intel.com>
+Subject: Re: [RFC PATCH 3/4] iommu/vt-d: Map/unmap domain with mmmap/mmunmap
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-4-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58F0B7@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <71b812c0-722c-8d8a-0c3f-58efab34f6b2@linux.intel.com>
+Date:   Wed, 25 Sep 2019 15:06:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909193020.GD2063@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F0B7@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let me revive this thread as there was no follow up.
+Hi,
 
-On Mon 09-09-19 21:30:20, Michal Hocko wrote:
-[...]
-> I believe it would be the best to start by explaining why we do not see
-> the same problem with order-0 requests. We do not enter the slow path
-> and thus the memory reclaim if there is any other node to pass through
-> watermakr as well right? So essentially we are relying on kswapd to keep
-> nodes balanced so that allocation request can be satisfied from a local
-> node. We do have kcompactd to do background compaction. Why do we want
-> to rely on the direct compaction instead? What is the fundamental
-> difference?
+On 9/25/19 1:00 PM, Tian, Kevin wrote:
+>> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
+>> Sent: Monday, September 23, 2019 8:25 PM
+>>
+>> If a dmar domain has DOMAIN_FLAG_FIRST_LEVEL_TRANS bit set
+>> in its flags, IOMMU will use the first level page table for
+>> translation. Hence, we need to map or unmap addresses in the
+>> first level page table.
+>>
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Cc: Kevin Tian <kevin.tian@intel.com>
+>> Cc: Liu Yi L <yi.l.liu@intel.com>
+>> Cc: Yi Sun <yi.y.sun@linux.intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel-iommu.c | 94 ++++++++++++++++++++++++++++++++-
+>> ----
+>>   1 file changed, 82 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index 9cfe8098d993..103480016010 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -168,6 +168,11 @@ static inline unsigned long virt_to_dma_pfn(void
+>> *p)
+>>   	return page_to_dma_pfn(virt_to_page(p));
+>>   }
+>>
+>> +static inline unsigned long dma_pfn_to_addr(unsigned long pfn)
+>> +{
+>> +	return pfn << VTD_PAGE_SHIFT;
+>> +}
+>> +
+>>   /* global iommu list, set NULL for ignored DMAR units */
+>>   static struct intel_iommu **g_iommus;
+>>
+>> @@ -307,6 +312,9 @@ static int hw_pass_through = 1;
+>>    */
+>>   #define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
+>>
+>> +/* Domain uses first level translation for DMA remapping. */
+>> +#define DOMAIN_FLAG_FIRST_LEVEL_TRANS		BIT(2)
+>> +
+>>   #define for_each_domain_iommu(idx, domain)			\
+>>   	for (idx = 0; idx < g_num_of_iommus; idx++)		\
+>>   		if (domain->iommu_refcnt[idx])
+>> @@ -552,6 +560,11 @@ static inline int domain_type_is_si(struct
+>> dmar_domain *domain)
+>>   	return domain->flags & DOMAIN_FLAG_STATIC_IDENTITY;
+>>   }
+>>
+>> +static inline int domain_type_is_flt(struct dmar_domain *domain)
+>> +{
+>> +	return domain->flags & DOMAIN_FLAG_FIRST_LEVEL_TRANS;
+>> +}
+>> +
+>>   static inline int domain_pfn_supported(struct dmar_domain *domain,
+>>   				       unsigned long pfn)
+>>   {
+>> @@ -1147,8 +1160,15 @@ static struct page *domain_unmap(struct
+>> dmar_domain *domain,
+>>   	BUG_ON(start_pfn > last_pfn);
+>>
+>>   	/* we don't need lock here; nobody else touches the iova range */
+>> -	freelist = dma_pte_clear_level(domain, agaw_to_level(domain-
+>>> agaw),
+>> -				       domain->pgd, 0, start_pfn, last_pfn,
+>> NULL);
+>> +	if (domain_type_is_flt(domain))
+>> +		freelist = intel_mmunmap_range(domain,
+>> +					       dma_pfn_to_addr(start_pfn),
+>> +					       dma_pfn_to_addr(last_pfn + 1));
+>> +	else
+>> +		freelist = dma_pte_clear_level(domain,
+>> +					       agaw_to_level(domain->agaw),
+>> +					       domain->pgd, 0, start_pfn,
+>> +					       last_pfn, NULL);
+> 
+> what about providing an unified interface at the caller side, then having
+> the level differentiated within the interface?
 
-I am especially interested about this part. The more I think about this
-the more I am convinced that the underlying problem really is in the pre
-mature fallback in the fast path. Does the almost-patch below helps your
-workload? It effectively reduces the fast path for higher order
-allocations to the local/requested node. The justification is that
-watermark check might be too strict for those requests as it is primary
-order-0 oriented. Low watermark target simply has no meaning for the
-higher order requests AFAIU. The min-low gap is giving kswapd a chance
-to balance and be more local node friendly while we do not have anything
-like that in compaction.
+Good point! I ever thought about adding some ops in struct dmar_domain,
+something like:
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ff5484fdbdf9..09036cf55fca 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4685,7 +4685,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
- {
- 	struct page *page;
- 	unsigned int alloc_flags = ALLOC_WMARK_LOW;
--	gfp_t alloc_mask; /* The gfp_t that was actually used for allocation */
-+	gfp_t fastpath_mask, alloc_mask; /* The gfp_t that was actually used for allocation */
- 	struct alloc_context ac = { };
- 
- 	/*
-@@ -4698,7 +4698,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
- 	}
- 
- 	gfp_mask &= gfp_allowed_mask;
--	alloc_mask = gfp_mask;
-+	fastpath_mask = alloc_mask = gfp_mask;
- 	if (!prepare_alloc_pages(gfp_mask, order, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
- 		return NULL;
- 
-@@ -4710,8 +4710,17 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
- 	 */
- 	alloc_flags |= alloc_flags_nofragment(ac.preferred_zoneref->zone, gfp_mask);
- 
--	/* First allocation attempt */
--	page = get_page_from_freelist(alloc_mask, order, alloc_flags, &ac);
-+	/*
-+	 * First allocation attempt. If we have a high order allocation then do not fall
-+	 * back to a remote node just based on the watermark check on the requested node
-+	 * because compaction might easily free up a requested order and then it would be
-+	 * better to simply go to the slow path.
-+	 * TODO: kcompactd should help here but nobody has woken it up unless we hit the
-+	 * slow path so we might need some tuning there as well.
-+	 */
-+	if (order && (gfp_mask & __GFP_DIRECT_RECLAIM))
-+		fastpath_mask |= __GFP_THISNODE;
-+	page = get_page_from_freelist(fastpath_mask, order, alloc_flags, &ac);
- 	if (likely(page))
- 		goto out;
- 
--- 
-Michal Hocko
-SUSE Labs
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index ed11ef594378..1dd184f76bfb 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -489,7 +489,14 @@ struct dmar_domain {
+         struct list_head auxd;          /* link to device's auxiliary 
+list */
+         struct iova_domain iovad;       /* iova's that belong to this 
+domain */
+
++       /* per domain page table and manipulation ops */
+         struct dma_pte  *pgd;           /* virtual address */
++       int (*map)(struct dmar_domain *domain,
++                  unsigned long addr, unsigned long end,
++                  phys_addr_t phys_addr, int dma_prot);
++       struct page *(*unmap)(struct dmar_domain *domain,
++                             unsigned long addr, unsigned long end);
++
+         int             gaw;            /* max guest address width */
+
+         /* adjusted guest address width, 0 is level 2 30-bit */
+
+So that this code could be simply like this:
+
+	freelist = domain->unmap(...);
+
+Best regards,
+Baolu
