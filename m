@@ -2,190 +2,165 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B2AC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955CBC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCB321E6F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569447218;
-	bh=TszXw7S5GIEzEo992EEMfz4W0WtzSxu1MBpaBhf4tmw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fm68Kjw4PdJQJ+yZT+ERy2Fhr0NTASt7lP2y5ErbM0A/FSZZNQYbBwKFwNABeGkcr
-	 1U9S8t/49G3fs0NyiLZ34hezBEpIOKn7YLhI2bK+Ki8AQe7F5bc4baN4cTdHooC/vu
-	 U79Lz6zh1oaTC+mSg0DcLOr88blQnK7vQvR11emo=
+	by mail.kernel.org (Postfix) with ESMTP id 5D22921D80
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="A8la0tCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfIYVdi (ORCPT
+        id S1727375AbfIYVeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfIYVdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:33:37 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95011222BD;
-        Wed, 25 Sep 2019 21:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569447215;
-        bh=TszXw7S5GIEzEo992EEMfz4W0WtzSxu1MBpaBhf4tmw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QlI2Sj1D5LJahPlbpQRPzC/Kfp42A3NwekR29GtyvfIPAZlvPN1zAfycydpBTfcd8
-         IvT8WVCyptqcO23hrQq7/1AbSsfzPRa68TLRQRP+hrXx+5Qsz/4M4CfEt25gMVn9on
-         EMq0EmayAeKNvnaIFqzE8CzGz5kGoSiMNjw4W64I=
-Received: by mail-qt1-f181.google.com with SMTP id m15so298885qtq.2;
-        Wed, 25 Sep 2019 14:33:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAU/MDgYmsvDWUxhr0S/Q958v/NMn7J4JTGJNu6zn2KE6uwZuvLx
-        +uW755Pt4Q2Nc+sOQUjGxURuNzeHmiO1sPSfVA==
-X-Google-Smtp-Source: APXvYqy9YJ9VRUtFzrkZ+iKb5Tx5rlamJJuwaAKBRmCflwCEbYKpuVBbZPPVrEImTOCJgn8Jl5TlEwRQfbhe0HNZXOU=
-X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr1647258qvu.138.1569447214653;
- Wed, 25 Sep 2019 14:33:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de> <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de> <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-In-Reply-To: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Sep 2019 16:33:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
+        Wed, 25 Sep 2019 17:34:17 -0400
+Received: from mail-eopbgr810115.outbound.protection.outlook.com ([40.107.81.115]:35180
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfIYVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 17:34:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TdbStwKOOP+Hg/57wPbiSQcGWxpglpU7XU3OWDG+f3DQ1YAEtfyauPlb43Ttu1u4GQOV7KGOXK7IUutzrI3JAdm6s61uCWfs9MrGlj99ejE4pqOEFdWtN/fGnsFSXNVmpTSpqNVz+hGXEm8fg5QlCxkykHHQ6OnX0PeKdMKC6O84PqXaGzd69LykmuIjrL+8Xx5/7utXC0+YTRBcoD0z6vgxrP2VHwR3orlD9x9QNoHrY+QWU5UmwRCDonwf9hnORKac9djeuupApD3y3KHIaD7K5Ivum2g2zebgCR4iyv7o0WRR9gnKhKQWeSN7EXIpxi2MxFC+IuYVMauCg9DVPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Apwfe7or50AEwPyEfOZNW/LvlnE2nNKDqtypMigcvtw=;
+ b=McYjmXl1SlABabXR2kcpRRoHrmvJ4Fi/27ko3SyP16oq64hgfDTKmbsWuNRCW7cv6wmzMIPM5Zd7LwSDCEoRxMXDapz9NwLGcrS+lK5QUa2szcieZ46UjV3nVqV2JcsdFJMOGgfgrEHdhs6BUAUNH8WjgNxSRNbjMYR94eHqwXfLtAgAMCdtnYTIjSgauH5YOcyRSupK3FS7UuS10u2ll51ZJTHO84blra8RyngEHd8DqteboeeBelt8ea4qRoLae9iGPXW5+BfELJGKOF+j1IVW2L/ay4O3tIWi8YNGBiiqt+PHNn3apDU2WO4256jkx0YQOZ6HvVGBrhWe5zm6tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Apwfe7or50AEwPyEfOZNW/LvlnE2nNKDqtypMigcvtw=;
+ b=A8la0tCfzBQ9rQ11enSN+eld1VRtMpXkf3sMmcJQ4f5WLsdNmpDNt5RnTIDu0RU5gTZemMrudIDhcSzMn9wrSfMkLMwZtlRimzsi5V3M/2u1UBMCtYQN5OgX4r3bO/huO1E4ZPvrtL6ycDw6PRNwxIX6hAg9bHQjqrd+FCifHVg=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0989.namprd21.prod.outlook.com (52.132.114.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.1; Wed, 25 Sep 2019 21:34:14 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 21:34:14 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] hv_sock: Add the support of hibernation
+Thread-Topic: [PATCH v2] hv_sock: Add the support of hibernation
+Thread-Index: AQHVc+j5+OoX7/VHfE+B55yc8kBPyQ==
+Date:   Wed, 25 Sep 2019 21:34:13 +0000
+Message-ID: <1569447243-27433-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0133.namprd04.prod.outlook.com (2603:10b6:104::11)
+ To SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1606be42-1fc7-40e7-4fa0-08d742001c02
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR2101MB0989:|SN6PR2101MB0989:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB0989DD2EA942911F33A40CD7BF870@SN6PR2101MB0989.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(189003)(199004)(386003)(186003)(2201001)(305945005)(64756008)(66946007)(66446008)(6116002)(6486002)(6506007)(66476007)(36756003)(66556008)(110136005)(7736002)(316002)(3846002)(256004)(5660300002)(26005)(107886003)(14444005)(2906002)(6436002)(22452003)(25786009)(71190400001)(71200400001)(6512007)(102836004)(8676002)(66066001)(1511001)(50226002)(43066004)(2501003)(486006)(4720700003)(8936002)(476003)(2616005)(99286004)(478600001)(4326008)(81156014)(3450700001)(10090500001)(14454004)(6636002)(52116002)(81166006)(86362001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0989;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8o1ucOez5seSdlMe1w5MjZb/YJiCTS19LdHW3lTZ+Xjg8/GAPmKuQqptAziz5nnauwiBsbGn3h8Fp5Hr5hMmKyutJFGYWH6FSafF1qaMrtRQTtgRPhMljWSF9ECLgf6x+GJZ90nEGr+vOOZ3DL9S7q74fcre7e23ttMBKvSOMngkUn92MnM8LfjvRdqM/vLJSQLwvIaQqqclcAFQ0hZqWVnlzBHq1MjkM0Eva12E9lwCkmDNzpL0nqfd8qmsWyz3oRQcp6hdzj4YvNgxGiy2ujzOHa3OqfKhebX2tB/fZbub8Cy/P30O/QejGMECRUxSC8VhV0c3iDtJO4eoc5U9cdQCvanm2/WpJ0nlsUDDCCXtYzBXUknqhXSdp+h/3INvPkS6CsfIttXsxXg4lscgE8BtD6wPR3tmR+YTnF0gWO4=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1606be42-1fc7-40e7-4fa0-08d742001c02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 21:34:14.0437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D34/TWFglJ3hXhRhoHWuv6zwMg9R025Foh7SzSaW8JcP73E/F2G5XUJzSG2RAafCKSLstF7QBKS2ODwASMHI/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0989
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 11:52 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 25/09/2019 17:16, Rob Herring wrote:
-> > On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> >>
-> >> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
-> >>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> >>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
-> >>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-> >>>>> <nsaenzjulienne@suse.de> wrote:
-> >>>>>> Hi All,
-> >>>>>> this series tries to address one of the issues blocking us from
-> >>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
-> >>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
-> >>>>>> bus' DMA addressing constraints.
-> >>>>>>
-> >>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
-> >>>>>> DT node representing the device being configured, as opposed to the PCIe
-> >>>>>> bridge node we currently pass. This causes the code to directly jump
-> >>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
-> >>>>>> whatever was set there.
-> >>>>>>
-> >>>>>> To address this I create a new API in OF - inspired from Robin Murphys
-> >>>>>> original proposal[2] - which accepts a bus DT node as it's input in
-> >>>>>> order to configure a device's DMA constraints. The changes go deep into
-> >>>>>> of/address.c's implementation, as a device being having a DT node
-> >>>>>> assumption was pretty strong.
-> >>>>>>
-> >>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
-> >>>>>> redundant arguments and creating an alternative function for the special
-> >>>>>> cases
-> >>>>>> not applicable to either the above case or the default usage.
-> >>>>>>
-> >>>>>> IMO the resulting functions are more explicit. They will probably
-> >>>>>> surface some hacky usages that can be properly fixed as I show with the
-> >>>>>> DT fixes on the Layerscape platform.
-> >>>>>>
-> >>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
-> >>>>>> on a Seattle AMD board.
-> >>>>>
-> >>>>> Humm, I've been working on this issue too. Looks similar though yours
-> >>>>> has a lot more churn and there's some other bugs I've found.
-> >>>>
-> >>>> That's good news, and yes now that I see it, some stuff on my series is
-> >>>> overly
-> >>>> complicated. Specially around of_translate_*().
-> >>>>
-> >>>> On top of that, you removed in of_dma_get_range():
-> >>>>
-> >>>> -   /*
-> >>>> -    * At least empty ranges has to be defined for parent node if
-> >>>> -    * DMA is supported
-> >>>> -    */
-> >>>> -   if (!ranges)
-> >>>> -           break;
-> >>>>
-> >>>> Which I assumed was bound to the standard and makes things easier.
-> >>>>
-> >>>>> Can you test out this branch[1]. I don't have any h/w needing this,
-> >>>>> but wrote a unittest and tested with modified QEMU.
-> >>>>
-> >>>> I reviewed everything, I did find a minor issue, see the patch attached.
-> >>>
-> >>> WRT that patch, the original intent of "force_dma" was purely to
-> >>> consider a device DMA-capable regardless of the presence of
-> >>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
-> >>> device has always been bogus - magic paravirt devices which appear out
-> >>> of nowhere and expect to be treated as genuine DMA masters are a
-> >>> separate problem that we haven't really approached yet.
-> >>
-> >> I agree it's clearly abusing the function. I have no problem with the behaviour
-> >> change if it's OK with you.
->
-> Thinking about it, you could probably just remove that call from the Xen
-> DRM driver now anyway - since the dma-direct rework, we lost the ability
-> to set dma_dummy_ops by default, and NULL ops now represent what it
-> (presumably) wants.
+Add the necessary dummy callbacks for hibernation.
 
-Not xen_dma_ops? In any case, I'll send out a patch for the the Xen
-folks to comment on.
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Acked-by: David S. Miller <davem@davemloft.net>
+---
 
-> >> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
-> >> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
-> >> works already.
-> >
-> > Multiple dma-ranges as far as configuring inbound windows should work
-> > already other than the bug when there's any parent translation. But if
-> > you mean supporting multiple DMA offsets and masks per device in the
-> > DMA API, there's nothing in the works yet.
->
-> There's also the in-between step of making of_dma_get_range() return a
-> size based on all the dma-ranges entries rather than only the first one
-> - otherwise, something like [1] can lead to pretty unworkable default
-> masks. We implemented that when doing acpi_dma_get_range(), it's just
-> that the OF counterpart never caught up.
+In v2:
+    Added David's Acked-by.
+    Removed [net-next] from the Subject.
 
-Right. I suppose we assume any holes in the ranges are addressable by
-the device but won't get used for other reasons (such as no memory
-there). However, to be correct, the range of the dma offset plus mask
-would need to be within the min start and max end addresses. IOW,
-while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
-power of 2, the 'correct' thing to do is round down.
+    @Sasha, can you please pick this up into the hyper-v tree?
 
-Rob
+ net/vmw_vsock/hyperv_transport.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> [1]
-> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
+ort.c
+index f2084e3f7aa4..4c02e38aa728 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -930,6 +930,24 @@ static int hvs_remove(struct hv_device *hdev)
+ 	return 0;
+ }
+=20
++/* hv_sock connections can not persist across hibernation, and all the hv_=
+sock
++ * channels are forced to be rescinded before hibernation: see
++ * vmbus_bus_suspend(). Here the dummy hvs_suspend() and hvs_resume()
++ * are only needed because hibernation requires that every vmbus device's
++ * driver should have a .suspend and .resume callback: see vmbus_suspend()=
+.
++ */
++static int hvs_suspend(struct hv_device *hv_dev)
++{
++	/* Dummy */
++	return 0;
++}
++
++static int hvs_resume(struct hv_device *dev)
++{
++	/* Dummy */
++	return 0;
++}
++
+ /* This isn't really used. See vmbus_match() and vmbus_probe() */
+ static const struct hv_vmbus_device_id id_table[] =3D {
+ 	{},
+@@ -941,6 +959,8 @@ static struct hv_driver hvs_drv =3D {
+ 	.id_table	=3D id_table,
+ 	.probe		=3D hvs_probe,
+ 	.remove		=3D hvs_remove,
++	.suspend	=3D hvs_suspend,
++	.resume		=3D hvs_resume,
+ };
+=20
+ static int __init hvs_init(void)
+--=20
+2.19.1
+
