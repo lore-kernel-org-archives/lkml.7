@@ -2,198 +2,92 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A39C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2344C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAB721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B23222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atRyjKpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440018AbfIYSJd (ORCPT
+        id S2440147AbfIYSJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 14:09:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35378 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439944AbfIYSJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 14:09:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 11:09:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
-   d="scan'208";a="191419403"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 25 Sep 2019 11:09:31 -0700
-Date:   Wed, 25 Sep 2019 11:09:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-Message-ID: <20190925180931.GG31852@linux.intel.com>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
- <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 25 Sep 2019 14:09:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46981 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440035AbfIYSJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 14:09:37 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u22so370065qtq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 11:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QGz9lVjUUYmDPzsI/GOxWTXeDKg/AkMmVNx227mWBU4=;
+        b=atRyjKpab4YukGa+7pHHXYmZW0gvEA9bCNrJBVrw6yY+ivfP+cTf8gvpCa0By8q0//
+         e4D1wGMy1nPQewEWsklrX1mx+qg5W79Hvzm2Jd1Dirk2W2quemerRBinzzTg8wH2TN+y
+         U82C5/6wJ4dpPh1ymDEfKuHIpjq7va4vjd/X7j3gIA7hGOnHKlKLGyWm5MniqrCSke9a
+         my3z5S+9/3EuLbTLDS1FAoE6UByiM8jdJAYpY3ID7whqtnHeYFrAbWf/i3cblQqr7Vc/
+         Sg8w38cFPxTd8pUdxy81oIihu7OijQACcUPD9RU32gJryPAIXd0FRm6MFhmzGCXPqA5K
+         x0fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QGz9lVjUUYmDPzsI/GOxWTXeDKg/AkMmVNx227mWBU4=;
+        b=ePKXj2cxWzRs4uE9U9b5NqjyoiIz8o4qRILMAvffKdyKo/xLHCAVFsHIeJTa9xpW7F
+         x41ydPGjmRf+FuP84QCSxynAaYq/dloPQ3US4yttJPdPA4a8gh77iOlDWa5u4mbTl9mO
+         Si7O1zJ/N4FoydyqXNWx9w5D5xHXksZhfbw8ieKixMTTgSN7XM7J9OIqV1t2CwVN23xP
+         8kxT5Eh0FDY8S3i13yheFQ3Jvjn2/IVlQ4fCuhPyTfBT4KRKZcmOxFWw1tLm2xQL54Rm
+         S3FMOhdRBgSi19JV/7W+sDuRPlBNW1q9Yt3A/6dA0Ox7lvVok1rzmYsohhWr1ZVcxvbQ
+         V25Q==
+X-Gm-Message-State: APjAAAWE3mF+cCAaj+bNolehTOhyn4Shz1xABC15v1gNXoSD9XmL2AMl
+        liaU4x/TOHj6/6aRb/hbPpI=
+X-Google-Smtp-Source: APXvYqx049EScC4/u8X+unA98xAcrm2Zs7ogOWRg43Bw0MvMFCJTggaYpHrMMD0hDTF5MEDcLuUvmA==
+X-Received: by 2002:ac8:7648:: with SMTP id i8mr628531qtr.363.1569434976225;
+        Wed, 25 Sep 2019 11:09:36 -0700 (PDT)
+Received: from ubuntu-XPS-8900.mobile.psu.edu ([104.39.62.174])
+        by smtp.gmail.com with ESMTPSA id v23sm97817qto.89.2019.09.25.11.09.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 11:09:35 -0700 (PDT)
+From:   Dongliang Mu <mudongliangabcd@gmail.com>
+To:     davem@davemloft.net, g.nault@alphalink.fr
+Cc:     linux-kernel@vger.kernel.org,
+        Dongliang Mu <mudongliangabcd@gmail.com>
+Subject: [PATCH] fix typo
+Date:   Wed, 25 Sep 2019 14:09:29 -0400
+Message-Id: <20190925180929.24788-1-mudongliangabcd@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:47:40PM +0200, Thomas Gleixner wrote:
-> So only one of the CPUs will win the cmpxchg race, set te variable to 1 and
-> warn, the other and any subsequent AC on any other CPU will not warn
-> either. So you don't need WARN_ONCE() at all. It's redundant and confusing
-> along with the atomic_set().
-> 
-> Whithout reading that link [1], what Ingo proposed was surely not the
-> trainwreck which you decided to put into that debugfs thing.
+Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
 
-We're trying to sort out the trainwreck, but there's an additional wrinkle
-that I'd like your input on.
+Change Tinnel to Tunnel
+---
+ net/l2tp/l2tp_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We overlooked the fact that MSR_TEST_CTRL is per-core, i.e. shared by
-sibling hyperthreads.  This is especially problematic for KVM, as loading
-MSR_TEST_CTRL during VM-Enter could cause spurious #AC faults in the kernel
-and bounce MSR_TEST_CTRL.split_lock.
-
-E.g. if CPU0 and CPU1 are siblings and CPU1 is running a KVM guest with
-MSR_TEST_CTRL.split_lock=1, hitting an #AC on CPU0 in the host kernel will
-lead to suprious #AC faults and constant toggling of of the MSR.
-
-  CPU0               CPU1
-
-         split_lock=enabled
-
-  #AC -> disabled
-
-                     VM-Enter -> enabled
-
-  #AC -> disabled
-
-                     VM-Enter -> enabled
-
-  #AC -> disabled
-
-
-
-My thought to handle this:
-
-  - Remove the per-cpu cache.
-
-  - Rework the atomic variable to differentiate between "disabled globally"
-    and "disabled by kernel (on some CPUs)".
-
-  - Modify the #AC handler to test/set the same atomic variable as the
-    sysfs knob.  This is the "disabled by kernel" flow.
-
-  - Modify the debugfs/sysfs knob to only allow disabling split-lock
-    detection.  This is the "disabled globally" path, i.e. sends IPIs to
-    clear MSR_TEST_CTRL.split_lock on all online CPUs.
-
-  - Modify the resume/init flow to clear MSR_TEST_CTRL.split_lock if it's
-    been disabled on *any* CPU via #AC or via the knob.
-
-  - Modify the debugs/sysfs read function to either print the raw atomic
-    variable, or differentiate between "enabled", "disabled globally" and
-   "disabled by kernel".
-
-  - Remove KVM loading of MSR_TEST_CTRL, i.e. KVM *never* writes the CPU's
-    actual MSR_TEST_CTRL.  KVM still emulates MSR_TEST_CTRL so that the
-    guest can do WRMSR and handle its own #AC faults, but KVM doesn't
-    change the value in hardware.
-
-      * Allowing guest to enable split-lock detection can induce #AC on
-        the host after it has been explicitly turned off, e.g. the sibling
-        hyperthread hits an #AC in the host kernel, or worse, causes a
-        different process in the host to SIGBUS.
-
-      * Allowing guest to disable split-lock detection opens up the host
-        to DoS attacks.
-
-  - KVM advertises split-lock detection to guest/userspace if and only if
-    split_lock_detect_disabled is zero.
-
-  - Add a pr_warn_once() in KVM that triggers if split locks are disabled
-    after support has been advertised to a guest.
-
-Does this sound sane?
-
-The question at the forefront of my mind is: why not have the #AC handler
-send a fire-and-forget IPI to online CPUs to disable split-lock detection
-on all CPUs?  Would the IPI be problematic?  Globally disabling split-lock
-on any #AC would (marginally) simplify the code and would eliminate the
-oddity of userspace process (and KVM guest) #AC behavior varying based on
-the physical CPU it's running on.
-
-
-Something like:
-
-#define SPLIT_LOCK_DISABLED_IN_KERNEL	BIT(0)
-#define SPLIT_LOCK_DISABLED_GLOBALLY	BIT(1)
-
-static atomic_t split_lock_detect_disabled = ATOMIT_INIT(0);
-
-void split_lock_detect_ac(void)
-{
-	lockdep_assert_irqs_disabled();
-
-	/* Disable split lock detection on this CPU to avoid reentrant #AC. */
-	wrmsrl(MSR_TEST_CTRL,
-	       rdmsrl(MSR_TEST_CTRL) & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
-
-	/*
-	 * If split-lock detection has not been disabled, either by the kernel
-	 * or globally, record that it has been disabled by the kernel and
-	 * WARN.  Guarding WARN with the atomic ensures only the first #AC due
-	 * to split-lock is logged, e.g. if multiple CPUs encounter #AC or if
-	 * #AC is retriggered by a perf context NMI that interrupts the
-	 * original WARN.
-	 */
-	if (atomic_cmpxchg(&split_lock_detect_disabled, 0,
-			   SPLIT_LOCK_DISABLED_IN_KERNEL) == 0)
-	        WARN(1, "split lock operation detected\n");
-}
-
-static ssize_t split_lock_detect_wr(struct file *f, const char __user *user_buf,
-				    size_t count, loff_t *ppos)
-{
-	int old;
-
-	<parse or ignore input value?>
-	
-	old = atomic_fetch_or(SPLIT_LOCK_DISABLED_GLOBALLY,
-			      &split_lock_detect_disabled);
-
-	/* Update MSR_TEST_CTRL unless split-lock was already disabled. */
-	if (!(old & SPLIT_LOCK_DISABLED_GLOBALLY))
-		on_each_cpu(split_lock_update, NULL, 1);
-
-	return count;
-}
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index 105e5a7092e7..b4647fcfe3d6 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1138,7 +1138,7 @@ int l2tp_xmit_skb(struct l2tp_session *session, struct sk_buff *skb, int hdr_len
+ EXPORT_SYMBOL_GPL(l2tp_xmit_skb);
+ 
+ /*****************************************************************************
+- * Tinnel and session create/destroy.
++ * Tunnel and session create/destroy.
+  *****************************************************************************/
+ 
+ /* Tunnel socket destruct hook.
+-- 
+2.17.1
 
