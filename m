@@ -2,144 +2,160 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78872C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B2C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3826221D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A7A21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PJGjXs82"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikC+0Dzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfIYXf3 (ORCPT
+        id S1732081AbfIYXl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:35:29 -0400
-Received: from mail-eopbgr1310101.outbound.protection.outlook.com ([40.107.131.101]:37171
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728876AbfIYXf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:35:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ITqXaQc2qgNI7cZlkGn4VO77yr2ZjQO4jdmydvLRZ8Psgh+NlBLCxHWM+EFA2u26wASbLJNh4mEiUpcg2sOnPYBXX3vpAuPgB06N16ZjixOFDx1t/XRfE/fP5CMCS7wyzJHH67o25t6Wky+0WPMwzj/joCTyyN5Q5KEpRZ9J+d4c5m9cfpQe8q9ZVelAfB+BdDRqEIP4J6hiHFjjWcjlKZRRQktiYJOUmuUfQZtNSXD7j7fWErGyFKGhOgtylIwjtM5gAjsUNjVKfVhgNkv+PaQXfNwiLBztzrxr9guU64hgKxB9uk7aFw/c0YhoG7lZEahlMcXZ+bVRvOuWV/2JAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i4piu0DfMGs4Dz6ShCcCahkWEkVUcxK8oVExZ5c/5oc=;
- b=XJQO612TX+eHwqMA+N7x583ATHOqAj1ZXwG+ZBSxTaRLLzsYpq94Lo3imdkMjoixMo6GebAJhhelV/c85U+Ig6oSahFvdU49kBmVCblnzgg6xD3GdTGC0BgHmik0CEFlaGUherzAMGWCYagfCzaNTHAAf02fim4KWNtlujaWtM69v0wibmVuzeeJ41rltTAHjvdWZtl5YqcAOiiwT1ievinXrODgJBZxS/5JS0FqqmA5iYcZhtIqBGGF6+BjjFGtqJMiorkA5uMujWVVQIcRlh+/RG273Oj21pkjJW3+xTO46TvpwyNS8RQykC9KbzFiZmxk60NWAxMxpHZbloasnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i4piu0DfMGs4Dz6ShCcCahkWEkVUcxK8oVExZ5c/5oc=;
- b=PJGjXs82KI3FfT1X7o0bbaK7EsbbrOwYubwXE00+31pJma//i/+P8HZEOJtJ+uka5Qrg+hFolgPXaxwpSbDJ+asdYKXsdCTltKARGTUOl/5GXEfuxWqTmNdVZsylEPiN/xTKvtrT7GvjslVIHXXaZbuGkmvEUugJzY2rTRBDjyA=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.5; Wed, 25 Sep 2019 23:35:18 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 23:35:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
- clocksource for hibernation
-Thread-Topic: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
- clocksource for hibernation
-Thread-Index: AQHVc/fwSon8M7RoH0Cu+okwDUbU56c9CFiQ
-Date:   Wed, 25 Sep 2019 23:35:18 +0000
-Message-ID: <PU1P153MB0169A28B05A7CDE04A57AA58BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
- <1567723581-29088-4-git-send-email-decui@microsoft.com>
- <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
-In-Reply-To: <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T23:35:15.9030009Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=47e669de-0e0b-4a54-8f04-fada6bf4e618;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10b12606-6f9f-415f-f5c8-08d74211066e
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB013917B8D55F0EE875F4C1A6BF870@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(10290500003)(52536014)(1511001)(5660300002)(110136005)(478600001)(81166006)(6636002)(2501003)(7416002)(8990500004)(74316002)(7736002)(6246003)(4326008)(316002)(81156014)(8676002)(6116002)(446003)(11346002)(486006)(305945005)(8936002)(2906002)(2201001)(33656002)(476003)(14454004)(55016002)(229853002)(6436002)(86362001)(186003)(99286004)(14444005)(256004)(15650500001)(10090500001)(66946007)(9686003)(66476007)(76116006)(66446008)(64756008)(66556008)(7696005)(102836004)(76176011)(71190400001)(25786009)(71200400001)(53546011)(6506007)(46003)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mUS4uwy2zkmGX23NBnf+TCH+Sfr7yfx0nZtgktVAiVtefr/Ov1sCg72gTIAG13P4cVprtuO68S2cnxYUZeJbBMp/3/4VKp7C9w5gZkyjZ+uAJENJcHcyMYYMMXirN+6cSLJs+BI/mu9ztaxRChDSNlqLlIqc2MRhv8dIrhBoPnJnzYolrEvGf2CAe+dUEVWz5VsUDoid11irdCpe3YgcGMm9e1UyObg50LrWZSWXEKjRqm5aQBG0gbyQwvffZ+FpWtiZ83B94rD4Tvl5V5Tc16kdJhR3uJN+fZtFQOld+/jtSOKpLXA9cJDUfPzZtr09Y39lv7wUg+Oke7lc/kJ/P2PB8NTTxQCPB+hlSZ+/Qhez4sc6wdNyBn0EJ1IGNz1mP2EFTX8zg51e7OVA9ezq+g5YTP1uAXEmWDVTFbKkyTE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 19:41:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42284 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfIYXl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:41:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i185so467807oif.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EHbkABYA72FSTQ3pj3ZvFRjeV+Q+MQiZLIOILleg91w=;
+        b=ikC+0DziOlmeugQL6JFEl1u8w6d6laAEphMOizKfH/HWBjn1vMApg1IOxnvQ2JsRP3
+         hCZEw3oEQKZl/4qdPmcQhmcO+X9Y+O0Fzx5iScN0GS5BdRRsFiZCIRLKF138viJXRuhc
+         inekVOFcjrFs4OOb/OJcOrP/rBdPuIHACFxmC/c51qg6reADN81vg8ydh5HnVuZhK7zF
+         2HILp4GiCx0bTqJHW6CwNRvhrnV1oQqH3UhaQ3hQR0mYhOBIA7XGobMO1ZEdRS++X94G
+         rqfzn/xlNZAybgMzhCkJezhXqlDVJu8hgaS8m5w7e65q2KbrYfGDuusZEta4ADshFypu
+         WbWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EHbkABYA72FSTQ3pj3ZvFRjeV+Q+MQiZLIOILleg91w=;
+        b=U7r8+anbRN677tVPMMtCHHVGIY19/XFs+qjYHICYoSNHsGyzq4u8I6r2FB2GlGXo1p
+         0KenS3xbP/wNFaHROCXnW6u6T5ZoVNzZ94T8VmHGcDF0t1iB3Znqp+IuyU8r3eA42dMo
+         shStS5sF0lg56IHMyOAgt2IRjZhU18CSkxCpoGR4GZRk3j/1JSOiIplavsSRtpKW1XI6
+         ah1QPzS/fYKIL99mRj0Z1Mfi6AenakIU8s8QbJy+Um5wiHW8L4kmRiMkuUEdPCGrjrPO
+         M/GcYn2EQTf9jGXdAZC0KUTR0+mVmCSA7Si5dCyuPP7ZOx2fnoSAo0PEyU+rHpEBCzP1
+         KhlQ==
+X-Gm-Message-State: APjAAAXkdrvzuQsHMqm6XnZwN9ME0Qudj0LNpgmXUs5acyhNx/Io4Qog
+        X+8wVsqeCiflh8qZJ1fUdq0SnzBDXWzLEaMgGboS8bwdEqk=
+X-Google-Smtp-Source: APXvYqzZiSs0E0jE6HKza5JlGSFS4o6JjlD3XGwMpMsW7T7hvLwXX0vE4z3xrsupBQG6/XB44pBdJVOq4h79715K9aA=
+X-Received: by 2002:aca:5b84:: with SMTP id p126mr505449oib.4.1569454883752;
+ Wed, 25 Sep 2019 16:41:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10b12606-6f9f-415f-f5c8-08d74211066e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 23:35:18.1629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: afAzjQ6falO30Mfnrf9zinqS33RwzxnMVSApmwl3cNfvJjDt/BXSLX80X0cTlkxAavAxMi9dUIba8qsAqIXAxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
+References: <20190925172915.576755-1-natechancellor@gmail.com> <CAKwvOdmO255nWf2PrfJ54X95ShNbYPf0FK2x=f57LmzOrCmJug@mail.gmail.com>
+In-Reply-To: <CAKwvOdmO255nWf2PrfJ54X95ShNbYPf0FK2x=f57LmzOrCmJug@mail.gmail.com>
+From:   =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>
+Date:   Thu, 26 Sep 2019 01:41:12 +0200
+Message-ID: <CAOrgDVNraVQT7kLvPJ36OZM8tQ5atfvy7TYG+JCw9XXwzb1HBQ@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Fix clang -Wint-in-bool-context warnings in
+ IF_ASSIGN macro
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4NCj4gU2Vu
-dDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjUsIDIwMTkgNDoyMSBQTQ0KPiBUbzogRGV4dWFuIEN1
-aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT47IGFybmRAYXJuZGIuZGU7IGJwQGFsaWVuOC5kZTsNCj4g
-SGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IGhwYUB6eXRvci5jb207IEtZ
-IFNyaW5pdmFzYW4NCj4gPGt5c0BtaWNyb3NvZnQuY29tPjsgbGludXgtaHlwZXJ2QHZnZXIua2Vy
-bmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWluZ29AcmVkaGF0LmNv
-bTsgc2FzaGFsQGtlcm5lbC5vcmc7IFN0ZXBoZW4NCj4gSGVtbWluZ2VyIDxzdGhlbW1pbkBtaWNy
-b3NvZnQuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOyB4ODZAa2VybmVsLm9yZzsNCj4gTWljaGFl
-bCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+OyBTYXNoYSBMZXZpbg0KPiA8QWxleGFu
-ZGVyLkxldmluQG1pY3Jvc29mdC5jb20+DQo+IENjOiBsaW51eC1hcmNoQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMvM10gY2xvY2tzb3VyY2UvZHJpdmVyczogU3Vz
-cGVuZC9yZXN1bWUgSHlwZXItVg0KPiBjbG9ja3NvdXJjZSBmb3IgaGliZXJuYXRpb24NCj4gDQo+
-IE9uIDA2LzA5LzIwMTkgMDA6NDcsIERleHVhbiBDdWkgd3JvdGU6DQo+ID4gVGhpcyBpcyBuZWVk
-ZWQgZm9yIGhpYmVybmF0aW9uLCBlLmcuIHdoZW4gd2UgcmVzdW1lIHRoZSBvbGQga2VybmVsLCB3
-ZSBuZWVkDQo+ID4gdG8gZGlzYWJsZSB0aGUgImN1cnJlbnQiIGtlcm5lbCdzIFRTQyBwYWdlIGFu
-ZCB0aGVuIHJlc3VtZSB0aGUgb2xkIGtlcm5lbCdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-RGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogTWljaGFl
-bCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo+IA0KPiBJIGNhbiB0YWtlIHRoaXMg
-cGF0Y2ggaWYgbmVlZGVkLg0KDQpUaGFua3MsIERhbmllbCEgVXN1YWxseSB0Z2x4IHRha2VzIGNh
-cmUgb2YgdGhlIHBhdGNoZXMsIGJ1dCBpdCBsb29rcyByZWNlbnRseSBoZQ0KbWF5IGJlIHRvbyBi
-dXN5IHRvIGhhbmRsZSB0aGUgMyBwYXRjaGVzLiANCg0KSSBndWVzcyB5b3UgY2FuIHRha2UgdGhl
-IHBhdGNoLCBpZiB0Z2x4IGhhcyBubyBvYmplY3Rpb24uIDotKQ0KSWYgeW91IHRha2UgdGhlIHBh
-dGNoLCBwbGVhc2UgdGFrZSBhbGwgdGhlIDMgcGF0Y2hlcy4NCg0KVGhhbmtzLA0KLS0gRGV4dWFu
-DQo=
+GCC C frontend does not warn, GCC C++ FE does. https://godbolt.org/z/_sczyM
+
+So I (we?) think there is something weird in gcc frontends.
+
+>> I can't think of a case that this warning is a bug (maybe David can
+explain more),
+
+In this case or generally? General bug example:
+
+if (state =3D=3D A || B)
+
+(should be if (state =3D=3D A || state =3D=3D B))
+
+Since this is just one occurrence and I recommend to just land this small f=
+ix.
+
+
+st 25. 9. 2019 o 19:41 Nick Desaulniers <ndesaulniers@google.com> nap=C3=AD=
+sal(a):
+>
+> On Wed, Sep 25, 2019 at 10:29 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > After r372664 in clang, the IF_ASSIGN macro causes a couple hundred
+> > warnings along the lines of:
+> >
+> > kernel/trace/trace_output.c:1331:2: warning: converting the enum
+> > constant to a boolean [-Wint-in-bool-context]
+> > kernel/trace/trace.h:409:3: note: expanded from macro
+> > 'trace_assign_type'
+> >                 IF_ASSIGN(var, ent, struct ftrace_graph_ret_entry,
+> >                 ^
+> > kernel/trace/trace.h:371:14: note: expanded from macro 'IF_ASSIGN'
+> >                 WARN_ON(id && (entry)->type !=3D id);     \
+> >                            ^
+> > 264 warnings generated.
+> >
+> > Add the implicit '!=3D 0' to the WARN_ON statement to fix the warnings.
+> >
+> > Link: https://github.com/llvm/llvm-project/commit/28b38c277a2941e9e891b=
+2db30652cfd962f070b
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/686
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> I can't think of a case that this warning is a bug (maybe David can
+> explain more), but seems like a small fix that can stop a big spew of
+> warnings, and IIUC this is the lone instance we see in the kernel.  In
+> that case, I prefer a tiny change to outright disabling the warning in
+> case it does find interesting cases later.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> > ---
+> >  kernel/trace/trace.h | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 26b0a08f3c7d..f801d154ff6a 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -365,11 +365,11 @@ static inline struct trace_array *top_trace_array=
+(void)
+> >         __builtin_types_compatible_p(typeof(var), type *)
+> >
+> >  #undef IF_ASSIGN
+> > -#define IF_ASSIGN(var, entry, etype, id)               \
+> > -       if (FTRACE_CMP_TYPE(var, etype)) {              \
+> > -               var =3D (typeof(var))(entry);             \
+> > -               WARN_ON(id && (entry)->type !=3D id);     \
+> > -               break;                                  \
+> > +#define IF_ASSIGN(var, entry, etype, id)                       \
+> > +       if (FTRACE_CMP_TYPE(var, etype)) {                      \
+> > +               var =3D (typeof(var))(entry);                     \
+> > +               WARN_ON(id !=3D 0 && (entry)->type !=3D id);        \
+> > +               break;                                          \
+> >         }
+> >
+> >  /* Will cause compile errors if type is not found. */
+> > --
+> > 2.23.0
+> >
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
