@@ -2,119 +2,227 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E050C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197A8C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E7D20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ak9p/uPd"
+	by mail.kernel.org (Postfix) with ESMTP id DA40021D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442717AbfIYIVx (ORCPT
+        id S2442732AbfIYIYp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:21:53 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53461 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405820AbfIYIVx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:21:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so3985470wmd.3;
-        Wed, 25 Sep 2019 01:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=07HHxynuwRX2AxzUmWOs5TTpHN0wbdYgczfuCjqhEZU=;
-        b=Ak9p/uPdzo8AlUpi4OGQdDIrmxSxm62rMBBWaO/s7BUHwNjtkWnd5KXLjlshIU977b
-         6kPFYUOLqqX4PxCwkShjXzPA/xNBr7niko/DpV2taGZ88o6XNaSwedn9icLXa2q1s+S8
-         2OgPmjWhJjbu9bQ2h/zhbCMU/maQYodYHCCzteFRKTuIqhmuJN+9r0XgWqbBxko4GEs5
-         fEOju1qOVh3WOwYSM912MivsN5fpIPHO0usWKYQxV6XpnpIDQQtY5W+GximZSjy7KuzG
-         OgyXV/HGvAMYEQG6ZA/DTG8xHVlkIBETsEzXFKHFeAblTjm/ShALTbSpEt4sPjuxgCgy
-         buig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=07HHxynuwRX2AxzUmWOs5TTpHN0wbdYgczfuCjqhEZU=;
-        b=DRyne32u3rIxRJN2XvWrq8KzjO6+42NgnhUJRnJqeHiWxr1TyRa+nMzj99iLt7YPUk
-         cyX6WjXc4+NmHMwI941xBaXesrf6SB4C3YNg1HgYZaP64GLMQ3PQM1bPMpSFTlTIpLqA
-         p+17vV1Dyh7cCVzNlPtmd3laTqFVNYVe/HD6SFZzjQ3ZIegOVWO6RXqmfohMQpvCSOvf
-         82i8J0QZKJjn+k9Tw4mIMW5ih+D8TmZy/zgLQiIBea7smFVvPJKzxYUX36DF3kH0PPQw
-         UsbA0b4ivPBh7E4dumxPjI29sRPFt83FOSEACpjmVAcwN9BqbabnEMMivFphAy3ybNje
-         YsaQ==
-X-Gm-Message-State: APjAAAVToA8XfEvAL8VXeGzhye5kApNvdeaGxLznaoPkKl9b9I8zkz+m
-        TQzobv65SfHbqKqHwnk32lk=
-X-Google-Smtp-Source: APXvYqzeqND3xSEL3Da/l7gOEPtiJolvl2AIQAGTg92Aa1V9ScGXZTZ+ghAc45AHbJu35hyNRLlQBw==
-X-Received: by 2002:a7b:cd11:: with SMTP id f17mr6066933wmj.12.1569399711322;
-        Wed, 25 Sep 2019 01:21:51 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id b62sm2753407wmc.13.2019.09.25.01.21.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Sep 2019 01:21:50 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 10:21:49 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
- Inspiron 10xx
-Message-ID: <20190925082149.yjhmmb64i4h6sddi@pali>
-References: <156824368856.28378.14511879419677114177@WARFSTATION>
- <20190912073358.n5bxqosowhky5uhb@pali>
- <156882055514.9370.16951540573597044820@WARFSTATION>
- <20190922134323.mowwoyeuqoalpwsg@pali>
- <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
- <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+        Wed, 25 Sep 2019 04:24:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32480 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405820AbfIYIYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:24:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 01:24:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="364256679"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga005.jf.intel.com with ESMTP; 25 Sep 2019 01:24:42 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 01:24:42 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 25 Sep 2019 01:24:41 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 25 Sep 2019 01:24:41 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.92]) with mapi id 14.03.0439.000;
+ Wed, 25 Sep 2019 16:24:38 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Wang <jasowang@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
+        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
+        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "freude@linux.ibm.com" <freude@linux.ibm.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "idos@mellanox.com" <idos@mellanox.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>
+Subject: RE: [PATCH V2 0/8] mdev based hardware virtio offloading support
+Thread-Topic: [PATCH V2 0/8] mdev based hardware virtio offloading support
+Thread-Index: AQHVct+eQdtHh3CM1kSintZ5w217Z6c8D0tg
+Date:   Wed, 25 Sep 2019 08:24:38 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F68D@SHSMSX104.ccr.corp.intel.com>
+References: <20190924135332.14160-1-jasowang@redhat.com>
+In-Reply-To: <20190924135332.14160-1-jasowang@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzNlNTRhOTItZmM2My00ZDE0LWI1MjgtY2VmOWFlNDZkMWJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaERhd1cxSkkrS1Y5NEZRdThqNm9jSFJJNHZmRU1SUStsRnp4WnpwMkYzVU5RNGducjNJTThkRHhlUkpXMng4bCJ9
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 25 September 2019 11:07:35 Andy Shevchenko wrote:
-> On Mon, Sep 23, 2019 at 4:24 PM <Mario.Limonciello@dell.com> wrote:
-> > > From: Pali Rohár <pali.rohar@gmail.com>
-> > > Sent: Sunday, September 22, 2019 8:43 AM
-> > > To: Pacien TRAN-GIRARD
-> > > Cc: Matthew Garrett; Darren Hart; Andy Shevchenko; platform-driver-
-> > > x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
-> > > Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
-> > > Inspiron 10xx
+> From: Jason Wang [mailto:jasowang@redhat.com]
+> Sent: Tuesday, September 24, 2019 9:53 PM
 > 
-> > > We need to wait what Mario wrote about this particular problem.
-> > >
-> >
-> > I agree an Inspiron is unlikely to be updated 9 years later.  I think the right thing
-> > to do in this instance is to blacklist this particular platform in kernel driver.
+> Hi all:
 > 
-> Does it mean you are okay with the proposed patch? Can you give your tag then?
+> There are hardware that can do virtio datapath offloading while having
+> its own control path. This path tries to implement a mdev based
+> unified API to support using kernel virtio driver to drive those
+> devices. This is done by introducing a new mdev transport for virtio
+> (virtio_mdev) and register itself as a new kind of mdev driver. Then
+> it provides a unified way for kernel virtio driver to talk with mdev
+> device implementation.
+> 
+> Though the series only contains kernel driver support, the goal is to
+> make the transport generic enough to support userspace drivers. This
+> means vhost-mdev[1] could be built on top as well by resuing the
+> transport.
+> 
+> A sample driver is also implemented which simulate a virito-net
+> loopback ethernet device on top of vringh + workqueue. This could be
+> used as a reference implementation for real hardware driver.
+> 
+> Consider mdev framework only support VFIO device and driver right now,
+> this series also extend it to support other types. This is done
+> through introducing class id to the device and pairing it with
+> id_talbe claimed by the driver. On top, this seris also decouple
 
-I would rather use different name as kbd_phantom_backlight. E.g.
-lbd_broken_backlight or something which indicates non-working / disabled
-support.
+id_table claimed ... this series ...
 
-Also in commit message is written that problem is with KBD_LED_OFF_TOKEN
-and KBD_LED_ON_TOKEN tokens, but proposed patch does not blacklist these
-tokens, but rather turn off whole kbd functionality. So proposed patch
-does not patch commit message, nor explain it.
+> device specific parents ops out of the common ones.
+> 
+> Pktgen test was done with virito-net + mvnet loop back device.
+> 
+> Please review.
+> 
+> [1] https://lkml.org/lkml/2019/9/16/869
+> 
+> Changes from V1:
+> 
+> - move virtio_mdev.c to drivers/virtio
+> - store class_id in mdev_device instead of mdev_parent
+> - store device_ops in mdev_device instead of mdev_parent
+> - reorder the patch, vringh fix comes first
+> - really silent compiling warnings
+> - really switch to use u16 for class_id
+> - uevent and modpost support for mdev class_id
+> - vraious tweaks per comments from Parav
+> 
+> Changes from RFC-V2:
+> 
+> - silent compile warnings on some specific configuration
+> - use u16 instead u8 for class id
+> - reseve MDEV_ID_VHOST for future vhost-mdev work
+> - introduce "virtio" type for mvnet and make "vhost" type for future
+>   work
+> - add entries in MAINTAINER
+> - tweak and typos fixes in commit log
+> 
+> Changes from RFC-V1:
+> 
+> - rename device id to class id
+> - add docs for class id and device specific ops (device_ops)
+> - split device_ops into seperate headers
+> - drop the mdev_set_dma_ops()
+> - use device_ops to implement the transport API, then it's not a part
+>   of UAPI any more
+> - use GFP_ATOMIC in mvnet sample device and other tweaks
+> - set_vring_base/get_vring_base support for mvnet device
+> 
+> Jason Wang (8):
+>   vringh: fix copy direction of vringh_iov_push_kern()
+>   mdev: class id support
+>   mdev: bus uevent support
+>   modpost: add support for mdev class id
+>   mdev: introduce device specific ops
+>   mdev: introduce virtio device and its device ops
+>   virtio: introduce a mdev based transport
+>   docs: sample driver to demonstrate how to implement virtio-mdev
+>     framework
+> 
+>  .../driver-api/vfio-mediated-device.rst       |   7 +-
+>  MAINTAINERS                                   |   2 +
+>  drivers/gpu/drm/i915/gvt/kvmgt.c              |  18 +-
+>  drivers/s390/cio/vfio_ccw_ops.c               |  18 +-
+>  drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
+>  drivers/vfio/mdev/mdev_core.c                 |  19 +
+>  drivers/vfio/mdev/mdev_driver.c               |  22 +
+>  drivers/vfio/mdev/mdev_private.h              |   2 +
+>  drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
+>  drivers/vhost/vringh.c                        |   8 +-
+>  drivers/virtio/Kconfig                        |   7 +
+>  drivers/virtio/Makefile                       |   1 +
+>  drivers/virtio/virtio_mdev.c                  | 417 +++++++++++
+>  include/linux/mdev.h                          |  52 +-
+>  include/linux/mod_devicetable.h               |   8 +
+>  include/linux/vfio_mdev.h                     |  52 ++
+>  include/linux/virtio_mdev.h                   | 145 ++++
+>  samples/Kconfig                               |   7 +
+>  samples/vfio-mdev/Makefile                    |   1 +
+>  samples/vfio-mdev/mbochs.c                    |  20 +-
+>  samples/vfio-mdev/mdpy.c                      |  20 +-
+>  samples/vfio-mdev/mtty.c                      |  18 +-
+>  samples/vfio-mdev/mvnet.c                     | 692 ++++++++++++++++++
+>  scripts/mod/devicetable-offsets.c             |   3 +
+>  scripts/mod/file2alias.c                      |  10 +
+>  25 files changed, 1524 insertions(+), 84 deletions(-)
+>  create mode 100644 drivers/virtio/virtio_mdev.c
+>  create mode 100644 include/linux/vfio_mdev.h
+>  create mode 100644 include/linux/virtio_mdev.h
+>  create mode 100644 samples/vfio-mdev/mvnet.c
+> 
+> --
+> 2.19.1
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
