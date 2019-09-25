@@ -2,160 +2,75 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102ACC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F80C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACAF21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smygSNg9"
+	by mail.kernel.org (Postfix) with ESMTP id AE4D721D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569429317;
+	bh=EQIgfd4Pl8s+2WAjOGkYRfW3VCER4B6mWgrNTVihk1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y9L9eNVibJr2yhSzjUtaTmKjQbxJmqjCRp77BZgZeiKtDUDAa7lgL6REXk8WSudkm
+	 owcypHHBfyMoKUPT+kD6q0Qz0BUiGDUhXV8jC3Gx1ZVqQDFPPnapvEdpuyhyxhJihj
+	 /s0a8wMr/VGT8iIzUmWi09i6NL4DsAbhWeIG0XEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389312AbfIYQev (ORCPT
+        id S2389712AbfIYQfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:34:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33219 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfIYQeu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:34:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so7725985wrs.0;
-        Wed, 25 Sep 2019 09:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=s+6/bt73F0nPkh+ms30j0ei78DCt1MwVFFVQl9AGl+A=;
-        b=smygSNg9FtLOVqPacXXLuBqzZgNquwgf502lQnDrZZV5nuuo1H5s/ex7lbhjMHm7or
-         W5f9sP6CfAj+zLQVBgnlN1BNRQ/Yiu10T/wrAw9PtG28Eo1CRYdl+oeO4TROcZzQS2WE
-         gwrlNPb6xbDF/I7/AqayB1DVxtgWwm6oW+212q5UpYOTFsHGtpRbSfxhya14GvH7272F
-         xF2+lsaLwAtHatm8iRhPM6GjMO0HOy/Lav8cY4AoZlp9nsHLgUnJQE6d3hAwA4UFEoXP
-         kHb+O9tMEzdTX6lw0EXzCGtD23AqF+/TwTcoyhi/gSKJqU3FW7uNrqAnrBsso92RRSjy
-         L0DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=s+6/bt73F0nPkh+ms30j0ei78DCt1MwVFFVQl9AGl+A=;
-        b=uZmx7b4QFSz0DPhpOGXmau4ueunQ4fmBukYnyHH5Wx0aemMq7K8b147ZLNuGZCGuu1
-         PsE7xfmOBrZwtQ7zV2agv6PS39wJ/POvEP2Ouafi3tDFedFe404OY4M4MyXSeQ7mjJkk
-         YzflGrgcJzNqYSQjQLKJQnpaRDufAqkCHe7nwQzxcBP3a++T/XBUSmxi4BU3ZdWTZuy7
-         8rujjY9fEBkOuRxOdpmOiG5nw4WFUkA8uJ/Sy5M9NehHUyhXRspIgKoPsMN21ko+kJaM
-         oAbWMQrKhMJs5wzViUhTA1MNKCA0tLexJg45x26wMBVss/iynnOecTfUFwcR5xqAOv3U
-         gA4g==
-X-Gm-Message-State: APjAAAVIQ6Ek0N7+KapieCSoO+7xpyCkIQGYKG6jTlr4sdhng1+qFSEN
-        mNO4yyNrQvRW7VeOr413qewreHdI
-X-Google-Smtp-Source: APXvYqzG9uZ++lfYDbCS8zeD0orJK6Hij8TVimAq9rhTUfa9PhmpSpHL6h6GyA04sZa+N/qoS5hQMw==
-X-Received: by 2002:a5d:4f86:: with SMTP id d6mr10247057wru.384.1569429288225;
-        Wed, 25 Sep 2019 09:34:48 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id b16sm9170000wrh.5.2019.09.25.09.34.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 09:34:47 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Subject: [PATCH] KVM: nVMX: cleanup and fix host 64-bit mode checks
-Date:   Wed, 25 Sep 2019 18:34:46 +0200
-Message-Id: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 25 Sep 2019 12:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389320AbfIYQfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:35:16 -0400
+Received: from localhost (unknown [12.206.46.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0910B21D7A;
+        Wed, 25 Sep 2019 16:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569429316;
+        bh=EQIgfd4Pl8s+2WAjOGkYRfW3VCER4B6mWgrNTVihk1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dE61ORBtVj4kwu+7PGniQ3DCcVo4G0oPaL4sEMfkx6K57ID4iTM7r35gmnRayAlng
+         AKR4nHEoqxWhmnuc4xQNtOK56z4WiB1r8bkO0NEy0JuAefyJjJ9AaH4xkfGf3KgzmN
+         WC2E8YbFdGK/bWPIBEsu04tJwG0MMaGdXO/sT+1Q=
+Date:   Wed, 25 Sep 2019 09:34:14 -0700
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [EXT] Re: [V4 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
+ controller driver for Layerscape SoCs
+Message-ID: <20190925163414.GH3824@vkoul-mobl>
+References: <20190613101341.21169-1-peng.ma@nxp.com>
+ <20190613101341.21169-2-peng.ma@nxp.com>
+ <20190624164556.GD2962@vkoul-mobl>
+ <VI1PR04MB443142772665BB29B909DFF4EDB10@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20190924193446.GF3824@vkoul-mobl>
+ <VI1PR04MB44314EF818033EB52D0A591DED870@VI1PR04MB4431.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB44314EF818033EB52D0A591DED870@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM was incorrectly checking vmcs12->host_ia32_efer even if the "load
-IA32_EFER" exit control was reset.  Also, some checks were not using
-the new CC macro for tracing.
+On 25-09-19, 02:27, Peng Ma wrote:
 
-Cleanup everything so that the vCPU's 64-bit mode is determined
-directly from EFER_LMA and the VMCS checks are based on that, which
-matches section 26.2.4 of the SDM.
+> >Can you please resend me after rc1 is out and I will review it and do the
+> >needful
+> [Peng Ma] Got it. By the way, when will rc1 out?
 
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Fixes: 5845038c111db27902bc220a4f70070fe945871c
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 53 ++++++++++++++++++++---------------------------
- 1 file changed, 22 insertions(+), 31 deletions(-)
+It is supposed to be out on coming monday!
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 70d59d9304f2..e108847f6cf8 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2664,8 +2664,26 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
- 	    CC(!kvm_pat_valid(vmcs12->host_ia32_pat)))
- 		return -EINVAL;
- 
--	ia32e = (vmcs12->vm_exit_controls &
--		 VM_EXIT_HOST_ADDR_SPACE_SIZE) != 0;
-+#ifdef CONFIG_X86_64
-+	ia32e = !!(vcpu->arch.efer & EFER_LMA);
-+#else
-+	if (CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE))
-+		return -EINVAL;
-+
-+	ia32e = false;
-+#endif
-+
-+	if (ia32e) {
-+		if (CC(!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) ||
-+		    CC(!(vmcs12->host_cr4 & X86_CR4_PAE)))
-+			return -EINVAL;
-+	} else {
-+		if (CC(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) ||
-+		    CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
-+		    CC(vmcs12->host_cr4 & X86_CR4_PCIDE) ||
-+		    CC(((vmcs12->host_rip) >> 32) & 0xffffffff))
-+			return -EINVAL;
-+	}
- 
- 	if (CC(vmcs12->host_cs_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
- 	    CC(vmcs12->host_ss_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
-@@ -2684,35 +2702,8 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
- 	    CC(is_noncanonical_address(vmcs12->host_gs_base, vcpu)) ||
- 	    CC(is_noncanonical_address(vmcs12->host_gdtr_base, vcpu)) ||
- 	    CC(is_noncanonical_address(vmcs12->host_idtr_base, vcpu)) ||
--	    CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)))
--		return -EINVAL;
--
--	if (!(vmcs12->host_ia32_efer & EFER_LMA) &&
--	    ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
--	    (vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE))) {
--		return -EINVAL;
--	}
--
--	if ((vmcs12->host_ia32_efer & EFER_LMA) &&
--	    !(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) {
--		return -EINVAL;
--	}
--
--	if (!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
--	    ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
--	    (vmcs12->host_cr4 & X86_CR4_PCIDE) ||
--	    (((vmcs12->host_rip) >> 32) & 0xffffffff))) {
--		return -EINVAL;
--	}
--
--	if ((vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
--	    ((!(vmcs12->host_cr4 & X86_CR4_PAE)) ||
--	    (is_noncanonical_address(vmcs12->host_rip, vcpu)))) {
--		return -EINVAL;
--	}
--#else
--	if (vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE ||
--	    vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)
-+	    CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)) ||
-+	    CC(is_noncanonical_address(vmcs12->host_rip, vcpu)))
- 		return -EINVAL;
- #endif
- 
 -- 
-1.8.3.1
-
+~Vinod
