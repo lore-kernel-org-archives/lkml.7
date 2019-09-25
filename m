@@ -2,102 +2,89 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47A1C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7913DC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2142054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40ED7207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMXKM9s6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sOJctlcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439411AbfIYPUz (ORCPT
+        id S2439460AbfIYPU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:20:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35860 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfIYPUz (ORCPT
+        Wed, 25 Sep 2019 11:20:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35402 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfIYPU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:20:55 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y19so7425166wrd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ih7TKOYfBLPKOMFm2CoimjQft6GV1JfCO8eV/MUJwrU=;
-        b=FMXKM9s6XrtYvQ88Ib0+IVZFHiUBU8cGTTuRi4LCBQoaPe9EksZ4oD43F2pxQVXQZ1
-         pbA+NK4hNDaFGhpkGW7uvJITGoMw6qK0nTwR4MZuYnoOpluBn9DT+oNjBgAYk+fyv1du
-         Zdz+H7/TvhBJR0EqaIagAXAWMOuMluTqkHQGmUtTnn4yjktlVDmp+M3WgiW2VFul+H0Q
-         L3NTsp9pgPhgnIsll7DTwZoFUeddgK50/oUvXP5tL/fBRZdm58k4hirAq7HfO6v6B9+l
-         9Xzzfpg1uQGivuIpIELbgh40/8G9FmACqsr8UQ3NtTymY2JEFloDxnBAq0eAoTU2HKXY
-         y2Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ih7TKOYfBLPKOMFm2CoimjQft6GV1JfCO8eV/MUJwrU=;
-        b=Ar2ngxMSVq+AGunkA+W5JCM1GJSSEX6plvDEi8gf4U4kgAggIaMjQL7iKZ1zA/puZU
-         U+5RTQ39vYpsKG4jYdBFLtiDFShcOUWHt8uBjQ7irbPrmKXEpX++MrfRfeEN8nbL9O8z
-         6UbvVMVjc6vTlXE4oGEX7Mb7LKIpu0hyszW4CXYXs3D86m0MWYXRTyljrMNDwx1wUZer
-         InfpJDqdbL/5+uqMcgfzKykYrtJ/5VjovmFny/Y7UfXjRA4wyLMdAY1L0eAyUNqGfYcZ
-         BvSG7jLDGEKEtOGDYc2v6z5btCI75d8sJgKW2s+fn4f6okaaMGe/1ab6qpoBweqfV0WD
-         UDzQ==
-X-Gm-Message-State: APjAAAVo6/3C1jZevj6Dq/Bjx/Tl0RysJo3mLZGu7VfVXqZfdsfOGyMg
-        OFUq+PDZcDb6SNCB8DtRY0NEeVGYjrD/ORGaGDwkOGv2WpE=
-X-Google-Smtp-Source: APXvYqwzNrfGTdVLE38UE68+yX95Bv3XD1XJUh1r7iu9PvauWOolAlKjz4RDxaIwvVfhnsanRYoq3o9MYYK4H87Z6Zg=
-X-Received: by 2002:adf:fe88:: with SMTP id l8mr9457664wrr.32.1569424853257;
- Wed, 25 Sep 2019 08:20:53 -0700 (PDT)
+        Wed, 25 Sep 2019 11:20:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PFKsrI125193;
+        Wed, 25 Sep 2019 10:20:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569424854;
+        bh=1TPs+PNmYkoQWTZgbmCZluJSZbvWjeIv343i7k1kfn8=;
+        h=From:To:CC:Subject:Date;
+        b=sOJctlcWMYelI8YA5Mz4YiPJxO1hppFiVtNyeHKy5riTEfFJCnuft1dyTfttIaOZJ
+         TXS3tsXgYSLQUKR26sN2eCkkLDa46dlo6ih5XWlzL6nDb6AP2Tj/LsVdIKnj/tWFkR
+         sJ5dPaxbHikCVP/YoQY1j1iuRqKDbSNcEF0fD6wU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8PFKsQB128695
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 25 Sep 2019 10:20:54 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
+ Sep 2019 10:20:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 25 Sep 2019 10:20:47 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PFKssn047659;
+        Wed, 25 Sep 2019 10:20:54 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/3] media: ov5640: updates
+Date:   Wed, 25 Sep 2019 10:22:58 -0500
+Message-ID: <20190925152301.21645-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190925131241.27913-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20190925131241.27913-1-ben.dooks@codethink.co.uk>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 25 Sep 2019 17:20:41 +0200
-Message-ID: <CAKv+Gu8H6u+3Hp5HdYwoG6PwVHGK4shjC9KNsUSMRy6xQNiPoA@mail.gmail.com>
-Subject: Re: [PATCH] efi: make unexported efi_rci2_sysfs_init static
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel@lists.codethink.co.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 at 15:12, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->
-> The efi_rci2_sysfs_init() is not used outside of rci2-table.c so
-> make it static to silence the following sparse warning:
->
-> drivers/firmware/efi/rci2-table.c:79:12: warning: symbol 'efi_rci2_sysfs_init' was not declared. Should it be static?
->
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
->  drivers/firmware/efi/rci2-table.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/rci2-table.c b/drivers/firmware/efi/rci2-table.c
-> index 3e290f96620a..76b0c354a027 100644
-> --- a/drivers/firmware/efi/rci2-table.c
-> +++ b/drivers/firmware/efi/rci2-table.c
-> @@ -76,7 +76,7 @@ static u16 checksum(void)
->         return chksum;
->  }
->
-> -int __init efi_rci2_sysfs_init(void)
-> +static int __init efi_rci2_sysfs_init(void)
->  {
->         struct kobject *tables_kobj;
->         int ret = -ENOMEM;
-> --
-> 2.23.0
->
+This patch series is a collection of patches we have been carrying for a
+while.
 
-Thanks Ben.
+First, it adds support for PIXEL_RATE control which is used by some
+CSI2 receiver driver to properly set-up their DPHY.
 
-Queued in efi/urgent
+Then we fix an issue related to having extra sensor enable/disable in
+the register array for the 1920x1080 mode.
+
+Finally we restrict the largest resolution which should only be
+available at the lowest FPS.
+
+Benoit Parrot (3):
+  media: ov5640: add PIXEL_RATE control
+  media: ov5640: Fix 1920x1080 mode to remove extra enable/disable
+  media: ov5640: Make 2592x1944 mode only available at 15 fps
+
+ drivers/media/i2c/ov5640.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
