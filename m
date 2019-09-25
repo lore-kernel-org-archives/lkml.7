@@ -2,206 +2,244 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E98C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742FAC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E4021D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF1821D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569392611;
+	bh=+pUotpvPxtPDE9XDRq1gUWN02qOp+MNc5U1tIj4aEEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q8+/DSfwc/LSO82zwuYDAJ+mFnWrTlyGrVXxmM/RbtP3hkv3HiqQtd4U5LtuLuS+6
+	 k6A9yuI43cc417wKWLzW4RRRhYSk+vyaX9TFDKtSUIYQ/fVkTLjiJzuqejMUoGHSYE
+	 7YriPOOgyp/0Atst360PQNkmA4+L/iya+XUumM04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411862AbfIYGTI (ORCPT
+        id S2411874AbfIYGXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:19:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:56540 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729378AbfIYGTH (ORCPT
+        Wed, 25 Sep 2019 02:23:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45400 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404570AbfIYGX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:19:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id a22so7439339ioq.23
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 23:19:07 -0700 (PDT)
+        Wed, 25 Sep 2019 02:23:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r5so4915281wrm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 23:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bjOEh0remiO1SBIUmbtaD2NymPKRcZuLKqrk2Be+LSc=;
+        b=OhmbCZqqehmKBug/dwmx6kGZ6epz34JLOMtkhLRxM4m4IXCCbtDGrHkmBVXrY+3tZL
+         di7zPnJWpR/YrUF2UNLZw0DAXySsoTZhXMGCRgh9MP5jAr87U5eu4ssURuT6vdYopjD2
+         o7aDNNSWkmBofNwp7vE8xnEJcB6Gs4pXRlEijyTmqLbokJdYDjLuuBql0isM2vz0/+v/
+         M3YauIyZpD7U4egSI3vByAOO9InHgulNYbGi+6r01cJDa4VCinwBY8bG+UPh3cCx76EL
+         +0Ty87cF2Fkq/LK3d4PP4PU8iM8CqfLXlpwRvFrSdrF04mdo60qndWpLuzJkUs/dHEq+
+         cu1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cW96M0F/kJO0oAtQ7bv2vEgNKpow1m3Kj4kGAYXb2JY=;
-        b=IZ8b6BQl6A/fRciO4BKivFuBtn0uo0euXozbY4hhs/zl3Pnz9VM+CqDW8jLpsvsLDt
-         1wU48TlDunS8HfNdwENGDyWv4RlqtR81NpqlLESPbunN05Xl3soIKqZO4EeSUcAKSUqe
-         18MQcmLaBayVOLxMnywvD2gzXtr09LNwdWp+6zT5C7EmdrqMB50hX8bJSqnzHIlWGRO0
-         r/MqmwKNN24qPwwg5sOqsZuY7f97dTg9LkvbeMhZfT/jtCz69tHhXy92fYVmpOnKkit2
-         Pwx7ytAqUgEIE2Qi32mISl7AI4il93Ld2+07uiA8dj9G6S5Lt9qdTMe/wCp1opzfgCIn
-         jnRw==
-X-Gm-Message-State: APjAAAXkrh6ZXB3EYnQuMTKlx6k5z6ao5P1tyAxJpluRY8+p8fdp78ds
-        EfLRLzJTiQcfgbC88dpnR+IcF/ITpTAVOHtKdT+TVcPBLexo
-X-Google-Smtp-Source: APXvYqw2F2EwMD4TJ7b/ACk8a3u3T2sDbv/rmwsyD9F2I1+cIjvU0z46h7hDVmp2OYC3qQ/eRbiEqjbk8hfByu/8yNYfuRZimrQw
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bjOEh0remiO1SBIUmbtaD2NymPKRcZuLKqrk2Be+LSc=;
+        b=T8ME4uo1RA2sLQgTYLSclVXXnt3r0koL5o2eo3ywGdBlvDRc2vqOSDxCDelpOWi2Qz
+         dErfLsr5J4FXBvqRRuN21CS3GlB0jJnJOanOtmLNouKyR3BrVCFjnLtHa5r41YyUs0K9
+         KuvAvLFRunuutVFNDMGacWaGSo+BDY12tjqNPULz74rBhXX2gw1uwEsM7ddLYlsjFXOj
+         KBoELFLv7Ajzu3Lb5PQku3vzhaeQfGoXP4CZWLWAJMyciG0HGOkrkBRY3WrNvRkB7Cch
+         +US8zUUXiCMvGOA9623N3A9eoGq1U2Ux64vU5avIpnYxHx8TDpQYH/jrYDYbCM3kyB8O
+         XwNw==
+X-Gm-Message-State: APjAAAUCx6fEGWHt0mqxMRTud96HhWbewlmN9rT19+9tWcyoOs2SBBq+
+        MOo86UZFVpc7QvEqsLrjs6g=
+X-Google-Smtp-Source: APXvYqwBZurQ4uTRW+kVz5MGCDgVppKWsO764mbboyeSGhtF1gffYeYwn0yWec2NooQZKCvixAxCmA==
+X-Received: by 2002:a5d:6b49:: with SMTP id x9mr7689888wrw.80.1569392606892;
+        Tue, 24 Sep 2019 23:23:26 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d193sm5603295wmd.0.2019.09.24.23.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 23:23:25 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 08:23:23 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] x86/pti for 5.4-rc1
+Message-ID: <20190925062323.GA65860@gmail.com>
+References: <156864062018.3407.16580572772546914005.tglx@nanos.tec.linutronix.de>
+ <156864062019.3407.14798418565580024723.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjQJaNbQe3fmFU19_wawkx-WT9Sv=h5mWCA9=LL34g_3Q@mail.gmail.com>
+ <CDB07BE3-6491-4159-89E7-FBA1631A01C3@fb.com>
+ <CAHk-=whbOhAmc3FEhnEkdM9AXFuKM+964r+uzzm_Q9qFaxTC7g@mail.gmail.com>
+ <E4AF8E4C-A307-4AE7-85AA-F579D5BFDBDD@fb.com>
+ <CAHk-=wisZfwwJo57BRigT5X_uWs6Jw4K3ezPSwCSMBHSeJTHzg@mail.gmail.com>
+ <C6FC577A-A589-46FD-92FE-5C441BDB922D@fb.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9f4e:: with SMTP id u14mr899668iot.106.1569392346773;
- Tue, 24 Sep 2019 23:19:06 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 23:19:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000057e77805935aa13a@google.com>
-Subject: possible deadlock in refcount_dec_and_mutex_lock
-From:   syzbot <syzbot+22987eb604bffbcb717a@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C6FC577A-A589-46FD-92FE-5C441BDB922D@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+* Song Liu <songliubraving@fb.com> wrote:
 
-HEAD commit:    b5b3bd89 Add linux-next specific files for 20190920
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12bd8429600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eadcd01c1bd90b7f
-dashboard link: https://syzkaller.appspot.com/bug?extid=22987eb604bffbcb717a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> 
+> > On Sep 17, 2019, at 4:35 PM, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > 
+> > On Tue, Sep 17, 2019 at 4:29 PM Song Liu <songliubraving@fb.com> wrote:
+> >> 
+> >> How about we just do:
+> >> 
+> >> diff --git i/arch/x86/mm/pti.c w/arch/x86/mm/pti.c
+> >> index b196524759ec..0437f65250db 100644
+> >> --- i/arch/x86/mm/pti.c
+> >> +++ w/arch/x86/mm/pti.c
+> >> @@ -341,6 +341,7 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+> >>                }
+> >> 
+> >>                if (pmd_large(*pmd) || level == PTI_CLONE_PMD) {
+> >> +                       WARN_ON_ONCE(addr & ~PMD_MASK);
+> >>                        target_pmd = pti_user_pagetable_walk_pmd(addr);
+> >>                        if (WARN_ON(!target_pmd))
+> >>                                return;
+> >> 
+> >> So it is a "warn and continue" check just for unaligned PMD address.
+> > 
+> > The problem there is that the "continue" part can be wrong.
+> > 
+> > Admittedly it requires a pretty crazy setup: you first hit a
+> > pmd_large() entry, but the *next* pmd is regular, so you start doing
+> > the per-page cloning.
+> > 
+> > And that per-page cloning will be wrong, because it will start in the
+> > middle of the next pmd, because addr wasn't aligned, and the previous
+> > pmd-only clone did
+> > 
+> >                        addr += PMD_SIZE;
+> > 
+> > to go to the next case.
+> > 
+> > See?
+> 
+> I see. This is tricky. 
+> 
+> Maybe we should skip clone of the first unaligned large pmd?
+> 
+> diff --git i/arch/x86/mm/pti.c w/arch/x86/mm/pti.c
+> index 7f2140414440..1dfa69f8196b 100644
+> --- i/arch/x86/mm/pti.c
+> +++ w/arch/x86/mm/pti.c
+> @@ -343,6 +343,11 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+>                 }
+> 
+>                 if (pmd_large(*pmd) || level == PTI_CLONE_PMD) {
+> +                       if (WARN_ON_ONCE(addr & ~PMD_MASK)) {
+> +                               addr = round_up(addr, PMD_SIZE);
+> +                               continue;
+> +                       }
+> +
+>                         target_pmd = pti_user_pagetable_walk_pmd(addr);
+>                         if (WARN_ON(!target_pmd))
+>                                 return;
 
-Unfortunately, I don't have any reproducer for this crash yet.
+No, we should do a proper iteration of the page table structures.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+22987eb604bffbcb717a@syzkaller.appspotmail.com
+> Or we can round_down the addr and copy the whole PMD properly:
+> 
+> diff --git i/arch/x86/mm/pti.c w/arch/x86/mm/pti.c
+> index 7f2140414440..bee9881f2e85 100644
+> --- i/arch/x86/mm/pti.c
+> +++ w/arch/x86/mm/pti.c
+> @@ -343,6 +343,9 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+>                 }
+> 
+>                 if (pmd_large(*pmd) || level == PTI_CLONE_PMD) {
+> +                       if (WARN_ON_ONCE(addr & ~PMD_MASK))
+> +                               addr &= PMD_MASK;
+> +
+>                         target_pmd = pti_user_pagetable_walk_pmd(addr);
+>                         if (WARN_ON(!target_pmd))
+>                                 return;
+> 
+> I think the latter is better, but I am not sure. 
 
-block nbd3: Receive control failed (result -22)
-======================================================
-WARNING: possible circular locking dependency detected
-5.3.0-next-20190920 #0 Not tainted
-------------------------------------------------------
-kworker/u5:0/1524 is trying to acquire lock:
-ffff8880a3030978 (&nbd->config_lock){+.+.}, at: refcount_dec_and_mutex_lock  
-lib/refcount.c:319 [inline]
-ffff8880a3030978 (&nbd->config_lock){+.+.}, at:  
-refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
+While this works, it's the wrong iterator pattern I believe.
 
-but task is already holding lock:
-ffff8880a63ffdc0 ((work_completion)(&args->work)){+.+.}, at:  
-process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
+In this function we iterate by passing in a 'random' [start,end) virtual 
+memory address range with no particular alignment assumptions, then look 
+up all pagetable entries covered by that range.
 
-which lock already depends on the new lock.
+The iteration's principle is straightforward: we look up the first 
+address (byte granular) then continue iterating according to the observed 
+structure of the kernel pagetables, by skipping the range we have just 
+looked up:
 
+- If the current PUD is not mapped, then we set 'addr' to the first byte 
+  after the virtual memory range represented by the current PUD entry:
 
-the existing dependency chain (in reverse order) is:
+    addr = round_up(addr + 1, PUD_SIZE);
 
--> #2 ((work_completion)(&args->work)){+.+.}:
-        process_one_work+0x91c/0x1740 kernel/workqueue.c:2245
-        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-        kthread+0x361/0x430 kernel/kthread.c:255
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+- If the current PMD is not mapped, then the next byte is:
 
--> #1 ((wq_completion)knbd0-recv){+.+.}:
-        flush_workqueue+0x126/0x14c0 kernel/workqueue.c:2774
-        drain_workqueue+0x1b4/0x470 kernel/workqueue.c:2939
-        destroy_workqueue+0x74/0x750 kernel/workqueue.c:4335
-        nbd_config_put+0x3dd/0x870 drivers/block/nbd.c:1181
-        nbd_release+0x103/0x150 drivers/block/nbd.c:1460
-        __blkdev_put+0x4d1/0x810 fs/block_dev.c:1867
-        blkdev_put+0x98/0x560 fs/block_dev.c:1929
-        blkdev_close+0x8b/0xb0 fs/block_dev.c:1936
-        __fput+0x2ff/0x890 fs/file_table.c:280
-        ____fput+0x16/0x20 fs/file_table.c:313
-        task_work_run+0x145/0x1c0 kernel/task_work.c:113
-        exit_task_work include/linux/task_work.h:22 [inline]
-        do_exit+0x904/0x2e60 kernel/exit.c:879
-        do_group_exit+0x135/0x360 kernel/exit.c:983
-        __do_sys_exit_group kernel/exit.c:994 [inline]
-        __se_sys_exit_group kernel/exit.c:992 [inline]
-        __x64_sys_exit_group+0x44/0x50 kernel/exit.c:992
-        do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    addr = round_up(addr + 1, PMD_SIZE);
 
--> #0 (&nbd->config_lock){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-        refcount_dec_and_mutex_lock lib/refcount.c:319 [inline]
-        refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
-        nbd_config_put+0x31/0x870 drivers/block/nbd.c:1159
-        recv_work+0x19b/0x200 drivers/block/nbd.c:787
-        process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-        kthread+0x361/0x430 kernel/kthread.c:255
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+The part Linus correctly pointed it is still iterating incorrectly and 
+might potentially be unrobust is:
 
-other info that might help us debug this:
+    addr += PMD_SIZE;
 
-Chain exists of:
-   &nbd->config_lock --> (wq_completion)knbd0-recv -->  
-(work_completion)(&args->work)
+This is buggy because it doesn't step to the next byte after the current 
+mapped PMD, but potentially somewhere into the middle of the next 
+PMD-sized range of virtual memory (which might or might not be covered by 
+a PMD entry). The iterations after that might be similarly offset and 
+buggy as well.
 
-  Possible unsafe locking scenario:
+The right fix is to *fix the address iterator*, to use the basic 
+principle of the function, with the same general exact calculation 
+pattern we use in the other cases:
 
-        CPU0                    CPU1
-        ----                    ----
-   lock((work_completion)(&args->work));
-                                lock((wq_completion)knbd0-recv);
-                                lock((work_completion)(&args->work));
-   lock(&nbd->config_lock);
+    addr = round_down(addr, PMD_SIZE) + PMD_SIZE;
 
-  *** DEADLOCK ***
+BTW., I'd also suggest using this new round_down() pattern in the other 
+two cases as well:
 
-2 locks held by kworker/u5:0/1524:
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
-__write_once_size include/linux/compiler.h:226 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
-arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at: atomic64_set  
-include/asm-generic/atomic-instrumented.h:855 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
-atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at: set_work_data  
-kernel/workqueue.c:620 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
-set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
-  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
-process_one_work+0x88b/0x1740 kernel/workqueue.c:2240
-  #1: ffff8880a63ffdc0 ((work_completion)(&args->work)){+.+.}, at:  
-process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
+    addr = round_down(addr, PUD_SIZE) + PUD_SIZE;
+    ...
+    addr = round_down(addr, PMD_SIZE) + PMD_SIZE;
 
-stack backtrace:
-CPU: 1 PID: 1524 Comm: kworker/u5:0 Not tainted 5.3.0-next-20190920 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: knbd3-recv recv_work
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
-  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  refcount_dec_and_mutex_lock lib/refcount.c:319 [inline]
-  refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
-  nbd_config_put+0x31/0x870 drivers/block/nbd.c:1159
-  recv_work+0x19b/0x200 drivers/block/nbd.c:787
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-block nbd3: shutting down sockets
+Why? Because this:
 
+    addr = round_up(addr + 1, PUD_SIZE);
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Will iterate incorrectly if 'addr' (which is byte granular) is the last 
+*byte* of a PUD range, it will incorrectly skip the next PUD range...
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Is a page-unaligned address likely to be passed in to this function? With 
+the current users I really hope it won't happen, but it costs nothing to 
+use clean iterators and think through all cases - it also makes the code 
+more readable.
+
+Three random nits about the pti_clone_pgtable() function:
+
+- Could we please also fix all WARN()'s in that function to be 
+  WARN_ONCE()? Any warning from that function is probably fatal to the 
+  bootup anyway, and it doesn't help if we potentially spam many 
+  warnings.
+
+- Please add an explanation comment to why the 'BUG();' case is 
+  unrecoverable and needs us to crash the kernel.
+
+- Please add a comment about what the 'level' parameter does. It's non-obvious.
+
+Thanks,
+
+	Ingo
