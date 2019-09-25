@@ -2,309 +2,120 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B05BC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1190C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19ACC217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A5321D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442611AbfIYHcw (ORCPT
+        id S2633980AbfIYHcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:32:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30234 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405164AbfIYHcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:32:51 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8P7Sf4M023692
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 03:32:50 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v839n1jke-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 03:32:49 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 25 Sep 2019 08:32:46 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 25 Sep 2019 08:32:43 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8P7WESd37945808
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Sep 2019 07:32:15 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C2664C04E;
-        Wed, 25 Sep 2019 07:32:42 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62F024C046;
-        Wed, 25 Sep 2019 07:32:41 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.153])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 25 Sep 2019 07:32:41 +0000 (GMT)
-Date:   Wed, 25 Sep 2019 10:32:39 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de, mhocko@suse.co,
-        dan.j.williams@intel.com, david@redhat.com, cai@lca.pw,
-        linux-mm@kvack.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3] mm: Support memblock alloc on the exact node for
- sparse_buffer_init()
-References: <e836da55-19f7-e505-7f2a-5f790d61b912@huawei.com>
+        Wed, 25 Sep 2019 03:32:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32052 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405164AbfIYHcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:32:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 00:32:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="364246016"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga005.jf.intel.com with ESMTP; 25 Sep 2019 00:32:51 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 00:32:51 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.140]) with mapi id 14.03.0439.000;
+ Wed, 25 Sep 2019 15:32:49 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Peter Xu <peterx@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Yi Sun <yi.y.sun@linux.intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: RE: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
+ interfaces
+Thread-Topic: [RFC PATCH 2/4] iommu/vt-d: Add first level page table
+ interfaces
+Thread-Index: AQHVcgpDf16VDDZMQk6x5RWfK5mI2qc5MXAAgABWBICAAcJfAIAAh6Ig//+HOwCAABizAIAAjr3w
+Date:   Wed, 25 Sep 2019 07:32:48 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-3-baolu.lu@linux.intel.com>
+ <20190923203102.GB21816@araj-mobl1.jf.intel.com>
+ <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
+ <20190925043050.GK28074@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
+ <20190925052402.GM28074@xz-x1>
+ <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
+In-Reply-To: <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2U4YmU0ZmUtZDYzZS00ZjE4LWExZjctMTJkMzE0OTI5ZWIwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQjAzc0c5Y3ZcL01KUnQ3QmQyR2hyUUdDVkVaY3J4TEUzcGJTZjZoYzM4MDdzcGVnXC9Kcm5MZ1RYbXNHcDZGNGVuIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e836da55-19f7-e505-7f2a-5f790d61b912@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19092507-0028-0000-0000-000003A23C9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092507-0029-0000-0000-00002464552A
-Message-Id: <20190925073239.GD1857@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-25_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909250076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 03:18:43PM +0800, Yunfeng Ye wrote:
-> sparse_buffer_init() use memblock_alloc_try_nid_raw() to allocate memory
-> for page management structure, if memory allocation fails from specified
-> node, it will fall back to allocate from other nodes.
-> 
-> Normally, the page management structure will not exceed 2% of the total
-> memory, but a large continuous block of allocation is needed. In most
-> cases, memory allocation from the specified node will success always,
-> but a node memory become highly fragmented will fail. we expect to
-> allocate memory base section rather than by allocating a large block of
-> memory from other NUMA nodes
-> 
-> Add memblock_alloc_exact_nid_raw() for this situation, which allocate
-> boot memory block on the exact node. If a large contiguous block memory
-> allocate fail in sparse_buffer_init(), it will fall back to allocate
-> small block memory base section.
-> 
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-
-One nit below, otherwise
-
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-
-> ---
-> v2 -> v3:
->  - use "bool exact_nid" instead of "int need_exact_nid"
->  - remove the comment "without panicking"
-> 
-> v1 -> v2:
->  - use memblock_alloc_exact_nid_raw() rather than using a flag
-> 
->  include/linux/memblock.h |  3 +++
->  mm/memblock.c            | 65 ++++++++++++++++++++++++++++++++++++++++--------
->  mm/sparse.c              |  2 +-
->  3 files changed, 58 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index f491690..b38bbef 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -358,6 +358,9 @@ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
->  					 MEMBLOCK_ALLOC_ACCESSIBLE);
->  }
-> 
-> +void *memblock_alloc_exact_nid_raw(phys_addr_t size, phys_addr_t align,
-> +				 phys_addr_t min_addr, phys_addr_t max_addr,
-> +				 int nid);
->  void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
->  				 phys_addr_t min_addr, phys_addr_t max_addr,
->  				 int nid);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 7d4f61a..0de9d83 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1323,12 +1323,13 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
->   * @start: the lower bound of the memory region to allocate (phys address)
->   * @end: the upper bound of the memory region to allocate (phys address)
->   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-> + * @exact_nid: control the allocation fall back to other nodes
->   *
->   * The allocation is performed from memory region limited by
->   * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
->   *
-> - * If the specified node can not hold the requested memory the
-> - * allocation falls back to any node in the system
-> + * If the specified node can not hold the requested memory and @exact_nid
-> + * is zero, the allocation falls back to any node in the system
-
-     ^ is false  ;-)
-
->   *
->   * For systems with memory mirroring, the allocation is attempted first
->   * from the regions with mirroring enabled and then retried from any
-> @@ -1342,7 +1343,8 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
->   */
->  static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->  					phys_addr_t align, phys_addr_t start,
-> -					phys_addr_t end, int nid)
-> +					phys_addr_t end, int nid,
-> +					bool exact_nid)
->  {
->  	enum memblock_flags flags = choose_memblock_flags();
->  	phys_addr_t found;
-> @@ -1365,7 +1367,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->  	if (found && !memblock_reserve(found, size))
->  		goto done;
-> 
-> -	if (nid != NUMA_NO_NODE) {
-> +	if (nid != NUMA_NO_NODE && !exact_nid) {
->  		found = memblock_find_in_range_node(size, align, start,
->  						    end, NUMA_NO_NODE,
->  						    flags);
-> @@ -1413,7 +1415,8 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
->  					     phys_addr_t start,
->  					     phys_addr_t end)
->  {
-> -	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE);
-> +	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE,
-> +					false);
->  }
-> 
->  /**
-> @@ -1432,7 +1435,7 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
->  phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid)
->  {
->  	return memblock_alloc_range_nid(size, align, 0,
-> -					MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> +					MEMBLOCK_ALLOC_ACCESSIBLE, nid, false);
->  }
-> 
->  /**
-> @@ -1442,6 +1445,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
->   * @min_addr: the lower bound of the memory region to allocate (phys address)
->   * @max_addr: the upper bound of the memory region to allocate (phys address)
->   * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-> + * @exact_nid: control the allocation fall back to other nodes
->   *
->   * Allocates memory block using memblock_alloc_range_nid() and
->   * converts the returned physical address to virtual.
-> @@ -1457,7 +1461,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
->  static void * __init memblock_alloc_internal(
->  				phys_addr_t size, phys_addr_t align,
->  				phys_addr_t min_addr, phys_addr_t max_addr,
-> -				int nid)
-> +				int nid, bool exact_nid)
->  {
->  	phys_addr_t alloc;
-> 
-> @@ -1469,11 +1473,13 @@ static void * __init memblock_alloc_internal(
->  	if (WARN_ON_ONCE(slab_is_available()))
->  		return kzalloc_node(size, GFP_NOWAIT, nid);
-> 
-> -	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
-> +	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid,
-> +					exact_nid);
-> 
->  	/* retry allocation without lower limit */
->  	if (!alloc && min_addr)
-> -		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid);
-> +		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid,
-> +						exact_nid);
-> 
->  	if (!alloc)
->  		return NULL;
-> @@ -1482,6 +1488,43 @@ static void * __init memblock_alloc_internal(
->  }
-> 
->  /**
-> + * memblock_alloc_exact_nid_raw - allocate boot memory block on the exact node
-> + * without zeroing memory
-> + * @size: size of memory block to be allocated in bytes
-> + * @align: alignment of the region and block's size
-> + * @min_addr: the lower bound of the memory region from where the allocation
-> + *	  is preferred (phys address)
-> + * @max_addr: the upper bound of the memory region from where the allocation
-> + *	      is preferred (phys address), or %MEMBLOCK_ALLOC_ACCESSIBLE to
-> + *	      allocate only from memory limited by memblock.current_limit value
-> + * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-> + *
-> + * Public function, provides additional debug information (including caller
-> + * info), if enabled. Does not zero allocated memory.
-> + *
-> + * Return:
-> + * Virtual address of allocated memory block on success, NULL on failure.
-> + */
-> +void * __init memblock_alloc_exact_nid_raw(
-> +			phys_addr_t size, phys_addr_t align,
-> +			phys_addr_t min_addr, phys_addr_t max_addr,
-> +			int nid)
-> +{
-> +	void *ptr;
-> +
-> +	memblock_dbg("%s: %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa %pS\n",
-> +		     __func__, (u64)size, (u64)align, nid, &min_addr,
-> +		     &max_addr, (void *)_RET_IP_);
-> +
-> +	ptr = memblock_alloc_internal(size, align,
-> +					   min_addr, max_addr, nid, true);
-> +	if (ptr && size > 0)
-> +		page_init_poison(ptr, size);
-> +
-> +	return ptr;
-> +}
-> +
-> +/**
->   * memblock_alloc_try_nid_raw - allocate boot memory block without zeroing
->   * memory and without panicking
->   * @size: size of memory block to be allocated in bytes
-> @@ -1512,7 +1555,7 @@ void * __init memblock_alloc_try_nid_raw(
->  		     &max_addr, (void *)_RET_IP_);
-> 
->  	ptr = memblock_alloc_internal(size, align,
-> -					   min_addr, max_addr, nid);
-> +					   min_addr, max_addr, nid, false);
->  	if (ptr && size > 0)
->  		page_init_poison(ptr, size);
-> 
-> @@ -1547,7 +1590,7 @@ void * __init memblock_alloc_try_nid(
->  		     __func__, (u64)size, (u64)align, nid, &min_addr,
->  		     &max_addr, (void *)_RET_IP_);
->  	ptr = memblock_alloc_internal(size, align,
-> -					   min_addr, max_addr, nid);
-> +					   min_addr, max_addr, nid, false);
->  	if (ptr)
->  		memset(ptr, 0, size);
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 72f010d..1a06471 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -475,7 +475,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
->  	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
->  	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
->  	sparsemap_buf =
-> -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
-> +		memblock_alloc_exact_nid_raw(size, PAGE_SIZE,
->  						addr,
->  						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
->  	sparsemap_buf_end = sparsemap_buf + size;
-> -- 
-> 2.7.4
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+PiBGcm9tOiBMdSBCYW9sdSBbbWFpbHRvOmJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbV0NCj4gU2Vu
+dDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjUsIDIwMTkgMjo1MiBQTQ0KPiANCj4gSGkgUGV0ZXIg
+YW5kIEtldmluLA0KPiANCj4gT24gOS8yNS8xOSAxOjI0IFBNLCBQZXRlciBYdSB3cm90ZToNCj4g
+PiBPbiBXZWQsIFNlcCAyNSwgMjAxOSBhdCAwNDozODozMUFNICswMDAwLCBUaWFuLCBLZXZpbiB3
+cm90ZToNCj4gPj4+IEZyb206IFBldGVyIFh1IFttYWlsdG86cGV0ZXJ4QHJlZGhhdC5jb21dDQo+
+ID4+PiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAyNSwgMjAxOSAxMjozMSBQTQ0KPiA+Pj4N
+Cj4gPj4+IE9uIFR1ZSwgU2VwIDI0LCAyMDE5IGF0IDA5OjM4OjUzQU0gKzA4MDAsIEx1IEJhb2x1
+IHdyb3RlOg0KPiA+Pj4+Pj4gaW50ZWxfbW1tYXBfcmFuZ2UoZG9tYWluLCBhZGRyLCBlbmQsIHBo
+eXNfYWRkciwgcHJvdCkNCj4gPj4+Pj4NCj4gPj4+Pj4gTWF5YmUgdGhpbmsgb2YgYSBkaWZmZXJl
+bnQgbmFtZS4uPyBtbW1hcCBzZWVtcyBhIGJpdCB3ZWlyZCA6LSkNCj4gPj4+Pg0KPiA+Pj4+IFll
+cy4gSSBkb24ndCBsaWtlIGl0IGVpdGhlci4gSSd2ZSB0aG91Z2h0IGFib3V0IGl0IGFuZCBoYXZl
+bid0DQo+ID4+Pj4gZmlndXJlZCBvdXQgYSBzYXRpc2ZpZWQgb25lLiBEbyB5b3UgaGF2ZSBhbnkg
+c3VnZ2VzdGlvbnM/DQo+ID4+Pg0KPiA+Pj4gSG93IGFib3V0IGF0IGxlYXN0IHNwbGl0IHRoZSB3
+b3JkIHVzaW5nICJfIj8gIExpa2UgIm1tX21hcCIsIHRoZW4NCj4gPj4+IGFwcGx5IGl0IHRvIGFs
+bCB0aGUgIm1tbSoiIHByZWZpeGVzLiAgT3RoZXJ3aXNlIGl0J2xsIGJlIGVhc2lseQ0KPiA+Pj4g
+bWlzcmVhZCBhcyBtbWFwKCkgd2hpY2ggaXMgdG90YWxseSBpcnJlbGV2YW50IHRvIHRoaXMuLi4N
+Cj4gPj4+DQo+ID4+DQo+ID4+IHdoYXQgaXMgdGhlIHBvaW50IG9mIGtlZXBpbmcgJ21tJyBoZXJl
+PyByZXBsYWNlIGl0IHdpdGggJ2lvbW11Jz8NCj4gPg0KPiA+IEknbSBub3Qgc3VyZSBvZiB3aGF0
+IEJhb2x1IHRob3VnaHQsIGJ1dCB0byBtZSAibW0iIG1ha2VzIHNlbnNlIGl0c2VsZg0KPiA+IHRv
+IGlkZW50aWZ5IHRoaXMgZnJvbSByZWFsIElPTU1VIHBhZ2UgdGFibGVzIChiZWNhdXNlIElJVUMg
+dGhlc2Ugd2lsbA0KPiA+IGJlIE1NVSBwYWdlIHRhYmxlcykuICBXZSBjYW4gY29tZSB1cCB3aXRo
+IGJldHRlciBuYW1lcywgYnV0IElNSE8NCj4gPiAiaW9tbXUiIGNhbiBiZSBhIGJpdCBtaXNsZWFk
+aW5nIHRvIGxldCBwZW9wbGUgcmVmZXIgdG8gdGhlIDJuZCBsZXZlbA0KPiA+IHBhZ2UgdGFibGUu
+DQo+IA0KPiAibW0iIHJlcHJlc2VudHMgYSBDUFUgKGZpcnN0IGxldmVsKSBwYWdlIHRhYmxlOw0K
+PiANCj4gdnMuDQo+IA0KPiAiaW8iIHJlcHJlc2VudHMgYW4gSU9NTVUgKHNlY29uZCBsZXZlbCkg
+cGFnZSB0YWJsZS4NCj4gDQoNCklPTU1VIGZpcnN0IGxldmVsIGlzIG5vdCBlcXVpdmFsZW50IHRv
+IENQVSBwYWdlIHRhYmxlLCB0aG91Z2ggeW91IGNhbg0KdXNlIHRoZSBsYXR0ZXIgYXMgdGhlIGZp
+cnN0IGxldmVsIChlLmcuIGluIFNWQSkuIEVzcGVjaWFsbHkgaGVyZSB5b3UgYXJlDQptYWtpbmcg
+SU9WQS0+R1BBIGFzIHRoZSBmaXJzdCBsZXZlbCwgd2hpY2ggaXMgbm90IENQVSBwYWdlIHRhYmxl
+Lg0KDQpidHcgYm90aCBsZXZlbHMgYXJlIGZvciAiaW8iIGkuZS4gRE1BIHB1cnBvc2VzIGZyb20g
+VlQtZCBwLm8udi4gVGhleQ0KYXJlIGp1c3QgaGllcmFyY2hpY2FsIHN0cnVjdHVyZXMgaW1wbGVt
+ZW50ZWQgYnkgVlQtZCwgd2l0aCBzbGlnaHRseQ0KZGlmZmVyZW50IGZvcm1hdC4gVGhlIHNwZWNp
+ZmljYXRpb24gZG9lc24ndCBsaW1pdCBob3cgeW91IHVzZSB0aGVtIGZvci4NCkluIGEgaHlwb3Ro
+ZXRpY2FsIGNhc2UsIGFuIElPTU1VIG1heSBpbXBsZW1lbnQgZXhhY3RseSBzYW1lIENQVS1wYWdl
+LQ0KdGFibGUgZm9ybWF0IGFuZCBzdXBwb3J0IHBhZ2UgZmF1bHRzIGZvciBib3RoIGxldmVscy4g
+VGhlbiB5b3UgY2FuIGV2ZW4NCmxpbmsgdGhlIENQVSBwYWdlIHRhYmxlIHRvIHRoZSAybmQgbGV2
+ZWwgZm9yIHN1cmUuDQoNCk1heWJlIHdlIGp1c3QgbmFtZSBpdCBmcm9tIFZULWQgY29udGV4dCwg
+ZS5nLiBpbnRlbF9tYXBfZmlyc3RfbGV2ZWxfcmFuZ2UsDQpJbnRlbF9tYXBfc2Vjb25kX2xldmVs
+X3JhbmdlLCBhbmQgdGhlbiByZWdpc3RlciB0aGVtIGFzIGRtYXIgZG9tYWluDQpjYWxsYmFjayBh
+cyB5b3UgcmVwbGllZCBpbiBhbm90aGVyIG1haWwuDQoNClRoYW5rcw0KS2V2aW4NCg==
