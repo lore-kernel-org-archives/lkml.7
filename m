@@ -2,95 +2,139 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0049C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23A3C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C86A20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B6B21D80
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9LsvzkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442609AbfIYHum (ORCPT
+        id S2442627AbfIYHvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:50:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49282 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437273AbfIYHum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:50:42 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0AC59882F2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:50:42 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id s25so1506960wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:50:41 -0700 (PDT)
+        Wed, 25 Sep 2019 03:51:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34866 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437273AbfIYHvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:51:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v8so5323948wrt.2;
+        Wed, 25 Sep 2019 00:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KK67yuIkFsaQkINB9Eu+BWBSTsnh/Qbi0YgbzgTn/rM=;
+        b=c9LsvzkC2UahQM7UsxwHEYILC+sW+LJN8PKvTE5AcffKIdC9teJ6yeqDt3GLKHE0Kk
+         i6g+ixT+t5Fl9YYIghKagH0I+5cmWOoBj4ey2NqFGqyqRQ2eYNDA6iPFw8tBs6LojIsc
+         gsEttSgoKUyl3ayfybejZlf+X6Urk6ZXpHC0NEFodz61tM4MNHxr25pKQUMunNlPIIPo
+         W+CVt67+/WrZbj/DkAzIT3lFJT1qvqKfXRqLW7vkfGLxl8QKsJJ3ZZg1Z5OnWEvI02r+
+         pY9tYrVAk5xhUS6mHsC8X8l0y4jLR9jmWrwJT/89ak2X7wAf7dj4S/AkTavUx1WFTx4z
+         BCgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HYW+7OIc+oWfT/yx6/DrRQ9OVDX/Tk7EiyaM2Cojmhs=;
-        b=KkRQ9AETJ1cfOUjDVxuQUHZXflR9CnNAn3kyC+CKgZuC330Zzjr7PqAtzlmoYZcwuE
-         OfjZSii7h4wH0ZR3k//qLA6SFAhrTd99eVJpmEAryI3ag7usmeow5fpcquXv462Q1e7H
-         CEKMe2UKcswEsw4Js4ed3P27VQi/pjyfrIgsdW2uDj8bsC9Dd488PvezZdJR6pcU8+i9
-         NZcDZTAzVgp/wpopfawdmaTkwC30PznRh3o40NYw/GZagaUhoGBhm/EDcy8K68XW5Fez
-         zuLj8eJYzAxhFp2uk+J66sRxZM+g+yv0QgJTZri8FtiaL86wGx8n9ZlRy1UEr0KxTaQ4
-         Kgog==
-X-Gm-Message-State: APjAAAWrEm8q2Mv9rLEDeO7EZ/bA/wHn5AQ2YASzhHFi9GDlEhEzq1vq
-        6MKWVnKpXDL/wQ6TrN2lTKStTODjmfLX4VZfCOjvxxpJodyK+0HeGDJT+rBMB/u6YJJcxeGPKXp
-        VvdpmFghprDkGtPwAcRGlalvI
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr5872499wmj.21.1569397840502;
-        Wed, 25 Sep 2019 00:50:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxtvZMsWmeH3/rg+4pkIrLnbZniZnoLTRybC7fHAMsikPSeeBEnuwwdmtqFzu/RZt1IlIru4Q==
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr5872474wmj.21.1569397840246;
-        Wed, 25 Sep 2019 00:50:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id b15sm3904376wmb.28.2019.09.25.00.50.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 00:50:39 -0700 (PDT)
-Subject: Re: [PATCH 15/17] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190920212509.2578-1-aarcange@redhat.com>
- <20190920212509.2578-16-aarcange@redhat.com>
- <87o8zb8ik1.fsf@vitty.brq.redhat.com>
- <7329012d-0b3b-ce86-f58d-3d2d5dc5a790@redhat.com>
- <20190923190514.GB19996@redhat.com> <20190924214657.GE4658@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <5e047696-c641-da4b-1215-ebecbb492417@redhat.com>
-Date:   Wed, 25 Sep 2019 09:50:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KK67yuIkFsaQkINB9Eu+BWBSTsnh/Qbi0YgbzgTn/rM=;
+        b=W44u7eZXIeyA//4QdN8EsL0bUuNDr1JGiqHD8yvbdHjRJjWIX7C7ycqNZ5TgwJo9gF
+         add5zcjJHyXlteiJX8touuaE6TyW9tqJL4iK54KKDczMOpEqGq6aGYcbNXLVqyWncJST
+         EbMluwuplGwjpMgUPS4ILPPEptDMxA5qfCuNR7leJggFv5jqD0xZZSGhS7oEXx/c6Eba
+         MqbxzReg4GCePqAIci+iW/76evA6IxYT7GJ8R/7+7Z9MNa2SfdFSMDyIV+ayNR4YeCd1
+         UH2rhH4PLXbLCU+ENOipY7QuaHDO2cgBw5WlDZ9m6qLm517hq9AYWZWNWNs4OG8hTeKS
+         fP0g==
+X-Gm-Message-State: APjAAAXVanR8BhsF4U0gh/lCT3HWKcz0lrEk5qBv4m7Bh4GslOjNWOBd
+        Jh1X7Nt/DSopf6ys4WXcR+c=
+X-Google-Smtp-Source: APXvYqwrOufVxF7BKJQix5uJfUddnzmRjLWMMYR6+d0GX5jXoiNnqDqhkvogXpYBFn1Befjg5UfCbg==
+X-Received: by 2002:a5d:4307:: with SMTP id h7mr7547801wrq.393.1569397897860;
+        Wed, 25 Sep 2019 00:51:37 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id t14sm2798946wrs.6.2019.09.25.00.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 00:51:36 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 09:51:35 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v9 03/11] pwm: mediatek: remove a property "has-clks"
+Message-ID: <20190925075135.GA29006@ulmo>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+ <1568933351-8584-4-git-send-email-sam.shih@mediatek.com>
+ <20190925063003.aht4platmfalcqru@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190924214657.GE4658@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <20190925063003.aht4platmfalcqru@pengutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/19 23:46, Andrea Arcangeli wrote:
->>>
->>> I would keep only EXIT_REASON_MSR_WRITE, EXIT_REASON_PREEMPTION_TIMER,
->>> EXIT_REASON_EPT_MISCONFIG and add EXIT_REASON_IO_INSTRUCTION.
->> Intuition doesn't work great when it comes to CPU speculative
->> execution runtime. I can however run additional benchmarks to verify
->> your theory that keeping around frequent retpolines will still perform
->> ok.
-> On one most recent CPU model there's no measurable difference with
-> your list or my list with a hrtimer workload (no cpuid). It's
-> challenging to measure any difference below 0.5%.
 
-Let's keep the short list then.
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Paolo
+On Wed, Sep 25, 2019 at 08:30:03AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Fri, Sep 20, 2019 at 06:49:03AM +0800, Sam Shih wrote:
+> > We can use fixed-clock to repair mt7628 pwm during configure from
+> > userspace. The SoC is legacy MIPS and has no complex clock tree.
+> > Due to we can get clock frequency for period calculation from DT
+> > fixed-clock, so we can remove has-clock property, and directly
+> > use devm_clk_get and clk_get_rate.
+> >=20
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > Acked-by: Uwe Kleine-K=C3=B6 <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Changes since v9:
+> > Added an Acked-by tag
+>=20
+> Argh, my name was croped and ended up in this state in
+> 5c50982af47ffe36df3e31bc9e11be5a067ddd18. Thierry, any chance to repair
+> that? Something
+> like
+>=20
+> 	git filter-branch --msg-filter 'sed "s/Kleine-K=C3=B6 /Kleine-K=C3=B6nig=
+ /"' linus/master..
+
+Done, though I ended up doing it manually. I don't trust my git
+filter-branch skills. =3D)
+
+Thierry
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2LHIMACgkQ3SOs138+
+s6FVWQ//ZCxxPqTJAJi0DQFkIwCq4Zezubiab3AKelA5for80UXfZRc4Mt04Nw6A
+Kz9cafImwG+n6i2Lr1bkHmsiPjnweUMMqWHQz42B1veoQXas3iGrDgWjqjq0mCx0
+/oELIxnCXP2gnkjkXzSzhtUz3lUWjxsZpVyMw5Lrrwp2zgp+FVGc4qFsCzSpZ1C2
+Ns2kDIt6eqgEQnP8HC0JtX7f1BfAqY1iqh5jX/8Ex6yhkskmdhjLriPaFvMzwOE+
+wnky4KAn0ehpwpMlTM+X+67QYinD2HF5ACm+KxiKNxDh8YnLzKc3mWlavYUUcgOV
+KxZGtJCtcPg2FTz2BsJHIokllFDVYmcSApnkhFxHH7MeANNixbAo9rTe3ZY+eZ/S
+bSemBr86T3ypkFKPddRyiVuw2NehYilTML9IjuTha8DzU0YatCm+ZoNrKXUCw21C
+ybE2luElYxK8VI6R6M5T7u3eEy98T5gbw49Dtr324cIuF2blJjtqCTnuaNNSvare
+TJ4fzjYPfIh0//q4lRWed6QLQkHXpciu+IgSuNtNhbLCPvqI6yju3uIOb/PwGLrH
+AJvQgRpRX9ikbZPSD6vCnYad/JZhnGgOJWiKoviSnWbnWWWIvhk5JYMYh/stfTbi
+Zk1m7BTKK6vyuyo3Hz9CxnIBpvht0e2ua62KjYCrAUKZaEVuOrI=
+=o/DM
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
