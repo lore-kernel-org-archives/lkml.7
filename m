@@ -2,180 +2,160 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E45AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14721C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24917208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE9B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JYcMLiIv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RjuYzY0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfIYWZJ (ORCPT
+        id S1728073AbfIYW1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:25:09 -0400
-Received: from mail-eopbgr1310098.outbound.protection.outlook.com ([40.107.131.98]:24192
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725868AbfIYWZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:25:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iKnZjPdbHTrnzW5IXdsXGMlOIvQIxe3l/+xEGXrXM9VetrgNUgbNzHBAzYBTr0gBSnpvb+d6EoB7jWaAO6Z7g7q15STbRinw7wIkgKwZ71/1rwNNWzATEHjVNDld1r51kJmoVfqhjuCq50/jNLmU8FrsrNCb9cKEVSuzYyEgYWaMYb0AR3yLaGs7CK0vD6yVKN6QD8xi9xWH9RyR7HUcO2ao/A1E2Io8bVAUGpDii3SN2lpKjk8OW8AZp/Ln5Fi57eiKz2EejvevZBpAvg4+a9mP+i7adn9kxZGXc04OkQmVK78h/fsvcxDGCgJOrMuvU3FAYwRnWIpZ19iUPcza/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CTIBkjK6fEASPkqskDhT4WRfUjNIVAN7ETUURVEQEB4=;
- b=ZkzTL4b9YEIxDPrl1efHS3xwuLNTMIc3URHQLDuBtJCXksuzbrCkw5CQNpinVh5D7i1dG4bXBjISUc0ExcnmXggKeZcAp+cO9MQFtHHcxrhVb6Yo/hLTkxDGo8WAJWNPywV85BJ7XvSxCXEceQ60DfPK0/zuAlmhcpSvIJaXxySw/AffUFdveM07Od8WPfALuJiI4hvS2NbA5/vqxjw0ky7q6+bwsCpXU5pTUagfKvbWrnxr9rpukL1GwwEV8rBn4rOUCPULcedZUFlM5lN8S138XFlRru+5U04EVMYv1CdvltMYve+V1weX0ZhoOI1D+ZU9N/ajNplJBClgNQM30A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CTIBkjK6fEASPkqskDhT4WRfUjNIVAN7ETUURVEQEB4=;
- b=JYcMLiIv6cbE/TnC+wdOUZ1rLtwSGBnP5tA/ENGei75jTZIbuo0kmS2pD3N3CkqCtE4TJnsrc8GFLSbePOnSxosOPFCabu8WLJMU0sNNI3EiGu0DLipRcLjT2b9ISZVI2NV2rEm7LC7lq0aWcd6atjFa+tPO8IsAEAzrzx64yJU=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0122.APCP153.PROD.OUTLOOK.COM (10.170.188.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.6; Wed, 25 Sep 2019 22:25:00 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 22:25:00 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: RE: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Thread-Topic: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Thread-Index: AdVSPER5d22rbcvgTV28JV77HSffhgPsqanQBIAm+UA=
-Date:   Wed, 25 Sep 2019 22:25:00 +0000
-Message-ID: <PU1P153MB0169DECAA73E88F49B333CF7BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
- <KU1P153MB0166994305CF5B9CFA612AA7BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <KU1P153MB0166994305CF5B9CFA612AA7BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-14T01:06:51.2322584Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab25360d-4a75-4436-9390-ec9b2f112f8b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04544e4f-460f-43a4-f0e8-08d74207346c
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0122:|PU1P153MB0122:|PU1P153MB0122:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB012256E31D8A3A354DF29FAFBF870@PU1P153MB0122.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(396003)(136003)(366004)(54534003)(199004)(189003)(2906002)(66556008)(66476007)(478600001)(14444005)(74316002)(8990500004)(6116002)(8936002)(110136005)(14454004)(54906003)(6246003)(305945005)(7736002)(2201001)(4326008)(2501003)(22452003)(99286004)(64756008)(9686003)(7696005)(66446008)(66946007)(1511001)(6436002)(76176011)(229853002)(55016002)(76116006)(10090500001)(71200400001)(53546011)(33656002)(186003)(486006)(7416002)(52536014)(5660300002)(86362001)(46003)(25786009)(71190400001)(6506007)(81156014)(102836004)(8676002)(446003)(11346002)(81166006)(476003)(10290500003)(316002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0122;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ULMBJjhKAXfatCJl/ceX66XYDL7Y8EXkTOO7KrUWokOR+QDUxe2Xld6oSSkCUIiPmx0W2Dzu2EOTc3G0cK75ea5v0yta+r9VCG6GvX7W43EazC13snU99QyfT1mnb46p3cPpxu6gjQSH8vVhkGMeFUaorY9Ali9R4JsBacyyaVXhA0Gylm5lcsrFe+aAGDVuLo8aJmOYR62gti1akZ9/1jrqST+fzxPWzBT6HF/B0W55+weolN+dFKU7xZdwndSFcjZJQxv30IboLhOBNJtbAR7ULzFU8/vGl3DlaV6Nbto11GFdGn6m6HDRoSjP0+EJ24Fl3zGvhxshOD/tNnZKiIi+HlwzvPwjmg7QHQ+h++cia78Y6c282borJ8vXM14vByqk6G86kHRqEK96sAn9TH3JamhiwR+1daF91eRanBs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Sep 2019 18:27:01 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33396 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfIYW1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:27:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so1239101ior.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fm80X3RKbE4ptbvOr+D6078MZ2RjBl28nL5ykuuTQLs=;
+        b=RjuYzY0NFN5UQbOo85Gxnrd6/tMuvsnauNcqjc8V/Add6MpPa7GHJKPE92tzVaI6a+
+         OVwszkmyOLMSkFBO5fIGLxoabJ8uMu4klb/S0gVNKF0bJKt64NI4eKEIGrHcoIQFWc7Q
+         sT3pP8+Sz8pNMYPbK/OP5DBXslYaqhJG8K2YaB0nwL3+DTjjWC+c5T1R5Do3Hxeyz4oS
+         kfCdC0cdVNIkrADIjhEGBY2afz92KHgixzovi2hWrtKvCgozpbYIMQMakVcX5R7hjK/J
+         83k4dR0D6+q0Nx5W+d1BlP0musvEnJ21aL5oBJA/wIpbi/2VWZzjifEZMieY7A5xIlYI
+         /ENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fm80X3RKbE4ptbvOr+D6078MZ2RjBl28nL5ykuuTQLs=;
+        b=c6XDOsnD3M2kgOjh/Fv/tQU+ZuGOrMFDDTBMTYA872VcMBFGAimmPBDxljW2YDUS7l
+         KsBvWe+ElpTO5q8ZKLsUJuKsFhGL1iEhrjDZooHYCi3lqbQwCiQo5J8tuNuPStNSUnq3
+         a/mU6+D37lZKOug0aXTp40Jr8oFbJ9E4YmPm/Y99G290/TnT1hPn3wcrd/3losgakWug
+         vp9twi0swtBQIw+KI8CtK/E8ucys7pBkBEeNzGQ1WzIhvAytByfoC4SIxfZKDy48fsoH
+         JuBHNqkDQ4Teih3srfArvZ3lyout+Rs8jnEVVLhVvrifZ1AvXratAFcHCRtDkduOJj4i
+         6Org==
+X-Gm-Message-State: APjAAAX34qHqySPXY5wJPN2UtZRHnGunsizbnsn21t04uMfkyI5Bfp1I
+        ehQFUkkCWdBjkEM3lMEHQo2UDQ==
+X-Google-Smtp-Source: APXvYqy9YqEdsNZhvxrBH4jGn3loHdLKjcvrLSAnBK/MTULbkW6TJqewZ9kD3D5YoQPSrFMpUB4tNA==
+X-Received: by 2002:a5e:8218:: with SMTP id l24mr354085iom.56.1569450419680;
+        Wed, 25 Sep 2019 15:26:59 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
+        by smtp.gmail.com with ESMTPSA id w7sm33392iob.17.2019.09.25.15.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 15:26:59 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 16:26:54 -0600
+From:   Yu Zhao <yuzhao@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hugh Dickins <hughd@google.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Lance Roy <ldr709@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Aaron Lu <ziqian.lzq@antfin.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        David Hildenbrand <david@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 3/4] mm: don't expose non-hugetlb page to fast gup
+ prematurely
+Message-ID: <20190925222654.GA180125@google.com>
+References: <20190914070518.112954-1-yuzhao@google.com>
+ <20190924232459.214097-1-yuzhao@google.com>
+ <20190924232459.214097-3-yuzhao@google.com>
+ <20190925082530.GD4536@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04544e4f-460f-43a4-f0e8-08d74207346c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:25:00.3316
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nVMJ0CIDJ7PbkgAqJv2VK8I7xVeJEHglcxh3jVfLOddu4tDUTjBqzI58kxg4eNBFAFHK+35Re3LhXJ+kgsbStg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925082530.GD4536@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of
-> Dexuan Cui
-> Sent: Monday, September 2, 2019 5:35 PM
-> To: lorenzo.pieralisi@arm.com; bhelgaas@google.com;
-> linux-pci@vger.kernel.org
-> [..snipped...]
-> > ---
-> >
-> > changes in v2:
-> > 	Updated the changelog with more details.
-> >
-> >  drivers/pci/pci-driver.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 36dbe960306b..27dfc68db9e7 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
-> *dev)
-> >  			return error;
-> >  	}
-> >
-> > -	if (pci_has_legacy_pm_support(pci_dev))
-> > -		return pci_legacy_resume_early(dev);
-> > -
-> >  	/*
-> >  	 * pci_restore_state() requires the device to be in D0 (because of MS=
-I
-> >  	 * restoration among other things), so force it into D0 in case the
-> >  	 * driver's "freeze" callbacks put it into a low-power state directly=
-.
-> >  	 */
-> >  	pci_set_power_state(pci_dev, PCI_D0);
-> > +
-> > +	if (pci_has_legacy_pm_support(pci_dev))
-> > +		return pci_legacy_resume_early(dev);
-> > +
-> >  	pci_restore_state(pci_dev);
-> >
-> >  	if (drv && drv->pm && drv->pm->thaw_noirq)
-> > --
->=20
-> Hi, Lorenzo, Bjorn,
->=20
-> Can you please take a look at the v2 ?
->=20
-> -- Dexuan
+On Wed, Sep 25, 2019 at 10:25:30AM +0200, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 05:24:58PM -0600, Yu Zhao wrote:
+> > We don't want to expose a non-hugetlb page to the fast gup running
+> > on a remote CPU before all local non-atomic ops on the page flags
+> > are visible first.
+> > 
+> > For an anon page that isn't in swap cache, we need to make sure all
+> > prior non-atomic ops, especially __SetPageSwapBacked() in
+> > page_add_new_anon_rmap(), are ordered before set_pte_at() to prevent
+> > the following race:
+> > 
+> > 	CPU 1				CPU1
+> > 	set_pte_at()			get_user_pages_fast()
+> > 	  page_add_new_anon_rmap()	  gup_pte_range()
+> > 	  __SetPageSwapBacked()		    SetPageReferenced()
+> > 
+> > This demonstrates a non-fatal scenario. Though haven't been directly
+> > observed, the fatal ones can exist, e.g., PG_lock set by fast gup
+> > caller and then overwritten by __SetPageSwapBacked().
+> > 
+> > For an anon page that is already in swap cache or a file page, we
+> > don't need smp_wmb() before set_pte_at() because adding to swap or
+> > file cach serves as a valid write barrier. Using non-atomic ops
+> > thereafter is a bug, obviously.
+> > 
+> > smp_wmb() is added following 11 of total 12 page_add_new_anon_rmap()
+> > call sites, with the only exception being
+> > do_huge_pmd_wp_page_fallback() because of an existing smp_wmb().
+> > 
+> 
+> I'm thinking this patch make stuff rather fragile.. Should we instead
+> stick the barrier in set_p*d_at() instead? Or rather, make that store a
+> store-release?
 
-Hi Lorenzo, Bjorn, and all,
-It looks this patch has not been acked by anyone.
+I prefer it this way too, but I suspected the majority would be
+concerned with the performance implications, especially those
+looping set_pte_at()s in mm/huge_memory.c.
 
-Should I resend it? There is no change since v2.
+If we have a consensus that smp_wmb() would be better off wrapped
+together with set_p*d_at() in a macro, I'd be glad to make the change.
 
-Thanks,
--- Dexuan
+And it seems to me applying smp_store_release() would have to happen
+in each arch, which might be just as fragile.
