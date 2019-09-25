@@ -2,229 +2,140 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF902C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D996C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B135A217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549B020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="xjVonQsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405671AbfIYMOr (ORCPT
+        id S1730299AbfIYMRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 08:14:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58600 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405619AbfIYMOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 08:14:45 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 952791918644;
-        Wed, 25 Sep 2019 12:14:44 +0000 (UTC)
-Received: from [10.72.12.148] (ovpn-12-148.pek2.redhat.com [10.72.12.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E60E600C8;
-        Wed, 25 Sep 2019 12:13:58 +0000 (UTC)
-Subject: Re: [PATCH V2 2/8] mdev: class id support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "idos@mellanox.com" <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
- <20190924135332.14160-3-jasowang@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F6AE@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <c7e8a56a-d805-7cf4-2704-dc891dd23713@redhat.com>
-Date:   Wed, 25 Sep 2019 20:13:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 08:17:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40010 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfIYMRw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 08:17:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b24so4660362wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 05:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DqFYHh7P1zkKGNcj3JI+kOGE1cX5L+ByeTo5y44rHeo=;
+        b=xjVonQsz/4QZ8/Lk18W0rcjnghr3JMgUBDvgQR3p6G0dTYAXKe8Q2JZEpVM7gWL6/8
+         lrp0RDCjIrsPL6F89T9yVdt+JkllEBD3Qty7ewmyojUO95yw+vVlooLLIhtqL6a2GGas
+         IHliVfvBF1RV7LSVLdT0PaivVi67xgMc9m7lb7aP2VuPJQvfeWjjYGl4BsKXutpwMo+b
+         bBXCEYIxViYCNhuWC9Riij8Q0c5x/JjTKhK9pZcZivSUf5D+6N52viccNNZFAR+WVcBe
+         vBXDMVwVgylG4jPDkoyMyPm9PN3sLAlhb4aR2XbRSJGEdQUHrppH5I7OhGVv7186ybuV
+         EIxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DqFYHh7P1zkKGNcj3JI+kOGE1cX5L+ByeTo5y44rHeo=;
+        b=PasblzEp1ZHNBNEBkKTQSGHqqUH+CMSTaumAdfUHaYsbP96dNv3KvSJNe2BiacME3+
+         iFtO9O+LsKaP62Xu8wz0N4bXhGzXDLNy2J58idtA763a0JcI06XVUP004PjVtwoSsUMI
+         tPUNEMKGQD4R+rf9L3sxNQby1vB0OYqbBGy/8bnQT47M/ltx2C/PVr/u8vo/XQdueF/B
+         ja70FR12bpMptVUHWaHS1UHpAcegaqCCzO4US5doFautArxDD0MnEbl729qjSWMpH2vv
+         C5rsYJBTOpKXYQhQXMIkNqYiT8shAIrfy75TBd+cSr0lKlKnJyFmpjZ/PCq7pep81jzo
+         tmeQ==
+X-Gm-Message-State: APjAAAUPCku7E/BP0HA+UwXWTE7HZnAH8ETt/ABH0iTWGP2Mgl5THR2w
+        BJX+13i2dk+exhOpUMABaRiRRw==
+X-Google-Smtp-Source: APXvYqzItaZV+20Vaqxd+notYcQrDLZwBviGcDdP/Otb4i1YIx3iH1LXhQMg01OGijHUOFb2O/YtIg==
+X-Received: by 2002:a05:600c:389:: with SMTP id w9mr7210774wmd.139.1569413869649;
+        Wed, 25 Sep 2019 05:17:49 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id bo6sm514411ejb.30.2019.09.25.05.17.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 05:17:48 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id B835B1022AB; Wed, 25 Sep 2019 15:17:50 +0300 (+03)
+Date:   Wed, 25 Sep 2019 15:17:50 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hugh Dickins <hughd@google.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Lance Roy <ldr709@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Aaron Lu <ziqian.lzq@antfin.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm: don't expose page to fast gup prematurely
+Message-ID: <20190925121750.zxrt2zkc4g73h6cp@box>
+References: <20190514230751.GA70050@google.com>
+ <20190914070518.112954-1-yuzhao@google.com>
+ <20190924112316.324l7gqpdzhpiliq@box>
+ <20190924220550.GA123810@google.com>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F6AE@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 25 Sep 2019 12:14:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924220550.GA123810@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 24, 2019 at 04:05:50PM -0600, Yu Zhao wrote:
+> On Tue, Sep 24, 2019 at 02:23:16PM +0300, Kirill A. Shutemov wrote:
+> > On Sat, Sep 14, 2019 at 01:05:18AM -0600, Yu Zhao wrote:
+> > > We don't want to expose page to fast gup running on a remote CPU
+> > > before all local non-atomic ops on page flags are visible first.
+> > > 
+> > > For anon page that isn't in swap cache, we need to make sure all
+> > > prior non-atomic ops, especially __SetPageSwapBacked() in
+> > > page_add_new_anon_rmap(), are order before set_pte_at() to prevent
+> > > the following race:
+> > > 
+> > > 	CPU 1				CPU1
+> > > set_pte_at()			get_user_pages_fast()
+> > > page_add_new_anon_rmap()		gup_pte_range()
+> > > 	__SetPageSwapBacked()			SetPageReferenced()
+> > 
+> > Is there a particular codepath that has what you listed for CPU?
+> > After quick look, I only saw that we page_add_new_anon_rmap() called
+> > before set_pte_at().
+> 
+> I think so. One in do_swap_page() and another in unuse_pte(). Both
+> are on KSM paths. Am I referencing a stale copy of the source?
 
-On 2019/9/25 下午4:28, Tian, Kevin wrote:
->> From: Jason Wang
->> Sent: Tuesday, September 24, 2019 9:53 PM
->>
->> Mdev bus only supports vfio driver right now, so it doesn't implement
->> match method. But in the future, we may add drivers other than vfio,
->> the first driver could be virtio-mdev. This means we need to add
->> device class id support in bus match method to pair the mdev device
->> and mdev driver correctly.
->>
->> So this patch adds id_table to mdev_driver and class_id for mdev
->> parent with the match method for mdev bus.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>  Documentation/driver-api/vfio-mediated-device.rst |  3 +++
->>  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
->>  drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
->>  drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
->>  drivers/vfio/mdev/mdev_core.c                     |  7 +++++++
->>  drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
->>  drivers/vfio/mdev/mdev_private.h                  |  1 +
->>  drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
->>  include/linux/mdev.h                              |  8 ++++++++
->>  include/linux/mod_devicetable.h                   |  8 ++++++++
->>  samples/vfio-mdev/mbochs.c                        |  1 +
->>  samples/vfio-mdev/mdpy.c                          |  1 +
->>  samples/vfio-mdev/mtty.c                          |  1 +
->>  13 files changed, 53 insertions(+)
->>
->> diff --git a/Documentation/driver-api/vfio-mediated-device.rst
->> b/Documentation/driver-api/vfio-mediated-device.rst
->> index 25eb7d5b834b..a5bdc60d62a1 100644
->> --- a/Documentation/driver-api/vfio-mediated-device.rst
->> +++ b/Documentation/driver-api/vfio-mediated-device.rst
->> @@ -102,12 +102,14 @@ structure to represent a mediated device's
->> driver::
->>        * @probe: called when new device created
->>        * @remove: called when device removed
->>        * @driver: device driver structure
->> +      * @id_table: the ids serviced by this driver
->>        */
->>       struct mdev_driver {
->>  	     const char *name;
->>  	     int  (*probe)  (struct device *dev);
->>  	     void (*remove) (struct device *dev);
->>  	     struct device_driver    driver;
->> +	     const struct mdev_class_id *id_table;
->>       };
->>
->>  A mediated bus driver for mdev should use this structure in the function
->> calls
->> @@ -165,6 +167,7 @@ register itself with the mdev core driver::
->>  	extern int  mdev_register_device(struct device *dev,
->>  	                                 const struct mdev_parent_ops *ops);
->>
->> +
->>  However, the mdev_parent_ops structure is not required in the function
->> call
->>  that a driver should use to unregister itself with the mdev core driver::
->>
->> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
->> b/drivers/gpu/drm/i915/gvt/kvmgt.c
->> index 23aa3e50cbf8..f793252a3d2a 100644
->> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
->> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
->> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj,
->> struct mdev_device *mdev)
->>  		     dev_name(mdev_dev(mdev)));
->>  	ret = 0;
->>
->> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->>  out:
->>  	return ret;
->>  }
->> diff --git a/drivers/s390/cio/vfio_ccw_ops.c
->> b/drivers/s390/cio/vfio_ccw_ops.c
->> index f0d71ab77c50..d258ef1fedb9 100644
->> --- a/drivers/s390/cio/vfio_ccw_ops.c
->> +++ b/drivers/s390/cio/vfio_ccw_ops.c
->> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject
->> *kobj, struct mdev_device *mdev)
->>  			   private->sch->schid.ssid,
->>  			   private->sch->schid.sch_no);
->>
->> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->>  	return 0;
->>  }
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index 5c0f53c6dde7..2cfd96112aa0 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj,
->> struct mdev_device *mdev)
->>  	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
->>  	mutex_unlock(&matrix_dev->lock);
->>
->> +	mdev_set_class_id(mdev, MDEV_ID_VFIO);
->>  	return 0;
->>  }
->>
->> diff --git a/drivers/vfio/mdev/mdev_core.c
->> b/drivers/vfio/mdev/mdev_core.c
->> index b558d4cfd082..8764cf4a276d 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev,
->> void *data)
->>  }
->>  EXPORT_SYMBOL(mdev_set_drvdata);
->>
->> +void mdev_set_class_id(struct mdev_device *mdev, u16 id)
->> +{
->> +	mdev->class_id = id;
->> +}
->> +EXPORT_SYMBOL(mdev_set_class_id);
->> +
->>  struct device *mdev_dev(struct mdev_device *mdev)
->>  {
->>  	return &mdev->dev;
->> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device
->> *dev, void *data)
->>   * mdev_register_device : Register a device
->>   * @dev: device structure representing parent device.
->>   * @ops: Parent device operation structure to be registered.
->> + * @id: device id.
-> class id.
+I *think* it is a bug. Setting a pte before adding the page to rmap may
+lead to rmap (like try_to_unmap() or something) to miss the VMA.
 
+Do I miss something?
 
-Right, will fix.
-
-Thanks
-
+-- 
+ Kirill A. Shutemov
