@@ -2,210 +2,181 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0CCC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE24C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4834321D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCD221D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="AAbEnkMU";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="dB9KJ3ag"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="O/EGXG+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391809AbfIYPz2 (ORCPT
+        id S2391837AbfIYP4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:55:28 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:31048 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728451AbfIYPz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:55:27 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8PFkSlA030449;
-        Wed, 25 Sep 2019 08:54:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
- b=AAbEnkMUjp75q4YvCfcxTrVCYbjZLgaQXhu6XQKp/YlvFUU0tj1K9rpxGGvLZtpw8BZj
- qR2OGcCFv2Ijpc80MXyNxb8MX/rYdjIShvwVyIwQSKMVB9qRxlyxQt8k5Ogd4BX/s8xJ
- FCTmAm0aGahqjS0gA6f5F3GOwCbyXsJT+WPpU+haAJU1vsHeFVttBaQrreD+mI+A8S3N
- YfRv2ECRv2A7PvVg13pp1yYxK0QV/lOq79TvWMBLJPOFnkDrgBgj3sa82HpqdHE06Pst
- ZzgzwPMi6Y52dJY4F7vvEs2fq6XhP37xmdPvst/pXkCGAjhnXbeNlzw1cQoTfVibLxn3 Iw== 
-Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2052.outbound.protection.outlook.com [104.47.48.52])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2v5ge0gcv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 25 Sep 2019 08:54:28 -0700
+        Wed, 25 Sep 2019 11:56:51 -0400
+Received: from mail-eopbgr750075.outbound.protection.outlook.com ([40.107.75.75]:44769
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725966AbfIYP4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:56:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KPW3WBKYC+vm/JF3xSBNTYQAT/rfwDMlFx5IdOBeT9Yrnw65XqugJyLJrIGDNToqP8hlhEW/vBhiSnu8iYRLklO6ZWPVpZe+6XSRrK6Z5bhJzQxR5+GeoiR+oUNwjbx5ky/nu3x/yBcds7oyfWtzFX2nLeiPL7buwmFk4XDZFeMbTX4FtrJobyWqj08HS44zhLlmF0jJvjOM4ucHNTkRmUB6KD83/MkqpI9M1g++7dV69juEMkK/dfI90mShS3mi0OejaTPAjYWNAOy0PsKSUTaFFwF1xbFwXTi0LrkH2jWtCQ1NKop6xnBQNwSuL+bfQlAWohNLNyegpuNYn2Tn/A==
+ b=SBs5mF7M6ufdUl2uuhZpek5ddUBwVQsWmyVRLuo32bciHCRPtU5mnChFA3k4ejH14bFEHoBXVX8NzmObMDIMIprKgM3jk1rSxOIQAdnFRdZhiLr6L8xKXL7+g0U3uuAFOVdxh/eXh2wcecePOyj5n4lm92D0sT7xPMjKtFB1jYZ12m+NiZpV3VoDky0aehVtFeJhIfmQeme2iBFsDyhQ0c7sSKrRv8nxWICU1zkkGjqAkC0L5riSUZyrV1xADicvJiV4+INA+q+rL+FKqY4LxFNZ6RpkJEeEW0PqOwvMsHnEEnyjluqakiqFcQnGndhV46xF3WQZsn2G4EXwUSoaTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
- b=Qvv7u7fwtBAaJN+gD8hu4L98BGu9UvK7XmT04HBfwQ/BIHq4W+P1yTStlliU3lvikg4z/Ex548TQHH/5Qc/vpanT72YRoBRMEFfKNBm1Vu59FXKINrxCqH8gaYGjScLX2E+50UTG8tP3wWikNwPoRfi5pCsQaSnpGqMYwz7JV2DApy83YI8QftaHgDiNfgCffSHkZaEKXUFd2xVRL0BKvP8OFu56IJV5bDNHINoGi6xN8tyK3Z/kP3cWR/zooEcb5TcUrVLVoxbf5TmbR3zllqhh1KSAF/jCDN7uO3upAwcoPfkrqlEtvqeD8MEoouboy2MtiRx+3rGDGYZv5Z4rYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 158.140.1.28) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=jMUZXKLd5WeYTeB3roY7BpC4pDcJ4i0QEgEWQW2+32I=;
+ b=J1QyV/kX0xqGx6DE8Lk9XneMWz7IBcglwN9/vWRR7vqm3Lb7T6UVoqVc0TmCm7TM+e8SlICB/66zMgN4KZD8+QhnyFoIbRqoHHZ7yhH4+0EnA0c8ESa27yfiHvkuh3gCoxBNh7h2oKaxWai9xZqclXtWoBMYlAinEV8Ov1F6Tf5g9ENM8JkvHc24niYD+UPRG8TdFiIBUGpmr42m/Dku0LKMQ7VomJY+iiKmUNMEQFvS84c1e4xsQFllyDeRwd9wn6gxdz+HtJlcYrmnuwwXZjMeWSnlG9cX6FGmV7KAoCuZKVXsretMInJPLr65zOZ33obkdQ5sINz2UmcS2sTs1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
- b=dB9KJ3ag5PUtLZc0qetkkd1Pc4q7fOBpyroh301nNNIaVi36gGsYvwPt1UsJJsKp4YAggEuX/rw/ypp9dU5aueOToK7YPZj1tKjKHvkn5bROea512Le7/mJMD5a89XXRfbZ78EjfHKttRFjMEQzddQQ34AktbcanH6tiAc6hhd0=
-Received: from BYAPR07CA0066.namprd07.prod.outlook.com (2603:10b6:a03:60::43)
- by BYAPR07MB6808.namprd07.prod.outlook.com (2603:10b6:a03:127::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.15; Wed, 25 Sep
- 2019 15:54:22 +0000
-Received: from BY2NAM05FT058.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::208) by BYAPR07CA0066.outlook.office365.com
- (2603:10b6:a03:60::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.21 via Frontend
- Transport; Wed, 25 Sep 2019 15:54:22 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- BY2NAM05FT058.mail.protection.outlook.com (10.152.100.195) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.8 via Frontend Transport; Wed, 25 Sep 2019 15:54:21 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x8PFsGKr000577
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 25 Sep 2019 08:54:17 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Wed, 25 Sep 2019 17:54:16 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 25 Sep 2019 17:54:15 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x8PFsFMh009125;
-        Wed, 25 Sep 2019 16:54:15 +0100
-Received: (from piotrs@localhost)
-        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x8PFs717009008;
-        Wed, 25 Sep 2019 16:54:07 +0100
-From:   Piotr Sroka <piotrs@cadence.com>
-CC:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: [v8 0/2] mtd: rawnand: Add Cadence NAND controller driver
-Date:   Wed, 25 Sep 2019 16:52:42 +0100
-Message-ID: <20190925155325.7035-1-piotrs@cadence.com>
-X-Mailer: git-send-email 2.15.0
+ bh=jMUZXKLd5WeYTeB3roY7BpC4pDcJ4i0QEgEWQW2+32I=;
+ b=O/EGXG+qzs7ph3r4ioXp/7RwJITKf6ya+E5Ria/RkE0uHXEiwk77mitshtdqpuci0vrqft3PQMlRZJiKOmQsv7tG+QB7viPiOG62ppKE1RlGKjTP0gP4sat6OADvbE8KXdIbt9HsUAv8mq6NuSwnW4nYQv/vlBZlmfx0lbtlD24=
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
+ MWHPR12MB1838.namprd12.prod.outlook.com (10.175.49.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Wed, 25 Sep 2019 15:56:46 +0000
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::31f2:3115:6265:33a0]) by MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::31f2:3115:6265:33a0%11]) with mapi id 15.20.2284.023; Wed, 25 Sep
+ 2019 15:56:46 +0000
+From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
+To:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
+Thread-Topic: [PATCH] drm: Don't free jobs in wait_event_interruptible()
+Thread-Index: AQHVc7PzYTddskm3okCDHaLelWCdUqc8jD6A
+Date:   Wed, 25 Sep 2019 15:56:46 +0000
+Message-ID: <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
+References: <20190925151404.23222-1-steven.price@arm.com>
+In-Reply-To: <20190925151404.23222-1-steven.price@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0020.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::33) To MWHPR12MB1453.namprd12.prod.outlook.com
+ (2603:10b6:301:e::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23f7e586-e496-4721-b750-08d741d0f7d0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR12MB1838;
+x-ms-traffictypediagnostic: MWHPR12MB1838:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR12MB1838A74338DA4A3C1AAB895EEA870@MWHPR12MB1838.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:626;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(189003)(199004)(71190400001)(71200400001)(36756003)(6636002)(2906002)(66066001)(2616005)(476003)(446003)(11346002)(486006)(31686004)(5660300002)(14444005)(229853002)(31696002)(256004)(305945005)(6512007)(14454004)(316002)(478600001)(86362001)(7736002)(6436002)(6486002)(6246003)(66946007)(66476007)(66446008)(66556008)(64756008)(26005)(99286004)(76176011)(52116002)(102836004)(186003)(25786009)(6116002)(3846002)(81166006)(81156014)(8936002)(110136005)(54906003)(386003)(53546011)(8676002)(6506007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1838;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rj+g6Kf26yVuWcxQqK9HW/IH8KP1rPMHQCxawjiVuEB3q0k+BERlR8FnJrVwP0hO4x4R+vF259Yn/qGakvN2mt879sFW/GsGkRpySrUCsUrGGGQb2oar+duV/NpZTEvyxFKkm0nKQz+JUmDmSNqH5D9tNZsqMHPpiYHN/EGPGpBb5isnYJ7NGVCkaKoxnZC4odMnSYdl8bAeBcoj/0K5dS5ODrhDNkdqjZmqDvPk70uvJjTIo8VJQAx1q6ZZvgME99u55N/5pBU/IigqaVFK4Sdmloyb6QZ8uQteHxljp8rihYetdBHWgnygl2OeXpKj9x0neO+f4VgTaezf7e79ffPqwvfCEyKvZAcC88YafQLtQ20wpI9bs8Qa6AE7wMnnqAqZUrbvbBmRlgeD+N6luDy34fQoAloRC+mt36Fxzhs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4108FF92B2F61847972E1781B8C99A1D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(346002)(396003)(136003)(36092001)(189003)(199004)(50226002)(186003)(5660300002)(1671002)(47776003)(70206006)(70586007)(50466002)(4326008)(7636002)(48376002)(86362001)(7416002)(87636003)(478600001)(1076003)(26826003)(305945005)(316002)(246002)(51416003)(109986005)(356004)(6666004)(486006)(476003)(8676002)(2616005)(54906003)(2906002)(26005)(126002)(16586007)(36756003)(42186006)(76130400001)(426003)(8936002)(336012)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6808;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ee90c397-993d-46cd-a09c-08d741d0a19e
-X-MS-TrafficTypeDiagnostic: BYAPR07MB6808:
-X-Microsoft-Antispam-PRVS: <BYAPR07MB68082E5D16CE9301E12A880ADD870@BYAPR07MB6808.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 01713B2841
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8noWVPVij/riU/AC0s68UhoK7TjqYeiyPDdAiUiK71Qf4Lpu4sainlPJZOoM7cbX+NjFD/+NLWBu9Q/R8JrcLoSBRpWQvOw0VOCjsAzvQxGyzDmIUYvNWTkkCypYBqOKKuc4C1XeAa1fOjajWajoiAas8G+TQ9n8XqX3e/W6ZYYHbkkOkHv4Nb/jlWkb/AnyoaTDpqm9wbVV1WjrCXkl+rRP1kN8IVqajAyIS23gkVsVzf0ZoeNbcO2YjiSTP/QbI2Kp8y9MlGAGXCX2SjVHFbDyyESy3k67ClCkW4ZcBQ6+n+fXu4AZPbvq2qNVZ6+4LfwheW/Ymx2YEftlXRlHC+op8ReR5XuQpv08hzQpM4Xq28bF8cFtpkjw43pZE2T0LWIole8QRNlDvuKA4fDDeEAuuRy8Wgz1lEdMW1pPgHs=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2019 15:54:21.6224
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23f7e586-e496-4721-b750-08d741d0f7d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 15:56:46.5207
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee90c397-993d-46cd-a09c-08d741d0a19e
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6808
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-25_07:2019-09-25,2019-09-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909250146
-To:     unlisted-recipients:; (no To-header on input)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VLknsquL50tDN+h57mUpMsARNtnXE58+s9NzRitZfZFSQiGotqCE4t1nRURdSQdURbvJ4PVawMOehycCPwWHMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1838
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver for Cadence HPNFC NAND flash controller.
-
-HW DMA interface
-Page write and page read operations are executed in Command DMA mode.
-Commands are defined by DMA descriptors.
-In CDMA mode controller own DMA engine is used (Master DMA mode).
-Other operations defined by nand_op_instr are executed in "Generic" mode.
-In that mode data can be transferred only in by Slave DMA interface.
-Slave DMA interface can be connected directly to AXI or to an external
-DMA engine.
-
-HW ECC support
-Cadence NAND controller supports HW BCH correction.
- ECC is transparent from SW point of view. It means that ECC codes
-are calculated and written to flash. In read operation ECC codes 
-are removed from user data and correction is made if necessary.
-
-Controller data layout with ECC enabled:
- -------------------------------------------------------------------------
-|Sec 1 | ECC | Sec 2 | ECC ...... | Sec n | OOB (32B) | ECC | unused data |
- -------------------------------------------------------------------------
-
-Last sector is extended by a out-bound data. Tha maximum size of
-"extra data" is 32 bytes. The oob data are protected by ECC. If we need to 
-read only oob data the whole last sector must be read. It is because 
-oob data are part of last sector. Reading oob function always reads 
-whole sector and writing oob function always writes whole last sector.
-Written data are interleaved with the ECC therefore part of the 
-last sector is located on oob area and the BBM is overwritten.
-
-SKIP BYTES feature
-To protect BBM the "skip byte" HW feature is used. 
-Write page function copies BBM value from first byte of oob data to 
-BBM offset defined by manufacturer. Read page functions always takes 
-BBM from flash manufacturer offset. It causes that for not written 
-pages the proper value of BBM marker is used.
-
-ECC size calculation
-Information about supported ECC steps and ECC strengths are read 
-from controller registers. ECC sector size and ECC strength can be
-configurable. Size of ECC depends on maximum supported sector size 
-it not depends on selected sector size. Therefore there is a separate
-function for calculating ECC size for each of possible 
-sector size/step size.
-
-Piotr Sroka (2):
-  Add new Cadence NAND driver to MTD subsystem
-  Add Cadence NAND controller driver
-
- .../bindings/mtd/cadence-nand-controller.txt       |   53 +
- MAINTAINERS                                        |    7 +
- drivers/mtd/nand/raw/Kconfig                       |    7 +
- drivers/mtd/nand/raw/Makefile                      |    1 +
- drivers/mtd/nand/raw/cadence-nand-controller.c     | 3036 ++++++++++++++++++++
- 5 files changed, 3104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
- create mode 100644 drivers/mtd/nand/raw/cadence-nand-controller.c
-
--- 
-2.15.0
-
+T24gOS8yNS8xOSAxMToxNCBBTSwgU3RldmVuIFByaWNlIHdyb3RlOg0KDQo+IGRybV9zY2hlZF9j
+bGVhbnVwX2pvYnMoKSBhdHRlbXB0cyB0byBmcmVlIGZpbmlzaGVkIGpvYnMsIGhvd2V2ZXIgYmVj
+YXVzZQ0KPiBpdCBpcyBjYWxsZWQgYXMgdGhlIGNvbmRpdGlvbiBvZiB3YWl0X2V2ZW50X2ludGVy
+cnVwdGlibGUoKSBpdCBtdXN0IG5vdA0KPiBzbGVlcC4gVW5mb3J0dW5hdGVseSBzb21lIGZyZWUg
+Y2FsbGJhY2tzIChub3RhYmx5IGZvciBQYW5mcm9zdCkgZG8gc2xlZXAuDQo+DQo+IEluc3RlYWQg
+bGV0J3MgcmVuYW1lIGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoKSB0bw0KPiBkcm1fc2NoZWRfZ2V0
+X2NsZWFudXBfam9iKCkgYW5kIHNpbXBseSByZXR1cm4gYSBqb2IgZm9yIHByb2Nlc3NpbmcgaWYN
+Cj4gdGhlcmUgaXMgb25lLiBUaGUgY2FsbGVyIGNhbiB0aGVuIGNhbGwgdGhlIGZyZWVfam9iKCkg
+Y2FsbGJhY2sgb3V0c2lkZQ0KPiB0aGUgd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgd2hlcmUg
+c2xlZXBpbmcgaXMgcG9zc2libGUgYmVmb3JlDQo+IHJlLWNoZWNraW5nIGFuZCByZXR1cm5pbmcg
+dG8gc2xlZXAgaWYgbmVjZXNzYXJ5Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBTdGV2ZW4gUHJpY2Ug
+PHN0ZXZlbi5wcmljZUBhcm0uY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vc2NoZWR1
+bGVyL3NjaGVkX21haW4uYyB8IDQ0ICsrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+ICAgMSBm
+aWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPiBpbmRleCA5YTBlZTc0ZDgyZGMuLjBl
+ZDRhYWE0ZTZkMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hl
+ZF9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMN
+Cj4gQEAgLTYyMiw0MyArNjIyLDQxIEBAIHN0YXRpYyB2b2lkIGRybV9zY2hlZF9wcm9jZXNzX2pv
+YihzdHJ1Y3QgZG1hX2ZlbmNlICpmLCBzdHJ1Y3QgZG1hX2ZlbmNlX2NiICpjYikNCj4gICB9DQo+
+ICAgDQo+ICAgLyoqDQo+IC0gKiBkcm1fc2NoZWRfY2xlYW51cF9qb2JzIC0gZGVzdHJveSBmaW5p
+c2hlZCBqb2JzDQo+ICsgKiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iIC0gZmV0Y2ggdGhlIG5l
+eHQgZmluaXNoZWQgam9iIHRvIGJlIGRlc3Ryb3llZA0KPiAgICAqDQo+ICAgICogQHNjaGVkOiBz
+Y2hlZHVsZXIgaW5zdGFuY2UNCj4gICAgKg0KPiAtICogUmVtb3ZlIGFsbCBmaW5pc2hlZCBqb2Jz
+IGZyb20gdGhlIG1pcnJvciBsaXN0IGFuZCBkZXN0cm95IHRoZW0uDQo+ICsgKiBSZXR1cm5zIHRo
+ZSBuZXh0IGZpbmlzaGVkIGpvYiBmcm9tIHRoZSBtaXJyb3IgbGlzdCAoaWYgdGhlcmUgaXMgb25l
+KQ0KPiArICogcmVhZHkgZm9yIGl0IHRvIGJlIGRlc3Ryb3llZC4NCj4gICAgKi8NCj4gLXN0YXRp
+YyB2b2lkIGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoc3RydWN0IGRybV9ncHVfc2NoZWR1bGVyICpz
+Y2hlZCkNCj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqDQo+ICtkcm1fc2NoZWRfZ2V0
+X2NsZWFudXBfam9iKHN0cnVjdCBkcm1fZ3B1X3NjaGVkdWxlciAqc2NoZWQpDQo+ICAgew0KPiAr
+CXN0cnVjdCBkcm1fc2NoZWRfam9iICpqb2IgPSBOVUxMOw0KPiAgIAl1bnNpZ25lZCBsb25nIGZs
+YWdzOw0KPiAgIA0KPiAgIAkvKiBEb24ndCBkZXN0cm95IGpvYnMgd2hpbGUgdGhlIHRpbWVvdXQg
+d29ya2VyIGlzIHJ1bm5pbmcgKi8NCj4gICAJaWYgKHNjaGVkLT50aW1lb3V0ICE9IE1BWF9TQ0hF
+RFVMRV9USU1FT1VUICYmDQo+ICAgCSAgICAhY2FuY2VsX2RlbGF5ZWRfd29yaygmc2NoZWQtPndv
+cmtfdGRyKSkNCj4gLQkJcmV0dXJuOw0KPiAtDQo+IC0NCj4gLQl3aGlsZSAoIWxpc3RfZW1wdHko
+JnNjaGVkLT5yaW5nX21pcnJvcl9saXN0KSkgew0KPiAtCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAq
+am9iOw0KPiArCQlyZXR1cm4gTlVMTDsNCj4gICANCj4gLQkJam9iID0gbGlzdF9maXJzdF9lbnRy
+eSgmc2NoZWQtPnJpbmdfbWlycm9yX2xpc3QsDQo+ICsJam9iID0gbGlzdF9maXJzdF9lbnRyeV9v
+cl9udWxsKCZzY2hlZC0+cmluZ19taXJyb3JfbGlzdCwNCj4gICAJCQkJICAgICAgIHN0cnVjdCBk
+cm1fc2NoZWRfam9iLCBub2RlKTsNCj4gLQkJaWYgKCFkbWFfZmVuY2VfaXNfc2lnbmFsZWQoJmpv
+Yi0+c19mZW5jZS0+ZmluaXNoZWQpKQ0KPiAtCQkJYnJlYWs7DQo+ICAgDQo+IC0JCXNwaW5fbG9j
+a19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiArCXNwaW5fbG9ja19p
+cnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiArDQo+ICsJaWYgKGpvYiAm
+JiBkbWFfZmVuY2VfaXNfc2lnbmFsZWQoJmpvYi0+c19mZW5jZS0+ZmluaXNoZWQpKSB7DQo+ICAg
+CQkvKiByZW1vdmUgam9iIGZyb20gcmluZ19taXJyb3JfbGlzdCAqLw0KPiAgIAkJbGlzdF9kZWxf
+aW5pdCgmam9iLT5ub2RlKTsNCj4gLQkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmc2NoZWQtPmpv
+Yl9saXN0X2xvY2ssIGZsYWdzKTsNCj4gLQ0KPiAtCQlzY2hlZC0+b3BzLT5mcmVlX2pvYihqb2Ip
+Ow0KPiArCX0gZWxzZSB7DQo+ICsJCWpvYiA9IE5VTEw7DQo+ICsJCS8qIHF1ZXVlIHRpbWVvdXQg
+Zm9yIG5leHQgam9iICovDQo+ICsJCWRybV9zY2hlZF9zdGFydF90aW1lb3V0KHNjaGVkKTsNCj4g
+ICAJfQ0KPiAgIA0KPiAtCS8qIHF1ZXVlIHRpbWVvdXQgZm9yIG5leHQgam9iICovDQo+IC0Jc3Bp
+bl9sb2NrX2lycXNhdmUoJnNjaGVkLT5qb2JfbGlzdF9sb2NrLCBmbGFncyk7DQo+IC0JZHJtX3Nj
+aGVkX3N0YXJ0X3RpbWVvdXQoc2NoZWQpOw0KPiAgIAlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZz
+Y2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiAgIA0KPiArCXJldHVybiBqb2I7DQo+ICAg
+fQ0KPiAgIA0KPiAgIC8qKg0KPiBAQCAtNjk4LDEyICs2OTYsMTggQEAgc3RhdGljIGludCBkcm1f
+c2NoZWRfbWFpbih2b2lkICpwYXJhbSkNCj4gICAJCXN0cnVjdCBkcm1fc2NoZWRfZmVuY2UgKnNf
+ZmVuY2U7DQo+ICAgCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqc2NoZWRfam9iOw0KPiAgIAkJc3Ry
+dWN0IGRtYV9mZW5jZSAqZmVuY2U7DQo+ICsJCXN0cnVjdCBkcm1fc2NoZWRfam9iICpjbGVhbnVw
+X2pvYiA9IE5VTEw7DQo+ICAgDQo+ICAgCQl3YWl0X2V2ZW50X2ludGVycnVwdGlibGUoc2NoZWQt
+Pndha2VfdXBfd29ya2VyLA0KPiAtCQkJCQkgKGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoc2NoZWQp
+LA0KPiArCQkJCQkgKGNsZWFudXBfam9iID0gZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYihzY2hl
+ZCkpIHx8DQo+ICAgCQkJCQkgKCFkcm1fc2NoZWRfYmxvY2tlZChzY2hlZCkgJiYNCj4gICAJCQkJ
+CSAgKGVudGl0eSA9IGRybV9zY2hlZF9zZWxlY3RfZW50aXR5KHNjaGVkKSkpIHx8DQo+IC0JCQkJ
+CSBrdGhyZWFkX3Nob3VsZF9zdG9wKCkpKTsNCj4gKwkJCQkJIGt0aHJlYWRfc2hvdWxkX3N0b3Ao
+KSk7DQoNCg0KQ2FuJ3Qgd2UganVzdCBjYWxsIGRybV9zY2hlZF9jbGVhbnVwX2pvYnMgcmlnaHQg
+aGVyZSwgcmVtb3ZlIGFsbCB0aGUgDQpjb25kaXRpb25zIGluIHdhaXRfZXZlbnRfaW50ZXJydXB0
+aWJsZSAobWFrZSBpdCBhbHdheXMgdHJ1ZSkgYW5kIGFmdGVyIA0KZHJtX3NjaGVkX2NsZWFudXBf
+am9icyBpcyBjYWxsZWQgdGVzdCBmb3IgYWxsIHRob3NlIGNvbmRpdGlvbnMgYW5kIA0KcmV0dXJu
+IHRvIHNsZWVwIGlmIHRoZXkgZXZhbHVhdGUgdG8gZmFsc2UgPyBkcm1fc2NoZWRfY2xlYW51cF9q
+b2JzIGlzIA0KY2FsbGVkIHVuY29uZGl0aW9uYWxseSBpbnNpZGUgd2FpdF9ldmVudF9pbnRlcnJ1
+cHRpYmxlIGFueXdheS4uLiBUaGlzIGlzIA0KbW9yZSBvZiBhIHF1ZXN0aW9uIHRvIENocmlzdGlh
+bi4NCg0KQW5kcmV5DQoNCg0KPiArDQo+ICsJCXdoaWxlIChjbGVhbnVwX2pvYikgew0KPiArCQkJ
+c2NoZWQtPm9wcy0+ZnJlZV9qb2IoY2xlYW51cF9qb2IpOw0KPiArCQkJY2xlYW51cF9qb2IgPSBk
+cm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iKHNjaGVkKTsNCj4gKwkJfQ0KPiAgIA0KPiAgIAkJaWYg
+KCFlbnRpdHkpDQo+ICAgCQkJY29udGludWU7DQo=
