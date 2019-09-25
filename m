@@ -2,124 +2,311 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E89C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0B8C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F49D20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180DF21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="J2cnVIpq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="erg1HrlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392729AbfIYUDI (ORCPT
+        id S2392741AbfIYUDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 16:03:08 -0400
-Received: from mail-eopbgr1310110.outbound.protection.outlook.com ([40.107.131.110]:39456
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729118AbfIYUDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 16:03:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ku/ukuqZVNaV7/XV4e+XtgNhpTSIEQU58qZihSEp4bNS0omop2t+9LCykYdFK1a52t6+tgRqErOUvWxi0L7i+AUBzpygsp3JJnn1qImitexP9ThR9+AehbsQc5oaP1Gi5HuYahi9Gg3jXU8UqcKD9Yp9z0idSC7RZk+nrqNGYojW9fx/OV5zHnzZT1cZVg/XF6pW4TQ3GqGcSVfzXpjPY+UMcZ5rhxttoSYm3PpJYd2gXukhFgjIaOgwVbU1sTedHf+US+K2kClvKFO8QJPcP1ZiZDILWxGxfUwqHy182lPD5TYGpNQfke6g6kOStXiiu/Kp1uh1vkY84o7Xmalk1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7pERnnq11T2DEfVyDb5Xo3s7tcIAhZRt3YAUJu2xSv8=;
- b=BLLNqwsx6SycZ1m4kjmfHdS3FG9GG0x8B8hE9DjvuAZmHoNHGg+9ZKpKV2BUVKoqZII85NbQ1qrB2ZeQrjQyJeVuGD9Jh3VCh2GWmbf2jrtgJTmvlNgw70H/V29ss/SIFsHDg46dagohdXAhQmxA5vj6PlqQkyIcuaiGPk/NaP7tLB1W1wLbD/Ye1CYyFsFVqyLzjMIPCb9L4XyrC/NdiKthvloKdW5G7o0a+cBywh65+V3EblMywHut02yA+yzRXst2uAffN/QyGJsHQNEY8tjc0CSrMbZzvOpnIyerVXeMh8BkojD4PzhOn+qvTq4hVRtR0T8+8z7qp4SEeUP+PQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7pERnnq11T2DEfVyDb5Xo3s7tcIAhZRt3YAUJu2xSv8=;
- b=J2cnVIpqfILl97crz+PjdK9xzwsxANXR0fzpWDSmyB8pqpfpHKM8dpxSJSLobWlKFGuLVtURrTL1Q2726/Yv0kKslmQIaREyyn8uMxosGDObdjrD458CR9ok564xr7lkuKhJ2iAgtGJGqTT9JLtKC4PoHbr0BNaj422TurR/jI0=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0202.APCP153.PROD.OUTLOOK.COM (52.133.192.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Wed, 25 Sep 2019 20:03:03 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 20:03:03 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        David Hildenbrand <david@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] hv_balloon: Add the support of hibernation
-Thread-Topic: [PATCH] hv_balloon: Add the support of hibernation
-Thread-Index: AQHVaVISraz6+BtHYEamhMlzHx+g16coS8YAgADwLwCAAMMQUIAAJyMAgAAQlQCAEq5eQA==
-Date:   Wed, 25 Sep 2019 20:03:02 +0000
-Message-ID: <PU1P153MB0169B05143A68A56740669AFBF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568245010-66879-1-git-send-email-decui@microsoft.com>
- <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
- <PU1P153MB0169E922DF7A5A43C7026D82BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <7d218fd5-76d9-f5fa-548a-76fe5dfab230@redhat.com>
- <PU1P153MB01691EC455AAF37BC6AF26DDBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <ef6f8554-8324-a4d8-4549-759495e482b7@redhat.com>
- <PU1P153MB01699AB87526B16F7AB94045BFB20@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB01699AB87526B16F7AB94045BFB20@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-14T00:26:00.3261188Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cc25ee78-8be9-4480-8628-176a5590891e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4755c50-d20c-460c-252b-08d741f35f8d
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0202:|PU1P153MB0202:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0202AACD9A341C0ED4DAE4E1BF870@PU1P153MB0202.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(189003)(199004)(14454004)(76116006)(55016002)(25786009)(478600001)(6116002)(9686003)(6246003)(64756008)(66476007)(7696005)(6436002)(33656002)(5660300002)(10290500003)(66556008)(66946007)(2906002)(6636002)(86362001)(52536014)(229853002)(4744005)(2201001)(110136005)(11346002)(316002)(99286004)(22452003)(486006)(8990500004)(476003)(446003)(6506007)(71200400001)(71190400001)(66446008)(10090500001)(256004)(8936002)(76176011)(74316002)(305945005)(186003)(8676002)(81156014)(102836004)(2501003)(81166006)(46003)(1511001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0202;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m8wbtNvcoPeZfSo+uSIn8aO+D8RSwIOml20FuQQH9POdfYYlAzBEusYwsVRHyKkMAs0yjTvgRjDouJWq/L5l5y22uCZij1qSiLWBmq0ssS/Ht1AgyoewfgWLeq6Y6kZ9WNE92Su/ZQ8maSHR2kezyX8gftoYf7sUgs4dSzTwavUAuYXVFZzpVUJEVwXcpx+fLgOPPP+re0k5if7dNGKqTYBG1punZexkzniwA2Y1xSIFmAm3XLgxfb+C1pWODwmZWnSYvPnmbyOKj8hwZdWBnl5+HZ/UIKzy43SahDnJg9L74VtwH+1aUt0Jn79k/0m5RBVxS0GNKPX2DoeOC7SgKUPjy0p08e41e4HUKYoDVaBMWbQgOhEdUrdrDJWUfaymUvu6X1akvUp+p6l5wOcALpTQU5rUlB03OZLROsnP4R0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 16:03:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44880 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729118AbfIYUDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 16:03:15 -0400
+Received: by mail-io1-f68.google.com with SMTP id j4so84706iog.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h/RTPptMzVlxWY6kHXdS0P3xSNWevs200xt+aATskwU=;
+        b=erg1HrlJng3dStEDefsrPZCNWQSvBlUR8Da1WM8mj7tT7syQA+1jnrAgrs+oaKM63S
+         tXi4rvN+XMuX+yHICWCEYgS15KCtl0iFfVyl6EdEfEmkMNMZB4hgQzGbJU39gy9jR/F5
+         Y8zQ11MMPrhJuWEd7d/t/OcE/0fNbzNthWUm0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h/RTPptMzVlxWY6kHXdS0P3xSNWevs200xt+aATskwU=;
+        b=piBDyoAsItl7ObcUqx0jj2UTX0Eb9XaD2BzTerZi0PMVe9sXi78HCocsz4z6M//RRT
+         3t09/kqsalyzJl0Yrxlq1CmEPRhxuOpG0KyMoh7pvQtwEGPuejdB3sm9kcutIYKtJW83
+         wUv1kfagDtw1bGzbWHwDKg4J4CV2NPbQhUKeBaJnz1jNQc9aGJULiTZwYfrgBGzKZz/g
+         W4Ri9fEApHQRCmIFlhw4edJ+kYHND75v5aZEcT1hJgVRRFRdV2/ZTI3Dwia3BFZrjjt1
+         tYVECoizWr1QGtiwszmFuoajiKkt6d2xPi50+eg9TK8GAbZXQO16jsipqCwciJPw9Nez
+         zK9A==
+X-Gm-Message-State: APjAAAWjMkGnkBFIDDN1myGsfFRTxKglxhwdDXJbY0jeuU8T4Sdwfa1X
+        +otCZG8vXOOrL1TJ73qKNb5wmlZvvTc=
+X-Google-Smtp-Source: APXvYqw6wQSzzTpdRFCgLlrvhyQ561MJKnXWSRwpNp5vio+OvFgQlXezzhlp01G2HuHbXQ8i6PT/LA==
+X-Received: by 2002:a6b:8e92:: with SMTP id q140mr1277109iod.205.1569441794220;
+        Wed, 25 Sep 2019 13:03:14 -0700 (PDT)
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
+        by smtp.gmail.com with ESMTPSA id g8sm300733ioc.0.2019.09.25.13.03.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 13:03:13 -0700 (PDT)
+Received: by mail-io1-f49.google.com with SMTP id a1so172965ioc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:03:13 -0700 (PDT)
+X-Received: by 2002:a92:4a11:: with SMTP id m17mr1653859ilf.142.1569441793167;
+ Wed, 25 Sep 2019 13:03:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4755c50-d20c-460c-252b-08d741f35f8d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 20:03:02.8310
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qOPfF4m5XhdZfroVL0GsXQQfAMJlxrpHr8zGJIGBJCwVDv+C2YNuGojk3pOPK5xugJZeMahoSBR0J901XmtcVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0202
+References: <20190731183732.178134-1-dianders@chromium.org> <20190830145237.aoysubwetqe3eggj@holly.lan>
+In-Reply-To: <20190830145237.aoysubwetqe3eggj@holly.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 25 Sep 2019 13:03:02 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=URLYwLZ0R0zzrH5xKdRWD52X7Qn_MaLdXjvWYv8vF+6Q@mail.gmail.com>
+Message-ID: <CAD=FV=URLYwLZ0R0zzrH5xKdRWD52X7Qn_MaLdXjvWYv8vF+6Q@mail.gmail.com>
+Subject: Re: [PATCH v2] kdb: Fix stack crawling on 'running' CPUs that aren't
+ the master
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+ICBbLi4uIHNuaXBw
-ZWQgLi4uXQ0KPiA+IEFueWhvdywganVzdCBzb21lIGNvbW1lbnRzIGZyb20gbXkgc2lkZSA6KSBJ
-IGNhbiBzZWUgaG93IFdpbmRvd3MgU2VydmVyDQo+ID4gd29ya2VkIGFyb3VuZCB0aGF0IGlzc3Vl
-IHJpZ2h0IG5vdyBieSBqdXN0IFhPUidpbmcgYm90aCBmZWF0dXJlcy4NCj4gPg0KPiA+IERhdmlk
-IC8gZGhpbGRlbmINCj4gDQo+IFRoYW5rcyBmb3Igc2hhcmluZyB5b3VyIHRob3VnaHRzIQ0KPiAN
-Cj4gLS0gRGV4dWFuDQoNCkhpIERhdmlkLA0KSWYgbXkgZXhwbGFuYXRpb24gc291bmRzIGdvb2Qg
-dG8geW91LCBjYW4gSSBoYXZlIGFuIEFja2VkLWJ5IGZyb20geW91PyANCg0KVGhhbmtzLA0KLS0g
-RGV4dWFuDQo=
+Hi,
+
+On Fri, Aug 30, 2019 at 7:52 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Wed, Jul 31, 2019 at 11:37:32AM -0700, Douglas Anderson wrote:
+> > In kdb when you do 'btc' (back trace on CPU) it doesn't necessarily
+> > give you the right info.  Specifically on many architectures
+> > (including arm64, where I tested) you can't dump the stack of a
+> > "running" process that isn't the process running on the current CPU.
+> > This can be seen by this:
+> >
+> >  echo SOFTLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
+> >  # wait 2 seconds
+> >  <sysrq>g
+> >
+> > Here's what I see now on rk3399-gru-kevin.  I see the stack crawl for
+> > the CPU that handled the sysrq but everything else just shows me stuck
+> > in __switch_to() which is bogus:
+> >
+> > ======
+> >
+> > [0]kdb> btc
+> > btc: cpu status: Currently on cpu 0
+> > Available cpus: 0, 1-3(I), 4, 5(I)
+> > Stack traceback for pid 0
+> > 0xffffff801101a9c0        0        0  1    0   R  0xffffff801101b3b0 *swapper/0
+> > Call trace:
+> >  dump_backtrace+0x0/0x138
+> >  ...
+> >  kgdb_compiled_brk_fn+0x34/0x44
+> >  ...
+> >  sysrq_handle_dbg+0x34/0x5c
+> > Stack traceback for pid 0
+> > 0xffffffc0f175a040        0        0  1    1   I  0xffffffc0f175aa30  swapper/1
+> > Call trace:
+> >  __switch_to+0x1e4/0x240
+> >  0xffffffc0f65616c0
+> > Stack traceback for pid 0
+> > 0xffffffc0f175d040        0        0  1    2   I  0xffffffc0f175da30  swapper/2
+> > Call trace:
+> >  __switch_to+0x1e4/0x240
+> >  0xffffffc0f65806c0
+> > Stack traceback for pid 0
+> > 0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
+> > Call trace:
+> >  __switch_to+0x1e4/0x240
+> >  0xffffffc0f659f6c0
+> > Stack traceback for pid 1474
+> > 0xffffffc0dde8b040     1474      727  1    4   R  0xffffffc0dde8ba30  bash
+> > Call trace:
+> >  __switch_to+0x1e4/0x240
+> >  __schedule+0x464/0x618
+> >  0xffffffc0dde8b040
+> > Stack traceback for pid 0
+> > 0xffffffc0f17b0040        0        0  1    5   I  0xffffffc0f17b0a30  swapper/5
+> > Call trace:
+> >  __switch_to+0x1e4/0x240
+> >  0xffffffc0f65dd6c0
+> >
+> > ===
+> >
+> > The problem is that 'btc' eventually boils down to
+> >   show_stack(task_struct, NULL);
+> >
+> > ...and show_stack() doesn't work for "running" CPUs because their
+> > registers haven't been stashed.
+> >
+> > On x86 things might work better (I haven't tested) because kdb has a
+> > special case for x86 in kdb_show_stack() where it passes the stack
+> > pointer to show_stack().  This wouldn't work on arm64 where the stack
+> > crawling function seems needs the "fp" and "pc", not the "sp" which is
+> > presumably why arm64's show_stack() function totally ignores the "sp"
+> > parameter.
+> >
+> > NOTE: we _can_ get a good stack dump for all the cpus if we manually
+> > switch each one to the kdb master and do a back trace.  AKA:
+> >   cpu 4
+> >   bt
+> > ...will give the expected trace.  That's because now arm64's
+> > dump_backtrace will now see that "tsk == current" and go through a
+> > different path.
+> >
+> > In this patch I fix the problems by catching a request to stack crawl
+> > a task that's running on a CPU and then I ask that CPU to do the stack
+> > crawl.
+> >
+> > NOTE: this will (presumably) change what stack crawls are printed for
+> > x86 machines.  Now kdb functions will show up in the stack crawl.
+> > Presumably this is OK but if it's not we can go back and add a special
+> > case for x86 again.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> I think this approach can be made work but there are problems as things
+> exist today, see below.
+>
+>
+> > ---
+> >
+> > Changes in v2:
+> > - Totally new approach; now arch agnostic.
+> >
+> >  kernel/debug/debug_core.c |  5 +++++
+> >  kernel/debug/debug_core.h |  1 +
+> >  kernel/debug/kdb/kdb_bt.c | 44 ++++++++++++++++++++++++++++++---------
+> >  3 files changed, 40 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > index 5cc608de6883..a89c72714fe6 100644
+> > --- a/kernel/debug/debug_core.c
+> > +++ b/kernel/debug/debug_core.c
+> > @@ -92,6 +92,8 @@ static int kgdb_use_con;
+> >  bool dbg_is_early = true;
+> >  /* Next cpu to become the master debug core */
+> >  int dbg_switch_cpu;
+> > +/* cpu number of slave we request a stack crawl of */
+> > +int dbg_slave_dumpstack_cpu = -1;
+> >
+> >  /* Use kdb or gdbserver mode */
+> >  int dbg_kdb_mode = 1;
+> > @@ -580,6 +582,9 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+> >                               atomic_xchg(&kgdb_active, cpu);
+> >                               break;
+> >                       }
+> > +             } else if (dbg_slave_dumpstack_cpu == cpu) {
+>
+> Couldn't this be encoded in the exception state?
+
+Yup, but it requires exporting the exception state from debug_core.c
+(or exporting a function that sets this).  Ah, but below you said you
+wanted the whole stack crawling on a CPU moved to debug_core.c, so
+done.
+
+
+> > +                     dump_stack();
+> > +                     dbg_slave_dumpstack_cpu = -1;
+>
+> >               } else if (kgdb_info[cpu].exception_state & DCPU_IS_SLAVE) {
+> >                       if (!raw_spin_is_locked(&dbg_slave_lock))
+> >                               goto return_normal;
+> > diff --git a/kernel/debug/debug_core.h b/kernel/debug/debug_core.h
+> > index b4a7c326d546..dca74d5caef2 100644
+> > --- a/kernel/debug/debug_core.h
+> > +++ b/kernel/debug/debug_core.h
+> > @@ -62,6 +62,7 @@ extern int dbg_io_get_char(void);
+> >  /* Switch from one cpu to another */
+> >  #define DBG_SWITCH_CPU_EVENT -123456
+> >  extern int dbg_switch_cpu;
+> > +extern int dbg_slave_dumpstack_cpu;
+> >
+> >  /* gdbstub interface functions */
+> >  extern int gdb_serial_stub(struct kgdb_state *ks);
+> > diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+> > index 7e2379aa0a1e..10095ae05826 100644
+> > --- a/kernel/debug/kdb/kdb_bt.c
+> > +++ b/kernel/debug/kdb/kdb_bt.c
+> > @@ -10,6 +10,7 @@
+> >   */
+> >
+> >  #include <linux/ctype.h>
+> > +#include <linux/delay.h>
+> >  #include <linux/string.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/sched/signal.h>
+> > @@ -22,20 +23,43 @@
+> >  static void kdb_show_stack(struct task_struct *p, void *addr)
+> >  {
+> >       int old_lvl = console_loglevel;
+> > +     int time_left;
+> > +     int cpu;
+> > +
+> >       console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
+> >       kdb_trap_printk++;
+> > -     kdb_set_current_task(p);
+> > -     if (addr) {
+> > -             show_stack((struct task_struct *)p, addr);
+> > -     } else if (kdb_current_regs) {
+> > -#ifdef CONFIG_X86
+> > -             show_stack(p, &kdb_current_regs->sp);
+> > -#else
+> > -             show_stack(p, NULL);
+> > -#endif
+> > +
+> > +     if (!addr && kdb_task_has_cpu(p)) {
+> > +             cpu = kdb_process_cpu(p);
+> > +
+> > +             if (cpu == raw_smp_processor_id()) {
+> > +                     dump_stack();
+> > +                     goto exit;
+>
+> This goto is not for error recovery but looks like it is. Why can't we
+> use normal control flow here (extracting the remote stack dump logic
+> into a seperate function if the right margin is getting too close)?
+>
+> In fact to be honest a function call would be useful anyway since I'd
+> rather have all the resulting horror in a single file (debug_core.c).
+
+Sure.  Done.
+
+
+> > +             }
+> > +
+> > +             /*
+> > +              * In general architectures don't support dumping the stack
+> > +              * of a "running" process that's not the current one so if
+> > +              * we want to dump the stack of a running process that's not
+> > +              * the master then we'll set a global letting the slave
+> > +              * (which should be looping) know to dump its own stack.
+> > +              */
+> > +             dbg_slave_dumpstack_cpu = cpu;
+> > +             for (time_left = MSEC_PER_SEC; time_left; time_left--) {
+> > +                     udelay(1000);
+> > +                     if (dbg_slave_dumpstack_cpu == -1)
+> > +                             break;
+> > +             }
+>
+> This timeout does not interact correctly with the pager (the timer does
+> not get reset when we sit in the pager loop waiting for user to tell us
+> to continue).
+
+Nice catch, thanks.  Probably the easiest thing to do is to get rid of
+this timeout but put in a check to make sure that the CPU has the
+"IN_SLAVE" flag set.  This was important since you otherwise could get
+into this code path by doing "ps" to see what process was running on a
+non-rounded-up CPU and then "btp <pid>".  v3 should handle this
+without the timeout.
+
+
+-Doug
