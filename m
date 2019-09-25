@@ -2,164 +2,156 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E14BC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620C8C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E872082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F402082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:18:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcJfabqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442429AbfIYHRx (ORCPT
+        id S2442536AbfIYHSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:17:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58042 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437028AbfIYHRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:17:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3D10CB641;
-        Wed, 25 Sep 2019 07:17:49 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-To:     Andrew Morton <akpm@linux-foundation.org>, cl@linux.com
-Cc:     David Sterba <dsterba@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <20190826111627.7505-1-vbabka@suse.cz>
- <20190826111627.7505-3-vbabka@suse.cz>
- <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
- <20190923171710.GN2751@twin.jikos.cz>
- <alpine.DEB.2.21.1909242048020.17661@www.lameter.com>
- <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <34a45e87-5bad-5f01-7dcb-8a3f6cf37281@suse.cz>
-Date:   Wed, 25 Sep 2019 09:17:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 25 Sep 2019 03:18:52 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45633 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437009AbfIYHSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:18:52 -0400
+Received: by mail-yw1-f67.google.com with SMTP id x65so407036ywf.12;
+        Wed, 25 Sep 2019 00:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UZ3VnberXXl+Q/9IPbdaDqe16sWDnoZalHAnBGlNPH8=;
+        b=TcJfabqyz1SZlZ3H3wCoCgPLUSGbyvhaiHjoo6CpV54jCbZO/idllgPrhKdSRbkNZQ
+         nCyaJFb+xU1mJUgHhp34wLJ2zTlFgpCORbEyWSZf+MHBdzMzJxHhfp2rf6lUehSjEfTN
+         CPCgcq2zi+o0n6/e7UZctT4P5jWh1+WVuzpUbqeXwLuBeci35/QU66exY+JBfHKQbnO2
+         Do/UEvudqzHgvecE23eglKK1rf17uS1HUVBR/yUfpAHEfuLsquuUKfzhb67iu+3KFgDu
+         JfCv+xg+oa9dwI6ZF44nGv/SY8TXJY7sJILedZxWBZDpqcP5kXpaIKxxme87+h1gikqq
+         TYxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UZ3VnberXXl+Q/9IPbdaDqe16sWDnoZalHAnBGlNPH8=;
+        b=qQvZrJrDEgvJ5/616VQ7lmJksXeg/uAd3ozu5dPRgESUS6HJKAckh3H4TbDQpDPeLL
+         HfzJg3u8teW8EjDa1YqXmz7HRXN4ktGOgi1XzU4krnEROvANE3uMHfpngIMbFmxLI2YV
+         J5sSpnb2fJq9ZLAG9rjOuNgyvvaKCgwe1t7+rrJCIBNL8RsZc1CRr9jhiGSzR+CIgPkV
+         7FuWFab0hFXiuwsSK5cOjmWnmH4BIccdujAFGD4HdDq/+kmG/zhQn+UwkYevg7VtZ2/L
+         pE5RapkcCVtV1yBTVvjRdqhxI0ysNACPRLOC4xKXP+etsbJX1DgQ6rTSk07vDUKrHhlj
+         pZqg==
+X-Gm-Message-State: APjAAAVqmTIMJt32XS+O53LHxY9MWmy0b7Q3lVQi0Giu98/9yTP9yc0S
+        rm7MG150ylR0+WYLYinIaViyDHHjmW9HtYaFBjE=
+X-Google-Smtp-Source: APXvYqxvh6SEBI8yGwwivJ3ovHtuG2rDkCstKV7h4t24bTekVPgiGCtdpI6mDgtvpDSPaI3/QV4WttEj14ANH0Ux+dc=
+X-Received: by 2002:a81:54:: with SMTP id 81mr4470004ywa.25.1569395930960;
+ Wed, 25 Sep 2019 00:18:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1569393333-128141-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1569393333-128141-1-git-send-email-chengzhihao1@huawei.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 25 Sep 2019 10:18:39 +0300
+Message-ID: <CAOQ4uxjfko0+G_BUOt=fL1iTXdnWA=-=Kn-bgszF08g7yj4zqQ@mail.gmail.com>
+Subject: Re: [PATCH xfstests v3] overlay: Enable character device to be the
+ base fs partition
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>,
+        David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
+        Eric Biggers <ebiggers@google.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 1:54 AM, Andrew Morton wrote:
-> On Tue, 24 Sep 2019 20:52:52 +0000 (UTC) cl@linux.com wrote:
-> 
->> On Mon, 23 Sep 2019, David Sterba wrote:
->>
->>> As a user of the allocator interface in filesystem, I'd like to see a
->>> more generic way to address the alignment guarantees so we don't have to
->>> apply workarounds like 3acd48507dc43eeeb each time we find that we
->>> missed something. (Where 'missed' might be another sort of weird memory
->>> corruption hard to trigger.)
->>
->> The alignment guarantees are clearly documented and objects are misaligned
->> in debugging kernels.
->>
->> Looking at 3acd48507dc43eeeb:Looks like no one tested that patch with a
->> debug kernel or full debugging on until it hit mainline. Not good.
->>
->> The consequence for the lack of proper testing is to make the production
->> kernel contain the debug measures?
-> 
-> This isn't a debug measure - it's making the interface do that which
-> people evidently expect it to do.  Minor point.
+On Wed, Sep 25, 2019 at 9:29 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>
+> When running overlay tests using character devices as base fs partitions,
+> all overlay usecase results become 'notrun'. Function
+> '_overay_config_override' (common/config) detects that the current base
+> fs partition is not a block device and will set FSTYP to base fs. The
+> overlay usecase will check the current FSTYP, and if it is not 'overlay'
+> or 'generic', it will skip the execution.
+>
+> For example, using UBIFS as base fs skips all overlay usecases:
+>
+>   FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+>   MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+>
+>   overlay/001   [not run] not suitable for this filesystem type: ubifs
+>   overlay/002   [not run] not suitable for this filesystem type: ubifs
+>   overlay/003   [not run] not suitable for this filesystem type: ubifs
+>
+> When checking that the base fs partition is a block/character device,
+> FSTYP is overwritten as 'overlay'. This patch allows the base fs
+> partition to be a character device that can also execute overlay
+> usecases (such as ubifs).
+>
+> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 
-Yes, detecting issues due to misalignment is one thing, but then there
-are the workarounds necessary to achieve it (for multiple sizes, so no
-single kmem_cache_create(..., alignment)), as XFS folks demonstrated.
+Looks fine.
+Eryu, you may change this to Reviewed-by
 
-> I agree it's a bit regrettable to do this but it does appear that the
-> change will make the kernel overall a better place given the reality of
-> kernel development.
-
-Thanks.
-
-> Given this, have you reviewed the patch for overall implementation
-> correctness?
-> 
-> I'm wondering if we can avoid at least some of the patch's overhead if
-> slab debugging is disabled - the allocators are already returning
-> suitably aligned memory, so why add the new code in that case?
-
-Most of the new code is for SLOB, which has no debugging and yet
-misaligns. For SLUB and SLAB, it's just passing alignment argument to
-kmem_cache_create() for kmalloc caches, which means just extra few
-instructions during boot, and no extra code during kmalloc/kfree itself.
+> ---
+>  common/config | 6 +++---
+>  common/rc     | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/common/config b/common/config
+> index 4c86a49..4eda36c 100644
+> --- a/common/config
+> +++ b/common/config
+> @@ -532,7 +532,7 @@ _canonicalize_mountpoint()
+>  # When SCRATCH/TEST_* vars are defined in evironment and not
+>  # in config file, this function is called after vars have already
+>  # been overriden in the previous test.
+> -# In that case, TEST_DEV is a directory and not a blockdev and
+> +# In that case, TEST_DEV is a directory and not a blockdev/chardev and
+>  # the function will return without overriding the SCRATCH/TEST_* vars.
+>  _overlay_config_override()
+>  {
+> @@ -550,7 +550,7 @@ _overlay_config_override()
+>         #    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+>         #    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+>         #    overlayfs base and mount dirs inside base fs mount.
+> -       [ -b "$TEST_DEV" ] || return 0
+> +       [ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+>
+>         # Config file may specify base fs type, but we obay -overlay flag
+>         [ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+> @@ -570,7 +570,7 @@ _overlay_config_override()
+>         export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+>         export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+>
+> -       [ -b "$SCRATCH_DEV" ] || return 0
+> +       [ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+>
+>         # Store original base fs vars
+>         export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+> diff --git a/common/rc b/common/rc
+> index 66c7fd4..8d57c37 100644
+> --- a/common/rc
+> +++ b/common/rc
+> @@ -3100,7 +3100,7 @@ _require_scratch_shutdown()
+>                         # SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
+>                         # will be null, so check OVL_BASE_SCRATCH_DEV before
+>                         # running shutdown to avoid shutting down base fs accidently.
+> -                       _notrun "$SCRATCH_DEV is not a block device"
+> +                       _notrun "This test requires a valid $OVL_BASE_SCRATCH_DEV as ovl base fs"
+>                 else
+>                         src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
+>                         || _notrun "Underlying filesystem does not support shutdown"
+> --
+> 2.7.4
+>
