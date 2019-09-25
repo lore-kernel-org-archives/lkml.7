@@ -2,186 +2,209 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2DDC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E19C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34E82075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC0A2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ageJebil"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+NMUppG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411454AbfIYDNw (ORCPT
+        id S2411472AbfIYDPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 23:13:52 -0400
-Received: from mail-eopbgr00057.outbound.protection.outlook.com ([40.107.0.57]:63367
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391325AbfIYDNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 23:13:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gZt/p+meZcs9bTqCAS+LVS2t8lUQVOjQxOAicCpo28CC6hFP/tNbIkCSYjKgoUlc5Xa/WSV2tUFfBQDJpjpeAI42dt4FfIIWWo0ZgCARPYOTzMfmHBfUSKuKJnEsOkg87cElJLnqQHg38SNfgLlmGHjHcimCNJDGqXIl4A+cRPdbNg3BUcOaGrThlJp32CzYEziQyhWbdJCFkRafOgcBuAhXhdIce/xHfFOm8Tvw9KTfjO5qxLTlK0+FiuxfSHxTGFilrCN/THXzq2aT5vV0i0FWaj28+FMIMBeEai5VFchjrookY4dn6oZF0Myxee3XFu6W41kKZ3QPviM16Hbp2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9gPHhrxSS5RyrbR7T8Oh9S5esSP6LfVKH3fYxdNWa/I=;
- b=Qu98TRwRabPNHMh+rwU0oJV1TAtEfNaGdGQqVgBV44Qsp8OhrGc1LVKI3Svi4IbtTl7rf6yx4xOtDsSgAARH0kaTiQGYAnrGw5QQOe4XzVs1tcBi6nT11m3MDHBdjJZtJgQmh7ZrrNz24WGVPFcRYdN8mKx0g5p9Qqyv74Bnu01HQNRIGeX/splCfhsAAAYKZymiNS2Mv9wsSyq69LJP2pu+I17m8rOfWk40uSB9D1CuxXHBwbWpZIV2uOC6xHoBPbgw3FBLQYE+QYTBEZ2weBfDwhwoL2LOqsRjPyRAo/5TY/E/cYiCZcSo0oTzdIxI4ln3UmMTJokkGXaGFAT8MA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9gPHhrxSS5RyrbR7T8Oh9S5esSP6LfVKH3fYxdNWa/I=;
- b=ageJebilx9+uO8ZDHRp4WpElodreLQWZebpAqG9yTio1cqn+QJ4EDWs5ayFNK53H9QvX+fXrwR4c/w8TbsgAscaykz3eT5rp9b6vBxsJrWLBgVqvmokHlsGAs/QIE7vGmT8WpEdPunwAZJBm09lna+tVES3pPSNkDJEl9G+kC6E=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4713.eurprd04.prod.outlook.com (20.176.233.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Wed, 25 Sep 2019 03:13:08 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
- 03:13:08 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Ran Wang <ran.wang_1@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Topic: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Index: AQHVcoOnab7d5ysBNkWsXmY0PrfSuKc6/L+AgAC3JZA=
-Date:   Wed, 25 Sep 2019 03:13:07 +0000
-Message-ID: <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 382b4caf-c68b-46f1-f8a8-08d741664a10
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4713;
-x-ms-traffictypediagnostic: DB7PR04MB4713:|DB7PR04MB4713:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB471346E0B8B912FAA0DDB0A48F870@DB7PR04MB4713.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(346002)(376002)(396003)(189003)(199004)(9686003)(55016002)(6436002)(33656002)(14454004)(229853002)(99286004)(71200400001)(71190400001)(76176011)(256004)(102836004)(7696005)(6506007)(6116002)(5660300002)(3846002)(64756008)(66446008)(14444005)(66556008)(66946007)(66476007)(2906002)(76116006)(52536014)(26005)(316002)(54906003)(110136005)(486006)(25786009)(2501003)(478600001)(44832011)(476003)(186003)(11346002)(446003)(6636002)(66066001)(8676002)(4326008)(81166006)(86362001)(81156014)(8936002)(6246003)(305945005)(74316002)(7736002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4713;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UGiv/bNKp5XgxrqM7wAW4gqocxz2dt3Af46/b2DN0ctneUVjCpaioQcF6pyZ3x8vJBW6hT7icUvFXSExiVPeQctZjeSJrzZjGN6kN9aF2WgzNk0qzwER5boKx4x5xkxuXTbQrw2PqK2Ubv4sOgaLMUBCQc2Eaqom53ogmpKAxSGXdkVd/I0nP1Tgcq5Yf9XNzW3LRAlA8Dbg1m5WdyFHM6w1OaSyIO1Zxbp4aq1cjFTduH/9o0sKBJsDbuGVNdWBMHcCvzsh//Pb8XYbEPuY7a8rj1c0+OK5JKVpryOJ4dAVQRUQ59B+nUUq2sBdOI7y8X3YUuHijTn9mrfCGj0KVfyCKjx1un5kWQzQVvFmSE6vh11uGql7oQ1LN+MnU51TfL1Dt1umL9I1x8gpSFmo7zsXXKStlcpMd6SYkn9I/gM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 23:15:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44225 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411457AbfIYDPP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 23:15:15 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 21so3458262otj.11;
+        Tue, 24 Sep 2019 20:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=afcCPGULCNOtz/0h05xsNOQts8+NcMH2hirofuxLTdQ=;
+        b=U+NMUppGyzVy2XDqOvfnHJt7FaU8Bs09UlndkxV+Isw+0giosZ4aNeiw+7XOfFXb8T
+         8zNlSSlpkOWrbsSOGKdqudl+lwQ0spV7CnZ9xQYXFDJ5Du26veLJ/NShlVLVapOh2g1a
+         v+BchHQ8LAQ9tAS1UgCGVwwWuw630X669rkFm3jsg6b4NQ7apKzJizHo61TAgNjPW/s3
+         ybmqVdQFqhB6k8y2FoQDo6zaXVZpGU/AY7a9WZ6PdbWHfU5gDeW2WJaHNLdIZDmhdmXb
+         b3u7qtOwp2g/nDygGnZARX4erkjePrmUmlbRNnP4qBEqPCAa2EaOOU7+pSyxzY5wxnr4
+         Lc2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=afcCPGULCNOtz/0h05xsNOQts8+NcMH2hirofuxLTdQ=;
+        b=HZSq3phJVa7wdy5cSS15apmuHZCzt1S5klO3QjpE800k3ztb8vEQ+0ifOsDn//bfKV
+         zLU+EtF74li1+7p1/vXlR6L9/qmMrN1DpfMHHewQIOaKiFWjZvl5GNpMDIFWZ+XothIZ
+         Hy8VzpNu8oXGHB0/BX4Tm+z9arS2wdgjHbF1oxBAxYV7d3/MaxN91oqj5LhFQLSVEGAr
+         ECdOhaBgmgkRqieFCvUiO4N4BGihMln/O/sH4nVBrOz3YtIm0UQCyVCIc8fs4cJvP/so
+         wIQRqHmjqfgwe3vEVEx2F06QSNXy/QDUnK5NkTFyYBQkZvgKA1HhktKTsXOb4RO5FsRI
+         5EcQ==
+X-Gm-Message-State: APjAAAWYS05is7EnC798m0d6aV1yrDhrT8wfz2muOqwMERbVpPkwiPG1
+        tWFIdN+rtjzExtLcxXHcE98YfKL2SAeoP8NIr08=
+X-Google-Smtp-Source: APXvYqx3uHu6GsUxdtRr8tl95tqn/QuheLHwAoSbpsrOzGMBbveA2admP6ZJxsCiutQSZnSIRfD7l6ZLmrRNVy1OUCE=
+X-Received: by 2002:a9d:aa8:: with SMTP id 37mr4453390otq.56.1569381314722;
+ Tue, 24 Sep 2019 20:15:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 382b4caf-c68b-46f1-f8a8-08d741664a10
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 03:13:07.7962
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zUYo23gCzHkhcFC+g3kwNSqUITfR5n0ZRynSq2s6Qd+K1q4sYJQURPy8FIqfFtnb9BbBcD7aNV/2hKQ6N63SHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4713
+References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
+ <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com> <CANRm+CxVXsQCmEpxNJSifmQJk5cqoSifFq+huHJE1s7a-=0iXw@mail.gmail.com>
+ <2dda32db-5662-f7a6-f52d-b835df1f45f1@redhat.com> <9ef778df-c34a-897c-bcfa-780256fb78ff@redhat.com>
+In-Reply-To: <9ef778df-c34a-897c-bcfa-780256fb78ff@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 25 Sep 2019 11:15:02 +0800
+Message-ID: <CANRm+Cyckfhm59GoP1m_SsHcAAiUAaLtnMLKSY2nJJJeexmTjQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is preempted"
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
+        "# v3 . 10+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Sep 2019 at 21:04, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 11/09/19 06:25, Waiman Long wrote:
+> > On 9/10/19 6:56 AM, Wanpeng Li wrote:
+> >> On Mon, 9 Sep 2019 at 18:56, Waiman Long <longman@redhat.com> wrote:
+> >>> On 9/9/19 2:40 AM, Wanpeng Li wrote:
+> >>>> From: Wanpeng Li <wanpengli@tencent.com>
+> >>>>
+> >>>> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't =
+wait if
+> >>>> vCPU is preempted), we found great regression caused by this commit.
+> >>>>
+> >>>> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each i=
+s 80 vCPUs.
+> >>>> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700=
+-1800
+> >>>> records/s with this commit.
+> >>>>
+> >>>>           Host                       Guest                score
+> >>>>
+> >>>> vanilla + w/o kvm optimizes     vanilla               1700-1800 reco=
+rds/s
+> >>>> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 re=
+cords/s
+> >>>> vanilla + w/ kvm optimizes      vanilla               4500-5000 reco=
+rds/s
+> >>>> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 re=
+cords/s
+> >>>>
+> >>>> Exit from aggressive wait-early mechanism can result in yield premat=
+ure and
+> >>>> incur extra scheduling latency in over-subscribe scenario.
+> >>>>
+> >>>> kvm optimizes:
+> >>>> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interru=
+pts)
+> >>>> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate =
+lock waiter preemption)
+> >>>>
+> >>>> Tested-by: loobinliu@tencent.com
+> >>>> Cc: Peter Zijlstra <peterz@infradead.org>
+> >>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+> >>>> Cc: Ingo Molnar <mingo@kernel.org>
+> >>>> Cc: Waiman Long <longman@redhat.com>
+> >>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> >>>> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> >>>> Cc: loobinliu@tencent.com
+> >>>> Cc: stable@vger.kernel.org
+> >>>> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is pre=
+empted)
+> >>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> >>>> ---
+> >>>>  kernel/locking/qspinlock_paravirt.h | 2 +-
+> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qs=
+pinlock_paravirt.h
+> >>>> index 89bab07..e84d21a 100644
+> >>>> --- a/kernel/locking/qspinlock_paravirt.h
+> >>>> +++ b/kernel/locking/qspinlock_paravirt.h
+> >>>> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
+> >>>>       if ((loop & PV_PREV_CHECK_MASK) !=3D 0)
+> >>>>               return false;
+> >>>>
+> >>>> -     return READ_ONCE(prev->state) !=3D vcpu_running || vcpu_is_pre=
+empted(prev->cpu);
+> >>>> +     return READ_ONCE(prev->state) !=3D vcpu_running;
+> >>>>  }
+> >>>>
+> >>>>  /*
+> >>> There are several possibilities for this performance regression:
+> >>>
+> >>> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause so=
+me
+> >>> cacheline contention issue depending on how that callback is implemen=
+ted.
+> >>>
+> >>> 2) KVM may set the preempt flag for a short period whenver an vmexit
+> >>> happens even if a vmenter is executed shortly after. In this case, we
+> >>> may want to use a more durable vcpu suspend flag that indicates the v=
+cpu
+> >>> won't get a real vcpu back for a longer period of time.
+> >>>
+> >>> Perhaps you can add a lock event counter to count the number of
+> >>> wait_early events caused by vcpu_is_preempted() being true to see if =
+it
+> >>> really cause a lot more wait_early than without the vcpu_is_preempted=
+()
+> >>> call.
+> >> pv_wait_again:1:179
+> >> pv_wait_early:1:189429
+> >> pv_wait_head:1:263
+> >> pv_wait_node:1:189429
+> >> pv_vcpu_is_preempted:1:45588
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3Dsleep 5=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> pv_wait_again:1:181
+> >> pv_wait_early:1:202574
+> >> pv_wait_head:1:267
+> >> pv_wait_node:1:202590
+> >> pv_vcpu_is_preempted:1:46336
+> >>
+> >> The sampling period is 5s, 6% of wait_early events caused by
+> >> vcpu_is_preempted() being true.
 > >
-> > The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata
-> > A-008646 on LS1021A
+> > 6% isn't that high. However, when one vCPU voluntarily releases its
+> > vCPU, all the subsequently waiters in the queue will do the same. It is
+> > a cascading effect. Perhaps we wait early too aggressive with the
+> > original patch.
 > >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v3:
-> > 	- rename property name
-> > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > I also look up the email chain of the original commit. The patch
+> > submitter did not provide any performance data to support this change.
+> > The patch just looked reasonable at that time. So there was no
+> > objection. Given that we now have hard evidence that this was not a goo=
+d
+> > idea. I think we should revert it.
 > >
-> > Change in v2:
-> > 	- update desc of the property 'fsl,rcpm-scfg'
+> > Reviewed-by: Waiman Long <longman@redhat.com>
 > >
-> >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > ++++++++++++++
-> >  1 file changed, 14 insertions(+)
+> > Thanks,
+> > Longman
 > >
-> > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > index 5a33619d881d..157dcf6da17c 100644
-> > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
-> >  Optional properties:
-> >   - little-endian : RCPM register block is Little Endian. Without it RC=
-PM
-> >     will be Big Endian (default case).
-> > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
->=20
-> You probably should mention this is related to a hardware issue on LS1021=
-a
-> and only needed on LS1021a.
-Okay, got it, thanks, I will add this in v4.
->=20
-> > +   Must include n + 1 entries (n =3D #fsl,rcpm-wakeup-cells, such as:
-> > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries)=
-.
->=20
-> #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.
-> However you are defining an offset to scfg registers here.  Why these two
-> are related?  The length here should actually be related to the #address-=
-cells
-> of the soc/.  But since this is only needed for LS1021, you can just make=
- it 3.
-I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device node(fsl=
-,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
-0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
-But because of the hardware issue on LS1021A, I need store the value of IPP=
-DEXPCR registers
-to an alt address. So I defining an offset to scfg registers, then RCPM dri=
-ver get an abosolute address from offset,
- RCPM driver write the value of IPPDEXPCR registers to these abosolute addr=
-esses(backup the value of IPPDEXPCR registers).
->=20
-> > +   The first entry must be a link to the SCFG device node.
-> > +   The non-first entry must be offset of registers of SCFG.
-> >
-> >  Example:
-> >  The RCPM node for T4240:
-> > @@ -43,6 +48,15 @@ The RCPM node for T4240:
-> >  		#fsl,rcpm-wakeup-cells =3D <2>;
-> >  	};
-> >
-> > +The RCPM node for LS1021A:
-> > +	rcpm: rcpm@1ee2140 {
-> > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
-> > +		#fsl,rcpm-wakeup-cells =3D <2>;
-> > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
-> > SCFG_SPARECR8 */
-> > +	};
-> > +
-> > +
-> >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> >  -------------------------------------------
-> >  Required fsl,rcpm-wakeup property should be added to a device node if
-> > the device
-> > --
-> > 2.17.1
+>
+> Queued, thanks.
 
+Didn't see it in yesterday's updated kvm/queue. :)
+
+    Wanpeng
