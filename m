@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5254C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB89C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEDD207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9461D214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569433209;
-	bh=d0Ht5tuogpE0oLeNz+8DxZE0agOlMsMwzMYMy2/DwMc=;
+	s=default; t=1569433211;
+	bh=PL/bII7lYtbReeMEMq9nxssvYSIf1exQZuVNMXwajMc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kTpYaNr6SgXaDA9rjPioJuGR/YJEq+ZH2h6lVebSKVYt/Nn6//xMLFUFCQEh9Ke56
-	 12M5oa9hVGzFpiaCTXYf2I1rF6NlOiEgWh+UkDBbfi7NORyyvHsOCiezo7jyb+9H7z
-	 qr+cALgPSWwUuoAznnjZARoWP4f7Ryu320AGBmZU=
+	b=U3rqZbnETi1DACuGPAD4Tt2F03WAy9KGWe3DFFZKcsF2InK19KOoDTGjnxp/jUgMn
+	 OGRkjZ88yoPn5Ol6FTovSVSgy+vVQWh7qib5rEFwR+XXnX9LOsVHo06psw80+/cThO
+	 2yBTY9c6CAz/jIvFs7w9apuouL9zaothi1Xu8JqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634228AbfIYRkI (ORCPT
+        id S2634216AbfIYRkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 13:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443048AbfIYRkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2443032AbfIYRkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Sep 2019 13:40:06 -0400
-Subject: Re: [GIT PULL] tpmdd fixes for Linux v5.4-rc1
+Subject: Re: [GIT PULL] fuse update for 5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569433206;
-        bh=d0Ht5tuogpE0oLeNz+8DxZE0agOlMsMwzMYMy2/DwMc=;
+        s=default; t=1569433205;
+        bh=PL/bII7lYtbReeMEMq9nxssvYSIf1exQZuVNMXwajMc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1TxT3E6W2lKgQMM+HS3ycaKsaf8U3QMnA7KX1zRd7aXcW4c4hqLIF7oUNCVpm4U5U
-         0TKAJ4lbRgUxUIBhgneEWwhJmMA0dRj1BOO7A6Pp8AJHdTIFr+eMrl3tgUbVcN0Jot
-         2Hhmua5oWjHY+kc4jU1dpgmu63ufNcKRgG1wuDUQ=
+        b=HJ6ZxKycnbHUMRIypOsTXHCU3V+I8qrioQWQuGDnKT6tA/QXVHAc/ZRMLlvlP2sgx
+         98oX7imligUK6gFE4E53Y/P4TDnf2YkeEN95GXuEGhDuh+KV165Ad6rrZtrBhdIT3j
+         MMSLMx4ofJZK16NEm3mzzARtAmgrcHlvczM4hjTY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190925000214.GA23372@linux.intel.com>
-References: <20190925000214.GA23372@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190925000214.GA23372@linux.intel.com>
-X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
- tags/tpmdd-next-20190925
-X-PR-Tracked-Commit-Id: e13cd21ffd50a07b55dcc4d8c38cedf27f28eaa1
+In-Reply-To: <20190925092639.GA1904@miu.piliscsaba.redhat.com>
+References: <20190925092639.GA1904@miu.piliscsaba.redhat.com>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190925092639.GA1904@miu.piliscsaba.redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
+ tags/fuse-update-5.4
+X-PR-Tracked-Commit-Id: 5addcd5dbd8c2d2bcf719a2eb41a9b43bf9a7935
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 301310c6d24e5b135d1efd3d4a9cc6adc4fbd94a
-Message-Id: <156943320613.26797.6301275237676729094.pr-tracker-bot@kernel.org>
-Date:   Wed, 25 Sep 2019 17:40:06 +0000
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, jmorris@namei.org
+X-PR-Merge-Commit-Id: 7b1373dd6e86f3a222590ae404a400e699b32884
+Message-Id: <156943320549.26797.3226293348825732296.pr-tracker-bot@kernel.org>
+Date:   Wed, 25 Sep 2019 17:40:05 +0000
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 25 Sep 2019 03:02:14 +0300:
+The pull request you sent on Wed, 25 Sep 2019 11:26:39 +0200:
 
-> git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190925
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-5.4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/301310c6d24e5b135d1efd3d4a9cc6adc4fbd94a
+https://git.kernel.org/torvalds/c/7b1373dd6e86f3a222590ae404a400e699b32884
 
 Thank you!
 
