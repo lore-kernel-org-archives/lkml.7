@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AE3C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F2C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3721421D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1E520640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7NBjARN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BBRlV88b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443268AbfIYUCy (ORCPT
+        id S2392709AbfIYUC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 16:02:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42456 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440129AbfIYUCw (ORCPT
+        Wed, 25 Sep 2019 16:02:58 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41662 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440130AbfIYUCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Sep 2019 16:02:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q12so33347pff.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:02:51 -0700 (PDT)
+Received: by mail-pg1-f196.google.com with SMTP id s1so542615pgv.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YAwKOfkBAIB9WhQiaaLLy2L479R9P65WNB5nP2TJodw=;
-        b=E7NBjARNhbdGyBXdEV8SyXfYFXQyEHoVKDUFATfGxCUW7CrsJ6l6NiTEHPv/xGeh0W
-         BfaCeztNVfLgttNyC7QG1oPGJWoq+WBJLX1Yfnx/ZAwA0JU4ebpfWjQDrgQtfxGq10M0
-         ovjSzK31JoYMMtGYyFANab+mXyrNWxh47wQig=
+        bh=CQLYUORcfotgaKqy5gkXc5kVZJb5dGrYga+46jw612E=;
+        b=BBRlV88bVISU676nmRF0kHVZdbXHig0dn9rIjsZ8a0RiJ8C7mEzWYP6UYHuj4l6KeY
+         M8EMwHVLwnCKr6L4uqSHsH4P7cYEucUlq4v1CPfV7QjSl0nBvxmnM5Hr3knERGUN+v+T
+         iDStwC0hgjriwDEOj/1GoS+dVq0GqUviNbZq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YAwKOfkBAIB9WhQiaaLLy2L479R9P65WNB5nP2TJodw=;
-        b=eRho6Hy/e3Axc1Q/CvPAjKVeZmJs6KuZLXjnLltab0tv24raaKv2bTWvjdQ2jBX5JH
-         WBVaNGTTuT6Pj2cxLjBBiP0aXhEx08ZLvahRxyQwBSu03HyDt/vI9JSESCGfQ1kHLrX4
-         BGkCyDO6saxUJqnACHSfRF9rIJClwWOnpz798pWnWzn6B+C1VdELqXvnZ6dBrfCM2q6q
-         hK3y3/ClTCUIuY/47Q69zrLS/YQMBguj8zavh/GWQKsiUc00KNJKpuSmKlb1aJJZqCeE
-         yLbnM0qOr3sVCeNLJWaYO1OPUCF0vFoO8a9RLmHeMlJXz1tiAJj7dE66o2/PPFhN1X8S
-         fNRg==
-X-Gm-Message-State: APjAAAWvikw00+p+cvEAcSIveGOHzhYNCCZ3L0YaYdDdBoJZ1o6gZICA
-        NlvNGvuJEV/W2Pov8O417egO9XlehIc=
-X-Google-Smtp-Source: APXvYqwrbF0fnCNsefwBLmxVw3p+YzKu/TOroqO998JvI5nUXu99hXPkBBiV5cHhkxvVcrdR25vBvg==
-X-Received: by 2002:a62:1888:: with SMTP id 130mr27979pfy.72.1569441770793;
-        Wed, 25 Sep 2019 13:02:50 -0700 (PDT)
+        bh=CQLYUORcfotgaKqy5gkXc5kVZJb5dGrYga+46jw612E=;
+        b=Y2ME0yMJ5Yy1cZBd1pfyRy4KQGp0D0KXnYaXFWauNggZuLgud+BK1J6WUg3KjxC2mh
+         DRn2l2rdt1Oybcoo/6iljVuNLWsUJT0iaZL09ftApOkiyNO3PZ/IeiJlbchQA1dbcyyd
+         XoxWno7giB5IDHKBePUfJGpbDnfNCOr9ROZMtdbLYpuONtDLrTmHguvIrfRcRQZunapm
+         61jJK+TwJBIzYzRYKQVyJDM9frhGeHTymJUMIkAWz4m9q1IWR42XX29qAvUd0IcHDNDu
+         hMJTA3vpo5mgoUKNxVoKP44Mkd/hg+PUqh9LgLRIWzHNtBcy05amiV6jpMbKVocOG3XC
+         KHng==
+X-Gm-Message-State: APjAAAXD3p0fq+1lIriwH6mIyXiGKAe+wjUduZNYzUQSuSqxnYYoHiEy
+        HqfKaakNQKFPBn4+M2RBtpgxhg==
+X-Google-Smtp-Source: APXvYqwJ6pHdDAlsDr5RKFXS0cDGb0ZF1UKcTlt+5NRLmu4on6vgnFNUO2amx7Cb+kq88ANcYDP1LQ==
+X-Received: by 2002:a62:3c1:: with SMTP id 184mr317726pfd.209.1569441771927;
+        Wed, 25 Sep 2019 13:02:51 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d76sm458113pga.80.2019.09.25.13.02.49
+        by smtp.gmail.com with ESMTPSA id d76sm458113pga.80.2019.09.25.13.02.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 13:02:50 -0700 (PDT)
+        Wed, 25 Sep 2019 13:02:51 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     kgdb-bugreport@lists.sourceforge.net,
         Douglas Anderson <dianders@chromium.org>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] kdb: Remove unused "argcount" param from kdb_bt1(); make btaprompt bool
-Date:   Wed, 25 Sep 2019 13:02:18 -0700
-Message-Id: <20190925125811.v3.2.Ibc2d4ec1b0e23dbf39dcd296e3c56d8520fbc144@changeid>
+Subject: [PATCH v3 3/4] kdb: Fix "btc <cpu>" crash if the CPU didn't round up
+Date:   Wed, 25 Sep 2019 13:02:19 -0700
+Message-Id: <20190925125811.v3.3.Id33c06cbd1516b49820faccd80da01c7c4bf15c7@changeid>
 X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
 In-Reply-To: <20190925200220.157670-1-dianders@chromium.org>
 References: <20190925200220.157670-1-dianders@chromium.org>
@@ -75,89 +75,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kdb_bt1() had a mysterious "argcount" parameter passed in (always
-the number 5, by the way) and never used.  Presumably this is just old
-cruft.  Remove it.  While at it, upgrade the btaprompt parameter to a
-full fledged bool instead of an int.
+I noticed that when I did "btc <cpu>" and the CPU I passed in hadn't
+rounded up that I'd crash.  I was going to copy the same fix from
+commit 162bc7f5afd7 ("kdb: Don't back trace on a cpu that didn't round
+up") into the "not all the CPUs" case, but decided it'd be better to
+clean things up a little bit.
+
+This consolidates the two code paths.  It is _slightly_ wasteful in in
+that the checks for "cpu" being too small or being offline isn't
+really needed when we're iterating over all online CPUs, but that
+really shouldn't hurt.  Better to have the same code path.
+
+While at it, eliminate at least one slightly ugly (and totally
+needless) recursive use of kdb_parse().
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- Patch ("kdb: Remove unused "argcount" param from...") new for v3.
+- Patch ("kdb: Fix "btc <cpu>" crash if the CPU...") new for v3.
 
 Changes in v2: None
 
- kernel/debug/kdb/kdb_bt.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ kernel/debug/kdb/kdb_bt.c | 61 ++++++++++++++++++++++-----------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
 
 diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-index 7e2379aa0a1e..120fc686c919 100644
+index 120fc686c919..d9af139f9a31 100644
 --- a/kernel/debug/kdb/kdb_bt.c
 +++ b/kernel/debug/kdb/kdb_bt.c
-@@ -78,8 +78,7 @@ static void kdb_show_stack(struct task_struct *p, void *addr)
-  */
+@@ -101,6 +101,27 @@ kdb_bt1(struct task_struct *p, unsigned long mask, bool btaprompt)
+ 	return 0;
+ }
  
- static int
--kdb_bt1(struct task_struct *p, unsigned long mask,
--	int argcount, int btaprompt)
-+kdb_bt1(struct task_struct *p, unsigned long mask, bool btaprompt)
- {
- 	char buffer[2];
- 	if (kdb_getarea(buffer[0], (unsigned long)p) ||
-@@ -106,7 +105,6 @@ int
++static void
++kdb_bt_cpu(unsigned long cpu)
++{
++	struct task_struct *kdb_tsk;
++
++	if (cpu >= num_possible_cpus() || !cpu_online(cpu)) {
++		kdb_printf("WARNING: no process for cpu %ld\n", cpu);
++		return;
++	}
++
++	/* If a CPU failed to round up we could be here */
++	kdb_tsk = KDB_TSK(cpu);
++	if (!kdb_tsk) {
++		kdb_printf("WARNING: no task for cpu %ld\n", cpu);
++		return;
++	}
++
++	kdb_set_current_task(kdb_tsk);
++	kdb_bt1(kdb_tsk, ~0UL, false);
++}
++
+ int
  kdb_bt(int argc, const char **argv)
  {
- 	int diag;
--	int argcount = 5;
- 	int btaprompt = 1;
- 	int nextarg;
- 	unsigned long addr;
-@@ -125,7 +123,7 @@ kdb_bt(int argc, const char **argv)
- 		/* Run the active tasks first */
- 		for_each_online_cpu(cpu) {
- 			p = kdb_curr_task(cpu);
--			if (kdb_bt1(p, mask, argcount, btaprompt))
-+			if (kdb_bt1(p, mask, btaprompt))
- 				return 0;
- 		}
- 		/* Now the inactive tasks */
-@@ -134,7 +132,7 @@ kdb_bt(int argc, const char **argv)
- 				return 0;
- 			if (task_curr(p))
- 				continue;
--			if (kdb_bt1(p, mask, argcount, btaprompt))
-+			if (kdb_bt1(p, mask, btaprompt))
- 				return 0;
- 		} kdb_while_each_thread(g, p);
- 	} else if (strcmp(argv[0], "btp") == 0) {
-@@ -148,7 +146,7 @@ kdb_bt(int argc, const char **argv)
- 		p = find_task_by_pid_ns(pid, &init_pid_ns);
- 		if (p) {
- 			kdb_set_current_task(p);
--			return kdb_bt1(p, ~0UL, argcount, 0);
-+			return kdb_bt1(p, ~0UL, false);
- 		}
- 		kdb_printf("No process with pid == %ld found\n", pid);
- 		return 0;
-@@ -159,7 +157,7 @@ kdb_bt(int argc, const char **argv)
- 		if (diag)
- 			return diag;
- 		kdb_set_current_task((struct task_struct *)addr);
--		return kdb_bt1((struct task_struct *)addr, ~0UL, argcount, 0);
-+		return kdb_bt1((struct task_struct *)addr, ~0UL, false);
+@@ -161,7 +182,6 @@ kdb_bt(int argc, const char **argv)
  	} else if (strcmp(argv[0], "btc") == 0) {
  		unsigned long cpu = ~0;
  		struct task_struct *save_current_task = kdb_current_task;
-@@ -211,7 +209,7 @@ kdb_bt(int argc, const char **argv)
- 			kdb_show_stack(kdb_current_task, (void *)addr);
- 			return 0;
- 		} else {
--			return kdb_bt1(kdb_current_task, ~0UL, argcount, 0);
-+			return kdb_bt1(kdb_current_task, ~0UL, false);
+-		char buf[80];
+ 		if (argc > 1)
+ 			return KDB_ARGCOUNT;
+ 		if (argc == 1) {
+@@ -169,35 +189,22 @@ kdb_bt(int argc, const char **argv)
+ 			if (diag)
+ 				return diag;
  		}
- 	}
- 
+-		/* Recursive use of kdb_parse, do not use argv after
+-		 * this point */
+-		argv = NULL;
+ 		if (cpu != ~0) {
+-			if (cpu >= num_possible_cpus() || !cpu_online(cpu)) {
+-				kdb_printf("no process for cpu %ld\n", cpu);
+-				return 0;
+-			}
+-			sprintf(buf, "btt 0x%px\n", KDB_TSK(cpu));
+-			kdb_parse(buf);
+-			return 0;
+-		}
+-		kdb_printf("btc: cpu status: ");
+-		kdb_parse("cpu\n");
+-		for_each_online_cpu(cpu) {
+-			void *kdb_tsk = KDB_TSK(cpu);
+-
+-			/* If a CPU failed to round up we could be here */
+-			if (!kdb_tsk) {
+-				kdb_printf("WARNING: no task for cpu %ld\n",
+-					   cpu);
+-				continue;
++			kdb_bt_cpu(cpu);
++		} else {
++			/*
++			 * Recursive use of kdb_parse, do not use argv after
++			 * this point.
++			 */
++			argv = NULL;
++			kdb_printf("btc: cpu status: ");
++			kdb_parse("cpu\n");
++			for_each_online_cpu(cpu) {
++				kdb_bt_cpu(cpu);
++				touch_nmi_watchdog();
+ 			}
+-
+-			sprintf(buf, "btt 0x%px\n", kdb_tsk);
+-			kdb_parse(buf);
+-			touch_nmi_watchdog();
++			kdb_set_current_task(save_current_task);
+ 		}
+-		kdb_set_current_task(save_current_task);
+ 		return 0;
+ 	} else {
+ 		if (argc) {
 -- 
 2.23.0.351.gc4317032e6-goog
 
