@@ -2,156 +2,100 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D47C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C4DC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FAE21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBCB21D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569429925;
+	bh=fhs9k7FdCaf3ch97oov/IXh/ex3MLes/Q6xhgZoPvM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KgNN3V0k/tcnZJlpllmXJlD51LwFBjX5K2wBdBHI7RTD/FqlBXWT/1EQI3Z4PwZqe
+	 Z+Vdz5FsmGsmYeKAQzVMAGdRgAOpzPAAeCQR6zIdam7qWMAB1qWPW6BQzseugWbBLy
+	 YDufvpSfatUUrc0iUIFnStfvmkuQ9Dn6UIxnTDNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439855AbfIYQnI (ORCPT
+        id S2391960AbfIYQpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:43:08 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:45343 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732923AbfIYQnI (ORCPT
+        Wed, 25 Sep 2019 12:45:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60706 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391916AbfIYQpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:43:08 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id DANaiLbsHz6EADANdiBgjX; Wed, 25 Sep 2019 18:43:06 +0200
-Subject: Re: [PATCH] media: vidioc-queryctrl.rst: clarify combining READ_ONLY
- with WRITE_ONLY
-To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20190925150945.27706-1-helen.koike@collabora.com>
- <211b3d26-ffbc-3245-6613-7fd42c65cc80@xs4all.nl>
- <a7e82545-141b-7496-f0f1-dadbe05565f0@collabora.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <e9ba320a-75bb-2a0d-cd26-617f61c8a2af@xs4all.nl>
-Date:   Wed, 25 Sep 2019 18:43:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 12:45:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7y+HfIZ6ZjSCuJsrId/50nzQ9enIfiTTA4qGihG5qEo=; b=kM7JA2BVrkhFNP8duNWma1lCd
+        qAV3mCDY4C9l9QxA9CXWUFF6/KgGjr5Yf9dPzjRfPrCW5JjsVxx9uhlz7gMv5cduRMOhjPWo1hCJb
+        WAE7nP6ewnGD1JPcoaHXq0XacFJinWB/kqc7WS06YMh1vjCSpDQ8GHfXJ1eBWQlZgpFkA=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDAPn-0007tC-NN; Wed, 25 Sep 2019 16:45:19 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 8574BD01BD1; Wed, 25 Sep 2019 17:45:17 +0100 (BST)
+Date:   Wed, 25 Sep 2019 09:45:17 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        krzk@kernel.org
+Subject: Re: [PATCH v2 1/2] spi: Add call to spi_slave_abort() function when
+ spidev driver is released
+Message-ID: <20190925164517.GI2036@sirena.org.uk>
+References: <20190924110547.14770-1-lukma@denx.de>
+ <20190925091143.15468-1-lukma@denx.de>
+ <20190925091143.15468-2-lukma@denx.de>
 MIME-Version: 1.0
-In-Reply-To: <a7e82545-141b-7496-f0f1-dadbe05565f0@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfERSPoQyAvf5cEaQ19pJx+nQOpyDj770YEWzMb6Rn499daZnpOJjrGH3s8dOHl2ItwJAb/kLHAT81WqgjkM4yqDcTIyWxq1yBCMiInQ4kupACO4El6Iw
- sK5GRr2Baio8DUxpJqHB80zUsi/x9j17KFqjEaYHhNoRE6yhgfs712g/xYQiYCwaNiyD7KLsktIl7CQMUP2kJMdmz8C6I38YPwONp/7a1hS7g+QwCOAhryF5
- M4gjf14NiLj8c6Gu+rIyD9AVQ3ENgp6AjvsPzluV0psnRlzojxnIHPzZuh9KiJUDLhy1fqCUUaH1GZCNu+E6RzXLXn2RuawS4bnk/QqWNDs=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xzV2nyj/vUZRUtI2"
+Content-Disposition: inline
+In-Reply-To: <20190925091143.15468-2-lukma@denx.de>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 6:29 PM, Helen Koike wrote:
-> Hi Hans
-> 
-> On 9/25/19 12:17 PM, Hans Verkuil wrote:
->> On 9/25/19 5:09 PM, Helen Koike wrote:
->>> Make it clear in the documentation that V4L2_CTRL_FLAG_READ_ONLY doesn't
->>> conflict with V4L2_CTRL_FLAG_WRITE_ONLY. Also make it clear that
->>> if both are combined then the control has read and write permissions.
->>
->> That doesn't look right.
->>
->> This is the test in v4l2-compliance:
->>
->> __u32 rw_mask = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY;
->>
->> if ((fl & rw_mask) == rw_mask)
->> 	return fail("can't read nor write this control\n");
->>
->> If both flags are set, then a fail is reported.
->>
->> Did you mis-read?
->>
->> Setting both flags makes no sense.
-> 
-> Maybe I misunderstood the V4L2_CTRL_TYPE_CTRL_CLASS, from v4l2-compliance:
-> 
-> 	case V4L2_CTRL_TYPE_CTRL_CLASS:
-> 		if (fl != (V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY))
-> 			return fail("invalid flags for control class\n");
-> 
-> I was confused why vivid was using both flags in vivid_ctrl_class (and also the debayer patch that was following this model).
-> 
-> Why both flags are expected when this type is used?
 
-Ah, now I understand. This is specific to control classes: such controls cannot
-be read nor written. They just provide a name for the control class, but both
-G_CTRL and S_CTRL should fail.
+--xzV2nyj/vUZRUtI2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So this specific combination of flags is specific to control classes only.
+On Wed, Sep 25, 2019 at 11:11:42AM +0200, Lukasz Majewski wrote:
+> This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
+> in the slave mode (like NXP's dspi driver for Vybrid SoC).
 
-This works because a 'get' will fail if WRITE_ONLY is set, and a 'set' will fail
-if READ_ONLY is set. Setting both flags will cause both 'get' and 'set' to fail.
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
 
-It is admittedly a bit confusing.
+That said I'll handle this this one time.
 
-Regards,
+--xzV2nyj/vUZRUtI2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Hans
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Thanks,
-> Helen
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>>
->>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->>>
->>> ---
->>> Hi,
->>>
->>> v4l2-compliance expects both flags for read and write permissions, so I
->>> would like to make it clear in the docs.
->>> Please let me know if this is not the case.
->>>
->>> Thanks
->>> Helen
->>> ---
->>>  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
->>> index a3d56ffbf4cc..1d3aecdf679f 100644
->>> --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
->>> +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
->>> @@ -500,6 +500,11 @@ See also the examples in :ref:`control`.
->>>        - 0x0004
->>>        - This control is permanently readable only. Any attempt to change
->>>  	the control will result in an ``EINVAL`` error code.
->>> +
->>> +	.. note::
->>> +
->>> +	   If combined with ``V4L2_CTRL_FLAG_WRITE_ONLY``, then both, read
->>> +	   and write are allowed.
->>>      * - ``V4L2_CTRL_FLAG_UPDATE``
->>>        - 0x0008
->>>        - A hint that changing this control may affect the value of other
->>> @@ -523,6 +528,11 @@ See also the examples in :ref:`control`.
->>>  	where writing a value will cause the device to carry out a given
->>>  	action (e. g. motor control) but no meaningful value can be
->>>  	returned.
->>> +
->>> +	.. note::
->>> +
->>> +	   If combined with ``V4L2_CTRL_FLAG_READ_ONLY``, then both, read
->>> +	   and write are allowed.
->>>      * - ``V4L2_CTRL_FLAG_VOLATILE``
->>>        - 0x0080
->>>        - This control is volatile, which means that the value of the
->>>
->>
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2LmXQACgkQJNaLcl1U
+h9AX+wf/YRDipet4jypZCYH78t9sIO4yBQwRzjv9DLVcymB1XijNG10pbEZJZ2jt
+kMBpgC6UkBZGYB8UygjYvzMdenYZgbzSa0rV013H2GaWwVzInVdPF0xJ6/uDvVak
+9CZD+ZzYg3HqCBOPvzCXa2kPVvc2KmCJttjRB37QXaGzrEWEvSjbaSfszL2dIuk3
+E3xCNU6Y+noyIjwSmrKL0WxSHwdUx4ldAaOWdPFdAL14+yGNMQbTCXwP3WdC35DB
+tRaO09BGacJvbP3SVVTvr4EGG6Qi2oFYEHaUpCWMtSJWYwzxA4YGNc7FgqCiLaO0
+MzP6qGgidGi4lPuWomspXMyRPUBKmg==
+=QKDX
+-----END PGP SIGNATURE-----
 
+--xzV2nyj/vUZRUtI2--
