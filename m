@@ -2,165 +2,407 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC7EC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0F2C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BA9205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dHL0EUAP"
+	by mail.kernel.org (Postfix) with ESMTP id 78586205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569449803;
+	bh=rp23T1+4Nb/S7Kct4aK3CDCRYTwEaeJlHrW9PrpkDLE=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=dnUSZkFslgIkuv+ghFhUe1ipHEZIe+bat9QjDMbI6pVRkyDIXB/ptohqJKCiDdNj7
+	 bwezgBNvVWiy51zMxDGiEHMsP/34pAsbox9uz4SdlmQW/tIgJHr/M6sfm8CIpFH2HY
+	 YZD9itB8pEWWm3K78NOFaj1vYVhh1oBpDrHK97qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfIYWQX (ORCPT
+        id S1729150AbfIYWQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:16:23 -0400
-Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:6166
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728277AbfIYWQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:16:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sot1f9Y58IdYsy7lGHFtc8ONOqwUEnnekosvr0l4xZ36XNRPlpDNHz4qG2FVJr6zBbvWlNQUNgKMMpoCbQ9br4bNt/MQmFrKxrEm8AMQEUwNffmk0q35IgSfmOhUGb4OSXpvXEtYNdd7pqWEgZvO2tyuzaAWTRyEylDvCPwmqdlXq8K7qYxXi4/f7yHDMJfDXYzqbk3XYCa8+JpT9J2A6QcIMtI6r/W4rc17MZUmHBCm4UCEbdULIBIAvFF9M1Cs7btxjR6eWJi5VCsqe2lDTLjciDp+n53sU84XTt71cB/meeaREwaN3BNl81ESSjbAZa/5bd9US2T2uSYIP8xdqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
- b=Sy3ZY81IM4cdJLQDAxPgh2krV4yIm4JO9fr8IJaP+wPeOc8CB2q+jqpxEpIR9K/ce0s9dZIsNZcjZSSf0g4imfvV2/9rpvbFafCJHQeI25YJXaqu0+hbsA4q2K0qPUdjORcjZ+7mcs19OnNtgZPrCR6C72xQwgzLVwlf8JC4kIyNuo66/3JQjIaNRK2wwk6GV/qefbvVjlXhVyt8Segez39EdjQ3Bno/NM+j/6UMZFCILBF0GS3ntsZB1I9VSTdtLFLnce2mg99Pl+lbMPxQmjMH8K9mgJ+j2sA5ngzl65CJlVIETcV0YWXet1idSMZpC9yNk5ajriCnlXPOjve53w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
- b=dHL0EUAPjye7GPKMoG8MujPyl4fCkLYwTH33bMB5Rb2f6M5XK8M51aXMCcA9uTPF6ECJeA2xTJt9KLDRcXfoxlFXUxSjl75crwfFPXyJOcxSjWkCprH8FFFAtA9C19SRBd/Diz7vPL54wvvHYSrlSLH4YsZBcHunGYxriPqTEyw=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Wed, 25 Sep 2019 22:15:18 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 22:15:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kbuild test robot <lkp@intel.com>
-CC:     "kbuild-all@01.org" <kbuild-all@01.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v2] scsi: storvsc: Add the support of hibernation
-Thread-Topic: [PATCH v2] scsi: storvsc: Add the support of hibernation
-Thread-Index: AQHVc+yzKPLAAiKv9kWlGVY81JBAn6c888eg
-Date:   Wed, 25 Sep 2019 22:15:18 +0000
-Message-ID: <PU1P153MB0169E8F4FF7FAB990A10954ABF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1569442244-16726-1-git-send-email-decui@microsoft.com>
- <201909260511.qkZEo9lk%lkp@intel.com>
-In-Reply-To: <201909260511.qkZEo9lk%lkp@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:15:15.9530993Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1caed55-c678-4d8d-9f8d-ec8d6f3aecd9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb851f3f-cf5b-4736-7622-08d74205d956
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0137:|PU1P153MB0137:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0137F6898304D73C97B1E707BF870@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(10290500003)(478600001)(6916009)(54906003)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(55016002)(99286004)(22452003)(10090500001)(5024004)(316002)(256004)(86362001)(14444005)(9686003)(8990500004)(71200400001)(71190400001)(33656002)(5660300002)(52536014)(107886003)(6246003)(2906002)(6116002)(4326008)(14454004)(102836004)(6436002)(305945005)(53546011)(6506007)(186003)(46003)(7736002)(229853002)(25786009)(476003)(7696005)(76176011)(486006)(81166006)(81156014)(8676002)(11346002)(8936002)(74316002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MU1b1zrHJuP1rmyul436nE/3U8SnUrwIIvYG/zBMeqJ45JUpaQhfC5/7CIGspkCj26KhHamsxotZoPuhiS8GJnB69x9dFftWgD4hTk1ZqezXsdIruUvj+QqEQ212W3gXtBum+4nfNPvyDMJlhcvz0GYfjj1UfmW/BXXiFK9Xv7/VWmhwdJgjPPMGlnUtlVNUOtFpzcKm+SBvoXYkUu4qBxg52US+Tz/MRdnGVTAjbiaacXySYbjOJ2Fo0kB1QH5b+Gr3Z6ZAYiOBmGlHFBl0RpZr2igKAuzWA2ES0dcWOJ0JVdbL3AusTzWUTfL9XO070K6cSK+SC5QN1jfGLu/B4wBgDlcKRMZ4wM1Vp997j/dns8JzLW57X6OBjtVfbpjWbo/++fSB+xXHMCqjeVyqHsHQsPErVnNuwsN6eMhP9PE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Sep 2019 18:16:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41467 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbfIYWQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:16:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id r26so1040229ioh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=w4gadLLHs2A9nM8uLns+2A3TjlnvTrDdFnbGeq+CsP4=;
+        b=JeYNTYcrgQ88EP1K7ijtOF8BR15gKOoBwgiHSJxYfjZv39su5wmaUtIA2lUAs6Fgpq
+         Ga+TJJMh6RWZYdtEC7iJRI8v7VkH6zgwRBI5v11tFnViVHAniUzCa8VtxX1BEghWBeUj
+         jDsAMDK0W66VB16+9c5b5g5EEaGUOmCl+meG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=w4gadLLHs2A9nM8uLns+2A3TjlnvTrDdFnbGeq+CsP4=;
+        b=s0dJBMBjXvNBJn6RaMZLClpIS14c+sYwj3VKlSAZ03clfBs+5SfAPMMgGuth5Qv+U+
+         TV0LFAfhAd/yg+eC2DEaubuYCkWX7FFTfvkHwn52tjbxFw/zAh050ssPeuwXeMp6NdSb
+         Hk2xqlS7O2VF1wgzJGIZq1IyInFQn1aVDrQNZFLEI8oJZqlS5V4fmYeVof85xDmNtJxU
+         4YH0xVGeHvWg1Jyh8D9D5f5MIekuKNtNY3WH1RjhZltPaDzdewsRLaaeJkqE690qfNxu
+         N4b5HddNDS6+OhPecUjsvmAeCyRdP2blCV7nd9nsR9HJmOhU1SlD1tZSxZ6HYlYTOi2P
+         8t0w==
+X-Gm-Message-State: APjAAAVRiXYE9VsppA6ktXyBvvD7JvZIpspL+N+y9jXpjxJHadw5mRmJ
+        h89ptonOBZ5HOPEjYcQXlw5A0A==
+X-Google-Smtp-Source: APXvYqzb5nHtvVFhHQATwcjL856t6gAyXNURP86aq70L1aRDf2FhtPOMIx/JLApY8BN4tyO1fckUMw==
+X-Received: by 2002:a5d:8f92:: with SMTP id l18mr249347iol.143.1569449799910;
+        Wed, 25 Sep 2019 15:16:39 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g75sm69755ila.43.2019.09.25.15.16.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 15:16:39 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest update for Linux 5.4-rc1 (minus kunit)
+Message-ID: <20820aaa-8555-d981-6f31-d872da9dd965@linuxfoundation.org>
+Date:   Wed, 25 Sep 2019 16:16:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb851f3f-cf5b-4736-7622-08d74205d956
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:15:18.0618
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6JiFNJj6MxeG2cl5UAIrFA424cvgEVzz3sQENaahJ7Z/gr9AmiKPklCm8jyx/Yzi5YUoK+jSUhQN6VI1NirdQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
+Content-Type: multipart/mixed;
+ boundary="------------36B1E5FF27D1C8EAF5C60560"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: kbuild test robot <lkp@intel.com>
-> Sent: Wednesday, September 25, 2019 2:55 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: kbuild-all@01.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; sashal@kernel.org; jejb@linux.ibm.com;
-> martin.petersen@oracle.com; linux-hyperv@vger.kernel.org;
-> linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Michael Kelley
-> <mikelley@microsoft.com>; Dexuan Cui <decui@microsoft.com>
-> Subject: Re: [PATCH v2] scsi: storvsc: Add the support of hibernation
->=20
-> Hi Dexuan,
->=20
-> Thank you for the patch! Yet something to improve:
->=20
-> [auto build test ERROR on mkp-scsi/for-next]
-> [cannot apply to v5.3 next-20190924]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see
-> [...snipped...]
-> config: x86_64-rhel (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Dx86_64
->=20
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
-> All errors (new ones prefixed by >>):
->=20
-> >> drivers//scsi/storvsc_drv.c:1981:3: error: 'struct hv_driver' has no m=
-ember
-> named 'suspend'
->      .suspend =3D storvsc_suspend,
->       ^~~~~~~
+This is a multi-part message in MIME format.
+--------------36B1E5FF27D1C8EAF5C60560
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch depends on the below patch in Linus's tree (today):
-271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
- for hibernation")
-So, we don't really have an issue here.
+Hi Linus,
 
-The mkp-scsi/for-next branch needs to do a merge with Linus's master branch=
-.
+Please pull the following Kselftest update for Linux 5.4-rc1 (minus kunit).
 
-Thanks,
--- Dexuan
+This Kselftest update for Linux 5.4-rc1 consists of several fixes to
+existing tests.
+
+diff is attached.
+
+This pull has just the ksleftest patches I sent in my previous pull
+request. I dropped the KUnit patches and rebased.
+
+I will send another pull request for the KUnit work later on this
+week.
+
+Please note that there is conflict between
+
+tools/testing/selftests/tpm2/Makefile
+
+between commit:
+
+   3fb2179b0f3553a ("selftests/tpm2: Add the missing TEST_FILES assignment")
+
+from the tpmdd tree and commit:
+
+   d04e26067d13f01 ("selftests: tpm2: install python files")
+
+Please take the fix from kselftest tree which is the correct
+version for this change.
+
+d04e26067d13f01 ("selftests: tpm2: install python files")
+
+Please let me know if you have any questions and/or concerns.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+
+The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+
+   Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.4-rc1.1
+
+for you to fetch changes up to 721cb3c8bc8890e824b7be53bf951960ff7811f9:
+
+   selftests: tpm2: install python files (2019-09-23 08:33:16 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.4-rc1.1
+
+This Kselftest update for Linux 5.4-rc1 consists of fixes to existing
+tests.
+
+----------------------------------------------------------------
+Anders Roxell (2):
+       selftests: livepatch: add missing fragments to config
+       selftests: tpm2: install python files
+
+George G. Davis (2):
+       selftests: watchdog: Add optional file argument
+       selftests: watchdog: cleanup whitespace in usage options
+
+Ilya Leoshkevich (1):
+       selftests: use "$(MAKE)" instead of "make"
+
+Masanari Iida (1):
+       selftest/ftrace: Fix typo in trigger-snapshot.tc
+
+Tycho Andersen (1):
+       selftests/seccomp: fix build on older kernels
+
+  tools/testing/selftests/Makefile                   | 22 ++++++------
+  .../ftrace/test.d/trigger/trigger-snapshot.tc      |  2 +-
+  tools/testing/selftests/livepatch/config           |  2 ++
+  tools/testing/selftests/seccomp/seccomp_bpf.c      |  5 +++
+  tools/testing/selftests/tpm2/Makefile              |  1 +
+  tools/testing/selftests/watchdog/watchdog-test.c   | 41 
++++++++++++++++-------
+  6 files changed, 48 insertions(+), 25 deletions(-)
+----------------------------------------------------------------
+
+--------------36B1E5FF27D1C8EAF5C60560
+Content-Type: text/x-patch;
+ name="linux-kselftest-5.4-rc1.1.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.4-rc1.1.diff"
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 25b43a8c2b15..c3feccb99ff5 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -126,9 +126,9 @@ endif
+ # in the default INSTALL_HDR_PATH usr/include.
+ khdr:
+ ifeq (1,$(DEFAULT_INSTALL_HDR_PATH))
+-	make --no-builtin-rules ARCH=$(ARCH) -C $(top_srcdir) headers_install
++	$(MAKE) --no-builtin-rules ARCH=$(ARCH) -C $(top_srcdir) headers_install
+ else
+-	make --no-builtin-rules INSTALL_HDR_PATH=$$BUILD/usr \
++	$(MAKE) --no-builtin-rules INSTALL_HDR_PATH=$$BUILD/usr \
+ 		ARCH=$(ARCH) -C $(top_srcdir) headers_install
+ endif
+ 
+@@ -136,35 +136,35 @@ all: khdr
+ 	@for TARGET in $(TARGETS); do		\
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+ 		mkdir $$BUILD_TARGET  -p;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;\
+ 	done;
+ 
+ run_tests: all
+ 	@for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET run_tests;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET run_tests;\
+ 	done;
+ 
+ hotplug:
+ 	@for TARGET in $(TARGETS_HOTPLUG); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;\
+ 	done;
+ 
+ run_hotplug: hotplug
+ 	@for TARGET in $(TARGETS_HOTPLUG); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET run_full_test;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET run_full_test;\
+ 	done;
+ 
+ clean_hotplug:
+ 	@for TARGET in $(TARGETS_HOTPLUG); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
+ 	done;
+ 
+ run_pstore_crash:
+-	make -C pstore run_crash
++	$(MAKE) -C pstore run_crash
+ 
+ # Use $BUILD as the default install root. $BUILD points to the
+ # right output location for the following cases:
+@@ -184,7 +184,7 @@ ifdef INSTALL_PATH
+ 	install -m 744 kselftest/prefix.pl $(INSTALL_PATH)/kselftest/
+ 	@for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET INSTALL_PATH=$(INSTALL_PATH)/$$TARGET install; \
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET INSTALL_PATH=$(INSTALL_PATH)/$$TARGET install; \
+ 	done;
+ 
+ 	@# Ask all targets to emit their test scripts
+@@ -203,7 +203,7 @@ ifdef INSTALL_PATH
+ 		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
+ 		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
+ 		echo -n "run_many" >> $(ALL_SCRIPT); \
+-		make -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
++		$(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
+ 		echo "" >> $(ALL_SCRIPT);	    \
+ 		echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
+ 	done;
+@@ -216,7 +216,7 @@ endif
+ clean:
+ 	@for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		make OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
+ 	done;
+ 
+ .PHONY: khdr all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
+index 7717c0a09686..ac738500d17f 100644
+--- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-snapshot.tc
+@@ -28,7 +28,7 @@ if [ -z "$FEATURE" ]; then
+     exit_unsupported
+ fi
+ 
+-echo "Test snapshot tigger"
++echo "Test snapshot trigger"
+ echo 0 > snapshot
+ echo 1 > events/sched/sched_process_fork/enable
+ ( echo "forked")
+diff --git a/tools/testing/selftests/livepatch/config b/tools/testing/selftests/livepatch/config
+index 0dd7700464a8..ad23100cb27c 100644
+--- a/tools/testing/selftests/livepatch/config
++++ b/tools/testing/selftests/livepatch/config
+@@ -1 +1,3 @@
++CONFIG_LIVEPATCH=y
++CONFIG_DYNAMIC_DEBUG=y
+ CONFIG_TEST_LIVEPATCH=m
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 6ef7f16c4cf5..7f8b5c8982e3 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -199,6 +199,11 @@ struct seccomp_notif_sizes {
+ };
+ #endif
+ 
++#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
++#define PTRACE_EVENTMSG_SYSCALL_ENTRY	1
++#define PTRACE_EVENTMSG_SYSCALL_EXIT	2
++#endif
++
+ #ifndef seccomp
+ int seccomp(unsigned int op, unsigned int flags, void *args)
+ {
+diff --git a/tools/testing/selftests/tpm2/Makefile b/tools/testing/selftests/tpm2/Makefile
+index 9dd848427a7b..1a5db1eb8ed5 100644
+--- a/tools/testing/selftests/tpm2/Makefile
++++ b/tools/testing/selftests/tpm2/Makefile
+@@ -2,3 +2,4 @@
+ include ../lib.mk
+ 
+ TEST_PROGS := test_smoke.sh test_space.sh
++TEST_PROGS_EXTENDED := tpm2.py tpm2_tests.py
+diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
+index c2333c78cf04..afff120c7be6 100644
+--- a/tools/testing/selftests/watchdog/watchdog-test.c
++++ b/tools/testing/selftests/watchdog/watchdog-test.c
+@@ -19,7 +19,7 @@
+ 
+ int fd;
+ const char v = 'V';
+-static const char sopts[] = "bdehp:t:Tn:NL";
++static const char sopts[] = "bdehp:t:Tn:NLf:";
+ static const struct option lopts[] = {
+ 	{"bootstatus",          no_argument, NULL, 'b'},
+ 	{"disable",             no_argument, NULL, 'd'},
+@@ -31,6 +31,7 @@ static const struct option lopts[] = {
+ 	{"pretimeout",    required_argument, NULL, 'n'},
+ 	{"getpretimeout",       no_argument, NULL, 'N'},
+ 	{"gettimeleft",		no_argument, NULL, 'L'},
++	{"file",          required_argument, NULL, 'f'},
+ 	{NULL,                  no_argument, NULL, 0x0}
+ };
+ 
+@@ -69,16 +70,19 @@ static void term(int sig)
+ static void usage(char *progname)
+ {
+ 	printf("Usage: %s [options]\n", progname);
+-	printf(" -b, --bootstatus    Get last boot status (Watchdog/POR)\n");
+-	printf(" -d, --disable       Turn off the watchdog timer\n");
+-	printf(" -e, --enable        Turn on the watchdog timer\n");
+-	printf(" -h, --help          Print the help message\n");
+-	printf(" -p, --pingrate=P    Set ping rate to P seconds (default %d)\n", DEFAULT_PING_RATE);
+-	printf(" -t, --timeout=T     Set timeout to T seconds\n");
+-	printf(" -T, --gettimeout    Get the timeout\n");
+-	printf(" -n, --pretimeout=T  Set the pretimeout to T seconds\n");
+-	printf(" -N, --getpretimeout Get the pretimeout\n");
+-	printf(" -L, --gettimeleft   Get the time left until timer expires\n");
++	printf(" -f, --file\t\tOpen watchdog device file\n");
++	printf("\t\t\tDefault is /dev/watchdog\n");
++	printf(" -b, --bootstatus\tGet last boot status (Watchdog/POR)\n");
++	printf(" -d, --disable\t\tTurn off the watchdog timer\n");
++	printf(" -e, --enable\t\tTurn on the watchdog timer\n");
++	printf(" -h, --help\t\tPrint the help message\n");
++	printf(" -p, --pingrate=P\tSet ping rate to P seconds (default %d)\n",
++	       DEFAULT_PING_RATE);
++	printf(" -t, --timeout=T\tSet timeout to T seconds\n");
++	printf(" -T, --gettimeout\tGet the timeout\n");
++	printf(" -n, --pretimeout=T\tSet the pretimeout to T seconds\n");
++	printf(" -N, --getpretimeout\tGet the pretimeout\n");
++	printf(" -L, --gettimeleft\tGet the time left until timer expires\n");
+ 	printf("\n");
+ 	printf("Parameters are parsed left-to-right in real-time.\n");
+ 	printf("Example: %s -d -t 10 -p 5 -e\n", progname);
+@@ -92,14 +96,20 @@ int main(int argc, char *argv[])
+ 	int ret;
+ 	int c;
+ 	int oneshot = 0;
++	char *file = "/dev/watchdog";
+ 
+ 	setbuf(stdout, NULL);
+ 
+-	fd = open("/dev/watchdog", O_WRONLY);
++	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
++		if (c == 'f')
++			file = optarg;
++	}
++
++	fd = open(file, O_WRONLY);
+ 
+ 	if (fd == -1) {
+ 		if (errno == ENOENT)
+-			printf("Watchdog device not enabled.\n");
++			printf("Watchdog device (%s) not found.\n", file);
+ 		else if (errno == EACCES)
+ 			printf("Run watchdog as root.\n");
+ 		else
+@@ -108,6 +118,8 @@ int main(int argc, char *argv[])
+ 		exit(-1);
+ 	}
+ 
++	optind = 0;
++
+ 	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
+ 		switch (c) {
+ 		case 'b':
+@@ -190,6 +202,9 @@ int main(int argc, char *argv[])
+ 			else
+ 				printf("WDIOC_GETTIMELEFT error '%s'\n", strerror(errno));
+ 			break;
++		case 'f':
++			/* Handled above */
++			break;
+ 
+ 		default:
+ 			usage(argv[0]);
+
+--------------36B1E5FF27D1C8EAF5C60560--
