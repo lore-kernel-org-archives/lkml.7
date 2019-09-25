@@ -2,157 +2,156 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A62C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14608C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2C32054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3432054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nF3zC9zO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437305AbfIYHhK (ORCPT
+        id S2393512AbfIYHhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:37:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59836 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391671AbfIYHhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:37:09 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B088307D96F;
-        Wed, 25 Sep 2019 07:37:08 +0000 (UTC)
-Received: from [10.36.117.14] (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFA3C5F9D2;
-        Wed, 25 Sep 2019 07:37:04 +0000 (UTC)
-Subject: Re: [PATCH v1] powerpc/pseries: CMM: Drop page array
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arun KS <arunks@codeaurora.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wed, 25 Sep 2019 03:37:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38720 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392973AbfIYHhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:37:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=de5nn/eSh/M6SfFOgTwUQaAn196rLscasGKtD5AUuUs=; b=nF3zC9zOKMeYOwaM5E9MTgulD
+        fRQB/uFnc0EG2pJZT4t4cBrswF5dlPePWEXSJGj4I0AkeuCU1jlCs0BklqrxF5dsJqx/825QDldMT
+        3HrJtOxS3kUQ6xuCegEDWM1ZszdRP4yGpmAZZatq7p0KZs8LfT4FWOY1vxbGPczM03BSTbGk8jXuj
+        DxWSHmMXinYQDTKoPK8ZNPgfX4i5MeGpntXTy8u4v27rX2ETeKQKqTxN54jEwzPk8SUrnaMyVGzeY
+        /NTC3qi7RSPVjpxirIQOxBJdwD3+0PgOzpeic1Rm9OUkPq/45Z/TFbnLe/Myejll2yLbrCQs2kTb3
+        zNrZ8KVgw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iD1qy-0003zh-FA; Wed, 25 Sep 2019 07:36:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8BCDD3012CF;
+        Wed, 25 Sep 2019 09:35:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7027A200D2661; Wed, 25 Sep 2019 09:36:43 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 09:36:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-References: <20190910163932.13160-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <a2c2f516-c37c-71f5-8f35-c357e8754b17@redhat.com>
-Date:   Wed, 25 Sep 2019 09:37:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, mpe@ellerman.id.au
+Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
+Message-ID: <20190925073643.GA4536@hirez.programming.kicks-ass.net>
+References: <20190903074718.GT2386@hirez.programming.kicks-ass.net>
+ <87k1apqqgk.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+ <874l1tp7st.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjvyRJEdativFqqGGxzSgWnc-m7b+B04iQBMcZV4uM=hA@mail.gmail.com>
+ <20190903200603.GW2349@hirez.programming.kicks-ass.net>
+ <20190903213218.GG4125@linux.ibm.com>
+ <87r24umryu.fsf@x220.int.ebiederm.org>
+ <20190906070736.GR2349@hirez.programming.kicks-ass.net>
+ <87woehek20.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20190910163932.13160-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 25 Sep 2019 07:37:09 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woehek20.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.19 18:39, David Hildenbrand wrote:
-> We can simply store the pages in a list (page->lru), no need for a
-> separate data structure (+ complicated handling). This is how most
-> other balloon drivers store allocated pages without additional tracking
-> data.
-> 
-> For the notifiers, use page_to_pfn() to check if a page is in the
-> applicable range. plpar_page_set_loaned()/plpar_page_set_active() were
-> called with __pa(page_address()) for now, I assume we can simply switch
-> to page_to_phys() here. The pfn_to_kaddr() handling is now mostly gone.
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Arun KS <arunks@codeaurora.org>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Only compile-tested. I hope the page_to_phys() thingy is correct and I
-> didn't mess up something else / ignoring something important why the array
-> is needed.
-> 
-> I stumbled over this while looking at how the memory isolation notifier is
-> used - and wondered why the additional array is necessary. Also, I think
-> by switching to the generic balloon compaction mechanism, we could get
-> rid of the memory hotplug notifier and the memory isolation notifier in
-> this code, as the migration capability of the inflated pages is the real
-> requirement:
-> 	commit 14b8a76b9d53346f2871bf419da2aaf219940c50
-> 	Author: Robert Jennings <rcj@linux.vnet.ibm.com>
-> 	Date:   Thu Dec 17 14:44:52 2009 +0000
-> 	
-> 	    powerpc: Make the CMM memory hotplug aware
-> 	
-> 	    The Collaborative Memory Manager (CMM) module allocates individual pages
-> 	    over time that are not migratable.  On a long running system this can
-> 	    severely impact the ability to find enough pages to support a hotplug
-> 	    memory remove operation.
-> 	[...]
-> 
-> Thoughts?
+On Mon, Sep 09, 2019 at 07:22:15AM -0500, Eric W. Biederman wrote:
 
-Ping, is still feature still used at all?
+> Let me see if I can explain my confusion in terms of task_numa_compare.
+> 
+> The function task_numa_comare now does:
+> 
+> 	rcu_read_lock();
+> 	cur = rcu_dereference(dst_rq->curr);
+> 
+> Then it proceeds to examine a few fields of cur.
+> 
+> 	cur->flags;
+>         cur->cpus_ptr;
+>         cur->numa_group;
+>         cur->numa_faults[];
+>         cur->total_numa_faults;
+>         cur->se.cfs_rq;
+> 
+> My concern here is the ordering between setting rq->curr and and setting
+> those other fields.  If we read values of those fields that were not
+> current when we set cur than I think task_numa_compare would give an
+> incorrect answer.
 
-If nobody can test, any advise on which HW I need and how to trigger it?
+That code is explicitly without serialization. One memory barrier isn't
+going to make any difference what so ever.
 
--- 
+Specifically, those numbers will change _after_ we make it current, not
+before.
 
-Thanks,
+> From what I can see pick_next_task_fair does not mess with any of
+> the fields that task_numa_compare uses.  So the existing memory barrier
+> should be more than sufficient for that case.
 
-David / dhildenb
+There should not be, but even if there is, load-balancing in general
+(very much including the NUMA balancing) is completely unserialized and
+prone to reading stale data at all times.
+
+This is on purpose; it minimizes the interference of load-balancing, and
+if we make a 'wrong' choice, the next pass can fix it up.
+
+> So I think I just need to write up a patch 4/3 that replaces the my
+> "rcu_assign_pointer(rq->curr, next)" with "RCU_INIT_POINTER(rq->curr,
+> next)".  And includes a great big comment to that effect.
+> 
+> 
+> 
+> Now maybe I am wrong.  Maybe we can afford to see data that was changed
+> before the task became rq->curr in task_numa_compare.  But I don't think
+> so.  I really think it is that full memory barrier just a bit earlier
+> in __schedule that is keeping us safe.
+> 
+> Am I wrong?
+
+Not in so far that we now both seem to agree on using
+RCU_INIT_POINTER(); but we're still disagreeing on why.
+
+My argument is that since we can already obtain any task_struct pointer
+through find_task_by_vpid() and friends, any access to its individual
+members must already have serialzation rules (or explicitly none, as for
+load-balancing).
+
+I'm viewing this as just another variant of find_task_by_vpid(), except
+we index by CPU instead of PID. There can be changes to task_struct
+between to invocations of find_task_by_vpid(), any user will have to
+somehow deal with that. This is no different.
+
+Take for instance p->cpus_ptr, it has very specific serialzation rules
+(which that NUMA balancer thing blatantly ignores), as do a lot of other
+task_struct fields.
+
+The memory barrier in question isn't going to help with any of that.
+
+Specifically, if we care about the consistency of the numbers changed by
+pick_next_task(), we must acquire rq->lock (of course, once we do that,
+we can immediately use rq->curr without further RCU use).
