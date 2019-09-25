@@ -2,237 +2,85 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE95CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7837CC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB73521655
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GKbaaXX0"
+	by mail.kernel.org (Postfix) with ESMTP id 53C1420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633714AbfIYDsY (ORCPT
+        id S2633833AbfIYDta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 23:48:24 -0400
-Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:37551
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2633617AbfIYDsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 23:48:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XdDA0qV6//k8DMgpbXRivbmZuXNgNGG26XdfoWtugBbx2tQIVJib4d1Z9tSsXutAXhwmOmvrrQDoYhwz33/5CRLtoAT+36v4O4BfwFx8r2qPFBIdK1dTlH2J7ljWXEGfeB6AyIS3NZi3P9NC8hiW/cgWu5p+uJwzCEf1k8q7vGvjB7D/ShKh1EG13oyp0QtAadc+Ns8MpPVe5UcPfu4hHibo/h9LZstmiRcP43Xwtn3r7gJMkHVl99FuY4iVVl32c423Dai2E73zIHahQ/jwPkF1/NeTBlWEJWYXGE8w9ihTv+8cuTMz/eWpw7Pct19434fN6GvE0RNdiBCqdF+s3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P1whAhsksq7C77hpD2V0lnRaxbKTlKq/xD4XwDZx3f4=;
- b=XTIQBKI63dv/IWPy1CBEFcluknaOD2F5JraTsmUMXhxoltk0jM1oENU/IxmEcjHJ5/eQhcTUHvgm9zM9LhECiingT7mRg0Du2YDyRI813DZj2ibubiG6sVsVCtPAD4QfyklPFmgo9at7FCOsYhCL7daQRt/F22tdiFJZc5SUUerrnuV5N/p/pDGAB0o47K2RD6Z3OfanmuTEIsGFEKYerrGljNrsUcDiwjHkhn65RGTOwV9WIjvMylytKLsziNTMv59vtQ3C72daHY8Pat8AG17d28hLUWcgihkwTzDwd7PHh9UFb1rxPEbC5Ucofy4f43LBjHb84woZHokt2ji8GA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P1whAhsksq7C77hpD2V0lnRaxbKTlKq/xD4XwDZx3f4=;
- b=GKbaaXX0AxVPexZatOBDv4CDCvXhzG0Sz3nRkNxf19eK6M6Jvvd8QKMBwSfd4sov9WpeOed7iH8oFQlnfJnTKnsGZuI2PKjWXcFjV7TDH1l37bABII7Yj4EilM6iLeA7qO+pTZMxHJukFXclZUEjnEyWfwL2pAT69dzRDZYkHB0=
-Received: from AM0PR04MB6676.eurprd04.prod.outlook.com (20.179.255.161) by
- AM0PR04MB6115.eurprd04.prod.outlook.com (20.179.35.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.26; Wed, 25 Sep 2019 03:48:20 +0000
-Received: from AM0PR04MB6676.eurprd04.prod.outlook.com
- ([fe80::5c26:3c5f:17e0:8038]) by AM0PR04MB6676.eurprd04.prod.outlook.com
- ([fe80::5c26:3c5f:17e0:8038%7]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
- 03:48:20 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Ran Wang <ran.wang_1@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Topic: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Index: AQHVcoOnKERg3NBKWEeinvrVMNtD66c6+UIwgADABICAAADF0IAABAEAgAAAioCAAAQ4AIAAADyw
-Date:   Wed, 25 Sep 2019 03:48:20 +0000
-Message-ID: <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [136.49.234.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 69fcba0e-bbdc-4e58-9ec4-08d7416b34fb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6115;
-x-ms-traffictypediagnostic: AM0PR04MB6115:|AM0PR04MB6115:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB61159C649CE7D7D83424335E8F870@AM0PR04MB6115.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(189003)(199004)(13464003)(316002)(14454004)(110136005)(2906002)(256004)(6636002)(9686003)(71200400001)(86362001)(99286004)(66066001)(5660300002)(52536014)(478600001)(229853002)(71190400001)(26005)(102836004)(6116002)(4326008)(81166006)(8936002)(476003)(54906003)(486006)(76116006)(76176011)(81156014)(25786009)(33656002)(74316002)(11346002)(446003)(8676002)(305945005)(2501003)(66946007)(14444005)(66556008)(7736002)(66476007)(6436002)(3846002)(55016002)(66446008)(6246003)(64756008)(186003)(6506007)(7696005)(53546011)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6115;H:AM0PR04MB6676.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hLvs/Yyo7BoS+hOewWFWtBfDuVr5qdDfyj7ds1ouATL33Zro9i+lhjZeFCefEgP6BOajINdkdbQm49nKJ67RigZ/czf7R1Hk21wfddbB5D2X0aDU3InrRQ7yqCIOmzCUnnYM4dI7M2/lY1EBrVMMuVcAjx0iX3yOi29cdF6J1BjNZOFekMy23caMTf1X8euA4udCmJ3jDFkp4pNiYuOEEzfxU9QgyVvhbI3dfu9WDY2NkiLySEexdZ+Erw3YWaU66QWo2rCk6/7xnxvhV+o4LE6Uj7xXL10GvlqQi1s7vpFQKEoOiDneDxxbg6gfMcY8n0CrH18Rb826GTaEV/ClSIc7fh40Z8XZ0fTQ3YBQInQQ0MIKYjQMVnV7/wXjTuwb7Bhy0rVk/+aa9xPFAv0P98cjkWotVll8/8+JkSK5faA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Sep 2019 23:49:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49084 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633617AbfIYDt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 23:49:29 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C3E718C891A;
+        Wed, 25 Sep 2019 03:49:25 +0000 (UTC)
+Received: from [10.72.12.148] (ovpn-12-148.pek2.redhat.com [10.72.12.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 559C2600C8;
+        Wed, 25 Sep 2019 03:49:19 +0000 (UTC)
+Subject: Re: [PATCH] virtio_mmio: remove redundant dev_err message
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, mst@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <1569309666-1437-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ccce7b48-d8a8-bbf8-7192-cefa77f51993@redhat.com>
+Date:   Wed, 25 Sep 2019 11:49:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69fcba0e-bbdc-4e58-9ec4-08d7416b34fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 03:48:20.1486
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uzbqAqI1a9Onnap4H+0cUuoYzidRYhxmPJ/jKJoCqA1R74gGp0DJ6C9qet6wYEmgxmLLqQak/Edy5MZCcOzKOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6115
+In-Reply-To: <1569309666-1437-1-git-send-email-dingxiang@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 25 Sep 2019 03:49:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/9/24 下午3:21, Ding Xiang wrote:
+> platform_get_irq already contains error message,
 
-> -----Original Message-----
-> From: Biwen Li
-> Sent: Tuesday, September 24, 2019 10:47 PM
-> To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
-> robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
-> <ran.wang_1@nxp.com>
-> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr=
--alt-
-> addr' property
->=20
-> > > > > > >
-> > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle an
-> > > > > > > errata
-> > > > > > > A-008646 on LS1021A
-> > > > > > >
-> > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > > > > ---
-> > > > > > > Change in v3:
-> > > > > > > 	- rename property name
-> > > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> > > > > > >
-> > > > > > > Change in v2:
-> > > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
-> > > > > > >
-> > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > > > > > > ++++++++++++++
-> > > > > > >  1 file changed, 14 insertions(+)
-> > > > > > >
-> > > > > > > diff --git
-> > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > index 5a33619d881d..157dcf6da17c 100644
-> > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example
-> Chips
-> > > > > > >  Optional properties:
-> > > > > > >   - little-endian : RCPM register block is Little Endian.
-> > > > > > > Without it
-> > RCPM
-> > > > > > >     will be Big Endian (default case).
-> > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC
-> > > > > > > + LS1021A,
-> > > > > >
-> > > > > > You probably should mention this is related to a hardware
-> > > > > > issue on LS1021a and only needed on LS1021a.
-> > > > > Okay, got it, thanks, I will add this in v4.
-> > > > > >
-> > > > > > > +   Must include n + 1 entries (n =3D #fsl,rcpm-wakeup-cells,=
- such as:
-> > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 +
-> > > > > > > + 1
-> > entries).
-> > > > > >
-> > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on
-> > > > > > an
-> > SoC.
-> > > > > > However you are defining an offset to scfg registers here.
-> > > > > > Why these two are related?  The length here should actually be
-> > > > > > related to the #address-cells of the soc/.  But since this is
-> > > > > > only needed for LS1021, you can
-> > > > > just make it 3.
-> > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
-> > > > > device node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
-> > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
-> > IPPDEXPCR1).
-> > > > > But because of the hardware issue on LS1021A, I need store the
-> > > > > value of IPPDEXPCR registers to an alt address. So I defining an
-> > > > > offset to scfg registers, then RCPM driver get an abosolute
-> > > > > address from offset, RCPM driver write the value of IPPDEXPCR
-> > > > > registers to these abosolute addresses(backup the value of
-> > > > > IPPDEXPCR
-> > registers).
-> > > >
-> > > > I understand what you are trying to do.  The problem is that the
-> > > > new fsl,ippdexpcr-alt-addr property contains a phandle and an offse=
-t.
-> > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
-> > > You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/*
-> > > SCFG_SPARECR8 */
-> >
-> > No.  The #address-cell for the soc/ is 2, so the offset to scfg should
-> > be 0x0 0x51c.  The total size should be 3, but it shouldn't be coming
-> > from #fsl,rcpm-wakeup-cells like you mentioned in the binding.
-> Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with #addre=
-ss-cells
-> instead of #fsl,rcpm-wakeup-cells.
 
-Yes.
+Is this message contained in all possible error path? If not, it's 
+probably better to keep it as is.
 
-Regards,
-Leo
-> >
-> > > >
-> > > > > >
-> > > > > > > +   The first entry must be a link to the SCFG device node.
-> > > > > > > +   The non-first entry must be offset of registers of SCFG.
-> > > > > > >
-> > > > > > >  Example:
-> > > > > > >  The RCPM node for T4240:
-> > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
-> > > > > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > >  	};
-> > > > > > >
-> > > > > > > +The RCPM node for LS1021A:
-> > > > > > > +	rcpm: rcpm@1ee2140 {
-> > > > > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
-> > > 2.1+";
-> > > > > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
-> > > > > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
-> > > > > > > SCFG_SPARECR8 */
-> > > > > > > +	};
-> > > > > > > +
-> > > > > > > +
-> > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> > > > > > >  -------------------------------------------
-> > > > > > >  Required fsl,rcpm-wakeup property should be added to a
-> > > > > > > device node if the device
-> > > > > > > --
-> > > > > > > 2.17.1
+Thanks
 
+
+> so remove
+> the redundant dev_err message
+>
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> ---
+>   drivers/virtio/virtio_mmio.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index e09edb5..c4b9f25 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -466,10 +466,8 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>   	int irq = platform_get_irq(vm_dev->pdev, 0);
+>   	int i, err, queue_idx = 0;
+>   
+> -	if (irq < 0) {
+> -		dev_err(&vdev->dev, "Cannot get IRQ resource\n");
+> +	if (irq < 0)
+>   		return irq;
+> -	}
+>   
+>   	err = request_irq(irq, vm_interrupt, IRQF_SHARED,
+>   			dev_name(&vdev->dev), vm_dev);
