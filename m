@@ -2,56 +2,107 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB81C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383F8C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5895D20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2A620640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404960AbfIYLnS (ORCPT
+        id S2391203AbfIYLoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 07:43:18 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34678 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729986AbfIYLnS (ORCPT
+        Wed, 25 Sep 2019 07:44:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35805 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732107AbfIYLoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 07:43:18 -0400
-Received: from localhost (unknown [65.39.69.237])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9A808154EC89A;
-        Wed, 25 Sep 2019 04:43:16 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 13:43:14 +0200 (CEST)
-Message-Id: <20190925.134314.794543116027582950.davem@davemloft.net>
-To:     christophe.jaillet@wanadoo.fr
-Cc:     khc@pm.waw.pl, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] hdlc: Simplify code in 'pvc_xmit()'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190921061738.25326-1-christophe.jaillet@wanadoo.fr>
-References: <20190921061738.25326-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 25 Sep 2019 04:43:17 -0700 (PDT)
+        Wed, 25 Sep 2019 07:44:05 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iD5iC-0004n8-1R; Wed, 25 Sep 2019 11:44:00 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, tiwai@suse.com
+Cc:     linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v5 1/2] PCI: Add pci_pr3_present() helper to check Power Resource for D3hot
+Date:   Wed, 25 Sep 2019 19:43:53 +0800
+Message-Id: <20190925114353.25600-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190925113255.25062-2-kai.heng.feng@canonical.com>
+References: <20190925113255.25062-2-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Sat, 21 Sep 2019 08:17:38 +0200
+Add pci_pr3_present() to check whether the platform supplies _PR3 to
+tell us which power resources the device depends on when in D3hot. This
+information is useful to let drivers choose different runtime suspend
+behavior. A user will be add in next patch.
 
-> Use __skb_pad instead of rewriting it, this saves some LoC.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Compile tested only.
+This is mostly the same as nouveau_pr3_present().
 
-Please test this code and resubmit for net-next, thank you.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v5:
+- Add wording suggestion from Bjorn.
+v4:
+- Let caller to find its upstream port device.
+
+ drivers/pci/pci.c   | 16 ++++++++++++++++
+ include/linux/pci.h |  2 ++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e7982af9a5d8..d03f624d8928 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5856,6 +5856,22 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ 	return 0;
+ }
+ 
++bool pci_pr3_present(struct pci_dev *pdev)
++{
++	struct acpi_device *adev;
++
++	if (acpi_disabled)
++		return false;
++
++	adev = ACPI_COMPANION(&pdev->dev);
++	if (!adev)
++		return false;
++
++	return adev->power.flags.power_resources &&
++		acpi_has_method(adev->handle, "_PR3");
++}
++EXPORT_SYMBOL_GPL(pci_pr3_present);
++
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f9088c89a534..1d15c5d49cdd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2310,9 +2310,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+ 
+ void
+ pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
++bool pci_pr3_present(struct pci_dev *pdev);
+ #else
+ static inline struct irq_domain *
+ pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
++static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+ #endif
+ 
+ #ifdef CONFIG_EEH
+-- 
+2.17.1
+
