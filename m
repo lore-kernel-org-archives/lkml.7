@@ -2,94 +2,113 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E7CC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E23C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F740214D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569416871;
-	bh=z9U2u1eJm77iSS217DHe30P6Z27QGW02D0GUrC8Tqq8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ELg8UryuXJgTd+zwFjpKQD9ka08AMpGEXj8AFanQLmSPGE5AlYuyGvsIM4nJF/auo
-	 6dNiNaYw6akkgOeHzVJF+8rVEQdON453VaTjEBQTTExKwoMtuc1t+TPLBSqnfbx8bK
-	 byxsmGEUH8brRKcyCzXoxi/2H0Bi+LV56tzdABco=
+	by mail.kernel.org (Postfix) with ESMTP id 4843120640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406082AbfIYNHu (ORCPT
+        id S2391493AbfIYNJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 09:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60432 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 09:09:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:49008 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405791AbfIYNHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 09:07:50 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395B620640;
-        Wed, 25 Sep 2019 13:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569416869;
-        bh=z9U2u1eJm77iSS217DHe30P6Z27QGW02D0GUrC8Tqq8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ReGnkPpVh6OjQAOBCXxIsSyroDLXZKq4VGXm8qiXRWqf2gRJM+5iYY1M6sLuChI3+
-         3hnDcDM5+HuhGn/D7+C5S0GgR4U3ne2+M5gXRJVV84Jg5E1+BlH3HSMxuTJdtPnh3a
-         WhghRjpohCCKjsLUbcWRVXFqvZHNxI5kqAptmriw=
-Received: by mail-qt1-f179.google.com with SMTP id u40so6420388qth.11;
-        Wed, 25 Sep 2019 06:07:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGeq5iVt+48LZZXdpvCUe/GbKIx1SZH9oWCHTkhh5+wbYoS397
-        LouQAnealJ/H4MlfBSjDVkuZ+x4iCv9bs/lg8A==
-X-Google-Smtp-Source: APXvYqy8xSNSZuLq/5OS0tlsIcIHbHGo7t00kiTteAmoF+SyyYorxN89hVi0vNFSwJToBOy5sLycJNN4ZLxt3RK6Ds8=
-X-Received: by 2002:ad4:528b:: with SMTP id v11mr7322949qvr.200.1569416862333;
- Wed, 25 Sep 2019 06:07:42 -0700 (PDT)
+        id S2388199AbfIYNJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 09:09:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42D981570;
+        Wed, 25 Sep 2019 06:09:32 -0700 (PDT)
+Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 23B543F59C;
+        Wed, 25 Sep 2019 06:09:31 -0700 (PDT)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, ard.biesheuvel@linaro.org,
+        ndesaulniers@google.com, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] arm64: Allow disabling of the compat vDSO
+Date:   Wed, 25 Sep 2019 14:09:26 +0100
+Message-Id: <20190925130926.50674-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.23.0.rc0
 MIME-Version: 1.0
-References: <20190925084932.147971-1-paul.kocialkowski@bootlin.com> <20190925084932.147971-2-paul.kocialkowski@bootlin.com>
-In-Reply-To: <20190925084932.147971-2-paul.kocialkowski@bootlin.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Sep 2019 08:07:30 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJY+d9frxuxspvo2SQ=vpWMCAWZfMODA-jm_rKu1GOEaw@mail.gmail.com>
-Message-ID: <CAL_JsqJY+d9frxuxspvo2SQ=vpWMCAWZfMODA-jm_rKu1GOEaw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: Document the Xylon LogiCVC
- display controller
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 3:49 AM Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
->
-> The Xylon LogiCVC is a display controller implemented as programmable
-> logic in Xilinx FPGAs.
->
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  .../display/xylon,logicvc-display.yaml        | 314 ++++++++++++++++++
->  1 file changed, 314 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
+The compat vDSO building requires a cross-compiler than produces AArch32
+binaries, defined via CONFIG_CROSS_COMPILE_COMPAT_VDSO or the
+CROSS_COMPILE_COMPAT environment variable. If none of these is defined,
+building the kernel always prints a warning as there is no way to
+deselect the compat vDSO.
 
-Error: Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dts:17.1-6
-syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:321: recipe for target
-'Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dt.yaml'
-failed
-make[1]: *** [Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dt.yaml]
-Error 1
-Makefile:1282: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Add an arm64 Kconfig entry to allow the deselection of the compat vDSO.
+In addition, make it an EXPERT option, default n, until other issues
+with the compat vDSO are solved (64-bit only kernel headers included in
+user-space vDSO code, CC_IS_CLANG irrelevant to CROSS_COMPILE_COMPAT).
+
+Fixes: bfe801ebe84f ("arm64: vdso: Enable vDSO compat support")
+Cc: Will Deacon <will@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+
+It looks like you can't really win with the current compat vDSO logic.
+You either don't have a compat cross-compiler and you get a Makefile
+warning or you have one and a get a compiler warning (or failure)
+because of the 64-bit kernel headers included in 32-bit user-space code.
+
+"depends on BROKEN" for ARM64_COMPAT_VDSO also work for me instead of
+EXPERT. I'll leave it up to Will to decide but I'd like at least this
+patch in -rc2 (even better if everything else is fixed before the final
+5.4).
+
+Suggestions for future improvements of the compat vDSO handling:
+
+- replace the CROSS_COMPILE_COMPAT prefix with a full COMPATCC; maybe
+  check that it indeed produces 32-bit code
+
+- check whether COMPATCC is clang or not rather than CC_IS_CLANG, which
+  only checks the native compiler
+
+- clean up the headers includes; vDSO should not include kernel-only
+  headers that may even contain code patched at run-time
+
+ arch/arm64/Kconfig | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 866e05882799..83a9a78085c6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -110,7 +110,6 @@ config ARM64
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HARDIRQS_SW_RESEND
+ 	select HAVE_PCI
+@@ -1185,6 +1184,15 @@ config KUSER_HELPERS
+ 	  Say N here only if you are absolutely certain that you do not
+ 	  need these helpers; otherwise, the safe option is to say Y.
+ 
++config ARM64_COMPAT_VDSO
++	bool "Enable the 32-bit vDSO" if EXPERT
++	depends on !CPU_BIG_ENDIAN
++	select GENERIC_COMPAT_VDSO
++	help
++	  Enable the vDSO support for 32-bit applications. You would
++	  need to set the 32-bit cross-compiler prefix in
++	  CONFIG_CROSS_COMPILE_COMPAT_VDSO or the CROSS_COMPILE_COMPAT
++	  environment variable.
+ 
+ menuconfig ARMV8_DEPRECATED
+ 	bool "Emulate deprecated/obsolete ARMv8 instructions"
