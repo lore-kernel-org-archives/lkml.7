@@ -2,240 +2,197 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5BFC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF23C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76D921D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51EB21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fugNAyju"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Hv/iJ2r9";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Hv/iJ2r9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411828AbfIYF7j (ORCPT
+        id S2411839AbfIYF7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:59:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37671 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411815AbfIYF7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:59:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id u20so1949678plq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sixuJfcEsKxEyNW6NClPoa+el3r6rMOWUSS7IBto0XY=;
-        b=fugNAyjuuul94jLQlDha8DZAOXx0OEgTyKPvUnQEcK8AvLJ/FyP+4aF+fDv1xZ+7dB
-         cL1ixpnjA7X8pyjxCmMGwBC10bTNlgxg3Y6YgN24yvXDsn5taqBjkvHUU2R0hlz6+jWJ
-         Qh+re2BLHDPC6cusIbTsDAmCEwyOyH9NA7l9rdqVN+z2aqTDmjG0RqzSwt3Bp2iihG0s
-         7TmqF7wLopmIRMtPvUotA8ZmVgeVHCSjuQpQYP/cHRgHZcBw4/ULNN+xo5qfpY05sqZx
-         X68hklDqSibAix2Ol0HeEDkXK53MhPn+YRpYL8ll+hxM9XQlBc0f0oDmzl4ZdZSZP8ko
-         pHJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sixuJfcEsKxEyNW6NClPoa+el3r6rMOWUSS7IBto0XY=;
-        b=CSu8J8+SGS+A2J69UsjRgrWJCPanXlNbeI3sY+qrpDWZKKibe6bzpuMCd6ez/frsCM
-         iwrSYZDSZETmN9zmn7p1c8pLTZYyxgf2ALFUC0lY9AqVPL0ar+9+QCbK6Lhd/xbONCpZ
-         2M3MeMW/LESo/vwBK2Sm6FvU5e0fjGSlWegGylhofymvkSL+X47Io9IHrl3xN42qbRJE
-         lzt81muU+aGwXwmmlixJmeIC6J8U1+y2svWQM5tIRLVbpG3BUWjcxyzJEuVP6KHE7Bxn
-         ZP4k/Qem36XieM0EYkzEv/aCvm6pGpmBCapBHwMzE2IZS2Cs81jxsY/xgJyij1vxg8VJ
-         WtYg==
-X-Gm-Message-State: APjAAAVuUatWN+AIEhsYNQ8a9pFwbFoR9L2KyuV+bs8QbGAWZtX9BJ+w
-        oe+wDfkAyd+lnfxLFGMJgAY79Q==
-X-Google-Smtp-Source: APXvYqx7ulhyhAYLr9kjOcD6g1JpEuN670axDok3c12zNjsU6NkNSJN3yZGCTMd13XVgsr/OZTbVGQ==
-X-Received: by 2002:a17:902:850b:: with SMTP id bj11mr7394125plb.39.1569391177288;
-        Tue, 24 Sep 2019 22:59:37 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m2sm3836534pgc.19.2019.09.24.22.59.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 22:59:36 -0700 (PDT)
-Date:   Tue, 24 Sep 2019 22:59:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        David Dai <daidavid1@codeaurora.org>
-Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get()
- and reduce DT binding
-Message-ID: <20190925055933.GA2810@tuxbook-pro>
-References: <20190925054133.206992-1-swboyd@chromium.org>
+        Wed, 25 Sep 2019 01:59:48 -0400
+Received: from mail-eopbgr150081.outbound.protection.outlook.com ([40.107.15.81]:61585
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2411815AbfIYF7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:59:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m4/w0pL5IokLsy5MZI9XnBSldWZqNoC5W2AIqRQNc6U=;
+ b=Hv/iJ2r9E64mjWdCDZ0Gr4Ph2k1fgc0xwfNFRfEvaqF0K1re8Z+or/L1dlYd/TM0FjVfFh+liALDOQVmc6aKBOlGk5og89c/VRJGBbUgcqdYsY68mGG80zy0yZur3AytVFP2KhyLmQc5JQBLpkJJgfXem3SHN7eZq31TLHvcMmQ=
+Received: from VI1PR08CA0086.eurprd08.prod.outlook.com (2603:10a6:800:d3::12)
+ by HE1PR08MB2892.eurprd08.prod.outlook.com (2603:10a6:7:30::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Wed, 25 Sep
+ 2019 05:59:36 +0000
+Received: from AM5EUR03FT011.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::202) by VI1PR08CA0086.outlook.office365.com
+ (2603:10a6:800:d3::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.15 via Frontend
+ Transport; Wed, 25 Sep 2019 05:59:28 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT011.mail.protection.outlook.com (10.152.16.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Wed, 25 Sep 2019 05:59:27 +0000
+Received: ("Tessian outbound e4042aced47b:v33"); Wed, 25 Sep 2019 05:59:27 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 388c28d4e391fd87
+X-CR-MTA-TID: 64aa7808
+Received: from dce0bc606223.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.13.59])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 02F3B035-E903-4083-8DAB-E0D89493FA97.1;
+        Wed, 25 Sep 2019 05:59:22 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04lp2059.outbound.protection.outlook.com [104.47.13.59])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id dce0bc606223.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 25 Sep 2019 05:59:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V9BCPYMnm1fibs48XEBEXtDUXb33lt55PiwjjvmoGATIDvFnehvG0pVooR71HjYudDmh6JomnJfNPPcgUmWYoeis0DyLAfrRctIGuffLJPeHWk2cQp9VVQE5ITkXwhiM/y59UuN/AT4duTy4MH9MCpWNrIgpE8y5IOFxWwTnKR5ByrTRBJUfZWG4Fpu347CFvVvfDKpjNXQl1DWKD0sOyA1tgHFD6KZTnUYe+/Y0qzY0PsIrgFOrkHVvs2LO46gecrbCvl4qxdHskj9AWwpFVj79FUbMoR7BwfWgDihg7RDMD/X4ah85rnLtKy5N8KuHxUw61sfXGLd4H+CauUtOfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m4/w0pL5IokLsy5MZI9XnBSldWZqNoC5W2AIqRQNc6U=;
+ b=lcyxpV7+1Q2643jCY4bMRMopU0SO0XU5xOm6Ad+/a9kcnmOjd2TfbCNR6isZGalQ/97qD1DFvKrW5+Avbp7MG5ak3Hi+Og75IywYO79TBTJqt+Anam6wh3VB2EpYlGF/HxB+FLxRo6DCDVV0vYm19RFxasW1yxdxmimOJB6u0ymaZBPR9QlIP5VGXiH7kY6HcljHUMhA6j/gPM7QMQOOYudTCm3pn7TGUrbGbdipkPbLXGi9hPuIwsw3byviF4nbLsJqeIuoY+FGoUyQMsgxQrgSGye0mwG9KwZfpASxk6syU1XZpE/EQ04yuL/Uq6RrEYWTyx1Eb+pmufXKZ6iVyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m4/w0pL5IokLsy5MZI9XnBSldWZqNoC5W2AIqRQNc6U=;
+ b=Hv/iJ2r9E64mjWdCDZ0Gr4Ph2k1fgc0xwfNFRfEvaqF0K1re8Z+or/L1dlYd/TM0FjVfFh+liALDOQVmc6aKBOlGk5og89c/VRJGBbUgcqdYsY68mGG80zy0yZur3AytVFP2KhyLmQc5JQBLpkJJgfXem3SHN7eZq31TLHvcMmQ=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4829.eurprd08.prod.outlook.com (10.255.113.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Wed, 25 Sep 2019 05:59:19 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 05:59:19 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: prevent memory leak in
+ komeda_wb_connector_add
+Thread-Topic: [PATCH] drm/komeda: prevent memory leak in
+ komeda_wb_connector_add
+Thread-Index: AQHVc1n//vysXyMGDEaxrhE/kSCsmac75gEA
+Date:   Wed, 25 Sep 2019 05:59:19 +0000
+Message-ID: <20190925055912.GA27846@jamwan02-TSP300>
+References: <20190925043031.32308-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190925043031.32308-1-navid.emamdoost@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR06CA0023.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::35) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 7d5cf295-7e02-40c3-dd66-08d7417d864a
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4829;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4829:|VE1PR08MB4829:|HE1PR08MB2892:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR08MB2892494E06B92A15EF4B3233B3870@HE1PR08MB2892.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7691;OLM:7691;
+x-forefront-prvs: 01713B2841
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(346002)(136003)(376002)(39860400002)(396003)(189003)(199004)(229853002)(76176011)(9686003)(52116002)(11346002)(6512007)(8676002)(81166006)(6436002)(14454004)(3846002)(6116002)(25786009)(99286004)(486006)(256004)(55236004)(446003)(476003)(14444005)(33716001)(81156014)(102836004)(386003)(6506007)(8936002)(64756008)(66446008)(26005)(66476007)(186003)(6246003)(66556008)(6486002)(66946007)(5660300002)(478600001)(305945005)(58126008)(86362001)(7736002)(54906003)(33656002)(316002)(66066001)(2906002)(6916009)(4326008)(71200400001)(71190400001)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4829;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: oQiPdJDVvAQ3+raflbzjJOOD9f8nBPaVLgu2DYcwPxzytfhbrTK8eksX0b2V1xDX+bopQe6IhC6F7+1lCqOfypJu/H/HvthpiTPDTk+HiPTVgS4Af/uDuF7BHMHaACWeZ6/Ch7AuCH92rd38pYr9OjmyEr9WRKokbgt9xpv9MP0YIzCVSE/9dwqxl3CwU7nlmm54zFd4+VerN25QUo0WgLY7BosZeqKNhUN0LkKmwjNHTFC0Z7Luz4uNRsxlGzw+qa6JlCIUeCcF1TKKqaOF2y+Kh3Zl8ghgHR38t2OtPuK0VIpix3GangcgaLDRptrg2eprWUdydIFi1dwCQiWQcyYzdtrLtqsEYTs6U0XFqZmt7BIBNV/VgF9MIrNjY+V8f1HOYkCjJG59By4VfEStyzgq/cp1nr3c0aaS8rhCXO8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5AA98EFFC17CAA419B3A4DEC6035C371@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925054133.206992-1-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4829
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT011.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(39860400002)(136003)(396003)(346002)(199004)(189003)(66066001)(14454004)(54906003)(47776003)(6246003)(102836004)(22756006)(6862004)(99286004)(33716001)(4326008)(186003)(50466002)(26005)(446003)(316002)(11346002)(476003)(36906005)(486006)(58126008)(336012)(126002)(386003)(26826003)(14444005)(76176011)(63350400001)(25786009)(6506007)(478600001)(7736002)(356004)(33656002)(81156014)(81166006)(8676002)(3846002)(9686003)(6512007)(305945005)(6116002)(6486002)(97756001)(2906002)(5660300002)(46406003)(1076003)(8936002)(8746002)(229853002)(70206006)(86362001)(70586007)(76130400001)(23726003);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR08MB2892;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 58d60162-fcbb-485f-7d2c-08d7417d80fd
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:HE1PR08MB2892;
+NoDisclaimer: True
+X-Forefront-PRVS: 01713B2841
+X-Microsoft-Antispam-Message-Info: /FoTlk3qQa9dd00E004vrRhYqS7vjTDFhAvwgyPw0npjduI1LRvYdy4JQMKz2zv7AJGJYf3xHbNsdsh6c5q7Sc639T6RAdnB6ShaEHKDZSAmtye0tZt0syE8k4xYuwAaadoDGH1Mn46HZSMPp5xpBMAVfEFELTzZTHwnkyYdyTVjMTZ33ODwWAbOY3h+8L7gFVJ4i23sIigdvCgdfptFOTBeRGv7TXpgsNLBJ1f3BjnqqUpHskb0VKWkQxinTSWMQ4EbVTmO/I+83XnUO8mOeTGgxFhF9T8DzgfbbVdEvybnyYloUFwnDsmFDx8pDAt5OvTmVMsU9Du+Zfw+i1OqezqgeWlE7yW8rZjAwVEDk/oSqNszOeyTISQ9RK+/dBKMIa3Ala+iOFfkvus2xsfjOReTlgpiPSycz82foQzKdNI=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2019 05:59:27.5454
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d5cf295-7e02-40c3-dd66-08d7417d864a
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2892
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
-
-> I don't see any users of icc_get() in the kernel today, and adding them
-> doesn't make sense. That's because adding calls to that function in a
-> driver will make the driver SoC specific given that the arguments are
-> some sort of source and destination numbers that would typically be
-> listed in DT or come from platform data so they can match a global
-> numberspace of interconnect numbers. It would be better to follow the
-> approach of other kernel frameworks where the API is the same no matter
-> how the platform is described (i.e. platform data, DT, ACPI, etc.) and
-> swizzle the result in the framework to match whatever the device is by
-> checking for a DT node pointer or a fwnode pointer, etc. Therefore,
-> install icc_get() as the defacto API and make drivers use that instead
-> of of_icc_get() which implies the driver is DT specific when it doesn't
-> need to be.
-> 
-
-+1 on this part!
-
-> The DT binding could also be simplified somewhat. Currently a path needs
-> to be specified in DT for each and every use case that is possible for a
-> device to want. Typically the path is to memory, which looks to be
-> reserved for in the binding with the "dma-mem" named path, but sometimes
-> the path is from a device to the CPU or more generically from a device
-> to another device which could be a CPU, cache, DMA master, or another
-> device if some sort of DMA to DMA scenario is happening. Let's remove
-> the pair part of the binding so that we just list out a device's
-> possible endpoints on the bus or busses that it's connected to.
-> 
-> If the kernel wants to figure out what the path is to memory or the CPU
-> or a cache or something else it should be able to do that by finding the
-> node for the "destination" endpoint, extracting that node's
-> "interconnects" property, and deriving the path in software. For
-> example, we shouldn't need to write out each use case path by path in DT
-> for each endpoint node that wants to set a bandwidth to memory. We
-> should just be able to indicate what endpoint(s) a device sits on based
-> on the interconnect provider in the system and then walk the various
-> interconnects to find the path from that source endpoint to the
-> destination endpoint.
-> 
-
-But doesn't this implies that the other end of the path is always some
-specific node, e.g. DDR? With a single node how would you describe
-CPU->LLCC or GPU->OCIMEM?
-
-> Obviously this patch doesn't compile but I'm sending it out to start
-> this discussion so we don't get stuck on the binding or the kernel APIs
-> for a long time. It looks like we should be OK in terms of backwards
-> compatibility because we can just ignore the second element in an old
-> binding, but maybe we'll want to describe paths in different directions
-> (e.g. the path from the CPU to the SD controller may be different than
-> the path the SD controller takes to the CPU) and that may require
-> extending interconnect-names to indicate what direction/sort of path it
-> is. I'm basically thinking about master vs. slave ports in AXI land.
-> 
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: <linux-pm@vger.kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+On Tue, Sep 24, 2019 at 11:30:30PM -0500, Navid Emamdoost wrote:
+> In komeda_wb_connector_add if drm_writeback_connector_init fails the
+> allocated memory for kwb_conn should be released.
+>=20
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  .../bindings/interconnect/interconnect.txt    | 19 ++++---------------
->  include/linux/interconnect.h                  | 13 ++-----------
->  2 files changed, 6 insertions(+), 26 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> index 6f5d23a605b7..f8979186b8a7 100644
-> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> @@ -11,7 +11,7 @@ The interconnect provider binding is intended to represent the interconnect
->  controllers in the system. Each provider registers a set of interconnect
->  nodes, which expose the interconnect related capabilities of the interconnect
->  to consumer drivers. These capabilities can be throughput, latency, priority
-> -etc. The consumer drivers set constraints on interconnect path (or endpoints)
-> +etc. The consumer drivers set constraints on interconnect paths (or endpoints)
->  depending on the use case. Interconnect providers can also be interconnect
->  consumers, such as in the case where two network-on-chip fabrics interface
->  directly.
-> @@ -42,23 +42,12 @@ multiple paths from different providers depending on use case and the
->  components it has to interact with.
->  
->  Required properties:
-> -interconnects : Pairs of phandles and interconnect provider specifier to denote
-> -	        the edge source and destination ports of the interconnect path.
-> -
-> -Optional properties:
-> -interconnect-names : List of interconnect path name strings sorted in the same
-> -		     order as the interconnects property. Consumers drivers will use
-> -		     interconnect-names to match interconnect paths with interconnect
-> -		     specifier pairs.
-> -
-> -                     Reserved interconnect names:
-> -			 * dma-mem: Path from the device to the main memory of
-> -			            the system
-> +interconnects : phandle and interconnect provider specifier to denote
-> +	        the edge source for this node.
->  
->  Example:
->  
->  	sdhci@7864000 {
->  		...
-> -		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
-> -		interconnect-names = "sdhc-mem";
-> +		interconnects = <&pnoc MASTER_SDCC_1>;
+>  drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/d=
+rivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> index 2851cac94d86..75133f967fdb 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> @@ -166,8 +166,10 @@ static int komeda_wb_connector_add(struct komeda_kms=
+_dev *kms,
+>  					   &komeda_wb_encoder_helper_funcs,
+>  					   formats, n_formats);
+>  	komeda_put_fourcc_list(formats);
+> -	if (err)
+> +	if (err) {
+> +		kfree(kwb_conn);
+>  		return err;
+> +	}
 
-This example seems incomplete, as it doesn't describe the path between
-CPU and the config space, with this in place I think you need the
-interconnect-names.
+Hi Navid:
 
+Thank you for the patch.
 
-But with a single interconnect, the interconnect-names should be
-omitted, as done in other frameworks.
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
 
->  	};
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index d70a914cba11..e1ae704f5ab1 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -25,23 +25,14 @@ struct device;
->  
->  #if IS_ENABLED(CONFIG_INTERCONNECT)
->  
-> -struct icc_path *icc_get(struct device *dev, const int src_id,
-> -			 const int dst_id);
-> -struct icc_path *of_icc_get(struct device *dev, const char *name);
-> +struct icc_path *icc_get(struct device *dev, const char *name);
->  void icc_put(struct icc_path *path);
->  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->  void icc_set_tag(struct icc_path *path, u32 tag);
->  
->  #else
->  
-> -static inline struct icc_path *icc_get(struct device *dev, const int src_id,
-> -				       const int dst_id)
-> -{
-> -	return NULL;
-> -}
-> -
-> -static inline struct icc_path *of_icc_get(struct device *dev,
-> -					  const char *name)
-> +static inline struct icc_path *icc_get(struct device *dev, const char *name)
-
-I like this part, if mimics what's done in other frameworks and removes
-the ties to OF from the API.
-
-Regards,
-Bjorn
-
->  {
->  	return NULL;
->  }
-> 
-> base-commit: b5b3bd898ba99fb0fb6aed3b23ec6353a1724d6f
-> -- 
-> Sent by a computer through tubes
-> 
+> =20
+>  	drm_connector_helper_add(&wb_conn->base, &komeda_wb_conn_helper_funcs);
+> =20
+> --=20
+> 2.17.1
