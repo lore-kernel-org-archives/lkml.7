@@ -2,151 +2,188 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3FDC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF22C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9782146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7EE21D81
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTomjbEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406852AbfIYNo7 (ORCPT
+        id S2406882AbfIYNqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 09:44:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58004 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406650AbfIYNo5 (ORCPT
+        Wed, 25 Sep 2019 09:46:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51934 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406650AbfIYNqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 09:44:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 8EFA628BCCF
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     brcm80211-dev-list.pdl@broadcom.com
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Subject: [PATCH 2/2] brcmfmac: fix suspend/resume when power is cut off
-Date:   Wed, 25 Sep 2019 16:44:58 +0300
-Message-Id: <20190925134458.1413790-2-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190925134458.1413790-1-adrian.ratiu@collabora.com>
-References: <20190925134458.1413790-1-adrian.ratiu@collabora.com>
+        Wed, 25 Sep 2019 09:46:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so5752566wme.1;
+        Wed, 25 Sep 2019 06:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1/Kc/2vwe/MWcIEq574opB9VZ0KeBd39iKMn9f9wOnM=;
+        b=JTomjbEBqTVk6AiQ4QAg9u178HwdzgYAqM06AEjKwVdIirhgf52VyLgl0dnyFPEEZs
+         dy+iTYnHtUzqFKXS8tOozAsXIcmuzmIMsC3mMjkDwk071DKfh5YSg/ApOyVgn0Zpv/Df
+         eW7l9z36yVJJIWmWrytRY1txFkotV44p3wHyRggeLdBZ5aQS+Doze8flgwCvqn4/iLIh
+         b0qac38/MnVTwrazUjChDAze3H+TvMrH55eMXHhCJdbSIcFFi8/QKp4pdA/VYBV+PJqb
+         ukiJ4zInkzp2VuS8dus88BRWRzGb5g8UTV6jPMHrRs2GQbxOPtXwgrwtsolotkbbTwP9
+         1CSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1/Kc/2vwe/MWcIEq574opB9VZ0KeBd39iKMn9f9wOnM=;
+        b=Ky9xhSORIXML/12WlyWt1EpWSkUXxvT158IdJphF1TUT+SxLqXAlIWVtSeP5gQPA/w
+         UIwheCjaJl2r8vXEd6gVxB35FBLCzaTiezQt6Rq5GsiuVh23oT0y0CNCP77lCvXdxMYo
+         AY0ftOc56wni11mkI6OM6jk+/2Pic8HuJPQG7VckmcnqWfWhe7L80Nsz++TNvCJ9ZXhw
+         xUUNbipfTJyy6eson7l8VAVckdlnJuXPd2+kwUQwpmm8O23740aGqo4CPd5hrU8bKkeV
+         RMHFQBKU0nr6F79+ADz1pv11xJxrPK5g1c1sA0Iy4BKiBS7/SbZVNJ8MNIwf7rj0hR2C
+         Wryw==
+X-Gm-Message-State: APjAAAUVrdNA10gMnOibjKtMAgDmbyL6AehIQ3mbdhtgEifIvQ1Xf2qX
+        LAXzHoIaykKNINVG+84aB9z0EhZN
+X-Google-Smtp-Source: APXvYqzQh/XqU5mG5shn/4vH4eQCrwKReSEMGtlCyAcUO3EellvdrN56+ANHLNuu2keFF4xj/UDg5Q==
+X-Received: by 2002:a1c:d183:: with SMTP id i125mr8322398wmg.1.1569419172234;
+        Wed, 25 Sep 2019 06:46:12 -0700 (PDT)
+Received: from [10.0.20.253] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id w125sm6650515wmg.32.2019.09.25.06.46.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 06:46:10 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: For review: pidfd_send_signal(2) manual page
+To:     Daniel Colascione <dancol@google.com>
+References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
+ <87pnjr9rth.fsf@mid.deneb.enyo.de>
+ <20190923142325.jowzbnwjw7g7si7j@wittgenstein>
+ <90dd38d5-34b3-b72f-8e5a-b51f944f22fb@gmail.com>
+ <20190924195701.7pw2olbviieqsg5q@wittgenstein>
+ <b76adb4c-826b-6493-ba75-a9863066d3b1@gmail.com>
+ <CAKOZueuJ=En9=mtFvhpmsnjqMAOjVmffaVwwzpe=ieHemxH3mw@mail.gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <b2519fb3-8bf5-d821-ae48-dad4435330f4@gmail.com>
+Date:   Wed, 25 Sep 2019 15:46:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAKOZueuJ=En9=mtFvhpmsnjqMAOjVmffaVwwzpe=ieHemxH3mw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-brcmfmac assumed the wifi device always remains powered on and thus
-hardcoded the MMC_PM_KEEP_POWER flag expecting the wifi device to
-remain on even during suspend/resume cycles.
+Hello Daniel,
 
-This is not always the case, some appliances cut power to everything
-connected via SDIO for efficiency reasons and this leads to wifi not
-being usable after coming out of suspend because the device was not
-correctly reinitialized.
+On 9/24/19 11:08 PM, Daniel Colascione wrote:
+> On Tue, Sep 24, 2019 at 2:00 PM Michael Kerrisk (man-pages)
+> <mtk.manpages@gmail.com> wrote:
+>>
+>> Hello Christian,
+>>
+>>>>> If you're the parent of the process you can do this without CLONE_PIDFD:
+>>>>> pid = fork();
+>>>>> pidfd = pidfd_open();
+>>>>> ret = pidfd_send_signal(pidfd, 0, NULL, 0);
+>>>>> if (ret < 0 && errno == ESRCH)
+>>>>>     /* pidfd refers to another, recycled process */
+>>>>
+>>>> Although there is still the race between the fork() and the
+>>>> pidfd_open(), right?
+>>>
+>>> Actually no and my code is even too complex.
+>>> If you are the parent, and this is really a sequence that obeys the
+>>> ordering pidfd_open() before waiting:
+>>>
+>>> pid = fork();
+>>> if (pid == 0)
+>>>       exit(EXIT_SUCCESS);
+>>> pidfd = pidfd_open(pid, 0);
+>>> waitid(pid, ...);
+>>>
+>>> Then you are guaranteed that pidfd will refer to pid. No recycling can
+>>> happen since the process has not been waited upon yet (That is,
+>>
+>> D'oh! Yes, of course.
+> 
+> You still have a race if you're the parent and you have SIGCHLD set to
+> SIG_IGN though.
 
-So we check for the keep_power capability and if it's not present then
-we remove the device and probe it again during resume to mirror what's
-happening in hardware and ensure correct reinitialization in the case
-when MMC_PM_KEEP_POWER is not supported.
+Yes, thanks for reminding me of that (as did Christian also).
 
-Suggested-by: Gustavo Padovan <gustavo.padovan@collabora.com>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- .../broadcom/brcm80211/brcmfmac/bcmsdh.c      | 53 ++++++++++++++-----
- 1 file changed, 39 insertions(+), 14 deletions(-)
+>>> excluding special cases such as where you have a mainloop where a
+>>> callback reacts to a SIGCHLD event and waits on the child behind your
+>>> back and your next callback in the mainloop calls pidfd_open() while the
+>>> pid has been recycled etc.).
+> 
+> That's a pretty common case though, especially if you're a library.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index fc12598b2dd3..96fd8e2bf773 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -1108,7 +1108,8 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
- 	struct sdio_func *func;
- 	struct brcmf_bus *bus_if;
- 	struct brcmf_sdio_dev *sdiodev;
--	mmc_pm_flag_t sdio_flags;
-+	mmc_pm_flag_t pm_caps, sdio_flags;
-+	int ret = 0;
- 
- 	func = container_of(dev, struct sdio_func, dev);
- 	brcmf_dbg(SDIO, "Enter: F%d\n", func->num);
-@@ -1119,19 +1120,33 @@ static int brcmf_ops_sdio_suspend(struct device *dev)
- 	bus_if = dev_get_drvdata(dev);
- 	sdiodev = bus_if->bus_priv.sdio;
- 
--	brcmf_sdiod_freezer_on(sdiodev);
--	brcmf_sdio_wd_timer(sdiodev->bus, 0);
-+	pm_caps = sdio_get_host_pm_caps(func);
-+
-+	if (pm_caps & MMC_PM_KEEP_POWER) {
-+		/* preserve card power during suspend */
-+		brcmf_sdiod_freezer_on(sdiodev);
-+		brcmf_sdio_wd_timer(sdiodev->bus, 0);
-+
-+		sdio_flags = MMC_PM_KEEP_POWER;
-+		if (sdiodev->wowl_enabled) {
-+			if (sdiodev->settings->bus.sdio.oob_irq_supported)
-+				enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
-+			else
-+				sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
-+		}
-+
-+		if (sdio_set_host_pm_flags(sdiodev->func1, sdio_flags))
-+			brcmf_err("Failed to set pm_flags %x\n", sdio_flags);
- 
--	sdio_flags = MMC_PM_KEEP_POWER;
--	if (sdiodev->wowl_enabled) {
--		if (sdiodev->settings->bus.sdio.oob_irq_supported)
--			enable_irq_wake(sdiodev->settings->bus.sdio.oob_irq_nr);
--		else
--			sdio_flags |= MMC_PM_WAKE_SDIO_IRQ;
-+	} else {
-+		/* power will be cut so remove device, probe again in resume */
-+		brcmf_sdiod_intr_unregister(sdiodev);
-+		ret = brcmf_sdiod_remove(sdiodev);
-+		if (ret)
-+			brcmf_err("Failed to remove device on suspend\n");
- 	}
--	if (sdio_set_host_pm_flags(sdiodev->func1, sdio_flags))
--		brcmf_err("Failed to set pm_flags %x\n", sdio_flags);
--	return 0;
-+
-+	return ret;
- }
- 
- static int brcmf_ops_sdio_resume(struct device *dev)
-@@ -1139,13 +1154,23 @@ static int brcmf_ops_sdio_resume(struct device *dev)
- 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
- 	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
- 	struct sdio_func *func = container_of(dev, struct sdio_func, dev);
-+	mmc_pm_flag_t pm_caps = sdio_get_host_pm_caps(func);
-+	int ret = 0;
- 
- 	brcmf_dbg(SDIO, "Enter: F%d\n", func->num);
- 	if (func->num != 2)
- 		return 0;
- 
--	brcmf_sdiod_freezer_off(sdiodev);
--	return 0;
-+	if (!(pm_caps & MMC_PM_KEEP_POWER)) {
-+		/* bus was powered off and device removed, probe again */
-+		ret = brcmf_sdiod_probe(sdiodev);
-+		if (ret)
-+			brcmf_err("Failed to probe device on resume\n");
-+	} else {
-+		brcmf_sdiod_freezer_off(sdiodev);
-+	}
-+
-+	return ret;
- }
- 
- static const struct dev_pm_ops brcmf_sdio_pm_ops = {
+I presume that conventionally the only real resolution of this kind of
+problem is that the mainloop SIGCHLD call back has a waitpid() loop
+that (in a nonblocking fashion) loops checking each of the PIDs created
+by the mainloop, right?
+
+>>> A race could only appear in sequences where waiting happens before
+>>> pidfd_open():
+>>>
+>>> pid = fork();
+>>> if (pid == 0)
+>>>       exit(EXIT_SUCCESS);
+>>> waitid(pid, ...);
+>>> pidfd = pidfd_open(pid, 0);
+>>>
+>>> which honestly simply doesn't make any sense. So if you're the parent
+>>> and you combine fork() + pidfd_open() correctly things should be fine
+>>> without even having to verify via pidfd_send_signal() (I missed that in
+>>> my first mail.).
+>>
+>> Thanks for the additional detail.
+>>
+>> I added the following to the pidfd_open() page, to
+>> prevent people making the same thinko as me:
+>>
+>>        The following code sequence can be used to obtain a file  descrip‐
+>>        tor for the child of fork(2):
+>>
+>>            pid = fork();
+>>            if (pid > 0) {     /* If parent */
+>>                pidfd = pidfd_open(pid, 0);
+>>                ...
+>>            }
+>>
+>>        Even  if  the  child process has already terminated by the time of
+>>        the pidfd_open() call, the returned file descriptor is  guaranteed
+>>        to refer to the child because the parent has not yet waited on the
+>>        child (and therefore, the child's ID has not been recycled).
+> 
+> I'd prefer that sample code be robust in all cases.
+
+I'm not clear what you think is missing. Or do you mean that the code
+can't be robust in the face of (1) waitpid(-1) in another thread or an
+asynchronous SIGCHLD handler and (2) SIGCHLD disposition set to SIG_IGN?
+
+Thanks,
+
+Michael
+
 -- 
-2.23.0
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
