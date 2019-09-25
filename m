@@ -2,178 +2,135 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D8DC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD199C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D79214D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qWcsG6xY"
+	by mail.kernel.org (Postfix) with ESMTP id 8AB69207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440011AbfIYQx3 (ORCPT
+        id S2392181AbfIYQ4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:53:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41710 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437678AbfIYQx3 (ORCPT
+        Wed, 25 Sep 2019 12:56:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55528 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392097AbfIYQ4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:53:29 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q7so3870861pfh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/sojhQaKNfMwCzwlmCta8VLr7dMJZiKlxmvoLeV0xI=;
-        b=qWcsG6xYj8I2u4Z0FOvpRJNmoINmp4oKlfBLVJlJ+3y1cXOTmV26RTzmv1TyjCwR4h
-         eSVMBEcQ5GTnB42JC8NI47DTM62W5HYUDWGFkA8O/6wkOmn/ABJ179sISNie/gTCB67g
-         G59Fvn01qNJiBJStmIyr2B3fHwAzDpeAjOlwluiZL/UjWxt0cvVTykQqWP/k+Wa5m6FH
-         6upOHc69RCH6rdsvdDpAIxZTZXM7AJ5Am+zuiZ/upqPmRTsQTgGUzdXeE1sqepZ0Xaru
-         uD5CM3d4iHHoHKNhcjvU6Uc+6A1FLRxqjMKwcibKO2dob8tM7p83FTxxsdQh3sXYhJNX
-         9Fvg==
+        Wed, 25 Sep 2019 12:56:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id r13so433333ioj.22
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:56:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/sojhQaKNfMwCzwlmCta8VLr7dMJZiKlxmvoLeV0xI=;
-        b=SX6DeIeTOMVn7hcxsSiNcfUDsmod+sg2C9B9e/YE074JOy0unTkRjFQc3mmV7ff8J5
-         cGN3TIfM66BrO+K5jbchdu5StwIrM/5aZFEKa+TenTwSE7WWoSgrNVs/fIvZEeNFeDkV
-         YP6iXtsMai/4KFEpAZy1I8G9P7VxdAjQMviOvns+b+Z19CwPj+NyiY9B5i2n7Z2KYf1U
-         H979SnFI1PUMgo4z0nCpAPkiOOYFwxdwJhSohdd6++i5y5bzg9CcwOvhI7kBV27LOwuQ
-         uTRv2exmwxO+8y3/WbglyWkYAZHSZJiOuAoa1fy0Om3oU1qJ6nknQUAsUkN9va6bL//f
-         tPUw==
-X-Gm-Message-State: APjAAAVfkR38e8XM78igW2FBsuDDH0A/LF7T940GTRwfRkvRGV5axeuc
-        Egqe7zafEpZoOjBwdwda4U1UT9vkKtLDhKXH3jMPvA==
-X-Google-Smtp-Source: APXvYqyGOrPmmtsw3QaNO3jNzRvgBnclwKeaJ8rYvix6Eqms6giQGJOoDgBUTsFg1jBCdVquRwzJhHZ/p2YowQNYnYk=
-X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr7402764pjb.123.1569430407847;
- Wed, 25 Sep 2019 09:53:27 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=C4r9LDbF2p0HwPfpAWk2w9xf+quUQCDipCG0hOvAJdU=;
+        b=o6cR/Mx8Kkst8afhtOyxSDTTzIgC6k+nkaKsAr2Uw4dsVHhHRi9tRLK6olwbCtRd2y
+         1S9OW51tl+BKRHvZwa0wsOdcrfFvSDFAxAtVjGAjgxAVeERjvcgxJvsr4xA/uniY5BrP
+         hpnCls9iKEjA9c0/BJk050fV2ELY2KkGRgGdIVg7EOnl5iOdMDib6zH+Cs/Y7k1bIVZX
+         aJpw962VYdglG8AVgvBzcljulCmtnLDsTOTfLhC+jNKz3JIi9EifRa9UfbnmVMCRAvHj
+         rrJX5SNY4Zi0lEE/tkLWwpAJi++T50pUj3x7sNDQNRyv7KxtU5rU2Fvv7GO9oRHJmSjG
+         jNnA==
+X-Gm-Message-State: APjAAAWvtu6+M5/+nxSMi6fyOwUz+DNg1pF32zY3CZO/p4cR3A6c1sCS
+        oFlUJOvR/3R+eK1BdGC4ZWOc4Y0Ai349tYrV9rS/jdmChSWx
+X-Google-Smtp-Source: APXvYqz8c2QD+R45NIU3/aPah4UBs0Fm8y5Bqs+vlTYLf+07+Gbcc+VtP5vHvhUiFSRw4S4JvGec2FQmF4WZYsbu857WEpmV9ncw
 MIME-Version: 1.0
-References: <20190925130926.50674-1-catalin.marinas@arm.com>
-In-Reply-To: <20190925130926.50674-1-catalin.marinas@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 25 Sep 2019 09:53:16 -0700
-Message-ID: <CAKwvOdn2Sf7aAt0zqUUqGY6nXg-C3be7An9amy4tfiNr_8ERJw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Allow disabling of the compat vDSO
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:b942:: with SMTP id j63mr346113iof.69.1569430567452;
+ Wed, 25 Sep 2019 09:56:07 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 09:56:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007909bf059363878e@google.com>
+Subject: WARNING in blk_mq_init_sched
+From:   syzbot <syzbot+b2c197f98f86543b69c8@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:09 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> The compat vDSO building requires a cross-compiler than produces AArch32
-> binaries, defined via CONFIG_CROSS_COMPILE_COMPAT_VDSO or the
-> CROSS_COMPILE_COMPAT environment variable. If none of these is defined,
-> building the kernel always prints a warning as there is no way to
-> deselect the compat vDSO.
->
-> Add an arm64 Kconfig entry to allow the deselection of the compat vDSO.
-> In addition, make it an EXPERT option, default n, until other issues
-> with the compat vDSO are solved (64-bit only kernel headers included in
-> user-space vDSO code, CC_IS_CLANG irrelevant to CROSS_COMPILE_COMPAT).
+Hello,
 
-CC_IS_CLANG might be because then CC can be reused with different
-flags, rather than providing a different cross compiler binary via
-config option.
+syzbot found the following crash on:
 
->
-> Fixes: bfe801ebe84f ("arm64: vdso: Enable vDSO compat support")
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+HEAD commit:    f7c3bf8f Merge tag 'gfs2-for-5.4' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f5baf9600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=50d4af03d68a470c
+dashboard link: https://syzkaller.appspot.com/bug?extid=b2c197f98f86543b69c8
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/595
-Overall, this work is important to Android; the ARMv8-A series of
-mobile SoCs we see today have to support 32b and 64b (A32+A64?) for at
-least a few more years; we would like gettimeofday() and friends to be
-fast for 32b and 64b applications.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> ---
->
-> It looks like you can't really win with the current compat vDSO logic.
-> You either don't have a compat cross-compiler and you get a Makefile
-> warning or you have one and a get a compiler warning (or failure)
-> because of the 64-bit kernel headers included in 32-bit user-space code.
->
-> "depends on BROKEN" for ARM64_COMPAT_VDSO also work for me instead of
-> EXPERT. I'll leave it up to Will to decide but I'd like at least this
-> patch in -rc2 (even better if everything else is fixed before the final
-> 5.4).
->
-> Suggestions for future improvements of the compat vDSO handling:
->
-> - replace the CROSS_COMPILE_COMPAT prefix with a full COMPATCC; maybe
->   check that it indeed produces 32-bit code
->
-> - check whether COMPATCC is clang or not rather than CC_IS_CLANG, which
->   only checks the native compiler
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b2c197f98f86543b69c8@syzkaller.appspotmail.com
 
-When cross compiling, IIUC CC_IS_CLANG is referring to CC which is the
-cross compiler, which is different than HOSTCC which is the host
-compiler.  HOSTCC is used mostly for things in scripts/ while CC is
-used to compile a majority of the kernel in a cross compile.
-
->
-> - clean up the headers includes; vDSO should not include kernel-only
->   headers that may even contain code patched at run-time
-
-This is a big one; Clang validates the inline asm constraints for
-extended inline assembly, GCC does not for dead code.  So Clang chokes
-on the inclusion of arm64 headers using extended inline assembly when
-being compiled for arm-linux-gnueabi.
-
->
->  arch/arm64/Kconfig | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 866e05882799..83a9a78085c6 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -110,7 +110,6 @@ config ARM64
->         select GENERIC_STRNLEN_USER
->         select GENERIC_TIME_VSYSCALL
->         select GENERIC_GETTIMEOFDAY
-> -       select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
->         select HANDLE_DOMAIN_IRQ
->         select HARDIRQS_SW_RESEND
->         select HAVE_PCI
-> @@ -1185,6 +1184,15 @@ config KUSER_HELPERS
->           Say N here only if you are absolutely certain that you do not
->           need these helpers; otherwise, the safe option is to say Y.
->
-> +config ARM64_COMPAT_VDSO
-> +       bool "Enable the 32-bit vDSO" if EXPERT
-> +       depends on !CPU_BIG_ENDIAN
-> +       select GENERIC_COMPAT_VDSO
-> +       help
-> +         Enable the vDSO support for 32-bit applications. You would
-> +         need to set the 32-bit cross-compiler prefix in
-> +         CONFIG_CROSS_COMPILE_COMPAT_VDSO or the CROSS_COMPILE_COMPAT
-> +         environment variable.
->
->  menuconfig ARMV8_DEPRECATED
->         bool "Emulate deprecated/obsolete ARMv8 instructions"
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 25817 at block/blk-mq-sched.c:558  
+blk_mq_sched_free_requests block/blk-mq-sched.c:558 [inline]
+WARNING: CPU: 1 PID: 25817 at block/blk-mq-sched.c:558  
+blk_mq_init_sched+0xad6/0xc00 block/blk-mq-sched.c:543
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 25817 Comm: syz-executor.4 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  panic+0x25c/0x799 kernel/panic.c:219
+  __warn+0x22f/0x230 kernel/panic.c:576
+  report_bug+0x190/0x290 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:blk_mq_sched_free_requests block/blk-mq-sched.c:558 [inline]
+RIP: 0010:blk_mq_init_sched+0xad6/0xc00 block/blk-mq-sched.c:543
+Code: f6 e8 9e 03 00 00 49 83 c6 10 4c 89 f7 e8 82 08 37 04 e9 ce fd ff ff  
+e8 c8 81 3f fe 48 c7 c7 72 5c 35 88 31 c0 e8 1d ae 28 fe <0f> 0b e9 ce f9  
+ff ff e8 ae 81 3f fe 48 c7 c7 72 5c 35 88 31 c0 e8
+RSP: 0018:ffff88802225fbb8 EFLAGS: 00010246
+RAX: 0000000000000024 RBX: 0000000000000000 RCX: 489d2508ed9c7100
+RDX: ffffc9000e9a6000 RSI: 0000000000009af7 RDI: 0000000000009af8
+RBP: ffff88802225fc50 R08: ffffffff815c9744 R09: ffffed1015d66090
+R10: ffffed1015d66090 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff888026958990 R14: ffff888026958080 R15: ffff8880269580d0
+  elevator_init_mq+0x317/0x450 block/elevator.c:719
+  __device_add_disk+0x6d/0x1140 block/genhd.c:705
+  device_add_disk+0x2a/0x40 block/genhd.c:763
+  add_disk include/linux/genhd.h:429 [inline]
+  loop_add+0x5d1/0x780 drivers/block/loop.c:2051
+  loop_control_ioctl+0x422/0x640 drivers/block/loop.c:2174
+  do_vfs_ioctl+0x744/0x1730 fs/ioctl.c:46
+  ksys_ioctl fs/ioctl.c:713 [inline]
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:718
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a09
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fce60497c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09
+RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000006
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce604986d4
+R13: 00000000004c3118 R14: 00000000004d69f8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Thanks,
-~Nick Desaulniers
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
