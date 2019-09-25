@@ -2,127 +2,134 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBEEC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BB9C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890AA2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BBB21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VuU2Pa0n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LJvkmSHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392954AbfIYUMk (ORCPT
+        id S2393038AbfIYUN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 16:12:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41159 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731062AbfIYUMk (ORCPT
+        Wed, 25 Sep 2019 16:13:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46372 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731062AbfIYUN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 16:12:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q7so60626pfh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:12:40 -0700 (PDT)
+        Wed, 25 Sep 2019 16:13:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k25so19528oiw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Jna560TLuCXx87ceJCymiwtgkmh7HkrMG2IFgw1kI4c=;
-        b=VuU2Pa0nBBkxwAP9ay+E9uFWWwIVwYqseAK+ma9eJZFXhVQN0qi+UjD6soxXNTeZqf
-         GrarSQAhhPI3J1vEGx/BK9yp/fT8XW7v6L5dyzHQRVN6n+yriwbjsGmhDeb3kP+IElVG
-         twwLQiDdTpGuKXcUmsqMHE/DrcsjfZAgIx3H4=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QGYgy//3euTBO2RPb921udeY715yYdyyXRCdc+pkFYA=;
+        b=LJvkmSHKTXJkhgo4wUmQXkaASca4THuoqb6DDCkkD0mdLdbmQsccsT2LoSe7W1oHgO
+         Udc+z0gUY9Atmz++PJrdOx8NDhg3RqQ/FAsHm3lKZIRqmWFhR2sDGODYqcGoX5OysHFk
+         DIXGxLPFZcv0lCS3+fwnw9VGpx7OJ+8qDdT70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Jna560TLuCXx87ceJCymiwtgkmh7HkrMG2IFgw1kI4c=;
-        b=Ht4DCU+zeSEicAI6Eav0MlElJtg/enPqSq7R8JSccev2BJFMJizWl9IsqxoP9HKikN
-         kVhys3dUDVPhbpiworxSZn8UfM6gAu4tmAXqVFClvy+qllUkAkMVEZMrQdcA9DWmMsMo
-         wrvNyLZJuR9n3RRzjKsdzDmElFEcuTKnAWUwHT34dlMfVs3KJoG9QVfPlC0I7tyfVOwb
-         4GEIinK3sW0sCk0zUTZ98Uvep4eFgnHeV43CHy4tm9Iv6VfkKYRhUY4PIDecitFragaV
-         kdDnSSO1sTgekD7kMCeE+0P3FcdZPZwS6Z8V18suLmZHXGROvIOmdL5kWHGbjhU6qvpD
-         RLRQ==
-X-Gm-Message-State: APjAAAVAltzPZoYXZvMBtwkUdWhgw4X6GvyPTvh7ygf4neh+ARuAN0Y+
-        oBmO+SoinjX/zXFtrXnywLv5MA==
-X-Google-Smtp-Source: APXvYqxDgsn2vYK72wwqUc6AnpeWlXdjSD2e1YwZ+LWSbLufCkg3PlfC7SJqBS+r43Bc7NNyT/WRQg==
-X-Received: by 2002:a62:583:: with SMTP id 125mr28598pff.69.1569442359691;
-        Wed, 25 Sep 2019 13:12:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q30sm35535pja.18.2019.09.25.13.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 13:12:38 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 13:12:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?J=E9r=E9mie?= Galarneau 
-        <jeremie.galarneau@efficios.com>
-Cc:     s.mesoraca16@gmail.com, viro@zeniv.linux.org.uk,
-        dan.carpenter@oracle.com, akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org, solar@openwall.com
-Subject: Re: Unmerged patches adding audit when protected_regular/fifos
- sysctl causes EACCES
-Message-ID: <201909251307.B970AF1E7@keescook>
-References: <CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQOdkFq0PA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QGYgy//3euTBO2RPb921udeY715yYdyyXRCdc+pkFYA=;
+        b=NNQZDpzE+ny9vsM8cvmYXi5SLuabrQnNnO5rB808Ghjp9oqksG5wScfz02TPWvQEqx
+         DB/ocao19mjhK1mrU8bR9u9O5sY3dxmOYYsfRmYhA0zXVFNtrki3j2dWp5sZQAwDJCle
+         hEnz4zOxHYOnCNs2EmLogEgyvcH5V6KDRt+cLcOued6fmAKU/dZ9BL88f9m2JTqfTa18
+         UJu0GmYBCKWpD/YwhBTRXlhkhvrP6/Ijfoqna8EHpfpCMT4CJavApTJ37rYDjXM5DczT
+         GeYApNOE/a4weMoU2ItC7wt+me/yX2ST+Rw+5j9fTiQoAknZmO6HIO5EVy/1rHoPACjU
+         FFhA==
+X-Gm-Message-State: APjAAAWZfNnJgr0caRFarRw+QEBNlUVyWFKFMeqDrfJ0N2VhVI+WifIT
+        B2b5ZqQswh/XVoLhUXYwxGSMzz4BNUM=
+X-Google-Smtp-Source: APXvYqywsgBSnyIW3KNh9krp+VmQJRIpdUQRjsc5EC73bQv/UaGNM31E7SqpK8nWMTEa2Cz8VS/7xg==
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr6018143oib.7.1569442434738;
+        Wed, 25 Sep 2019 13:13:54 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id t18sm1954837otd.60.2019.09.25.13.13.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 13:13:54 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id 41so5987964oti.12
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:13:53 -0700 (PDT)
+X-Received: by 2002:a9d:4787:: with SMTP id b7mr192692otf.351.1569442433479;
+ Wed, 25 Sep 2019 13:13:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQOdkFq0PA@mail.gmail.com>
+References: <20190916181215.501-1-ncrews@chromium.org> <20190922161306.GA1999@bug>
+ <20190922190542.GC3185@piout.net> <CAHX4x876iDn_6Q1+p1SNMncHJezSUQysfM+py0gjD2ytMKBj=w@mail.gmail.com>
+ <20190923201938.GB4141@piout.net>
+In-Reply-To: <20190923201938.GB4141@piout.net>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Wed, 25 Sep 2019 14:13:41 -0600
+X-Gmail-Original-Message-ID: <CAHX4x87P6ZHX9e_846NnzCCVJxTTULie_QZ8Dtuvt7HCS312Mg@mail.gmail.com>
+Message-ID: <CAHX4x87P6ZHX9e_846NnzCCVJxTTULie_QZ8Dtuvt7HCS312Mg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] rtc: wilco-ec: Remove yday and wday calculations
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Benson Leung <bleung@chromium.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Dmitry Torokhov <dtor@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 02:58:28PM -0400, Jérémie Galarneau wrote:
-> Hi Kees,
-> 
-> I have noticed that the two top-most patches of your protected-creat
-> branch were never merged upstream [1]. Those patches add audit logs
-> whenever the protected_regular or protected_fifo sysctl prevent the
-> creation of a file/fifo.
-> 
-> They were mentioned in the v4 thread [2] of the "main" patch and
-> seemed acceptable, but they were no longer mentioned in v5 [3], which
-> was merged.
-> 
-> Now that systemd enables those sysctls by default (v241+), I got
-> bitten pretty hard by this check and it took me a while to figure out
-> what was happening [4]. I ended up catching it by adding a bunch of
-> printk(), including where you proposed to add an audit log statement.
-> 
-> I just found your two patches while implementing what you proposed almost 1:1.
-> 
-> Was there a reason why those were abandoned? Otherwise, would you mind
-> resubmitting them?
+Hi Alexandre,
 
-Hi!
+Sorry to be a pain, but I passed this by some other Chrome OS
+kernel engineers, and when the HW gives a bogus time we
+want logging at a more severe level than the dev_dbg() call
+in the core, so I'm going to send another revision. It's going to
+require duplicated calls to rtc_valid_tm(), but we feel that it is
+required.
 
-There was concern about getting buy-in from the audit folks delaying
-things even more. Instead of waiting for that, as it had already taken
-a long time to get consensus even on the functionality, they were
-dropped.
+Thanks,
+Nick
 
-I'll rebase them and send them out again; thanks for the ping!
-
--Kees
-
-> 
-> Thanks!
-> Jérémie
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=kspp/userspace/protected-creat
-> [2] https://lkml.org/lkml/2018/4/10/840
-> [3] https://lore.kernel.org/lkml/20180416175918.GA13494@beast/
-> [4] https://github.com/lttng/lttng-tools/commit/cf86ff2c4ababd01fea7ab2c9c289cb7c0a1bcd5
-> 
-> -- 
-> Jérémie Galarneau
-> EfficiOS Inc.
-> http://www.efficios.com
-
--- 
-Kees Cook
+On Mon, Sep 23, 2019 at 2:19 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 23/09/2019 11:20:42-0600, Nick Crews wrote:
+> > > This is coming from struct tm, it is part of C89 but I think I was no=
+t
+> > > born when this decision was made. man rtc properly reports that those
+> > > fields are unused and no userspace tools are actually making use of
+> > > them. Nobody cares about the broken down representation of the time.
+> > > What is done is use the ioctl then mktime to have a UNIX timestamp.
+> > >
+> > > "The mktime function ignores the specified contents of the tm_wday,
+> > > tm_yday, tm_gmtoff, and tm_zone members of the broken-down time
+> > > structure. It uses the values of the other components to determine th=
+e
+> > > calendar time; it=E2=80=99s permissible for these components to have
+> > > unnormalized values outside their normal ranges. The last thing that
+> > > mktime does is adjust the components of the brokentime structure,
+> > > including the members that were initially ignored."
+> >
+> > This is very non-obvious and I only knew this from talking to you,
+> > Alexandre. Perhaps we should add this note to the RTC core,
+> > such as in the description for rtc_class_ops?
+> >
+>
+> I'm planning to add documentation on what should be done in an RTC
+> driver, I'll ensure to add something on this topic.
+>
+> > For this patch, do you want me to make any further changes?
+> >
+>
+> No need for any changes, however, I can't apply it right now because we
+> are in the middle of the merge window.
+>
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
