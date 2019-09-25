@@ -2,106 +2,152 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7413CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000D4C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6FD20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oP7md3ji"
+	by mail.kernel.org (Postfix) with ESMTP id D3A06214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442679AbfIYIAE (ORCPT
+        id S2442692AbfIYIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:00:04 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:9106 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442663AbfIYIAE (ORCPT
+        Wed, 25 Sep 2019 04:00:42 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57379 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2442663AbfIYIAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:00:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569398402; x=1600934402;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Shfvyo0ImXjLBdc3+R5WUqFtxA+yMdf8SQNuUzdMxRA=;
-  b=oP7md3jiBIeRTQJHSKVnFor+cM+g/A+jYbbt5X1RWTi94W7aQp+nZ2n2
-   ztpEdTUO9ehJfbCMUotNTQZT7spxXqxk1xcyb7CCRClgYQPI1mxbqkOWQ
-   O4BkyBv43p4C1T5LrbTsPIXd1/D62WJ89/tOlZ/bVa3j1MzEV0GqqVWpw
-   k=;
-X-IronPort-AV: E=Sophos;i="5.64,547,1559520000"; 
-   d="scan'208";a="787240915"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 Sep 2019 08:00:00 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 760A0A05E7;
-        Wed, 25 Sep 2019 07:59:59 +0000 (UTC)
-Received: from EX13D22EUA002.ant.amazon.com (10.43.165.125) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 25 Sep 2019 07:59:58 +0000
-Received: from EX13D22EUA004.ant.amazon.com (10.43.165.129) by
- EX13D22EUA002.ant.amazon.com (10.43.165.125) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 25 Sep 2019 07:59:57 +0000
-Received: from EX13D22EUA004.ant.amazon.com ([10.43.165.129]) by
- EX13D22EUA004.ant.amazon.com ([10.43.165.129]) with mapi id 15.00.1367.000;
- Wed, 25 Sep 2019 07:59:57 +0000
-From:   "Kiyanovski, Arthur" <akiyano@amazon.com>
-To:     Tal Gilboa <talgi@mellanox.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>,
-        Saeed Mahameed <saeedm@mellanox.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH] dimlib: make DIMLIB a hidden symbol
-Thread-Topic: [PATCH] dimlib: make DIMLIB a hidden symbol
-Thread-Index: AQHVb7e0M+d87C6r+0SKPdjxpO2J/ac0ytMAgAdDX9A=
-Date:   Wed, 25 Sep 2019 07:59:33 +0000
-Deferred-Delivery: Wed, 25 Sep 2019 07:59:15 +0000
-Message-ID: <228c9ba04ceb4b728c83adeb379fb564@EX13D22EUA004.ant.amazon.com>
-References: <20190920133115.12802-1-uwe@kleine-koenig.org>
- <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
-In-Reply-To: <670cc72f-fef0-a8cf-eb03-25fdb608eea8@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.11]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 04:00:41 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7FE0E43E145;
+        Wed, 25 Sep 2019 18:00:36 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iD2Dy-0000zC-Ou; Wed, 25 Sep 2019 18:00:34 +1000
+Date:   Wed, 25 Sep 2019 18:00:34 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Tejun Heo <tj@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+Message-ID: <20190925080034.GD804@dread.disaster.area>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+ <20190924073940.GM6636@dread.disaster.area>
+ <CAHk-=whf2BQ8xqVBF8YuxRznByrP-oTgcHSY9DgDnrFTxpsrVA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whf2BQ8xqVBF8YuxRznByrP-oTgcHSY9DgDnrFTxpsrVA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=7-415B0cAAAA:8 a=714uhUuBiEYtG38rzikA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBUYWwgR2lsYm9hIDx0YWxnaUBt
-ZWxsYW5veC5jb20+DQo+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDIwLCAyMDE5IDg6MDIgUE0N
-Cj4gVG86IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5vcmc+OyBTYWVlZCBN
-YWhhbWVlZA0KPiA8c2FlZWRtQG1lbGxhbm94LmNvbT47IEtpeWFub3Zza2ksIEFydGh1ciA8YWtp
-eWFub0BhbWF6b24uY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbmV0
-ZGV2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkaW1saWI6IG1ha2Ug
-RElNTElCIGEgaGlkZGVuIHN5bWJvbA0KPiANCj4gT24gOS8yMC8yMDE5IDQ6MzEgUE0sIFV3ZSBL
-bGVpbmUtS8O2bmlnIHdyb3RlOg0KPiA+IEFjY29yZGluZyB0byBUYWwgR2lsYm9hIHRoZSBvbmx5
-IGJlbmVmaXQgZnJvbSBESU0gY29tZXMgZnJvbSBhIGRyaXZlcg0KPiA+IHRoYXQgdXNlcyBpdC4g
-U28gaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRvIG1ha2UgdGhpcyBzeW1ib2wgdXNlciB2aXNpYmxl
-LA0KPiA+IGluc3RlYWQgYWxsIGRyaXZlcnMgdGhhdCB1c2UgaXQgc2hvdWxkIHNlbGVjdCBpdCAo
-YXMgaXMgYWxyZWFkeSB0aGUgY2FzZQ0KPiA+IEFGQUlDVCkuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPg0KPiA+IC0tLQ0K
-PiA+ICAgbGliL0tjb25maWcgfCAzICstLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2xpYi9LY29uZmln
-IGIvbGliL0tjb25maWcNCj4gPiBpbmRleCBjYzA0MTI0ZWQ4ZjcuLjlmZThhMjFmZDE4MyAxMDA2
-NDQNCj4gPiAtLS0gYS9saWIvS2NvbmZpZw0KPiA+ICsrKyBiL2xpYi9LY29uZmlnDQo+ID4gQEAg
-LTU1NSw4ICs1NTUsNyBAQCBjb25maWcgU0lHTkFUVVJFDQo+ID4gICAJICBJbXBsZW1lbnRhdGlv
-biBpcyBkb25lIHVzaW5nIEdudVBHIE1QSSBsaWJyYXJ5DQo+ID4NCj4gPiAgIGNvbmZpZyBESU1M
-SUINCj4gPiAtCWJvb2wgIkRJTSBsaWJyYXJ5Ig0KPiA+IC0JZGVmYXVsdCB5DQo+ID4gKwlib29s
-DQo+ID4gICAJaGVscA0KPiA+ICAgCSAgRHluYW1pYyBJbnRlcnJ1cHQgTW9kZXJhdGlvbiBsaWJy
-YXJ5Lg0KPiA+ICAgCSAgSW1wbGVtZW50cyBhbiBhbGdvcml0aG0gZm9yIGR5bmFtaWNhbGx5IGNo
-YW5nZSBDUSBtb2RlcmF0aW9uDQo+IHZhbHVlcw0KPiA+DQo+IFRoZXJlJ3MgYSBwZW5kaW5nIHNl
-cmllcyB1c2luZyBESU0gd2hpY2ggZGlkbid0IGFkZCB0aGUgc2VsZWN0IGNsYXVzZQ0KPiBbMV0u
-IEFydGh1ciwgRllJLiBPdGhlciB0aGFuIHRoYXQgTEdUTS4NCj4gDQo+IFsxXSBodHRwczovL3d3
-dy5tYWlsLWFyY2hpdmUuY29tL25ldGRldkB2Z2VyLmtlcm5lbC5vcmcvbXNnMzE0MzA0Lmh0bWwN
-Cg0KVGhhbmtzIFRhbCwgSSBtaXNzZWQgdGhhdC4NCg==
+On Tue, Sep 24, 2019 at 12:08:04PM -0700, Linus Torvalds wrote:
+> On Tue, Sep 24, 2019 at 12:39 AM Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > Stupid question: how is this any different to simply winding down
+> > our dirty writeback and throttling thresholds like so:
+> >
+> > # echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
+> 
+> Our dirty_background stuff is very questionable, but it exists (and
+> has those insane defaults) because of various legacy reasons.
+
+That's not what I was asking about.  The context is in the previous
+lines you didn't quote:
+
+> > > > Is the faster speed reproducible?  I don't quite understand why this
+> > > > would be.
+> > >
+> > > Writing to disk simply starts earlier.
+> >
+> > Stupid question: how is this any different to simply winding down
+> > our dirty writeback and throttling thresholds like so:
+
+i.e. I'm asking about the reasons for the performance differential
+not asking for an explanation of what writebehind is. If the
+performance differential really is caused by writeback starting
+sooner, then winding down dirty_background_bytes should produce
+exactly the same performance because it will start writeback -much
+faster-.
+
+If it doesn't, then the assertion that the difference is caused by
+earlier writeout is questionable and the code may not actually be
+doing what is claimed....
+
+Basically, I'm asking for proof that the explanation is correct.
+
+> > to start background writeback when there's 100MB of dirty pages in
+> > memory, and then:
+> >
+> > # echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
+> 
+> The thing is, that also accounts for dirty shared mmap pages. And it
+> really will kill some benchmarks that people take very very seriously.
+
+Yes, I know that. I'm not suggesting that we do this,
+
+[snip]
+
+> Anyway, the end result of all this is that we have that
+> balance_dirty_pages() that is pretty darn complex and I suspect very
+> few people understand everything that goes on in that function.
+
+I'd agree with you there - most of the ground work for the
+balance_dirty_pages IO throttling feedback loop was all based on
+concepts I developed to solve dirty page writeback thrashing
+problems on Irix back in 2003.  The code we have in Linux was
+written by Fenguang Wu with help for a lot of people, but the
+underlying concepts of delegating IO to dedicated writeback threads
+that calculate and track page cleaning rates (BDI writeback rates)
+and then throttling incoming page dirtying rate to the page cleaning
+rate all came out of my head....
+
+So, much as it may surprise you, I am one of the few people who do
+actually understand how that whole complex mass of accounting and
+feedback is supposed to work. :)
+
+> Now, whether write-behind really _does_ help that, or whether it's
+> just yet another tweak and complication, I can't actually say.
+
+Neither can I at this point - I lack the data and that's why I was
+asking if there was a perf difference with the existing limits wound
+right down. Knowing whether the performance difference is simply a
+result of starting writeback IO sooner tells me an awful lot about
+what other behaviour is happening as a result of the changes in this
+patch.
+
+> But I
+> don't think 'dirty_background_bytes' is really an argument against
+> write-behind, it's just one knob on the very complex dirty handling we
+> have.
+
+Never said it was - just trying to determine if a one line
+explanation is true or not.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
