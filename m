@@ -2,140 +2,116 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39305C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0C1C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAFC2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8FA214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442413AbfIYHpV (ORCPT
+        id S2633990AbfIYHsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:45:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47144 "EHLO mx1.redhat.com"
+        Wed, 25 Sep 2019 03:48:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47888 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394933AbfIYHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:45:21 -0400
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+        id S2442570AbfIYHsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:48:38 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7553363704
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:45:20 +0000 (UTC)
-Received: by mail-pl1-f199.google.com with SMTP id b23so2841495pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:45:20 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 270703CBC1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:48:38 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id l6so1908311wrn.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:48:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lGlfVebe14dEyAwlNX/fOfUXOsimPZPypK8xTf2N4Zk=;
-        b=HuSCjVHkESHfrujmIfLVWAVUF6uAEmmwV0tvzzuU5gbrbHKg4YEEpu+gTmMZ5ztzWD
-         BoC7S5He8kF7o50A5C+nDFpr4tZpi26bzRg8XSqG+OOoK991k5waq5VnEvGsdH+0yyk0
-         1WnaJiNsvnup7/0S9FK1UovmVY1DfTdle4i1MBefvCd7zVrU+0s3BCFqoUy7AI/0HLwU
-         QbQeHg6gyQy/iFKU3ojizQ7AZ/0pwAN8fS61180UPA/EEKIbCnpILCzPvtRGO2VyB3di
-         Dl4M51v6i4GM0VM9rZthqQFpHEMC480zTVMfSSVYu0rEoSk566dIpLHjXcxer7487etV
-         LoVQ==
-X-Gm-Message-State: APjAAAUch25UYXQvDWqFN/586VkdTMPGLtgNlwd/DxsVHKbQJ29ivoZY
-        ucxdqbsCVdG+hohqt5UyqRQ4nBuL2x9mB5RCJTeF7lpRK/4OlfxKteUvFRIzg0vAAg9viG1b7ZZ
-        jhxyAW1qA3v0+PAWRUXbT1GmB
-X-Received: by 2002:a17:902:7c94:: with SMTP id y20mr7255441pll.229.1569397519932;
-        Wed, 25 Sep 2019 00:45:19 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwCHx/3JAR/6+/InK/am42O9UXzLwb84IAvlRe5LPMfo5VvBXJdpQbI+cKfEX19uVulZcYtcw==
-X-Received: by 2002:a17:902:7c94:: with SMTP id y20mr7255402pll.229.1569397519622;
-        Wed, 25 Sep 2019 00:45:19 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p17sm5670841pfn.50.2019.09.25.00.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 00:45:18 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 15:45:07 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
-Message-ID: <20190925074507.GP28074@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122715.53de79d0@jacob-builder>
- <20190923202552.GA21816@araj-mobl1.jf.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
- <dfd9b7a2-5553-328a-08eb-16c8a3a2644e@linux.intel.com>
- <20190925065640.GO28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4A3@SHSMSX104.ccr.corp.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IS7JBZ9zrqGVDeRJNFg8m1nKnd2cfm4f/OwgwdjTPRw=;
+        b=udYcnStajUDlsSrd5AnX1sdkv7mIr70p4wcq9p0Mn2lyC6XMWjsPYJZ7ozNrF4K3k9
+         93FLSg8STP59EjJFu0fFlUF5GE6CyULQudfqxQU7W4w6oBULGhi2yIevIaOlu885a+TX
+         +KU5CT9fxSQzBMy2BMi9xVYMge2Uyueoh0x1wcdwn9iGjBa0k2el+kK70QfdicVf2u4k
+         tl2znjDITG+A6+QH6GcBRbFOBNTKZjEP0soKKifyONIoHtUWJWv+F7Z/QouAD+AtE1FT
+         84SJ7NxJ6ruKERRjRk6nn+sq1ttO5PrnjpfIQtBTUb3D8gsAXjcMw6WonoNuJDvWZjXe
+         2OTw==
+X-Gm-Message-State: APjAAAUx0YcKlfNnRb1TmaeuaF0U4XbWAEfxzM0RUBpWtOp57d2Nfi4P
+        CnxJ75/24IP6uNdTpH2XgxmiN3Egn91wXxjdwe9CNjBmYG3nN4JFUCxIwpHL9/irvH/+93TPOcy
+        Jmy9D4xqZTJh62qgWqPYGfAoh
+X-Received: by 2002:a5d:4307:: with SMTP id h7mr7531879wrq.393.1569397716630;
+        Wed, 25 Sep 2019 00:48:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxEpJogKzLfOpsHXL9nPwehQ4M6oLQikRQicx68vJp+AA1DzSOcYm+nBkEmeMRY8Vw9e5ddRg==
+X-Received: by 2002:a5d:4307:: with SMTP id h7mr7531843wrq.393.1569397716293;
+        Wed, 25 Sep 2019 00:48:36 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id d28sm7228325wrb.95.2019.09.25.00.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 00:48:35 -0700 (PDT)
+Subject: Re: [PATCH] selftests: kvm: Fix libkvm build error
+To:     Shuah Khan <skhan@linuxfoundation.org>, rkrcmar@redhat.com,
+        shuah@kernel.org
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190924201451.31977-1-skhan@linuxfoundation.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <dbfb9d46-488a-b940-c86f-79ad750a324a@redhat.com>
+Date:   Wed, 25 Sep 2019 09:48:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190924201451.31977-1-skhan@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4A3@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 07:21:51AM +0000, Tian, Kevin wrote:
-> > From: Peter Xu [mailto:peterx@redhat.com]
-> > Sent: Wednesday, September 25, 2019 2:57 PM
-> > 
-> > On Wed, Sep 25, 2019 at 10:48:32AM +0800, Lu Baolu wrote:
-> > > Hi Kevin,
-> > >
-> > > On 9/24/19 3:00 PM, Tian, Kevin wrote:
-> > > > > > >       '-----------'
-> > > > > > >       '-----------'
-> > > > > > >
-> > > > > > > This patch series only aims to achieve the first goal, a.k.a using
-> > > > first goal? then what are other goals? I didn't spot such information.
-> > > >
-> > >
-> > > The overall goal is to use IOMMU nested mode to avoid shadow page
-> > table
-> > > and VMEXIT when map an gIOVA. This includes below 4 steps (maybe not
-> > > accurate, but you could get the point.)
-> > >
-> > > 1) GIOVA mappings over 1st-level page table;
-> > > 2) binding vIOMMU 1st level page table to the pIOMMU;
-> > > 3) using pIOMMU second level for GPA->HPA translation;
-> > > 4) enable nested (a.k.a. dual stage) translation in host.
-> > >
-> > > This patch set aims to achieve 1).
-> > 
-> > Would it make sense to use 1st level even for bare-metal to replace
-> > the 2nd level?
-> > 
-> > What I'm thinking is the DPDK apps - they have MMU page table already
-> > there for the huge pages, then if they can use 1st level as the
-> > default device page table then it even does not need to map, because
-> > it can simply bind the process root page table pointer to the 1st
-> > level page root pointer of the device contexts that it uses.
-> > 
+On 24/09/19 22:14, Shuah Khan wrote:
+> Fix the following build error:
 > 
-> Then you need bear with possible page faults from using CPU page
-> table, while most devices don't support it today. 
+> libkvm.a(assert.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a PIE object; recompile with -fPIC
+> 
+> Add -fPIC to CFLAGS to fix it.
 
-Right, I was just thinking aloud.  After all neither do we have IOMMU
-hardware to support 1st level (or am I wrong?)...  It's just that when
-the 1st level is ready it should sound doable because IIUC PRI should
-be always with the 1st level support no matter on IOMMU side or the
-device side?
+This is wrong, these testcases cannot be position-independent 
+executables.  Can you include the failing command line from "V=1" 
+output?
 
-I'm actually not sure about whether my understanding here is
-correct... I thought the pasid binding previously was only for some
-vendor kernel drivers but not a general thing to userspace.  I feel
-like that should be doable in the future once we've got some new
-syscall interface ready to deliver 1st level page table (e.g., via
-vfio?) then applications like DPDK seems to be able to use that too
-even directly via bare metal.
+The problem seems to be that these definitions are not working properly:
 
-Regards,
+no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
+        $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
 
--- 
-Peter Xu
+LDFLAGS += -pthread $(no-pie-option)
+
+Thanks,
+
+Paolo
+
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  tools/testing/selftests/kvm/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 62c591f87dab..b4a55d300e75 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -44,7 +44,7 @@ INSTALL_HDR_PATH = $(top_srcdir)/usr
+>  LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+>  LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+>  CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+> -	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+> +	-fno-stack-protector -fPIC -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+>  	-I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
+>  
+>  no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
+> 
+
