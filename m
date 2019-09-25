@@ -2,106 +2,172 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEA3C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F3CC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9271C2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:20:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZvt//L9"
+	by mail.kernel.org (Postfix) with ESMTP id 68BAF20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411500AbfIYDUv (ORCPT
+        id S2411511AbfIYDVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 23:20:51 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39804 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbfIYDUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 23:20:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so9886175ioc.6;
-        Tue, 24 Sep 2019 20:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AMQHeW4iwg1cC0jNZyLdmDs+JNlvjY193iwsLSoiahg=;
-        b=aZvt//L91Q9a5+qjjLpXV/AkFXSpmuqrWM+fn9515REKF9MBWs2U2aOYSbRBCcVtOP
-         E1YH4c9yMgbuZSI9rezDoPAaw/Ww3wWztQIln2F7EeFyqiXwQs8XBPTqUi80GKi3hQX0
-         3V0mudMYsoNMn5YUwvaPMVPj3gHZuc/IgCKsQ34YloMNpfnK1ZoBFjJLK4aJk9kHRh6X
-         NG+jgzY6slCYPUXZMjpNMzxLdU/nlSx6y7055Gp8tN+MWuIsON8du87q/7FxQukVo9ah
-         ftL/pmUaoAsa48VkRZjbsUYh82S4Ag128MRs9RWBWhSjZO7ZGLjGXcTiLfHUnAMgsNDg
-         J+hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AMQHeW4iwg1cC0jNZyLdmDs+JNlvjY193iwsLSoiahg=;
-        b=N/9qtZZGm4EHykTwXJ/YVaVyv0rwLqEwMD0NPQHO1cOVWvEryr0X2f9GpZ0YT2iL3c
-         IBmx6xhKz2KW8Cu3zolADMrmOMRrOdxh/kVeicAfij3Z7DuZJYQ8Sf70to4ExYRhXFU4
-         MMCCgSp8lO/4gBg8vndgqF9TO5/ASeWYufW+EruddUxXTdmu2Dib1bHrfKGEaVxIRH6I
-         gaeu8yq5Va54NGn0iAFP7GcVkZd6kXEw3M3HdS3LOebe+hJZYxtL1GQQSdnSnNiifHnd
-         RQ0XIEAMCcFFEBOnEQUiBG2R+lRS1O5BNTjHGC/wS9zfcK3qW982Yr9F7whpVUAtaaOQ
-         RS5g==
-X-Gm-Message-State: APjAAAXzcrjTZk0jmtF4tonEXpnqctQ6sJw7QLaBtDJPmIAD6m5oZHUF
-        InqfczyzW+THqE+nCzxrmsQ=
-X-Google-Smtp-Source: APXvYqx889DB8YB5toYzJW7umDas80cCCrtq2DAi+XCOTjNWwyhpR8EWrsou7GxN8ZfbPASi1+7bDw==
-X-Received: by 2002:a02:80d:: with SMTP id 13mr2980357jac.50.1569381648785;
-        Tue, 24 Sep 2019 20:20:48 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id e9sm3849993iot.88.2019.09.24.20.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 20:20:47 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Bodong Wang <bodong@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
-Date:   Tue, 24 Sep 2019 22:20:34 -0500
-Message-Id: <20190925032038.22943-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 24 Sep 2019 23:21:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37758 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728522AbfIYDVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 23:21:09 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E97B3CAC57776CCE6E27;
+        Wed, 25 Sep 2019 11:21:06 +0800 (CST)
+Received: from [127.0.0.1] (10.177.224.82) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 11:20:58 +0800
+Subject: Re: [PATCH xfstests] overlay: Enable character device to be the base
+ fs partition
+To:     Eryu Guan <eguan@linux.alibaba.com>
+CC:     Amir Goldstein <amir73il@gmail.com>,
+        Eryu Guan <guaneryu@gmail.com>,
+        "David Oberhollenzer" <david.oberhollenzer@sigma-star.at>,
+        Eric Biggers <ebiggers@google.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
+ <CAOQ4uxhL_EZZ_ktv8RYpn-q2nDrA2v7kjv+b99a5ZKg3tmEQ8A@mail.gmail.com>
+ <b215554a-092b-fcf3-e0a3-36fab291b4ff@huawei.com>
+ <20190925031554.GA67926@e18g06458.et15sqa>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <41aa4398-5269-f9c5-3415-ed788ab45ffb@huawei.com>
+Date:   Wed, 25 Sep 2019 11:20:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
+MIME-Version: 1.0
+In-Reply-To: <20190925031554.GA67926@e18g06458.et15sqa>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.224.82]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
-memory should be released.
+Oh, You are right, I understood it wrong. Thanks for reminding.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-index 4c50efe4e7f1..61021133029e 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
-@@ -464,8 +464,10 @@ static int mlx5_fpga_conn_create_cq(struct mlx5_fpga_conn *conn, int cq_size)
- 	}
- 
- 	err = mlx5_vector2eqn(mdev, smp_processor_id(), &eqn, &irqn);
--	if (err)
-+	if (err) {
-+		kvfree(in);
- 		goto err_cqwq;
-+	}
- 
- 	cqc = MLX5_ADDR_OF(create_cq_in, in, cq_context);
- 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(cq_size));
--- 
-2.17.1
+在 2019/9/25 11:15, Eryu Guan 写道:
+> On Tue, Sep 24, 2019 at 10:19:38PM +0800, Zhihao Cheng wrote:
+>> As far as I know, _require_scratch_shutdown() is called after _overay_config_override(), at this moment, FSTYP equals to base fs. According the implementation of _require_scratch_shutdown:
+>> 3090 _require_scratch_shutdown()
+>> 3091 {
+>> 3092     [ -x src/godown ] || _notrun "src/godown executable not found"
+>> 3093
+>> 3094     _scratch_mkfs > /dev/null 2>&1 || _notrun "_scratch_mkfs failed on $SCRATCH_DEV"
+>> 3095     _scratch_mount
+>> 3096
+>> 3097     if [ $FSTYP = "overlay" ]; then                                            # FSTYP = base fs
+>> 3098         if [ -z $OVL_BASE_SCRATCH_DEV ]; then
+>> 3099             # In lagacy overlay usage, it may specify directory as
+>> 3100             # SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
+>> 3101             # will be null, so check OVL_BASE_SCRATCH_DEV before
+>> 3102             # running shutdown to avoid shutting down base fs accidently.
+>> 3103             _notrun "$SCRATCH_DEV is not a block device"
+>> 3104         else
+>> 3105             src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
+>> 3106             || _notrun "Underlying filesystem does not support shutdown"
+>> 3107         fi
+>> 3108     else
+>> 3109         src/godown -f $SCRATCH_MNT 2>&1 \
+>> 3110             || _notrun "$FSTYP does not support shutdown"                      # Executes this path
+>> 3111     fi
+>> 3112
+>> 3113     _scratch_unmount
+>> 3114 }
+>> So, we can't get output: _notrun "$SCRATCH_DEV is not a block device". Instead, the verbose should like:
+>>   after _overlay_config_override FSTYP=ubifs    # Additional print message
+>>   FSTYP         -- ubifs
+>>   PLATFORM      -- Linux/x86_64
+>>   MKFS_OPTIONS  -- /dev/ubi0_1
+>>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+>>
+>>   generic/042	[not run] ubifs does not support shutdown
+>>
+>> But I'll consider describing error more concisely in v2.
+>>
+>> 在 2019/9/24 20:33, Amir Goldstein 写道:
+>>> On Tue, Sep 24, 2019 at 12:34 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>>>>
+>>>> When running overlay tests using character devices as base fs partitions,
+>>>> all overlay usecase results become 'notrun'. Function
+>>>> '_overay_config_override' (common/config) detects that the current base
+>>>> fs partition is not a block device and will set FSTYP to base fs. The
+>>>> overlay usecase will check the current FSTYP, and if it is not 'overlay'
+>>>> or 'generic', it will skip the execution.
+>>>>
+>>>> For example, using UBIFS as base fs skips all overlay usecases:
+>>>>
+>>>>   FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+>>>>   MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+>>>>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+>>>>
+>>>>   overlay/001   [not run] not suitable for this filesystem type: ubifs
+>>>>   overlay/002   [not run] not suitable for this filesystem type: ubifs
+>>>>   overlay/003   [not run] not suitable for this filesystem type: ubifs
+>>>>   ...
+>>>>
+>>>> When checking that the base fs partition is a block/character device,
+>>>> FSTYP is overwritten as 'overlay'. This patch allows the base fs
+>>>> partition to be a character device that can also execute overlay
+>>>> usecases (such as ubifs).
+>>>>
+>>>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+>>>> ---
+>>>>  common/config | 4 ++--
+>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/common/config b/common/config
+>>>> index 4c86a49..a22acdb 100644
+>>>> --- a/common/config
+>>>> +++ b/common/config
+>>>> @@ -550,7 +550,7 @@ _overlay_config_override()
+>>>>         #    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+>>>>         #    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+>>>>         #    overlayfs base and mount dirs inside base fs mount.
+>>>> -       [ -b "$TEST_DEV" ] || return 0
+>>>> +       [ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+>>>>
+>>>>         # Config file may specify base fs type, but we obay -overlay flag
+>>>>         [ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+>>>> @@ -570,7 +570,7 @@ _overlay_config_override()
+>>>>         export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+>>>>         export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+>>>>
+>>>> -       [ -b "$SCRATCH_DEV" ] || return 0
+>>>> +       [ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+>>>>
+>>>>         # Store original base fs vars
+>>>>         export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>
+>>> Looks fine.
+>>>
+>>> One nit: there is a message in _require_scratch_shutdown():
+>>> _notrun "$SCRATCH_DEV is not a block device"
+>>> for when $OVL_BASE_SCRATCH_DEV is not defined.
+>>>
+>>> Could probably use a better describing error anyway.
+> 
+> I think what Amir suggested is that, as you add char device support to
+> overlay base device, the message in _require_scratch_shutdown() should
+> be updated accordingly, not the commit log.
+> 
+> Thanks,
+> Eryu
+> 
+> .
+> 
 
