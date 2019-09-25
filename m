@@ -2,182 +2,163 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C1FC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE6AC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27AB207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E57207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jFW/yT5k"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="RuBZqIvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408437AbfIYRmN (ORCPT
+        id S1727118AbfIYRpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:42:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50746 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732494AbfIYRlU (ORCPT
+        Wed, 25 Sep 2019 13:45:02 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:39059 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfIYRpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:41:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfFCB029460;
-        Wed, 25 Sep 2019 12:41:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569433275;
-        bh=U/CdL3ky1UgHUUHC2UlJw+Bp+HRLVkYO6pdXvDYGyfg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jFW/yT5kRpg1s7L0TQBskRcJRmbUhKVFY5avsu4QhQc0AmYzjuAPkXOGqH74qZ1Lp
-         uZ1d+yeHHC7lPkuf/lo33rm3gkZ0FoWN1ubxRcfeRxvvywklAqvj0gU96i2HXcy8yC
-         VuywUNLmLkqybK+mOq+X6kl5bpOC/jrF/X+vKhTM=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfFUv018190;
-        Wed, 25 Sep 2019 12:41:15 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
- Sep 2019 12:41:07 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 25 Sep 2019 12:41:07 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfEJv045630;
-        Wed, 25 Sep 2019 12:41:14 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v9 02/15] dt: bindings: Add multicolor class dt bindings documention
-Date:   Wed, 25 Sep 2019 12:46:03 -0500
-Message-ID: <20190925174616.3714-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20190925174616.3714-1-dmurphy@ti.com>
-References: <20190925174616.3714-1-dmurphy@ti.com>
+        Wed, 25 Sep 2019 13:45:02 -0400
+Received: by mail-yw1-f67.google.com with SMTP id n11so2367852ywn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OwXWZPnQzf3XInXWmq5k6gcPq0axL7VeZ/2pUkeIAO0=;
+        b=RuBZqIvukahNvS2RWkJSSIoSGRWT90uYjmjps6VQ1ybNW3AYnanSdd4620DHDwc/yF
+         N2132Z2o6rc0ScIkepSll+PIIr1lBpgU29MoUPbGETeSuqTivFQslAQAH3+AqGym/YQv
+         n226t8zfFzSifU9oPn5hVQKYfolEPuSacs9PkqBS5iZD08BM2dPV1TC94ONamhSa5CGx
+         mlRTN2p8fN432g8cr9uFNmhwLjYFWInOrA6u5wZ30Cv4BbNR1jZuP7+ShVrWs4RDvU6l
+         Pji0dM4YDZn9YVYfraDmMuLmKvlrLRDMGMSb6X4tfcFD8bEEsPdl0MYISqAv1F0Lzjo3
+         Q/IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OwXWZPnQzf3XInXWmq5k6gcPq0axL7VeZ/2pUkeIAO0=;
+        b=CYHOZNeen0mQVPGXXYz5CLtkivuxc+8W9ZliNtiei8C4SfXEMzXlrnBxRBb26JJyoH
+         uEVs3JudySeA8g7LQ5SFWGmWfUnwIml9QfIwkvlSju4jsc2LrVvZDJfjna15YIAUaZcq
+         WJN0yWJvQPZOiaOR06wPjj+yRqovr0r9S0cv/JTtpFXoeIK4U8eY6UE1TD1/jz/lQNen
+         HdEagrcuhXDBvmn4+ywxh7FcY7OY9T0OCrbuJ5+hxQm2SOvvEeRJQmv6WH4X5PbLqsLB
+         nmb/vpKVf8Y5UXbYTsalAnM2P/Bya9kgns14/2du8+R2oYBFg/hpRwgCzy2UKzteGpOm
+         A+VA==
+X-Gm-Message-State: APjAAAWg2Sh2vBorpaGk3tVEjlYtQMOg35kqZYHUyCs9i7H4l1mxqiTS
+        51nxKD9PmKd4MCA9T49h/AmXUg==
+X-Google-Smtp-Source: APXvYqxiTwnx/w47MoIffPeZy27M224makbmCx5nzSH8a736vVNBtE4G47Q7IhV/AMkoZsqLvj+jkQ==
+X-Received: by 2002:a81:6589:: with SMTP id z131mr6316271ywb.262.1569433501520;
+        Wed, 25 Sep 2019 10:45:01 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 189sm1371215ywa.47.2019.09.25.10.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 10:45:00 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 13:45:00 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/27] drm/dp_mst: Move link address dumping into a
+ function
+Message-ID: <20190925174500.GB218215@art_vandelay>
+References: <20190903204645.25487-1-lyude@redhat.com>
+ <20190903204645.25487-2-lyude@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190903204645.25487-2-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the LEDs multicolor class framework.
+On Tue, Sep 03, 2019 at 04:45:39PM -0400, Lyude Paul wrote:
+> Makes things easier to read.
+> 
+> Cc: Juston Li <juston.li@intel.com>
+> Cc: Imre Deak <imre.deak@intel.com>
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Cc: Harry Wentland <hwentlan@amd.com>
+> Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..8619c9bf1811
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-@@ -0,0 +1,98 @@
-+* Multicolor LED properties
-+
-+Bindings for multi color LEDs show how to describe current outputs of
-+either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-+etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-+modules. This is achieved by adding multi-led nodes layer to the
-+monochrome LED bindings.
-+
-+The nodes and properties defined in this document are unique to the multicolor
-+LED class.  Common LED nodes and properties are inherited from the common.txt
-+within this documentation directory.
-+
-+Required LED Child properties:
-+	- color : For multicolor LED support this property should be defined as
-+		  LED_COLOR_ID_MULTI and further definition can be found in
-+		  include/linux/leds/common.h.
-+
-+led-controller@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "ti,lp5024";
-+	reg = <0x29>;
-+
-+	multi-led@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_STATUS;
-+
-+
-+		led@3 {
-+			reg = <3>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@4 {
-+			reg = <4>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@5 {
-+			reg = <5>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+		reg = <2>;
-+		ti,led-bank = <2 3 5>;
-+
-+		led@6 {
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+			led-sources = <6 9 15>;
-+		};
-+
-+		led@7 {
-+			reg = <0x7>;
-+			color = <LED_COLOR_ID_GREEN>;
-+			led-sources = <7 10 16>;
-+		};
-+
-+		led@8 {
-+			reg = <0x8>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			led-sources = <8 11 17>;
-+		};
-+	};
-+
-+	multi-led@4 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <4>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_ACTIVITY;
-+
-+		led@12 {
-+			reg = <12>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@13 {
-+			reg = <13>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@14 {
-+			reg = <14>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+
-+};
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 35 ++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 82add736e17d..36db66a0ddb1 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -2103,6 +2103,28 @@ static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
+>  	mutex_unlock(&mgr->qlock);
+>  }
+>  
+> +static void
+> +drm_dp_dump_link_address(struct drm_dp_link_address_ack_reply *reply)
+> +{
+> +	struct drm_dp_link_addr_reply_port *port_reply;
+> +	int i;
+> +
+> +	for (i = 0; i < reply->nports; i++) {
+> +		port_reply = &reply->ports[i];
+> +		DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n",
+> +			      i,
+> +			      port_reply->input_port,
+> +			      port_reply->peer_device_type,
+> +			      port_reply->port_number,
+> +			      port_reply->dpcd_revision,
+> +			      port_reply->mcs,
+> +			      port_reply->ddps,
+> +			      port_reply->legacy_device_plug_status,
+> +			      port_reply->num_sdp_streams,
+> +			      port_reply->num_sdp_stream_sinks);
+> +	}
+> +}
+> +
+>  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+>  				     struct drm_dp_mst_branch *mstb)
+>  {
+> @@ -2128,18 +2150,7 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+>  			DRM_DEBUG_KMS("link address nak received\n");
+>  		} else {
+>  			DRM_DEBUG_KMS("link address reply: %d\n", txmsg->reply.u.link_addr.nports);
+> -			for (i = 0; i < txmsg->reply.u.link_addr.nports; i++) {
+> -				DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n", i,
+> -				       txmsg->reply.u.link_addr.ports[i].input_port,
+> -				       txmsg->reply.u.link_addr.ports[i].peer_device_type,
+> -				       txmsg->reply.u.link_addr.ports[i].port_number,
+> -				       txmsg->reply.u.link_addr.ports[i].dpcd_revision,
+> -				       txmsg->reply.u.link_addr.ports[i].mcs,
+> -				       txmsg->reply.u.link_addr.ports[i].ddps,
+> -				       txmsg->reply.u.link_addr.ports[i].legacy_device_plug_status,
+> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_streams,
+> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_stream_sinks);
+> -			}
+> +			drm_dp_dump_link_address(&txmsg->reply.u.link_addr);
+>  
+>  			drm_dp_check_mstb_guid(mstb, txmsg->reply.u.link_addr.guid);
+>  
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.22.0.214.g8dca754b1e
-
+Sean Paul, Software Engineer, Google / Chromium OS
