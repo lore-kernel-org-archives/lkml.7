@@ -2,85 +2,96 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D70AC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC01C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4856821D82
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20CB214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:52:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="va8yIct1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbfIYJv7 (ORCPT
+        id S1731706AbfIYJwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:51:59 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20770 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfIYJv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:51:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 02:51:58 -0700
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="201198282"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 02:51:56 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 2442020A0F; Wed, 25 Sep 2019 12:51:54 +0300 (EEST)
-Date:   Wed, 25 Sep 2019 12:51:54 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v3 6/8] media: i2c: ov2659: Add powerdown/reset gpio
- handling
-Message-ID: <20190925095154.GL9467@paasikivi.fi.intel.com>
-References: <20190924164414.21897-1-bparrot@ti.com>
- <20190924164414.21897-7-bparrot@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190924164414.21897-7-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 25 Sep 2019 05:52:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42030 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfIYJws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:52:48 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z12so2898119pgp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 02:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TV3RT1yNKXy5j0AoE4e6keZibU6Zrl0Z4HmWZXehpjw=;
+        b=va8yIct1jAIbfCuT/3sEP4exm22IQ2TSwWZP2+TsQD7Czgf2QXVgxepvptPTgLoifq
+         5r/FRHyIQOdjDoO5V+eirOa4qQ5m5BXLaK0Jc+RM6BD8Edgv9isDVFsB3SwVDyL/+8mW
+         s6axDG4Eti4ok2rYzMLd/40V9QkKJEHTx+7q/KUEWYKzi84PeWgSjNOMUYp2EGX7VEdn
+         daIsmeq4cDoSg85xqv9HhaCnxKuPz2KJBDNiSb8+6It47l89jyS3m7xe/EhL8qnfHRx7
+         JJnNtE22qP4BEFxoOCaOPhlXs2Wh8b8y8tYKZda6+/4/ZMa0oNQbDPQcjzVrutR+SOFO
+         IuKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TV3RT1yNKXy5j0AoE4e6keZibU6Zrl0Z4HmWZXehpjw=;
+        b=lkT5yse2IS0pOrBi+87DFDvkmnDxvn4e8OCXQVkm9ch3nA3U5+Qo53U6IVfGWBk/f5
+         VV9NR66eDm7bGsoMKvZutrqIh1KYoceh6SXToxBl7M5iB9tntpW8BO3YU1ZMIqz/i+ao
+         EghGG721jtMkHg+zwP6n+GCgDEbaz8VNVr/L0sSsRTB2U3+EKn8jVcl7PM56ZqSFy8hF
+         33FeVXz3tU23Zok3XdZCnf62Ev8SZiyhk9aqHhcFe0jqrTk6ANrOqoo20bPkkjnARQG8
+         2WpuRAaqE8QAWA/JdHKCVjYMg5iT3ON9ntP2c9VlrZfi1Ex500PtvKmcloYFUMMSg+DW
+         4RGQ==
+X-Gm-Message-State: APjAAAUz87T/3M0NP35jaV7+AUmDJV/RcDPS57lu7PPYNNTrue8kJjGB
+        Qprew09yF2i1GrntqpTcBMKI4A==
+X-Google-Smtp-Source: APXvYqxAi3M7mauapLMsR6LDIGh2upipMbm+6rwiwwDaLqwegdnLSJD1q1FWwqTsxI1Xn5NqnSB2mQ==
+X-Received: by 2002:a63:d908:: with SMTP id r8mr8046960pgg.263.1569405167866;
+        Wed, 25 Sep 2019 02:52:47 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id p20sm4037221pgj.47.2019.09.25.02.52.43
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Sep 2019 02:52:46 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org
+Cc:     longman@redhat.com, linux-gpio@vger.kernel.org,
+        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
+        baolin.wang@linaro.org, orsonzhai@gmail.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.19.y 0/3] Candidates from Spreadtrum 4.14 product kernel
+Date:   Wed, 25 Sep 2019 17:52:26 +0800
+Message-Id: <cover.1569404757.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
+kernel, but missing in v4.19.75:
 
-On Tue, Sep 24, 2019 at 11:44:12AM -0500, Benoit Parrot wrote:
-> On some board it is possible that the sensor 'powerdown' and or 'reset'
-> pin might be controlled by gpio instead of being tied.
-> 
-> To implement we add pm_runtime support which will handle the power
-> up/down sequence when it is available otherwise the sensor will be
-> powered on at module insertion/probe and powered off at module removal.
-> 
-> Now originally the driver assumed that the sensor would always stay
-> powered and keep its register setting. We cannot assume this anymore, so
-> every time we "power up" we need to re-program the initial registers
-> configuration first. This was previously done only at probe time.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
+957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
+87a2b65fc855 power: supply: sysfs: ratelimit property read error message
 
-Thanks for the update.
+[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
 
-I missed the control interface is accessible also when the device is not
-streaming, and the driver doesn't appear to power on the sensor for that,
-leading to a failing I²C write.
+David Lechner (1):
+  power: supply: sysfs: ratelimit property read error message
 
-Could you address that as well, either here or as a separate patch? E.g.
-the smiapp driver does this.
+Nathan Chancellor (1):
+  pinctrl: sprd: Use define directive for sprd_pinconf_params values
+
+Waiman Long (1):
+  locking/lockdep: Add debug_locks check in __lock_downgrade()
+
+ drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
+ drivers/power/supply/power_supply_sysfs.c |    3 ++-
+ kernel/locking/lockdep.c                  |    3 +++
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
 -- 
-Kind regards,
+1.7.9.5
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
