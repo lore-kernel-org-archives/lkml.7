@@ -2,142 +2,110 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26368C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA647C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B2921D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3FE21D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Fp0DnKSp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xt6NIi0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732747AbfIYTx2 (ORCPT
+        id S2387854AbfIYT4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 15:53:28 -0400
-Received: from mail-eopbgr1300105.outbound.protection.outlook.com ([40.107.130.105]:6127
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727743AbfIYTx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 15:53:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nBKb8AGAFjYLKYeVaLLKdYGYi/HR0SCc8XaAadhjw9IAj44QaeaG6KJV2k2vHSmct9pqJewMvT4y5F8amdBEBiGd7PEYCmFXa4XtzyOOSM1+APzHgg+SJmWJGnjxvRHd4l3abxgbH5rNnmkX44nKIUU8d+mnun4SB+wSlTm4AN87f3ffvey0yvREA0ZxaHUaebWuBtkOISU6BRUd96qkdAnXL1POZdtToEAsihTk8pm6aeeHsEZvxLSVztOaIZo7b+RoJfjtKKCQ8m+GS9AGRKZURAk6pHX2b8ZhpKI0u9QnVjTxZYT0zSt5EBELjzA/D/yfmbgD6t2R0Vx9FLN/RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OsLyvRCIbr02SR0jA0Z6oucEcCmJd+qByJtPTdbYKnA=;
- b=IXmNxL7/DfyrprGoVpd2NECrOVJCx8DZDvfl2lxjR4SzTaL9Ob1eNkiEQI/SPVRTvu4uDvWC2QTQ14C5COJWvUzfpbNFPMa8eEHoFXvk9hl2rwjfq/NdeI+20upFil29Yr5/Dq6Oq+t1DXK16IAfdecOr1OEZqiuIczT+5tRs498XkaL31LpnO43Jj9iJCAZ9wsV2fAgsa6w3dsH/0bWzmNtMso7VXj5IUwPEypBU5OQHLPWDVnM21r7cadXRH+cWg0IVRGUa5ojAU2EgQ7sFZAJjEODEnukRuXKu2Q3hOstq0DWXbQeFL6p1rbencmGjMERZe0C9GZkl6PSGwNZ8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OsLyvRCIbr02SR0jA0Z6oucEcCmJd+qByJtPTdbYKnA=;
- b=Fp0DnKSpL9001uyJ/D0Or+z92f+A1+jrYrA9NpN8uLx6t2FJWWv/itrQNyA73S85bnzlcfXqk2WeshCR8YuGsGYDcc4vzA8danxjUrsO7M7o5Pkps5Ly3DzvchOFdZ9jveo4bdMAInxYoIhv+s9sJdW9+3ZDED4A66/Rwvr62CM=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.5; Wed, 25 Sep 2019 19:53:22 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 19:53:23 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] HID: hyperv: Add the support of hibernation
-Thread-Topic: [PATCH] HID: hyperv: Add the support of hibernation
-Thread-Index: AQHVaPmqZINIgyUXxE2R4/KRfEe4oqc84yhw
-Date:   Wed, 25 Sep 2019 19:53:22 +0000
-Message-ID: <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568244952-66716-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1568244952-66716-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T19:53:20.7582067Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1e0f9b41-cdce-46c7-90ec-b90b750b9b58;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a7074dc-b0b4-40a0-6ecc-08d741f205bb
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB01394463403081EFF58890D2BF870@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(7696005)(102836004)(2906002)(76176011)(5660300002)(476003)(316002)(25786009)(9686003)(55016002)(6636002)(33656002)(486006)(8990500004)(52536014)(76116006)(1511001)(14444005)(86362001)(305945005)(6116002)(66946007)(256004)(99286004)(74316002)(6246003)(6436002)(186003)(4744005)(6506007)(66556008)(81166006)(10090500001)(64756008)(66476007)(66446008)(71200400001)(71190400001)(446003)(11346002)(10290500003)(478600001)(2201001)(22452003)(8936002)(46003)(110136005)(8676002)(14454004)(229853002)(2501003)(81156014)(7736002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0X29lQ6kjroAywh1Gz3L6tlzc04aEJwnh8lRCRCN0nkifdiSrGQMGjyG790wZJBbVypz6ba/xLARvqTZzh/0UXlIxAvPwxUvihZ95+duh4HyN8kjQPAr9MBaAdtTZ7LHojwwdJQcCYWzWwryDgHGYS3F739jobghqCA1BVL/o0D/VPmks1YWaPt+2HTe56DG9PvJFiPvZRVV4JP+wC9MTPZfRKP5pGGzEO7VcNpLq/im+fTWs0d5kMBKLJMs+hifYCiFyHGrcu6q9ySiHJIMMn04GBJ0WWGd6UIPHxI92vYaxaHeOeKKTSCRkUNDFvXhowsqPCbRpHmli5NAcQJkzevrXmWKg9KHkP9YEmqar/b5oyiWf6sQaG7CoQJtQuWxDxGLDmDhap2p72yZ9H5WAzrFMvDYj1kBsvjvrhIJdkw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Sep 2019 15:56:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34299 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731229AbfIYT4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 15:56:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a11so116175wrx.1;
+        Wed, 25 Sep 2019 12:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uwE3NiK8u+bxgHZ+HUFoTn6YzX3YfI6lWA87gOzdcWY=;
+        b=Xt6NIi0WjoL2BbXIfO4Qdd2wVTiqsKYtqYFdYd48zmhuGPqisIsviqcJG+G43NSsDO
+         k0URO6ROFk3tYd5J2CgP1dF7O/c45PTOb5oW4WksihDC1/RaFJwbDMQljl1z9//jMb4H
+         blWJm1QibltgkD0SMMH3AA+zAjJoPuR0p+PYdgyiss7wwpOQMucE3g7Un39N8i4huPFt
+         3iMsHsxXTjsD8xYS0WPzGJEW4O+hkt9rijBD2uygsrUZb/kt9FLM6a2Hi8qmQXdaGMgY
+         kSmTUwp+IeRh4NWCaz7zlt0Nhna6eSstMFwdHKGjYWvcmi9jRo9jpzaHlr9lCS19CWye
+         yIZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uwE3NiK8u+bxgHZ+HUFoTn6YzX3YfI6lWA87gOzdcWY=;
+        b=gYK0SZyLoAY2d93qN+bBdMo0y2NjFYLtzcgc2rTMj6/xIaKhtIoXq8ah6eqPguYbdH
+         KkGDmBoH+Oi4UmOrGgvsMw2z4pfVJHDGm9ldWo5qz1OWqDasI54so6ulfW9h8ZFbNdiE
+         KSahOA5YOrlXSuHuSVWYgrxri5GnrqvWQIAd7DScVDanWXJTP3LYqxvxwyOXg9E1SSiZ
+         IwaiyfaFm9KzUkPifY+cT8jogEv0b6AQf6IBJOs+kypmlbCwtazWhXD+1Qm5q/ZvLIkz
+         xuVWQ0z71iOky9loQqvH4qffgYGK4JQRFnYaRVdkKBKacnDRTCahCcN5Dwtb2DP2xZic
+         2FvA==
+X-Gm-Message-State: APjAAAWX24ytRotlEWSKiB4hny5kYMTlfTNsurTtN275j9KBIW2ExOCA
+        JMjw250CRLjh2ppKP0F4Vs8=
+X-Google-Smtp-Source: APXvYqxBrzAB7FElDzuLgGE02iUemO9rVd6fi3TPPuuELGMtG+mycy1PCK8XGE5zVqtwQD0yZ/w4fg==
+X-Received: by 2002:adf:ef49:: with SMTP id c9mr67324wrp.122.1569441378315;
+        Wed, 25 Sep 2019 12:56:18 -0700 (PDT)
+Received: from localhost.localdomain (101.26.95.79.rev.sfr.net. [79.95.26.101])
+        by smtp.gmail.com with ESMTPSA id b7sm48899wrj.28.2019.09.25.12.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 12:56:17 -0700 (PDT)
+Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
+        by localhost.localdomain with esmtp (Exim 4.92.1)
+        (envelope-from <jekhor@gmail.com>)
+        id 1iDDOb-0002f2-6g; Wed, 25 Sep 2019 22:56:17 +0300
+Date:   Wed, 25 Sep 2019 22:56:17 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ Micro-B and Type-C variants
+Message-ID: <20190925195617.GA8666@jeknote.loshitsa1.net>
+References: <20190920223356.6622-1-jekhor@gmail.com>
+ <20190920223356.6622-2-jekhor@gmail.com>
+ <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com>
+ <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
+ <20190925162712.GA3653@jeknote.loshitsa1.net>
+ <CAHp75VfL0RUgMhZk=gesxBcBfRkfV8kC1zsN9TNg53qpUNVU0w@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a7074dc-b0b4-40a0-6ecc-08d741f205bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 19:53:22.6657
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KlSTyxO+AFutCGkQPbVV7u66V2dfaVtfff2UujYm+of7psbxv0ZA0RUkN/a3MiC+ZldW5bkrj/Xi7LN4cY22iA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfL0RUgMhZk=gesxBcBfRkfV8kC1zsN9TNg53qpUNVU0w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, September 11, 2019 4:36 PM
->=20
-> We need mousevsc_pm_notify() to make sure the pm_wakeup_hard_event()
-> call
-> does not prevent the system from entering hibernation: the hibernation
-> is a relatively long process, which can be aborted by the call
-> pm_wakeup_hard_event(), which is invoked upon mouse events.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->=20
-> This patch is basically a pure Hyper-V specific change and it has a
-> build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
-> Implement
-> suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin=
-'s
-> Hyper-V tree's hyperv-next branch [ ... snipped ...]
->=20
-> I request this patch should go through Sasha's tree rather than the
-> input subsystem's tree.
->=20
-> Hi Jiri, Benjamin, can you please Ack?
+On Wed, Sep 25, 2019 at 08:42:03PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 25, 2019 at 7:27 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
+> > On Wed, Sep 25, 2019 at 06:02:22PM +0300, Andy Shevchenko wrote:
+> > > On Sat, Sep 21, 2019 at 9:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> > > By some reason it doesn't apply.
+> >
+> > I have checked, and have no issues when applying this patch to the current
+> > torvalds/master and linux-next/master branches (351c8a09b00b and 9e88347dedd8
+> > commit IDs).
+> 
+> It doesn't apply to the subsystem tree (for-next or my review branch)
 
-Hi Jiri, Benjamin,
-Can you please take a look at the patch?
+Yes, it doesn't apply because this subsystem tree doesn't contain commit
 
-Thanks,
--- Dexuan
+"78cd4bf53635 platform/x86: intel_cht_int33fe: Use new API to gain access to the role switch"
+
+which was accepted to torvalds/master tree already.
+
+
+
+-- 
+Yauhen Kharuzhy
