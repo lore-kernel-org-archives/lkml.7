@@ -2,156 +2,88 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93908C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61186C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8E320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E41F222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634164AbfIYIdJ (ORCPT
+        id S2442766AbfIYIfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:33:09 -0400
-Received: from regular1.263xmail.com ([211.150.70.204]:55368 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634140AbfIYIdJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:33:09 -0400
-Received: from localhost (unknown [192.168.167.223])
-        by regular1.263xmail.com (Postfix) with ESMTP id E900E25A;
-        Wed, 25 Sep 2019 16:33:02 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.10.69] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P8268T140247138543360S1569400380603435_;
-        Wed, 25 Sep 2019 16:33:01 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <567e49f44f60ab6af7dc24948813d994>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     heiko@sntech.de, Ayan.Halder@arm.com, linux-kernel@vger.kernel.org
-References: <1569398801-92201-1-git-send-email-hjc@rock-chips.com>
- <1569398801-92201-2-git-send-email-hjc@rock-chips.com>
- <8cd915d3-9f61-abdc-7fd1-a9241777f29a@linux.intel.com>
-From:   "sandy.huang" <hjc@rock-chips.com>
-Message-ID: <e0c272ff-5ef9-f5db-4dad-477ecae2e6ca@rock-chips.com>
-Date:   Wed, 25 Sep 2019 16:32:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 04:35:24 -0400
+Received: from mga17.intel.com ([192.55.52.151]:57339 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405299AbfIYIfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:35:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 01:35:23 -0700
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="183186690"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 01:35:20 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs: Use make invocation's -j argument for parallelism
+In-Reply-To: <201909240910.D6E5C767D1@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <201909191438.C00E6DB@keescook> <20190922140331.3ffe8604@lwn.net> <201909231537.0FC0474C@keescook> <87pnjqtbft.fsf@intel.com> <201909240910.D6E5C767D1@keescook>
+Date:   Wed, 25 Sep 2019 11:35:17 +0300
+Message-ID: <87blv8u62i.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <8cd915d3-9f61-abdc-7fd1-a9241777f29a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2019/9/25 下午4:17, Maarten Lankhorst 写道:
-> Op 25-09-2019 om 10:06 schreef Sandy Huang:
->> These new format is supported by some rockchip socs:
->>
->> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
->> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
->> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
->>
->> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
->> ---
->>   drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->>   include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->>   2 files changed, 32 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
->> index c630064..f25fa81 100644
->> --- a/drivers/gpu/drm/drm_fourcc.c
->> +++ b/drivers/gpu/drm/drm_fourcc.c
->> @@ -274,6 +274,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
->>   		{ .format = DRM_FORMAT_YUV420_10BIT,    .depth = 0,
->>   		  .num_planes = 1, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->>   		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->> +		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->> +		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
->> +		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
->> +		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
->> +		  .is_yuv = true },
->> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,
->> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
->> +		  .is_yuv = true },
->>   	};
->>   
->>   	unsigned int i;
->> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->> index 3feeaa3..0479f47 100644
->> --- a/include/uapi/drm/drm_fourcc.h
->> +++ b/include/uapi/drm/drm_fourcc.h
->> @@ -238,6 +238,20 @@ extern "C" {
->>   #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
->>   
->>   /*
->> + * 2 plane YCbCr 10bit
->> + * index 0 = Y plane, [9:0] Y
->> + * index 1 = Cr:Cb plane, [19:0]
->> + * or
->> + * index 1 = Cb:Cr plane, [19:0]
->> + */
->> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
->> +
->> +/*
->>    * 2 plane YCbCr MSB aligned
->>    * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->>    * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
-> What are the other bits, they are not mentioned?
-
-It's compact layout
-
-Yplane:
-
-     Y0[9:0]Y1[9:0]Y2[9:0]Y3[9:0]...
-
-UVplane:
-
-     U0[9:0]V0[9:0]U1[9:0]V1[9:0]...
-
-
-
+On Tue, 24 Sep 2019, Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Sep 24, 2019 at 10:12:22AM +0300, Jani Nikula wrote:
+>> On Mon, 23 Sep 2019, Kees Cook <keescook@chromium.org> wrote:
+>> > On Sun, Sep 22, 2019 at 02:03:31PM -0600, Jonathan Corbet wrote:
+>> >> On Thu, 19 Sep 2019 14:44:37 -0700
+>> >> Kees Cook <keescook@chromium.org> wrote:
+>> >> 
+>> >> > While sphinx 1.7 and later supports "-jauto" for parallelism, this
+>> >> > effectively ignores the "-j" flag used in the "make" invocation, which
+>> >> > may cause confusion for build systems. Instead, extract the available
+>> >> 
+>> >> What sort of confusion might we expect?  Or, to channel akpm, "what are the
+>> >> user-visible effects of this bug"?
+>> >
+>> > When I run "make htmldocs -j16" with a pre-1.7 sphinx, it is not
+>> > parallelized. When I run "make htmldocs -j8" with 1.7+ sphinx, it uses
+>> > all my CPUs instead of 8. :)
+>> 
+>> To be honest, part of the solution should be to require Sphinx 1.8 or
+>> later. Even Debian stable has it. If your distro doesn't have it
+>> (really?), using the latest Sphinx in a virtual environment should be a
+>> matter of:
+>> 
+>> $ python3 -m venv .venv
+>> $ . .venv/bin/activate
+>> (.venv) $ pip install sphinx sphinx_rtd_theme
+>> (.venv) $ make htmldocs
 >
->
->
->
+> I don't mind having sphinx 1.8 (I did, in fact, already update it), but
+> that still doesn't solve the whole problem: my -j argument is being
+> ignored...
+
+I meant, *part* of the solution should be to not have to deal with
+ancient Sphinx.
+
+BR,
+Jani.
 
 
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
