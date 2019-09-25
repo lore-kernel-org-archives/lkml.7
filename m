@@ -2,111 +2,151 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC7DC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D4C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661FA20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569402986;
-	bh=Z2Uag+DwW909ph/1HOySpUCCmNKluWCbwO7QFKK6F8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r0kM6O+8zR7RfWh9zHQtQS0ATNxms+QbvRaSIBuZaVtM8eeLeQWlauPJnTvdO54wn
-	 W6Huphr3uHUNy6i2OjJbYr+b7qUcjwcDMV8gS+mnTshfh1IC0HmSNqiWqm+ERuFaTE
-	 alzFpfGdNSpc/Nnxm8hoXlFE/gBYKnGcTbPVmyrs=
+	by mail.kernel.org (Postfix) with ESMTP id EC2AF20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfIYJQQ (ORCPT
+        id S1727469AbfIYJSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfIYJPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:15:31 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C17A020673;
-        Wed, 25 Sep 2019 09:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569402925;
-        bh=Z2Uag+DwW909ph/1HOySpUCCmNKluWCbwO7QFKK6F8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LUAdHLEB0Njr3vPkEeYEnn9UJ65aNeraXjCw8vvFf6X7fzKvIP2kobELTTOGaz+Ai
-         F/6Pk5OGh6G++u9o8W46kH+kpymk6XLNk9oIVvO3P5dgTlNDCS89SC0ZdQYzlIooNS
-         HHynK47zEbah8oMWrSK4ChXXBYoripfPPxhyqVt0=
-Date:   Wed, 25 Sep 2019 11:15:22 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        David Dai <daidavid1@codeaurora.org>
-Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get()
- and reduce DT binding
-Message-ID: <20190925091522.jf5q2jdo6njfkxto@gilmour>
-References: <20190925054133.206992-1-swboyd@chromium.org>
+        Wed, 25 Sep 2019 05:18:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2780 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726690AbfIYJSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:18:02 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BDA5A25F422E5C2CE8A7;
+        Wed, 25 Sep 2019 17:17:55 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 17:17:50 +0800
+To:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        <dvhart@infradead.org>, <andy@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH 1/2] efi: Add efi_memmap_free() to free EFI memory map
+CC:     <linux-efi@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
+Date:   Wed, 25 Sep 2019 17:17:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aomtcuidegtr2wsv"
-Content-Disposition: inline
-In-Reply-To: <20190925054133.206992-1-swboyd@chromium.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In efi_fake_memmap(), the commit 20b1e22d01a4 ("x86/efi: Don't allocate
+memmap through memblock after mm_init()") replace memblock_alloc() with
+efi_memmap_alloc(), but there is no matching modification of
+memblock_free() when early_memremap() fail.
 
---aomtcuidegtr2wsv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fix this by adding efi_memmap_free() to instead of memblock_free().
 
-Hi Stephen,
+Fixes: 20b1e22d01a4 ("x86/efi: Don't allocate memmap through memblock after mm_init()")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ drivers/firmware/efi/fake_mem.c |  2 +-
+ drivers/firmware/efi/memmap.c   | 34 ++++++++++++++++++++++++++++++++++
+ include/linux/efi.h             |  1 +
+ 3 files changed, 36 insertions(+), 1 deletion(-)
 
-On Tue, Sep 24, 2019 at 10:41:33PM -0700, Stephen Boyd wrote:
-> The DT binding could also be simplified somewhat. Currently a path needs
-> to be specified in DT for each and every use case that is possible for a
-> device to want. Typically the path is to memory, which looks to be
-> reserved for in the binding with the "dma-mem" named path, but sometimes
-> the path is from a device to the CPU or more generically from a device
-> to another device which could be a CPU, cache, DMA master, or another
-> device if some sort of DMA to DMA scenario is happening. Let's remove
-> the pair part of the binding so that we just list out a device's
-> possible endpoints on the bus or busses that it's connected to.
->
-> If the kernel wants to figure out what the path is to memory or the CPU
-> or a cache or something else it should be able to do that by finding the
-> node for the "destination" endpoint, extracting that node's
-> "interconnects" property, and deriving the path in software. For
-> example, we shouldn't need to write out each use case path by path in DT
-> for each endpoint node that wants to set a bandwidth to memory. We
-> should just be able to indicate what endpoint(s) a device sits on based
-> on the interconnect provider in the system and then walk the various
-> interconnects to find the path from that source endpoint to the
-> destination endpoint.
+diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+index 9501edc..c2f69f6 100644
+--- a/drivers/firmware/efi/fake_mem.c
++++ b/drivers/firmware/efi/fake_mem.c
+@@ -65,7 +65,7 @@ void __init efi_fake_memmap(void)
+ 	new_memmap = early_memremap(new_memmap_phy,
+ 				    efi.memmap.desc_size * new_nr_map);
+ 	if (!new_memmap) {
+-		memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
++		efi_memmap_free(new_memmap_phy, new_nr_map);
+ 		return;
+ 	}
 
-The dma-mem name is used by the OF core to adjust the mapping of the
-devices as well. So, any solution needs to be generic (or provide a
-generic helper).
+diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+index 38b686c..35dc189 100644
+--- a/drivers/firmware/efi/memmap.c
++++ b/drivers/firmware/efi/memmap.c
+@@ -18,6 +18,11 @@ static phys_addr_t __init __efi_memmap_alloc_early(unsigned long size)
+ 	return memblock_phys_alloc(size, SMP_CACHE_BYTES);
+ }
 
-Maxime
++static void __init __efi_memmap_free_early(phys_addr_t addr, unsigned long size)
++{
++	memblock_free(addr, size);
++}
++
+ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+ {
+ 	unsigned int order = get_order(size);
+@@ -29,6 +34,15 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+ 	return PFN_PHYS(page_to_pfn(p));
+ }
 
---aomtcuidegtr2wsv
-Content-Type: application/pgp-signature; name="signature.asc"
++static void __init __efi_memmap_free_late(phys_addr_t addr, unsigned long size)
++{
++	unsigned int order = get_order(size);
++	struct page *p = pfn_to_page(PHYS_PFN(addr));
++
++	if (p)
++		__free_pages(p, order);
++}
++
+ /**
+  * efi_memmap_alloc - Allocate memory for the EFI memory map
+  * @num_entries: Number of entries in the allocated map.
+@@ -50,6 +64,26 @@ phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
+ }
 
------BEGIN PGP SIGNATURE-----
+ /**
++ * efi_memmap_free - Free memory for the EFI memory map
++ * @addr: Physical address of the EFI memory map to be freed.
++ * @num_entries: Number of the EFI memory map entries.
++ *
++ * Depending on whether mm_init() has already been invoked or not,
++ * either memblock or "normal" page free is used.
++ */
++void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries)
++{
++	unsigned long size = num_entries * efi.memmap.desc_size;
++
++	if (slab_is_available()) {
++		__efi_memmap_free_late(addr, size);
++
++		return;
++	}
++	__efi_memmap_free_early(addr, size);
++}
++
++/**
+  * __efi_memmap_init - Common code for mapping the EFI memory map
+  * @data: EFI memory map data
+  * @late: Use early or late mapping function?
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index bd38370..8bb741a 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1057,6 +1057,7 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+ extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYswKgAKCRDj7w1vZxhR
-xe8UAQC3EqIcKg882wsQj/TdlIO/sf9HoBIDnQnVNJ2t2kaPsAD/Qsa+D9ZQUlKc
-qhYx4agifh1/WXVN4H+Wb39VO4vx5wk=
-=Z0s1
------END PGP SIGNATURE-----
+ extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
++extern void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries);
+ extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
+ extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
+ extern void __init efi_memmap_unmap(void);
+-- 
+1.8.3.1
 
---aomtcuidegtr2wsv--
