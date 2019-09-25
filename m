@@ -2,120 +2,110 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40C5C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56833C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E0121D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271B92082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AebTbWJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390615AbfIYKxs (ORCPT
+        id S2403864AbfIYLBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:53:48 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32595 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390412AbfIYKxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:53:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 03:53:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="340374263"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 25 Sep 2019 03:53:43 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iD4vV-00034Z-VE; Wed, 25 Sep 2019 13:53:41 +0300
-Date:   Wed, 25 Sep 2019 13:53:41 +0300
-From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-To:     Nikolaus Voss <nv@vosn.de>
-Cc:     "Moore, Robert" <robert.moore@intel.com>,
-        Ferry Toth <fntoth@gmail.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
-Message-ID: <20190925105341.GD5933@smile.fi.intel.com>
-References: <20190913151228.GT2680@smile.fi.intel.com>
- <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909161134070.2910@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B968327D@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909181624550.3925@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B9686438@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909231100190.16390@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B968B639@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909251131060.65328@fox.voss.local>
+        Wed, 25 Sep 2019 07:01:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37462 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390478AbfIYLBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 07:01:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PAsJ3J087136;
+        Wed, 25 Sep 2019 11:01:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=w6XAuF/qcTj8cDqYC4cfHG6Vdy4EsYsV65lu58h90F0=;
+ b=AebTbWJCGZNNDdraBA50pdnHEUsukU3Qbh4gXU+N4wbWDwXAqP4V6i52AETufF34/VlI
+ gpuJFXeR2YQqQBttefqut93lY0Z4MM/FXYSADqRtCRqUY8RJtYNVvu8dRTtmFZgdhCxJ
+ toDh0VvUTS+5X6NTxa98cAAelEGETWRZJLdFiPR8Nnt5LLT50KQj2lsDS+9GkZH0q7eu
+ uA4aMT3yw5sSjyHeEeuG8Maakf++oMEC3cpGCcD+f3EBTBGB6LWqGYc273OmoDwYBx4v
+ IQv9DvwdSZf5ek2RCKrL6RlmDnOd78P3pg3HFhO6T9in6UkuV3QE4oMPgRF3WqfH3U+u EA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v5b9tuvmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 11:01:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PAx40S131861;
+        Wed, 25 Sep 2019 11:01:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2v82tjpg5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 11:01:17 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8PB18pt029392;
+        Wed, 25 Sep 2019 11:01:10 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Sep 2019 04:01:08 -0700
+Date:   Wed, 25 Sep 2019 14:01:00 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Dongpo Li <lidongpo@hisilicon.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH net] of: mdio: Fix a signedness bug in
+ of_phy_get_and_connect()
+Message-ID: <20190925110100.GL3264@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1909251131060.65328@fox.voss.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Mailer: git-send-email haha only kidding
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909250112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909250112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 12:18:11PM +0200, Nikolaus Voss wrote:
-> On Tue, 24 Sep 2019, Moore, Robert wrote:
-> > How about this:
-> > Go back to using acpi_tb_install_and_load_table(), but then call acpi_ns_initialize_objects afterwards This is what acpi_load_table does.
-> > 
-> > 
-> >    ACPI_INFO (("Host-directed Dynamic ACPI Table Load:"));
-> >    Status = AcpiTbInstallAndLoadTable (ACPI_PTR_TO_PHYSADDR (Table),
-> >        ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE, &TableIndex);
-> >    if (ACPI_SUCCESS (Status))
-> >    {
-> >        /* Complete the initialization/resolution of new objects */
-> > 
-> >        AcpiNsInitializeObjects ();
-> >    }
-> 
-> The idea was to have all drivers use the same interface for dynamically
-> loading ACPI tables, i.e. efivar_ssdt_load() (which already used
-> acpi_load_table()) and the acpi_configfs driver. The efivar driver doesn't
-> provide a possibility to unload the table, so acpi_load_table() is okay for
-> this purpose. 
+The "iface" variable is an enum and in this context GCC treats it as
+an unsigned int so the error handling is never triggered.
 
-> According to Bob, acpi_tb_install_and_load_table() is not part
-> of the external ACPICA API declared under include/acpi (though it is
-> exported).
+Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/of/of_mdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You are answering to Bob himself :-)
-
-So, above is another proposal and we can create a common symmetric APIs in ACPI
-glue layer for all users even if some of them don't care about unloading.
-
-> The counterpart of acpi_load_table() - inline comment "Note1: Mainly
-> intended to support hotplug addition of SSDTs" - seems to be
-> acpi_unload_parent_table() - inline comment "Note: Mainly intended to
-> support hotplug removal of SSDTs" - but it doesn't expect a table index but
-> an acpi_handle as argument, and it is only used within ACPICA, so IMO the
-> API can't be properly used in our case and should be improved even though
-> unloading tables is deprecated.
-> 
-> If changing the API is not an option, we can choose between Rafael's way
-> (extending the API instead of changing it) or Bob's proposal (doing the same
-> thing - hotplug-loading a SSDT - in different ways, in case of acpi_configfs
-> using ACPICA internal API). I don't have a clear favorite, but I'm tending
-> to Rafael's solution my favorite being the API change.
-
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 000b95787df1..bd6129db6417 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -362,7 +362,7 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
+ 	int ret;
+ 
+ 	iface = of_get_phy_mode(np);
+-	if (iface < 0)
++	if ((int)iface < 0)
+ 		return NULL;
+ 	if (of_phy_is_fixed_link(np)) {
+ 		ret = of_phy_register_fixed_link(np);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
