@@ -2,60 +2,98 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD0C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770B5C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CF02146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B9D21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569418710;
+	bh=nz2r43778u7sfnI6CaMK0ADS1GXFkn20EezdpVQkkcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yfp9u4vDhbFMd7kzEx1XENCy6Rk9sMxdxz+UtoIKsPQnDSfd9f5xqSCbBUTKJooC0
+	 hdJzLzX8hsqyBNJtlRsmVza77CLCyGq0aMigZXLIshPbFYhzlKs7/d3+zDC0XS38m7
+	 d9qrqT1XPoKqCFBaPi1kvStn7RTKtVG6KKp3TnvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406579AbfIYNdA (ORCPT
+        id S2406677AbfIYNi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 09:33:00 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:58567 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391613AbfIYNdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 09:33:00 -0400
-IronPort-SDR: S3GEvS/c5joOftr2zCT8j1JB/1bsRN84+3LAkZwptHkFSzFGVUs3+n1zRe8lhr+sjI5Tbv1fx0
- rNQjuQ+mVNwnMOFO01VujnZzPPMaOJ1GHS5jB+IjoZ8lBtlULlkXT1AxWWYPAKzav3iAAkRL3S
- tJZMwyljxMr+B2misWdabCMD1U3QiUYNfe8Uljr4t2n2UA2ImyFGEX/GsYcpUp4NrFjI0eKLvS
- ryOVJVLqzWXLwt0R72VufjYw0r/+HrAjAZ8fy2cBPYLRlw0OO7zYBhHWbYaDSxxp/ryUhFAt1V
- uUU=
-X-IronPort-AV: E=Sophos;i="5.64,548,1559548800"; 
-   d="scan'208";a="41625381"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 25 Sep 2019 05:32:59 -0800
-IronPort-SDR: VBiUJnzZLB/6RpjsCA5Q3ptfHMJzgF/pqiUrp1Hl0Bz8qHBuDaOhqW5xSB18lF7UB27iBiCFBe
- hbXFnjcjuPQ/A/Y4Y8nGrnPAAdJsA0HL3EZlv+Br807DF3C0lJXKg3KINCHqzPJmvSnmHYwmfW
- yFNbe6+xO+Uvsi6D/DF5ShJke/Cw1g5evCNpIuRbEX9kMx1v2PrN4msYwWbKi3Q794eaiLgy4Q
- gZjjsPC5ntRAFXXKptAnvT13k6jHaymARZk3sHpohjdkCq7uhH8k/8JPkYmnCPQMN/WcndaVou
- vzI=
-Date:   Wed, 25 Sep 2019 15:32:42 +0200
-From:   Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-To:     <fweisbec@gmail.com>, <tglx@linutronix.de>, <mingo@kernel.org>,
-        <peterz@infradead.org>
-CC:     <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH V2 1/1] tick: broadcast-hrtimer: Fix a race in bc_set_next
-Message-ID: <20190925133242.GA4188@bala-ubuntu>
-References: <alpine.DEB.2.21.1909232041080.1934@nanos.tec.linutronix.de>
- <20190925115541.1170-1-balasubramani_vivekanandan@mentor.com>
+        Wed, 25 Sep 2019 09:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406057AbfIYNi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 09:38:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0812146E;
+        Wed, 25 Sep 2019 13:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569418708;
+        bh=nz2r43778u7sfnI6CaMK0ADS1GXFkn20EezdpVQkkcc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SF+6M42HvtsxE3dBrenPEAErd+UgnKRlYWWf+NxekW6xuJMD0vFYLhVHoiwJ74FsN
+         smbVIXCIZak++6swKZg2/lE5w2o7XC7Kfh6leE8+GDAWuWWHvPY+0kiFCZ7bN2RbHk
+         qJNgw+mXBGWhrvZjqmeyrYDcLcPrCAJLo4xnHOeo=
+Date:   Wed, 25 Sep 2019 15:38:26 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     bvanassche@acm.org, bhelgaas@google.com, dsterba@suse.com,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        alexander.h.duyck@linux.intel.com, sakari.ailus@linux.intel.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] async: Let kfree() out of the critical area of the lock
+Message-ID: <20190925133826.GA1496885@kroah.com>
+References: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925115541.1170-1-balasubramani_vivekanandan@mentor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+In-Reply-To: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Peter Zijlstra, linux-renesas-soc
+On Wed, Sep 25, 2019 at 08:52:26PM +0800, Yunfeng Ye wrote:
+> It's not necessary to put kfree() in the critical area of the lock, so
+> let it out.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+>  kernel/async.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/async.c b/kernel/async.c
+> index 4f9c1d6..1de270d 100644
+> --- a/kernel/async.c
+> +++ b/kernel/async.c
+> @@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
+>  	list_del_init(&entry->domain_list);
+>  	list_del_init(&entry->global_list);
+> 
+> -	/* 3) free the entry */
+> -	kfree(entry);
+>  	atomic_dec(&entry_count);
+> -
+>  	spin_unlock_irqrestore(&async_lock, flags);
+> 
+> +	/* 3) free the entry */
+> +	kfree(entry);
+> +
+>  	/* 4) wake up any waiters */
+>  	wake_up(&async_done);
+>  }
+> -- 
+> 2.7.4
+> 
 
+Does this result any any measurable performance changes?
+
+thanks,
+
+greg k-h
