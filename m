@@ -2,50 +2,72 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5186C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6629BC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A4720640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC6020640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569452708;
+	bh=nc4kO4mWy1iAAC8EdNEprEHv1nuzvLI/K9KbJOWGEY8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LRxofv20kN8XnbWjorP2aFbtvNVHfIHOEpvSOMbSW5GeCQubDS5s0AO0zLa9qXiOk
+	 XGtSzNdM1PlQ7yzxPUSPllYMjlRtdtZQ0TPw0Es0LM8pQ0Ae0DZwin/f73Vq06AfCT
+	 wxQBSk93MYaqtY1hz9Q4mb/xJpQ+ukW2H1XalzT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730968AbfIYXEz (ORCPT
+        id S1731011AbfIYXFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:04:55 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:28370 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfIYXEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:04:55 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 0BD53A012D;
-        Thu, 26 Sep 2019 01:04:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id kO7xxPjyD2R1; Thu, 26 Sep 2019 01:04:49 +0200 (CEST)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        Wed, 25 Sep 2019 19:05:07 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:33477 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730975AbfIYXFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:05:07 -0400
+Received: by mail-io1-f53.google.com with SMTP id z19so1448178ior.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=579Tnc2tHWRxfBzI2AYOcygJW1YrE5JUA2yogVfQLuk=;
+        b=ApdS52HZvPG4UPM6xBSrQ2S/UNXlmI8kFOmZudEilOG4y80P5HJRHlUnXKPfNJ+WKH
+         au6AjE0kdrTM+IBnFeBGhuDDtnofOCiBS7i2bfyRqXibn7ujiFixczgXhQZkG/9SPJLP
+         nWtV3tk8SZJqPR2uvC9inxGGtNfRDe6urfDEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=579Tnc2tHWRxfBzI2AYOcygJW1YrE5JUA2yogVfQLuk=;
+        b=UH5UTOkwghnl3DU/s+OUjL5i3/dusIJgKSJ+riWoQb2sRHKLwJgLkndVgnzSrDbN4V
+         PsY8EY27QUoDMP8BpbkVbllmdOo3McWePW2xguCDMdsLQAp9SEWDJJV0/T1oH0rt7t+e
+         6ru+mEfCnSREpYNrZ9jlrZi0VnVYaZZh/wbbRlMhDYMT40wb12a5gOHlM4Lw6mqGFgc3
+         YRWdqb3cr5LBdMugGxGQK84HAWKpjuceLhcOP8IzCUx1PFmkUzIETtzctJdCwbOl2GF1
+         0/ytol/Drxbm9KZXUUYF9SI6yPc+qPBjCCWnU4T6MBqe5zDQxUtEAF4+B+EQbVx+RJVb
+         TMqw==
+X-Gm-Message-State: APjAAAW5NGxfFbfZWs8wFxBc/x//4NX8dQNPgssjhvn8d3Q6KenmRCSn
+        IYMmULlMNgiEaKh+d3ZrP1kIUQ==
+X-Google-Smtp-Source: APXvYqw3G8DNm3m995j68ySkBp40wb8S0xhIePya4oAlregS01zaifCXpCYtrJLA2UrcL7HqzDB3rg==
+X-Received: by 2002:a02:a792:: with SMTP id e18mr803374jaj.125.1569452705565;
+        Wed, 25 Sep 2019 16:05:05 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id f23sm70767ioc.36.2019.09.25.16.05.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 16:05:04 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        shuah@kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] sched_setattr: switch to copy_struct_from_user()
-Date:   Thu, 26 Sep 2019 01:03:31 +0200
-Message-Id: <20190925230332.18690-4-cyphar@cyphar.com>
-In-Reply-To: <20190925230332.18690-1-cyphar@cyphar.com>
-References: <20190925230332.18690-1-cyphar@cyphar.com>
+Subject: [PATCH 0/2] Simplify kselftest build and install use-cases
+Date:   Wed, 25 Sep 2019 17:04:33 -0600
+Message-Id: <cover.1569452305.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,96 +75,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is very straightforward, and helps unify the syscall
-interface for struct-from-userspace syscalls. Ideally we could also
-unify sched_getattr(2)-style syscalls as well, but unfortunately the
-correct semantics for such syscalls are much less clear (see [1] for
-more detail). In future we could come up with a more sane idea for how
-the syscall interface should look.
+This patch series simplifies kselftest use-cases and addresses requests
+from developers and testers to add support for building and installing
+from the main Makefile.
 
-[1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
-     robustify sched_read_attr() ABI logic and code")
+Shuah Khan (2):
+  Makefile: Add kselftest_build target to build tests
+  selftests: Add kselftest_install target to main Makefile
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- kernel/sched/core.c | 43 +++++++------------------------------------
- 1 file changed, 7 insertions(+), 36 deletions(-)
+ Makefile                                     | 8 ++++++++
+ tools/testing/selftests/Makefile             | 8 ++++++--
+ tools/testing/selftests/kselftest_install.sh | 4 ++--
+ 3 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index df9f1fe5689b..cdb2f5e29b88 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4900,9 +4900,6 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
- 	u32 size;
- 	int ret;
- 
--	if (!access_ok(uattr, SCHED_ATTR_SIZE_VER0))
--		return -EFAULT;
--
- 	/* Zero the full structure, so that a short copy will be nice: */
- 	memset(attr, 0, sizeof(*attr));
- 
-@@ -4910,45 +4907,19 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
- 	if (ret)
- 		return ret;
- 
--	/* Bail out on silly large: */
--	if (size > PAGE_SIZE)
--		goto err_size;
--
- 	/* ABI compatibility quirk: */
- 	if (!size)
- 		size = SCHED_ATTR_SIZE_VER0;
--
--	if (size < SCHED_ATTR_SIZE_VER0)
-+	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
- 		goto err_size;
- 
--	/*
--	 * If we're handed a bigger struct than we know of,
--	 * ensure all the unknown bits are 0 - i.e. new
--	 * user-space does not rely on any kernel feature
--	 * extensions we dont know about yet.
--	 */
--	if (size > sizeof(*attr)) {
--		unsigned char __user *addr;
--		unsigned char __user *end;
--		unsigned char val;
--
--		addr = (void __user *)uattr + sizeof(*attr);
--		end  = (void __user *)uattr + size;
--
--		for (; addr < end; addr++) {
--			ret = get_user(val, addr);
--			if (ret)
--				return ret;
--			if (val)
--				goto err_size;
--		}
--		size = sizeof(*attr);
-+	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-+	if (ret) {
-+		if (ret == -E2BIG)
-+			goto err_size;
-+		return ret;
- 	}
- 
--	ret = copy_from_user(attr, uattr, size);
--	if (ret)
--		return -EFAULT;
--
- 	if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
- 	    size < SCHED_ATTR_SIZE_VER1)
- 		return -EINVAL;
-@@ -5148,7 +5119,7 @@ sched_attr_copy_to_user(struct sched_attr __user *uattr,
-  * sys_sched_getattr - similar to sched_getparam, but with sched_attr
-  * @pid: the pid in question.
-  * @uattr: structure containing the extended parameters.
-- * @usize: sizeof(attr) that user-space knows about, for forwards and backwards compatibility.
-+ * @usize: sizeof(attr) for fwd/bwd comp.
-  * @flags: for future extension.
-  */
- SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
 -- 
-2.23.0
+2.20.1
 
