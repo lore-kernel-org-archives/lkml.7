@@ -2,235 +2,360 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3362DC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CDAC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0850A21D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29D420673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lw8M/6OP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6p59jXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfIYWBt (ORCPT
+        id S1726986AbfIYWBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 25 Sep 2019 18:01:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43822 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728816AbfIYWAT (ORCPT
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39063 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfIYV5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:00:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q17so84827wrx.10;
-        Wed, 25 Sep 2019 15:00:18 -0700 (PDT)
+        Wed, 25 Sep 2019 17:57:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a15so126105edt.6;
+        Wed, 25 Sep 2019 14:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=y58n22AehKpICGg7pp3UrxHJ2uXYXc6EGOkvrwA6HO8=;
-        b=Lw8M/6OPBaRs7BUKWe84Lhr+tS78mYzMADTYKDSwFWmJlt9z1m6QVlWpx0AVr4g6Wn
-         QNB5l6hp3VVfKmmTimqAdwdIHkqEGWTJcdsxnWbsGZcDI8i+VzOALEoXZzPxV6QH4uss
-         T6Zisk6GOL9jItOND5rodsvjHjPNx/CWSMvETUEvp2TvF85oxjQKzAcymRplx7hprgME
-         PmOM4r72tepI7IysJp5hEQ0op7WUThrsgoAZuCw4V3QLeMbfpSOvJksSIzAkM4fdowpc
-         uSKicTcKuCTYI23e52v8PH+JTH70R6EolnH4OT87zkiwpCsi4pD66DsltD0h+f/u4oJP
-         VPEg==
+        bh=oQZeaHgtYh0dD0KrAMF75weGYKIwWi478Xo02rJo9NM=;
+        b=M6p59jXoKzYA17xImqRlpAb8+4jCreGabZtES2pHk/F58g0JCpDtQunI1mvZVgLnaG
+         2IzQZtwwuJpg13P7tVfki4yKnkpRtRDwh5TWYqgKjvBn9xdGH6t1wYx+fF8T0Wtrhmb6
+         Dlr1IR+Kg0hPd9s2vdIH1NkJLgox2VwADBxofEIi8GBoti9wnnAqLR2EvxbpW7hFElWj
+         SlNYwXLdlZPN+IeKMzirdZL2+klAZYYN4bAPKPrs1DrX5eDjnJKSmgeTnVCkkdLFv9RG
+         4JCB01xMLrnjEyLWb38eqb8LECxhYSLbGd06tTkclMJf6lNup8MJ5jKYAoxb9tQ3T2kT
+         GPkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=y58n22AehKpICGg7pp3UrxHJ2uXYXc6EGOkvrwA6HO8=;
-        b=FSaSQcnxlbumnHvyeHw0HPfppLIgsz8wk76OzOHWeYzNTFb6ZEMlk8SOPMfsB7axcr
-         PnosQ3w6JOqQ38LI2dlBb++DP+KI1Crg8avESgzQM9hKxQ5bvKO90Ld4gkDBiV3YOLIh
-         iP/H5UmW3xbnolGTj/oC1StPLnB/mVrol7GnaKmnd4sZngMHDU2SNpRvcGe2ov/YGcjX
-         eN04Np+g6a5G+ggUb/al5/ZbUCkaJB6wNGxKDArTQTwH9X9FkwkessfWF1Np+mr9gQ7q
-         y1q/0hdGFQmD6zq6vOpGYE2vdLZ+Oyf23zPWkqAqCrL4ShQozV2uu2aEV1sgFFig5GwB
-         tqQQ==
-X-Gm-Message-State: APjAAAUhYHNu8c+WkE31tJmQoQg4ImYTXrxShs+ZCnTMFN08gIv7saLv
-        VLqWRGbfYt4RyPNS5qns9OWJTwse
-X-Google-Smtp-Source: APXvYqzjbFzUDF/Vb7xtEn+hZQ6NLT5vQFIl+2w2PRqRUMyLc/pRQiF1L5l7qj6XnMl98jHDrikISQ==
-X-Received: by 2002:adf:fe4a:: with SMTP id m10mr319209wrs.209.1569448817090;
-        Wed, 25 Sep 2019 15:00:17 -0700 (PDT)
-Received: from [192.168.1.19] (bfw9.neoplus.adsl.tpnet.pl. [83.28.60.9])
-        by smtp.gmail.com with ESMTPSA id t203sm236626wmf.42.2019.09.25.15.00.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 15:00:16 -0700 (PDT)
-Subject: Re: [PATCH v9 13/15] leds: lp55xx: Update the lp55xx to use the multi
- color framework
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190925174616.3714-1-dmurphy@ti.com>
- <20190925174616.3714-14-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <59e58ccf-84fb-5db7-5008-20afc7436d35@gmail.com>
-Date:   Thu, 26 Sep 2019 00:00:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oQZeaHgtYh0dD0KrAMF75weGYKIwWi478Xo02rJo9NM=;
+        b=UD18zjbIy+xdWA6baR1lAkeJ8qT+bTAajfaUM6g11M8WsVyM4gex6T7CiTAmCXgQK2
+         GfyOxrgNq6O4ijJNH+UlhcGAXVmp/PAQOLUjFksgdNz7iR2sUnLqEyRqzlp8lLxfOItr
+         KzQLoWXPtYPyJaEi6HKSAorvH0BOOxZW9njXP6ZS34JtetMAyhvundwfN2VSnnbDBWwa
+         2AC+z3EoYMh0aBxllahf2kfnQrEcxoaX2uhap1DGuhfpUjoQMxUZDAHTYlaS/jXIo/sq
+         L086wWZjDU0r6BgptLzQe7kMBMJZuywflotjcGLk4LDlDemjQwuaQe142IIMWMNgdF+E
+         rfkg==
+X-Gm-Message-State: APjAAAV6ZuukZDt1/gZYhslozmVw718LFvYHOyAMOrYJ5NfSQoojgDlZ
+        fPfKRatOk2y0dtwzORQD/tQ=
+X-Google-Smtp-Source: APXvYqw2VpUlnvQ+wx3TkAuOYVDS4hAWOnzWYW9ExgQ9wXevhlKU6csobaOMSAoogfsRvmo71L4/Xw==
+X-Received: by 2002:a05:6402:1583:: with SMTP id c3mr189150edv.286.1569448620358;
+        Wed, 25 Sep 2019 14:57:00 -0700 (PDT)
+Received: from hv-1.home ([188.187.26.81])
+        by smtp.gmail.com with ESMTPSA id g17sm3972ejb.80.2019.09.25.14.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 14:56:59 -0700 (PDT)
+From:   ivan.lazeev@gmail.com
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Lazeev <ivan.lazeev@gmail.com>
+Subject: [PATCH v5] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Date:   Thu, 26 Sep 2019 00:56:46 +0300
+Message-Id: <20190925215646.24844-1-ivan.lazeev@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190925174616.3714-14-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+From: Ivan Lazeev <ivan.lazeev@gmail.com>
 
-On 9/25/19 7:46 PM, Dan Murphy wrote:
-> Update the lp5523 to allow the use of the multi color framework.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/Kconfig                      |   1 +
->  drivers/leds/leds-lp5523.c                |  13 ++
->  drivers/leds/leds-lp55xx-common.c         | 150 ++++++++++++++++++----
->  drivers/leds/leds-lp55xx-common.h         |  11 ++
->  include/linux/platform_data/leds-lp55xx.h |   6 +
->  5 files changed, 157 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 84f60e35c5ee..dc3d9f2194cd 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -377,6 +377,7 @@ config LEDS_LP50XX
->  config LEDS_LP55XX_COMMON
->  	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
->  	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
-> +	depends on LEDS_CLASS_MULTI_COLOR && OF
->  	select FW_LOADER
->  	select FW_LOADER_USER_HELPER
->  	help
-> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-> index d0b931a136b9..8b2cdb98fed6 100644
-> --- a/drivers/leds/leds-lp5523.c
-> +++ b/drivers/leds/leds-lp5523.c
-> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct device *dev,
->  	return ret;
->  }
->  
-> +static int lp5523_led_intensity(struct lp55xx_led *led, int chan_num)
+Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
 
-Why do we need this function? brightness op will not suffice?
+cmd/rsp buffers are expected to be in the same ACPI region.
+For Zen+ CPUs BIOS's might report two different regions, some of
+them also report region sizes inconsistent with values from TPM
+registers.
 
-> +{
-> +	struct lp55xx_chip *chip = led->chip;
-> +	int ret;
-> +
-> +	mutex_lock(&chip->lock);
-> +	ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + chan_num,
-> +		     led->brightness);
-> +	mutex_unlock(&chip->lock);
-> +	return ret;
-> +}
-> +
->  static int lp5523_led_brightness(struct lp55xx_led *led)
->  {
->  	struct lp55xx_chip *chip = led->chip;
-> @@ -857,6 +869,7 @@ static struct lp55xx_device_config lp5523_cfg = {
->  	.max_channel  = LP5523_MAX_LEDS,
->  	.post_init_device   = lp5523_post_init_device,
->  	.brightness_fn      = lp5523_led_brightness,
-> +	.color_intensity_fn = lp5523_led_intensity,
->  	.set_led_current    = lp5523_set_led_current,
->  	.firmware_cb        = lp5523_firmware_loaded,
->  	.run_engine         = lp5523_run_engine,
-> diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-> index 44ced02b49f9..0e4b3a9d3047 100644
-> --- a/drivers/leds/leds-lp55xx-common.c
-> +++ b/drivers/leds/leds-lp55xx-common.c
-> @@ -136,9 +136,26 @@ static int lp55xx_set_brightness(struct led_classdev *cdev,
->  {
->  	struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
->  	struct lp55xx_device_config *cfg = led->chip->cfg;
-> +	int brightness_val[LP55XX_MAX_GROUPED_CHAN];
-> +	int ret;
-> +	int i;
-> +
-> +	if (led->mc_cdev.num_leds > 1) {
-> +		led_mc_calc_brightness(&led->mc_cdev,
-> +				       brightness, brightness_val);
-> +		for (i = 0; i < led->mc_cdev.num_leds; i++) {
-> +			led->brightness = brightness_val[i];
-> +			ret = cfg->color_intensity_fn(led,
-> +						      led->grouped_channels[i]);
+Memory configuration on ASRock x470 ITX:
 
-Now we will have three separate calls for each color component
-(and possibly sleeping on mutex on contention).
+db0a0000-dc59efff : Reserved
+        dc57e000-dc57efff : MSFT0101:00
+        dc582000-dc582fff : MSFT0101:00
 
-Probably LED mc class use case will need a bit different design.
+Work around the issue by storing ACPI regions declared for the
+device in struct crb_resources. It contains fixed arrays of
+copies of ACPI resourses (iores field) and pointers
+to a possibly allocated with devm_ioremap_resource memory region
+(iobase field), along with number of entries (num field).
+This data was previously held for a single resource
+in struct crb_priv (iobase field) and local variable io_res in
+crb_map_io function. ACPI resources array is used to find index of
+corresponding region for each buffer with crb_containing_res_idx,
+make the buffer size consistent with region's length and map it at
+most once, storing pointer to the allocated resource in iobase
+array at the same index.
 
-Also, instead of grouped_channels we could possibly have
+Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
+---
 
-led_mc_get_color_id(&led->mc_dev, i)
+Changes in v5:
+	- prefix new symbols with tpm_crb_
+	- get rid of dynamic allocation in ACPI walker
 
-which would map entry position index to color_id.
+ drivers/char/tpm/tpm_crb.c | 129 +++++++++++++++++++++++++++----------
+ 1 file changed, 96 insertions(+), 33 deletions(-)
 
-I will stop reviewing here and will continue after taking
-deeper look at this lp55xx design.
-
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d7f3..3c2485c71260 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -22,6 +22,7 @@
+ #include "tpm.h"
+ 
+ #define ACPI_SIG_TPM2 "TPM2"
++#define TPM_CRB_MAX_RESOURCES 3
+ 
+ static const guid_t crb_acpi_start_guid =
+ 	GUID_INIT(0x6BBF6CAB, 0x5463, 0x4714,
+@@ -91,7 +92,6 @@ enum crb_status {
+ struct crb_priv {
+ 	u32 sm;
+ 	const char *hid;
+-	void __iomem *iobase;
+ 	struct crb_regs_head __iomem *regs_h;
+ 	struct crb_regs_tail __iomem *regs_t;
+ 	u8 __iomem *cmd;
+@@ -108,6 +108,12 @@ struct tpm2_crb_smc {
+ 	u32 smc_func_id;
+ };
+ 
++struct tpm_crb_resources {
++	struct resource iores[TPM_CRB_MAX_RESOURCES];
++	void __iomem *iobase[TPM_CRB_MAX_RESOURCES];
++	int num;
++};
++
+ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+ 				unsigned long timeout)
+ {
+@@ -432,38 +438,75 @@ static const struct tpm_class_ops tpm_crb = {
+ 	.req_complete_val = CRB_DRV_STS_COMPLETE,
+ };
+ 
++static bool tpm_crb_resource_contains(struct resource *iores,
++				      u64 address)
++{
++	return address >= iores->start && address <= iores->end;
++}
++
++static int tpm_crb_containing_res_idx(struct tpm_crb_resources *resources,
++				      u64 address)
++{
++	int res_idx;
++
++	for (res_idx = 0; res_idx < resources->num; ++res_idx) {
++		if (tpm_crb_resource_contains(&resources->iores[res_idx],
++					      address))
++			return res_idx;
++	}
++
++	return -1;
++}
++
+ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ {
+-	struct resource *io_res = data;
++	struct tpm_crb_resources *resources = data;
+ 	struct resource_win win;
+ 	struct resource *res = &(win.res);
+ 
+ 	if (acpi_dev_resource_memory(ares, res) ||
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+-		*io_res = *res;
+-		io_res->name = NULL;
++		if (resources->num < TPM_CRB_MAX_RESOURCES) {
++			resources->iores[resources->num] = *res;
++			resources->iores[resources->num].name = NULL;
++		}
++		resources->num += 1;
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+-				 struct resource *io_res, u64 start, u32 size)
++static void __iomem *crb_map_res(struct device *dev,
++				 struct tpm_crb_resources *resources,
++				 int res_idx,
++				 u64 start, u32 size)
+ {
+ 	struct resource new_res = {
+ 		.start	= start,
+ 		.end	= start + size - 1,
+ 		.flags	= IORESOURCE_MEM,
+ 	};
++	struct resource *iores;
++	void __iomem *iobase;
+ 
+ 	/* Detect a 64 bit address on a 32 bit system */
+ 	if (start != new_res.start)
+ 		return (void __iomem *) ERR_PTR(-EINVAL);
+ 
+-	if (!resource_contains(io_res, &new_res))
++	if (res_idx < 0)
+ 		return devm_ioremap_resource(dev, &new_res);
+ 
+-	return priv->iobase + (new_res.start - io_res->start);
++	iores = &resources->iores[res_idx];
++	iobase = resources->iobase[res_idx];
++	if (!iobase) {
++		iobase = devm_ioremap_resource(dev, iores);
++		if (IS_ERR(iobase))
++			return iobase;
++
++		resources->iobase[res_idx] = iobase;
++	}
++
++	return iobase + (new_res.start - iores->start);
+ }
+ 
+ /*
+@@ -490,9 +533,10 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 		      struct acpi_table_tpm2 *buf)
+ {
+-	struct list_head resources;
+-	struct resource io_res;
++	struct list_head acpi_resources;
+ 	struct device *dev = &device->dev;
++	struct tpm_crb_resources resources;
++	int res_idx;
+ 	u32 pa_high, pa_low;
+ 	u64 cmd_pa;
+ 	u32 cmd_size;
+@@ -501,21 +545,36 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	u32 rsp_size;
+ 	int ret;
+ 
+-	INIT_LIST_HEAD(&resources);
+-	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
+-				     &io_res);
++	INIT_LIST_HEAD(&acpi_resources);
++	memset(&resources, 0, sizeof(resources));
++	ret = acpi_dev_get_resources(device, &acpi_resources,
++				     crb_check_resource, &resources);
+ 	if (ret < 0)
+ 		return ret;
+-	acpi_dev_free_resource_list(&resources);
++	acpi_dev_free_resource_list(&acpi_resources);
+ 
+-	if (resource_type(&io_res) != IORESOURCE_MEM) {
++	if (resources.num == 0) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+ 		return -EINVAL;
++	} else if (resources.num > TPM_CRB_MAX_RESOURCES) {
++		dev_warn(dev, FW_BUG "TPM2 ACPI table defines too many memory resources\n");
++		resources.num = TPM_CRB_MAX_RESOURCES;
+ 	}
+ 
+-	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	res_idx = tpm_crb_containing_res_idx(&resources, buf->control_address);
++
++	if (res_idx >= 0 &&
++	    !tpm_crb_resource_contains(&resources.iores[res_idx],
++				       buf->control_address +
++				       sizeof(struct crb_regs_tail) - 1))
++		res_idx = -1;
++
++	priv->regs_t = crb_map_res(dev, &resources, res_idx,
++				   buf->control_address,
++				   sizeof(struct crb_regs_tail));
++
++	if (IS_ERR(priv->regs_t))
++		return PTR_ERR(priv->regs_t);
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -523,9 +582,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	 */
+ 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+ 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+-		if (buf->control_address == io_res.start +
++		if (res_idx >= 0 &&
++		    buf->control_address == resources.iores[res_idx].start +
+ 		    sizeof(*priv->regs_h))
+-			priv->regs_h = priv->iobase;
++			priv->regs_h = resources.iobase[res_idx];
+ 		else
+ 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+ 	}
+@@ -534,13 +594,6 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+-				   sizeof(struct crb_regs_tail));
+-	if (IS_ERR(priv->regs_t)) {
+-		ret = PTR_ERR(priv->regs_t);
+-		goto out_relinquish_locality;
+-	}
+-
+ 	/*
+ 	 * PTT HW bug w/a: wake up the device to access
+ 	 * possibly not retained registers.
+@@ -552,13 +605,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
+-				      ioread32(&priv->regs_t->ctrl_cmd_size));
++	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
++
++	res_idx = tpm_crb_containing_res_idx(&resources, cmd_pa);
++	if (res_idx >= 0)
++		cmd_size = crb_fixup_cmd_size(dev, &resources.iores[res_idx],
++					      cmd_pa, cmd_size);
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+ 		pa_high, pa_low, cmd_size);
+ 
+-	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
++	priv->cmd = crb_map_res(dev, &resources, res_idx, cmd_pa, cmd_size);
+ 	if (IS_ERR(priv->cmd)) {
+ 		ret = PTR_ERR(priv->cmd);
+ 		goto out;
+@@ -566,11 +623,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
+-				      ioread32(&priv->regs_t->ctrl_rsp_size));
++	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
++
++	res_idx = tpm_crb_containing_res_idx(&resources, rsp_pa);
++
++	if (res_idx >= 0)
++		rsp_size = crb_fixup_cmd_size(dev, &resources.iores[res_idx],
++					      rsp_pa, rsp_size);
+ 
+ 	if (cmd_pa != rsp_pa) {
+-		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
++		priv->rsp = crb_map_res(dev, &resources, res_idx,
++					rsp_pa, rsp_size);
+ 		ret = PTR_ERR_OR_ZERO(priv->rsp);
+ 		goto out;
+ 	}
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
