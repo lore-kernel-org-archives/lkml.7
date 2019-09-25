@@ -2,115 +2,114 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0954C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB1BC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43052146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ODZq6RdW"
+	by mail.kernel.org (Postfix) with ESMTP id 216292146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569431460;
+	bh=wV3U4E6DFTxyqp2kcogZRwVmWc/aLVM4muBHxyiy45s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ETmfBFGxxKNQQlvbCoI+W49OBJy8vhC4h1jfnb/C7vnjsoG5cZJVRIC4lKTSvNZQ1
+	 qrrJqGzj9zZ4WOTsGfbocGuJ4zCZkjDM0Y9L3Z5YiA50FYwqpsZfbWuHOgdLF1dWwL
+	 ULIF+oxCIlBMfAuR7p6EygEmkKzVFPjh45gRxcT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502189AbfIYRK0 (ORCPT
+        id S2440203AbfIYRK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:10:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54264 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437796AbfIYRKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:10:25 -0400
-Received: from zn.tnic (p200300EC2F0BA100707709EB32B84CF4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:a100:7077:9eb:32b8:4cf4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 342BB1EC0A91;
-        Wed, 25 Sep 2019 19:10:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569431424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mla4nxBtIg9/feNWHEP9qZqx4jpzG38YzJe1TshTJgU=;
-        b=ODZq6RdWydjhNWwG0+WZCOT+YrLNPtB+Foj1KfPnS1mPdzx3S7tiuxDKCkx4KDbmPiQq5/
-        wRFACbE+3vtapDpE1Mb7fpwuLLDDeyK2uSUs/qw5Yp2LJCH/hhDvWpheu1z9IpHVxXqaFz
-        GR3PzEdy1Ccfb5TtTum3HC6LnlKdkI4=
-Date:   Wed, 25 Sep 2019 19:10:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Tri Vo <trong@android.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>,
-        George Rimar <grimar@accesssoftek.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Peter Smith <Peter.Smith@arm.com>, Rui Ueyama <ruiu@google.com>
-Subject: Re: [PATCH v2] x86, realmode: explicitly set entry via command line
-Message-ID: <20190925171025.GF3891@zn.tnic>
-References: <CAKwvOdmFqPSyeKn-0th_ca9B3QU63G__kEJ=X0tfjhE+1_p=FQ@mail.gmail.com>
- <20190924193310.132104-1-ndesaulniers@google.com>
- <20190925102041.GB3891@zn.tnic>
- <CAKwvOdneE7kMupFzxZC-6c=ps_98FP+Nz88fCXQ74z90hmaaXQ@mail.gmail.com>
+        Wed, 25 Sep 2019 13:10:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46282 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437796AbfIYRK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 13:10:59 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e17so6457164ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m/M6vs2MEAeMbwXL6x+MUmS0dJpTwUZl6jDdxP7DrDw=;
+        b=QRNmKsS7UFvM5WS2hJvF/DKx2du7B20JglJZah0r/OncwmJDy/25GvjHNsK/+d8dtK
+         1WVfiK+mnfI6/+EgrVxBfTTDFs9f/7e4VvW4hVap03eHhSSrdUZWnKE5p4p2VDg0GTRe
+         al6XiM4ArkVPwy1MSvvlYIiUCokXZoc/Us5KU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m/M6vs2MEAeMbwXL6x+MUmS0dJpTwUZl6jDdxP7DrDw=;
+        b=jGJYL9JZMba9qt5muSQIp3/ayk2hbwpKZp7E4oymxQrURFjLT8Cni9ips2yAj6VVZi
+         JdOlXqRSE0UaHdj1tyftNJvp9To5bzrl7up00lyJaJZp8BasC0LgnJjWc8OWuLIyz5jE
+         //XQgLenTqDAsIG0jf45sNbzR8XtPTd9g4XbS/EFhpQc3u+B5FZd4azzlP6gcthLSaw/
+         Gn+R1c8KF4evE4Zeic9eTlfosVndlyuLZzqmv2cmofF1c/EkSnAK8gTB35AKKhpNGexQ
+         rt27thT2gzEKaFp06XfeZwl19w7bG7ecBFo/CMtTDW1BEpc8Bvy5+S1oHnP/6ztEHkDh
+         HEdg==
+X-Gm-Message-State: APjAAAVFvm0ptuTlHl0d3e+0PYMUzP4mpiPwMkIDbnGD8p11mpIvXCgy
+        jpIbvsshQVT8ccomSIAGeSieD7PeNzg=
+X-Google-Smtp-Source: APXvYqzqPc4e6N0tL6kjTuZlphZcf9ZLSd9dXue1iy7JKc6AhEb0/PjEsXlZDKpDyw3V0cZ4KsOuKQ==
+X-Received: by 2002:a2e:9d16:: with SMTP id t22mr6457567lji.207.1569431455134;
+        Wed, 25 Sep 2019 10:10:55 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id q13sm1269180lfk.51.2019.09.25.10.10.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 10:10:54 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id e17so6456997ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:10:54 -0700 (PDT)
+X-Received: by 2002:a2e:2c02:: with SMTP id s2mr7454790ljs.156.1569431453769;
+ Wed, 25 Sep 2019 10:10:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdneE7kMupFzxZC-6c=ps_98FP+Nz88fCXQ74z90hmaaXQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190925165915.8135-1-cyphar@cyphar.com> <20190925165915.8135-2-cyphar@cyphar.com>
+In-Reply-To: <20190925165915.8135-2-cyphar@cyphar.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 25 Sep 2019 10:10:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjFeNjhtUxQ8npmXORz5RLQU7B_3wD=45eug1+MXnuYvA@mail.gmail.com>
+Message-ID: <CAHk-=wjFeNjhtUxQ8npmXORz5RLQU7B_3wD=45eug1+MXnuYvA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] lib: introduce copy_struct_from_user() helper
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 09:35:24AM -0700, Nick Desaulniers wrote:
-> Thanks for the consideration Boris.  So IIUC if the preceding sections
-> are larger than 0x1000 altogether, setting the entry there will be
-> wrong?
+On Wed, Sep 25, 2019 at 10:00 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> +int is_zeroed_user(const void __user *from, size_t size)
 
-Well, I spent some time this morning grepping to find out whether PA
-0x1000 was magical but didn't find anything. Perhaps hpa can refresh my
-memory...
+I like how you've done this, but it's buggy and only works on 64-bit.
 
-> Currently, .text looks like it's currently at 0x1000 for a defconfig,
-> and I assume that could move in the case I stated above?
+All the "u64" and "8" cases need to be "unsigned long" and
+"sizeof(unsigned long)".
 
-Yes, I think we shouldn't hardcode.
+Part of that requirement is:
 
-> $ readelf -S arch/x86/realmode/rm/realmode.elf | grep text
->   [ 3] .text             PROGBITS        00001000 201000 000f51 00  AX
->  0   0 4096
-> ...
-> 
-> In that case, it seems that maybe I should set the ENTRY in the linker
-> script as:
-> diff --git a/arch/x86/realmode/rm/realmode.lds.S
-> b/arch/x86/realmode/rm/realmode.lds.S
-> index 3bb980800c58..64d135d1ee63 100644
-> --- a/arch/x86/realmode/rm/realmode.lds.S
-> +++ b/arch/x86/realmode/rm/realmode.lds.S
-> @@ -11,6 +11,7 @@
-> 
->  OUTPUT_FORMAT("elf32-i386")
->  OUTPUT_ARCH(i386)
-> +ENTRY(pa_text_start)
+> +               unsafe_get_user(val, (u64 __user *) from, err_fault);
 
-Well, looking at arch/x86/boot/setup.ld, it does do:
+This part works fine - although 64-bit accesses migth be much more
+expensive and the win of unrolling might not be sufficient - but:
 
-ENTRY(_start)
+> +               if (align) {
+> +                       /* @from is unaligned. */
+> +                       val &= ~aligned_byte_mask(align);
+> +                       align = 0;
+> +               }
 
-for the global _start symbol in .../boot/header.S.
+This part fundamentally only works on 'unsigned long'.
 
-So you doing the respective thing in that linker script would make
-sense...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+         Linus
