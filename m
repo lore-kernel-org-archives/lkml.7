@@ -2,364 +2,247 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91DDC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2709EC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F42214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB60921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mDimB9ui"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qmAZ0rtw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633897AbfIYELU (ORCPT
+        id S2633924AbfIYEVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 00:11:20 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7650 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392218AbfIYELT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 00:11:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d8ae8ec0000>; Tue, 24 Sep 2019 21:11:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 24 Sep 2019 21:11:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 24 Sep 2019 21:11:17 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
- 2019 04:11:16 +0000
-Received: from [10.24.47.46] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Sep
- 2019 04:11:14 +0000
-Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
- quirks
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>,
-        'Gustavo Pimentel' <Gustavo.Pimentel@synopsys.com>,
-        'Andrew Murray' <andrew.murray@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>, 'Anvesh Salveru' <anvesh.s@samsung.com>
-References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
- <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
- <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
- <00a401d56c7e$cf3abd30$6db03790$@samsung.com>
- <20190916122400.GO9720@e119886-lin.cambridge.arm.com>
- <DM6PR12MB4010AE07CC6F1CC60A715EE4DA8C0@DM6PR12MB4010.namprd12.prod.outlook.com>
- <7ad2b603-49ce-e955-58c4-fba1fb5ca6c8@nvidia.com>
- <000001d572ba$6d3040a0$4790c1e0$@samsung.com>
- <72370258-2cbe-32d8-b444-a45b50efa3e0@nvidia.com>
- <004c01d572d1$406882a0$c13987e0$@samsung.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <b81c8f18-7066-2a03-fe52-fb8d41e35fea@nvidia.com>
-Date:   Wed, 25 Sep 2019 09:41:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <004c01d572d1$406882a0$c13987e0$@samsung.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 25 Sep 2019 00:21:06 -0400
+Received: from mail-eopbgr40087.outbound.protection.outlook.com ([40.107.4.87]:38907
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393276AbfIYEVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 00:21:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E1t+EWkSuOQNyJu+gTesN+AA092Mj2qMuYFxEpTmYhzQ6FyqZQii0teQ5WKY9YU8YfdvRFRSPqCqwy6iUo3W9PK3arIxqAJvkcAWx51Q/Jqjq2OZrKQ61YKkmX5Q6eaKh0WQ6EjK9VK2hNIsEyUQ8D+0y9rhnF9xVoGppDuo2o6ABBEcqA22XWunG5bWb0IKzx8hiv10dLRPqJWbGZI9d9q2gaGXLw7sBFZXE96kkegwNnyK5JHU9d1gmjVS6qirqlCzXZ2lAJctQuteey/0574DcjnnTZMLXDuzcWdBhJIIJj29xfXEm9JdlwxrNXMhnB2gITEjr5jzzstHr2T0EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7bNViU+H4OT41P5xc4/eS9rZMyylBGXYUnt0p+fNMaM=;
+ b=WFd77ANpSopNXs2nWWQu0AD2qvyN004VLbTgHgDLUNuSPt/tJLbXDoIr19VOh6G1rHOk3pHzqLFaitJkMf8FukCQNXKxwXuBA21LmZe2S8d5wz2YoANIWFA7XI/nG7Wr/cfDTGmy4anoVt9WEKhcxXq5ffl79gtaZYpo1r5ZC6QjhZqZZdzO1mYYDoVVwEngsoYrkomGgYunkSIXXaBNkvoj3fmK7lEeuyuwmIuF1//je2UEsVYaXAx3576XJkTmkijHKxnCaAXH6X+jHxvJBiVfnJfCZgKBiWGLI5XR6ykmXB6jLiFtt/TjZL6FvpatJ7hBpn3kydJKnSbzvHfs+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7bNViU+H4OT41P5xc4/eS9rZMyylBGXYUnt0p+fNMaM=;
+ b=qmAZ0rtwE3EBZcabCJpiBIgv7XFcgUoKZRwu1vcfA5sKlwIDEYjvpvsr6VlBXC3/FUTT/VPsageMPIB3EicF+iWgKzr/crxOOhd0sE7do6vUhzmYUXHCfiEaA8UMVGZ/5oVQk3JeKZGofymxLFMi9C+WcZyTISkvwr0QRGzzB78=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4220.eurprd04.prod.outlook.com (52.135.131.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Wed, 25 Sep 2019 04:21:01 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 04:21:00 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Thread-Topic: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Thread-Index: AQHVcoOnab7d5ysBNkWsXmY0PrfSuKc6/L+AgAC3JZCAAAkFAIAAANMggAABmICAAAIKMIAAAb8AgAACHkCAAAZAMA==
+Date:   Wed, 25 Sep 2019 04:21:00 +0000
+Message-ID: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1569384684; bh=08dvnNNRABjGFoXxot/+rTE1i0rCM4OYSwCk0vFf5SE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mDimB9uireqHiUHq3+cFYhcaedb1cL09zrcda+BvmEuLu0kAQUZAus7GvdpV/YqnE
-         HSTLpbul5BjxsL3ymq4aiUGiJH+lElIAoyWderNDrvdFCDeZl/XxubW7GjyqCGj0p4
-         ebCxWnmu5GjmrhLC1lID+kSYPkXq3lSy08xN8K4U4WzLAP96TIjW79cs9I7CsgvKVl
-         IpFJF6zFofND5rtdlrMvbzCvrIF/VGOn1O519ThJpS7aIRR2dF9ATEuljcgoxmYqQK
-         M9oVTGEixnLHutUPgtD95cfWSnFbJ3wSBLgX/W9cJvSkUOpcAqmVddaCuqx+/m3ii2
-         LWTm1DeIvBBSQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4dddadb6-cadb-4864-3d9c-08d7416fc5ae
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4220;
+x-ms-traffictypediagnostic: DB7PR04MB4220:|DB7PR04MB4220:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB422053D18B496356B9510E718F870@DB7PR04MB4220.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(189003)(199004)(74316002)(26005)(305945005)(52536014)(7736002)(33656002)(66476007)(229853002)(64756008)(3846002)(66446008)(2906002)(86362001)(76116006)(66946007)(14444005)(5660300002)(25786009)(478600001)(6116002)(256004)(110136005)(14454004)(66066001)(476003)(71190400001)(55016002)(11346002)(9686003)(71200400001)(4326008)(99286004)(486006)(54906003)(2940100002)(81156014)(44832011)(6506007)(2501003)(6246003)(316002)(186003)(102836004)(446003)(8676002)(7696005)(8936002)(66556008)(6636002)(6436002)(81166006)(76176011)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4220;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GC8hJbU44SOz2jrg8HjT4lOVgwasMQGrqN1cktwoQuRJLQ0lCkNzdNz10cvkGabzFIKbqLT/C7T2p9CPFNnuQrs1FSybz4UnN5RrcDfPho41gT/DrPmNCMnTsiTFZTyp5r7ddhTD7+Pwbmf5tbZu+LFcy/0rlfDb7OxzxDFnD/3lYK0xzPmjBHcBpAlk7+f2w1i8lyUmQ0xn2gSWPbQfET4w6/oIg0lQmr1/E06CIkeM4Aih73fLf6QrhO6RJDdFYr0UvrShMwJvfN4iC3wNDvWAizyC2cqY55O1FHKmBC+buKe+7/ozDT4Xe7uwnWwSXVkzD3MkdAunAkcdr7Z8Nk5Pnxc0jLItTbWaTN4OWkvRd8GLzxm9Bj4qlTqhrwmLSOryHe5scg/oXC+OZ0PtmYyCfwwQBKGJZ6VJ8oCIJvI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dddadb6-cadb-4864-3d9c-08d7416fc5ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 04:21:00.8411
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a+1pcrM7oEO4ET9TkuPrI3cCiFdkMCe5PXaMfVtKn6Ae2vYbGrX4/C9zWkPrZWueFxBXb1YCQzufeV+CYH6rqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/2019 5:41 PM, Pankaj Dubey wrote:
-> 
-> 
->> -----Original Message-----
->> From: Vidya Sagar <vidyas@nvidia.com>
->> Sent: Tuesday, September 24, 2019 4:57 PM
->> To: Pankaj Dubey <pankaj.dubey@samsung.com>; 'Gustavo Pimentel'
->> <Gustavo.Pimentel@synopsys.com>; 'Andrew Murray'
->> <andrew.murray@arm.com>
->> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->> jingoohan1@gmail.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
->> 'Anvesh Salveru' <anvesh.s@samsung.com>
->> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related equalization
->> quirks
->>
->> On 9/24/2019 2:58 PM, Pankaj Dubey wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Vidya Sagar <vidyas@nvidia.com>
->>>> Sent: Thursday, September 19, 2019 4:54 PM
->>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
->>>> equalization quirks
->>>>
->>>> On 9/16/2019 6:22 PM, Gustavo Pimentel wrote:
->>>>> On Mon, Sep 16, 2019 at 13:24:1, Andrew Murray
->>>> <andrew.murray@arm.com>
->>>>> wrote:
->>>>>
->>>>>> On Mon, Sep 16, 2019 at 04:36:33PM +0530, Pankaj Dubey wrote:
->>>>>>>
->>>>>>>
->>>>>>>> -----Original Message-----
->>>>>>>> From: Andrew Murray <andrew.murray@arm.com>
->>>>>>>> Sent: Monday, September 16, 2019 3:46 PM
->>>>>>>> To: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>>>>>> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>>>>>> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
->>>>>>>> lorenzo.pieralisi@arm.com; bhelgaas@google.com; Anvesh Salveru
->>>>>>>> <anvesh.s@samsung.com>
->>>>>>>> Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
->>>>>>> equalization
->>>>>>>> quirks
->>>>>>>>
->>>>>>>> On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
->>>>>>>>> From: Anvesh Salveru <anvesh.s@samsung.com>
->>>>>>>>>
->>>>>>>>> In some platforms, PCIe PHY may have issues which will prevent
->>>>>>>>> linkup to happen in GEN3 or higher speed. In case equalization
->>>>>>>>> fails, link will fallback to GEN1.
->>>>>>>>>
->>>>>>>>> DesignWare controller gives flexibility to disable GEN3
->>>>>>>>> equalization completely or only phase 2 and 3 of equalization.
->>>>>>>>>
->>>>>>>>> This patch enables the DesignWare driver to disable the PCIe
->>>>>>>>> GEN3 equalization by enabling one of the following quirks:
->>>>>>>>>     - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all
->>>>>>>>> phases
->>>> I don't think Gen-3 equalization can be skipped altogether.
->>>> PCIe Spec Rev 4.0 Ver 1.0 in Section-4.2.3 has the following statement.
->>>>
->>>> "All the Lanes that are associated with the LTSSM (i.e., those Lanes
->>>> that are currently operational or may be operational in the future
->>>> due to Link
->>>> Upconfigure) must participate in the Equalization procedure"
->>>>
->>>> and in Section-4.2.6.4.2.1.1 it says
->>>> "Note: A transition to Recovery.RcvrLock might be used in the case
->>>> where the Downstream Port determines that Phase 2 and Phase 3 are not
->>>> needed based on the platform and channel characteristics."
->>>>
->>>> Based on the above statements, I think it is Ok to skip only Phases
->>>> 2&3 of equalization but not 0&1.
->>>> I even checked with our hardware engineers and it seems
->>>> DWC_EQUALIZATION_DISABLE is present only for debugging purpose in
->>>> hardware simulations and shouldn't be used on real silicon otherwise it seems.
->>>>
->>>
->>> In DesignWare manual we don't see any comment that this feature is for
->> debugging purpose only.
->> Agree and as I mentioned even I got to know about it offline.
->>
->>> Even if it is meant for debugging purpose, if for some reason in an SoC, Gen3/4
->> linkup is failing due to equalization, and if disabling equalization is helping then
->> IMO it is OK to do it.
->> Well, I don't have specific reservations to not have it. We can use this as a fall
->> back option.
->>
->>> Just to re-confirm we tested one of the NVMe device on Jatson AGX Xavier RC
->> with equalization disabled. We do see linkup works well in GEN3. As we have
->> added this feature as a platform-quirk so only platforms that required this
->> feature can enable it.
->>>
->> Curious to know...You did it because link didn't come up with equalization
->> enabled? or just as an experiment?
->>
-> 
-> We did this, just as an experiment.
-Ok. Thanks for the clarification.
+> > >
+> > > > > > > > >
+> > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
+> > > > > > > > > an errata
+> > > > > > > > > A-008646 on LS1021A
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > > > > > ---
+> > > > > > > > > Change in v3:
+> > > > > > > > > 	- rename property name
+> > > > > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > > > > > > >
+> > > > > > > > > Change in v2:
+> > > > > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
+> > > > > > > > >
+> > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > > > > > > ++++++++++++++
+> > > > > > > > >  1 file changed, 14 insertions(+)
+> > > > > > > > >
+> > > > > > > > > diff --git
+> > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example
+> > > Chips
+> > > > > > > > >  Optional properties:
+> > > > > > > > >   - little-endian : RCPM register block is Little Endian.
+> > > > > > > > > Without it
+> > > > RCPM
+> > > > > > > > >     will be Big Endian (default case).
+> > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
+> > > > > > > > > + SoC LS1021A,
+> > > > > > > >
+> > > > > > > > You probably should mention this is related to a hardware
+> > > > > > > > issue on LS1021a and only needed on LS1021a.
+> > > > > > > Okay, got it, thanks, I will add this in v4.
+> > > > > > > >
+> > > > > > > > > +   Must include n + 1 entries (n =3D
+> > > > > > > > > + #fsl,rcpm-wakeup-cells, such
+> > as:
+> > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
+> > > > > > > > > + 2
+> > > > > > > > > + +
+> > > > > > > > > + 1
+> > > > entries).
+> > > > > > > >
+> > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
+> > > > > > > > registers on an
+> > > > SoC.
+> > > > > > > > However you are defining an offset to scfg registers here.
+> > > > > > > > Why these two are related?  The length here should
+> > > > > > > > actually be related to the #address-cells of the soc/.
+> > > > > > > > But since this is only needed for LS1021, you can
+> > > > > > > just make it 3.
+> > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
+> > > > > > > device node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
+> > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
+> > > > IPPDEXPCR1).
+> > > > > > > But because of the hardware issue on LS1021A, I need store
+> > > > > > > the value of IPPDEXPCR registers to an alt address. So I
+> > > > > > > defining an offset to scfg registers, then RCPM driver get
+> > > > > > > an abosolute address from offset, RCPM driver write the
+> > > > > > > value of IPPDEXPCR registers to these abosolute
+> > > > > > > addresses(backup the value of IPPDEXPCR
+> > > > registers).
+> > > > > >
+> > > > > > I understand what you are trying to do.  The problem is that
+> > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and =
+an
+> offset.
+> > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+> > > > > You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/*
+> > > > > SCFG_SPARECR8 */
+> > > >
+> > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
+> > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
+> > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
+> binding.
+> > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
+> > > #address-cells instead of #fsl,rcpm-wakeup-cells.
+> >
+> > Yes.
+> I got an example from drivers/pci/controller/dwc/pci-layerscape.c
+> and arch/arm/boot/dts/ls1021a.dtsi as follows:
+> fsl,pcie-scfg =3D <&scfg 0>, 0 is an index
+>=20
+> In my fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>, It means that 0x0 is =
+an alt
+> offset address for IPPDEXPCR0, 0x51c is an alt offset address For
+> IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
+> SCFG_SPARECR8.
+Maybe I need write it as:
+fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x0 0x0 0x51c>;
+first two 0x0 compose an alt offset address for IPPDEXPCR0,
+last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
 
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
-
-> 
->>> Snippet of lspci (from Jatson AGX Xavier RC) is given below, showing
->>> EQ is completely disabled and GEN3 linkup
->>> -----
->>> 0005:01:00.0 Non-Volatile memory controller: Lite-On Technology
->> Corporation Device 21f1 (rev 01) (prog-if 02 [NVM Express])
->>>           Subsystem: Marvell Technology Group Ltd. Device 1093
->>>            <snip>
->>>                   LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L0s
->> <512ns, L1 <64us
->>>                           ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
->>>                   LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
->>>                           ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->>>                   LnkSta: Speed 8GT/s, Width x4, TrErr- Train- SlotClk+ DLActive-
->> BWMgmt- ABWMgmt-
->>>                   DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR+,
->> OBFF Via message
->>>                   DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+,
->> OBFF Disabled
->>>                   LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
->>>                            Transmit Margin: Normal Operating Range,
->> EnterModifiedCompliance- ComplianceSOS-
->>>                            Compliance De-emphasis: -6dB
->>>                   LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-,
->> EqualizationPhase1-
->>>                            EqualizationPhase2-, EqualizationPhase3-,
->>> LinkEqualizationRequest-
->>> -----
->>>> - Vidya Sagar
->>>>
->>>>
->>>>>>>>>     - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization
->>>>>>>>> phase 2 & 3
->>>>>>>>>
->>>>>>>>> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
->>>>>>>>> struct.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
->>>>>>>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>>>>>>> ---
->>>>>>>>> Patchset v1 can be found at:
->>>>>>>>>     - 1/2: https://urldefense.proofpoint.com/v2/url?u=https-
->>>>
->> 3A__lkml.org_lkml_2019_9_10_443&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg
->>>> &r=bkWxpLoW-f-
->>>>
->> E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1
->>>> Ry4ICIDaiQ&s=s_nPmMNbQFswYRxQgBkeg4H9J_0FEtzRE-0AruC5WI4&e=
->>>>>>>>>     - 2/2:
->>>>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lk
->>>>>>>>> ml
->>>>>>>>>
->>>> _2019_9_10_444&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-
->> f-
->>>> E3Ed
->>>>>>>>>
->>>> iDCCa0_h0PicsViasSlvIpzZvPxs&m=MtEKKeJsQvi2UM1eSZUv2vPLLxrYU0aI1Ry
->>>>>>>>>
->> 4ICIDaiQ&s=kkfdwcX6bYcLrnJSgw_GcMMGAjnDTMtN2v6svWuANpk&e=
->>>>>>>>>
->>>>>>>>> Changes w.r.t v1:
->>>>>>>>>     - Squashed two patches from v1 into one as suggested by Gustavo
->>>>>>>>>     - Addressed review comments from Andrew
->>>>>>>>>
->>>>>>>>>     drivers/pci/controller/dwc/pcie-designware.c | 12
->>>>>>>>> ++++++++++++ drivers/pci/controller/dwc/pcie-designware.h |  9
->> +++++++++
->>>>>>>>>     2 files changed, 21 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> index 7d25102..97fb18d 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>>>>>>>> @@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
->>>>>>>>>     		break;
->>>>>>>>>     	}
->>>>>>>>>     	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
->> val);
->>>>>>>>> +
->>>>>>>>> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
->>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
->> PCIE_PORT_GEN3_RELATED);
->>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
->>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
->> val);
->>>>>>>>> +	}
->>>>>>>>> +
->>>>>>>>> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
->>>>>>>>> +		val = dw_pcie_readl_dbi(pci,
->> PCIE_PORT_GEN3_RELATED);
->>>>>>>>> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
->>>>>>>>> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED,
->> val);
->>>>>>>>> +	}
->>>>>>>>>     }
->>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> index ffed084..e428b62 100644
->>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>>>> @@ -29,6 +29,10 @@
->>>>>>>>>     #define LINK_WAIT_MAX_IATU_RETRIES	5
->>>>>>>>>     #define LINK_WAIT_IATU			9
->>>>>>>>>
->>>>>>>>> +/* Parameters for GEN3 related quirks */
->>>>>>>>> +#define DWC_EQUALIZATION_DISABLE	BIT(1)
->>>>>>>>> +#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
->>>>>>>>> +
->>>>>>>>>     /* Synopsys-specific PCIe configuration registers */
->>>>>>>>>     #define PCIE_PORT_LINK_CONTROL		0x710
->>>>>>>>>     #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
->>>>>>>>> @@ -60,6 +64,10 @@
->>>>>>>>>     #define PCIE_MSI_INTR0_MASK		0x82C
->>>>>>>>>     #define PCIE_MSI_INTR0_STATUS		0x830
->>>>>>>>>
->>>>>>>>> +#define PCIE_PORT_GEN3_RELATED		0x890
->>>>>>>>
->>>>>>>> I hadn't noticed this in the previous version - what is the
->>>>>>>> proper name
->>>>>>> for this
->>>>>>>> register? Does it end in _RELATED?
->>>>>>>
->>>>>>> As per SNPS databook the name of the register is "GEN3_RELATED_OFF".
->>>>>>> It is port logic register so, to keep similarity with other port
->>>>>>> logic registers in this file we named it as "PCIE_PORT_GEN3_RELATED".
->>>>>>
->>>>>> OK.
->>>>>>
->>>>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
->>>>>>
->>>>>> Also is the SNPS databook publicly available? I'd be interested in
->>>>>> reading it.
->>>>>
->>>>> The databook isn't openly available, sorry.
->>>>>
->>>>> Gustavo
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>> Andrew Murray
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>> Andrew Murray
->>>>>>>>
->>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
->>>>>>>>> +#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
->>>>>>>>> +
->>>>>>>>>     #define PCIE_ATU_VIEWPORT		0x900
->>>>>>>>>     #define PCIE_ATU_REGION_INBOUND		BIT(31)
->>>>>>>>>     #define PCIE_ATU_REGION_OUTBOUND	0
->>>>>>>>> @@ -244,6 +252,7 @@ struct dw_pcie {
->>>>>>>>>     	struct dw_pcie_ep	ep;
->>>>>>>>>     	const struct dw_pcie_ops *ops;
->>>>>>>>>     	unsigned int		version;
->>>>>>>>> +	unsigned int		quirk;
->>>>>>>>>     };
->>>>>>>>>
->>>>>>>>>     #define to_dw_pcie_from_pp(port) container_of((port), struct
->>>>>>>>> dw_pcie,
->>>>>>>>> pp)
->>>>>>>>> --
->>>>>>>>> 2.7.4
->>>>>>>>>
->>>>>>>
->>>>>
->>>>>
->>>
->>>
-> 
-> 
+Best Regards,
+Biwen Li=20
+> >
+> > Regards,
+> > Leo
+> > > >
+> > > > > >
+> > > > > > > >
+> > > > > > > > > +   The first entry must be a link to the SCFG device nod=
+e.
+> > > > > > > > > +   The non-first entry must be offset of registers of SC=
+FG.
+> > > > > > > > >
+> > > > > > > > >  Example:
+> > > > > > > > >  The RCPM node for T4240:
+> > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> > > > > > > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > > > > > > >  	};
+> > > > > > > > >
+> > > > > > > > > +The RCPM node for LS1021A:
+> > > > > > > > > +	rcpm: rcpm@1ee2140 {
+> > > > > > > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
+> > > > > 2.1+";
+> > > > > > > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
+> > > > > > > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > > > > > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
+> > > > > > > > > SCFG_SPARECR8 */
+> > > > > > > > > +	};
+> > > > > > > > > +
+> > > > > > > > > +
+> > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> > > > > > > > >  -------------------------------------------
+> > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
+> > > > > > > > > device node if the device
+> > > > > > > > > --
+> > > > > > > > > 2.17.1
 
