@@ -2,124 +2,447 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFA6C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100A7C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5B120640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC01A21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Ml8ihUom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbfIYTYk (ORCPT
+        id S1732746AbfIYT1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 15:24:40 -0400
-Received: from m4a0039g.houston.softwaregrp.com ([15.124.2.85]:57883 "EHLO
-        m4a0039g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726166AbfIYTYk (ORCPT
+        Wed, 25 Sep 2019 15:27:53 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39659 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729004AbfIYT1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 15:24:40 -0400
-Received: FROM m4a0039g.houston.softwaregrp.com (15.120.17.147) BY m4a0039g.houston.softwaregrp.com WITH ESMTP;
- Wed, 25 Sep 2019 19:23:43 +0000
-Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 25 Sep 2019 19:21:16 +0000
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (15.124.72.11) by
- M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 25 Sep 2019 19:21:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=djKvKjy909BIIjK4lA7RFGJpuUIoOU28hIMlGGCjGH7bXKM4O9P5NR1ClLlJSl8vmn2q+lJH4ac0eIG3fPeFBUKx+GLEM0I1AW/j2FQgIrSalifeEXtEttLEiQt8WAW88KIlKt1pHzF58J06360IaQ82P+scImzX6VVkaeABQevwgWfdmdbadZrAgL0QAbjnr6jv4GtfwQkWsC5vIn+GrkiVIm37Zrcd5Lm8ZFAnB4X2eo3IYS9JujSr0mLe26X6hP93WcQZS/OD40FNzJIhaFhbv+VqZAVIhFWgeQeMwepZy8u6tWPxJfVldKLGDD2RN6Y2ml06mp+VMMlvrpFZHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CkzlXf1zHjhifCKMt3Vcrb8euIr9tbCFfl3ii5IvDsg=;
- b=OKR6DvRaUWeM/3eJZyohs2zw12KUsAuBiqnDKqhgRWaQs7GUpfV0OOh3CtHDZ817qYRBGrNwpls8kO7xiOkSOguGS6he2AU4Qk6U4odoff9Jfw07pKa2Hf6DzXdgom/tm8GGIYXTzux9fbiD7eITs76vJ/R33qS5t0Cxhb8yLFr7EPO5uKPL+9TfIHnoL/9eJ1okjNJeO6O3pFTkJEzdfOcRQIW2+CgNfgXPsR2aNH0BbBCRlCiFREJbp7MWtO6sDm4t310JXIbE/UOHUjO39MDy/Ae6/Edma7Vxw5KaIsNAwBvLoyK08yVMHUb0ytlRN1HXu/scmpe1mcDfsbZ87Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from CY4PR1801MB1848.namprd18.prod.outlook.com (10.171.255.11) by
- CY4PR1801MB1943.namprd18.prod.outlook.com (10.171.253.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Wed, 25 Sep 2019 19:21:14 +0000
-Received: from CY4PR1801MB1848.namprd18.prod.outlook.com
- ([fe80::385d:2356:c3b4:5af2]) by CY4PR1801MB1848.namprd18.prod.outlook.com
- ([fe80::385d:2356:c3b4:5af2%7]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
- 19:21:14 +0000
-From:   Tony Jones <TonyJ@suse.com>
-To:     Yafang Shao <laoar.shao@gmail.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "mingo@redhat.com" <mingo@redhat.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "florian.schmidt@nutanix.com" <florian.schmidt@nutanix.com>,
-        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] tracing, vmscan: add comments for perf script
- page-reclaim
-Thread-Topic: [PATCH 2/2] tracing, vmscan: add comments for perf script
- page-reclaim
-Thread-Index: AQHVbi7xrrpo0QOXLUOiqyb6wYY3Mqc80GUA
-Date:   Wed, 25 Sep 2019 19:21:14 +0000
-Message-ID: <08afb22b-de50-7a2b-6d37-136d1bc41b23@suse.com>
-References: <1568817522-8754-1-git-send-email-laoar.shao@gmail.com>
- <1568817522-8754-3-git-send-email-laoar.shao@gmail.com>
-In-Reply-To: <1568817522-8754-3-git-send-email-laoar.shao@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1201CA0012.namprd12.prod.outlook.com
- (2603:10b6:301:4a::22) To CY4PR1801MB1848.namprd18.prod.outlook.com
- (2603:10b6:910:7a::11)
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=TonyJ@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [76.115.16.38]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2846dce0-0fb4-415d-9a98-08d741ed87e3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1801MB1943;
-x-ms-traffictypediagnostic: CY4PR1801MB1943:
-x-microsoft-antispam-prvs: <CY4PR1801MB19439944FC8F6E8C4101F813C3870@CY4PR1801MB1943.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(316002)(110136005)(4326008)(31696002)(8676002)(81156014)(14444005)(256004)(99286004)(36756003)(76176011)(6436002)(2501003)(6246003)(52116002)(478600001)(26005)(66066001)(14454004)(102836004)(31686004)(186003)(6512007)(4744005)(71200400001)(3846002)(25786009)(8936002)(7416002)(229853002)(71190400001)(86362001)(305945005)(66556008)(66946007)(66446008)(64756008)(6486002)(386003)(476003)(7736002)(66476007)(80792005)(53546011)(2201001)(5660300002)(11346002)(446003)(81166006)(6116002)(54906003)(2906002)(486006)(6506007)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1801MB1943;H:CY4PR1801MB1848.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UFpHfQKX3CCVL6/l0s/zFAL3+7lSOQ7S5ipOPvGMr4PrCczW5uSA93POrNeMpXYafUQukRByrA/jUa5cqOiphRByM3usgt7zmwsT4nNJDKHvfE9nZ52mGWbIkbeyV9Gs8qCpZRwYrbauh96i+1GuBhuMQYoAmT4o6T4aH29e24rN2VKzVr0Z+QfDD2hDLd2E8u1RR+krmIitfrKqKebv34ktTSsTQl1TBAa6lmAcFe9ANwVp06YD6W5ya6xrJX9MYVVHAJ1E7GIWfepKNCYSG+VXeANWOlck43C2PR9exxd2qpHBk0hOQHATDPwa5Hpap9aEBJkYPbVG7bHucRho7jSdVSnvnGM37iDFXdiyGuyZYOgk5RWKi+OBZLo5wP21nZiO9BMYCkHxjkfoa3MSwln0tn3OkdJTPydsLN6wCNM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7AA65A7F42A70B4C977BDE5E83001F2E@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 15:27:52 -0400
+Received: by mail-yw1-f66.google.com with SMTP id n11so2493855ywn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 12:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mWndbsM2FZW9DDrmc2MGJhzen2bAvM4kGyMpUj+NkzE=;
+        b=Ml8ihUomZRhj9lVSe+tvianRg9+2nGEqpd1LUcunAvxjytWmO5bHRkjUZSxxvKp1Dn
+         HFH8GlS18gzV2e2Emq4uM1O9QR3q5Bt9ApXknDAx6QZ19C7mZTQSB60tM3uUuyOFKqpu
+         K7oYz4QK1SK7i2b8LlFVNQPSXX7yaBuEO4hQ3CtlWbPgTTDjpGJkhzk0EthMD80J4e1Y
+         Z2C7JfRO/PepxRrKobB+BIKMtEo/tABm0ttIRiQi//LUo+z4C/MC0VB3jSNdwumePis8
+         Kfvaoyoa7sgdk8JqSs6421Yss8imBNUzYOviwVLl55rJtNIfG5lQrXyem+a7C2DPpP3D
+         fPrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mWndbsM2FZW9DDrmc2MGJhzen2bAvM4kGyMpUj+NkzE=;
+        b=GT2WxjaHO6MKA+iTwedBZ/2EgkkTjddXFFbjbspcEoVLoXo4SyMj42QIy9m1cvCAiM
+         V3TDcPxk0nx/Hnwk64xBRsvKM38hvhK8pz2mCVmX1HGTVrKZYVOfk0ZsgAeUHOGWNX1G
+         FA7HADex7FbChWF/3v0ketRNzXbs3ZwG4IGjKKnn4BZYsLWITKQsc41iVqnScqXatoGi
+         AbxS5NohX5VPCjqWz4lYMcb+r8Md14g8tesvp1essCBY8rbBNc1MwP/QGBKXaLret1Sg
+         9wIruuir5QYEAX+M+BkOpLF+9Yz6nxj3e6dubE8SgV7M4ZsDIHdHxxqDbA0EziY4ExYc
+         /3sA==
+X-Gm-Message-State: APjAAAUkWsIgCp/zstkYAytetdkvlGkPXNxyayqilXjzHNiGrA9UmTyo
+        WVDQhSNYvtpAy+9jqP7teQ8SMw==
+X-Google-Smtp-Source: APXvYqwa0LW1jQEtWq9nMkj2OmNFRVtcjWO6MZCX0fVithFixjuBTJBYt+Cc2B7LgfnimYwaz93ySg==
+X-Received: by 2002:a81:1c4:: with SMTP id 187mr7470954ywb.363.1569439671493;
+        Wed, 25 Sep 2019 12:27:51 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 5sm1387713ywb.73.2019.09.25.12.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 12:27:50 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 15:27:50 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 16/27] drm/dp_mst: Refactor pdt setup/teardown, add
+ more locking
+Message-ID: <20190925192750.GH218215@art_vandelay>
+References: <20190903204645.25487-1-lyude@redhat.com>
+ <20190903204645.25487-17-lyude@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2846dce0-0fb4-415d-9a98-08d741ed87e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 19:21:14.2397
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8WdNzCdvyWVH3XFi7FGWXRj6podY98HfyJxyDCgke71S3/ImNYKxWG/HC7XCen9F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB1943
-X-OriginatorOrg: suse.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903204645.25487-17-lyude@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8xOC8xOSA3OjM4IEFNLCBZYWZhbmcgU2hhbyB3cm90ZToNCj4gQ3VycmVudGx5IHRoZXJl
-J3Mgbm8gZWFzeSB3YXkgdG8gbWFrZSBwZXJmIHNjcmlwdHMgaW4gc3luYyB3aXRoDQo+IHRyYWNl
-cG9pbnRzLiBPbmUgcG9zc2libGUgd2F5IGlzIHRvIHJ1biBwZXJmJ3MgdGVzdHMgcmVndWxhcmx5
-LCBhbm90aGVyIHdheQ0KPiBpcyBvbmNlIHdlIGNoYW5nZXMgdGhlIGRlZmluaXRpb25zIG9mIHRy
-YWNlcG9pbnRzIHdlIG11c3Qga2VlcCBpbiBtaW5kIHRoYXQNCj4gdGhlIHBlcmYgc2NyaXB0cyB3
-aGljaCBhcmUgdXNpbmcgdGhlc2UgdHJhY2Vwb2ludHMgbXVzdCBiZSBjaGFuZ2VkIGFzIHdlbGwu
-DQo+IFNvIEkgYWRkIHRoaXMgY29tbWVudCBmb3IgdGhlIG5ldyBpbnRyb2R1Y2VkIHBhZ2UtcmVj
-bGFpbSBzY3JpcHQgYXMgYQ0KPiByZW1pbmRlci4NCj4NCj4gU2lnbmVkLW9mZi1ieTogWWFmYW5n
-IFNoYW8gPGxhb2FyLnNoYW9AZ21haWwuY29tPg0KDQpUaGlzIHNlZW1zIGxpa2UgdGhlIHRhaWwg
-d2FnZ2luZyB0aGUgZG9nIHRvIG1lLsKgIElmIHdlIGFkZGVkIHRoaXMgdG8gZXZlcnkgdHAgZGVm
-biB0aGF0IGlzIHVzZWQgYnkgYSBwZXJmIHBlcmwvcHl0aG9uIHNjcmlwdCB0aGUgdHAgaGVhZGVy
-cyB3b3VsZCBiZSBsaXR0ZXJlZCB3aXRoIHN1Y2ggY29tbWVudHMuDQoNCg==
+On Tue, Sep 03, 2019 at 04:45:54PM -0400, Lyude Paul wrote:
+> Since we're going to be implementing suspend/resume reprobing very soon,
+> we need to make sure we are extra careful to ensure that our locking
+> actually protects the topology state where we expect it to. Turns out
+> this isn't the case with drm_dp_port_setup_pdt() and
+> drm_dp_port_teardown_pdt(), both of which change port->mstb without
+> grabbing &mgr->lock.
+> 
+> Additionally, since most callers of these functions are just using it to
+> teardown the port's previous PDT and setup a new one we can simplify
+> things a bit and combine drm_dp_port_setup_pdt() and
+> drm_dp_port_teardown_pdt() into a single function:
+> drm_dp_port_set_pdt(). This function also handles actually ensuring that
+> we grab the correct locks when we need to modify port->mstb.
+> 
+> Cc: Juston Li <juston.li@intel.com>
+> Cc: Imre Deak <imre.deak@intel.com>
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Cc: Harry Wentland <hwentlan@amd.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 181 +++++++++++++++-----------
+>  include/drm/drm_dp_mst_helper.h       |   6 +-
+>  2 files changed, 110 insertions(+), 77 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index d1610434a0cb..9944ef2ce885 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -1487,24 +1487,6 @@ drm_dp_mst_topology_put_mstb(struct drm_dp_mst_branch *mstb)
+>  	kref_put(&mstb->topology_kref, drm_dp_destroy_mst_branch_device);
+>  }
+>  
+> -static void drm_dp_port_teardown_pdt(struct drm_dp_mst_port *port, int old_pdt)
+> -{
+> -	struct drm_dp_mst_branch *mstb;
+> -
+> -	switch (old_pdt) {
+> -	case DP_PEER_DEVICE_DP_LEGACY_CONV:
+> -	case DP_PEER_DEVICE_SST_SINK:
+> -		/* remove i2c over sideband */
+> -		drm_dp_mst_unregister_i2c_bus(&port->aux);
+> -		break;
+> -	case DP_PEER_DEVICE_MST_BRANCHING:
+> -		mstb = port->mstb;
+> -		port->mstb = NULL;
+> -		drm_dp_mst_topology_put_mstb(mstb);
+> -		break;
+> -	}
+> -}
+> -
+>  static void drm_dp_destroy_port(struct kref *kref)
+>  {
+>  	struct drm_dp_mst_port *port =
+> @@ -1714,38 +1696,79 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
+>  	return parent_lct + 1;
+>  }
+>  
+> -/*
+> - * return sends link address for new mstb
+> - */
+> -static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port)
+> +static int drm_dp_port_set_pdt(struct drm_dp_mst_port *port, u8 new_pdt)
+>  {
+> -	int ret;
+> -	u8 rad[6], lct;
+> -	bool send_link = false;
+> +	struct drm_dp_mst_topology_mgr *mgr = port->mgr;
+> +	struct drm_dp_mst_branch *mstb;
+> +	u8 rad[8], lct;
+> +	int ret = 0;
+> +
+> +	if (port->pdt == new_pdt)
+
+Shouldn't we also ensure that access to port->pdt is also locked?
+
+Sean
+
+> +		return 0;
+> +
+> +	/* Teardown the old pdt, if there is one */
+> +	switch (port->pdt) {
+> +	case DP_PEER_DEVICE_DP_LEGACY_CONV:
+> +	case DP_PEER_DEVICE_SST_SINK:
+> +		/*
+> +		 * If the new PDT would also have an i2c bus, don't bother
+> +		 * with reregistering it
+> +		 */
+> +		if (new_pdt == DP_PEER_DEVICE_DP_LEGACY_CONV ||
+> +		    new_pdt == DP_PEER_DEVICE_SST_SINK) {
+> +			port->pdt = new_pdt;
+> +			return 0;
+> +		}
+> +
+> +		/* remove i2c over sideband */
+> +		drm_dp_mst_unregister_i2c_bus(&port->aux);
+> +		break;
+> +	case DP_PEER_DEVICE_MST_BRANCHING:
+> +		mutex_lock(&mgr->lock);
+> +		drm_dp_mst_topology_put_mstb(port->mstb);
+> +		port->mstb = NULL;
+> +		mutex_unlock(&mgr->lock);
+> +		break;
+> +	}
+> +
+> +	port->pdt = new_pdt;
+>  	switch (port->pdt) {
+>  	case DP_PEER_DEVICE_DP_LEGACY_CONV:
+>  	case DP_PEER_DEVICE_SST_SINK:
+>  		/* add i2c over sideband */
+>  		ret = drm_dp_mst_register_i2c_bus(&port->aux);
+>  		break;
+> +
+>  	case DP_PEER_DEVICE_MST_BRANCHING:
+>  		lct = drm_dp_calculate_rad(port, rad);
+> +		mstb = drm_dp_add_mst_branch_device(lct, rad);
+> +		if (!mstb) {
+> +			ret = -ENOMEM;
+> +			DRM_ERROR("Failed to create MSTB for port %p", port);
+> +			goto out;
+> +		}
+>  
+> -		port->mstb = drm_dp_add_mst_branch_device(lct, rad);
+> -		if (port->mstb) {
+> -			port->mstb->mgr = port->mgr;
+> -			port->mstb->port_parent = port;
+> -			/*
+> -			 * Make sure this port's memory allocation stays
+> -			 * around until its child MSTB releases it
+> -			 */
+> -			drm_dp_mst_get_port_malloc(port);
+> +		mutex_lock(&mgr->lock);
+> +		port->mstb = mstb;
+> +		mstb->mgr = port->mgr;
+> +		mstb->port_parent = port;
+>  
+> -			send_link = true;
+> -		}
+> +		/*
+> +		 * Make sure this port's memory allocation stays
+> +		 * around until its child MSTB releases it
+> +		 */
+> +		drm_dp_mst_get_port_malloc(port);
+> +		mutex_unlock(&mgr->lock);
+> +
+> +		/* And make sure we send a link address for this */
+> +		ret = 1;
+>  		break;
+>  	}
+> -	return send_link;
+> +
+> +out:
+> +	if (ret < 0)
+> +		port->pdt = DP_PEER_DEVICE_NONE;
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -1881,10 +1904,9 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  			    struct drm_device *dev,
+>  			    struct drm_dp_link_addr_reply_port *port_msg)
+>  {
+> +	struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
+>  	struct drm_dp_mst_port *port;
+> -	bool ret;
+>  	bool created = false;
+> -	int old_pdt = 0;
+>  	int old_ddps = 0;
+>  
+>  	port = drm_dp_get_port(mstb, port_msg->port_number);
+> @@ -1896,7 +1918,7 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  		kref_init(&port->malloc_kref);
+>  		port->parent = mstb;
+>  		port->port_num = port_msg->port_number;
+> -		port->mgr = mstb->mgr;
+> +		port->mgr = mgr;
+>  		port->aux.name = "DPMST";
+>  		port->aux.dev = dev->dev;
+>  		port->aux.is_remote = true;
+> @@ -1909,11 +1931,9 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  
+>  		created = true;
+>  	} else {
+> -		old_pdt = port->pdt;
+>  		old_ddps = port->ddps;
+>  	}
+>  
+> -	port->pdt = port_msg->peer_device_type;
+>  	port->input = port_msg->input_port;
+>  	port->mcs = port_msg->mcs;
+>  	port->ddps = port_msg->ddps;
+> @@ -1925,29 +1945,33 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  	/* manage mstb port lists with mgr lock - take a reference
+>  	   for this list */
+>  	if (created) {
+> -		mutex_lock(&mstb->mgr->lock);
+> +		mutex_lock(&mgr->lock);
+>  		drm_dp_mst_topology_get_port(port);
+>  		list_add(&port->next, &mstb->ports);
+> -		mutex_unlock(&mstb->mgr->lock);
+> +		mutex_unlock(&mgr->lock);
+>  	}
+>  
+>  	if (old_ddps != port->ddps) {
+>  		if (port->ddps) {
+>  			if (!port->input) {
+> -				drm_dp_send_enum_path_resources(mstb->mgr,
+> -								mstb, port);
+> +				drm_dp_send_enum_path_resources(mgr, mstb,
+> +								port);
+>  			}
+>  		} else {
+>  			port->available_pbn = 0;
+>  		}
+>  	}
+>  
+> -	if (old_pdt != port->pdt && !port->input) {
+> -		drm_dp_port_teardown_pdt(port, old_pdt);
+> -
+> -		ret = drm_dp_port_setup_pdt(port);
+> -		if (ret == true)
+> -			drm_dp_send_link_address(mstb->mgr, port->mstb);
+> +	if (!port->input) {
+> +		int ret = drm_dp_port_set_pdt(port,
+> +					      port_msg->peer_device_type);
+> +		if (ret == 1) {
+> +			drm_dp_send_link_address(mgr, port->mstb);
+> +		} else if (ret < 0) {
+> +			DRM_ERROR("Failed to change PDT on port %p: %d\n",
+> +				  port, ret);
+> +			goto fail;
+> +		}
+>  	}
+>  
+>  	if (created && !port->input) {
+> @@ -1955,18 +1979,11 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  
+>  		build_mst_prop_path(mstb, port->port_num, proppath,
+>  				    sizeof(proppath));
+> -		port->connector = (*mstb->mgr->cbs->add_connector)(mstb->mgr,
+> -								   port,
+> -								   proppath);
+> -		if (!port->connector) {
+> -			/* remove it from the port list */
+> -			mutex_lock(&mstb->mgr->lock);
+> -			list_del(&port->next);
+> -			mutex_unlock(&mstb->mgr->lock);
+> -			/* drop port list reference */
+> -			drm_dp_mst_topology_put_port(port);
+> -			goto out;
+> -		}
+> +		port->connector = (*mgr->cbs->add_connector)(mgr, port,
+> +							     proppath);
+> +		if (!port->connector)
+> +			goto fail;
+> +
+>  		if ((port->pdt == DP_PEER_DEVICE_DP_LEGACY_CONV ||
+>  		     port->pdt == DP_PEER_DEVICE_SST_SINK) &&
+>  		    port->port_num >= DP_MST_LOGICAL_PORT_0) {
+> @@ -1974,28 +1991,38 @@ static void drm_dp_add_port(struct drm_dp_mst_branch *mstb,
+>  							 &port->aux.ddc);
+>  			drm_connector_set_tile_property(port->connector);
+>  		}
+> -		(*mstb->mgr->cbs->register_connector)(port->connector);
+> +
+> +		(*mgr->cbs->register_connector)(port->connector);
+>  	}
+>  
+> -out:
+>  	/* put reference to this port */
+>  	drm_dp_mst_topology_put_port(port);
+> +	return;
+> +
+> +fail:
+> +	/* Remove it from the port list */
+> +	mutex_lock(&mgr->lock);
+> +	list_del(&port->next);
+> +	mutex_unlock(&mgr->lock);
+> +
+> +	/* Drop the port list reference */
+> +	drm_dp_mst_topology_put_port(port);
+> +	/* And now drop our reference */
+> +	drm_dp_mst_topology_put_port(port);
+>  }
+>  
+>  static void drm_dp_update_port(struct drm_dp_mst_branch *mstb,
+>  			       struct drm_dp_connection_status_notify *conn_stat)
+>  {
+>  	struct drm_dp_mst_port *port;
+> -	int old_pdt;
+>  	int old_ddps;
+>  	bool dowork = false;
+> +
+>  	port = drm_dp_get_port(mstb, conn_stat->port_number);
+>  	if (!port)
+>  		return;
+>  
+>  	old_ddps = port->ddps;
+> -	old_pdt = port->pdt;
+> -	port->pdt = conn_stat->peer_device_type;
+>  	port->mcs = conn_stat->message_capability_status;
+>  	port->ldps = conn_stat->legacy_device_plug_status;
+>  	port->ddps = conn_stat->displayport_device_plug_status;
+> @@ -2007,11 +2034,17 @@ static void drm_dp_update_port(struct drm_dp_mst_branch *mstb,
+>  			port->available_pbn = 0;
+>  		}
+>  	}
+> -	if (old_pdt != port->pdt && !port->input) {
+> -		drm_dp_port_teardown_pdt(port, old_pdt);
+>  
+> -		if (drm_dp_port_setup_pdt(port))
+> +	if (!port->input) {
+> +		int ret = drm_dp_port_set_pdt(port,
+> +					      conn_stat->peer_device_type);
+> +		if (ret == 1) {
+>  			dowork = true;
+> +		} else if (ret < 0) {
+> +			DRM_ERROR("Failed to change PDT for port %p: %d\n",
+> +				  port, ret);
+> +			dowork = false;
+> +		}
+>  	}
+>  
+>  	drm_dp_mst_topology_put_port(port);
+> @@ -4003,9 +4036,7 @@ drm_dp_delayed_destroy_port(struct drm_dp_mst_port *port)
+>  	if (port->connector)
+>  		port->mgr->cbs->destroy_connector(port->mgr, port->connector);
+>  
+> -	drm_dp_port_teardown_pdt(port, port->pdt);
+> -	port->pdt = DP_PEER_DEVICE_NONE;
+> -
+> +	drm_dp_port_set_pdt(port, DP_PEER_DEVICE_NONE);
+>  	drm_dp_mst_put_port_malloc(port);
+>  }
+>  
+> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+> index 5423a8adda78..f253ee43e9d9 100644
+> --- a/include/drm/drm_dp_mst_helper.h
+> +++ b/include/drm/drm_dp_mst_helper.h
+> @@ -55,8 +55,10 @@ struct drm_dp_vcpi {
+>   * @num_sdp_stream_sinks: Number of stream sinks
+>   * @available_pbn: Available bandwidth for this port.
+>   * @next: link to next port on this branch device
+> - * @mstb: branch device attach below this port
+> - * @aux: i2c aux transport to talk to device connected to this port.
+> + * @mstb: branch device on this port, protected by
+> + * &drm_dp_mst_topology_mgr.lock
+> + * @aux: i2c aux transport to talk to device connected to this port, protected
+> + * by &drm_dp_mst_topology_mgr.lock
+>   * @parent: branch device parent of this port
+>   * @vcpi: Virtual Channel Payload info for this port.
+>   * @connector: DRM connector this port is connected to.
+> -- 
+> 2.21.0
+> 
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
