@@ -2,386 +2,461 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6A3C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466B9C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3B52146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8DA2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569422509;
+	bh=dFEQSY9oAAoapGwh7MZPPhc8b9taZNucXKtM3CmK+AA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=xVAh/NHh3ZNm5Z4xMQkGrF9fA2Edi/wuoA2fR3GdxvBFfG5Ohb4yJ21wW0uLVisCs
+	 WkBx127I3etpAqhX2BbVxDxziSoUjmGa8nQehQjLbskBGyYAguGKq0BahtkvGRZDlg
+	 21w+Md6IhrbAOXN7bvirIbbQxtKcKWLu+mz3LdD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437850AbfIYOkK (ORCPT
+        id S2437944AbfIYOls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:40:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58530 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437784AbfIYOkJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:40:09 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 094EB2609D6
-From:   Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH v3] media: vimc: Implement debayer control for mean window
- size
-To:     Arthur Moraes do Lago <arthurmoraeslago@gmail.com>,
-        lkcamp@lists.libreplanetbr.org, mchehab@kernel.org,
-        skhan@linuxfoundation.org, hverkuil-cisco@xs4all.nl,
-        andrealmeid@collabora.com, laispc19@gmail.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190924232127.30570-1-arthurmoraeslago@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <6024efd9-bf48-e914-eea1-586eae4d72b6@collabora.com>
-Date:   Wed, 25 Sep 2019 11:39:58 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 25 Sep 2019 10:41:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:51254 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437125AbfIYOls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:41:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BD351000;
+        Wed, 25 Sep 2019 07:41:47 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00F963F59C;
+        Wed, 25 Sep 2019 07:41:45 -0700 (PDT)
+Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER)
+ allocation
+To:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-11-maz@kernel.org>
+ <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
+Date:   Wed, 25 Sep 2019 15:41:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190924232127.30570-1-arthurmoraeslago@gmail.com>
+In-Reply-To: <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arthur,
-
-Thanks for the patch, just some small comments below.
-
-On 9/24/19 8:21 PM, Arthur Moraes do Lago wrote:
-> Add mean window size parameter for debayer filter as a control in
-> vimc-debayer.
+On 25/09/2019 14:04, Zenghui Yu wrote:
+> Hi Marc,
 > 
-> vimc-debayer was patched to allow changing mean windows parameter
-> of the filter without needing to reload the driver. The parameter
-> can now be set using a v4l2-ctl control(mean_window_size).
+> Some questions about this patch, mostly to confirm that I would
+> understand things here correctly.
 > 
-> Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
-> ---
-> Changes in V3:
->  - Renamed debayer control
->  - Fixed typo in documentation
->  - Freed control handler in vimc_deb_release
+> On 2019/9/24 2:25, Marc Zyngier wrote:
+>> GICv4.1 defines a new VPE table that is potentially shared between
+>> both the ITSs and the redistributors, following complicated affinity
+>> rules.
+>>
+>> To make things more confusing, the programming of this table at
+>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
+>> for something completely different.
+>>
+>> The code flow is somewhat complexified by the need to respect the
+>> affinities required by the HW, meaning that tables can either be
+>> inherited from a previously discovered ITS or redistributor.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+> 
+> [...]
+> 
+>> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct its_node *its,
+>>   	return indirect;
+>>   }
+>>   
+>> +static u32 compute_common_aff(u64 val)
+>> +{
+>> +	u32 aff, clpiaff;
+>> +
+>> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
+>> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
+>> +
+>> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
+>> +}
+>> +
+>> +static u32 compute_its_aff(struct its_node *its)
+>> +{
+>> +	u64 val;
+>> +	u32 svpet;
+>> +
+>> +	/*
+>> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
+>> +	 * the resulting affinity. We then use that to see if this match
+>> +	 * our own affinity.
+>> +	 */
+>> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
+>> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
+>> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
+>> +	return compute_common_aff(val);
+>> +}
+>> +
+>> +static struct its_node *find_sibbling_its(struct its_node *cur_its)
+>> +{
+>> +	struct its_node *its;
+>> +	u32 aff;
+>> +
+>> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
+>> +		return NULL;
+>> +
+>> +	aff = compute_its_aff(cur_its);
+>> +
+>> +	list_for_each_entry(its, &its_nodes, entry) {
+>> +		u64 baser;
+>> +
+>> +		if (!is_v4_1(its) || its == cur_its)
+>> +			continue;
+>> +
+>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
+>> +			continue;
+>> +
+>> +		if (aff != compute_its_aff(its))
+>> +			continue;
+>> +
+>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
+>> +		baser = its->tables[2].val;
+>> +		if (!(baser & GITS_BASER_VALID))
+>> +			continue;
+>> +
+>> +		return its;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>>   static void its_free_tables(struct its_node *its)
+>>   {
+>>   	int i;
+>> @@ -2004,6 +2066,15 @@ static int its_alloc_tables(struct its_node *its)
+>>   			break;
+>>   
+>>   		case GITS_BASER_TYPE_VCPU:
+>> +			if (is_v4_1(its)) {
+>> +				struct its_node *sibbling;
+>> +
+>> +				if ((sibbling = find_sibbling_its(its))) {
+>> +					its->tables[2] = sibbling->tables[2];
+> 
+> This means thst the vPE table is shared between ITSs which are under the
+> same affinity group?
 
-It would be nicer if you could keep the whole change log here, to see what happened in v2 too.
+That's indeed what this is trying to do...
+
+> Don't we need to set GITS_BASER (by its_setup_baser()) here to tell this
+> ITS where the vPE table lacates?
+
+Absolutely. This is a bug. I didn't spot it as my model only has a
+single ITS.
 
 > 
-> This commit is based on Shuah Khan's patch series 171283
-> ("Collapse vimc single monolithic driver").
+>> +					continue;
+>> +				}
+>> +			}
+>> +
+>>   			indirect = its_parse_indirect_baser(its, baser,
+>>   							    psz, &order,
+>>   							    ITS_MAX_VPEID_BITS);
+>> @@ -2025,6 +2096,212 @@ static int its_alloc_tables(struct its_node *its)
+>>   	return 0;
+>>   }
+>>   
+>> +static u64 inherit_vpe_l1_table_from_its(void)
+>> +{
+>> +	struct its_node *its;
+>> +	u64 val;
+>> +	u32 aff;
+>> +
+>> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+>> +	aff = compute_common_aff(val);
+>> +
+>> +	list_for_each_entry(its, &its_nodes, entry) {
+>> +		u64 baser;
+>> +
+>> +		if (!is_v4_1(its))
+>> +			continue;
+>> +
+>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
+>> +			continue;
+>> +
+>> +		if (aff != compute_its_aff(its))
+>> +			continue;
+>> +
+>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
+>> +		baser = its->tables[2].val;
+>> +		if (!(baser & GITS_BASER_VALID))
+>> +			continue;
+>> +
+>> +		/* We have a winner! */
+>> +		val  = GICR_VPROPBASER_4_1_VALID;
+>> +		if (baser & GITS_BASER_INDIRECT)
+>> +			val |= GICR_VPROPBASER_4_1_INDIRECT;
+>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
+>> +				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
+>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
+>> +				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
 > 
-> Thanks.
-> ---
->  Documentation/media/v4l-drivers/vimc.rst   | 10 +--
->  drivers/media/platform/vimc/vimc-common.h  |  1 +
->  drivers/media/platform/vimc/vimc-debayer.c | 89 +++++++++++++++++++---
->  3 files changed, 79 insertions(+), 21 deletions(-)
+> I remember the spec says,
+> GITS_BASER2 "points to" the ITS *vPE table*, which provides mappings
+> from the vPEID to target Redistributor and associated vpt address.
+> In GICv4.1 GICR_VPROPBASER "points to" the *vPE Configuration table*,
+> which stores the locations of each vPE's LPI configuration and pending
+> table.
 > 
-> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-> index a582af0509ee..28646c76dad5 100644
-> --- a/Documentation/media/v4l-drivers/vimc.rst
-> +++ b/Documentation/media/v4l-drivers/vimc.rst
-> @@ -80,9 +80,7 @@ vimc-capture:
->          Module options
->  ---------------
->  
-> -Vimc has a few module parameters to configure the driver.
-> -
-> -        param=value
-> +Vimc has a module parameter to configure the driver.
->  
->  * ``sca_mult=<unsigned int>``
->  
-> @@ -91,12 +89,6 @@ Vimc has a few module parameters to configure the driver.
->          original one. Currently, only supports scaling up (the default value
->          is 3).
->  
-> -* ``deb_mean_win_size=<unsigned int>``
-> -
-> -        Window size to calculate the mean. Note: the window size needs to be an
-> -        odd number, as the main pixel stays in the center of the window,
-> -        otherwise the next odd number is considered (the default value is 3).
-> -
->  Source code documentation
->  -------------------------
->  
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 236412ad7548..3a5102ddf794 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -19,6 +19,7 @@
->  #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
->  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
->  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
-> +#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
->  
->  #define VIMC_FRAME_MAX_WIDTH 4096
->  #define VIMC_FRAME_MAX_HEIGHT 2160
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 37f3767db469..f1fa7aa023a3 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -11,17 +11,12 @@
->  #include <linux/platform_device.h>
->  #include <linux/vmalloc.h>
->  #include <linux/v4l2-mediabus.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-event.h>
->  #include <media/v4l2-subdev.h>
->  
->  #include "vimc-common.h"
->  
-> -static unsigned int deb_mean_win_size = 3;
-> -module_param(deb_mean_win_size, uint, 0000);
-> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
-> -	"NOTE: the window size needs to be an odd number, as the main pixel "
-> -	"stays in the center of the window, otherwise the next odd number "
-> -	"is considered");
-> -
->  enum vimc_deb_rgb_colors {
->  	VIMC_DEB_RED = 0,
->  	VIMC_DEB_GREEN = 1,
-> @@ -46,6 +41,8 @@ struct vimc_deb_device {
->  	u8 *src_frame;
->  	const struct vimc_deb_pix_map *sink_pix_map;
->  	unsigned int sink_bpp;
-> +	unsigned int mean_win_size;
-> +	struct v4l2_ctrl_handler hdl;
->  };
->  
->  static const struct v4l2_mbus_framefmt sink_fmt_default = {
-> @@ -346,11 +343,18 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->  	return 0;
->  }
->  
-> +static const struct v4l2_subdev_core_ops vimc_deb_core_ops = {
-> +	.log_status = v4l2_ctrl_subdev_log_status,
-> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-> +};
-> +
->  static const struct v4l2_subdev_video_ops vimc_deb_video_ops = {
->  	.s_stream = vimc_deb_s_stream,
->  };
->  
->  static const struct v4l2_subdev_ops vimc_deb_ops = {
-> +	.core = &vimc_deb_core_ops,
->  	.pad = &vimc_deb_pad_ops,
->  	.video = &vimc_deb_video_ops,
->  };
-> @@ -384,7 +388,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
->  	 * the top left corner of the mean window (considering the current
->  	 * pixel as the center)
->  	 */
-> -	seek = deb_mean_win_size / 2;
-> +	seek = vdeb->mean_win_size / 2;
->  
->  	/* Sum the values of the colors in the mean window */
->  
-> @@ -471,14 +475,41 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
->  		}
->  
->  	return vdeb->src_frame;
-> +}
-> +
-> +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
-> +					    unsigned int mean_win_size)
-> +{
-> +	if (vdeb->mean_win_size == mean_win_size)
-> +		return;
+> And the code here says, if we can find an ITS (which is under the same
+> CommonLPIAff group with this Redistributor) has already been probed and
+> allocated an vPE table, then use this vPE table as this Redist's vPE
+> Configuration table.
+> So I infer that in GICv4.1, *vPE table* and *vPE Configuration table*
+> are actually the same concept?  And this table is shared between ITSs
+> and Redists which are under the same affinity group?
+> Please fix me if I have any misunderstanding.
 
-Why do you need this check, you could just directly assign it.
+Indeed. The whole idea is that ITSs and RDs can share a vPE table if
+they are in the same affinity group (such as a socket, for example).
+This is what is missing from v4.0 where the ITS knows about vPEs, but
+doesn't know about residency. With that in place, the HW is able to do a
+lot more for us.
 
-> +	vdeb->mean_win_size = mean_win_size;
-> +}
-
-I don't think you need this function actually.
-
->  
-> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct vimc_deb_device *vdeb =
-> +		container_of(ctrl->handler, struct vimc_deb_device, hdl);
-> +
-> +	switch (ctrl->id) {
-> +	case VIMC_CID_MEAN_WIN_SIZE:
-> +		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
-
-You could just put the assignment directly here, what do you think?
-
-Regards,
-Helen
-
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
->  }
->  
-> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
-> +	.s_ctrl = vimc_deb_s_ctrl,
-> +};
-> +
->  static void vimc_deb_release(struct v4l2_subdev *sd)
->  {
->  	struct vimc_deb_device *vdeb =
->  				container_of(sd, struct vimc_deb_device, sd);
->  
-> +	v4l2_ctrl_handler_free(&vdeb->hdl);
->  	vimc_pads_cleanup(vdeb->ved.pads);
->  	kfree(vdeb);
->  }
-> @@ -495,6 +526,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
->  	vimc_ent_sd_unregister(ved, &vdeb->sd);
->  }
->  
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
-> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
-> +	.id = VIMC_CID_VIMC_CLASS,
-> +	.name = "VIMC Controls",
-> +	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
-> +};
-> +
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
-> +	.ops = &vimc_deb_ctrl_ops,
-> +	.id = VIMC_CID_MEAN_WIN_SIZE,
-> +	.name = "Debayer Mean Window Size",
-> +	.type = V4L2_CTRL_TYPE_INTEGER,
-> +	.min = 1,
-> +	.max = 25,
-> +	.step = 2,
-> +	.def = 3,
-> +};
-> +
->  struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->  				     const char *vcfg_name)
->  {
-> @@ -507,6 +556,16 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->  	if (!vdeb)
->  		return NULL;
->  
-> +	/* Create controls: */
-> +	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
-> +	vdeb->sd.ctrl_handler = &vdeb->hdl;
-> +	if (vdeb->hdl.error) {
-> +		ret = vdeb->hdl.error;
-> +		goto err_free_vdeb;
-> +	}
-> +
->  	/* Initialize ved and sd */
->  	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
->  				   vcfg_name,
-> @@ -514,13 +573,12 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->  				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
->  				   MEDIA_PAD_FL_SOURCE},
->  				   &vimc_deb_int_ops, &vimc_deb_ops);
-> -	if (ret) {
-> -		kfree(vdeb);
-> -		return NULL;
-> -	}
-> +	if (ret)
-> +		goto err_free_hdl;
->  
->  	vdeb->ved.process_frame = vimc_deb_process_frame;
->  	vdeb->dev = &vimc->pdev.dev;
-> +	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
->  
->  	/* Initialize the frame format */
->  	vdeb->sink_fmt = sink_fmt_default;
-> @@ -534,4 +592,11 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->  	vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
->  
->  	return &vdeb->ved;
-> +
-> +err_free_hdl:
-> +	v4l2_ctrl_handler_free(&vdeb->hdl);
-> +err_free_vdeb:
-> +	kfree(vdeb);
-> +
-> +	return NULL;
->  }
 > 
+>> +		val |= FIELD_PREP(GICR_VPROPBASER_SHAREABILITY_MASK,
+>> +				  FIELD_GET(GITS_BASER_SHAREABILITY_MASK, baser));
+>> +		val |= FIELD_PREP(GICR_VPROPBASER_INNER_CACHEABILITY_MASK,
+>> +				  FIELD_GET(GITS_BASER_INNER_CACHEABILITY_MASK, baser));
+>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
+>> +
+>> +		return val;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+>> +{
+>> +	u32 aff;
+>> +	u64 val;
+>> +	int cpu;
+>> +
+>> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+>> +	aff = compute_common_aff(val);
+>> +
+>> +	for_each_possible_cpu(cpu) {
+>> +		void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
+>> +		u32 tmp;
+>> +
+>> +		if (!base || cpu == smp_processor_id())
+>> +			continue;
+>> +
+>> +		val = gic_read_typer(base + GICR_TYPER);
+>> +		tmp = compute_common_aff(val);
+>> +		if (tmp != aff)
+>> +			continue;
+>> +
+>> +		/*
+>> +		 * At this point, we have a victim. This particular CPU
+>> +		 * has already booted, and has an affinity that matches
+>> +		 * ours wrt CommonLPIAff. Let's use its own VPROPBASER.
+>> +		 * Make sure we don't write the Z bit in that case.
+>> +		 */
+>> +		val = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+>> +		val &= ~GICR_VPROPBASER_4_1_Z;
+>> +
+>> +		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
+>> +
+>> +		return val;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int allocate_vpe_l1_table(void)
+>> +{
+>> +	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+>> +	u64 val, esz, gpsz, npg, pa;
+>> +	unsigned int psz = SZ_64K;
+>> +	unsigned int np, epp;
+>> +	struct page *page;
+>> +
+>> +	if (!gic_rdists->has_rvpeid)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * if VPENDBASER.Valid is set, disable any previously programmed
+>> +	 * VPE by setting PendingLast while clearing Valid. This has the
+>> +	 * effect of making sure no doorbell will be generated and we can
+>> +	 * then safely clear VPROPBASER.Valid.
+>> +	 */
+>> +	if (gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER) & GICR_VPENDBASER_Valid)
+>> +		gits_write_vpendbaser(GICR_VPENDBASER_PendingLast,
+>> +				      vlpi_base + GICR_VPENDBASER);
+>> +
+>> +	/*
+>> +	 * If we can inherit the configuration from another RD, let's do
+>> +	 * so. Otherwise, we have to go through the allocation process. We
+>> +	 * assume that all RDs have the exact same requirements, as
+>> +	 * nothing will work otherwise.
+>> +	 */
+>> +	val = inherit_vpe_l1_table_from_rd(&gic_data_rdist()->vpe_table_mask);
+>> +	if (val & GICR_VPROPBASER_4_1_VALID)
+>> +		goto out;
+>> +
+>> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
+> 
+> I think we should check the allocation failure here.
 
+Sure.
 
+> 
+>> +
+>> +	val = inherit_vpe_l1_table_from_its();
+>> +	if (val & GICR_VPROPBASER_4_1_VALID)
+>> +		goto out;
+>> +
+>> +	/* First probe the page size */
+>> +	val = FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, GIC_PAGE_SIZE_64K);
+>> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
+>> +	val = gits_read_vpropbaser(vlpi_base + GICR_VPROPBASER);
+>> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
+>> +
+>> +	switch (gpsz) {
+>> +	default:
+>> +		gpsz = GIC_PAGE_SIZE_4K;
+>> +		/* fall through */
+>> +	case GIC_PAGE_SIZE_4K:
+>> +		psz = SZ_4K;
+>> +		break;
+>> +	case GIC_PAGE_SIZE_16K:
+>> +		psz = SZ_16K;
+>> +		break;
+>> +	case GIC_PAGE_SIZE_64K:
+>> +		psz = SZ_64K;
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Start populating the register from scratch, including RO fields
+>> +	 * (which we want to print in debug cases...)
+>> +	 */
+>> +	val = 0;
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, gpsz);
+>> +	esz = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val);
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ENTRY_SIZE, esz);
+> 
+> 'esz' seems always be 0 here?
+
+Yup, that's broken. Not sure what I had in mind here. esz (element size)
+should be extracted before resetting val, and ORed back in the register
+copy for debug purposes.
+
+> 
+>> +
+>> +	/* How many entries per GIC page? */
+>> +	esz++;
+>> +	epp = psz / (esz * SZ_8);
+>> +
+>> +	/*
+>> +	 * If we need more than just a single L1 page, flag the table
+>> +	 * as indirect and compute the number of required L1 pages.
+>> +	 */
+>> +	if (epp < ITS_MAX_VPEID) {
+>> +		int nl2;
+>> +
+>> +		gic_rdists->flags |= RDIST_FLAGS_VPE_INDIRECT;
+>> +		val |= GICR_VPROPBASER_4_1_INDIRECT;
+>> +
+>> +		/* Number of L2 pages required to cover the VPEID space */
+>> +		nl2 = DIV_ROUND_UP(ITS_MAX_VPEID, epp);
+>> +
+>> +		/* Number of L1 pages to point to the L2 pages */
+>> +		npg = DIV_ROUND_UP(nl2 * SZ_8, psz);
+>> +	} else {
+>> +		npg = 1;
+>> +	}
+>> +
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, npg);
+>> +
+>> +	/* Right, that's the number of CPU pages we need for L1 */
+>> +	np = DIV_ROUND_UP(npg * psz, PAGE_SIZE);
+>> +
+>> +	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %lld\n",
+>> +		 np, npg, psz, epp, esz);
+>> +	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
+>> +	if (!page)
+>> +		return -ENOMEM;
+>> +
+>> +	gic_data_rdist()->vpe_l1_page = page;
+>> +	pa = virt_to_phys(page_address(page));
+>> +	WARN_ON(!IS_ALIGNED(pa, psz));
+>> +
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR, pa >> 12);
+>> +	val |= GICR_VPROPBASER_RaWb;
+>> +	val |= GICR_VPROPBASER_InnerShareable;
+>> +	val |= GICR_VPROPBASER_4_1_Z;
+>> +	val |= GICR_VPROPBASER_4_1_VALID;
+>> +
+>> +out:
+>> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
+>> +	cpumask_set_cpu(smp_processor_id(), gic_data_rdist()->vpe_table_mask);
+>> +
+>> +	pr_debug("CPU%d: VPROPBASER = %llx %*pbl\n",
+>> +		 smp_processor_id(), val,
+>> +		 cpumask_pr_args(gic_data_rdist()->vpe_table_mask));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int its_alloc_collections(struct its_node *its)
+>>   {
+>>   	int i;
+>> @@ -2224,7 +2501,7 @@ static void its_cpu_init_lpis(void)
+>>   	val |= GICR_CTLR_ENABLE_LPIS;
+>>   	writel_relaxed(val, rbase + GICR_CTLR);
+>>   
+>> -	if (gic_rdists->has_vlpis) {
+>> +	if (gic_rdists->has_vlpis && !gic_rdists->has_rvpeid) {
+>>   		void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+>>   
+>>   		/*
+>> @@ -2248,6 +2525,16 @@ static void its_cpu_init_lpis(void)
+>>   		WARN_ON(val & GICR_VPENDBASER_Dirty);
+>>   	}
+>>   
+>> +	if (allocate_vpe_l1_table()) {
+>> +		/*
+>> +		 * If the allocation has failed, we're in massive trouble.
+>> +		 * Disable direct injection, and pray that no VM was
+>> +		 * already running...
+>> +		 */
+>> +		gic_rdists->has_rvpeid = false;
+>> +		gic_rdists->has_vlpis = false;
+>> +	}
+>> +
+>>   	/* Make sure the GIC has seen the above */
+>>   	dsb(sy);
+>>   out:
+
+Thanks for having had a look!
+
+        M.
+-- 
+Jazz is not dead, it just smells funny...
