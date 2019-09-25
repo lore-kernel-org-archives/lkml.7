@@ -2,147 +2,234 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5499CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BD2C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FEB21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7020520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n7ZBNZkX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HDoOqF6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633683AbfIYBtO (ORCPT
+        id S1730738AbfIYBwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 21:49:14 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:36093 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfIYBtN (ORCPT
+        Tue, 24 Sep 2019 21:52:00 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:25309 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfIYBwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 21:49:13 -0400
-Received: by mail-ot1-f51.google.com with SMTP id 67so3342557oto.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 18:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=S4K/lKtY3ak6usXvOj/zR7olHkBAUy+2MMM8LlZmBf8=;
-        b=n7ZBNZkX5ZlJmns7GrfnHL+C8hY/tL7+nHpK2ob+7tBetXEnZ7SdiyMDbRdIhdzw34
-         5/JLCJyXoodut+gqhbESE1sQQILap2nzKtISNRyYiPnXINIFRfZ53CXaLWA4yZKFJcZ6
-         tg7BATsohc/5kAc8Y9Hc//n1wwutMBxMRYiPUEbV7jCiRklTmUf/0keISGTKhe5wXb+F
-         NNWBSo+L+cYdXrWp3Yjr6ljwGMz6xrGImTbaVW5+7l0jNLT5K0S8oM1VKm5fe3gHemJZ
-         ztEz8yu8nqOmaYPKARLXSchUw5gZs72VdAepRjvB5sanuVUX3gE6sN5Sm9Zfv/avYp+0
-         IF9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S4K/lKtY3ak6usXvOj/zR7olHkBAUy+2MMM8LlZmBf8=;
-        b=nYGU/xFEyTsca3BrSMdyiWoFr1LGYnIikeI45k/Tlb39XXekXDw1Fk0G9H5DZLAZl3
-         4+M6gBAMasALjdk71Ee/0Dp71ZcccK76cKKEJvSt2g80pcPrVe3fmBFAKpNWeOaU7A6X
-         pS5B5u5Yd+gh/vSZP7eARARUzRZdVj++0iW2qZ5uCaLRyHQUzHFZj+sy9DOcT0gDL5q8
-         CnS7yy4bcp6vcQca+VC6vcKBvs6qAkxyMGs1eOeokqG4X9HByEWBwB7idYN0TCnBGg/J
-         dihgtBFdrPI56XFvc2SzvWr0JX22IQhcGtoGCv/P5pjlbR17b4AIWAcCpLcDUIiEkOn5
-         yb4w==
-X-Gm-Message-State: APjAAAX1+fJV7cm4w+gD26I2mn4VjtlIADremyygy6JkThp0HPCo8qKK
-        +yaf4yxChMYSLNyZ5nQOWvey+HUh5/fyyuP8YEcCzA==
-X-Google-Smtp-Source: APXvYqwPrvSj/06Aha2RRdJjgRXtUe0Y7rxGGyABjaWC9T328v20er7xQqVtyaKaTfRie45QpZfRJqwc/ZSUkKalazY=
-X-Received: by 2002:a05:6830:1096:: with SMTP id y22mr4317897oto.32.1569376152044;
- Tue, 24 Sep 2019 18:49:12 -0700 (PDT)
+        Tue, 24 Sep 2019 21:52:00 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190925015156epoutp01f3f93d3d281c326e01a893aa44e5d355~Hi3H7W00N1352513525epoutp01K
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 01:51:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190925015156epoutp01f3f93d3d281c326e01a893aa44e5d355~Hi3H7W00N1352513525epoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569376316;
+        bh=SWLIQ8vr4kRyJAdxtUXf37U2nrjBb2XtX1Hc/XqZgGc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=HDoOqF6vzLdxK83oi22tUIRqC+8FrcBTIABAQLcf3GzoJJTyifXSRSSAOBJESQgko
+         pZDebije59DMlKH0oUbvffOCWh4+vs66yc+qhylkNMS2nH6PM5RSRYxmW5GOjN2cGo
+         CgPNVgnHX/XlcRofs0fzx7AT12KkLxALysNEjflg=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190925015156epcas1p30f6ebb41b600b9427bb2cb2f481dd74c~Hi3He2v3_3075830758epcas1p3N;
+        Wed, 25 Sep 2019 01:51:56 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 46dLdj0txRzMqYkd; Wed, 25 Sep
+        2019 01:51:53 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        40.46.04085.738CA8D5; Wed, 25 Sep 2019 10:51:51 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190925015151epcas1p47b1dca3057c41416eae684baed0e4131~Hi3DFlfsz2715927159epcas1p4z;
+        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190925015151epsmtrp23bc528d39bd7307ff28789dc4718b288~Hi3DEtbIb2613026130epsmtrp2S;
+        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
+X-AuditID: b6c32a37-e19ff70000000ff5-8e-5d8ac8377697
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        81.17.03889.738CA8D5; Wed, 25 Sep 2019 10:51:51 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190925015151epsmtip186e005329bd4e927b9d23d462cc9d76c~Hi3C3szEq1157311573epsmtip1Y;
+        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
+Subject: Re: [PATCH v2] devfreq: Add tracepoint for frequency changes
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <418ddd67-ca8a-3d0e-066c-38d05a7082a8@samsung.com>
+Date:   Wed, 25 Sep 2019 10:56:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com> <87pnjr9rth.fsf@mid.deneb.enyo.de>
-In-Reply-To: <87pnjr9rth.fsf@mid.deneb.enyo.de>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 25 Sep 2019 03:48:45 +0200
-Message-ID: <CAG48ez17sqfpmzDKyPBm+h4P8LtCC8_V=StySK2gXcxGaD4mxg@mail.gmail.com>
-Subject: Re: For review: pidfd_send_signal(2) manual page
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190924193721.GK133864@google.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH+97zo+dwPI74uFmuR4as7h7X1ZMVRbhNLIwZWh717Er3a/dc
+        TfxT+XXu8mttxsUYCtlklBEVF6pNfp0fkYia+Zmt86s1m7t7mP57fd6fX9/P5/uhMOU5UkXl
+        WxyC3cKbGHIEfrllpiY2sc2Vpe06lcB1VN8kuY6yz+Gcr+EIyfn33ELcoxvHZZz/Qi/iukrP
+        kFyTs0eWShkqSx7ihu1NL8INX5uekIa9dTXI4L8YmUmsLUjOE/hcwa4WLDnW3HyLMYVZsjJ7
+        QbY+QcvGsklcIqO28GYhhUnPyIxdlG8KvIVRF/GmwoCUyYsio5mbbLcWOgR1nlV0pDCCLddk
+        S7LFibxZLLQY43Ks5jmsVjtbHwjcUJBXeuY3bvOqNp+qKcdL0LMIF5JTQMfD3Vf3cRcaQSnp
+        Kwhe3nyNJGMAweD1WkIyfiB40+EOdyEqlLLjk1zSGxFc9fpIyfiK4Pn3XiJYdxy9EOrPu7Ag
+        j6dnQN/Q/VBZjN4ug6edbhR0kHQMNL/vJIM8ho6CJ796Q7qCngs73/pDjNPToKrhU4gj6DUw
+        0NNCSDFjof1wHx5kOc2C01cvCzJGT4QXfcf+8hTYVl+JBRsD7SehvPQZLk2dDoMfW8MlHgcf
+        W+v+sgr8/Y2kxFvhbPstUkp2IqhrfkBIDh00V1XIgrvA6JlQ26CR5Ci4OnQUSY1HQ//3ckJa
+        lwKcO5VSyFTw9XTLJJ4EJ3ftJvcjxjNsHM+wETzDRvD8b3Yc4TVogmATzUZBZG264d99EYUO
+        NSbxCrpwL8OLaAoxoxSphCtLSfBFYrHZi4DCmPEKz+SApMjli7cIdmu2vdAkiF6kD2z7AKaK
+        yLEGzt7iyGb1s3U6HRfPJuhZlpmoMBhLspS0kXcIBYJgE+z/8mSUXFWCDp9umzDf2bjVMk2t
+        2VA2cGd0fG3z4qTqY0Vq/4Maje6azTjvXVFlv6YuKqu9o63pZbQ5elXivoqVRGTY426TU+c+
+        6jae/rBiS/L5b50HWfmJiijUozEcWhzWql166eT0OPfkLy2RU3+uHrlsdffytN6uWdEb11dv
+        8p29ve7nriFtYxqDi3k8G4PZRf4PtUqBzL4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSnK75ia5Yg8snFS3OLjvIZnG26Q27
+        xeVdc9gsPvceYbS4dGABk8XnDY8ZLW43rmCz2NfxgMmBw2N2w0UWj5Z9t9g93u+7yubRt2UV
+        o8fnTXIBrFFcNimpOZllqUX6dglcGY0r/rIUHJKqWLKqh6WB8bpoFyMHh4SAiUTra84uRi4O
+        IYHdjBL7tu1i7mLkBIpLSky7eJQZokZY4vDhYoiat4wSk78fYAepERZwldi6rgusXkRAQ+LJ
+        7/OMIDazQBuTxPytfiC2kMAzRokdH31BbDYBLYn9L26wgdj8AooSV388BqvnFbCTaHv0Gcxm
+        EVCVWLrrNZgtKhAhcXjHLKgaQYmTM5+wgNicAoYSHZe3MkHsUpf4M+8SM4QtLnHryXyouLxE
+        89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQI
+        jiotrR2MJ07EH2IU4GBU4uF1YO2KFWJNLCuuzD3EKMHBrCTCO0sGKMSbklhZlVqUH19UmpNa
+        fIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoHRMST1j0rIFsa2nPgMZnWG7zvs339+
+        +N4o283r+51DdWu3TFzQ+/zMoTz3M52tKbpHAoI6758wmKKdP2nH+96Vants/L66tCld/SWb
+        cadfoMrsRO3qTS7hakqO6eqFh1tbGe2OPs7/FZPlUnNaoedv7PPonyafVOW1Xn67K58T/enL
+        otbSy5OUWIozEg21mIuKEwGY58JApgIAAA==
+X-CMS-MailID: 20190925015151epcas1p47b1dca3057c41416eae684baed0e4131
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190919174436epcas4p17bf0528950813d3326237fcc56fd9b21
+References: <CGME20190919174436epcas4p17bf0528950813d3326237fcc56fd9b21@epcas4p1.samsung.com>
+        <20190919174423.105030-1-mka@chromium.org>
+        <62b2228b-e198-2558-2afc-e5687935742b@samsung.com>
+        <20190924193721.GK133864@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 1:26 PM Florian Weimer <fw@deneb.enyo.de> wrote:
-> * Michael Kerrisk:
-> >        The  pidfd_send_signal()  system call allows the avoidance of ra=
-ce
-> >        conditions that occur when using traditional interfaces  (such  =
-as
-> >        kill(2)) to signal a process.  The problem is that the tradition=
-al
-> >        interfaces specify the target process via a process ID (PID), wi=
-th
-> >        the  result  that the sender may accidentally send a signal to t=
-he
-> >        wrong process if the originally intended target process has term=
-i=E2=80=90
-> >        nated  and its PID has been recycled for another process.  By co=
-n=E2=80=90
-> >        trast, a PID file descriptor is a stable reference to  a  specif=
-ic
-> >        process;  if  that  process  terminates,  then the file descript=
-or
-> >        ceases to be  valid  and  the  caller  of  pidfd_send_signal()  =
-is
-> >        informed of this fact via an ESRCH error.
->
-> It would be nice to explain somewhere how you can avoid the race using
-> a PID descriptor.  Is there anything else besides CLONE_PIDFD?
+On 19. 9. 25. 오전 4:37, Matthias Kaehlcke wrote:
+> On Fri, Sep 20, 2019 at 10:15:57AM +0900, Chanwoo Choi wrote:
+>> Hi,
+> 
+> sorry for the delayed response, you message got buried in my
+> mailbox.
+> 
+>> On 19. 9. 20. 오전 2:44, Matthias Kaehlcke wrote:
+>>> Add a tracepoint for frequency changes of devfreq devices and
+>>> use it.
+>>>
+>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>>> ---
+>>> (sending v2 without much delay wrt v1, since the change in devfreq
+>>>  probably isn't controversial, and I'll be offline a few days)
+>>>
+>>> Changes in v2:
+>>> - included trace_devfreq_frequency_enabled() in the condition
+>>>   to avoid unnecessary evaluation when the trace point is
+>>>   disabled
+>>> ---
+>>>  drivers/devfreq/devfreq.c      |  3 +++
+>>>  include/trace/events/devfreq.h | 18 ++++++++++++++++++
+>>>  2 files changed, 21 insertions(+)
+>>>
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index ab22bf8a12d6..e9f04dcafb01 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -317,6 +317,9 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>>>  
+>>>  	devfreq->previous_freq = new_freq;
+>>>  
+>>> +	if (trace_devfreq_frequency_enabled() && new_freq != cur_freq)
+>>> +		trace_devfreq_frequency(devfreq, new_freq);
+>>
+>> You can change as following without 'new_freq' variable
+>> because devfreq->previous_freq is the new frequency.	
+>> 	trace_devfreq_frequency(devfreq);
+> 
+> In general that sounds good.
+> 
+> devfreq essentially uses df->previous_freq as df->cur_freq, I think
+> most code using it would be clearer if we renamed it accordingly.
+> I'll send a separate patch for this.
 
-My favorite example here is that you could implement "killall" without
-PID reuse races. With /proc/$pid file descriptors, you could do it
-like this (rough pseudocode with missing error handling and resource
-leaks and such):
+Actually, according to reference time of the 'df->previous_freq',
+'previous_freq' is proper or 'cur_freq is proper.
+But, In the comment of 'struct devfreq',
+it means the configured time as following: 
+	* @previous_freq:      previously configured frequency value.
+I think that it it not big problem to keep the name.
 
-for each pid {
-  procfs_pid_fd =3D open("/proc/"+pid);
-  if (procfs_pid_fd =3D=3D -1) continue;
-  comm_fd =3D openat(procfs_pid_fd, "comm");
-  if (comm_fd =3D=3D -1) continue;
-  char buf[1000];
-  int n =3D read(comm_fd, buf, sizeof(buf)-1);
-  buf[n] =3D 0;
-  if (strcmp(buf, expected_comm) =3D=3D 0) {
-    pidfd_send_signal(procfs_pid_fd, SIGKILL, NULL, 0);
-  }
-}
+> 
+>>> +
+>>>  	if (devfreq->suspend_freq)
+>>>  		devfreq->resume_freq = cur_freq;
+>>>  
+>>> diff --git a/include/trace/events/devfreq.h b/include/trace/events/devfreq.h
+>>> index cf5b8772175d..a62d32fe3c33 100644
+>>> --- a/include/trace/events/devfreq.h
+>>> +++ b/include/trace/events/devfreq.h
+>>> @@ -8,6 +8,24 @@
+>>>  #include <linux/devfreq.h>
+>>>  #include <linux/tracepoint.h>
+>>>  
+>>> +TRACE_EVENT(devfreq_frequency,
+>>> +	TP_PROTO(struct devfreq *devfreq, unsigned long freq),
+>>
+>> 'unsigned long freq' parameter is not necessary.
+>>
+>>> +
+>>> +	TP_ARGS(devfreq, freq),
+>>> +
+>>> +	TP_STRUCT__entry(
+>>> +		__string(dev_name, dev_name(&devfreq->dev))
+>>> +		__field(unsigned long, freq)
+>>> +	),
+>>> +
+>>> +	TP_fast_assign(
+>>> +		__assign_str(dev_name, dev_name(&devfreq->dev));
+>>> +		__entry->freq = freq;
+>>
+>> Initialize the new frequency with 'devfreq->previous_freq' as following:
+>>
+>> 		__entry->freq = devfreq->previous_freq;
+>>
+>>> +	),
+>>> +
+>>> +	TP_printk("dev_name=%s freq=%lu", __get_str(dev_name), __entry->freq)
+>>> +);
+>>> +
+>>>  TRACE_EVENT(devfreq_monitor,
+>>>  	TP_PROTO(struct devfreq *devfreq),
+>>>  
+>>>
+>>
+>>
+>> -- 
+>> Best Regards,
+>> Chanwoo Choi
+>> Samsung Electronics
+> 
+> 
 
-If you want to avoid using a procfs fd for this, I think you can still
-do it, the dance just gets more complicated:
 
-for each pid {
-  procfs_pid_fd =3D open("/proc/"+pid);
-  if (procfs_pid_fd =3D=3D -1) continue;
-  pid_fd =3D pidfd_open(pid, 0);
-  if (pid_fd =3D=3D -1) continue;
-  /* at this point procfs_pid_fd and pid_fd may refer to different processe=
-s */
-  comm_fd =3D openat(procfs_pid_fd, "comm");
-  if (comm_fd =3D=3D -1) continue;
-  /* at this point we know that procfs_pid_fd and pid_fd refer to the
-same struct pid, because otherwise the procfs_pid_fd must point to a
-directory that throws -ESRCH for everything */
-  char buf[1000];
-  int n =3D read(comm_fd, buf, sizeof(buf)-1);
-  buf[n] =3D 0;
-  if (strcmp(buf, expected_comm) =3D=3D 0) {
-    pidfd_send_signal(pid_fd, SIGKILL, NULL, 0);
-  }
-}
-
-But I don't think anyone is actually interested in using pidfds for
-this kind of usecase right now.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
