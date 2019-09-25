@@ -2,234 +2,229 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BD2C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63055C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7020520872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C4B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HDoOqF6v"
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="1r+7wj1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfIYBwA (ORCPT
+        id S2633685AbfIYBzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 21:52:00 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:25309 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfIYBwA (ORCPT
+        Tue, 24 Sep 2019 21:55:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34692 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfIYBzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 21:52:00 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190925015156epoutp01f3f93d3d281c326e01a893aa44e5d355~Hi3H7W00N1352513525epoutp01K
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 01:51:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190925015156epoutp01f3f93d3d281c326e01a893aa44e5d355~Hi3H7W00N1352513525epoutp01K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569376316;
-        bh=SWLIQ8vr4kRyJAdxtUXf37U2nrjBb2XtX1Hc/XqZgGc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=HDoOqF6vzLdxK83oi22tUIRqC+8FrcBTIABAQLcf3GzoJJTyifXSRSSAOBJESQgko
-         pZDebije59DMlKH0oUbvffOCWh4+vs66yc+qhylkNMS2nH6PM5RSRYxmW5GOjN2cGo
-         CgPNVgnHX/XlcRofs0fzx7AT12KkLxALysNEjflg=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190925015156epcas1p30f6ebb41b600b9427bb2cb2f481dd74c~Hi3He2v3_3075830758epcas1p3N;
-        Wed, 25 Sep 2019 01:51:56 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 46dLdj0txRzMqYkd; Wed, 25 Sep
-        2019 01:51:53 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        40.46.04085.738CA8D5; Wed, 25 Sep 2019 10:51:51 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190925015151epcas1p47b1dca3057c41416eae684baed0e4131~Hi3DFlfsz2715927159epcas1p4z;
-        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190925015151epsmtrp23bc528d39bd7307ff28789dc4718b288~Hi3DEtbIb2613026130epsmtrp2S;
-        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
-X-AuditID: b6c32a37-e19ff70000000ff5-8e-5d8ac8377697
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.17.03889.738CA8D5; Wed, 25 Sep 2019 10:51:51 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190925015151epsmtip186e005329bd4e927b9d23d462cc9d76c~Hi3C3szEq1157311573epsmtip1Y;
-        Wed, 25 Sep 2019 01:51:51 +0000 (GMT)
-Subject: Re: [PATCH v2] devfreq: Add tracepoint for frequency changes
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <418ddd67-ca8a-3d0e-066c-38d05a7082a8@samsung.com>
-Date:   Wed, 25 Sep 2019 10:56:15 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 24 Sep 2019 21:55:54 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j19so3894462lja.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 18:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KnrH0v0z3ukmxZZZVDlP/AkPyborUYw1x3C+Oh0uyjY=;
+        b=1r+7wj1h669ZQZ1Q36CDW0ti2s5mpg8ivKNi4O4P17FWWogctXLC8Ajf43UHZOLxsy
+         oRIZO0foOlIzl75l0DToQdd6xzLOjT3liWLNo1F/2afK3LeewO+4D3ybWbBaEbHLHf0z
+         pT9DPHZnT8Pls4zYBwXUZx1edeOsk08KqC2i+xvVM4dljvcot8VadAp0L5l/WTaCtf84
+         t1HGtax9Cn1CZ0nzmpIFO827C4ZaVxc+yMeLDhLcbQok9PXA89q+QfMkvCv7yct5ujRV
+         nc/i7155TaKaIAPIdLnigGHakXOFtBOsbEyVlp5wLEH1WWJpSupZLEgxbS5iJPu7UhtG
+         qahA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KnrH0v0z3ukmxZZZVDlP/AkPyborUYw1x3C+Oh0uyjY=;
+        b=kna7jlUKBw4p1xAkYLWOVuXj/dhMuXLAqgVgvedaWuy1Xptn21SJivok2MZOD9SbSF
+         EhV7cn5+nxgnB20t7dOsRgfcaAEWbm69H5+eJbi1QKkQmKZs1FWObjhD6tNqtYF84Uaa
+         98gsEdnjfY/VsYXShLShwP3aO3PcDK1tbMrG2XNzZ9ZFdUfR6lwsBcoHy2bQCVHxXjKm
+         xlImp6osdND1tm4SR83fBgrDopk5hU/+++Sr5mBgmJEuHjiUffWgILhoJrup7LFRmvoW
+         t2TmxoY+jM226mPTCMRaLIdx/QpnubY75aRkUuPA1LpIknjArpaiRGBxdYppAAeKYVJt
+         xnbA==
+X-Gm-Message-State: APjAAAWPA3u2xX4TK/YUJCngMx29nI3zycozdLT8xDxAGqBHxz0h2ExQ
+        mJBIJarn9kf1BY/J5l0j6qvcULzfKqWs79THNR7NPA==
+X-Google-Smtp-Source: APXvYqy2lLyxOuORM4qSVmKT+DJUortZxQMuCZxvRWRcXMz8NIqrkwRinHHcP3McR8h8J4YY3peQbTQhrkMAefMC81A=
+X-Received: by 2002:a2e:3201:: with SMTP id y1mr4059819ljy.5.1569376551089;
+ Tue, 24 Sep 2019 18:55:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190924193721.GK133864@google.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH+97zo+dwPI74uFmuR4as7h7X1ZMVRbhNLIwZWh717Er3a/dc
-        TfxT+XXu8mttxsUYCtlklBEVF6pNfp0fkYia+Zmt86s1m7t7mP57fd6fX9/P5/uhMOU5UkXl
-        WxyC3cKbGHIEfrllpiY2sc2Vpe06lcB1VN8kuY6yz+Gcr+EIyfn33ELcoxvHZZz/Qi/iukrP
-        kFyTs0eWShkqSx7ihu1NL8INX5uekIa9dTXI4L8YmUmsLUjOE/hcwa4WLDnW3HyLMYVZsjJ7
-        QbY+QcvGsklcIqO28GYhhUnPyIxdlG8KvIVRF/GmwoCUyYsio5mbbLcWOgR1nlV0pDCCLddk
-        S7LFibxZLLQY43Ks5jmsVjtbHwjcUJBXeuY3bvOqNp+qKcdL0LMIF5JTQMfD3Vf3cRcaQSnp
-        Kwhe3nyNJGMAweD1WkIyfiB40+EOdyEqlLLjk1zSGxFc9fpIyfiK4Pn3XiJYdxy9EOrPu7Ag
-        j6dnQN/Q/VBZjN4ug6edbhR0kHQMNL/vJIM8ho6CJ796Q7qCngs73/pDjNPToKrhU4gj6DUw
-        0NNCSDFjof1wHx5kOc2C01cvCzJGT4QXfcf+8hTYVl+JBRsD7SehvPQZLk2dDoMfW8MlHgcf
-        W+v+sgr8/Y2kxFvhbPstUkp2IqhrfkBIDh00V1XIgrvA6JlQ26CR5Ci4OnQUSY1HQ//3ckJa
-        lwKcO5VSyFTw9XTLJJ4EJ3ftJvcjxjNsHM+wETzDRvD8b3Yc4TVogmATzUZBZG264d99EYUO
-        NSbxCrpwL8OLaAoxoxSphCtLSfBFYrHZi4DCmPEKz+SApMjli7cIdmu2vdAkiF6kD2z7AKaK
-        yLEGzt7iyGb1s3U6HRfPJuhZlpmoMBhLspS0kXcIBYJgE+z/8mSUXFWCDp9umzDf2bjVMk2t
-        2VA2cGd0fG3z4qTqY0Vq/4Maje6azTjvXVFlv6YuKqu9o63pZbQ5elXivoqVRGTY426TU+c+
-        6jae/rBiS/L5b50HWfmJiijUozEcWhzWql166eT0OPfkLy2RU3+uHrlsdffytN6uWdEb11dv
-        8p29ve7nriFtYxqDi3k8G4PZRf4PtUqBzL4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSnK75ia5Yg8snFS3OLjvIZnG26Q27
-        xeVdc9gsPvceYbS4dGABk8XnDY8ZLW43rmCz2NfxgMmBw2N2w0UWj5Z9t9g93u+7yubRt2UV
-        o8fnTXIBrFFcNimpOZllqUX6dglcGY0r/rIUHJKqWLKqh6WB8bpoFyMHh4SAiUTra84uRi4O
-        IYHdjBL7tu1i7mLkBIpLSky7eJQZokZY4vDhYoiat4wSk78fYAepERZwldi6rgusXkRAQ+LJ
-        7/OMIDazQBuTxPytfiC2kMAzRokdH31BbDYBLYn9L26wgdj8AooSV388BqvnFbCTaHv0Gcxm
-        EVCVWLrrNZgtKhAhcXjHLKgaQYmTM5+wgNicAoYSHZe3MkHsUpf4M+8SM4QtLnHryXyouLxE
-        89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQI
-        jiotrR2MJ07EH2IU4GBU4uF1YO2KFWJNLCuuzD3EKMHBrCTCO0sGKMSbklhZlVqUH19UmpNa
-        fIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoHRMST1j0rIFsa2nPgMZnWG7zvs339+
-        +N4o283r+51DdWu3TFzQ+/zMoTz3M52tKbpHAoI6758wmKKdP2nH+96Vants/L66tCld/SWb
-        cadfoMrsRO3qTS7hakqO6eqFh1tbGe2OPs7/FZPlUnNaoedv7PPonyafVOW1Xn67K58T/enL
-        otbSy5OUWIozEg21mIuKEwGY58JApgIAAA==
-X-CMS-MailID: 20190925015151epcas1p47b1dca3057c41416eae684baed0e4131
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919174436epcas4p17bf0528950813d3326237fcc56fd9b21
-References: <CGME20190919174436epcas4p17bf0528950813d3326237fcc56fd9b21@epcas4p1.samsung.com>
-        <20190919174423.105030-1-mka@chromium.org>
-        <62b2228b-e198-2558-2afc-e5687935742b@samsung.com>
-        <20190924193721.GK133864@google.com>
+References: <20190919092413.11141-1-r@hev.cc> <4379abe0-9f81-21b6-11ae-6eb3db79eeff@akamai.com>
+ <5042e1e0-f49a-74c8-61f8-6903288110ac@akamai.com> <CAHirt9i42K37J9n8smaudJyigRAiiDhzZBuW+gbyLXHVq98yqQ@mail.gmail.com>
+ <92a54917-0cdf-89ce-1fb1-f913156a1e0d@akamai.com>
+In-Reply-To: <92a54917-0cdf-89ce-1fb1-f913156a1e0d@akamai.com>
+From:   Heiher <r@hev.cc>
+Date:   Wed, 25 Sep 2019 09:55:34 +0800
+Message-ID: <CAHirt9hQ1PkdDtidfHjbND-ABeRMj54yTWd2QDzOV4dbDEvdcg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] fs/epoll: Remove unnecessary wakeups of nested
+ epoll that in ET mode
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Eric Wong <e@80x24.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 9. 25. 오전 4:37, Matthias Kaehlcke wrote:
-> On Fri, Sep 20, 2019 at 10:15:57AM +0900, Chanwoo Choi wrote:
->> Hi,
-> 
-> sorry for the delayed response, you message got buried in my
-> mailbox.
-> 
->> On 19. 9. 20. 오전 2:44, Matthias Kaehlcke wrote:
->>> Add a tracepoint for frequency changes of devfreq devices and
->>> use it.
->>>
->>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> ---
->>> (sending v2 without much delay wrt v1, since the change in devfreq
->>>  probably isn't controversial, and I'll be offline a few days)
->>>
->>> Changes in v2:
->>> - included trace_devfreq_frequency_enabled() in the condition
->>>   to avoid unnecessary evaluation when the trace point is
->>>   disabled
->>> ---
->>>  drivers/devfreq/devfreq.c      |  3 +++
->>>  include/trace/events/devfreq.h | 18 ++++++++++++++++++
->>>  2 files changed, 21 insertions(+)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index ab22bf8a12d6..e9f04dcafb01 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -317,6 +317,9 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
->>>  
->>>  	devfreq->previous_freq = new_freq;
->>>  
->>> +	if (trace_devfreq_frequency_enabled() && new_freq != cur_freq)
->>> +		trace_devfreq_frequency(devfreq, new_freq);
->>
->> You can change as following without 'new_freq' variable
->> because devfreq->previous_freq is the new frequency.	
->> 	trace_devfreq_frequency(devfreq);
-> 
-> In general that sounds good.
-> 
-> devfreq essentially uses df->previous_freq as df->cur_freq, I think
-> most code using it would be clearer if we renamed it accordingly.
-> I'll send a separate patch for this.
+Hi,
 
-Actually, according to reference time of the 'df->previous_freq',
-'previous_freq' is proper or 'cur_freq is proper.
-But, In the comment of 'struct devfreq',
-it means the configured time as following: 
-	* @previous_freq:      previously configured frequency value.
-I think that it it not big problem to keep the name.
+On Tue, Sep 24, 2019 at 11:19 PM Jason Baron <jbaron@akamai.com> wrote:
+>
+>
+>
+> On 9/24/19 10:06 AM, Heiher wrote:
+> > Hi,
+> >
+> > On Mon, Sep 23, 2019 at 11:34 PM Jason Baron <jbaron@akamai.com> wrote:
+> >>
+> >>
+> >>
+> >> On 9/20/19 12:00 PM, Jason Baron wrote:
+> >>> On 9/19/19 5:24 AM, hev wrote:
+> >>>> From: Heiher <r@hev.cc>
+> >>>>
+> >>>> Take the case where we have:
+> >>>>
+> >>>>         t0
+> >>>>          | (ew)
+> >>>>         e0
+> >>>>          | (et)
+> >>>>         e1
+> >>>>          | (lt)
+> >>>>         s0
+> >>>>
+> >>>> t0: thread 0
+> >>>> e0: epoll fd 0
+> >>>> e1: epoll fd 1
+> >>>> s0: socket fd 0
+> >>>> ew: epoll_wait
+> >>>> et: edge-trigger
+> >>>> lt: level-trigger
+> >>>>
+> >>>> When s0 fires an event, e1 catches the event, and then e0 catches an event from
+> >>>> e1. After this, There is a thread t0 do epoll_wait() many times on e0, it should
+> >>>> only get one event in total, because e1 is a dded to e0 in edge-triggered mode.
+> >>>>
+> >>>> This patch only allows the wakeup(&ep->poll_wait) in ep_scan_ready_list under
+> >>>> two conditions:
+> >>>>
+> >>>>  1. depth == 0.
+>
+>
+> What is the point of this condition again? I was thinking we only need
+> to do #2.
+>
+> >>>>  2. There have event is added to ep->ovflist during processing.
+> >>>>
+> >>>> Test code:
+> >>>>  #include <unistd.h>
+> >>>>  #include <sys/epoll.h>
+> >>>>  #include <sys/socket.h>
+> >>>>
+> >>>>  int main(int argc, char *argv[])
+> >>>>  {
+> >>>>      int sfd[2];
+> >>>>      int efd[2];
+> >>>>      struct epoll_event e;
+> >>>>
+> >>>>      if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      efd[0] = epoll_create(1);
+> >>>>      if (efd[0] < 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      efd[1] = epoll_create(1);
+> >>>>      if (efd[1] < 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      e.events = EPOLLIN;
+> >>>>      if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      e.events = EPOLLIN | EPOLLET;
+> >>>>      if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      if (write(sfd[1], "w", 1) != 1)
+> >>>>              goto out;
+> >>>>
+> >>>>      if (epoll_wait(efd[0], &e, 1, 0) != 1)
+> >>>>              goto out;
+> >>>>
+> >>>>      if (epoll_wait(efd[0], &e, 1, 0) != 0)
+> >>>>              goto out;
+> >>>>
+> >>>>      close(efd[0]);
+> >>>>      close(efd[1]);
+> >>>>      close(sfd[0]);
+> >>>>      close(sfd[1]);
+> >>>>
+> >>>>      return 0;
+> >>>>
+> >>>>  out:
+> >>>>      return -1;
+> >>>>  }
+> >>>>
+> >>>> More tests:
+> >>>>  https://github.com/heiher/epoll-wakeup
+> >>>>
+> >>>> Cc: Al Viro <viro@ZenIV.linux.org.uk>
+> >>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >>>> Cc: Davide Libenzi <davidel@xmailserver.org>
+> >>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> >>>> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+> >>>> Cc: Eric Wong <e@80x24.org>
+> >>>> Cc: Jason Baron <jbaron@akamai.com>
+> >>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> >>>> Cc: Roman Penyaev <rpenyaev@suse.de>
+> >>>> Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
+> >>>> Cc: linux-kernel@vger.kernel.org
+> >>>> Cc: linux-fsdevel@vger.kernel.org
+> >>>> Signed-off-by: hev <r@hev.cc>
+> >>>> ---
+> >>>>  fs/eventpoll.c | 5 ++++-
+> >>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> >>>> index c4159bcc05d9..fa71468dbd51 100644
+> >>>> --- a/fs/eventpoll.c
+> >>>> +++ b/fs/eventpoll.c
+> >>>> @@ -685,6 +685,9 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+> >>>>      if (!ep_locked)
+> >>>>              mutex_lock_nested(&ep->mtx, depth);
+> >>>>
+> >>>> +    if (!depth || list_empty_careful(&ep->rdllist))
+> >>>> +            pwake++;
+> >>>> +
+>
+> This is the check I'm wondering why it's needed?
 
-> 
->>> +
->>>  	if (devfreq->suspend_freq)
->>>  		devfreq->resume_freq = cur_freq;
->>>  
->>> diff --git a/include/trace/events/devfreq.h b/include/trace/events/devfreq.h
->>> index cf5b8772175d..a62d32fe3c33 100644
->>> --- a/include/trace/events/devfreq.h
->>> +++ b/include/trace/events/devfreq.h
->>> @@ -8,6 +8,24 @@
->>>  #include <linux/devfreq.h>
->>>  #include <linux/tracepoint.h>
->>>  
->>> +TRACE_EVENT(devfreq_frequency,
->>> +	TP_PROTO(struct devfreq *devfreq, unsigned long freq),
->>
->> 'unsigned long freq' parameter is not necessary.
->>
->>> +
->>> +	TP_ARGS(devfreq, freq),
->>> +
->>> +	TP_STRUCT__entry(
->>> +		__string(dev_name, dev_name(&devfreq->dev))
->>> +		__field(unsigned long, freq)
->>> +	),
->>> +
->>> +	TP_fast_assign(
->>> +		__assign_str(dev_name, dev_name(&devfreq->dev));
->>> +		__entry->freq = freq;
->>
->> Initialize the new frequency with 'devfreq->previous_freq' as following:
->>
->> 		__entry->freq = devfreq->previous_freq;
->>
->>> +	),
->>> +
->>> +	TP_printk("dev_name=%s freq=%lu", __get_str(dev_name), __entry->freq)
->>> +);
->>> +
->>>  TRACE_EVENT(devfreq_monitor,
->>>  	TP_PROTO(struct devfreq *devfreq),
->>>  
->>>
->>
->>
->> -- 
->> Best Regards,
->> Chanwoo Choi
->> Samsung Electronics
-> 
-> 
+You are right. This is not needed. Initially, I want to keep the
+original behavior of depth 0 for direct poll() in multi-threads.
+
+>
+> Thanks,
+>
+>
+> -Jason
+>
 
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Best regards!
+Hev
+https://hev.cc
