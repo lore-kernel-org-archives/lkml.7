@@ -2,421 +2,112 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51956C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6E7C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13DEF21D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B3921D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HwblHVWg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3BMqCM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411779AbfIYFom (ORCPT
+        id S2411790AbfIYFrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:44:42 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49276 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404508AbfIYFom (ORCPT
+        Wed, 25 Sep 2019 01:47:17 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36410 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404442AbfIYFrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:44:42 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190925054438euoutp0150827e99ef6880724deda8e42d75116d~HmCTHqMpD0515305153euoutp01r
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 05:44:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190925054438euoutp0150827e99ef6880724deda8e42d75116d~HmCTHqMpD0515305153euoutp01r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569390278;
-        bh=kYIVoeIsDZViEyQtoAUGXK4fxaz0KwTD7EylbtIhnqY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HwblHVWgUg45oQOao8CkgXOzQ0d3qfnEH2faJeR9CDcI4CjKwA/dttL96cTe6Rm4A
-         j1o2vCrh7CPq7ItV/XPN5BZbfLceIi6icRdzMCBKRMYIwyrsBsJlqSkC3a3XnpPHH7
-         3ACNyBLlUD6I7UhJ4s5uydXnPDXtrNJdFxVm2FH0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190925054437eucas1p108c8908cb95482cff91297ba3fa5a2e2~HmCRwrvU62405424054eucas1p15;
-        Wed, 25 Sep 2019 05:44:37 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id A8.80.04469.5CEFA8D5; Wed, 25
-        Sep 2019 06:44:37 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190925054437eucas1p1faa58a48a75c43fd5b5c7424e3d658e7~HmCRdetQF1488914889eucas1p1b;
-        Wed, 25 Sep 2019 05:44:37 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190925054437eusmtrp12dae90d5d9dd472b8fbea5f7cbab0880~HmCRcM_cn1789117891eusmtrp1F;
-        Wed, 25 Sep 2019 05:44:37 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-b2-5d8afec5d574
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A6.64.04117.4CEFA8D5; Wed, 25
-        Sep 2019 06:44:36 +0100 (BST)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190925054436eusmtip11d852d14d1080b152186c05430a580ba~HmCQp4U1h2516225162eusmtip1Z;
-        Wed, 25 Sep 2019 05:44:36 +0000 (GMT)
-Message-ID: <f51aac4cacb7a0196ab6919b110ad9fcf4009c88.camel@samsung.com>
-Subject: Re: [RFC PATCH v2 01/11] devfreq: exynos-bus: Extract
- exynos_bus_profile_init()
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-Date:   Wed, 25 Sep 2019 07:44:35 +0200
-In-Reply-To: <2e49bd2c-e074-038b-f8a2-7dd8dea4a9af@samsung.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju29k5O0qzr2n4UlI4qCgqEypOVFYUcaB+SPmrqytPOtym7aip
-        QS27UCuXTUubXU1KDSnnLJUuNJdLJVdpVl5QnCZaaWtqRddtZ2L/nvc5z+V74NCE7CU5k1Zq
-        UjitRqGSU4Hi+/U/HIuf/dHvWvpJD0z31ROIqSi4SzJvRwdI5pqtmWRax0YoJv+RmWKM3Tli
-        xuG4J2FKulwkY3a2kUxL7WWKcWfbEFPgeCxiym1dEqbjaAnFFOQOUusway47TbGdbQ8ptvuM
-        XcRWFh9hK4arRazBUoZYt3l2tGR74Oo4TqVM47QRUbGBCeO9ODmfTa/vKiF1qGilHgXQgJdB
-        7vBtkR4F0jJcguDh+Y+kcIwisOQ1IK9Kht0IdEWSCUejxeEX3UZQ1P9LIhwfEPS4q3wOKWah
-        uFZHeHEw3g7NXS4fpvBaeNEx7usLwcMI+p58IbwHgY+LYMA0JPaqxHgumJ898PUFeBxljlZK
-        6F4EnxsNHg3taZgOv6uDvTSB58CxqkJCkLgkMGJY45UA3gjHs7YKdDAM2S3+BWHQlHtWLGAe
-        +mu6fWsA6xCYb9n8Oaugzv6K9OYQeAHcrY0Q6PVQ2usSCfFB8O7zdOEFQWC8n08ItBROnZQJ
-        UA61l4IEI0DWnTZ/NgtO+3WUg8JNk0tM/y0xTbZeR0QZCuVSeXU8x0dquINLeIWaT9XEL9mX
-        pDYjz3/W9Mf+tRqNvd5rRZhG8qnSdaR+l4xUpPEZaisCmpCHSE1hHkoap8jI5LRJe7SpKo63
-        olm0WB4qPTSlZ4cMxytSuESOS+a0E19FdMBMHcoLi0qZ5mqvSp8Rt2l/zV+Ypor+2axBrbFu
-        45aY7xvC3+xsWZFnHd+cdVU978pzw5VHzRfrtJ2FU849GDCmGZ72fVse3FLjJBMzY8uLx/oh
-        plJ52HbAeelWUXrHgPJC4s068m92ZfQ2x5epuWtK2wcbfn8y36hIzq46+W33+4+i+flyMZ+g
-        iFxIaHnFPyjBADNjAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xu7pH/3XFGvyWsrg/r5XRYuOM9awW
-        1788Z7WYf+Qcq8WVr+/ZLKbv3cRmMen+BBaL8+c3sFusuPuR1WLT42usFpd3zWGz+Nx7hNFi
-        xvl9TBZrj9xlt7jduILNYsbkl2wOAh6bVnWyedy5tofN4373cSaPzUvqPTa+28Hk0bdlFaPH
-        501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
-        ehnfHgkUTPeoOHZ3BWsD4yLLLkZODgkBE4lTW86zdjFycQgJLGWUWLblEwtEQkLi4/obrBC2
-        sMSfa11sEEVPGCW2TT0AVsQr4CGxZFcDM4gtLBAlce7uRzCbTcBe4uztb0wgDSIC7xklPmx/
-        xw7iMAu0MUkc6tsMNpZFQFVi09Ht7CA2J1DHqvNXoFZ8ZpTofXaDESTBLKAp0br9NzvEHToS
-        b0/1Aa3mAFotKPF3hzBEibxE89bZzBMYBWch6ZiFUDULSdUCRuZVjCKppcW56bnFRnrFibnF
-        pXnpesn5uZsYgfG67djPLTsYu94FH2IU4GBU4uF1YO2KFWJNLCuuzD3EKMHBrCTCO0sGKMSb
-        klhZlVqUH19UmpNafIjRFOificxSosn5wFSSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
-        JDU7NbUgtQimj4mDU6qB0bXZWSdMPKdE+vrT8wpn3jTNuWa487DI/efcW0+wWjaz3735U9x0
-        76WHks9nrPv1X85rSv+SC9pVCsdPT3BfqJR4N2HGsZeTQ1eyH4u/oezQeyhjYeL9xnuTn+za
-        1re8Q2+tqRmzTNAfL6ePzGGxr+IXxCSEaXu0ms4/wforbMOFTK4zOS/12JVYijMSDbWYi4oT
-        ARfkJE7tAgAA
-X-CMS-MailID: 20190925054437eucas1p1faa58a48a75c43fd5b5c7424e3d658e7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919142322eucas1p24bc477ee6e1bcd65546c305d55af097d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919142322eucas1p24bc477ee6e1bcd65546c305d55af097d
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142322eucas1p24bc477ee6e1bcd65546c305d55af097d@eucas1p2.samsung.com>
-        <20190919142236.4071-2-a.swigon@samsung.com>
-        <2e49bd2c-e074-038b-f8a2-7dd8dea4a9af@samsung.com>
+        Wed, 25 Sep 2019 01:47:17 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t14so2147063pgs.3;
+        Tue, 24 Sep 2019 22:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Eh8M+3jwlHqT1zqxVtZVbiy9DN02YJpr1pbJ56Y3aJw=;
+        b=H3BMqCM4fpx9/r8aQmcQLoZfSDjG38Ori/JsBght9/0VcgPT6fMKJujT46xn536f3S
+         gYDai1Q+094xJ6CPTlHxNccR31MfXKpYtdWnTWvoRTpqtYYARX6oXcJIsh+Cdtus/UsZ
+         nl7RlKHtVBbiaaP1AejOcflL8rLCwv0Sk8i4Xo0YIiahEgpGgg2rTB528ZIdqTx2mdwM
+         a1oCKGAtEIj3MVuINMM5/XAjM9Tnx70juFH6uG8/gw1KM0MzDUDdr54SwhB1/2wmZBiS
+         IhfxRV1qSkekwhhOauK9dGD3+08Kn9XcA4dYBUQXenkeU0uXgw5+uiKAtqrUeX4c5iPW
+         Qxiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Eh8M+3jwlHqT1zqxVtZVbiy9DN02YJpr1pbJ56Y3aJw=;
+        b=AUneuELG8Tj9rheBa2o9PQi+0JPBb/VbAj6CWw5pLq8tUY92BKLgp0cYFFWirRW+0E
+         A9i/uOog3X/B5nNEG5u3ivtO2R2+ikEgiHjwlpYEMC/Tj118xCMvByEzXjvPOXyl+chq
+         K367fc+Vh1oR54lBQ4hU+Jeseq2YNqM/TxQS4YPQrN2oJEgalgrH+hSeYnBnGzid3CVN
+         I4TB+oEMg4IbUwpD4fDVmxfsOEgWmQAIKZ3IMcnGSAU65gYaMz7LzyMWCZlUPQtc0AeZ
+         5EdYA949Dn+MTv81qWepWCqX214dWk8zLTAiBlLcRNsVKbagkjepT7TQraRK62aUZb9Q
+         aluA==
+X-Gm-Message-State: APjAAAVgzHEXz1gAfJck8ZeqG6V90REFUpu4vQF1rFt9OxdwYgaeDRH2
+        z0nqBZ3AhLLB32SsPE+ekd7F9cgt
+X-Google-Smtp-Source: APXvYqzal/UUKYK2deJAe8JWlIx0ed7Hs3eIeBRQF4xuySPJ+8IKqG6brcmqHMwlOGPMTnYz61DwVQ==
+X-Received: by 2002:a63:e24:: with SMTP id d36mr5060897pgl.143.1569390436340;
+        Tue, 24 Sep 2019 22:47:16 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id k4sm1623829pjl.9.2019.09.24.22.47.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 24 Sep 2019 22:47:15 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] KVM: LAPIC: Loose fluctuation filter for auto tune lapic_timer_advance_ns
+Date:   Wed, 25 Sep 2019 13:47:04 +0800
+Message-Id: <1569390424-22031-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Wanpeng Li <wanpengli@tencent.com>
 
-On Fri, 2019-09-20 at 11:15 +0900, Chanwoo Choi wrote:
-> Hi,
-> 
-> As I already replied on v1, patch1/2/3 clean-up code
-> for readability without any behavior changes. 
-> 
-> I think that you better to merge patch1/2/3 to one patch.
+5000 guest cycles delta is easy to encounter on desktop, per-vCPU 
+lapic_timer_advance_ns always keeps at 1000ns initial value, lets 
+loose fluctuation filter a bit to make auto tune can make some 
+progress.
 
-Yes, when writing the cover letter I think I forgot to explain why I decided not
-to merge these patches. Basically, none of the diff algorithms available in git
-(I've got v2.17.1) is able to produce a readable patch with these changes
-combined together into a single patch (functions are intermixed together in the
-output, git thinks that 'exynos_bus_probe' is a new function).
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please take a look at the diff at the bottom of this message to see how patches
-01..03 look when combined. If such patch looks acceptable to you, I can merge.
-
-> On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
-> > From: Artur Świgoń <a.swigon@partner.samsung.com>
-> > 
-> > This patch adds a new static function, exynos_bus_profile_init(), extracted
-> > from exynos_bus_probe().
-> > 
-> > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> > ---
-> >  drivers/devfreq/exynos-bus.c | 92 +++++++++++++++++++++---------------
-> >  1 file changed, 53 insertions(+), 39 deletions(-)
-> > 
-> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> > index 29f422469960..78f38b7fb596 100644
-> > --- a/drivers/devfreq/exynos-bus.c
-> > +++ b/drivers/devfreq/exynos-bus.c
-> > @@ -287,12 +287,62 @@ static int exynos_bus_parse_of(struct device_node *np,
-> >  	return ret;
-> >  }
-> >  
-> > +static int exynos_bus_profile_init(struct exynos_bus *bus,
-> > +				   struct devfreq_dev_profile *profile)
-> > +{
-> > +	struct device *dev = bus->dev;
-> > +	struct devfreq_simple_ondemand_data *ondemand_data;
-> > +	int ret;
-> > +
-> > +	/* Initialize the struct profile and governor data for parent device */
-> > +	profile->polling_ms = 50;
-> > +	profile->target = exynos_bus_target;
-> > +	profile->get_dev_status = exynos_bus_get_dev_status;
-> > +	profile->exit = exynos_bus_exit;
-> > +
-> > +	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
-> > +	if (!ondemand_data) {
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +	ondemand_data->upthreshold = 40;
-> > +	ondemand_data->downdifferential = 5;
-> > +
-> > +	/* Add devfreq device to monitor and handle the exynos bus */
-> > +	bus->devfreq = devm_devfreq_add_device(dev, profile,
-> > +						DEVFREQ_GOV_SIMPLE_ONDEMAND,
-> > +						ondemand_data);
-> > +	if (IS_ERR(bus->devfreq)) {
-> > +		dev_err(dev, "failed to add devfreq device\n");
-> > +		ret = PTR_ERR(bus->devfreq);
-> > +		goto err;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Enable devfreq-event to get raw data which is used to determine
-> > +	 * current bus load.
-> > +	 */
-> > +	ret = exynos_bus_enable_edev(bus);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "failed to enable devfreq-event devices\n");
-> > +		goto err;
-> > +	}
-> > +
-> > +	ret = exynos_bus_set_event(bus);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "failed to set event to devfreq-event devices\n");
-> > +		goto err;
-> > +	}
-> > +
-> > +err:
-> > +	return ret;
-> > +}
-> > +
-> >  static int exynos_bus_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> >  	struct device_node *np = dev->of_node, *node;
-> >  	struct devfreq_dev_profile *profile;
-> > -	struct devfreq_simple_ondemand_data *ondemand_data;
-> >  	struct devfreq_passive_data *passive_data;
-> >  	struct devfreq *parent_devfreq;
-> >  	struct exynos_bus *bus;
-> > @@ -334,45 +384,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
-> >  	if (passive)
-> >  		goto passive;
-> >  
-> > -	/* Initialize the struct profile and governor data for parent device */
-> > -	profile->polling_ms = 50;
-> > -	profile->target = exynos_bus_target;
-> > -	profile->get_dev_status = exynos_bus_get_dev_status;
-> > -	profile->exit = exynos_bus_exit;
-> > -
-> > -	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
-> > -	if (!ondemand_data) {
-> > -		ret = -ENOMEM;
-> > +	ret = exynos_bus_profile_init(bus, profile);
-> > +	if (ret < 0)
-> >  		goto err;
-> > -	}
-> > -	ondemand_data->upthreshold = 40;
-> > -	ondemand_data->downdifferential = 5;
-> > -
-> > -	/* Add devfreq device to monitor and handle the exynos bus */
-> > -	bus->devfreq = devm_devfreq_add_device(dev, profile,
-> > -						DEVFREQ_GOV_SIMPLE_ONDEMAND,
-> > -						ondemand_data);
-> > -	if (IS_ERR(bus->devfreq)) {
-> > -		dev_err(dev, "failed to add devfreq device\n");
-> > -		ret = PTR_ERR(bus->devfreq);
-> > -		goto err;
-> > -	}
-> > -
-> > -	/*
-> > -	 * Enable devfreq-event to get raw data which is used to determine
-> > -	 * current bus load.
-> > -	 */
-> > -	ret = exynos_bus_enable_edev(bus);
-> > -	if (ret < 0) {
-> > -		dev_err(dev, "failed to enable devfreq-event devices\n");
-> > -		goto err;
-> > -	}
-> > -
-> > -	ret = exynos_bus_set_event(bus);
-> > -	if (ret < 0) {
-> > -		dev_err(dev, "failed to set event to devfreq-event devices\n");
-> > -		goto err;
-> > -	}
-> >  
-> >  	goto out;
-> >  passive:
-
-commit cacf8e4ea0e111908d11779977c81e29d6418801
-Author: Artur Świgoń <a.swigon@partner.samsung.com>
-Date:   Tue Aug 27 13:17:28 2019 +0200
-
-    tmp: merge patches 01-03
-    
-    Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 29f422469960..60ad4319fd80 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -287,52 +287,12 @@ static int exynos_bus_parse_of(struct device_node *np,
- 	return ret;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 3a3a685..258407e 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -67,7 +67,7 @@
+ 
+ static bool lapic_timer_advance_dynamic __read_mostly;
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
+-#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
++#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 10000
+ #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+ /* step-by-step approximation to mitigate fluctuation */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+@@ -1504,7 +1504,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+ 	}
+ 
+-	if (unlikely(timer_advance_ns > LAPIC_TIMER_ADVANCE_ADJUST_MAX))
++	if (unlikely(timer_advance_ns > LAPIC_TIMER_ADVANCE_ADJUST_MAX/2))
+ 		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
  }
- 
--static int exynos_bus_probe(struct platform_device *pdev)
-+static int exynos_bus_profile_init(struct exynos_bus *bus,
-+				   struct devfreq_dev_profile *profile)
- {
--	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node, *node;
--	struct devfreq_dev_profile *profile;
-+	struct device *dev = bus->dev;
- 	struct devfreq_simple_ondemand_data *ondemand_data;
--	struct devfreq_passive_data *passive_data;
--	struct devfreq *parent_devfreq;
--	struct exynos_bus *bus;
--	int ret, max_state;
--	unsigned long min_freq, max_freq;
--	bool passive = false;
--
--	if (!np) {
--		dev_err(dev, "failed to find devicetree node\n");
--		return -EINVAL;
--	}
--
--	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
--	if (!bus)
--		return -ENOMEM;
--	mutex_init(&bus->lock);
--	bus->dev = &pdev->dev;
--	platform_set_drvdata(pdev, bus);
--
--	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
--	if (!profile)
--		return -ENOMEM;
--
--	node = of_parse_phandle(dev->of_node, "devfreq", 0);
--	if (node) {
--		of_node_put(node);
--		passive = true;
--	} else {
--		ret = exynos_bus_parent_parse_of(np, bus);
--		if (ret < 0)
--			return ret;
--	}
--
--	/* Parse the device-tree to get the resource information */
--	ret = exynos_bus_parse_of(np, bus);
--	if (ret < 0)
--		goto err_reg;
--
--	if (passive)
--		goto passive;
-+	int ret;
- 
- 	/* Initialize the struct profile and governor data for parent device */
- 	profile->polling_ms = 50;
-@@ -374,8 +334,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	goto out;
--passive:
-+err:
-+	return ret;
-+}
-+
-+static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
-+					   struct devfreq_dev_profile *profile)
-+{
-+	struct device *dev = bus->dev;
-+	struct devfreq_passive_data *passive_data;
-+	struct devfreq *parent_devfreq;
-+	int ret = 0;
-+
- 	/* Initialize the struct profile and governor data for passive device */
- 	profile->target = exynos_bus_target;
- 	profile->exit = exynos_bus_passive_exit;
-@@ -404,7 +374,59 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--out:
-+err:
-+	return ret;
-+}
-+
-+static int exynos_bus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node, *node;
-+	struct devfreq_dev_profile *profile;
-+	struct exynos_bus *bus;
-+	int ret, max_state;
-+	unsigned long min_freq, max_freq;
-+	bool passive = false;
-+
-+	if (!np) {
-+		dev_err(dev, "failed to find devicetree node\n");
-+		return -EINVAL;
-+	}
-+
-+	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
-+	if (!bus)
-+		return -ENOMEM;
-+	mutex_init(&bus->lock);
-+	bus->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, bus);
-+
-+	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
-+	if (!profile)
-+		return -ENOMEM;
-+
-+	node = of_parse_phandle(dev->of_node, "devfreq", 0);
-+	if (node) {
-+		of_node_put(node);
-+		passive = true;
-+	} else {
-+		ret = exynos_bus_parent_parse_of(np, bus);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Parse the device-tree to get the resource information */
-+	ret = exynos_bus_parse_of(np, bus);
-+	if (ret < 0)
-+		goto err_reg;
-+
-+	if (passive)
-+		ret = exynos_bus_profile_init_passive(bus, profile);
-+	else
-+		ret = exynos_bus_profile_init(bus, profile);
-+
-+	if (ret < 0)
-+		goto err;
-+
- 	max_state = bus->devfreq->profile->max_state;
- 	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
- 	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
-
+-- 
+2.7.4
 
