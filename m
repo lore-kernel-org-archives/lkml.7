@@ -2,112 +2,106 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB162C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A287C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A96F21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569452619;
-	bh=30m8Bj/9Yrhu6rdft1hnYF9b79GkkQHGW8a4CX47k+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pc3EquuoXsIKFDKJh1ZRtGrIbNg93cG2w5z8B6GQntsEWPZ+8t6N+Pdo7nkAoXCN9
-	 eKejxsihT47cWLZr8MXSzQAuZXW8yMB0SwJ0GUzcsMVvJDmETJ1tbZMNLXk71x0bhz
-	 xQltXSIjUeSxVJdWw14wAzJtM+PAZFqdSbaIhHpI=
+	by mail.kernel.org (Postfix) with ESMTP id 181D520640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbfIYXDi (ORCPT
+        id S1730757AbfIYXEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:03:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39666 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfIYXDi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:03:38 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n7so535466qtb.6;
-        Wed, 25 Sep 2019 16:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WfbXh+sodiUMPQSO5yCeqiJJDmHL2yMhTTI21O9c//4=;
-        b=UrO+9FhI4EIs4jI4yXfKf1L+DbuNMlCxcVZ3jN5cwJ77HfdAjqNgQ6FQPxLj6MbdI5
-         EQ/qM8/S1CQq7aJbPc4BEHeXaKa0t8kWWT5CI/Ss8KJpfdfe8ErjJVNEUNWUDkWlTdu7
-         CHchGLYEiaLnnldmMtFmLQKgaZqfp6lWYUGq4/CRCyN96qPXjBLljijuJ4/6rOpNNE/B
-         P/9roPgUV+Yc+bU/97dcTbYlgJnckw5Lls8VQSeJnLllwEXdKFmD+ONt+yzarNqHB0kZ
-         WhlCKuVX9JQyMt2nUCrCRDD5K/0JcLluu+G+Yq3HIEN3rNKrvMOGWYzCiyxaKhpZuEsy
-         Of9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WfbXh+sodiUMPQSO5yCeqiJJDmHL2yMhTTI21O9c//4=;
-        b=ekAeYulb6w4JboYVzWkX/GBojQ73c5G1/mDiGRmwFxIdmx4zZ+s9vktB59bfSQPSfK
-         ue/0atMEHabcS8kUt0dlRJBB6V2ZMjNMiln0vxCqv8wxE2foJmMhFjTsHojV6EhKwLeU
-         IFvzLS0BX9S1HvKxSjy29yKODkZhuaN6lUx7Gv8riU8lbEeQCn8RjPXAlxm7MhCTth0K
-         CiUZRY8iEsmi8rZmWgJ/1KjX93uhW+k8uj0EWgLDuAuTtBa/mQOHtCZoVQcXyXOhI7rW
-         QVitvmqzbdIoPnraESfM/H7v5uq3M7tRVrKrGAvsnDtKb0KrU+/WrSNRyzCiPCrenMnt
-         nZqw==
-X-Gm-Message-State: APjAAAWg4QhdiWFSaEkCwx5xefZdpcDDdEBaEaSg7+BfTjmoO94Ndi6C
-        0HT8K9LqdV+AAJWmCMh2vnw=
-X-Google-Smtp-Source: APXvYqyC1FyjGChJ2Qd1VW5+w/5vvUgYmAgGVElejt3WCWCezoA05O48V25SM3ipL5VdElk9+zyedw==
-X-Received: by 2002:ac8:100b:: with SMTP id z11mr953244qti.377.1569452617529;
-        Wed, 25 Sep 2019 16:03:37 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:a001])
-        by smtp.gmail.com with ESMTPSA id u43sm265769qte.19.2019.09.25.16.03.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 16:03:37 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 16:03:35 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org
-Subject: [PATCH 3/3 for-5.4/block] iocost: bump up default latency targets
- for hard disks
-Message-ID: <20190925230335.GK2233839@devbig004.ftw2.facebook.com>
-References: <20190925230207.GI2233839@devbig004.ftw2.facebook.com>
- <20190925230309.GJ2233839@devbig004.ftw2.facebook.com>
+        Wed, 25 Sep 2019 19:04:16 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:26388 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbfIYXEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:04:16 -0400
+Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 690E0A2271;
+        Thu, 26 Sep 2019 01:04:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id dnEiLNSDRYRu; Thu, 26 Sep 2019 01:04:10 +0200 (CEST)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] lib: introduce copy_struct_from_user() helper
+Date:   Thu, 26 Sep 2019 01:03:28 +0200
+Message-Id: <20190925230332.18690-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925230309.GJ2233839@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default hard disk param sets latency targets at 50ms.  As the
-default target percentiles are zero, these don't directly regulate
-vrate; however, they're still used to calculate the period length -
-100ms in this case.
+Patch changelog:
+ v2:
+  * Switch to less buggy handling of alignment. [Linus Torvalds, Al Viro]
+  * Move is_zeroed_user() to lib/usercopy.c. [kbuild test robot]
+  * Move copy_struct_to_user() to lib/usercopy.c. [Christian Brauner]
+  * Add self-tests for is_zeroed_user() to lib/test_user_copy.c.
+    [Christian Brauner]
+ v1: <https://lore.kernel.org/lkml/20190925165915.8135-1-cyphar@cyphar.com/>
 
-This is excessively low.  A SATA drive with QD32 saturated with random
-IOs can easily reach avg completion latency of several hundred msecs.
-A period duration which is substantially lower than avg completion
-latency can lead to wildly fluctuating vrate.
+This series was split off from the openat2(2) syscall discussion[1].
+However, the copy_struct_to_user() helper has been dropped, because
+after some discussion it appears that there is no really obvious
+semantics for how copy_struct_to_user() should work on mixed-vintages
+(for instance, whether [2] is the correct semantics for all syscalls).
 
-Let's bump up the default latency targets to 250ms so that the period
-duration is sufficiently long.
+A common pattern for syscall extensions is increasing the size of a
+struct passed from userspace, such that the zero-value of the new fields
+result in the old kernel behaviour (allowing for a mix of userspace and
+kernel vintages to operate on one another in most cases).
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-iocost.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Previously there was no common lib/ function that implemented
+the necessary extension-checking semantics (and different syscalls
+implemented them slightly differently or incompletely[3]). This series
+implements the helper and ports several syscalls to use it.
 
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -529,8 +529,8 @@ struct iocg_wake_ctx {
- static const struct ioc_params autop[] = {
- 	[AUTOP_HDD] = {
- 		.qos				= {
--			[QOS_RLAT]		=         50000, /* 50ms */
--			[QOS_WLAT]		=         50000,
-+			[QOS_RLAT]		=        250000, /* 250ms */
-+			[QOS_WLAT]		=        250000,
- 			[QOS_MIN]		= VRATE_MIN_PPM,
- 			[QOS_MAX]		= VRATE_MAX_PPM,
- 		},
+[1]: https://lore.kernel.org/lkml/20190904201933.10736-1-cyphar@cyphar.com/
+
+[2]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+     robustify sched_read_attr() ABI logic and code")
+
+[3]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+     similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+     always rejects differently-sized struct arguments.
+
+Aleksa Sarai (4):
+  lib: introduce copy_struct_from_user() helper
+  clone3: switch to copy_struct_from_user()
+  sched_setattr: switch to copy_struct_from_user()
+  perf_event_open: switch to copy_struct_from_user()
+
+ include/linux/bitops.h     |   7 +++
+ include/linux/uaccess.h    |   4 ++
+ include/uapi/linux/sched.h |   2 +
+ kernel/events/core.c       |  47 +++------------
+ kernel/fork.c              |  34 +++--------
+ kernel/sched/core.c        |  43 +++-----------
+ lib/strnlen_user.c         |   8 +--
+ lib/test_user_copy.c       |  59 +++++++++++++++++--
+ lib/usercopy.c             | 115 +++++++++++++++++++++++++++++++++++++
+ 9 files changed, 205 insertions(+), 114 deletions(-)
+
+-- 
+2.23.0
+
