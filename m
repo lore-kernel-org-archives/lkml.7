@@ -2,159 +2,152 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD20C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C189C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAFB21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UYwl+Pky"
+	by mail.kernel.org (Postfix) with ESMTP id 770732082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbfIYKZT (ORCPT
+        id S2389724AbfIYKZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:25:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50450 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387531AbfIYKZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:25:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so4699430wmg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 03:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YsAAEdAnYhuD24RBj5UQt7anrWgvey/6pgyZTzvHDNQ=;
-        b=UYwl+PkyE4LyhX9Bwrtb55DJgg0t6nDhFP4+vHYPs9lVb6ey6p7/I5j20teQl4ZfpR
-         Nk2jXO+EBFUtoef2hQdcvhCtLvcSZorF8q/9g5rWe9wlwTXl3Q8HkLxvmoumVf0eRrJu
-         b2E6WjNKME9ZLlZiD68k3jAe/290lCuRcyNDTDSxFv2j4Sm/YKV0bZPpv6BNUQFVrTlk
-         ar60ZfEexPr6n+3URWiNaDFmUFACj81yMsBRbamdwi0AwjhWif1dJEMu1tMGuntCU1ZW
-         p/gpStXXnCVfS4sN93ObS7XF8txCNS32KWSMhkX6+8Cux29ANksMX5NcbsJpj+6hhz75
-         uXVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YsAAEdAnYhuD24RBj5UQt7anrWgvey/6pgyZTzvHDNQ=;
-        b=Tby6EWuu4Bc9NbIqWlOMzKwU8+jgxqApNvuuvRNUucSvnuCG8OJCyEuXXIU8hdLol5
-         mW7QUw+9nTm/uve1JwLa8VapN1z3HCwl+W65Or/jxOCvdC0U2gt6Wj0roMiz0PYAaVr3
-         xA88LebtO0lgEEGiZHQ9ZO+otct6jVPkqCkHaPIsYrz+sCQzNI65jcT1NJsa1U5Qw2Cx
-         ytZiq4sybLpCuiuwB6gDZ3+eGk5VS1VpBBJ6RbNA5jMo2CC8JjldS8O9KMl/dkMYA0XD
-         5j+hs7W2FMQdpmQFTBePLMXPxOo/viK03wbf9JSTe2IsQva1BvvOapOP3M6WWn1CkCsN
-         zTXQ==
-X-Gm-Message-State: APjAAAV7gdbh06FvhPWNtqohnmv5LScWIRhb0s1GQZVbsUzzT/6r4KO7
-        +p+he6EEdzkc/05ipoza4AAZrmLeM7y0WlL7UvRMHw==
-X-Google-Smtp-Source: APXvYqyMgrnfISClQMEiMxR6OyDaNMbH+h4WHpY7n7XWx+b/qrWGNgEE7v4W9or4yhiQx8R3PWEvEbMpiqSBoVaZx9w=
-X-Received: by 2002:a1c:e906:: with SMTP id q6mr6505018wmc.136.1569407117052;
- Wed, 25 Sep 2019 03:25:17 -0700 (PDT)
+        Wed, 25 Sep 2019 06:25:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:46072 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729779AbfIYKZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 06:25:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A572D1570;
+        Wed, 25 Sep 2019 03:25:41 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62B5E3F694;
+        Wed, 25 Sep 2019 03:25:41 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 2BF45682851; Wed, 25 Sep 2019 11:25:40 +0100 (BST)
+Date:   Wed, 25 Sep 2019 11:25:40 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v2 2/2] drm/komeda: Adds layer horizontal input size
+ limitation check for D71
+Message-ID: <20190925102540.oepvakvcshyrhc3u@e110455-lin.cambridge.arm.com>
+References: <20190924080022.19250-1-lowry.li@arm.com>
+ <20190924080022.19250-3-lowry.li@arm.com>
 MIME-Version: 1.0
-References: <20190925101622.31457-1-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20190925101622.31457-1-jarkko.sakkinen@linux.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 25 Sep 2019 12:25:05 +0200
-Message-ID: <CAKv+Gu9xLXWj8e70rs6Oy3aT_+qvemMJqtOETQG+7z==Nf_RcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] efi+tpm: Don't access event->count when it isn't mapped.
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190924080022.19250-3-lowry.li@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 at 12:16, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> From: Peter Jones <pjones@redhat.com>
->
-> Some machines generate a lot of event log entries.  When we're
-> iterating over them, the code removes the old mapping and adds a
-> new one, so once we cross the page boundary we're unmapping the page
-> with the count on it.  Hilarity ensues.
->
-> This patch keeps the info from the header in local variables so we don't
-> need to access that page again or keep track of if it's mapped.
->
-> Fixes: 44038bc514a2 ("tpm: Abstract crypto agile event size calculations")
-> Cc: linux-efi@vger.kernel.org
-> Cc: linux-integrity@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Peter Jones <pjones@redhat.com>
-> Tested-by: Lyude Paul <lyude@redhat.com>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Acked-by: Matthew Garrett <mjg59@google.com>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Tue, Sep 24, 2019 at 08:00:49AM +0000, Lowry Li (Arm Technology China) wrote:
+> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> 
+> Adds maximum line size check according to the AFBC decoder limitation
+> and special Line size limitation(2046) for format: YUV420_10BIT and X0L2.
+> 
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
 
-Thanks Jarkko.
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-Shall I take these through the EFI tree?
-
+Best regards,
+Liviu
 
 > ---
->  include/linux/tpm_eventlog.h | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-> index 63238c84dc0b..12584b69a3f3 100644
-> --- a/include/linux/tpm_eventlog.h
-> +++ b/include/linux/tpm_eventlog.h
-> @@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
->         u16 halg;
->         int i;
->         int j;
-> +       u32 count, event_type;
->
->         marker = event;
->         marker_start = marker;
-> @@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
->         }
->
->         event = (struct tcg_pcr_event2_head *)mapping;
-> +       /*
-> +        * the loop below will unmap these fields if the log is larger than
-> +        * one page, so save them here for reference.
-> +        */
-> +       count = READ_ONCE(event->count);
-> +       event_type = READ_ONCE(event->event_type);
->
->         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
->
->         /* Check if event is malformed. */
-> -       if (event->count > efispecid->num_algs) {
-> +       if (count > efispecid->num_algs) {
->                 size = 0;
->                 goto out;
->         }
->
-> -       for (i = 0; i < event->count; i++) {
-> +       for (i = 0; i < count; i++) {
->                 halg_size = sizeof(event->digests[i].alg_id);
->
->                 /* Map the digest's algorithm identifier */
-> @@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
->                 + event_field->event_size;
->         size = marker - marker_start;
->
-> -       if ((event->event_type == 0) && (event_field->event_size == 0))
-> +       if (event_type == 0 && event_field->event_size == 0)
->                 size = 0;
+>  .../arm/display/komeda/d71/d71_component.c    | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> index 357837b9d6ed..6740b8422f11 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> @@ -349,7 +349,56 @@ static void d71_layer_dump(struct komeda_component *c, struct seq_file *sf)
+>  	seq_printf(sf, "%sAD_V_CROP:\t\t0x%X\n", prefix, v[2]);
+>  }
+>  
+> +static int d71_layer_validate(struct komeda_component *c,
+> +			      struct komeda_component_state *state)
+> +{
+> +	struct komeda_layer_state *st = to_layer_st(state);
+> +	struct komeda_layer *layer = to_layer(c);
+> +	struct drm_plane_state *plane_st;
+> +	struct drm_framebuffer *fb;
+> +	u32 fourcc, line_sz, max_line_sz;
 > +
->  out:
->         if (do_mapping)
->                 TPM_MEMUNMAP(mapping, mapping_size);
-> --
-> 2.20.1
->
+> +	plane_st = drm_atomic_get_new_plane_state(state->obj.state,
+> +						  state->plane);
+> +	fb = plane_st->fb;
+> +	fourcc = fb->format->format;
+> +
+> +	if (drm_rotation_90_or_270(st->rot))
+> +		line_sz = st->vsize - st->afbc_crop_t - st->afbc_crop_b;
+> +	else
+> +		line_sz = st->hsize - st->afbc_crop_l - st->afbc_crop_r;
+> +
+> +	if (fb->modifier) {
+> +		if ((fb->modifier & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK) ==
+> +			AFBC_FORMAT_MOD_BLOCK_SIZE_32x8)
+> +			max_line_sz = layer->line_sz;
+> +		else
+> +			max_line_sz = layer->line_sz / 2;
+> +
+> +		if (line_sz > max_line_sz) {
+> +			DRM_DEBUG_ATOMIC("afbc request line_sz: %d exceed the max afbc line_sz: %d.\n",
+> +					 line_sz, max_line_sz);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (fourcc == DRM_FORMAT_YUV420_10BIT && line_sz > 2046 && (st->afbc_crop_l % 4)) {
+> +		DRM_DEBUG_ATOMIC("YUV420_10BIT input_hsize: %d exceed the max size 2046.\n",
+> +				 line_sz);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (fourcc == DRM_FORMAT_X0L2 && line_sz > 2046 && (st->addr[0] % 16)) {
+> +		DRM_DEBUG_ATOMIC("X0L2 input_hsize: %d exceed the max size 2046.\n",
+> +				 line_sz);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct komeda_component_funcs d71_layer_funcs = {
+> +	.validate	= d71_layer_validate,
+>  	.update		= d71_layer_update,
+>  	.disable	= d71_layer_disable,
+>  	.dump_register	= d71_layer_dump,
+> -- 
+> 2.17.1
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
