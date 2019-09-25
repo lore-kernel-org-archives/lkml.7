@@ -2,159 +2,98 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B67C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A46C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605BB21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uG5RAiSu"
+	by mail.kernel.org (Postfix) with ESMTP id 2798721D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393575AbfIYVE7 (ORCPT
+        id S2393600AbfIYVGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:04:59 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33307 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393194AbfIYVEE (ORCPT
+        Wed, 25 Sep 2019 17:06:13 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35868 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393576AbfIYVFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:04:04 -0400
-Received: by mail-io1-f67.google.com with SMTP id z19so714875ior.0;
-        Wed, 25 Sep 2019 14:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GskCKR0jyoPsR1qZhphzrVQ/g2FzbQKpnf7tZfcT51I=;
-        b=uG5RAiSuJrTiTvehczL9JXUYpZbYKGY3Uf1ThnU/ETAxdyc/N+GPVGpLuiucQoNVHL
-         EUKbdWcFyk6dnfSzr0NCBz8LRkRadra1Ly1tx05rfBj46vXybCwKU/nOSomTX0wsDZOH
-         Q6RZnJVvCTFGhCYN63QM7tzSUKFrqne+HbkazfJal7TbHK1CVmGNNGCdB1h4Bin/xC4c
-         JvEt5Q488Qz6YesqY+L4F5NqAd/bRR6pjM4tFaZWQj2dFR/KYkZHNuK4q5/+8mFy2xtT
-         Y7HbE1NEze6ehJmX3H0gBoGn8n8st9Sc6+nizr2usgPJMijn+4k2uR0KrZ+kHBvJBYSE
-         ySEQ==
+        Wed, 25 Sep 2019 17:05:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so170984plr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 14:05:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GskCKR0jyoPsR1qZhphzrVQ/g2FzbQKpnf7tZfcT51I=;
-        b=HQYvuRcZbyz3W8LcNi8W4f3xml69Jg76i10fTpxq2hYoKA5LbYoU/fHaT8QlTLlhxD
-         zOCHtPL4+mGkfni3H10GarDE2Z4qXX8TP6ydXhurLSmCXjF2lc7aYSPFrqST4WGFruvG
-         KeKGUkxH5imTRyenhe5mwH0HplN4hy2uVik3oEBsn2VdHDCCerZPISnzjUw36o7laDUj
-         Ud1T4dAZqmlyO3RJAy4zYwHLy8DRwZMJRFKIKY2JuIvCaGZ1wYpFaUgAsdmiGooCCrOk
-         Q8OEKrV8e4IjKdlT7JB61mme1AUSmma5ZwgRxL/56mQkTK5A7Wiv0EJtA0JSgXRfRcYu
-         zOow==
-X-Gm-Message-State: APjAAAV9nW0naN5clq1LJ9nyfK6mg/ZJ7qZw4WOpr0GCtam+QM4Bqw8o
-        Wj1EmBtxLaAoO8KA0x4uRns=
-X-Google-Smtp-Source: APXvYqy3vUuSJpelIpaF6LgUfckTdS4d1hpomZh/Hs6MA0cJ1+CC6fLhpsvgMrjv96PcZRthAHKpUg==
-X-Received: by 2002:a02:cc6e:: with SMTP id j14mr280431jaq.130.1569445443802;
-        Wed, 25 Sep 2019 14:04:03 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id a14sm531516ioo.85.2019.09.25.14.04.02
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=gUT7L2UjxufsVBOfcfjfvQD60hO6N2xeQ8FpCxr2BGs=;
+        b=lkvkK0eXSS0wUFMxVd1nEbRN60Km8P2uLg31anz8EGZOQiScuqdVSbRtbmWhz0bSKq
+         o9NutbzfaatWRmcMY7/Jd/Ri0q1BSyjq3V56oavrMmm0rJUqv70M9UC8DYJsnUFkkJkQ
+         S3tJfqeu4pdEbEjCBqa0kI62SqMDFTbxu9tM6KdI5/e5GaAJLzUHxgbdK859yqoHCnic
+         J9817IQ7aaq/FSrCfKYeWfy7OCypfPB3lf39Kaul6IVANXn2Pwn2rHAvycXgRvtUUm8o
+         Vli/CFZihYhgT/DYy4vgqJi6XPwc1IvmLj+HjaqRRhJqxqSSExt42m9eGCk98p9Do2Iq
+         ZIpQ==
+X-Gm-Message-State: APjAAAWHozh7cazbz7Glc8fq1HPO2ujrYcwA2bTIfh8cG/oevTn5mlbU
+        rhS6JMu9D1ud2OfZwLSpugHdgA==
+X-Google-Smtp-Source: APXvYqy3cdkMgg0isteeXigHPCd6gHDI1dxPmb1QD+beG2Jb9fWSTndwNiR0j1qEnTRyndocyS3IVQ==
+X-Received: by 2002:a17:902:7085:: with SMTP id z5mr56136plk.57.1569445520447;
+        Wed, 25 Sep 2019 14:05:20 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id l189sm486896pgd.46.2019.09.25.14.05.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 14:04:02 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: renesas: rcar-sysc: fix memory leak in rcar_sysc_pd_init
-Date:   Wed, 25 Sep 2019 16:03:53 -0500
-Message-Id: <20190925210354.8845-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 25 Sep 2019 14:05:19 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 14:05:19 -0700 (PDT)
+X-Google-Original-Date: Wed, 25 Sep 2019 13:56:27 PDT (-0700)
+Subject:     Re: [PATCH 04/32] riscv: Use pr_warn instead of pr_warning
+In-Reply-To: <20190920062544.180997-5-wangkefeng.wang@huawei.com>
+CC:     joe@perches.com, akpm@linux-foundation.org, mingo@redhat.com,
+        davem@davemloft.net, acme@redhat.com, apw@canonical.com,
+        peterz@infradead.org, ast@kernel.org, daniel@iogearbox.net,
+        Greg KH <gregkh@linuxfoundation.org>,
+        sergey.senozhatsky@gmail.com, pmladek@suse.com,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        wangkefeng.wang@huawei.com,
+        Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     wangkefeng.wang@huawei.com
+Message-ID: <mhng-77b10aea-889e-40f5-a698-b47d44ba606c@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rcar_sysc_pd_init when looping over info->areas errors may happen but
-the error handling path does not clean up the intermediate allocated
-memories.
+On Thu, 19 Sep 2019 23:25:16 PDT (-0700), wangkefeng.wang@huawei.com wrote:
+> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
+> pr_warning"), removing pr_warning so all logging messages use a
+> consistent <prefix>_warn style. Let's do it.
+>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  arch/riscv/kernel/module.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+> index 70bb94ae61c5..b7401858d872 100644
+> --- a/arch/riscv/kernel/module.c
+> +++ b/arch/riscv/kernel/module.c
+> @@ -315,8 +315,8 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>  			/* Ignore unresolved weak symbol */
+>  			if (ELF_ST_BIND(sym->st_info) == STB_WEAK)
+>  				continue;
+> -			pr_warning("%s: Unknown symbol %s\n",
+> -				   me->name, strtab + sym->st_name);
+> +			pr_warn("%s: Unknown symbol %s\n",
+> +				me->name, strtab + sym->st_name);
+>  			return -ENOENT;
+>  		}
 
-This patch changes the error handling path in major and a little the loop
- itself. Inside the loop if an error happens the current pd will be
-released and then it goes to error handling path where it releases any
- previously allocated domains.
+Acked-by: Palmer Dabbelt <palmer@sifive.com>
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/soc/renesas/rcar-sysc.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
-index 59b5e6b10272..f9613c1ee0a0 100644
---- a/drivers/soc/renesas/rcar-sysc.c
-+++ b/drivers/soc/renesas/rcar-sysc.c
-@@ -330,10 +330,10 @@ static int __init rcar_sysc_pd_init(void)
- {
- 	const struct rcar_sysc_info *info;
- 	const struct of_device_id *match;
--	struct rcar_pm_domains *domains;
-+	struct rcar_pm_domains *domains = NULL;
- 	struct device_node *np;
- 	void __iomem *base;
--	unsigned int i;
-+	unsigned int i, num_areas = 0;
- 	int error;
- 
- 	np = of_find_matching_node_and_match(NULL, rcar_sysc_matches, &match);
-@@ -382,6 +382,7 @@ static int __init rcar_sysc_pd_init(void)
- 		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
- 		if (!pd) {
- 			error = -ENOMEM;
-+			num_areas = i;
- 			goto out_put;
- 		}
- 
-@@ -393,8 +394,11 @@ static int __init rcar_sysc_pd_init(void)
- 		pd->flags = area->flags;
- 
- 		error = rcar_sysc_pd_setup(pd);
--		if (error)
-+		if (error) {
-+			kfree(pd);
-+			num_areas = i;
- 			goto out_put;
-+		}
- 
- 		domains->domains[area->isr_bit] = &pd->genpd;
- 
-@@ -406,13 +410,30 @@ static int __init rcar_sysc_pd_init(void)
- 		if (error) {
- 			pr_warn("Failed to add PM subdomain %s to parent %u\n",
- 				area->name, area->parent);
-+			kfree(pd);
-+			num_areas = i;
- 			goto out_put;
- 		}
- 	}
- 
- 	error = of_genpd_add_provider_onecell(np, &domains->onecell_data);
-+	of_node_put(np);
-+
-+	return error;
- 
- out_put:
-+	if (domains) {
-+		for (i = 0; i < num_areas; i++) {
-+			const struct rcar_sysc_area *area = &info->areas[i];
-+
-+			if (!area->name) {
-+				/* Skip NULLified area */
-+				continue;
-+			}
-+			kfree(domains->domains[area->isr_bit]);
-+		}
-+		kfree(domains);
-+	}
- 	of_node_put(np);
- 	return error;
- }
--- 
-2.17.1
-
+I'm assuming this is going in through some other tree, LMK if that's not the 
+case.
