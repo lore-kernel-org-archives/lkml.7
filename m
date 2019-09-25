@@ -2,90 +2,182 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD5FC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C1FC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA017207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27AB207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbW9tn+O"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jFW/yT5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443166AbfIYRmR (ORCPT
+        id S2408437AbfIYRmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:42:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40846 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbfIYRmP (ORCPT
+        Wed, 25 Sep 2019 13:42:13 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50746 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732494AbfIYRlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:42:15 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so239082pgj.7;
-        Wed, 25 Sep 2019 10:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ep7MUnwSTs1NOnosNHftd5kt9y4voslofafMsmgNvp4=;
-        b=bbW9tn+OnqiBwGpi5ggOj70MxJU0HhU0829foG8gFQSO0rs0Uq7oG3D6ZSaAfGF6wH
-         xU3EPipe46ILw+PoQRsfHiGXTXTV02ugZzAiyftJu6dZHvjViAKxSnbqosQq4tJg4Oku
-         mhFqQaqBeimZ1FcPY+kKcnv74IeOfKhSwSW6jGGqIiAtDoSCdTJyAOph6OWjUlrY205N
-         VsE1xzI7L/44l1uOlB1sMLDnAK7m6h49Uyf9yUkxXfGvINQSG0z4X1YnAGTladLcklvo
-         PmkjihR0GvnL6swRODVk0anKRlDOVzpjhG2sdl5+Dw7rh1ec/CIZOyFHG7xX2wdaHc+0
-         QduQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ep7MUnwSTs1NOnosNHftd5kt9y4voslofafMsmgNvp4=;
-        b=Rik3kUAckcAsqvcqWo3mi2vijjG+lO+0I9dRAMxOo2JaY9HukC7o5XJ7LZGHcBQXtc
-         tEc08/NxGCuveDagRpsrTVv1PGDvd7XBpj7lNhwbaqioYWNKeYBfEup7sqzLWESfSrJ7
-         48JuOc+gdjygIty4d83Ki99IPAZYaDTDVL2Fmjf9VULmp5KEBNumqgwe9/n6WefIJIHY
-         jAqrNbLTzrJnVFZyL3DsV12MFPPf7SqOk4zyi++byH1R2g2bfqIzynVQGFr4yQFTIj9G
-         /HyqAup/QxYbC+IhO7TbpB/1xR6EEh6qIHE0ooiCbyq16l1iIiaPAkVRBd/kNvszbUN7
-         u9eA==
-X-Gm-Message-State: APjAAAWanbVETKVnejH0YdQbjvh8A/P4I1dmCBoEcQlb0TvNiceC10tK
-        pPrIgdw09Y/tEiqCjELiv4vjjFSZaG8DhxeCSSgj86l/cSA=
-X-Google-Smtp-Source: APXvYqwglDjYNJyV/BoRm1ThUdRpIn1sTx5vUTfTTnMfBOInk51P8lm/kYDxjLKc3vX28TD1S9MlOddzABELHN8MleA=
-X-Received: by 2002:a63:6988:: with SMTP id e130mr497818pgc.203.1569433334476;
- Wed, 25 Sep 2019 10:42:14 -0700 (PDT)
+        Wed, 25 Sep 2019 13:41:20 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfFCB029460;
+        Wed, 25 Sep 2019 12:41:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569433275;
+        bh=U/CdL3ky1UgHUUHC2UlJw+Bp+HRLVkYO6pdXvDYGyfg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=jFW/yT5kRpg1s7L0TQBskRcJRmbUhKVFY5avsu4QhQc0AmYzjuAPkXOGqH74qZ1Lp
+         uZ1d+yeHHC7lPkuf/lo33rm3gkZ0FoWN1ubxRcfeRxvvywklAqvj0gU96i2HXcy8yC
+         VuywUNLmLkqybK+mOq+X6kl5bpOC/jrF/X+vKhTM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfFUv018190;
+        Wed, 25 Sep 2019 12:41:15 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
+ Sep 2019 12:41:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 25 Sep 2019 12:41:07 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfEJv045630;
+        Wed, 25 Sep 2019 12:41:14 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v9 02/15] dt: bindings: Add multicolor class dt bindings documention
+Date:   Wed, 25 Sep 2019 12:46:03 -0500
+Message-ID: <20190925174616.3714-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190925174616.3714-1-dmurphy@ti.com>
+References: <20190925174616.3714-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20190920223356.6622-1-jekhor@gmail.com> <20190920223356.6622-2-jekhor@gmail.com>
- <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com> <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
- <20190925162712.GA3653@jeknote.loshitsa1.net>
-In-Reply-To: <20190925162712.GA3653@jeknote.loshitsa1.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Sep 2019 20:42:03 +0300
-Message-ID: <CAHp75VfL0RUgMhZk=gesxBcBfRkfV8kC1zsN9TNg53qpUNVU0w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
- Micro-B and Type-C variants
-To:     Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 7:27 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
-> On Wed, Sep 25, 2019 at 06:02:22PM +0300, Andy Shevchenko wrote:
-> > On Sat, Sep 21, 2019 at 9:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Add DT bindings for the LEDs multicolor class framework.
 
-> > By some reason it doesn't apply.
->
-> I have checked, and have no issues when applying this patch to the current
-> torvalds/master and linux-next/master branches (351c8a09b00b and 9e88347dedd8
-> commit IDs).
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-It doesn't apply to the subsystem tree (for-next or my review branch)
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..8619c9bf1811
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,98 @@
++* Multicolor LED properties
++
++Bindings for multi color LEDs show how to describe current outputs of
++either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
++etc.) or standalone LEDs, to achieve logically grouped multi-color LED
++modules. This is achieved by adding multi-led nodes layer to the
++monochrome LED bindings.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.22.0.214.g8dca754b1e
+
