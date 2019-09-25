@@ -2,91 +2,138 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB7BC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF54C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6AF20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B10520673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633829AbfIYCue (ORCPT
+        id S2411292AbfIYC6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 22:50:34 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25296 "EHLO mga04.intel.com"
+        Tue, 24 Sep 2019 22:58:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:40348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404590AbfIYCud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 22:50:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 19:50:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
-   d="scan'208";a="201100050"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 19:50:29 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122715.53de79d0@jacob-builder>
- <20190923202552.GA21816@araj-mobl1.jf.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <dfd9b7a2-5553-328a-08eb-16c8a3a2644e@linux.intel.com>
-Date:   Wed, 25 Sep 2019 10:48:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725812AbfIYC6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 22:58:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9CBA337;
+        Tue, 24 Sep 2019 19:57:58 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.41.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9FA8D3F694;
+        Tue, 24 Sep 2019 19:57:55 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH V2] mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
+Date:   Wed, 25 Sep 2019 08:27:53 +0530
+Message-Id: <1569380273-7708-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+Currently during memory hot add procedure, memory gets into memblock before
+calling arch_add_memory() which creates it's linear mapping.
 
-On 9/24/19 3:00 PM, Tian, Kevin wrote:
->>>>       '-----------'
->>>>       '-----------'
->>>>
->>>> This patch series only aims to achieve the first goal, a.k.a using
-> first goal? then what are other goals? I didn't spot such information.
-> 
+add_memory_resource() {
+	..................
+	memblock_add_node()
+	..................
+	arch_add_memory()
+	..................
+}
 
-The overall goal is to use IOMMU nested mode to avoid shadow page table
-and VMEXIT when map an gIOVA. This includes below 4 steps (maybe not
-accurate, but you could get the point.)
+But during memory hot remove procedure, removal from memblock happens first
+before it's linear mapping gets teared down with arch_remove_memory() which
+is not consistent. Resource removal should happen in reverse order as they
+were added. However this does not pose any problem for now, unless there is
+an assumption regarding linear mapping. One example was a subtle failure on
+arm64 platform [1]. Though this has now found a different solution.
 
-1) GIOVA mappings over 1st-level page table;
-2) binding vIOMMU 1st level page table to the pIOMMU;
-3) using pIOMMU second level for GPA->HPA translation;
-4) enable nested (a.k.a. dual stage) translation in host.
+try_remove_memory() {
+	..................
+	memblock_free()
+	memblock_remove()
+	..................
+	arch_remove_memory()
+	..................
+}
 
-This patch set aims to achieve 1).
+This changes the sequence of resource removal including memblock and linear
+mapping tear down during memory hot remove which will now be the reverse
+order in which they were added during memory hot add. The changed removal
+order looks like the following.
 
-> Also earlier you mentioned the new approach (nested) is more secure
-> than shadowing. why?
-> 
+try_remove_memory() {
+	..................
+	arch_remove_memory()
+	..................
+	memblock_free()
+	memblock_remove()
+	..................
+}
 
-My bad! After reconsideration, I realized that it's not "more secure".
+[1] https://patchwork.kernel.org/patch/11127623/
 
-Thanks for pointing this out.
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Changes in V2:
 
-Best regards,
-Baolu
+- Changed the commit message as per Michal and David 
+
+Changed in V1: https://patchwork.kernel.org/patch/11146361/
+
+Original patch https://lkml.org/lkml/2019/9/3/327
+
+Memory hot remove now works on arm64 without this because a recent commit
+60bb462fc7ad ("drivers/base/node.c: simplify unregister_memory_block_under_nodes()").
+
+David mentioned that re-ordering should still make sense for consistency
+purpose (removing stuff in the reverse order they were added). This patch
+is now detached from arm64 hot-remove series.
+
+https://lkml.org/lkml/2019/9/3/326
+
+ mm/memory_hotplug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 49f7bf91c25a..4f7d426a84d0 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1763,13 +1763,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+-	memblock_free(start, size);
+-	memblock_remove(start, size);
+ 
+ 	/* remove memory block devices before removing memory */
+ 	remove_memory_block_devices(start, size);
+ 
+ 	arch_remove_memory(nid, start, size, NULL);
++	memblock_free(start, size);
++	memblock_remove(start, size);
+ 	__release_memory_resource(start, size);
+ 
+ 	try_offline_node(nid);
+-- 
+2.20.1
+
