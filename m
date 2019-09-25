@@ -2,102 +2,97 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E557C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EFC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0814621D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36EE21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bm/dhap0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388921AbfIYQcn (ORCPT
+        id S2389055AbfIYQc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:32:43 -0400
-Received: from smtprelay0118.hostedemail.com ([216.40.44.118]:56453 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387859AbfIYQcn (ORCPT
+        Wed, 25 Sep 2019 12:32:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39122 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbfIYQcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:32:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 6901140CD;
-        Wed, 25 Sep 2019 16:32:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: slip39_1708dbe400e22
-X-Filterd-Recvd-Size: 2685
-Received: from XPS-9350 (bb220-255-137-117.singnet.com.sg [220.255.137.117])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 25 Sep 2019 16:32:37 +0000 (UTC)
-Message-ID: <e6d097c176d4a4bb4fe5664fe4199f3025d22182.camel@perches.com>
-Subject: Re: [PATCH] toplevel: Move ipc/ to kernel/ipc/: don't check the ipc
- dir
-From:   Joe Perches <joe@perches.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>, apw@canonical.com,
-        mingo@kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 25 Sep 2019 09:32:33 -0700
-In-Reply-To: <04acff22-430b-9ed7-f700-b644c0632cdd@huawei.com>
-References: <04acff22-430b-9ed7-f700-b644c0632cdd@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Wed, 25 Sep 2019 12:32:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Cp8u678gxU6rWkwDy/6jtdY/npvr9qVwuPGguClJ3Q0=; b=bm/dhap0jOx3jDv4S6/nBTafv
+        67krTmzxr3/0gEAruaH+phtGC6GDn9QJiLrrAwIIpZ2ZtSxH11XCvlhGz3q0UyMr91UWYhpd4pl5d
+        dMUTFHTd56sBE4kRoFeDwpFJy319uOCg8levABupZnBj+4vxco/QhxT429KTPTyWjME7XEdK9/5cp
+        NWdUrHgOobsB5++MeEUfwlM9PNPH7uLonD/D/0MoEBxYs59QmYWaGFT9dtPOG8+9n+Sk76aYGiVCm
+        duwKCOw2ZU9RpLrr4344CMuDyZ4tXHVm7nIrPVWGZ2YYuD1pXvOd80TLgOcTBhr+/qZQ9UE7YNTjv
+        zsKlBG0iw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDACw-0006La-W3; Wed, 25 Sep 2019 16:32:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 88A8D305E35;
+        Wed, 25 Sep 2019 18:31:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9C71320249302; Wed, 25 Sep 2019 18:31:54 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 18:31:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190925163154.GF4553@hirez.programming.kicks-ass.net>
+References: <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <20190925104040.GD4553@hirez.programming.kicks-ass.net>
+ <20190925132544.GL23050@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925132544.GL23050@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-25 at 20:37 +0800, Yunfeng Ye wrote:
-> After the commit 76128326f97c ("toplevel: Move ipc/ to kernel/ipc/: move
-> the files"), we met some error messages:
-> 
->   ./scripts/checkpatch.pl:
->   "Must be run from the top-level dir. of a kernel tree"
-> 
->   ./scripts/get_maintainer.pl:
->   "The current directory does not appear to be a linux kernel source tree.
-> 
-> Don't check the ipc dir in checkpatch.pl and get_maintainer.pl.
+On Wed, Sep 25, 2019 at 03:25:44PM +0200, Michal Hocko wrote:
+> I am sorry but I still do not understand why you consider this whack a
+> mole better then simply live with the fact that NUMA_NO_NODE is a
+> reality and that using the full cpu mask is a reasonable answer to that.
 
-Thanks.
-
-Maybe the commit subject could use "scripts:"
-or something similar and not "toplevel:".
-
-Trivially, it one day it'd be good to use the
-same routine and output message too.
-
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
->  scripts/checkpatch.pl     | 2 +-
->  scripts/get_maintainer.pl | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 93a7edf..6117d0e 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -1097,7 +1097,7 @@ sub top_of_kernel_tree {
->  	my @tree_check = (
->  		"COPYING", "CREDITS", "Kbuild", "MAINTAINERS", "Makefile",
->  		"README", "Documentation", "arch", "include", "drivers",
-> -		"fs", "init", "ipc", "kernel", "lib", "scripts",
-> +		"fs", "init", "kernel", "lib", "scripts",
->  	);
-> 
->  	foreach my $check (@tree_check) {
-> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-> index 5ef5921..2e42aeb 100755
-> --- a/scripts/get_maintainer.pl
-> +++ b/scripts/get_maintainer.pl
-> @@ -1109,7 +1109,6 @@ sub top_of_kernel_tree {
->  	&& (-d "${lk_path}drivers")
->  	&& (-d "${lk_path}fs")
->  	&& (-d "${lk_path}init")
-> -	&& (-d "${lk_path}ipc")
->  	&& (-d "${lk_path}kernel")
->  	&& (-d "${lk_path}lib")
->  	&& (-d "${lk_path}scripts")) {
-
+Because it doesn't make physical sense. A device _cannot_ be local to
+all CPUs in a NUMA system.
