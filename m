@@ -2,155 +2,98 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AEFC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12008C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3CE217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569394421;
-	bh=3I9N81YtR67BwSWbd01l59e9PfoymVO7oHoRVWCccdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QvZkY4fHHWhtOsgntouK+zjC1fdbhan1YQIXhqjv+dMaRY1hreqShS2bE0os0uO6p
-	 5SN6US93EeqwYcTn6aeSXeMzlVCxNxa93VML6RNQQLvT/Qirta+HI+577+RmZ5GsIp
-	 lFQ+MOipR6dj6V5/7GflQd9bAcboWEYkVxoCA4+g=
+	by mail.kernel.org (Postfix) with ESMTP id E14C521D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442387AbfIYGxk (ORCPT
+        id S2442401AbfIYGy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:53:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46232 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436671AbfIYGxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:53:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0B72DB044;
-        Wed, 25 Sep 2019 06:53:38 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 08:53:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH V2] mm/hotplug: Reorder memblock_[free|remove]() calls in
- try_remove_memory()
-Message-ID: <20190925065337.GG23050@dhcp22.suse.cz>
-References: <1569380273-7708-1-git-send-email-anshuman.khandual@arm.com>
+        Wed, 25 Sep 2019 02:54:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:14063 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436671AbfIYGy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 02:54:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 23:54:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="201155117"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 24 Sep 2019 23:54:23 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        Yi Sun <yi.y.sun@linux.intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
+To:     Peter Xu <peterx@redhat.com>, "Tian, Kevin" <kevin.tian@intel.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-3-baolu.lu@linux.intel.com>
+ <20190923203102.GB21816@araj-mobl1.jf.intel.com>
+ <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
+ <20190925043050.GK28074@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
+ <20190925052402.GM28074@xz-x1>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
+Date:   Wed, 25 Sep 2019 14:52:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569380273-7708-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190925052402.GM28074@xz-x1>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-09-19 08:27:53, Anshuman Khandual wrote:
-> Currently during memory hot add procedure, memory gets into memblock before
-> calling arch_add_memory() which creates it's linear mapping.
-> 
-> add_memory_resource() {
-> 	..................
-> 	memblock_add_node()
-> 	..................
-> 	arch_add_memory()
-> 	..................
-> }
-> 
-> But during memory hot remove procedure, removal from memblock happens first
-> before it's linear mapping gets teared down with arch_remove_memory() which
-> is not consistent. Resource removal should happen in reverse order as they
-> were added. However this does not pose any problem for now, unless there is
-> an assumption regarding linear mapping. One example was a subtle failure on
-> arm64 platform [1]. Though this has now found a different solution.
-> 
-> try_remove_memory() {
-> 	..................
-> 	memblock_free()
-> 	memblock_remove()
-> 	..................
-> 	arch_remove_memory()
-> 	..................
-> }
-> 
-> This changes the sequence of resource removal including memblock and linear
-> mapping tear down during memory hot remove which will now be the reverse
-> order in which they were added during memory hot add. The changed removal
-> order looks like the following.
-> 
-> try_remove_memory() {
-> 	..................
-> 	arch_remove_memory()
-> 	..................
-> 	memblock_free()
-> 	memblock_remove()
-> 	..................
-> }
-> 
-> [1] https://patchwork.kernel.org/patch/11127623/
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Hi Peter and Kevin,
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+On 9/25/19 1:24 PM, Peter Xu wrote:
+> On Wed, Sep 25, 2019 at 04:38:31AM +0000, Tian, Kevin wrote:
+>>> From: Peter Xu [mailto:peterx@redhat.com]
+>>> Sent: Wednesday, September 25, 2019 12:31 PM
+>>>
+>>> On Tue, Sep 24, 2019 at 09:38:53AM +0800, Lu Baolu wrote:
+>>>>>> intel_mmmap_range(domain, addr, end, phys_addr, prot)
+>>>>>
+>>>>> Maybe think of a different name..? mmmap seems a bit weird :-)
+>>>>
+>>>> Yes. I don't like it either. I've thought about it and haven't
+>>>> figured out a satisfied one. Do you have any suggestions?
+>>>
+>>> How about at least split the word using "_"?  Like "mm_map", then
+>>> apply it to all the "mmm*" prefixes.  Otherwise it'll be easily
+>>> misread as mmap() which is totally irrelevant to this...
+>>>
+>>
+>> what is the point of keeping 'mm' here? replace it with 'iommu'?
+> 
+> I'm not sure of what Baolu thought, but to me "mm" makes sense itself
+> to identify this from real IOMMU page tables (because IIUC these will
+> be MMU page tables).  We can come up with better names, but IMHO
+> "iommu" can be a bit misleading to let people refer to the 2nd level
+> page table.
 
-> ---
-> Changes in V2:
-> 
-> - Changed the commit message as per Michal and David 
-> 
-> Changed in V1: https://patchwork.kernel.org/patch/11146361/
-> 
-> Original patch https://lkml.org/lkml/2019/9/3/327
-> 
-> Memory hot remove now works on arm64 without this because a recent commit
-> 60bb462fc7ad ("drivers/base/node.c: simplify unregister_memory_block_under_nodes()").
-> 
-> David mentioned that re-ordering should still make sense for consistency
-> purpose (removing stuff in the reverse order they were added). This patch
-> is now detached from arm64 hot-remove series.
-> 
-> https://lkml.org/lkml/2019/9/3/326
-> 
->  mm/memory_hotplug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 49f7bf91c25a..4f7d426a84d0 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1763,13 +1763,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> -	memblock_free(start, size);
-> -	memblock_remove(start, size);
->  
->  	/* remove memory block devices before removing memory */
->  	remove_memory_block_devices(start, size);
->  
->  	arch_remove_memory(nid, start, size, NULL);
-> +	memblock_free(start, size);
-> +	memblock_remove(start, size);
->  	__release_memory_resource(start, size);
->  
->  	try_offline_node(nid);
-> -- 
-> 2.20.1
+"mm" represents a CPU (first level) page table;
 
--- 
-Michal Hocko
-SUSE Labs
+vs.
+
+"io" represents an IOMMU (second level) page table.
+
+Best regards,
+Baolu
