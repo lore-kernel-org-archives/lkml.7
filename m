@@ -7,383 +7,242 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E243C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF21C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F44207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C83421783
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nofsXCvU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P1eOPFC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443143AbfIYRlj (ORCPT
+        id S2443153AbfIYRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:41:39 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33130 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443114AbfIYRlb (ORCPT
+        Wed, 25 Sep 2019 13:41:40 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50782 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443113AbfIYRlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Sep 2019 13:41:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfGmw029155;
-        Wed, 25 Sep 2019 12:41:16 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfFM4029456;
+        Wed, 25 Sep 2019 12:41:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569433276;
-        bh=R64xqHNgQJwb3jlD5hJeJlTBPxK6GDqOAkPcBtuFvx4=;
+        s=ti-com-17Q1; t=1569433275;
+        bh=LB2/mEfQyYVK6iE8q9uOLAkmUrKRQZdWqraPFhfOHBg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nofsXCvUOp9u/9kI6Bw0aTaPhJIUNwM9UqgMFdnip0SFYag2tAgCc66Fe394D1DBh
-         T1cC+IUkTNZI5jNx/hhNsUtt59Wl2HpskvfMBB76NboMoqUZWgyzfcz/EA/YF8OscS
-         KVlUYJFApPHpEBDwe5d5UgvzuOo6ai0uu74sASNw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfGao018226;
-        Wed, 25 Sep 2019 12:41:16 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        b=P1eOPFC+8HuzwBAlhiJe8s4P22vlSR3kdfobl3h6K8T5Nr7GTsUYy7pUCxORW0LsX
+         t+n8AAT+EUYs7LT0ibOBXUqsy3WkUDqk/09MnOO6S6okP3wTtxWbITimFUQqU6/BNq
+         hRNF7AwY+oMIYFB3ZxF0Q+3yPNk1bDtuylGrJfGc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8PHfE5p048301
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 25 Sep 2019 12:41:15 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
- Sep 2019 12:41:09 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 12:41:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 25 Sep 2019 12:41:09 -0500
+ Frontend Transport; Wed, 25 Sep 2019 12:41:14 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfGXW045660;
-        Wed, 25 Sep 2019 12:41:16 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8PHfEqf031148;
+        Wed, 25 Sep 2019 12:41:14 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Dan Murphy <dmurphy@ti.com>, <linus.walleij@linaro.org>,
+        <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v9 09/15] dt: bindings: lp55xx: Update binding for Multicolor Framework
-Date:   Wed, 25 Sep 2019 12:46:10 -0500
-Message-ID: <20190925174616.3714-10-dmurphy@ti.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Subject: [PATCH v9 01/15] leds: multicolor: Add sysfs interface definition
+Date:   Wed, 25 Sep 2019 12:46:02 -0500
+Message-ID: <20190925174616.3714-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20190925174616.3714-1-dmurphy@ti.com>
 References: <20190925174616.3714-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the DT binding to include the properties to use the
-multicolor framework for the devices that use the LP55xx
-framework.
+Add a documentation of LED Multicolor LED class specific
+sysfs attributes.
+
+Add multicolor framework class documentation describing the
+usage of the files created.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ .../ABI/testing/sysfs-class-led-multicolor    | 35 +++++++
+ Documentation/leds/index.rst                  |  1 +
+ Documentation/leds/leds-class-multicolor.rst  | 96 +++++++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index bfe2805c5534..c120d2bde3bd 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,6 +1,8 @@
- Binding for TI/National Semiconductor LP55xx LED Drivers
- 
- Required properties:
-+- #address-cells: 1
-+- #size-cells: 0
- - compatible: one of
- 	national,lp5521
- 	national,lp5523
-@@ -14,6 +16,18 @@ Required properties:
- Each child has own specific current settings
- - led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
- - max-cur: Maximun current at each LED channel.
-+- reg: Output channel for the LED.  This is zero based channel identifier and
-+	the data sheet is a one based channel identifier.
-+	reg value to output to LED output number
-+	D1 = reg value is 0
-+	D2 = reg value is 1
-+	D3 = reg value is 2
-+	D4 = reg value is 3
-+	D5 = reg value is 4
-+	D6 = reg value is 5
-+	D7 = reg value is 6
-+	D8 = reg value is 7
-+	D9 = reg value is 8
- 
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
-@@ -35,23 +49,28 @@ example 1) LP5521
- on channel 0.
- 
- lp5521@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5521";
- 	reg = <0x32>;
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
- 
- 	chan0 {
-+		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
- 
- 	chan1 {
-+		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
- 
- 	chan2 {
-+		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
-@@ -70,59 +89,70 @@ ASEL1    ASEL0    Address
-  VEN      VEN       35h
- 
- lp5523@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
- 
- 	chan0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
-@@ -133,29 +163,35 @@ example 3) LP5562
- 4 channels are defined.
- 
- lp5562@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
- 	chan0 {
-+		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
- 	chan1 {
-+		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
- 	chan2 {
-+		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
- 	chan3 {
-+		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
-@@ -167,62 +203,125 @@ example 4) LP8501
- Others are same as LP5523.
- 
- lp8501@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp8501";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
- 	chan0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
- 	chan8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- };
+diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+new file mode 100644
+index 000000000000..65cb43de26e6
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+@@ -0,0 +1,35 @@
++What:		/sys/class/leds/<led>/brightness
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		Writing to this file will update all LEDs within the group to a
++		calculated percentage of what each color LED intensity is set
++		to. The percentage is calculated via the equation below:
 +
-+Multicolor Framework Support
-+In addition to the nodes and properties defined above for device support the
-+properties below are needed for multicolor framework support as defined in
-+Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
++		led_brightness = brightness * <color>_intensity/<color>_max_intensity
 +
-+Required child properties for multicolor framework
-+	- color : Must be LED_COLOR_ID_MULTI
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
++		For additional details please refer to
++		Documentation/leds/leds-class-multicolor.rst.
 +
-+Required grandchildren properties
-+	- reg : This is the LED output of the device
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/max_brightness.
 +
-+Multicolor LED example:
-+lp5523: lp5523@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "national,lp5523";
-+	reg = <0x32>;
-+	clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++What:		/sys/class/leds/<led>/colors/<color>_intensity
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read/write
++		The <color>_intensity file is created based on the color
++		defined by the registrar of the class.
++		There is one file per color presented.
 +
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <2>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_STANDBY;
-+		linux,default-trigger = "heartbeat";
++		The value of the color is from 0 to
++		/sys/class/leds/<led>/colors/<color>_max_intensity.
 +
-+		led@0 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x0>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
++What:		/sys/class/leds/<led>/colors/<color>_max_intensity
++Date:		Sept 2019
++KernelVersion:	5.5
++Contact:	Dan Murphy <dmurphy@ti.com>
++Description:	read only
++		Maximum intensity level for the LED color.
+diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
+index 060f4e485897..bc70c6aa7138 100644
+--- a/Documentation/leds/index.rst
++++ b/Documentation/leds/index.rst
+@@ -9,6 +9,7 @@ LEDs
+ 
+    leds-class
+    leds-class-flash
++   leds-class-multicolor
+    ledtrig-oneshot
+    ledtrig-transient
+    ledtrig-usbport
+diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+new file mode 100644
+index 000000000000..87a1588d7619
+--- /dev/null
++++ b/Documentation/leds/leds-class-multicolor.rst
+@@ -0,0 +1,96 @@
++====================================
++Multi Color LED handling under Linux
++====================================
 +
-+		led@1 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x1>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
++Description
++===========
++The multi color class groups monochrome LEDs and allows controlling two
++aspects of the final combined color: hue and lightness. The former is
++controlled via <color>_intensity files and the latter is controlled
++via brightness file.
 +
-+		led@6 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+	};
-+};
++For more details on hue and lightness notions please refer to
++https://en.wikipedia.org/wiki/CIECAM02.
++
++Note that intensity files only cache the written value and the actual
++change of hardware state occurs upon writing brightness file. This
++allows for changing many factors of the perceived color in a virtually
++unnoticeable way for the human observer.
++
++Multicolor Class Control
++========================
++The multicolor class presents the LED groups under a directory called "colors".
++This directory is a child under the LED parent node created by the led_class
++framework.  The led_class framework is documented in led-class.rst within this
++documentation directory.
++
++Each colored LED will have two files created under the colors directory
++<color>_intensity and <color>_max_intensity. These files will contain
++one of LED_COLOR_ID_* definitions from the header
++include/dt-bindings/leds/common.h.
++
++Directory Layout Example
++========================
++root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
++-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
++--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
++-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
++--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
++-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
++--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
++
++Multicolor Class Brightness Control
++===================================
++The multiclor class framework will calculate each monochrome LEDs intensity.
++
++The brightness level for each LED is calculated based on the color LED
++intensity setting divided by the color LED max intensity setting multiplied by
++the requested brightness.
++
++led_brightness = brightness * <color>_intensity/<color>_max_intensity
++
++Example:
++Three LEDs are present in the group as defined in "Directory Layout Example"
++within this document.
++
++A user first writes the color LED brightness file with the brightness level that
++is necessary to achieve a blueish violet output from the RGB LED group.
++
++echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
++echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
++echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
++
++red -
++	intensity = 138
++	max_intensity = 255
++green -
++	intensity = 43
++	max_intensity = 255
++blue -
++	intensity = 226
++	max_intensity = 255
++
++The user can control the brightness of that RGB group by writing the parent
++'brightness' control.  Assuming a parent max_brightness of 255 the user may want
++to dim the LED color group to half.  The user would write a value of 128 to the
++parent brightness file then the values written to each LED will be adjusted
++base on this value
++
++cat /sys/class/leds/rgb:grouped_leds/max_brightness
++255
++echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
++
++adjusted_red_value = 128 * 138/255 = 69
++adjusted_green_value = 128 * 43/255 = 21
++adjusted_blue_value = 128 * 226/255 = 113
++
++Reading the parent brightness file will return the current brightness value of
++the color LED group.
++
++cat /sys/class/leds/rgb:grouped_leds/max_brightness
++255
++
++echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
++
++cat /sys/class/leds/rgb:grouped_leds/brightness
++128
 -- 
 2.22.0.214.g8dca754b1e
 
