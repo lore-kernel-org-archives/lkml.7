@@ -2,98 +2,119 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4748CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62FDC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26226214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A135D20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbfIYJMI (ORCPT
+        id S2389183AbfIYJOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:12:08 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:34819 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387772AbfIYJMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:12:06 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46dXPc51y9z1s1VW;
-        Wed, 25 Sep 2019 11:12:04 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46dXPc4PXrz1qqkT;
-        Wed, 25 Sep 2019 11:12:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 2EBbxmp59U0j; Wed, 25 Sep 2019 11:12:02 +0200 (CEST)
-X-Auth-Info: PbuO3twiSHYkDC7a/Or/NRyzLBWFn1JSjsNp6URmSb4=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 25 Sep 2019 11:12:02 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        krzk@kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v2 1/2] spi: Add call to spi_slave_abort() function when spidev driver is released
-Date:   Wed, 25 Sep 2019 11:11:42 +0200
-Message-Id: <20190925091143.15468-2-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190925091143.15468-1-lukma@denx.de>
-References: <20190924110547.14770-1-lukma@denx.de>
- <20190925091143.15468-1-lukma@denx.de>
+        Wed, 25 Sep 2019 05:14:42 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2718 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388828AbfIYJOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:14:31 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9C859387E7EFF1887A06;
+        Wed, 25 Sep 2019 17:14:25 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 17:14:21 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+ <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+Date:   Wed, 25 Sep 2019 17:14:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190924131939.GS23050@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+On 2019/9/24 21:19, Michal Hocko wrote:
+> On Tue 24-09-19 14:59:36, Peter Zijlstra wrote:
+>> On Tue, Sep 24, 2019 at 02:43:25PM +0200, Peter Zijlstra wrote:
+>>> On Tue, Sep 24, 2019 at 02:25:00PM +0200, Michal Hocko wrote:
+>>>> On Tue 24-09-19 14:09:43, Peter Zijlstra wrote:
+>>>
+>>>>> We can push back and say we don't respect the specification because it
+>>>>> is batshit insane ;-)
+>>>>
+>>>> Here is my fingers crossed.
+>>>>
+>>>> [...]
+>>>>
+>>>>> Now granted; there's a number of virtual devices that really don't have
+>>>>> a node affinity, but then, those are not hurt by forcing them onto a
+>>>>> random node, they really don't do anything. Like:
+>>>>
+>>>> Do you really consider a random node a better fix than simply living
+>>>> with a more robust NUMA_NO_NODE which tells the actual state? Page
+>>>> allocator would effectivelly use the local node in that case. Any code
+>>>> using the cpumask will know that any of the online cpus are usable.
+>>>
+>>> For the pmu devices? Yes, those 'devices' aren't actually used for
+>>> anything other than sysfs entries.
+>>>
+>>> Nothing else uses the struct device.
+>>
+>> The below would get rid of the PMU and workqueue warnings with no
+>> side-effects (the device isn't used for anything except sysfs).
+> 
+> Hardcoding to 0 is simply wrong, if the node0 is cpuless for example...
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+Hi, Peter & Michal
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
+From the discussion above, It seems making the node_to_cpumask_map()
+NUMA_NO_NODE aware is the most feasible way to move forwad.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
+Any suggestion?
 
----
-Changes for v2:
-- Add #ifdef CONFIG_SPI_SLAVE to not compile in spi_slave_abort() on systems
-  which are only using master mode.
-  (The spi_slave_abort() is 'protected' by this Kconfig define in drivers/spi.c
-  file).
-  This error was spotted by kbuild test robot from Intel.
----
- drivers/spi/spidev.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 255786f2e844..3ea9d8a3e6e8 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -627,6 +627,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+#ifdef CONFIG_SPI_SLAVE
-+	spi_slave_abort(spidev->spi);
-+#endif
- 	mutex_unlock(&device_list_lock);
- 
- 	return 0;
--- 
-2.20.1
+> 
 
