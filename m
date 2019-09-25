@@ -4,116 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADF0C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93908C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7F5217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8E320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634153AbfIYIco (ORCPT
+        id S2634164AbfIYIdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:32:44 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39277 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634140AbfIYIcn (ORCPT
+        Wed, 25 Sep 2019 04:33:09 -0400
+Received: from regular1.263xmail.com ([211.150.70.204]:55368 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634140AbfIYIdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:32:43 -0400
-X-Originating-IP: 79.19.63.71
-Received: from uno.localdomain (host71-63-dynamic.19-79-r.retail.telecomitalia.it [79.19.63.71])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2ABE6E0007;
-        Wed, 25 Sep 2019 08:32:39 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 10:34:21 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: Re: [PATCH v6 4/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
-Message-ID: <20190925083421.ronwsvmqeu5quxpx@uno.localdomain>
-References: <20190920135137.10052-1-ricardo@ribalda.com>
- <20190920135137.10052-5-ricardo@ribalda.com>
+        Wed, 25 Sep 2019 04:33:09 -0400
+Received: from localhost (unknown [192.168.167.223])
+        by regular1.263xmail.com (Postfix) with ESMTP id E900E25A;
+        Wed, 25 Sep 2019 16:33:02 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.10.69] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P8268T140247138543360S1569400380603435_;
+        Wed, 25 Sep 2019 16:33:01 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <567e49f44f60ab6af7dc24948813d994>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     heiko@sntech.de, Ayan.Halder@arm.com, linux-kernel@vger.kernel.org
+References: <1569398801-92201-1-git-send-email-hjc@rock-chips.com>
+ <1569398801-92201-2-git-send-email-hjc@rock-chips.com>
+ <8cd915d3-9f61-abdc-7fd1-a9241777f29a@linux.intel.com>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <e0c272ff-5ef9-f5db-4dad-477ecae2e6ca@rock-chips.com>
+Date:   Wed, 25 Sep 2019 16:32:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jvmepk34h776iu7a"
-Content-Disposition: inline
-In-Reply-To: <20190920135137.10052-5-ricardo@ribalda.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <8cd915d3-9f61-abdc-7fd1-a9241777f29a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jvmepk34h776iu7a
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+在 2019/9/25 下午4:17, Maarten Lankhorst 写道:
+> Op 25-09-2019 om 10:06 schreef Sandy Huang:
+>> These new format is supported by some rockchip socs:
+>>
+>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+>>
+>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+>> ---
+>>   drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+>>   include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+>>   2 files changed, 32 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+>> index c630064..f25fa81 100644
+>> --- a/drivers/gpu/drm/drm_fourcc.c
+>> +++ b/drivers/gpu/drm/drm_fourcc.c
+>> @@ -274,6 +274,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>>   		{ .format = DRM_FORMAT_YUV420_10BIT,    .depth = 0,
+>>   		  .num_planes = 1, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
+>>   		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
+>> +		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
+>> +		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
+>> +		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
+>> +		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
+>> +		  .is_yuv = true },
+>> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,
+>> +		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
+>> +		  .is_yuv = true },
+>>   	};
+>>   
+>>   	unsigned int i;
+>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+>> index 3feeaa3..0479f47 100644
+>> --- a/include/uapi/drm/drm_fourcc.h
+>> +++ b/include/uapi/drm/drm_fourcc.h
+>> @@ -238,6 +238,20 @@ extern "C" {
+>>   #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+>>   
+>>   /*
+>> + * 2 plane YCbCr 10bit
+>> + * index 0 = Y plane, [9:0] Y
+>> + * index 1 = Cr:Cb plane, [19:0]
+>> + * or
+>> + * index 1 = Cb:Cr plane, [19:0]
+>> + */
+>> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
+>> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
+>> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
+>> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
+>> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
+>> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
+>> +
+>> +/*
+>>    * 2 plane YCbCr MSB aligned
+>>    * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+>>    * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+> What are the other bits, they are not mentioned?
 
-Hi Ricardo,
+It's compact layout
 
-On Fri, Sep 20, 2019 at 03:51:34PM +0200, Ricardo Ribalda Delgado wrote:
-> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Yplane:
+
+     Y0[9:0]Y1[9:0]Y2[9:0]Y3[9:0]...
+
+UVplane:
+
+     U0[9:0]V0[9:0]U1[9:0]V1[9:0]...
+
+
+
 >
-> A struct v4l2_area containing the width and the height of a rectangular
-> area.
 >
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
->  1 file changed, 6 insertions(+)
 >
-> diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> index a3d56ffbf4cc..33aff21b7d11 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
-> @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
->        - n/a
->        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
->  	quantization matrices for stateless video decoders.
-> +    * - ``V4L2_CTRL_TYPE_AREA``
-> +      - n/a
-> +      - n/a
-> +      - n/a
-> +      - A struct :c:type:`v4l2_area`, containing the width and the height
-> +        of a rectangular area. Units depend on the use case.
-
-I recall Hans too was in favour of having min, max and step defined
-(and applied to both width and height).
-
-Really a minor issue from my side, feel free to keep it the way it is
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-   j
->      * - ``V4L2_CTRL_TYPE_H264_SPS``
->        - n/a
->        - n/a
-> --
-> 2.23.0
 >
 
---jvmepk34h776iu7a
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2LJowACgkQcjQGjxah
-Vjxe7RAAs5u7tbvDOZmmKv/xCoPoxID0YGDFn+9bzAQu2F/cUHGbIrJjLMx2oBFo
-xRskqRp6wdztDyngFlVtDTaaEqvGtfhRagAJ7xe0gXvZAoKgMchCv027lWAz4KyL
-wIHOFqrAFvvy3dqc4V/pzfifgzqUCC6NtMXEkyNSPopbVZG+PVOHdADfL3cDzqxT
-TObImqKYGfXkEZJJCX6hYWulJr53JRf8Ks2UHrO8z5SGo5xU/hzMWZY/2GH8lo9b
-vN29/q3urnCExZjwGSJyGQ7KE3HRXRywo1AO+QNvT4bnr4+zJ++HO2QmWcfemcn2
-sqjkfYN3EKaCe/I0ZhO/Rb9C+kvWypGIguvLCuQuZO+mJky3Hh7sxdCW5AUUey2j
-BJe+LrweRz5QIorCxWSxMg5IaU/DvS3vPiXacX+aEDncSyT2LEVrVEl1E2UJKnHr
-K4F4TKNr00U73kw7wm7YNS8v4g4ZMzzrppoR6Hlrugl5FlwCsZauBDeaGDoM1joI
-5EsaDPDkTUBn/4W7LbPZfipUccue1xFp+257wT6tDRhQ/S0gqax9JoRWOxMqpo7f
-JtNpCpbA9zdYmT+ZuELoMnTKRc3jMRFf0SX7S8mph7p/y991gtweFPbN0iEVbZ2k
-/2EinpLCT6zWw1rBQM38Wngs7tx6MUG0HJk01i3x9bJImhi0was=
-=aOcf
------END PGP SIGNATURE-----
-
---jvmepk34h776iu7a--
