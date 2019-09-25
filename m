@@ -2,142 +2,164 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A605CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E14BC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78162205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569395773;
-	bh=BH1c1jMuQtj/2nR6Kc3VH0QWfIl5uilCVbbmYfj8O88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2NoIhXkcEjSuutjWPdXYInibBT3VgoSq34EIrXtAIkj7hg+kPKmsncID+Qk0JkuGe
-	 DTZj5T7H935wfOVO0zE+8qOE05Z/s1i6bOsmlrddSIyZwDxePtfLSyklZ6gprNq679
-	 slJqF8VHYli1FTNeCKPCmkN8Hy4hHcSvvTry3+5Y=
+	by mail.kernel.org (Postfix) with ESMTP id D8E872082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436994AbfIYHQM (ORCPT
+        id S2442429AbfIYHRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:16:12 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46790 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405047AbfIYHQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:16:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so3346113lfc.13;
-        Wed, 25 Sep 2019 00:16:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v3IxuuxS4/IRcbugvvfMOWxS50zKTmcgONQh2kY5N1s=;
-        b=QllyeOiuDQFUSf2fEbOerzoGI1UD4cKo3zCoQXphCjwGoL2cDreCUnX94D1upbk62Y
-         YsizzI46hTMF6G/beYJYaHSVvmvwvjkS3jro2aGTrHYHOgCwVLwgYN1AZGWsnhNZfMCo
-         LW4IHOymvf8oMkW7XRlC1KAQGBlcb9BFe4ymiXOfifXmJLBIJ2w1t1J5Xvn4OYyezcST
-         h6Kvcko3Lq7o4rEOZ5GozS9x6rKlhJ0kIWpk8BSd9dI3Ur7ugiZPQf/S3lEBd4mSUVd7
-         noFZqi50dIaW048zIQl7g6xWm2rRF67nCVSMTo7ebnFa1Cm57edhoz5YVGxyQKa7Kf5t
-         TqYA==
-X-Gm-Message-State: APjAAAWNNPuHRGekhPA8wtCrl8ZqcfrD1yfvCnrrDS1XDmkynBz3mYmh
-        NuXfsoz07bttDLtanV/SQUM=
-X-Google-Smtp-Source: APXvYqxK9KlRnUB5BCuCdHzDSyVWaKW57vgtVOZwe0WEPa0Hk1fxHthoUKNNsO1eBuospP4ZWxVEsw==
-X-Received: by 2002:a05:6512:304:: with SMTP id t4mr4739714lfp.15.1569395769975;
-        Wed, 25 Sep 2019 00:16:09 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id b67sm1046757ljf.5.2019.09.25.00.16.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 00:16:09 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iD1X4-0003kO-7z; Wed, 25 Sep 2019 09:16:14 +0200
-Date:   Wed, 25 Sep 2019 09:16:14 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Peter Chen <hzpeterchen@gmail.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        syzbot <syzbot+58e201002fe1e775e1ae@syzkaller.appspotmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Ramses =?iso-8859-1?Q?Ram=EDrez?= <ramzeto@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Cameron Gutman <aicommander@gmail.com>,
-        Tom Panfil <tom@steelseries.com>, linux-input@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in usb_anchor_resume_wakeups
-Message-ID: <20190925071614.GA14159@localhost>
-References: <000000000000e9312b058d3eadb8@google.com>
- <CAAeHK+yPewmT9J0mAYL0P2Wz55asVFD0DbQnwkBS7zdRTkyN2A@mail.gmail.com>
- <CAL411-o09wBhiPtRixFo4=6pB1rAmUsTKc2sBQmn4MjQcPBy2A@mail.gmail.com>
+        Wed, 25 Sep 2019 03:17:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58042 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437028AbfIYHRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:17:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3D10CB641;
+        Wed, 25 Sep 2019 07:17:49 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+To:     Andrew Morton <akpm@linux-foundation.org>, cl@linux.com
+Cc:     David Sterba <dsterba@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+ <20190923171710.GN2751@twin.jikos.cz>
+ <alpine.DEB.2.21.1909242048020.17661@www.lameter.com>
+ <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <34a45e87-5bad-5f01-7dcb-8a3f6cf37281@suse.cz>
+Date:   Wed, 25 Sep 2019 09:17:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL411-o09wBhiPtRixFo4=6pB1rAmUsTKc2sBQmn4MjQcPBy2A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 05:41:54PM +0800, Peter Chen wrote:
-> > On Tue, Jul 9, 2019 at 2:27 PM syzbot
-> > <syzbot+58e201002fe1e775e1ae@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=118d136da00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=58e201002fe1e775e1ae
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+58e201002fe1e775e1ae@syzkaller.appspotmail.com
-> > >
-> > > dummy_hcd dummy_hcd.5: no ep configured for urb 00000000c6093b7b
-> > > xpad 6-1:0.169: xpad_irq_out - usb_submit_urb failed with result -19
-> > > ==================================================================
-> > > BUG: KASAN: use-after-free in debug_spin_lock_before
-> > > kernel/locking/spinlock_debug.c:83 [inline]
-> > > BUG: KASAN: use-after-free in do_raw_spin_lock+0x24d/0x280
-> > > kernel/locking/spinlock_debug.c:112
-> > > Read of size 4 at addr ffff8881d0e584dc by task kworker/1:4/2786
-> > >
+On 9/25/19 1:54 AM, Andrew Morton wrote:
+> On Tue, 24 Sep 2019 20:52:52 +0000 (UTC) cl@linux.com wrote:
 > 
-> It should due to URB is freed at xpad_disconnect, but xpad_irq_out
-> still tries to access
-> freed URB.
+>> On Mon, 23 Sep 2019, David Sterba wrote:
+>>
+>>> As a user of the allocator interface in filesystem, I'd like to see a
+>>> more generic way to address the alignment guarantees so we don't have to
+>>> apply workarounds like 3acd48507dc43eeeb each time we find that we
+>>> missed something. (Where 'missed' might be another sort of weird memory
+>>> corruption hard to trigger.)
+>>
+>> The alignment guarantees are clearly documented and objects are misaligned
+>> in debugging kernels.
+>>
+>> Looking at 3acd48507dc43eeeb:Looks like no one tested that patch with a
+>> debug kernel or full debugging on until it hit mainline. Not good.
+>>
+>> The consequence for the lack of proper testing is to make the production
+>> kernel contain the debug measures?
 > 
-> Peter
-> 
-> #syz test: https://github.com/google/kasan.git 7829a896
-> 
-> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-> index 6b40a1c68f9f..32b7a199b580 100644
-> --- a/drivers/input/joystick/xpad.c
-> +++ b/drivers/input/joystick/xpad.c
-> @@ -1850,6 +1850,7 @@ static void xpad_disconnect(struct usb_interface *intf)
-> 
->         xpad_deinit_input(xpad);
-> 
-> +       usb_kill_urb(xpad->irq_out);
+> This isn't a debug measure - it's making the interface do that which
+> people evidently expect it to do.  Minor point.
 
-I'm not sure this is the right fix. The interrupt-urb should have been
-stopped by xpad_stop_output() just above. Perhaps the type test in that
-function is broken, or we may have a race where another thread is
-submitting the URB after we tried to stop it which we fail to handle.
+Yes, detecting issues due to misalignment is one thing, but then there
+are the workarounds necessary to achieve it (for multiple sizes, so no
+single kmem_cache_create(..., alignment)), as XFS folks demonstrated.
 
-Didn't check that closely, though.
+> I agree it's a bit regrettable to do this but it does appear that the
+> change will make the kernel overall a better place given the reality of
+> kernel development.
 
-Johan
+Thanks.
+
+> Given this, have you reviewed the patch for overall implementation
+> correctness?
+> 
+> I'm wondering if we can avoid at least some of the patch's overhead if
+> slab debugging is disabled - the allocators are already returning
+> suitably aligned memory, so why add the new code in that case?
+
+Most of the new code is for SLOB, which has no debugging and yet
+misaligns. For SLUB and SLAB, it's just passing alignment argument to
+kmem_cache_create() for kmalloc caches, which means just extra few
+instructions during boot, and no extra code during kmalloc/kfree itself.
