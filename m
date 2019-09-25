@@ -2,184 +2,89 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E5BC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CC7C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB0E21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5A221D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="lnGCwqPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfIYIxx (ORCPT
+        id S1732038AbfIYIx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:53:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59670 "EHLO mx1.redhat.com"
+        Wed, 25 Sep 2019 04:53:59 -0400
+Received: from mail.toke.dk ([52.28.52.200]:39823 "EHLO mail.toke.dk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393522AbfIYIwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:52:19 -0400
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EAF853D966
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:52:18 +0000 (UTC)
-Received: by mail-pl1-f199.google.com with SMTP id g13so1572084plq.20
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 01:52:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7guDYhVk5y9jI4XUS0aqeg/UFoHlnPDX75uAbJwUN6E=;
-        b=FkW3VRDU7N8rbufxIQet1y7DONayLLniPTKzYlyYHRhM19Vegh7VOZpZuT/l2anb4v
-         L87WksE4TTsOrGLkZkNXgQqhPXfreQ5r/UQWwTm9MeITBk4Tm4cTy1je3YYk7Av3sY6C
-         fKk9YbS8CVEsKRp081ZrFLn/6RTyoBCEiNQ6Medfqc5Si9R2DdLwKqJ6oXZbOfYEpUFP
-         DdOSwmbbuGsXL//oe8zCSUEagmPjI0begCSzKCDJtiieiUAarqmPCEb3UmW0up56q+Tr
-         3CstdRcAD+3N/I8cK2R1OZoL1p1gk0/qSun71h0nBnT2uc5zEecu/ju5Gbl3e3Qvq72T
-         e9zw==
-X-Gm-Message-State: APjAAAUhNzSbWaDGsbh62Q139trlqTBvdzRaSoTALvvwBMPxDBXadsM7
-        D+JWc1A+REzOEBed0Al17J0E444TQVqxJWlGuXEGKsFvgbzqiuuQ4Gkadk7fWEtTILUfZ138UEv
-        uhJ770VX+Y47Arvkt2ZQAfH4h
-X-Received: by 2002:a63:1918:: with SMTP id z24mr7420733pgl.94.1569401537741;
-        Wed, 25 Sep 2019 01:52:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzDN/t3bbGYbbRSFZVuna1qJhynbYShMjRFkCYwC5AswL4W0unwsLCKht5cqU+I7uZouEAN8A==
-X-Received: by 2002:a63:1918:: with SMTP id z24mr7420718pgl.94.1569401537447;
-        Wed, 25 Sep 2019 01:52:17 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id h8sm4588936pfo.64.2019.09.25.01.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 01:52:16 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 16:52:04 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
-Message-ID: <20190925085204.GR28074@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122715.53de79d0@jacob-builder>
- <20190923202552.GA21816@araj-mobl1.jf.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
- <dfd9b7a2-5553-328a-08eb-16c8a3a2644e@linux.intel.com>
- <20190925065640.GO28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4A3@SHSMSX104.ccr.corp.intel.com>
- <20190925074507.GP28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F5F5@SHSMSX104.ccr.corp.intel.com>
+        id S1731534AbfIYIxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:53:46 -0400
+X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Sep 2019 04:53:41 EDT
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+        t=1569401168; bh=hdI2/8m1XWzYalolj8xZHSopkUVGhtQLUm6AD7C/6rE=;
+        h=From:To:Subject:In-Reply-To:References:Date:From;
+        b=lnGCwqPn8Xik4+dABeuye2OpcKR61gBj+tf2azZZoiepMCvLys5acy3IEAA+CySH2
+         XpGvTv765iKAnzYQNUpf7Y00XFwVyGsUT3ShOReN/2rArjEsMh8kVdmUJaheeNA1Mw
+         A8fSIQHBrNUzDQv6bAp2GpCkb/BFUB+646giQysI2lnfync3zPBY7ptF2QJpBStDF9
+         c3Q4bwZw+CxdwrDkgOEvUpbi226xIFGNwDtCu+HCOGojbt8uZVyJx9lIwnUMXa59CM
+         ikhH6E/y8/5YSbpJvWH3rya/lMZkr25jE3h7vDFC6/NaiaBhJubkJEM0MOqhlMJ26T
+         KZU470eZglgHQ==
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: WireGuard to port to existing Crypto API
+In-Reply-To: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
+References: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
+Date:   Wed, 25 Sep 2019 10:46:08 +0200
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87v9tg3grz.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F5F5@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 08:02:23AM +0000, Tian, Kevin wrote:
-> > From: Peter Xu [mailto:peterx@redhat.com]
-> > Sent: Wednesday, September 25, 2019 3:45 PM
-> > 
-> > On Wed, Sep 25, 2019 at 07:21:51AM +0000, Tian, Kevin wrote:
-> > > > From: Peter Xu [mailto:peterx@redhat.com]
-> > > > Sent: Wednesday, September 25, 2019 2:57 PM
-> > > >
-> > > > On Wed, Sep 25, 2019 at 10:48:32AM +0800, Lu Baolu wrote:
-> > > > > Hi Kevin,
-> > > > >
-> > > > > On 9/24/19 3:00 PM, Tian, Kevin wrote:
-> > > > > > > > >       '-----------'
-> > > > > > > > >       '-----------'
-> > > > > > > > >
-> > > > > > > > > This patch series only aims to achieve the first goal, a.k.a using
-> > > > > > first goal? then what are other goals? I didn't spot such information.
-> > > > > >
-> > > > >
-> > > > > The overall goal is to use IOMMU nested mode to avoid shadow page
-> > > > table
-> > > > > and VMEXIT when map an gIOVA. This includes below 4 steps (maybe
-> > not
-> > > > > accurate, but you could get the point.)
-> > > > >
-> > > > > 1) GIOVA mappings over 1st-level page table;
-> > > > > 2) binding vIOMMU 1st level page table to the pIOMMU;
-> > > > > 3) using pIOMMU second level for GPA->HPA translation;
-> > > > > 4) enable nested (a.k.a. dual stage) translation in host.
-> > > > >
-> > > > > This patch set aims to achieve 1).
-> > > >
-> > > > Would it make sense to use 1st level even for bare-metal to replace
-> > > > the 2nd level?
-> > > >
-> > > > What I'm thinking is the DPDK apps - they have MMU page table already
-> > > > there for the huge pages, then if they can use 1st level as the
-> > > > default device page table then it even does not need to map, because
-> > > > it can simply bind the process root page table pointer to the 1st
-> > > > level page root pointer of the device contexts that it uses.
-> > > >
-> > >
-> > > Then you need bear with possible page faults from using CPU page
-> > > table, while most devices don't support it today.
-> > 
-> > Right, I was just thinking aloud.  After all neither do we have IOMMU
-> > hardware to support 1st level (or am I wrong?)...  It's just that when
-> 
-> You are right. Current VT-d supports only 2nd level.
-> 
-> > the 1st level is ready it should sound doable because IIUC PRI should
-> > be always with the 1st level support no matter on IOMMU side or the
-> > device side?
-> 
-> No. PRI is not tied to 1st or 2nd level. Actually from device p.o.v, it's
-> just a protocol to trigger page fault, but the device doesn't care whether
-> the page fault is on 1st or 2nd level in the IOMMU side. The only
-> relevant part is that a PRI request can have PASID tagged or cleared.
-> When it's tagged with PASID, the IOMMU will locate the translation
-> table under the given PASID (either 1st or 2nd level is fine, according
-> to PASID entry setting). When no PASID is included, the IOMMU locates
-> the translation from default entry (e.g. PASID#0 or any PASID contained
-> in RID2PASID in VT-d).
-> 
-> Your knowledge happened to be correct in deprecated ECS mode. At
-> that time, there is only one 2nd level per context entry which doesn't
-> support page fault, and there is only one 1st level per PASID entry which
-> supports page fault. Then PRI could be indirectly connected to 1st level,
-> but this just changed with new scalable mode.
-> 
-> Another note is that the PRI capability only indicates that a device is
-> capable of handling page faults, but not that a device can tolerate
-> page fault for any of its DMA access. If the latter is fasle, using CPU 
-> page table for DPDK usage is still risky (and specific to device behavior)
-> 
-> > 
-> > I'm actually not sure about whether my understanding here is
-> > correct... I thought the pasid binding previously was only for some
-> > vendor kernel drivers but not a general thing to userspace.  I feel
-> > like that should be doable in the future once we've got some new
-> > syscall interface ready to deliver 1st level page table (e.g., via
-> > vfio?) then applications like DPDK seems to be able to use that too
-> > even directly via bare metal.
-> > 
-> 
-> using 1st level for userspace is different from supporting DMA page
-> fault in userspace. The former is purely about which structure to
-> keep the mapping. I think we may do the same thing for both bare
-> metal and guest (using 2nd level only for GPA when nested is enabled
-> on the IOMMU). But reusing CPU page table for userspace is more
-> tricky. :-)
+"Jason A. Donenfeld" <Jason@zx2c4.com> writes:
 
-Yes I should have mixed up the 1st level page table and PRI a bit, and
-after all my initial question should be irrelevant to this series as
-well so it's already a bit out of topic (sorry for that).
+> Hi folks,
+>
+> I'm at the Kernel Recipes conference now and got a chance to talk with
+> DaveM a bit about WireGuard upstreaming. His viewpoint has recently
+> solidified: in order to go upstream, WireGuard must port to the
+> existing crypto API, and handle the Zinc project separately. As DaveM
+> is the upstream network tree maintainer, his opinion is quite
+> instructive.
+>
+> I've long resisted the idea of porting to the existing crypto API,
+> because I think there are serious problems with it, in terms of
+> primitives, API, performance, and overall safety. I didn't want to
+> ship WireGuard in a form that I thought was sub-optimal from a
+> security perspective, since WireGuard is a security-focused project.
+>
+> But it seems like with or without us, WireGuard will get ported to the
+> existing crypto API. So it's probably better that we just fully
+> embrace it, and afterwards work evolutionarily to get Zinc into Linux
+> piecemeal. I've ported WireGuard already several times as a PoC to the
+> API and have a decent idea of the ways it can go wrong and generally
+> how to do it in the least-bad way.
+>
+> I realize this kind of compromise might come as a disappointment for
+> some folks. But it's probably better that as a project we remain
+> intimately involved with our Linux kernel users and the security of
+> the implementation, rather than slinking away in protest because we
+> couldn't get it all in at once. So we'll work with upstream, port to
+> the crypto API, and get the process moving again. We'll pick up the
+> Zinc work after that's done.
 
-And, thanks for explaining these. :)
+On the contrary, kudos on taking the pragmatic route! Much as I have
+enjoyed watching your efforts on Zinc, I always thought it was a shame
+it had to hold back the upstreaming of WireGuard. So as far as I'm
+concerned, doing that separately sounds like the right approach at this
+point, and I'll look forward to seeing the patches land :)
 
--- 
-Peter Xu
+-Toke
