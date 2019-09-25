@@ -2,247 +2,168 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2709EC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DBBC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB60921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9D921E6F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 04:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qmAZ0rtw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVgKQ7C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633924AbfIYEVG (ORCPT
+        id S2411687AbfIYEYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 00:21:06 -0400
-Received: from mail-eopbgr40087.outbound.protection.outlook.com ([40.107.4.87]:38907
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393276AbfIYEVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 00:21:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E1t+EWkSuOQNyJu+gTesN+AA092Mj2qMuYFxEpTmYhzQ6FyqZQii0teQ5WKY9YU8YfdvRFRSPqCqwy6iUo3W9PK3arIxqAJvkcAWx51Q/Jqjq2OZrKQ61YKkmX5Q6eaKh0WQ6EjK9VK2hNIsEyUQ8D+0y9rhnF9xVoGppDuo2o6ABBEcqA22XWunG5bWb0IKzx8hiv10dLRPqJWbGZI9d9q2gaGXLw7sBFZXE96kkegwNnyK5JHU9d1gmjVS6qirqlCzXZ2lAJctQuteey/0574DcjnnTZMLXDuzcWdBhJIIJj29xfXEm9JdlwxrNXMhnB2gITEjr5jzzstHr2T0EQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7bNViU+H4OT41P5xc4/eS9rZMyylBGXYUnt0p+fNMaM=;
- b=WFd77ANpSopNXs2nWWQu0AD2qvyN004VLbTgHgDLUNuSPt/tJLbXDoIr19VOh6G1rHOk3pHzqLFaitJkMf8FukCQNXKxwXuBA21LmZe2S8d5wz2YoANIWFA7XI/nG7Wr/cfDTGmy4anoVt9WEKhcxXq5ffl79gtaZYpo1r5ZC6QjhZqZZdzO1mYYDoVVwEngsoYrkomGgYunkSIXXaBNkvoj3fmK7lEeuyuwmIuF1//je2UEsVYaXAx3576XJkTmkijHKxnCaAXH6X+jHxvJBiVfnJfCZgKBiWGLI5XR6ykmXB6jLiFtt/TjZL6FvpatJ7hBpn3kydJKnSbzvHfs+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7bNViU+H4OT41P5xc4/eS9rZMyylBGXYUnt0p+fNMaM=;
- b=qmAZ0rtwE3EBZcabCJpiBIgv7XFcgUoKZRwu1vcfA5sKlwIDEYjvpvsr6VlBXC3/FUTT/VPsageMPIB3EicF+iWgKzr/crxOOhd0sE7do6vUhzmYUXHCfiEaA8UMVGZ/5oVQk3JeKZGofymxLFMi9C+WcZyTISkvwr0QRGzzB78=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4220.eurprd04.prod.outlook.com (52.135.131.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Wed, 25 Sep 2019 04:21:01 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
- 04:21:00 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Ran Wang <ran.wang_1@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Topic: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Thread-Index: AQHVcoOnab7d5ysBNkWsXmY0PrfSuKc6/L+AgAC3JZCAAAkFAIAAANMggAABmICAAAIKMIAAAb8AgAACHkCAAAZAMA==
-Date:   Wed, 25 Sep 2019 04:21:00 +0000
-Message-ID: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4dddadb6-cadb-4864-3d9c-08d7416fc5ae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4220;
-x-ms-traffictypediagnostic: DB7PR04MB4220:|DB7PR04MB4220:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB422053D18B496356B9510E718F870@DB7PR04MB4220.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(189003)(199004)(74316002)(26005)(305945005)(52536014)(7736002)(33656002)(66476007)(229853002)(64756008)(3846002)(66446008)(2906002)(86362001)(76116006)(66946007)(14444005)(5660300002)(25786009)(478600001)(6116002)(256004)(110136005)(14454004)(66066001)(476003)(71190400001)(55016002)(11346002)(9686003)(71200400001)(4326008)(99286004)(486006)(54906003)(2940100002)(81156014)(44832011)(6506007)(2501003)(6246003)(316002)(186003)(102836004)(446003)(8676002)(7696005)(8936002)(66556008)(6636002)(6436002)(81166006)(76176011)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4220;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GC8hJbU44SOz2jrg8HjT4lOVgwasMQGrqN1cktwoQuRJLQ0lCkNzdNz10cvkGabzFIKbqLT/C7T2p9CPFNnuQrs1FSybz4UnN5RrcDfPho41gT/DrPmNCMnTsiTFZTyp5r7ddhTD7+Pwbmf5tbZu+LFcy/0rlfDb7OxzxDFnD/3lYK0xzPmjBHcBpAlk7+f2w1i8lyUmQ0xn2gSWPbQfET4w6/oIg0lQmr1/E06CIkeM4Aih73fLf6QrhO6RJDdFYr0UvrShMwJvfN4iC3wNDvWAizyC2cqY55O1FHKmBC+buKe+7/ozDT4Xe7uwnWwSXVkzD3MkdAunAkcdr7Z8Nk5Pnxc0jLItTbWaTN4OWkvRd8GLzxm9Bj4qlTqhrwmLSOryHe5scg/oXC+OZ0PtmYyCfwwQBKGJZ6VJ8oCIJvI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dddadb6-cadb-4864-3d9c-08d7416fc5ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 04:21:00.8411
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: a+1pcrM7oEO4ET9TkuPrI3cCiFdkMCe5PXaMfVtKn6Ae2vYbGrX4/C9zWkPrZWueFxBXb1YCQzufeV+CYH6rqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4220
+        Wed, 25 Sep 2019 00:24:21 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44505 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392142AbfIYEYV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 00:24:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id j4so10099710iog.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 21:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MS2fxSO5B4fdSwTSr588JEm97CHbkHnZPXYIa8kugGg=;
+        b=MVgKQ7C0XNYOr+wZQ7k0LZDFFkkfMarqBz67S1MUs1pNITYkcaGTG+R6ELtapPUAsH
+         h8RkjQkLp5vca+bpvQGYkPVfrlMqMjrguUMBoMlhYmV+hjreJhY9Zl5kuVMICZwvka4A
+         ppbdTu1xJNUpA2lZQa6N4k7h5+a+5QazXKuGx0zIPCtcLb5myxiBt2X1Fgo6Nnv2iZJ1
+         hzSVi6+h2FmPUMyE+ffZNnHEJ0UtPw9wa54tygJOopMCqDy8Sf5vufMNOQ4RW2Sp1xjC
+         NUlF4Tsg+Ud4bq/yim6m675DEibvGPgFjVXSUJa2q3BN2b1EnA/OtWIVNKexac2kA2s2
+         6QoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MS2fxSO5B4fdSwTSr588JEm97CHbkHnZPXYIa8kugGg=;
+        b=EQjI71Y9KZb+5o8gwUX7qE/a1QeYSguOKkEYDuRzLUtv2b1MP7OWY90giHUOFqCwSN
+         juFHPnLc1yITDku3CcYDWfLngxODUgiy9ktWSYxJ43oed4LLx0Q+N0mlKPfGWnyn5dee
+         bQynakeCAkAsJgLgmh8q8nGibctauLXQ0ZwUpI0olwEp3Ud6FAEasXMXtslZnKIjaAwJ
+         2vtcbgEQhDv6SdEYHIG/UFfufiiVe+K1GBuWBqTd6IztgdMDiGzvZVuExhH02TTAUTf6
+         X+cv0vuMhsUXpKQE9ZwS95qvRtd76hneqm4HEoHImSekOnpjo4lip3bnf8yBXiSMzw9e
+         dQ7w==
+X-Gm-Message-State: APjAAAVNANWI0ot/ucC51n1q54TMWWz5EptaHWFVEFPqw80mX15csSCH
+        Uu8TVFs5prnbm2SvrrzJfcFOubuhFRU=
+X-Google-Smtp-Source: APXvYqzndtOTM69mP51f/SoXtLy/fJyC/cIcsyLkt0PidJyn5iMPKKB+A8DdYyC3O8hIk4pqT4OWiA==
+X-Received: by 2002:a6b:6110:: with SMTP id v16mr8052275iob.199.1569385458891;
+        Tue, 24 Sep 2019 21:24:18 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id r12sm33707ilq.70.2019.09.24.21.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2019 21:24:18 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Wesley Chalmers <Wesley.Chalmers@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Aidan Wood <Aidan.Wood@amd.com>,
+        Ken Chalmers <ken.chalmers@amd.com>,
+        Eric Bernstein <Eric.Bernstein@amd.com>,
+        hersen wu <hersenxs.wu@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Roman Li <Roman.Li@amd.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        Thomas Lim <Thomas.Lim@amd.com>,
+        Su Sung Chung <Su.Chung@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: prevent memory leak
+Date:   Tue, 24 Sep 2019 23:23:56 -0500
+Message-Id: <20190925042407.31383-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > >
-> > > > > > > > >
-> > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
-> > > > > > > > > an errata
-> > > > > > > > > A-008646 on LS1021A
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > > > > > > ---
-> > > > > > > > > Change in v3:
-> > > > > > > > > 	- rename property name
-> > > > > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> > > > > > > > >
-> > > > > > > > > Change in v2:
-> > > > > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
-> > > > > > > > >
-> > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > > > > > > > > ++++++++++++++
-> > > > > > > > >  1 file changed, 14 insertions(+)
-> > > > > > > > >
-> > > > > > > > > diff --git
-> > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
-> > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example
-> > > Chips
-> > > > > > > > >  Optional properties:
-> > > > > > > > >   - little-endian : RCPM register block is Little Endian.
-> > > > > > > > > Without it
-> > > > RCPM
-> > > > > > > > >     will be Big Endian (default case).
-> > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
-> > > > > > > > > + SoC LS1021A,
-> > > > > > > >
-> > > > > > > > You probably should mention this is related to a hardware
-> > > > > > > > issue on LS1021a and only needed on LS1021a.
-> > > > > > > Okay, got it, thanks, I will add this in v4.
-> > > > > > > >
-> > > > > > > > > +   Must include n + 1 entries (n =3D
-> > > > > > > > > + #fsl,rcpm-wakeup-cells, such
-> > as:
-> > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
-> > > > > > > > > + 2
-> > > > > > > > > + +
-> > > > > > > > > + 1
-> > > > entries).
-> > > > > > > >
-> > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
-> > > > > > > > registers on an
-> > > > SoC.
-> > > > > > > > However you are defining an offset to scfg registers here.
-> > > > > > > > Why these two are related?  The length here should
-> > > > > > > > actually be related to the #address-cells of the soc/.
-> > > > > > > > But since this is only needed for LS1021, you can
-> > > > > > > just make it 3.
-> > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
-> > > > > > > device node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
-> > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
-> > > > IPPDEXPCR1).
-> > > > > > > But because of the hardware issue on LS1021A, I need store
-> > > > > > > the value of IPPDEXPCR registers to an alt address. So I
-> > > > > > > defining an offset to scfg registers, then RCPM driver get
-> > > > > > > an abosolute address from offset, RCPM driver write the
-> > > > > > > value of IPPDEXPCR registers to these abosolute
-> > > > > > > addresses(backup the value of IPPDEXPCR
-> > > > registers).
-> > > > > >
-> > > > > > I understand what you are trying to do.  The problem is that
-> > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and =
-an
-> offset.
-> > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
-> > > > > You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/*
-> > > > > SCFG_SPARECR8 */
-> > > >
-> > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
-> > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
-> > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
-> binding.
-> > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
-> > > #address-cells instead of #fsl,rcpm-wakeup-cells.
-> >
-> > Yes.
-> I got an example from drivers/pci/controller/dwc/pci-layerscape.c
-> and arch/arm/boot/dts/ls1021a.dtsi as follows:
-> fsl,pcie-scfg =3D <&scfg 0>, 0 is an index
->=20
-> In my fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>, It means that 0x0 is =
-an alt
-> offset address for IPPDEXPCR0, 0x51c is an alt offset address For
-> IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
-> SCFG_SPARECR8.
-Maybe I need write it as:
-fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x0 0x0 0x51c>;
-first two 0x0 compose an alt offset address for IPPDEXPCR0,
-last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
+In dcn*_create_resource_pool the allocated memory should be released if
+construct pool fails.
 
-Best Regards,
-Biwen Li=20
-> >
-> > Regards,
-> > Leo
-> > > >
-> > > > > >
-> > > > > > > >
-> > > > > > > > > +   The first entry must be a link to the SCFG device nod=
-e.
-> > > > > > > > > +   The non-first entry must be offset of registers of SC=
-FG.
-> > > > > > > > >
-> > > > > > > > >  Example:
-> > > > > > > > >  The RCPM node for T4240:
-> > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
-> > > > > > > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > > > >  	};
-> > > > > > > > >
-> > > > > > > > > +The RCPM node for LS1021A:
-> > > > > > > > > +	rcpm: rcpm@1ee2140 {
-> > > > > > > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
-> > > > > 2.1+";
-> > > > > > > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
-> > > > > > > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
-> > > > > > > > > SCFG_SPARECR8 */
-> > > > > > > > > +	};
-> > > > > > > > > +
-> > > > > > > > > +
-> > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> > > > > > > > >  -------------------------------------------
-> > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
-> > > > > > > > > device node if the device
-> > > > > > > > > --
-> > > > > > > > > 2.17.1
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 1 +
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+index afc61055eca1..1787b9bf800a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+@@ -1091,6 +1091,7 @@ struct resource_pool *dce100_create_resource_pool(
+ 	if (construct(num_virtual_links, dc, pool))
+ 		return &pool->base;
+ 
++	kfree(pool);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+index c66fe170e1e8..318e9c2e2ca8 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+@@ -1462,6 +1462,7 @@ struct resource_pool *dce110_create_resource_pool(
+ 	if (construct(num_virtual_links, dc, pool, asic_id))
+ 		return &pool->base;
+ 
++	kfree(pool);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+index 3ac4c7e73050..3199d493d13b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+@@ -1338,6 +1338,7 @@ struct resource_pool *dce112_create_resource_pool(
+ 	if (construct(num_virtual_links, dc, pool))
+ 		return &pool->base;
+ 
++	kfree(pool);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+index 7d08154e9662..bb497f43f6eb 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+@@ -1203,6 +1203,7 @@ struct resource_pool *dce120_create_resource_pool(
+ 	if (construct(num_virtual_links, dc, pool))
+ 		return &pool->base;
+ 
++	kfree(pool);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+index 5a89e462e7cc..59305e411a66 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+@@ -1570,6 +1570,7 @@ struct resource_pool *dcn10_create_resource_pool(
+ 	if (construct(init_data->num_virtual_links, dc, pool))
+ 		return &pool->base;
+ 
++	kfree(pool);
+ 	BREAK_TO_DEBUGGER();
+ 	return NULL;
+ }
+-- 
+2.17.1
 
