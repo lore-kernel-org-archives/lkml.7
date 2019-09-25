@@ -2,93 +2,75 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86510C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7469C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFCC214D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F7C214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfIYJvY (ORCPT
+        id S1730105AbfIYJv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:51:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32918 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfIYJvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:51:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 02:51:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="191290854"
-Received: from dariusvo-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.150])
-  by orsmga003.jf.intel.com with ESMTP; 25 Sep 2019 02:51:17 -0700
-Date:   Wed, 25 Sep 2019 12:51:14 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v2] x86, efi: never relocate kernel below lowest
- acceptable address
-Message-ID: <20190925095114.GB5173@linux.intel.com>
-References: <20190919160521.13820-1-kasong@redhat.com>
+        Wed, 25 Sep 2019 05:51:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58220 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfIYJv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:51:29 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iD3xG-0003pi-Gv; Wed, 25 Sep 2019 09:51:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] counter: stm32: clean up indentation issue
+Date:   Wed, 25 Sep 2019 10:51:26 +0100
+Message-Id: <20190925095126.20219-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919160521.13820-1-kasong@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:05:21AM +0800, Kairui Song wrote:
-> Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> And it's a potential issue on all platforms.
-> 
-> It's caused a broken kernel relocation on EFI systems, when below three
-> conditions are met:
-> 
-> 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
->    by the loader.
-> 2. There isn't enough room to contain the kernel, starting from the
->    default load address (eg. something else occupied part the region).
-> 3. In the memmap provided by EFI firmware, there is a memory region
->    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
->    kernel.
-> 
-> Efi stub will perform a kernel relocation when condition 1 is met. But
-> due to condition 2, efi stub can't relocate kernel to the preferred
-> address, so it fallback to query and alloc from EFI firmware for lowest
-> usable memory region.
-> 
-> It's incorrect to use the lowest memory address. In later stage, kernel
-> will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
-> but efi stub will end up relocating kernel below it.
-> 
-> Then before the kernel decompressing. Kernel will do another relocation
-> to address not lower than LOAD_PHYSICAL_ADDR, this time the relocate will
-> over write the blockage at the default load address, which efi stub tried
-> to avoid, and lead to unexpected behavior. Beside, the memory region it
-> writes to is not allocated from EFI firmware, which is also wrong.
-> 
-> To fix it, just don't let efi stub relocate the kernel to any address
-> lower than lowest acceptable address.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Acked-by:  <jarkko.sakkinen@linux.intel.com>
+There is an if statement that is indented one level too deeply,
+remove the extraneous tabs.
 
-/Jarkko
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/counter/stm32-timer-cnt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+index 644ba18a72ad..613dcccf79e1 100644
+--- a/drivers/counter/stm32-timer-cnt.c
++++ b/drivers/counter/stm32-timer-cnt.c
+@@ -219,8 +219,8 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
+ 
+ 	if (enable) {
+ 		regmap_read(priv->regmap, TIM_CR1, &cr1);
+-			if (!(cr1 & TIM_CR1_CEN))
+-				clk_enable(priv->clk);
++		if (!(cr1 & TIM_CR1_CEN))
++			clk_enable(priv->clk);
+ 
+ 		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+ 				   TIM_CR1_CEN);
+-- 
+2.20.1
+
