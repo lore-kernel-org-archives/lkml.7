@@ -2,118 +2,165 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D725C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC7EC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABF9208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BA9205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nWA7771D"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dHL0EUAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbfIYWO7 (ORCPT
+        id S1729074AbfIYWQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:14:59 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35589 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbfIYWO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:14:58 -0400
-Received: by mail-io1-f65.google.com with SMTP id q10so1139863iop.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oN2m4++0LKr6bYfqCXcWdRY1alpvZSl28bU6nXFdaRo=;
-        b=nWA7771D16q31tdoOAptSyiO4fw0bxdwPLiA2aW6WNm3y555sp4lMyWdhpn9DseJj9
-         i7Mbuaps/im/Hp+Ofs3yiga+jYR/tbxF6JcMY3sOrnEUhJo1xFG2V3napIb1eoZEKcld
-         yg8/C2yxtiYdAt+rRo4p2hkf5998b2pRB8LEyzPJU6pJhU/FcqyKH/+9LuKysD9QzE+p
-         gyvW5pZHdtMHEavMaAAyEofiCYpeClJivd7cbJWj3EmHAfcGyllwAD+sky5NkZADi/Oe
-         A4ne8r4ANNVH/68nshgcxglgxbXckv5QUdH3ZEVslFfuH+SdkCON1s1QEO3axn3y52kC
-         jhXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oN2m4++0LKr6bYfqCXcWdRY1alpvZSl28bU6nXFdaRo=;
-        b=IbO/eogtsZKjlrGtvpsChp3jYtSOcPc8WbtJG2UDwtaCiVx5waVwuOsmJxNbusHIvi
-         oVt5TzsYCJCl+YZo7X6kUnxIGxPCPi5L+GI/vUcdOdNpN+yy0tvd+Q4WyfVOxrgfnCPg
-         Ql3mhU33dbrH6C6TAXNBVOjJQZqwJzb2Pb/B/3qegB6mfTI+TAzlvF4AyNie7KxMgbY/
-         r7xV+e08mwoItAYJ4F05Pdgbbe9ZI/F27uiKwkYTmlqNr1alfIVtIUtXAsgq8H5Ki2R3
-         y+9NQwyooPiNQmcYrUNPKOUSK5vuzGK+ThsblgvxQzT0iDOFOXhus6uZw08FdqNqh7dj
-         Lemg==
-X-Gm-Message-State: APjAAAUx0nJo5IQlJVJPHwYOXQ7wxsZFdg1qPg7LxyhC0zhJVexg//U9
-        Dyw30FMLcVv0Rwe9hL/PMfa9CXt/IVxyGEUQSvVsxw==
-X-Google-Smtp-Source: APXvYqwnzPkSsiUbT68TdAM7/Fq82PmpQ5Z0A/CfGt1w6IWIPokbXcJ9ji5UArTZ6/VDdNS3FrcxTS4scZPUkGpDCyo=
-X-Received: by 2002:a6b:6a01:: with SMTP id x1mr238446iog.119.1569449697712;
- Wed, 25 Sep 2019 15:14:57 -0700 (PDT)
+        Wed, 25 Sep 2019 18:16:23 -0400
+Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:6166
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728277AbfIYWQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:16:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sot1f9Y58IdYsy7lGHFtc8ONOqwUEnnekosvr0l4xZ36XNRPlpDNHz4qG2FVJr6zBbvWlNQUNgKMMpoCbQ9br4bNt/MQmFrKxrEm8AMQEUwNffmk0q35IgSfmOhUGb4OSXpvXEtYNdd7pqWEgZvO2tyuzaAWTRyEylDvCPwmqdlXq8K7qYxXi4/f7yHDMJfDXYzqbk3XYCa8+JpT9J2A6QcIMtI6r/W4rc17MZUmHBCm4UCEbdULIBIAvFF9M1Cs7btxjR6eWJi5VCsqe2lDTLjciDp+n53sU84XTt71cB/meeaREwaN3BNl81ESSjbAZa/5bd9US2T2uSYIP8xdqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
+ b=Sy3ZY81IM4cdJLQDAxPgh2krV4yIm4JO9fr8IJaP+wPeOc8CB2q+jqpxEpIR9K/ce0s9dZIsNZcjZSSf0g4imfvV2/9rpvbFafCJHQeI25YJXaqu0+hbsA4q2K0qPUdjORcjZ+7mcs19OnNtgZPrCR6C72xQwgzLVwlf8JC4kIyNuo66/3JQjIaNRK2wwk6GV/qefbvVjlXhVyt8Segez39EdjQ3Bno/NM+j/6UMZFCILBF0GS3ntsZB1I9VSTdtLFLnce2mg99Pl+lbMPxQmjMH8K9mgJ+j2sA5ngzl65CJlVIETcV0YWXet1idSMZpC9yNk5ajriCnlXPOjve53w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
+ b=dHL0EUAPjye7GPKMoG8MujPyl4fCkLYwTH33bMB5Rb2f6M5XK8M51aXMCcA9uTPF6ECJeA2xTJt9KLDRcXfoxlFXUxSjl75crwfFPXyJOcxSjWkCprH8FFFAtA9C19SRBd/Diz7vPL54wvvHYSrlSLH4YsZBcHunGYxriPqTEyw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.3; Wed, 25 Sep 2019 22:15:18 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 22:15:18 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kbuild test robot <lkp@intel.com>
+CC:     "kbuild-all@01.org" <kbuild-all@01.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v2] scsi: storvsc: Add the support of hibernation
+Thread-Topic: [PATCH v2] scsi: storvsc: Add the support of hibernation
+Thread-Index: AQHVc+yzKPLAAiKv9kWlGVY81JBAn6c888eg
+Date:   Wed, 25 Sep 2019 22:15:18 +0000
+Message-ID: <PU1P153MB0169E8F4FF7FAB990A10954ABF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1569442244-16726-1-git-send-email-decui@microsoft.com>
+ <201909260511.qkZEo9lk%lkp@intel.com>
+In-Reply-To: <201909260511.qkZEo9lk%lkp@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:15:15.9530993Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1caed55-c678-4d8d-9f8d-ec8d6f3aecd9;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb851f3f-cf5b-4736-7622-08d74205d956
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0137:|PU1P153MB0137:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0137F6898304D73C97B1E707BF870@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(10290500003)(478600001)(6916009)(54906003)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(55016002)(99286004)(22452003)(10090500001)(5024004)(316002)(256004)(86362001)(14444005)(9686003)(8990500004)(71200400001)(71190400001)(33656002)(5660300002)(52536014)(107886003)(6246003)(2906002)(6116002)(4326008)(14454004)(102836004)(6436002)(305945005)(53546011)(6506007)(186003)(46003)(7736002)(229853002)(25786009)(476003)(7696005)(76176011)(486006)(81166006)(81156014)(8676002)(11346002)(8936002)(74316002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MU1b1zrHJuP1rmyul436nE/3U8SnUrwIIvYG/zBMeqJ45JUpaQhfC5/7CIGspkCj26KhHamsxotZoPuhiS8GJnB69x9dFftWgD4hTk1ZqezXsdIruUvj+QqEQ212W3gXtBum+4nfNPvyDMJlhcvz0GYfjj1UfmW/BXXiFK9Xv7/VWmhwdJgjPPMGlnUtlVNUOtFpzcKm+SBvoXYkUu4qBxg52US+Tz/MRdnGVTAjbiaacXySYbjOJ2Fo0kB1QH5b+Gr3Z6ZAYiOBmGlHFBl0RpZr2igKAuzWA2ES0dcWOJ0JVdbL3AusTzWUTfL9XO070K6cSK+SC5QN1jfGLu/B4wBgDlcKRMZ4wM1Vp997j/dns8JzLW57X6OBjtVfbpjWbo/++fSB+xXHMCqjeVyqHsHQsPErVnNuwsN6eMhP9PE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190925213721.21245-1-bigeasy@linutronix.de> <20190925213721.21245-2-bigeasy@linutronix.de>
-In-Reply-To: <20190925213721.21245-2-bigeasy@linutronix.de>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 25 Sep 2019 15:14:46 -0700
-Message-ID: <CALMp9eTbaoCh=izdFHGEnX2-mBKZaWJ_Bkg3b53csVQgs+XmuQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: x86: svm: Pass XSAVES to guest if available on host
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb851f3f-cf5b-4736-7622-08d74205d956
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:15:18.0618
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6JiFNJj6MxeG2cl5UAIrFA424cvgEVzz3sQENaahJ7Z/gr9AmiKPklCm8jyx/Yzi5YUoK+jSUhQN6VI1NirdQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 2:37 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> In commit
->    55412b2eda2b7 ("kvm: x86: Add kvm_x86_ops hook that enables XSAVES for guest")
->
-> XSAVES was enabled on VMX with a few additional tweaks and was always
-> disabled on SVM. Before ZEN XSAVES was not available so it made no
-> difference. With Zen it is possible to expose it to the guest if it is
-> available on the host.
-> I didn't find anything close to VMX's "VM-Execution Controls" and
-> exposing this flag based on the CPUID flags cause no harm so far.
->
-> Expose the XSAVES flag to the guest if the host supports it.
->
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  arch/x86/kvm/svm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index e0368076a1ef9..3878eb766fa39 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5992,7 +5992,7 @@ static bool svm_mpx_supported(void)
->
->  static bool svm_xsaves_supported(void)
->  {
-> -       return false;
-> +       return boot_cpu_has(X86_FEATURE_XSAVES);
->  }
->
->  static bool svm_umip_emulated(void)
-> --
-> 2.23.0
+> From: kbuild test robot <lkp@intel.com>
+> Sent: Wednesday, September 25, 2019 2:55 PM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: kbuild-all@01.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; sashal@kernel.org; jejb@linux.ibm.com;
+> martin.petersen@oracle.com; linux-hyperv@vger.kernel.org;
+> linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Michael Kelley
+> <mikelley@microsoft.com>; Dexuan Cui <decui@microsoft.com>
+> Subject: Re: [PATCH v2] scsi: storvsc: Add the support of hibernation
+>=20
+> Hi Dexuan,
+>=20
+> Thank you for the patch! Yet something to improve:
+>=20
+> [auto build test ERROR on mkp-scsi/for-next]
+> [cannot apply to v5.3 next-20190924]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see
+> [...snipped...]
+> config: x86_64-rhel (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=3Dx86_64
+>=20
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+> >> drivers//scsi/storvsc_drv.c:1981:3: error: 'struct hv_driver' has no m=
+ember
+> named 'suspend'
+>      .suspend =3D storvsc_suspend,
+>       ^~~~~~~
 
-This is inadequate. Please read the existing thread, "[Patch] KVM:
-SVM: Fix svm_xsaves_supported." Aaron Lewis is working on completing
-this as we speak.
+This patch depends on the below patch in Linus's tree (today):
+271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
+ for hibernation")
+So, we don't really have an issue here.
+
+The mkp-scsi/for-next branch needs to do a merge with Linus's master branch=
+.
+
+Thanks,
+-- Dexuan
