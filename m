@@ -2,112 +2,91 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404F0C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4645AC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133D821D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E88021D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rB5xmoq5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MoYk9zg8";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="X+uzUSLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407212AbfIYOCH (ORCPT
+        id S2407239AbfIYODw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:02:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34252 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405102AbfIYOCH (ORCPT
+        Wed, 25 Sep 2019 10:03:52 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59952 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405102AbfIYODv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:02:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a11so7136083wrx.1;
-        Wed, 25 Sep 2019 07:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F7vgeZSQPCok6+67LjXBzohtslp7p/FxL4eCR3C05lk=;
-        b=rB5xmoq5jZX1E5E3euLtcidJawgqXBAqMbR8O7LhiQ1XoRna7hyVR90F944A+11Fpz
-         Ue9dqxOv6f0XD/yvu7hk3ucIX5QpNP4FxxYVmrtDFHb7qjwxjbV1cyiL5CO1cMkBQdR8
-         e86YXa9GIOpf48hDg1kn6w1ZuPU0QaYpQNgcBqzB+q3GNkyMcDb2l+mPJNzb8OcHykfw
-         fQNEaHoA0NgHtNuUvyiAII/BHkTEZW2PBZ/R0oi42XQ2Vlvm1CmDXheKTb7sywojDLOV
-         X5eJQBHaFSLjrFV2pKbI2frR4XJvM1Kgg/lVBoVTuj5dvfMGCFz+Mn3cV9khsnxhRAy0
-         IZaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F7vgeZSQPCok6+67LjXBzohtslp7p/FxL4eCR3C05lk=;
-        b=WuE9aHfq8jDZdfA0LIAQmxJyrPsyCFGJw6L5YlNiAaTvMXuZzSPTtDttShZOSxSyiw
-         Qy0Q3ubagLlSkDLFQwE3VytLwFCgcEfnwHR6aG4n/2tvBZtfng6MwExThGnisZzfor/7
-         FpaiRo+Jy6GBOhZV1I8PnnVKqkGuTMH/fV7kX8P/aghLzmzBNKeJj5sle3/jPCv1Jkkk
-         iGNvlthP2E/LyXEM3pBBU6MXDILvBnngCayAQea9GXTnz9I+VZqiD7y4AVM773ErDkLS
-         3dUA3RaDF8FgpwtvMLqd7CDZSKKCB5GMVeILOQ64PbqrMfo9+1NIBYaEEW557G3y0n5v
-         +xVA==
-X-Gm-Message-State: APjAAAVUd1ZwGIxBVBBbqAwOvmLUTYCN6nnFht9qbCaakpC8XBrhByLg
-        F/27HdDM448qJfZsW3hBSIw6jY9Z
-X-Google-Smtp-Source: APXvYqyYrs5HA+LWpoO/rHQ44KUuOPazN3W8FjyPYgTUo4aLnTva+qW+9gWsKsTG16/JdVzKyp/LHA==
-X-Received: by 2002:a5d:6451:: with SMTP id d17mr10443674wrw.260.1569420123040;
-        Wed, 25 Sep 2019 07:02:03 -0700 (PDT)
-Received: from [10.0.20.253] ([95.157.63.22])
-        by smtp.gmail.com with ESMTPSA id r13sm8314034wrn.0.2019.09.25.07.02.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 07:02:02 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: For review: pidfd_send_signal(2) manual page
-To:     Florian Weimer <fw@deneb.enyo.de>
-References: <f21dbd73-5ef4-fb5b-003f-ff4fec34a1de@gmail.com>
- <87pnjr9rth.fsf@mid.deneb.enyo.de>
- <20190923142325.jowzbnwjw7g7si7j@wittgenstein>
- <90dd38d5-34b3-b72f-8e5a-b51f944f22fb@gmail.com>
- <20190924195701.7pw2olbviieqsg5q@wittgenstein>
- <b76adb4c-826b-6493-ba75-a9863066d3b1@gmail.com>
- <20190924215316.gxev2anuqffegocw@wittgenstein>
- <331cc245-3f70-dd43-31f9-8c1680ca6b20@gmail.com>
- <87h850scux.fsf@mid.deneb.enyo.de>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <5d941e9e-aba9-8929-66e9-93ae19e11757@gmail.com>
-Date:   Wed, 25 Sep 2019 16:02:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <87h850scux.fsf@mid.deneb.enyo.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 25 Sep 2019 10:03:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 56AE38EE175;
+        Wed, 25 Sep 2019 07:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1569420230;
+        bh=wgQLAhQ0gpMYuJqIxafxVyPJc5xPW8c1DYEePcqkeJU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MoYk9zg8Do4chGVdWYcE0CzTP4WxSWWl2MmooufUyNgrNOggM6gv8+5ym91rluB01
+         T9zP9EU/8mHdQL7K0Yaubf5zjl97Mnl6uxrU2SiOCil4kfpDfsBjsnePZHqaXjHKmR
+         abdVTqnGv4Bzttn3OX7EPkAg2DkpyBAYnW/hSS1A=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bz3oqnN4PUpl; Wed, 25 Sep 2019 07:03:49 -0700 (PDT)
+Received: from [9.232.197.57] (unknown [129.33.253.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 462748EE0E9;
+        Wed, 25 Sep 2019 07:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1569420229;
+        bh=wgQLAhQ0gpMYuJqIxafxVyPJc5xPW8c1DYEePcqkeJU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=X+uzUSLdrthDd94MjAzzF/mQ+tu0lWcZNyf+zUIDja9t9EKsDz6oiJ/ZNG2gvKiEa
+         yfskMWikzGLvJpq0Z7unefkclRQmKdUr8VxwuFWgizbKwabVGz66yaXjpvy2PbbRDR
+         NAD/asi2+/1w5ZWBs/mGZPl6OIj7w1j2DytR14BI=
+Message-ID: <1569420226.3642.24.camel@HansenPartnership.com>
+Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Wed, 25 Sep 2019 10:03:46 -0400
+In-Reply-To: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
+References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 3:51 PM, Florian Weimer wrote:
-> * Michael Kerrisk:
-> 
->>        If these conditions don't hold true, then the child process should
->>        instead be created using clone(2) with the CLONE_PID flag.
-> 
-> I think this should be CLONE_PIDFD.
+On Wed, 2019-09-25 at 16:48 +0300, Jarkko Sakkinen wrote:
+[...]
+> +	data_page = alloc_page(GFP_HIGHUSER);
+> +	if (!data_page)
+> +		return -ENOMEM;
+> +
+> +	data_ptr = kmap(data_page);
 
-Thanks Florian. Fixed.
+I don't think this is such a good idea.  On 64 bit it's no different
+from GFP_KERNEL and on 32 bit where we do have highmem, kmap space is
+at a premium, so doing a highmem allocation + kmap is more wasteful of
+resources than simply doing GFP_KERNEL.  In general, you should only do
+GFP_HIGHMEM if the page is going to be mostly used by userspace, which
+really isn't the case here.
 
-Cheers,
+James
 
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
