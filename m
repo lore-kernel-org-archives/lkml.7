@@ -2,102 +2,121 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3636C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD955C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DA521D82
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D94321D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411891AbfIYGZi (ORCPT
+        id S2393055AbfIYG3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:25:38 -0400
-Received: from proxima.lasnet.de ([78.47.171.185]:47358 "EHLO
-        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404570AbfIYGZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:25:38 -0400
-Received: from localhost.localdomain (p200300E9D742D21B26FCBF88D1F65952.dip0.t-ipconnect.de [IPv6:2003:e9:d742:d21b:26fc:bf88:d1f6:5952])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id 4C630C1B1A;
-        Wed, 25 Sep 2019 08:25:35 +0200 (CEST)
-Subject: Re: [PATCH] ieee802154: mcr20a: simplify a bit
- 'mcr20a_handle_rx_read_buf_complete()'
-To:     Xue Liu <liuxuenetmail@gmail.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "alex. aring" <alex.aring@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wpan - ML <linux-wpan@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190920194533.5886-1-christophe.jaillet@wanadoo.fr>
- <388f335a-a9ae-7230-1713-a1ecb682fecf@datenfreihafen.org>
- <CAJuUDwtWJgo7PHJR4kBpQ9mGamTMEaPZBNOZcL3mWFwwZ-zOmw@mail.gmail.com>
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <7d131e76-d487-ead3-1780-6a9a7d7877a4@datenfreihafen.org>
-Date:   Wed, 25 Sep 2019 08:25:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 25 Sep 2019 02:29:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2778 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390491AbfIYG3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 02:29:04 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 31D1BA6A5DDE99DB5B69;
+        Wed, 25 Sep 2019 14:28:51 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 14:28:42 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <guaneryu@gmail.com>, <amir73il@gmail.com>,
+        <david.oberhollenzer@sigma-star.at>, <ebiggers@google.com>,
+        <yi.zhang@huawei.com>
+CC:     <fstests@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH xfstests v3] overlay: Enable character device to be the base fs partition
+Date:   Wed, 25 Sep 2019 14:35:33 +0800
+Message-ID: <1569393333-128141-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <CAJuUDwtWJgo7PHJR4kBpQ9mGamTMEaPZBNOZcL3mWFwwZ-zOmw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+When running overlay tests using character devices as base fs partitions,
+all overlay usecase results become 'notrun'. Function
+'_overay_config_override' (common/config) detects that the current base
+fs partition is not a block device and will set FSTYP to base fs. The
+overlay usecase will check the current FSTYP, and if it is not 'overlay'
+or 'generic', it will skip the execution.
 
-On 24.09.19 23:40, Xue Liu wrote:
-> On Sat, 21 Sep 2019 at 13:52, Stefan Schmidt <stefan@datenfreihafen.org> wrote:
->>
->> Hello Xue.
->>
->> On 20.09.19 21:45, Christophe JAILLET wrote:
->>> Use a 'skb_put_data()' variant instead of rewritting it.
->>> The __skb_put_data variant is safe here. It is obvious that the skb can
->>> not overflow. It has just been allocated a few lines above with the same
->>> 'len'.
->>>
->>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>> ---
->>>   drivers/net/ieee802154/mcr20a.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
->>> index 17f2300e63ee..8dc04e2590b1 100644
->>> --- a/drivers/net/ieee802154/mcr20a.c
->>> +++ b/drivers/net/ieee802154/mcr20a.c
->>> @@ -800,7 +800,7 @@ mcr20a_handle_rx_read_buf_complete(void *context)
->>>        if (!skb)
->>>                return;
->>>
->>> -     memcpy(skb_put(skb, len), lp->rx_buf, len);
->>> +     __skb_put_data(skb, lp->rx_buf, len);
->>>        ieee802154_rx_irqsafe(lp->hw, skb, lp->rx_lqi[0]);
->>>
->>>        print_hex_dump_debug("mcr20a rx: ", DUMP_PREFIX_OFFSET, 16, 1,
->>>
->>
->> Could you please review and ACK this? If you are happy I will take it
->> through my tree.
->>
->> regards
->> Stefan Schmidt
-> 
-> Acked-by: Xue Liu <liuxuenetmail@gmail.com>
+For example, using UBIFS as base fs skips all overlay usecases:
 
+  FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+  MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+  MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
 
-This patch has been applied to the wpan tree and will be
-part of the next pull request to net. Thanks!
+  overlay/001	[not run] not suitable for this filesystem type: ubifs
+  overlay/002	[not run] not suitable for this filesystem type: ubifs
+  overlay/003	[not run] not suitable for this filesystem type: ubifs
 
-regards
-Stefan Schmidt
+When checking that the base fs partition is a block/character device,
+FSTYP is overwritten as 'overlay'. This patch allows the base fs
+partition to be a character device that can also execute overlay
+usecases (such as ubifs).
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+ common/config | 6 +++---
+ common/rc     | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/common/config b/common/config
+index 4c86a49..4eda36c 100644
+--- a/common/config
++++ b/common/config
+@@ -532,7 +532,7 @@ _canonicalize_mountpoint()
+ # When SCRATCH/TEST_* vars are defined in evironment and not
+ # in config file, this function is called after vars have already
+ # been overriden in the previous test.
+-# In that case, TEST_DEV is a directory and not a blockdev and
++# In that case, TEST_DEV is a directory and not a blockdev/chardev and
+ # the function will return without overriding the SCRATCH/TEST_* vars.
+ _overlay_config_override()
+ {
+@@ -550,7 +550,7 @@ _overlay_config_override()
+ 	#    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+ 	#    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+ 	#    overlayfs base and mount dirs inside base fs mount.
+-	[ -b "$TEST_DEV" ] || return 0
++	[ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+ 
+ 	# Config file may specify base fs type, but we obay -overlay flag
+ 	[ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+@@ -570,7 +570,7 @@ _overlay_config_override()
+ 	export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+ 	export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+ 
+-	[ -b "$SCRATCH_DEV" ] || return 0
++	[ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+ 
+ 	# Store original base fs vars
+ 	export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+diff --git a/common/rc b/common/rc
+index 66c7fd4..8d57c37 100644
+--- a/common/rc
++++ b/common/rc
+@@ -3100,7 +3100,7 @@ _require_scratch_shutdown()
+ 			# SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
+ 			# will be null, so check OVL_BASE_SCRATCH_DEV before
+ 			# running shutdown to avoid shutting down base fs accidently.
+-			_notrun "$SCRATCH_DEV is not a block device"
++			_notrun "This test requires a valid $OVL_BASE_SCRATCH_DEV as ovl base fs"
+ 		else
+ 			src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
+ 			|| _notrun "Underlying filesystem does not support shutdown"
+-- 
+2.7.4
+
