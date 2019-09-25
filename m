@@ -2,176 +2,164 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2366AC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDFAC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD11720640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FSbSy6AV"
+	by mail.kernel.org (Postfix) with ESMTP id D073421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 11:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404624AbfIYLlW (ORCPT
+        id S2404884AbfIYLlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 07:41:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54900 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732353AbfIYLlV (ORCPT
+        Wed, 25 Sep 2019 07:41:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21954 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404639AbfIYLlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 07:41:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so5050178wmp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 04:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NlYwZfi37MW+fG2G53m/ye4cUiGzk0pKzm2LWmwu4+Y=;
-        b=FSbSy6AV0csN/5J+L/b7vsjMly7qACDeRzIbk3Jk/Gy4SjxRkDDztmRx76ysfgA+6P
-         zeRTO8Oir2AL8VmSt6LnjkpOzEz8afZQtH5xnB/fjhdayRms95fZAx3S0JTnnuBW3kPV
-         K37pmKoVMJTZM5kKqVXtQGmTekVrbb+BW6Ksy7QqkxnXT+uAqsdk1lLNiVTJpNEIvlmy
-         HPVefMflsnoPMAFjLThCP7+uryyb9qE4JRfhEU15/yv8R6hqEv5cnDZdD2N+VrdmLUx1
-         vxfQ1ZhfRXNvGo+782axFPYTc/yJh6hMuNWeeok20/i8JZjUL4U3untUhFP40eLTETjO
-         JA+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NlYwZfi37MW+fG2G53m/ye4cUiGzk0pKzm2LWmwu4+Y=;
-        b=HjdFg/Xqqvx6NO8AN2tVK7eDRuldd2b4ufN4k5L4EafZLwEZ6QV+qJ7LmoCbsWGaDE
-         TygyIrMqhhCuEzKB1mlzYhphFtLl3083l9OikNmRMFw+9WZTHHdRbV8Y2mrUJhA1bMk+
-         SzaVKpZspcR93LRZjRSAv7weT0YuTv57oygEXvKLfswBzyiiHPiuOIl7aXesyFfKqUz3
-         gl4+YBSJ2Puuwny+nBaAZvLFSDbVnkOkGOrd2nC/NWg9jl21PfC9v5rQViDQsPeZRQSm
-         QaLo4GR9WEN8lnBUcX8HhZV6LguZ2fmVtyOVK6joKT4gzRKxwKIW5Oj3F2mdM65AXkL7
-         lCMA==
-X-Gm-Message-State: APjAAAW7ZaV2TUJI+4OJwI4CKushWWyEcN1wjk1ZbaW+sA1s5dh/6T10
-        JrHBSv0WFjLMs03J/od/81VcsAYBXunTQw==
-X-Google-Smtp-Source: APXvYqznuQUSWw1R/GPQvgLJPp6nuq8m4FlWXAOgZppECWdwh6ybUf2fQimEoaOUtMK5oyCOX9ddAA==
-X-Received: by 2002:a1c:7306:: with SMTP id d6mr7619568wmb.62.1569411678872;
-        Wed, 25 Sep 2019 04:41:18 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id f83sm3735973wmf.43.2019.09.25.04.41.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Sep 2019 04:41:18 -0700 (PDT)
-Subject: Re: [PATCH RESEND] drm/meson: vclk: use the correct G12A frac max
- value
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190828132311.23881-1-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <30fe12e7-e905-17b3-79ea-3857daa41f61@baylibre.com>
-Date:   Wed, 25 Sep 2019 13:41:17 +0200
+        Wed, 25 Sep 2019 07:41:49 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8PBapR8004142
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:41:49 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v861ykpt8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:41:48 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 25 Sep 2019 12:41:46 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 25 Sep 2019 12:41:40 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8PBfdjS42991868
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 11:41:39 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 272FF11C04A;
+        Wed, 25 Sep 2019 11:41:39 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F69E11C04C;
+        Wed, 25 Sep 2019 11:41:38 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Sep 2019 11:41:38 +0000 (GMT)
+Received: from [9.81.212.159] (unknown [9.81.212.159])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CF9EAA01BD;
+        Wed, 25 Sep 2019 21:41:23 +1000 (AEST)
+Subject: Re: [PATCH 1/5] powerpc: Add OPAL calls for LPC memory alloc/release
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190917014307.30485-1-alastair@au1.ibm.com>
+ <20190917014307.30485-2-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Wed, 25 Sep 2019 13:41:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190828132311.23881-1-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190917014307.30485-2-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092511-0020-0000-0000-000003716B51
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092511-0021-0000-0000-000021C73120
+Message-Id: <70d4372d-b421-893b-091d-c00ee7cce4b1@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-25_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909250119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping, could someone review this patch ?
-
-Neil
-
-On 28/08/2019 15:23, Neil Armstrong wrote:
-> When calculating the HDMI PLL settings for a DMT mode PHY frequency,
-> use the correct max fractional PLL value for G12A VPU.
+On 17/9/19 3:42 am, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> With this fix, we can finally setup the 1024x768-60 mode.
+> Add OPAL calls for LPC memory alloc/release
 > 
-> Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+
+This needs rebasing, but apart from that.
+
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+
 > ---
-> Fixed typo in commit log, 1024x76 => 1024x768
+>   arch/powerpc/include/asm/opal-api.h        | 4 +++-
+>   arch/powerpc/include/asm/opal.h            | 3 +++
+>   arch/powerpc/platforms/powernv/opal-call.c | 2 ++
+>   3 files changed, 8 insertions(+), 1 deletion(-)
 > 
->  drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+> index 383242eb0dea..c58161cd7cfb 100644
+> --- a/arch/powerpc/include/asm/opal-api.h
+> +++ b/arch/powerpc/include/asm/opal-api.h
+> @@ -208,7 +208,9 @@
+>   #define OPAL_HANDLE_HMI2			166
+>   #define	OPAL_NX_COPROC_INIT			167
+>   #define OPAL_XIVE_GET_VP_STATE			170
+> -#define OPAL_LAST				170
+> +#define OPAL_NPU_MEM_ALLOC			171
+> +#define OPAL_NPU_MEM_RELEASE			172
+> +#define OPAL_LAST				172
+>   
+>   #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+>   #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+> index 57bd029c715e..8c957a003be4 100644
+> --- a/arch/powerpc/include/asm/opal.h
+> +++ b/arch/powerpc/include/asm/opal.h
+> @@ -39,6 +39,9 @@ int64_t opal_npu_spa_clear_cache(uint64_t phb_id, uint32_t bdfn,
+>   				uint64_t PE_handle);
+>   int64_t opal_npu_tl_set(uint64_t phb_id, uint32_t bdfn, long cap,
+>   			uint64_t rate_phys, uint32_t size);
+> +int64_t opal_npu_mem_alloc(uint64_t phb_id, uint32_t bdfn,
+> +			uint64_t size, uint64_t *bar);
+> +int64_t opal_npu_mem_release(uint64_t phb_id, uint32_t bdfn);
+>   int64_t opal_console_write(int64_t term_number, __be64 *length,
+>   			   const uint8_t *buffer);
+>   int64_t opal_console_read(int64_t term_number, __be64 *length,
+> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+> index 29ca523c1c79..09a280446507 100644
+> --- a/arch/powerpc/platforms/powernv/opal-call.c
+> +++ b/arch/powerpc/platforms/powernv/opal-call.c
+> @@ -287,3 +287,5 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,		OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
+>   OPAL_CALL(opal_sensor_read_u64,			OPAL_SENSOR_READ_U64);
+>   OPAL_CALL(opal_sensor_group_enable,		OPAL_SENSOR_GROUP_ENABLE);
+>   OPAL_CALL(opal_nx_coproc_init,			OPAL_NX_COPROC_INIT);
+> +OPAL_CALL(opal_npu_mem_alloc,			OPAL_NPU_MEM_ALLOC);
+> +OPAL_CALL(opal_npu_mem_release,			OPAL_NPU_MEM_RELEASE);
 > 
-> diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
-> index ac491a781952..f690793ae2d5 100644
-> --- a/drivers/gpu/drm/meson/meson_vclk.c
-> +++ b/drivers/gpu/drm/meson/meson_vclk.c
-> @@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
->  		if (frac >= HDMI_FRAC_MAX_GXBB)
->  			return false;
->  	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
-> -		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
-> -		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-> +		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
->  		/* Empiric supported min/max dividers */
->  		if (m < 106 || m > 247)
->  			return false;
->  		if (frac >= HDMI_FRAC_MAX_GXL)
->  			return false;
-> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
-> +		/* Empiric supported min/max dividers */
-> +		if (m < 106 || m > 247)
-> +			return false;
-> +		if (frac >= HDMI_FRAC_MAX_G12A)
-> +			return false;
->  	}
->  
->  	return true;
-> 
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
