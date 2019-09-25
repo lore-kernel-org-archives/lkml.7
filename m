@@ -2,210 +2,322 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA47C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86437C43630
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1843C21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E3221D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:49:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PzfhRmxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392463AbfIYTs6 (ORCPT
+        id S2392493AbfIYTs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 25 Sep 2019 15:48:59 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33839 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732007AbfIYTs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Sep 2019 15:48:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33920 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731991AbfIYTs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 15:48:57 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD55B2D7E1;
-        Wed, 25 Sep 2019 19:48:56 +0000 (UTC)
-Received: from [10.36.116.51] (ovpn-116-51.ams2.redhat.com [10.36.116.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 902A01001B12;
-        Wed, 25 Sep 2019 19:48:54 +0000 (UTC)
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-To:     Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190924143615.19628-1-david@redhat.com>
- <1569337401.5576.217.camel@lca.pw> <20190924151147.GB23050@dhcp22.suse.cz>
- <1569351244.5576.219.camel@lca.pw>
- <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
- <1569427262.5576.225.camel@lca.pw> <20190925174809.GM23050@dhcp22.suse.cz>
- <1569435659.5576.227.camel@lca.pw>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <92bce3d4-0a3e-e157-529d-35aafbc30f3b@redhat.com>
-Date:   Wed, 25 Sep 2019 21:48:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: by mail-ot1-f68.google.com with SMTP id m19so5975525otp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 12:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O+2OKUfqw9V+eaDFB+P0UAy5luWT6sUT4VIfCQuUKoE=;
+        b=PzfhRmxGvfcgdzRMXKka51SFc8xms7T1mFK/1GAOf6Adf1K/bF7WMKLvfNsMvwTwKU
+         4KU1nHOjwkI1oL+weIVmtfqNrq28RwrOEwepoqxVo4Udw29lu52Tgv/YN4YIuv7PDvmH
+         IyIWmfnXH+9PdxBWdMWrdwTCV5ua5P5ZTYTTU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O+2OKUfqw9V+eaDFB+P0UAy5luWT6sUT4VIfCQuUKoE=;
+        b=r2PS6nIq0ycQmOqkzs848/3YOeJUJWxMrNKbv6tLevixQWPgwZW/JClwXdQ+On2OB8
+         lIGSYnPsBPC2eQFtTVEfJJU5X9GZ/a2lopTsD7kWI89c4pI3fE3SalL7IuaQ08Ypsuxn
+         IL/WGpYeVsNx0Chxq1YgA3KUf4CPueUQbi21LqyhPVrbuB5FrkNNToGzTCEtSXL2On2b
+         TsVUMqfdODsjQkU92sPj2BnKkIE7oX6i7hXHjD7SxejS2Fl17tn2jJkBMuw53WH8uty/
+         89WoB3XpYlRlKJH9tldBjhilZLB6L280sNzzNJFgNKtPLqQgQHPhwMTWChhu9vl0XVOn
+         eV8A==
+X-Gm-Message-State: APjAAAXXpbqXzbBAzKb65PlYgXuu0fSrV+wl4RAoU/7mWzPjBMVZE77y
+        ajCtBL36x8UhrShn4qXKR/E2xuBNSUzKs1UHq0YFoNwj1Xc=
+X-Google-Smtp-Source: APXvYqxm+YIbGKtXftN4Q/JlPalGEQxuRhBGL0nPr6KIPXNGH4y9WiL5t5qJuG1WAT4bEySzNpwDixq3ggKdrtFq9fs=
+X-Received: by 2002:a9d:404:: with SMTP id 4mr166775otc.204.1569440935127;
+ Wed, 25 Sep 2019 12:48:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1569435659.5576.227.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 25 Sep 2019 19:48:56 +0000 (UTC)
+References: <1569439345.3084.5.camel@suse.com>
+In-Reply-To: <1569439345.3084.5.camel@suse.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 25 Sep 2019 21:48:44 +0200
+Message-ID: <CAKMK7uHicakgeTEUhK63R4yKh+HMHCmy11L_o5PCSJoLG65BYg@mail.gmail.com>
+Subject: Re: 4f5368b5541a902f6596558b05f5c21a9770dd32 causes regression
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sndirsch@suse.com, tzimmermann@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.09.19 20:20, Qian Cai wrote:
-> On Wed, 2019-09-25 at 19:48 +0200, Michal Hocko wrote:
->> On Wed 25-09-19 12:01:02, Qian Cai wrote:
->>> On Wed, 2019-09-25 at 09:02 +0200, David Hildenbrand wrote:
->>>> On 24.09.19 20:54, Qian Cai wrote:
->>>>> On Tue, 2019-09-24 at 17:11 +0200, Michal Hocko wrote:
->>>>>> On Tue 24-09-19 11:03:21, Qian Cai wrote:
->>>>>> [...]
->>>>>>> While at it, it might be a good time to rethink the whole locking over there, as
->>>>>>> it right now read files under /sys/kernel/slab/ could trigger a possible
->>>>>>> deadlock anyway.
->>>>>>>
->>>>>>
->>>>>> [...]
->>>>>>> [  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
->>>>>>> [  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
->>>>>>> [  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
->>>>>>> [  442.469930][ T5224]        lock_acquire+0x31c/0x360
->>>>>>> [  442.474803][ T5224]        get_online_mems+0x54/0x150
->>>>>>> [  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
->>>>>>> [  442.485072][ T5224]        total_objects_show+0x28/0x34
->>>>>>> [  442.490292][ T5224]        slab_attr_show+0x38/0x54
->>>>>>> [  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
->>>>>>> [  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
->>>>>>> [  442.505433][ T5224]        seq_read+0x30c/0x8a8
->>>>>>> [  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
->>>>>>> [  442.515007][ T5224]        __vfs_read+0x88/0x20c
->>>>>>> [  442.519620][ T5224]        vfs_read+0xd8/0x10c
->>>>>>> [  442.524060][ T5224]        ksys_read+0xb0/0x120
->>>>>>> [  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
->>>>>>> [  442.533634][ T5224]        el0_svc_handler+0x170/0x240
->>>>>>> [  442.538768][ T5224]        el0_svc+0x8/0xc
->>>>>>
->>>>>> I believe the lock is not really needed here. We do not deallocated
->>>>>> pgdat of a hotremoved node nor destroy the slab state because an
->>>>>> existing slabs would prevent hotremove to continue in the first place.
->>>>>>
->>>>>> There are likely details to be checked of course but the lock just seems
->>>>>> bogus.
->>>>>
->>>>> Check 03afc0e25f7f ("slab: get_online_mems for
->>>>> kmem_cache_{create,destroy,shrink}"). It actually talk about the races during
->>>>> memory as well cpu hotplug, so it might even that cpu_hotplug_lock removal is
->>>>> problematic?
->>>>>
->>>>
->>>> Which removal are you referring to? get_online_mems() does not mess with
->>>> the cpu hotplug lock (and therefore this patch).
->>>
->>> The one in your patch. I suspect there might be races among the whole NUMA node
->>> hotplug, kmem_cache_create, and show_slab_objects(). See bfc8c90139eb ("mem-
->>> hotplug: implement get/put_online_mems")
->>>
->>> "kmem_cache_{create,destroy,shrink} need to get a stable value of cpu/node
->>> online mask, because they init/destroy/access per-cpu/node kmem_cache parts,
->>> which can be allocated or destroyed on cpu/mem hotplug."
->>
->> I still have to grasp that code but if the slub allocator really needs
->> a stable cpu mask then it should be using the explicit cpu hotplug
->> locking rather than rely on side effect of memory hotplug locking.
->>
->>> Both online_pages() and show_slab_objects() need to get a stable value of
->>> cpu/node online mask.
->>
->> Could tou be more specific why online_pages need a stable cpu online
->> mask? I do not think that show_slab_objects is a real problem because a
->> potential race shouldn't be critical.
-> 
-> build_all_zonelists()
->   __build_all_zonelists()
->     for_each_online_cpu(cpu)
-> 
+On Wed, Sep 25, 2019 at 9:37 PM Oliver Neukum <oneukum@suse.com> wrote:
+>
+> Hi,
+>
+> I am seeing a hard lockup during boot with this patch.
+> I am using only the laptop's internal display.
+> The last message I see is:
 
-Two things:
+Should be fixed with
 
-a) We currently always hold the device hotplug lock when onlining memory
-and when onlining cpus (for CPUs at least via user space - we would have
-to double check other call paths). So theoretically, that should guard
-us from something like that already.
+commit e0f32f78e51b9989ee89f608fd0dd10e9c230652 (tag:
+drm-misc-next-fixes-2019-09-18)
+Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue Sep 17 14:09:35 2019 +0200
 
-b)
+    drm/kms: Duct-tape for mode object lifetime checks
 
-commit 11cd8638c37f6c400cc472cc52b6eccb505aba6e
-Author: Michal Hocko <mhocko@suse.com>
-Date:   Wed Sep 6 16:20:34 2017 -0700
+which undoes any side-effect of the patch you're pointing at. I am
+rather surprised though that this results in a hard-lookup for you,
+did you confirm the bisect by reverting that commit on top of latest
+upstream?
 
-    mm, page_alloc: remove stop_machine from build_all_zonelists
+Cheers, Daniel
 
-Tells me:
+>
+> kvm: disabled by BIOS
+>
+>         Regards
+>                 Oliver
+>
+> devices are:
+>
+> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Host Bridge/DRAM Registers [8086:1910] (rev 07)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0
+>         Capabilities: [e0] Vendor Specific Information: Len=10 <?>
+>         Kernel driver in use: skl_uncore
+>
+> 00:01.0 PCI bridge [0604]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) [8086:1901] (rev 07) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0, IRQ 120
+>         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>         I/O behind bridge: 00003000-00003fff [size=4K]
+>         Memory behind bridge: dc000000-dc0fffff [size=1M]
+>         Prefetchable memory behind bridge: 0000000040000000-000000004fffffff [size=256M]
+>         Capabilities: [88] Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Capabilities: [80] Power Management version 3
+>         Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [a0] Express Root Port (Slot+), MSI 00
+>         Capabilities: [100] Virtual Channel
+>         Capabilities: [140] Root Complex Link
+>         Capabilities: [d94] #19
+>         Kernel driver in use: pcieport
+>
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 530 [8086:191b] (rev 06) (prog-if 00 [VGA controller])
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 130
+>         Memory at db000000 (64-bit, non-prefetchable) [size=16M]
+>         Memory at 50000000 (64-bit, prefetchable) [size=256M]
+>         I/O ports at 6000 [size=64]
+>         [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
+>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [d0] Power Management version 2
+>         Capabilities: [100] Process Address Space ID (PASID)
+>         Capabilities: [200] Address Translation Service (ATS)
+>         Capabilities: [300] Page Request Interface (PRI)
+>         Kernel driver in use: i915
+>         Kernel modules: i915
+>
+> 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-H USB 3.0 xHCI Controller [8086:a12f] (rev 31) (prog-if 30 [XHCI])
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, medium devsel, latency 0, IRQ 125
+>         Memory at dc320000 (64-bit, non-prefetchable) [size=64K]
+>         Capabilities: [70] Power Management version 2
+>         Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+>         Kernel driver in use: xhci_hcd
+>         Kernel modules: xhci_pci
+>
+> 00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-H Thermal subsystem [8086:a131] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: fast devsel, IRQ 18
+>         Memory at dc34a000 (64-bit, non-prefetchable) [size=4K]
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
+>         Kernel driver in use: intel_pch_thermal
+>         Kernel modules: intel_pch_thermal
+>
+> 00:16.0 Communication controller [0780]: Intel Corporation Sunrise Point-H CSME HECI #1 [8086:a13a] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 126
+>         Memory at dc34b000 (64-bit, non-prefetchable) [size=4K]
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [8c] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Kernel driver in use: mei_me
+>         Kernel modules: mei_me
+>
+> 00:17.0 SATA controller [0106]: Intel Corporation Sunrise Point-H SATA controller [AHCI mode] [8086:a102] (rev 31) (prog-if 01 [AHCI 1.0])
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, 66MHz, medium devsel, latency 0, IRQ 124
+>         Memory at dc348000 (32-bit, non-prefetchable) [size=8K]
+>         Memory at dc34e000 (32-bit, non-prefetchable) [size=256]
+>         I/O ports at 6080 [size=8]
+>         I/O ports at 6088 [size=4]
+>         I/O ports at 6040 [size=32]
+>         Memory at dc34c000 (32-bit, non-prefetchable) [size=2K]
+>         Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [70] Power Management version 3
+>         Capabilities: [a8] SATA HBA v1.0
+>         Kernel driver in use: ahci
+>         Kernel modules: ahci
+>
+> 00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-H PCI Express Root Port #1 [8086:a110] (rev f1) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0, IRQ 121
+>         Bus: primary=00, secondary=02, subordinate=02, sec-latency=0
+>         I/O behind bridge: None
+>         Memory behind bridge: dc100000-dc1fffff [size=1M]
+>         Prefetchable memory behind bridge: None
+>         Capabilities: [40] Express Root Port (Slot+), MSI 00
+>         Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [90] Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Capabilities: [a0] Power Management version 3
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Access Control Services
+>         Capabilities: [200] L1 PM Substates
+>         Kernel driver in use: pcieport
+>
+> 00:1c.1 PCI bridge [0604]: Intel Corporation Sunrise Point-H PCI Express Root Port #2 [8086:a111] (rev f1) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0, IRQ 122
+>         Bus: primary=00, secondary=03, subordinate=03, sec-latency=0
+>         I/O behind bridge: 00004000-00005fff [size=8K]
+>         Memory behind bridge: dc200000-dc2fffff [size=1M]
+>         Prefetchable memory behind bridge: 000000003e900000-000000003eafffff [size=2M]
+>         Capabilities: [40] Express Root Port (Slot+), MSI 00
+>         Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [90] Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Capabilities: [a0] Power Management version 3
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Access Control Services
+>         Capabilities: [200] L1 PM Substates
+>         Capabilities: [220] #19
+>         Kernel driver in use: pcieport
+>
+> 00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-H PCI Express Root Port #5 [8086:a114] (rev f1) (prog-if 00 [Normal decode])
+>         Flags: bus master, fast devsel, latency 0, IRQ 123
+>         Bus: primary=00, secondary=04, subordinate=6e, sec-latency=0
+>         I/O behind bridge: 00007000-00007fff [size=4K]
+>         Memory behind bridge: ac000000-da0fffff [size=737M]
+>         Prefetchable memory behind bridge: 0000000060000000-00000000a9ffffff [size=1184M]
+>         Capabilities: [40] Express Root Port (Slot+), MSI 00
+>         Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [90] Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Capabilities: [a0] Power Management version 3
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Access Control Services
+>         Capabilities: [220] #19
+>         Kernel driver in use: pcieport
+>
+> 00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-H LPC Controller [8086:a150] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0
+>
+> 00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-H PMC [8086:a121] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: fast devsel
+>         Memory at dc340000 (32-bit, non-prefetchable) [disabled] [size=16K]
+>
+> 00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-H HD Audio [8086:a170] (rev 31) (prog-if 80)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 64, IRQ 132
+>         Memory at dc344000 (64-bit, non-prefetchable) [size=16K]
+>         Memory at dc330000 (64-bit, non-prefetchable) [size=64K]
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Kernel driver in use: snd_hda_intel
+>         Kernel modules: snd_hda_intel
+>
+> 00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-H SMBus [8086:a123] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: medium devsel, IRQ 16
+>         Memory at dc34d000 (64-bit, non-prefetchable) [size=256]
+>         I/O ports at efa0 [size=32]
+>         Kernel driver in use: i801_smbus
+>         Kernel modules: i2c_i801
+>
+> 00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (2) I219-LM [8086:15b7] (rev 31)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 127
+>         Memory at dc300000 (32-bit, non-prefetchable) [size=128K]
+>         Capabilities: [c8] Power Management version 3
+>         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [e0] PCI Advanced Features
+>         Kernel driver in use: e1000e
+>         Kernel modules: e1000e
+>
+> 01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Venus XTX [Radeon HD 8890M / R9 M275X/M375X] [1002:6820] (rev 83) (prog-if 00 [VGA controller])
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 131
+>         Memory at 40000000 (64-bit, prefetchable) [size=256M]
+>         Memory at dc000000 (64-bit, non-prefetchable) [size=256K]
+>         I/O ports at 3000 [size=256]
+>         Expansion ROM at dc060000 [disabled] [size=128K]
+>         Capabilities: [48] Vendor Specific Information: Len=08 <?>
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [58] Express Legacy Endpoint, MSI 00
+>         Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [100] Vendor Specific Information: ID=0001 Rev=1 Len=010 <?>
+>         Capabilities: [150] Advanced Error Reporting
+>         Capabilities: [270] #19
+>         Kernel driver in use: radeon
+>         Kernel modules: radeon, amdgpu
+>
+> 01:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Cape Verde/Pitcairn HDMI Audio [Radeon HD 7700/7800 Series] [1002:aab0]
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: bus master, fast devsel, latency 0, IRQ 129
+>         Memory at dc040000 (64-bit, non-prefetchable) [size=16K]
+>         Capabilities: [48] Vendor Specific Information: Len=08 <?>
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [58] Express Legacy Endpoint, MSI 00
+>         Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [100] Vendor Specific Information: ID=0001 Rev=1 Len=010 <?>
+>         Capabilities: [150] Advanced Error Reporting
+>         Kernel driver in use: snd_hda_intel
+>         Kernel modules: snd_hda_intel
+>
+> 02:00.0 Network controller [0280]: Intel Corporation Wireless 8260 [8086:24f3] (rev 2a)
+>         Subsystem: Intel Corporation Dual Band Wireless-AC 8260 [8086:0010]
+>         Flags: bus master, fast devsel, latency 0, IRQ 128
+>         Memory at dc100000 (64-bit, non-prefetchable) [size=8K]
+>         Capabilities: [c8] Power Management version 3
+>         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [40] Express Endpoint, MSI 00
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [140] Device Serial Number 34-13-e8-ff-ff-36-80-58
+>         Capabilities: [14c] Latency Tolerance Reporting
+>         Capabilities: [154] L1 PM Substates
+>         Kernel driver in use: iwlwifi
+>         Kernel modules: iwlwifi
+>
+> 03:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader [10ec:525a] (rev 01)
+>         Subsystem: Hewlett-Packard Company Device [103c:80d5]
+>         Flags: fast devsel, IRQ 255
+>         Memory at dc200000 (32-bit, non-prefetchable) [disabled] [size=4K]
+>         Capabilities: [80] Power Management version 3
+>         Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit+
+>         Capabilities: [b0] Express Endpoint, MSI 00
+>         Capabilities: [100] Advanced Error Reporting
+>         Capabilities: [148] Device Serial Number 00-00-00-01-00-4c-e0-00
+>         Capabilities: [158] Latency Tolerance Reporting
+>         Capabilities: [160] L1 PM Substates
 
-"Updates of the zonelists happen very seldom, basically only when a zone
- becomes populated during memory online or when it loses all the memory
- during offline.  A racing iteration over zonelists could either miss a
- zone or try to work on one zone twice.  Both of these are something we
- can live with occasionally because there will always be at least one
- zone visible so we are not likely to fail allocation too easily for
- example."
 
-Sounds like if there would be a race, we could live with it if I am not
-getting that totally wrong.
 
 -- 
-
-Thanks,
-
-David / dhildenb
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
