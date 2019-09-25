@@ -2,280 +2,80 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873D3C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37756C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5376F20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB6E20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PeBt5FAb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tjw9Ktoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442820AbfIYIl6 (ORCPT
+        id S2442830AbfIYImF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:41:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47592 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406947AbfIYIl6 (ORCPT
+        Wed, 25 Sep 2019 04:42:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48196 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406947AbfIYImE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:41:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8P8fqAK025847;
-        Wed, 25 Sep 2019 03:41:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569400912;
-        bh=ZWw3g9tHf8AManzLkmi4eo3nbsy7HyU0BkIAV4xFwwo=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=PeBt5FAb5nL21izBkbeeMVn4VyxJE2eSfDN9IbsLAjNIgOReFozKua0rt5/dIuFCD
-         WZ1OPLaeyN/aGDOaLJF6SgqI6exOkTQOoHwKa/5AZOiTuZjS+BD8jEEns1S8ZovGdN
-         m6gfau3nRaiRUYWwjMrOPr88ZQLH6vya94y8so0k=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8P8fqXf128416;
-        Wed, 25 Sep 2019 03:41:52 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 25
- Sep 2019 03:41:45 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 25 Sep 2019 03:41:45 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8P8foQ6015044;
-        Wed, 25 Sep 2019 03:41:50 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current regulator
- to the LED core
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <daniel.thompson@linaro.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmurphy@ti.com>, <tomi.valkeinen@ti.com>
-References: <20190923102059.17818-1-jjhiblot@ti.com>
- <20190923102059.17818-4-jjhiblot@ti.com>
- <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com>
-Message-ID: <fb10ca8b-08f2-abbd-ecfa-3c7b2f3b9817@ti.com>
-Date:   Wed, 25 Sep 2019 10:41:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 04:42:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=slIVu/DxGMu9zok1ECDFQwAeqP3IJaeIKjOiSYAzAEU=; b=Tjw9KtoiX/nGWJQfPJoOQAOQQ
+        QV2QqtC45CeRbgBOSMP/S3GPI+/bONBvR+xM5bgJ+yhVUmfXjh+bLKSn3BQPRyPQK8/tTOlt5fWug
+        82xmrFdH+2whhoQ7QEawWGSpblwp5BH3A1cQqje2JyYqFp2eFvgb7Nv6L5m+UnnFEy4Zd+AHiQzDq
+        NrRv8h6g1TXB6G6AAfKtznqARZd8zLSvrqfbMu4NGEPF+MLAQa9Lddz9xN1pcEG501Xb5P9hXybLJ
+        eYW1msD6Iimlez5Ob50WEiSRXa/1VYromx7qx4Bh7+9UaLzZODHx18E5UzsDG64DRNpJHG3rclN98
+        RUz/1zVKA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iD2rw-0008RH-GF; Wed, 25 Sep 2019 08:41:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E25A3012CF;
+        Wed, 25 Sep 2019 10:41:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EFE60203C2D9F; Wed, 25 Sep 2019 10:41:49 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 10:41:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <qperret@qperret.net>
+Cc:     Pavan Kondeti <pkondeti@codeaurora.org>, mingo@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        juri.lelli@redhat.com, rjw@rjwysocki.net, morten.rasmussen@arm.com,
+        valentin.schneider@arm.com, qais.yousef@arm.com, tkjos@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
+Message-ID: <20190925084149.GB4553@hirez.programming.kicks-ass.net>
+References: <20190912094404.13802-1-qperret@qperret.net>
+ <20190920030215.GA20250@codeaurora.org>
+ <20190920094115.GA11503@qperret.net>
+ <20190920103338.GB20250@codeaurora.org>
+ <20190920112300.GA13151@qperret.net>
 MIME-Version: 1.0
-In-Reply-To: <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920112300.GA13151@qperret.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 20, 2019 at 01:23:00PM +0200, Quentin Perret wrote:
+> On Friday 20 Sep 2019 at 16:03:38 (+0530), Pavan Kondeti wrote:
+> > +1. Looks good to me.
+> 
+> Cool, thanks.
+> 
+> Peter/Ingo, is there anything else I should do ? Should I resend the
+> patch 'properly' (that is, not inline) ?
 
-On 24/09/2019 20:58, Jacek Anaszewski wrote:
-> Hi Jean,
->
-> Thank you for the patch.
->
-> I must say I'm not a big fan of this change.
-> It adds a bunch of code to the LED core and gives small
-> functionality in a reward.
-
-I disagree. I remember having to tweak DTS in the past to force some 
-regulators outputs, and then they would be always turned on. If all 
-sub-systems were power-supply/regulator-aware, that kind of hack would 
-not be needed.
-
-
->   It may also influence maximum
-> software blinking rate, so I'd rather avoid calling
-> regulator_enable/disable when timer trigger is set.
->
-> It will of course require more code.
-
-True. We might be able to mitigate this by delaying turning off the 
-regulator; Turning it on would be an immediate action, turning it off 
-would be delayed by a configurable amount of ms. That should take care 
-of the max blinking rate and reduce the overhead for a LED that changes 
-states quite often (like a mass storage indicator)
-
-JJ
-
->
-> Since AFAIR Pavel was original proponent of this change then
-> I'd like to see his opinion before we move on to discussing
-> possible improvements to this patch.
->
-> Best regards,
-> Jacek Anaszewski
->
-> On 9/23/19 12:20 PM, Jean-Jacques Hiblot wrote:
->> A LED is usually powered by a voltage/current regulator. Let the LED core
->> know about it. This allows the LED core to turn on or off the power supply
->> as needed.
->>
->> Signed-off-by: Jean-Jacques Hiblot<jjhiblot@ti.com>
->> ---
->>   drivers/leds/led-class.c | 17 +++++++++++
->>   drivers/leds/led-core.c  | 65 ++++++++++++++++++++++++++++++++++++++--
->>   drivers/leds/leds.h      |  3 ++
->>   include/linux/leds.h     |  5 ++++
->>   4 files changed, 88 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index e11177d77b4c..d122b6982efd 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -352,6 +352,7 @@ int led_classdev_register_ext(struct device *parent,
->>   	char final_name[LED_MAX_NAME_SIZE];
->>   	const char *proposed_name = composed_name;
->>   	int ret;
->> +	struct regulator *regulator;
->>   
->>   	if (init_data) {
->>   		if (init_data->devname_mandatory && !init_data->devicename) {
->> @@ -387,6 +388,22 @@ int led_classdev_register_ext(struct device *parent,
->>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
->>   				led_cdev->name, dev_name(led_cdev->dev));
->>   
->> +	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
->> +	if (IS_ERR(regulator)) {
->> +		if (regulator != ERR_PTR(-ENODEV)) {
->> +			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
->> +				led_cdev->name);
->> +			device_unregister(led_cdev->dev);
->> +			mutex_unlock(&led_cdev->led_access);
->> +			return PTR_ERR(regulator);
->> +		}
->> +		led_cdev->regulator = NULL;
->> +	} else {
->> +		led_cdev->regulator = regulator;
->> +		led_cdev->regulator_state = REG_OFF;
->> +		atomic_set(&led_cdev->target_regulator_state, REG_UNKNOWN);
->> +	}
->> +
->>   	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->>   		ret = led_add_brightness_hw_changed(led_cdev);
->>   		if (ret) {
->> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->> index d318f9b0382d..155a158c7b8d 100644
->> --- a/drivers/leds/led-core.c
->> +++ b/drivers/leds/led-core.c
->> @@ -37,6 +37,43 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
->>   };
->>   EXPORT_SYMBOL_GPL(led_colors);
->>   
->> +static int __led_handle_regulator(struct led_classdev *led_cdev)
->> +{
->> +	int rc;
->> +	int target_state = led_cdev->delayed_set_value ?  REG_ON : REG_OFF;
->> +
->> +	if (!led_cdev->regulator)
->> +		return 0;
->> +
->> +	/*
->> +	 * if the current regulator state is not the target state, we
->> +	 * need to update it.
->> +	 * note: No need for spinlock or atomic here because
->> +	 * led_cdev->regulator_state is modified only in the context of
->> +	 * the worqueue
->> +	 */
->> +	if (led_cdev->regulator_state != target_state) {
->> +
->> +		if (target_state == REG_ON)
->> +			rc = regulator_enable(led_cdev->regulator);
->> +		else
->> +			rc = regulator_disable(led_cdev->regulator);
->> +		if (rc) {
->> +			/*
->> +			 * If something went wrong with the regulator update,
->> +			 * Make sure that led_set_brightness_nosleep() assume
->> +			 * that the regultor is in the right state.
->> +			 */
->> +			atomic_set(&led_cdev->target_regulator_state,
->> +				   REG_UNKNOWN);
->> +			return rc;
->> +		}
->> +
->> +		led_cdev->regulator_state = target_state;
->> +	}
->> +	return 0;
->> +}
->> +
->>   static int __led_set_brightness(struct led_classdev *led_cdev,
->>   				enum led_brightness value)
->>   {
->> @@ -135,6 +172,11 @@ static void set_brightness_delayed(struct work_struct *ws)
->>   	    (led_cdev->flags & LED_HW_PLUGGABLE)))
->>   		dev_err(led_cdev->dev,
->>   			"Setting an LED's brightness failed (%d)\n", ret);
->> +
->> +	ret = __led_handle_regulator(led_cdev);
->> +	if (ret)
->> +		dev_err(led_cdev->dev,
->> +			"Updating regulator state failed (%d)\n", ret);
->>   }
->>   
->>   static void led_set_software_blink(struct led_classdev *led_cdev,
->> @@ -269,8 +311,27 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
->>   void led_set_brightness_nopm(struct led_classdev *led_cdev,
->>   			      enum led_brightness value)
->>   {
->> -	/* Use brightness_set op if available, it is guaranteed not to sleep */
->> -	if (!__led_set_brightness(led_cdev, value))
->> +	bool update_regulator = false;
->> +	int old, new;
->> +
->> +	if (led_cdev->regulator) {
->> +		/*
->> +		 * Check if the regulator need to be updated.
->> +		 * We use an atomic here because multiple threads could
->> +		 * be calling this function at the same time. Using
->> +		 * atomic_xchg() ensures the consistency between
->> +		 * target_regulator_state, value and update_regulator
->> +		 */
->> +		new = !!value;
->> +		old = atomic_xchg(&led_cdev->target_regulator_state, new);
->> +		update_regulator = (old != new);
->> +	}
->> +
->> +	/*
->> +	 * If regulator state doesn't need to be changed, use brightness_set
->> +	 * op if available, it is guaranteed not to sleep
->> +	 */
->> +	if (!update_regulator && !__led_set_brightness(led_cdev, value))
->>   		return;
->>   
->>   	/* If brightness setting can sleep, delegate it to a work queue task */
->> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
->> index 0b577cece8f7..02f261ce77f2 100644
->> --- a/drivers/leds/leds.h
->> +++ b/drivers/leds/leds.h
->> @@ -11,6 +11,9 @@
->>   
->>   #include <linux/rwsem.h>
->>   #include <linux/leds.h>
->> +#include <linux/regulator/consumer.h>
->> +
->> +enum { REG_OFF = 0, REG_ON, REG_UNKNOWN };
->>   
->>   static inline int led_get_brightness(struct led_classdev *led_cdev)
->>   {
->> diff --git a/include/linux/leds.h b/include/linux/leds.h
->> index 88bf2ceaabe6..8ce7cf937192 100644
->> --- a/include/linux/leds.h
->> +++ b/include/linux/leds.h
->> @@ -149,6 +149,11 @@ struct led_classdev {
->>   
->>   	/* Ensures consistent access to the LED Flash Class device */
->>   	struct mutex		led_access;
->> +
->> +	/* regulator */
->> +	struct regulator	*regulator;
->> +	int			regulator_state;
->> +	atomic_t		target_regulator_state;
->>   };
->>   
->>   /**
->>
+Got it, thanks!
