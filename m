@@ -2,107 +2,157 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A72C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A62C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A28217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2C32054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437093AbfIYHf1 (ORCPT
+        id S2437305AbfIYHhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:35:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53122 "EHLO mga17.intel.com"
+        Wed, 25 Sep 2019 03:37:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59836 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390567AbfIYHf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:35:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 00:35:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="188706169"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Sep 2019 00:35:26 -0700
-Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 00:35:25 -0700
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- FMSMSX125.amr.corp.intel.com (10.18.125.40) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 00:35:25 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.132]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 15:35:23 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Peter Xu <peterx@redhat.com>, Lu Baolu <baolu.lu@linux.intel.com>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>
-Subject: RE: [RFC PATCH 4/4] iommu/vt-d: Identify domains using first level
- page table
-Thread-Topic: [RFC PATCH 4/4] iommu/vt-d: Identify domains using first level
- page table
-Thread-Index: AQHVcgpG/pXRrE8O1EK3Luw5SA+K6qc7cLwAgACSPnA=
-Date:   Wed, 25 Sep 2019 07:35:23 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F50F@SHSMSX104.ccr.corp.intel.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-5-baolu.lu@linux.intel.com>
- <20190925065006.GN28074@xz-x1>
-In-Reply-To: <20190925065006.GN28074@xz-x1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWNjOWZjYmUtYzc2MS00MjE2LWJkYmYtYzU2YTdhNGI0OWMyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSnozQ1pmXC9STHptMktYYkRDZzRUWjJ6MUk0bzJ2NWgzcXIxXC9pK05WeW1VRkg5K2FVUWJyVG9jcUQyenU4cmdWIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S2391671AbfIYHhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:37:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B088307D96F;
+        Wed, 25 Sep 2019 07:37:08 +0000 (UTC)
+Received: from [10.36.117.14] (ovpn-117-14.ams2.redhat.com [10.36.117.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFA3C5F9D2;
+        Wed, 25 Sep 2019 07:37:04 +0000 (UTC)
+Subject: Re: [PATCH v1] powerpc/pseries: CMM: Drop page array
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arun KS <arunks@codeaurora.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+References: <20190910163932.13160-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <a2c2f516-c37c-71f5-8f35-c357e8754b17@redhat.com>
+Date:   Wed, 25 Sep 2019 09:37:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190910163932.13160-1-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 25 Sep 2019 07:37:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBQZXRlciBYdSBbbWFpbHRvOnBldGVyeEByZWRoYXQuY29tXQ0KPiBTZW50OiBXZWRu
-ZXNkYXksIFNlcHRlbWJlciAyNSwgMjAxOSAyOjUwIFBNDQo+IA0KPiBPbiBNb24sIFNlcCAyMywg
-MjAxOSBhdCAwODoyNDo1NFBNICswODAwLCBMdSBCYW9sdSB3cm90ZToNCj4gPiArLyoNCj4gPiAr
-ICogQ2hlY2sgYW5kIHJldHVybiB3aGV0aGVyIGZpcnN0IGxldmVsIGlzIHVzZWQgYnkgZGVmYXVs
-dCBmb3INCj4gPiArICogRE1BIHRyYW5zbGF0aW9uLg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGJv
-b2wgZmlyc3RfbGV2ZWxfYnlfZGVmYXVsdCh2b2lkKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZG1h
-cl9kcmhkX3VuaXQgKmRyaGQ7DQo+ID4gKwlzdHJ1Y3QgaW50ZWxfaW9tbXUgKmlvbW11Ow0KPiA+
-ICsNCj4gPiArCXJjdV9yZWFkX2xvY2soKTsNCj4gPiArCWZvcl9lYWNoX2FjdGl2ZV9pb21tdShp
-b21tdSwgZHJoZCkNCj4gPiArCQlpZiAoIXNtX3N1cHBvcnRlZChpb21tdSkgfHwNCj4gPiArCQkg
-ICAgIWVjYXBfZmx0cyhpb21tdS0+ZWNhcCkgfHwNCj4gPiArCQkgICAgIWNhcF9jYWNoaW5nX21v
-ZGUoaW9tbXUtPmNhcCkpDQo+ID4gKwkJCXJldHVybiBmYWxzZTsNCj4gPiArCXJjdV9yZWFkX3Vu
-bG9jaygpOw0KPiA+ICsNCj4gPiArCXJldHVybiB0cnVlOw0KPiA+ICt9DQo+IA0KPiAiSWYgbm8g
-Y2FjaGluZyBtb2RlLCB0aGVuIHdlIHdpbGwgbm90IHVzZSAxc3QgbGV2ZWwuIg0KPiANCj4gSG1t
-LCBkb2VzIHRoZSB2SU9NTVUgbmVlZHMgdG8gc3VwcG9ydCBjYWNoaW5nLW1vZGUgaWYgd2l0aCB0
-aGUNCj4gc29sdXRpb24geW91IHByb3Bvc2VkIGhlcmU/ICBDYWNoaW5nIG1vZGUgaXMgb25seSBu
-ZWNlc3NhcnkgZm9yDQo+IHNoYWRvd2luZyBBRkFJQ1QsIGFuZCBhZnRlciBhbGwgeW91J3JlIGdv
-aW5nIHRvIHVzZSBmdWxsLW5lc3RlZCwNCj4gdGhlbi4uLiB0aGVuIEkgd291bGQgdGhpbmsgaXQn
-cyBub3QgbmVlZGVkLiAgQW5kIGlmIHNvLCB3aXRoIHRoaXMNCj4gcGF0Y2ggMXN0IGxldmVsIHdp
-bGwgYmUgZGlzYWJsZWQuIFNvdW5kcyBsaWtlIGEgcGFyYWRveC4uLg0KPiANCj4gSSdtIHRoaW5r
-aW5nIHdoYXQgd291bGQgYmUgdGhlIGJpZyBwaWN0dXJlIGZvciB0aGlzIHRvIHdvcmsgbm93OiBG
-b3INCj4gdGhlIHZJT01NVSwgaW5zdGVhZCBvZiBleHBvc2luZyB0aGUgY2FjaGluZy1tb2RlLCBJ
-J20gdGhpbmtpbmcgbWF5YmUNCj4gd2Ugc2hvdWxkIGV4cG9zZSBpdCB3aXRoIGVjYXAuRkxUUz0x
-IHdoaWxlIHdlIGNhbiBrZWVwIGVjYXAuU0xUUz0wDQo+IHRoZW4gaXQncyBuYXR1cmFsIHRoYXQg
-d2UgY2FuIG9ubHkgdXNlIDFzdCBsZXZlbCB0cmFuc2xhdGlvbiBpbiB0aGUNCj4gZ3Vlc3QgZm9y
-IGFsbCB0aGUgZG9tYWlucyAoYW5kIEkgYXNzdW1lIHN1Y2ggYW4gZWNhcCB2YWx1ZSBzaG91bGQN
-Cj4gbmV2ZXIgaGFwcGVuIG9uIHJlYWwgaGFyZHdhcmUsIGFtIEkgcmlnaHQ/KS4NCj4gDQoNCnll
-cywgdGhhdCdzIGFsc28gdGhlIHBpY3R1cmUgaW4gbXkgbWluZC4gOi0pDQoNClRoYW5rcw0KS2V2
-aW4NCg==
+On 10.09.19 18:39, David Hildenbrand wrote:
+> We can simply store the pages in a list (page->lru), no need for a
+> separate data structure (+ complicated handling). This is how most
+> other balloon drivers store allocated pages without additional tracking
+> data.
+> 
+> For the notifiers, use page_to_pfn() to check if a page is in the
+> applicable range. plpar_page_set_loaned()/plpar_page_set_active() were
+> called with __pa(page_address()) for now, I assume we can simply switch
+> to page_to_phys() here. The pfn_to_kaddr() handling is now mostly gone.
+> 
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> Only compile-tested. I hope the page_to_phys() thingy is correct and I
+> didn't mess up something else / ignoring something important why the array
+> is needed.
+> 
+> I stumbled over this while looking at how the memory isolation notifier is
+> used - and wondered why the additional array is necessary. Also, I think
+> by switching to the generic balloon compaction mechanism, we could get
+> rid of the memory hotplug notifier and the memory isolation notifier in
+> this code, as the migration capability of the inflated pages is the real
+> requirement:
+> 	commit 14b8a76b9d53346f2871bf419da2aaf219940c50
+> 	Author: Robert Jennings <rcj@linux.vnet.ibm.com>
+> 	Date:   Thu Dec 17 14:44:52 2009 +0000
+> 	
+> 	    powerpc: Make the CMM memory hotplug aware
+> 	
+> 	    The Collaborative Memory Manager (CMM) module allocates individual pages
+> 	    over time that are not migratable.  On a long running system this can
+> 	    severely impact the ability to find enough pages to support a hotplug
+> 	    memory remove operation.
+> 	[...]
+> 
+> Thoughts?
+
+Ping, is still feature still used at all?
+
+If nobody can test, any advise on which HW I need and how to trigger it?
+
+-- 
+
+Thanks,
+
+David / dhildenb
