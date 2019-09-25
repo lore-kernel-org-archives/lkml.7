@@ -2,128 +2,162 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40448C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBD7C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1656320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DB420872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569433695;
-	bh=TfJiMeZnm2Xg2nnR/VhITe/Q76IaD1eV1iwo4q20Ceo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EbGtwwUrNmR+ekfnJ5joz4SrGYPDB+zGRqK8qu12FYAifr1LJHqpFw9IBrMpJCkg8
-	 xW0UfQ1TZrGtnnuypeLl9iu+oESk7O1YROw26h8WXxKfJQPkQVIcCOg12rKMH3dVNm
-	 zH5YZ7d3dGZL5PjZK5MM56BxhL457U6Efs4QA1ho=
+	s=default; t=1569433732;
+	bh=oWlU7mS7LEQJMzlcLP351aYBDUK1RSNZf1OiMFvL+no=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=on6EG2HLG88/j3WmM0aRBcSQTEf2AyeZotwTlA9bRcmibZXPxjmnFD/ycRRr7Kqyz
+	 8x9opVKy4AV5ya8/A8cUF8NLnCUvMV4nxNSHOcuuXE3/dgfzGN2/J+WnEQOwIkyyN1
+	 UGYGW1TFaNGAfEf8oXZ7hfFNGuCe8ZBtwDubkB1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfIYRsO (ORCPT
+        id S1728983AbfIYRsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:48:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727028AbfIYRsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:48:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7002FAB89;
-        Wed, 25 Sep 2019 17:48:11 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 19:48:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Message-ID: <20190925174809.GM23050@dhcp22.suse.cz>
-References: <20190924143615.19628-1-david@redhat.com>
- <1569337401.5576.217.camel@lca.pw>
- <20190924151147.GB23050@dhcp22.suse.cz>
- <1569351244.5576.219.camel@lca.pw>
- <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
- <1569427262.5576.225.camel@lca.pw>
+        Wed, 25 Sep 2019 13:48:52 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38368 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfIYRsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 13:48:51 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u28so4875060lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ubp3hpdHZYFHNsbBzmSC09eT5vsyQ7Zrdz0nsHZMrVo=;
+        b=gGKQ4rsBGdlqZUFMO6XNkNge3CFyTMn8oZRzwJk/rovTd8qu09JoOmMh4pWLsauLni
+         Au3XxhldtMZLJwfaqs4pnNxXd0RGKaYu+YhlrWEfuThVz+0g8mr0CzD/B99CmJ3YtiNy
+         rZkgmAhinraPdfB5emwIyaHr2/x37VdH3uCq4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ubp3hpdHZYFHNsbBzmSC09eT5vsyQ7Zrdz0nsHZMrVo=;
+        b=QA/M+R9Rvno8Z9BAC5yYltDZrIkMEy0hUPIVIdURK3B+9OZRwQHm14npdp7wCvpA6e
+         szUSSMvuUvMK+e6Qc0weiQUzIhGycJjJbzN1cvy/6sD9lK+VJN1Wzn4SLT4KYoU2lO49
+         xJ6YKVNjcGvJ84WBDssMRLSdfisAB4ldUQRnwiLj+Y5VgYHBj9CuHbY6tyslCmCmZYhc
+         U7YDxnh5wWuyjEKs5Y1RsoGhz+k0FiHt4n278BJnu//33lv2dJaK8zjga/D7cInf4MQV
+         Tx3/PyM+z4yL5eVGnNsfAQyx2454pLFrya+udkM+tPdvt/+IZaWi7n0x+dz/8uR817E8
+         TdFw==
+X-Gm-Message-State: APjAAAUo/tEdmYJKUA3vH1EKhFBMrUV3rrPBvs45f/oCTdKcQHYWWFpW
+        0yhieSVBvegC8RqGNRfEa7AHwlfOe94=
+X-Google-Smtp-Source: APXvYqwBjoxxtjSW0deZjPPOR+EAnzh786a3ei7qVVq1uxsWbgvFr/BGyxJf3baSZz0HwZmTojhm1g==
+X-Received: by 2002:a19:c3d3:: with SMTP id t202mr7116590lff.48.1569433729076;
+        Wed, 25 Sep 2019 10:48:49 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id w16sm1361515lji.42.2019.09.25.10.48.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 10:48:48 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id u28so4875003lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 10:48:48 -0700 (PDT)
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr7038976lfp.61.1569433727828;
+ Wed, 25 Sep 2019 10:48:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569427262.5576.225.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190925165915.8135-1-cyphar@cyphar.com> <20190925165915.8135-2-cyphar@cyphar.com>
+ <CAHk-=wjFeNjhtUxQ8npmXORz5RLQU7B_3wD=45eug1+MXnuYvA@mail.gmail.com> <20190925172049.skm6ohnnxpofdkzv@yavin>
+In-Reply-To: <20190925172049.skm6ohnnxpofdkzv@yavin>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 25 Sep 2019 10:48:31 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjagt257WHiOr2v1Bx_3q7tuzogabw_1EnodKm0vt+-WQ@mail.gmail.com>
+Message-ID: <CAHk-=wjagt257WHiOr2v1Bx_3q7tuzogabw_1EnodKm0vt+-WQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] lib: introduce copy_struct_from_user() helper
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-09-19 12:01:02, Qian Cai wrote:
-> On Wed, 2019-09-25 at 09:02 +0200, David Hildenbrand wrote:
-> > On 24.09.19 20:54, Qian Cai wrote:
-> > > On Tue, 2019-09-24 at 17:11 +0200, Michal Hocko wrote:
-> > > > On Tue 24-09-19 11:03:21, Qian Cai wrote:
-> > > > [...]
-> > > > > While at it, it might be a good time to rethink the whole locking over there, as
-> > > > > it right now read files under /sys/kernel/slab/ could trigger a possible
-> > > > > deadlock anyway.
-> > > > > 
-> > > > 
-> > > > [...]
-> > > > > [  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
-> > > > > [  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
-> > > > > [  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
-> > > > > [  442.469930][ T5224]        lock_acquire+0x31c/0x360
-> > > > > [  442.474803][ T5224]        get_online_mems+0x54/0x150
-> > > > > [  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
-> > > > > [  442.485072][ T5224]        total_objects_show+0x28/0x34
-> > > > > [  442.490292][ T5224]        slab_attr_show+0x38/0x54
-> > > > > [  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
-> > > > > [  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
-> > > > > [  442.505433][ T5224]        seq_read+0x30c/0x8a8
-> > > > > [  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
-> > > > > [  442.515007][ T5224]        __vfs_read+0x88/0x20c
-> > > > > [  442.519620][ T5224]        vfs_read+0xd8/0x10c
-> > > > > [  442.524060][ T5224]        ksys_read+0xb0/0x120
-> > > > > [  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
-> > > > > [  442.533634][ T5224]        el0_svc_handler+0x170/0x240
-> > > > > [  442.538768][ T5224]        el0_svc+0x8/0xc
-> > > > 
-> > > > I believe the lock is not really needed here. We do not deallocated
-> > > > pgdat of a hotremoved node nor destroy the slab state because an
-> > > > existing slabs would prevent hotremove to continue in the first place.
-> > > > 
-> > > > There are likely details to be checked of course but the lock just seems
-> > > > bogus.
-> > > 
-> > > Check 03afc0e25f7f ("slab: get_online_mems for
-> > > kmem_cache_{create,destroy,shrink}"). It actually talk about the races during
-> > > memory as well cpu hotplug, so it might even that cpu_hotplug_lock removal is
-> > > problematic?
-> > > 
-> > 
-> > Which removal are you referring to? get_online_mems() does not mess with
-> > the cpu hotplug lock (and therefore this patch).
-> 
-> The one in your patch. I suspect there might be races among the whole NUMA node
-> hotplug, kmem_cache_create, and show_slab_objects(). See bfc8c90139eb ("mem-
-> hotplug: implement get/put_online_mems")
-> 
-> "kmem_cache_{create,destroy,shrink} need to get a stable value of cpu/node
-> online mask, because they init/destroy/access per-cpu/node kmem_cache parts,
-> which can be allocated or destroyed on cpu/mem hotplug."
+On Wed, Sep 25, 2019 at 10:21 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> Just to make sure I understand, the following diff would this solve the
+> problem? If so, I'll apply it, and re-send in a few hours.
 
-I still have to grasp that code but if the slub allocator really needs
-a stable cpu mask then it should be using the explicit cpu hotplug
-locking rather than rely on side effect of memory hotplug locking.
+Actually, looking at it more, it's still buggy.
 
-> Both online_pages() and show_slab_objects() need to get a stable value of
-> cpu/node online mask.
+That final "size smaller than unsigned long" doesn't correctly handle
+the case of (say) a single byte in the middle of a 8-byte word.
 
-Could tou be more specific why online_pages need a stable cpu online
-mask? I do not think that show_slab_objects is a real problem because a
-potential race shouldn't be critical.
+So you need to do something like this:
 
--- 
-Michal Hocko
-SUSE Labs
+    int is_zeroed_user(const void __user *from, size_t size)
+  {
+        unsigned long val, mask, align;
+
+        if (unlikely(!size))
+                return true;
+
+        if (!user_access_begin(from, size))
+                return -EFAULT;
+
+        align = (uintptr_t) from % sizeof(unsigned long);
+        from -= align;
+        size += align;
+
+        mask = ~aligned_byte_mask(align);
+
+        while (size >= sizeof(unsigned long)) {
+                unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+                val &= mask;
+                if (unlikely(val))
+                        goto done;
+                mask = ~0ul;
+                from += sizeof(unsigned long);
+                size -= sizeof(unsigned long);
+        }
+
+        if (size) {
+                /* (@from + @size) is unaligned. */
+                unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+                mask &= aligned_byte_mask(size);
+                val &= mask;
+        }
+
+  done:
+        user_access_end();
+        return (val == 0);
+  err_fault:
+        user_access_end();
+        return -EFAULT;
+  }
+
+note how "mask" carries around from the very beginning all the way to
+the end, and "align" itself is no longer used after mask has been
+calculated.
+
+That's required because of say a 2-byte read at offset 5. You end up
+with "align=5, size=7" at the beginning, and mask needs to be
+0x00ffff0000000000 (on little-endian) for that final access.
+
+Anyway, I checked, and the above seems to generate ok code quality
+too. Sadly "unsafe_get_user()" cannot use "asm goto" because of a gcc
+limitation (no asm goto with outputs), so it's not _perfect_, but
+that's literally a compiler limitation.
+
+But I didn't actually _test_ the end result. You should probably
+verify that it gets the right behavior exactly for those interesting
+cases where we mask both the beginning and the end.
+
+            Linus
