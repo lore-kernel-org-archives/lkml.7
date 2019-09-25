@@ -2,193 +2,162 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCF1C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFB3C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5380321D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="svK5i2xd"
+	by mail.kernel.org (Postfix) with ESMTP id 2D40021D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569428221;
+	bh=kWvQDMnhvqyvgI/cRcXoMhpMrwTzw21yx7s7QxCURME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sL28aypV+qnb+rUQB3kpYzADqMne9xPGrxd24zD9xEmeY+/43GxkgGaIUussRnTNZ
+	 yHoUXaPd2ytZSjiQONwbP9GO+Do8oYYA1NELP3F5J7MeAph15aAuv/72rQboeTK5UW
+	 jaCwyKasPWrm94L3wbI0xdpJNprdXcDiOmvHxUic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732745AbfIYQJR (ORCPT
+        id S2502036AbfIYQRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:09:17 -0400
-Received: from mail-eopbgr800073.outbound.protection.outlook.com ([40.107.80.73]:40992
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfIYQJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:09:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BPvBv9rf0Nj0+z3ddcb8yDxVXSjKCffxJLspetCCogSxaqzqtiko/LxS05F/RJZalgTc2NYqH+m5+8h51oGyB7KixUadPnxSORTvgAT+tbUxUwyaZju13szoIFFLG4ye+MxkTvbtDUCARhSzQCzuUcVJQJHMuNP4fCCPC1flI30IltKNrkrnszu4FIasL+V8dLJI23Mi17jIsST8HH5XiYzOHtSln3elDM2alonTlVdZ7zgoyOmF83N3So5WYg/LbOcBk3KYpkyZ+uxl6pHsL0lQtX/CyxWJhKgH68oABORyUmtQeWXq1OuclF7vrgKyjXyvMl/YywnwoqKV8PgqEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rPxjhI1kVYeLpNu1JJe2C4Sg7in9QUo856n9WE0uyVI=;
- b=aJdJEBVJNJGZo+ZsRNwSIp3Xzb4vkMeQA6NtUW825w+cZpmnfG1x9nxFFS9vE+cnyymmrCTDDX6z/9MaHo5YCVcecbpUDzWpkl2ZicRALrefA53W1dxIPHvT0dSWiBs4c+wUIMhZg79sAMGf0hX/vIUa1bh+69oz+ZWulG5g0bh6Rra5WMDh78e3saD+ngXApc2fizsSNURopjsDlqD+NpUCxPBQt58D+U4j647YT3Kk1e3ZKRTa/mtU0B4lJ739GHAdhCDExhd2UVn8nKUO+svlkYDPj28rZif4jNihypOwfvJIy00U3mj5KV0F+MPumkISBvqiduZoH9UoRdo8yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rPxjhI1kVYeLpNu1JJe2C4Sg7in9QUo856n9WE0uyVI=;
- b=svK5i2xdyytX6RmBUOMjgquObVXmRFSZdqunP0vZSUKnzIgZTkbYqm+JB5tOhE1111o9GJZv+9m/tCRfExYMFfObxP3uIEE6F9T/cCYZrEA7YPtNyBUrM5tbvvTXoTvN9p1GuYkyMbE8p3G4dsmNRre+jGbqsfVS6hMtWPYGnXc=
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
- MWHPR12MB1694.namprd12.prod.outlook.com (10.172.56.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Wed, 25 Sep 2019 16:07:34 +0000
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::31f2:3115:6265:33a0]) by MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::31f2:3115:6265:33a0%11]) with mapi id 15.20.2284.023; Wed, 25 Sep
- 2019 16:07:34 +0000
-From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-To:     Steven Price <steven.price@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
-Thread-Topic: [PATCH] drm: Don't free jobs in wait_event_interruptible()
-Thread-Index: AQHVc7PzYTddskm3okCDHaLelWCdUqc8STCAgABEL4CAAAHkgA==
-Date:   Wed, 25 Sep 2019 16:07:34 +0000
-Message-ID: <da04cf92-f4c7-e896-5070-4d2a9be273aa@amd.com>
-References: <20190925151404.23222-1-steven.price@arm.com>
- <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
- <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
-In-Reply-To: <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0036.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00::49) To MWHPR12MB1453.namprd12.prod.outlook.com
- (2603:10b6:301:e::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05bf44a0-dff0-4a6b-339a-08d741d279f2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR12MB1694;
-x-ms-traffictypediagnostic: MWHPR12MB1694:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR12MB1694E5F47758AF2255910D51EA870@MWHPR12MB1694.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(396003)(376002)(39860400002)(189003)(199004)(6116002)(256004)(66556008)(2906002)(6636002)(11346002)(6512007)(316002)(66946007)(86362001)(110136005)(36756003)(8936002)(476003)(54906003)(52116002)(66446008)(305945005)(76176011)(31696002)(8676002)(7736002)(478600001)(102836004)(5660300002)(386003)(446003)(99286004)(66476007)(64756008)(229853002)(6436002)(31686004)(4326008)(25786009)(71190400001)(53546011)(71200400001)(3846002)(66066001)(6506007)(186003)(486006)(81156014)(14454004)(26005)(2616005)(81166006)(6246003)(6486002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1694;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dnOQ8Q0B012OF8LQ2o/wWY1w/NAsWrSKexE+eyI1O/NeOqNZE+v/xLQcH3wG/nmQZloQTAmO5GmrlB+71hvhOcre2qAveEw8bx+/QH/1DeC/h7RjGD5F60EALeY3sCoXqnWrq4kr8Dh33gw7Q1jY7p57vNKbgNKkMgUKDPcCStPOoCjLPw1Im1NBLenWGZQ53kqmclG2+GcyRGU4WqJdtCkPTcSJYpp7tRNtvyZH8kGnerZHVebSMW2F4TrBv4OEFUTyggURj91g83Y+4IrAqA1QRq1L0Uph+HHpV01qx5goTwQg3P1f9v9/exwLgEPBONkqYBTX1pXmm12mhRI77OkaqZhZW94DBBesqLui+0UdaNrfC8tzWwNUS198mDtH6bylO/XI1Fv+Am2AkUq0PAXvTlnxctiuN6MjqcyNH1E=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5364DB814D1F124599350D29E816FC22@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 25 Sep 2019 12:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2501933AbfIYQQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:16:59 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA50A222BF;
+        Wed, 25 Sep 2019 16:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569428218;
+        bh=kWvQDMnhvqyvgI/cRcXoMhpMrwTzw21yx7s7QxCURME=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0yN231Pbtuv+A35lsN4TVWWkAO/Ao1z+ejWEW70agRAiztlbt/DXeoxut4H8u0lni
+         g2Sc0yzW9dahjD5GhfnpP7r4r+vF2NS+Ad9wA3nPzCfNIZpt3Zn8SW5rmnhGN60Wta
+         Vjtu3J1zixjw+Pddib6E0BK6QMuLIg46YmwdgczY=
+Received: by mail-qk1-f181.google.com with SMTP id y144so5748849qkb.7;
+        Wed, 25 Sep 2019 09:16:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAVoBWZ/+FrIqF+S5vnX1RPonBpCj+G1lFaarvhio6lj+loH1zkH
+        xExU6ZHAmERboX1YwypC4/JZA3UXrLyTXaT6Kw==
+X-Google-Smtp-Source: APXvYqyTl1XVuWTp/35jWle4Kbs2xpDG3Z/T5fV7UMzbxRk+doCiTCUGQILqDsprUV9H9iwgwr82s3aYudHesNV1NR4=
+X-Received: by 2002:a37:be87:: with SMTP id o129mr4499696qkf.254.1569428216961;
+ Wed, 25 Sep 2019 09:16:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05bf44a0-dff0-4a6b-339a-08d741d279f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 16:07:34.2697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UVgFWa9iQ0PTdA7YYkLuWQgAdlbXRT0HzuQ+Yd7TeWslbM+A7TcyzM8+BI8yapiUjNn732HPQ4xTE62eW/TWJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1694
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de> <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+In-Reply-To: <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Sep 2019 11:16:45 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+Message-ID: <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8yNS8xOSAxMjowMCBQTSwgU3RldmVuIFByaWNlIHdyb3RlOg0KDQo+IE9uIDI1LzA5LzIw
-MTkgMTY6NTYsIEdyb2R6b3Zza3ksIEFuZHJleSB3cm90ZToNCj4+IE9uIDkvMjUvMTkgMTE6MTQg
-QU0sIFN0ZXZlbiBQcmljZSB3cm90ZToNCj4+DQo+Pj4gZHJtX3NjaGVkX2NsZWFudXBfam9icygp
-IGF0dGVtcHRzIHRvIGZyZWUgZmluaXNoZWQgam9icywgaG93ZXZlciBiZWNhdXNlDQo+Pj4gaXQg
-aXMgY2FsbGVkIGFzIHRoZSBjb25kaXRpb24gb2Ygd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkg
-aXQgbXVzdCBub3QNCj4+PiBzbGVlcC4gVW5mb3J0dW5hdGVseSBzb21lIGZyZWUgY2FsbGJhY2tz
-IChub3RhYmx5IGZvciBQYW5mcm9zdCkgZG8gc2xlZXAuDQo+Pj4NCj4+PiBJbnN0ZWFkIGxldCdz
-IHJlbmFtZSBkcm1fc2NoZWRfY2xlYW51cF9qb2JzKCkgdG8NCj4+PiBkcm1fc2NoZWRfZ2V0X2Ns
-ZWFudXBfam9iKCkgYW5kIHNpbXBseSByZXR1cm4gYSBqb2IgZm9yIHByb2Nlc3NpbmcgaWYNCj4+
-PiB0aGVyZSBpcyBvbmUuIFRoZSBjYWxsZXIgY2FuIHRoZW4gY2FsbCB0aGUgZnJlZV9qb2IoKSBj
-YWxsYmFjayBvdXRzaWRlDQo+Pj4gdGhlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZSgpIHdoZXJl
-IHNsZWVwaW5nIGlzIHBvc3NpYmxlIGJlZm9yZQ0KPj4+IHJlLWNoZWNraW5nIGFuZCByZXR1cm5p
-bmcgdG8gc2xlZXAgaWYgbmVjZXNzYXJ5Lg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogU3RldmVu
-IFByaWNlIDxzdGV2ZW4ucHJpY2VAYXJtLmNvbT4NCj4+PiAtLS0NCj4+PiAgICBkcml2ZXJzL2dw
-dS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYyB8IDQ0ICsrKysrKysrKysrKysrLS0tLS0tLS0t
-LS0tDQo+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9u
-cygtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2No
-ZWRfbWFpbi5jIGIvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMNCj4+PiBp
-bmRleCA5YTBlZTc0ZDgyZGMuLjBlZDRhYWE0ZTZkMSAxMDA2NDQNCj4+PiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5jDQo+Pj4gQEAgLTYyMiw0MyArNjIyLDQxIEBAIHN0YXRp
-YyB2b2lkIGRybV9zY2hlZF9wcm9jZXNzX2pvYihzdHJ1Y3QgZG1hX2ZlbmNlICpmLCBzdHJ1Y3Qg
-ZG1hX2ZlbmNlX2NiICpjYikNCj4+PiAgICB9DQo+Pj4gICAgDQo+Pj4gICAgLyoqDQo+Pj4gLSAq
-IGRybV9zY2hlZF9jbGVhbnVwX2pvYnMgLSBkZXN0cm95IGZpbmlzaGVkIGpvYnMNCj4+PiArICog
-ZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYiAtIGZldGNoIHRoZSBuZXh0IGZpbmlzaGVkIGpvYiB0
-byBiZSBkZXN0cm95ZWQNCj4+PiAgICAgKg0KPj4+ICAgICAqIEBzY2hlZDogc2NoZWR1bGVyIGlu
-c3RhbmNlDQo+Pj4gICAgICoNCj4+PiAtICogUmVtb3ZlIGFsbCBmaW5pc2hlZCBqb2JzIGZyb20g
-dGhlIG1pcnJvciBsaXN0IGFuZCBkZXN0cm95IHRoZW0uDQo+Pj4gKyAqIFJldHVybnMgdGhlIG5l
-eHQgZmluaXNoZWQgam9iIGZyb20gdGhlIG1pcnJvciBsaXN0IChpZiB0aGVyZSBpcyBvbmUpDQo+
-Pj4gKyAqIHJlYWR5IGZvciBpdCB0byBiZSBkZXN0cm95ZWQuDQo+Pj4gICAgICovDQo+Pj4gLXN0
-YXRpYyB2b2lkIGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoc3RydWN0IGRybV9ncHVfc2NoZWR1bGVy
-ICpzY2hlZCkNCj4+PiArc3RhdGljIHN0cnVjdCBkcm1fc2NoZWRfam9iICoNCj4+PiArZHJtX3Nj
-aGVkX2dldF9jbGVhbnVwX2pvYihzdHJ1Y3QgZHJtX2dwdV9zY2hlZHVsZXIgKnNjaGVkKQ0KPj4+
-ICAgIHsNCj4+PiArCXN0cnVjdCBkcm1fc2NoZWRfam9iICpqb2IgPSBOVUxMOw0KPj4+ICAgIAl1
-bnNpZ25lZCBsb25nIGZsYWdzOw0KPj4+ICAgIA0KPj4+ICAgIAkvKiBEb24ndCBkZXN0cm95IGpv
-YnMgd2hpbGUgdGhlIHRpbWVvdXQgd29ya2VyIGlzIHJ1bm5pbmcgKi8NCj4+PiAgICAJaWYgKHNj
-aGVkLT50aW1lb3V0ICE9IE1BWF9TQ0hFRFVMRV9USU1FT1VUICYmDQo+Pj4gICAgCSAgICAhY2Fu
-Y2VsX2RlbGF5ZWRfd29yaygmc2NoZWQtPndvcmtfdGRyKSkNCj4+PiAtCQlyZXR1cm47DQo+Pj4g
-LQ0KPj4+IC0NCj4+PiAtCXdoaWxlICghbGlzdF9lbXB0eSgmc2NoZWQtPnJpbmdfbWlycm9yX2xp
-c3QpKSB7DQo+Pj4gLQkJc3RydWN0IGRybV9zY2hlZF9qb2IgKmpvYjsNCj4+PiArCQlyZXR1cm4g
-TlVMTDsNCj4+PiAgICANCj4+PiAtCQlqb2IgPSBsaXN0X2ZpcnN0X2VudHJ5KCZzY2hlZC0+cmlu
-Z19taXJyb3JfbGlzdCwNCj4+PiArCWpvYiA9IGxpc3RfZmlyc3RfZW50cnlfb3JfbnVsbCgmc2No
-ZWQtPnJpbmdfbWlycm9yX2xpc3QsDQo+Pj4gICAgCQkJCSAgICAgICBzdHJ1Y3QgZHJtX3NjaGVk
-X2pvYiwgbm9kZSk7DQo+Pj4gLQkJaWYgKCFkbWFfZmVuY2VfaXNfc2lnbmFsZWQoJmpvYi0+c19m
-ZW5jZS0+ZmluaXNoZWQpKQ0KPj4+IC0JCQlicmVhazsNCj4+PiAgICANCj4+PiAtCQlzcGluX2xv
-Y2tfaXJxc2F2ZSgmc2NoZWQtPmpvYl9saXN0X2xvY2ssIGZsYWdzKTsNCj4+PiArCXNwaW5fbG9j
-a19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+ICsNCj4+PiArCWlm
-IChqb2IgJiYgZG1hX2ZlbmNlX2lzX3NpZ25hbGVkKCZqb2ItPnNfZmVuY2UtPmZpbmlzaGVkKSkg
-ew0KPj4+ICAgIAkJLyogcmVtb3ZlIGpvYiBmcm9tIHJpbmdfbWlycm9yX2xpc3QgKi8NCj4+PiAg
-ICAJCWxpc3RfZGVsX2luaXQoJmpvYi0+bm9kZSk7DQo+Pj4gLQkJc3Bpbl91bmxvY2tfaXJxcmVz
-dG9yZSgmc2NoZWQtPmpvYl9saXN0X2xvY2ssIGZsYWdzKTsNCj4+PiAtDQo+Pj4gLQkJc2NoZWQt
-Pm9wcy0+ZnJlZV9qb2Ioam9iKTsNCj4+PiArCX0gZWxzZSB7DQo+Pj4gKwkJam9iID0gTlVMTDsN
-Cj4+PiArCQkvKiBxdWV1ZSB0aW1lb3V0IGZvciBuZXh0IGpvYiAqLw0KPj4+ICsJCWRybV9zY2hl
-ZF9zdGFydF90aW1lb3V0KHNjaGVkKTsNCj4+PiAgICAJfQ0KPj4+ICAgIA0KPj4+IC0JLyogcXVl
-dWUgdGltZW91dCBmb3IgbmV4dCBqb2IgKi8NCj4+PiAtCXNwaW5fbG9ja19pcnFzYXZlKCZzY2hl
-ZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+IC0JZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQo
-c2NoZWQpOw0KPj4+ICAgIAlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZzY2hlZC0+am9iX2xpc3Rf
-bG9jaywgZmxhZ3MpOw0KPj4+ICAgIA0KPj4+ICsJcmV0dXJuIGpvYjsNCj4+PiAgICB9DQo+Pj4g
-ICAgDQo+Pj4gICAgLyoqDQo+Pj4gQEAgLTY5OCwxMiArNjk2LDE4IEBAIHN0YXRpYyBpbnQgZHJt
-X3NjaGVkX21haW4odm9pZCAqcGFyYW0pDQo+Pj4gICAgCQlzdHJ1Y3QgZHJtX3NjaGVkX2ZlbmNl
-ICpzX2ZlbmNlOw0KPj4+ICAgIAkJc3RydWN0IGRybV9zY2hlZF9qb2IgKnNjaGVkX2pvYjsNCj4+
-PiAgICAJCXN0cnVjdCBkbWFfZmVuY2UgKmZlbmNlOw0KPj4+ICsJCXN0cnVjdCBkcm1fc2NoZWRf
-am9iICpjbGVhbnVwX2pvYiA9IE5VTEw7DQo+Pj4gICAgDQo+Pj4gICAgCQl3YWl0X2V2ZW50X2lu
-dGVycnVwdGlibGUoc2NoZWQtPndha2VfdXBfd29ya2VyLA0KPj4+IC0JCQkJCSAoZHJtX3NjaGVk
-X2NsZWFudXBfam9icyhzY2hlZCksDQo+Pj4gKwkJCQkJIChjbGVhbnVwX2pvYiA9IGRybV9zY2hl
-ZF9nZXRfY2xlYW51cF9qb2Ioc2NoZWQpKSB8fA0KPj4+ICAgIAkJCQkJICghZHJtX3NjaGVkX2Js
-b2NrZWQoc2NoZWQpICYmDQo+Pj4gICAgCQkJCQkgIChlbnRpdHkgPSBkcm1fc2NoZWRfc2VsZWN0
-X2VudGl0eShzY2hlZCkpKSB8fA0KPj4+IC0JCQkJCSBrdGhyZWFkX3Nob3VsZF9zdG9wKCkpKTsN
-Cj4+PiArCQkJCQkga3RocmVhZF9zaG91bGRfc3RvcCgpKTsNCj4+DQo+PiBDYW4ndCB3ZSBqdXN0
-IGNhbGwgZHJtX3NjaGVkX2NsZWFudXBfam9icyByaWdodCBoZXJlLCByZW1vdmUgYWxsIHRoZQ0K
-Pj4gY29uZGl0aW9ucyBpbiB3YWl0X2V2ZW50X2ludGVycnVwdGlibGUgKG1ha2UgaXQgYWx3YXlz
-IHRydWUpIGFuZCBhZnRlcg0KPj4gZHJtX3NjaGVkX2NsZWFudXBfam9icyBpcyBjYWxsZWQgdGVz
-dCBmb3IgYWxsIHRob3NlIGNvbmRpdGlvbnMgYW5kDQo+PiByZXR1cm4gdG8gc2xlZXAgaWYgdGhl
-eSBldmFsdWF0ZSB0byBmYWxzZSA/IGRybV9zY2hlZF9jbGVhbnVwX2pvYnMgaXMNCj4+IGNhbGxl
-ZCB1bmNvbmRpdGlvbmFsbHkgaW5zaWRlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZSBhbnl3YXku
-Li4gVGhpcyBpcw0KPj4gbW9yZSBvZiBhIHF1ZXN0aW9uIHRvIENocmlzdGlhbi4NCj4gQ2hyaXN0
-aWFuIG1heSBrbm93IGJldHRlciB0aGFuIG1lLCBidXQgSSB0aGluayB0aG9zZSBjb25kaXRpb25z
-IG5lZWQgdG8NCj4gYmUgaW4gd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgdG8gYXZvaWQgcmFj
-ZSBjb25kaXRpb25zLiBJZiB3ZSBzaW1wbHkNCj4gcmVwbGFjZSBhbGwgdGhlIGNvbmRpdGlvbnMg
-d2l0aCBhIGxpdGVyYWwgInRydWUiIHRoZW4NCj4gd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkg
-d2lsbCBuZXZlciBhY3R1YWxseSBzbGVlcC4NCj4NCj4gU3RldmUNCg0KWWVzIHlvdSByaWdodCwg
-aXQgd29uJ3Qgd29yayBhcyBJIG1pc3NlZCB0aGF0IGNvbmRpdGlvbiBpcyBldmFsdWF0ZWQgYXMg
-DQpmaXJzdCBzdGVwIGluIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZSBiZWZvcmUgaXQgc2xlZXBz
-Lg0KDQpBbmRyZXkNCg0KDQo=
+On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
+> > On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
+> > > On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> > > > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> > > > <nsaenzjulienne@suse.de> wrote:
+> > > > > Hi All,
+> > > > > this series tries to address one of the issues blocking us from
+> > > > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> > > > > devices not represented in DT which sit behind a PCI bus fail to get the
+> > > > > bus' DMA addressing constraints.
+> > > > >
+> > > > > This is due to the fact that of_dma_configure() assumes it's receiving a
+> > > > > DT node representing the device being configured, as opposed to the PCIe
+> > > > > bridge node we currently pass. This causes the code to directly jump
+> > > > > into PCI's parent node when checking for 'dma-ranges' and misses
+> > > > > whatever was set there.
+> > > > >
+> > > > > To address this I create a new API in OF - inspired from Robin Murphys
+> > > > > original proposal[2] - which accepts a bus DT node as it's input in
+> > > > > order to configure a device's DMA constraints. The changes go deep into
+> > > > > of/address.c's implementation, as a device being having a DT node
+> > > > > assumption was pretty strong.
+> > > > >
+> > > > > On top of this work, I also cleaned up of_dma_configure() removing its
+> > > > > redundant arguments and creating an alternative function for the special
+> > > > > cases
+> > > > > not applicable to either the above case or the default usage.
+> > > > >
+> > > > > IMO the resulting functions are more explicit. They will probably
+> > > > > surface some hacky usages that can be properly fixed as I show with the
+> > > > > DT fixes on the Layerscape platform.
+> > > > >
+> > > > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> > > > > on a Seattle AMD board.
+> > > >
+> > > > Humm, I've been working on this issue too. Looks similar though yours
+> > > > has a lot more churn and there's some other bugs I've found.
+> > >
+> > > That's good news, and yes now that I see it, some stuff on my series is
+> > > overly
+> > > complicated. Specially around of_translate_*().
+> > >
+> > > On top of that, you removed in of_dma_get_range():
+> > >
+> > > -   /*
+> > > -    * At least empty ranges has to be defined for parent node if
+> > > -    * DMA is supported
+> > > -    */
+> > > -   if (!ranges)
+> > > -           break;
+> > >
+> > > Which I assumed was bound to the standard and makes things easier.
+> > >
+> > > > Can you test out this branch[1]. I don't have any h/w needing this,
+> > > > but wrote a unittest and tested with modified QEMU.
+> > >
+> > > I reviewed everything, I did find a minor issue, see the patch attached.
+> >
+> > WRT that patch, the original intent of "force_dma" was purely to
+> > consider a device DMA-capable regardless of the presence of
+> > "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
+> > device has always been bogus - magic paravirt devices which appear out
+> > of nowhere and expect to be treated as genuine DMA masters are a
+> > separate problem that we haven't really approached yet.
+>
+> I agree it's clearly abusing the function. I have no problem with the behaviour
+> change if it's OK with you.
+>
+> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
+> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
+> works already.
+
+Multiple dma-ranges as far as configuring inbound windows should work
+already other than the bug when there's any parent translation. But if
+you mean supporting multiple DMA offsets and masks per device in the
+DMA API, there's nothing in the works yet.
+
+Rob
