@@ -2,105 +2,140 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DA6C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39305C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032262054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoMqTIie"
+	by mail.kernel.org (Postfix) with ESMTP id 0FAFC2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394961AbfIYHmw (ORCPT
+        id S2442413AbfIYHpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:42:52 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:36590 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393596AbfIYHmw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:42:52 -0400
-Received: by mail-pg1-f181.google.com with SMTP id t14so2306652pgs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=puF3UNYaJSZMgESC66NJjpK9rhx4xQJhi0e+qQB9l2E=;
-        b=GoMqTIieZ8SyZHDOYFDZjiSJ1Q0+ttpr9XBdWpqkHXC6f8iZwjejVQjwmtF1e/eR9S
-         KYPnjF4TqQZExSS1xQIRCwTipc8F67nVv5gUt7Q5OMlBxnnsObBkGXCyso/3AtYfEt18
-         NIxfXNPEDTWz2Xf+AyKsf6GzKFnXNrWmd0XmactZH8lcp6ijuCho5QQ7a9MR6YQ71T1C
-         oTwPL62B057CtHlSR8s9d3wVve2pMp33fX/DTCO6x0DBTrJvftT00eAn3pCjHlCx63EN
-         WybPM5C2BnK42hdPz8HPg41fl6/t1ZvzKjJaKGm5DNSRzsCiGRurK4pwPZtcNWS1hsiw
-         DCIA==
+        Wed, 25 Sep 2019 03:45:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47144 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394933AbfIYHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:45:21 -0400
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7553363704
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:45:20 +0000 (UTC)
+Received: by mail-pl1-f199.google.com with SMTP id b23so2841495pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:45:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=puF3UNYaJSZMgESC66NJjpK9rhx4xQJhi0e+qQB9l2E=;
-        b=XQjooS+w28y5Za8Ebcn0BYHlzSWPuPxcOOy1h3R7H8pdS2bqzRWxZNLEG1A/HHPbNf
-         QhYgQNc5Ii+oLLiyx7t9sZ4s/I7/0eLx7Xp9Rv1QkwBZDmLSIjfOvJ9vEY8UsuSv3g03
-         JM2E/zPT9NUxh+001/s8FX+TcWa7HDLQ7Rs2Z940LdRt2bdiJvmGJhdo7syqETUSZLmG
-         WXWrloQyro+KwSSR8IyXy/r+25JGl9/XyQ0fKhoA91qBaoBto1I42UCJ2np5Y+7rrwgY
-         iWoheT7i8mSWUypH9nAC2gKFfQaOz+V5is5qTfQFszah/nT9//Hhu+BiOMlKL9lPU0Pk
-         OTpQ==
-X-Gm-Message-State: APjAAAWU6atsHCx2WesVH+5WO3FfK7exnImMvScfZz0kZkyOzs+C0VQ8
-        Rep5Z7X5/vU3H5jD8C5/WyQ=
-X-Google-Smtp-Source: APXvYqwUSHV12jCHjZxOw7gvGkcSMh0LGzZ9s7Q+jQ9p7Rthi1qBOlQRrXjdXbDjtrSI4faXBe7oZA==
-X-Received: by 2002:a62:27c3:: with SMTP id n186mr8057476pfn.58.1569397371038;
-        Wed, 25 Sep 2019 00:42:51 -0700 (PDT)
-Received: from compute1 ([210.200.12.126])
-        by smtp.gmail.com with ESMTPSA id l189sm4896907pgd.46.2019.09.25.00.42.49
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Sep 2019 00:42:50 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 15:42:43 +0800
-From:   Jerry Lin <wahahab11@gmail.com>
-To:     Jens Frederich <jfrederich@gmail.com>,
-        Daniel Drake <dsd@laptop.org>,
-        Jon Nettleton <jon.nettleton@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Jerry Lin <wahahab11@gmail.com>
-Subject: [PATCH v2] staging: olpc_dcon: fix wrong dependencies in Kconfig file
-Message-ID: <20190925074243.GA24947@compute1>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lGlfVebe14dEyAwlNX/fOfUXOsimPZPypK8xTf2N4Zk=;
+        b=HuSCjVHkESHfrujmIfLVWAVUF6uAEmmwV0tvzzuU5gbrbHKg4YEEpu+gTmMZ5ztzWD
+         BoC7S5He8kF7o50A5C+nDFpr4tZpi26bzRg8XSqG+OOoK991k5waq5VnEvGsdH+0yyk0
+         1WnaJiNsvnup7/0S9FK1UovmVY1DfTdle4i1MBefvCd7zVrU+0s3BCFqoUy7AI/0HLwU
+         QbQeHg6gyQy/iFKU3ojizQ7AZ/0pwAN8fS61180UPA/EEKIbCnpILCzPvtRGO2VyB3di
+         Dl4M51v6i4GM0VM9rZthqQFpHEMC480zTVMfSSVYu0rEoSk566dIpLHjXcxer7487etV
+         LoVQ==
+X-Gm-Message-State: APjAAAUch25UYXQvDWqFN/586VkdTMPGLtgNlwd/DxsVHKbQJ29ivoZY
+        ucxdqbsCVdG+hohqt5UyqRQ4nBuL2x9mB5RCJTeF7lpRK/4OlfxKteUvFRIzg0vAAg9viG1b7ZZ
+        jhxyAW1qA3v0+PAWRUXbT1GmB
+X-Received: by 2002:a17:902:7c94:: with SMTP id y20mr7255441pll.229.1569397519932;
+        Wed, 25 Sep 2019 00:45:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwCHx/3JAR/6+/InK/am42O9UXzLwb84IAvlRe5LPMfo5VvBXJdpQbI+cKfEX19uVulZcYtcw==
+X-Received: by 2002:a17:902:7c94:: with SMTP id y20mr7255402pll.229.1569397519622;
+        Wed, 25 Sep 2019 00:45:19 -0700 (PDT)
+Received: from xz-x1 ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id p17sm5670841pfn.50.2019.09.25.00.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 00:45:18 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 15:45:07 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RFC PATCH 0/4] Use 1st-level for DMA remapping in guest
+Message-ID: <20190925074507.GP28074@xz-x1>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122715.53de79d0@jacob-builder>
+ <20190923202552.GA21816@araj-mobl1.jf.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58D1F1@SHSMSX104.ccr.corp.intel.com>
+ <dfd9b7a2-5553-328a-08eb-16c8a3a2644e@linux.intel.com>
+ <20190925065640.GO28074@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4A3@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4A3@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow simultaneous support for XO-1 and XO-1.5.
-This module require GPIO_CS5535 (for 1.0) and ACPI (for 1.5) now.
+On Wed, Sep 25, 2019 at 07:21:51AM +0000, Tian, Kevin wrote:
+> > From: Peter Xu [mailto:peterx@redhat.com]
+> > Sent: Wednesday, September 25, 2019 2:57 PM
+> > 
+> > On Wed, Sep 25, 2019 at 10:48:32AM +0800, Lu Baolu wrote:
+> > > Hi Kevin,
+> > >
+> > > On 9/24/19 3:00 PM, Tian, Kevin wrote:
+> > > > > > >       '-----------'
+> > > > > > >       '-----------'
+> > > > > > >
+> > > > > > > This patch series only aims to achieve the first goal, a.k.a using
+> > > > first goal? then what are other goals? I didn't spot such information.
+> > > >
+> > >
+> > > The overall goal is to use IOMMU nested mode to avoid shadow page
+> > table
+> > > and VMEXIT when map an gIOVA. This includes below 4 steps (maybe not
+> > > accurate, but you could get the point.)
+> > >
+> > > 1) GIOVA mappings over 1st-level page table;
+> > > 2) binding vIOMMU 1st level page table to the pIOMMU;
+> > > 3) using pIOMMU second level for GPA->HPA translation;
+> > > 4) enable nested (a.k.a. dual stage) translation in host.
+> > >
+> > > This patch set aims to achieve 1).
+> > 
+> > Would it make sense to use 1st level even for bare-metal to replace
+> > the 2nd level?
+> > 
+> > What I'm thinking is the DPDK apps - they have MMU page table already
+> > there for the huge pages, then if they can use 1st level as the
+> > default device page table then it even does not need to map, because
+> > it can simply bind the process root page table pointer to the 1st
+> > level page root pointer of the device contexts that it uses.
+> > 
+> 
+> Then you need bear with possible page faults from using CPU page
+> table, while most devices don't support it today. 
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Jerry Lin <wahahab11@gmail.com>
----
-Changes in v2:
-    - Remove the parentheses
----
- drivers/staging/olpc_dcon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, I was just thinking aloud.  After all neither do we have IOMMU
+hardware to support 1st level (or am I wrong?)...  It's just that when
+the 1st level is ready it should sound doable because IIUC PRI should
+be always with the 1st level support no matter on IOMMU side or the
+device side?
 
-diff --git a/drivers/staging/olpc_dcon/Kconfig b/drivers/staging/olpc_dcon/Kconfig
-index 4ae271f..d1a0dea 100644
---- a/drivers/staging/olpc_dcon/Kconfig
-+++ b/drivers/staging/olpc_dcon/Kconfig
-@@ -3,7 +3,7 @@ config FB_OLPC_DCON
- 	tristate "One Laptop Per Child Display CONtroller support"
- 	depends on OLPC && FB
- 	depends on I2C
--	depends on (GPIO_CS5535 || ACPI)
-+	depends on GPIO_CS5535 && ACPI
- 	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  In order to support very low power operation, the XO laptop uses a
+I'm actually not sure about whether my understanding here is
+correct... I thought the pasid binding previously was only for some
+vendor kernel drivers but not a general thing to userspace.  I feel
+like that should be doable in the future once we've got some new
+syscall interface ready to deliver 1st level page table (e.g., via
+vfio?) then applications like DPDK seems to be able to use that too
+even directly via bare metal.
+
+Regards,
+
 -- 
-2.7.4
-
+Peter Xu
