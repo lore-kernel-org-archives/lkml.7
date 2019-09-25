@@ -2,112 +2,131 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD7BC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACB8C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECEB21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QZYKTcaL"
+	by mail.kernel.org (Postfix) with ESMTP id 4998121D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391732AbfIYPui (ORCPT
+        id S2391794AbfIYPv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:50:38 -0400
-Received: from mail.efficios.com ([167.114.142.138]:57590 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfIYPui (ORCPT
+        Wed, 25 Sep 2019 11:51:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41995 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387835AbfIYPv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:50:38 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A9ED7335AEC;
-        Wed, 25 Sep 2019 11:50:36 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id nq34majohdaM; Wed, 25 Sep 2019 11:50:36 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 1749E335AE6;
-        Wed, 25 Sep 2019 11:50:36 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1749E335AE6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1569426636;
-        bh=GDXL2zBD8kvV0WzbzXzJ1B5F6oF7zpTdqPV/W3I2liE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=QZYKTcaLjjFCxG0wyStTqP9KhCM/t2E9+TfG8c+2/LgOkRMIJpSL8cpwKNNT6AuTN
-         x3KRn4fo9XqgWTx+Xt0tAviT4yElAMQsPICXVY2Y9zu0K5YmQUPdkoSwQWP8hGTju+
-         rTxNHBteJmT+B5UatpTbtDM4DYpcwHwmEzC1mIZUtQiA8p5SsYo+f0SmJnZrlIO/yp
-         Twn/rVNktwjqP4ySgwaFeekFjxG5UPR2yqKXafex2VkyYpZdztcQeV9Xw3zWHTO91A
-         K2TsvctMzUln49EKXQLsSvXpLQYd7pkmJ14bP+21Ko/eFEHqf2qMZJ9viPSb2R3bWe
-         4uMOvWkHuwEwQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 9nNg678A0s0j; Wed, 25 Sep 2019 11:50:36 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id EB471335ADD;
-        Wed, 25 Sep 2019 11:50:35 -0400 (EDT)
-Date:   Wed, 25 Sep 2019 11:50:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Message-ID: <680386266.3864.1569426635751.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190925080732.GC4536@hirez.programming.kicks-ass.net>
-References: <20190919173705.2181-1-mathieu.desnoyers@efficios.com> <20190923090636.GH2349@hirez.programming.kicks-ass.net> <485879119.4072.1569250532294.JavaMail.zimbra@efficios.com> <20190925080732.GC4536@hirez.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH for 5.4 0/7] Membarrier fixes and cleanups
+        Wed, 25 Sep 2019 11:51:59 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iD9a4-0003aB-SQ; Wed, 25 Sep 2019 17:51:52 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iD9a3-00075g-RB; Wed, 25 Sep 2019 17:51:51 +0200
+Date:   Wed, 25 Sep 2019 17:51:51 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-3-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
-Thread-Topic: Membarrier fixes and cleanups
-Thread-Index: 24jVcQEvv8VYqsQvJy+Zyvm2xjujtQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:42:18 up 130 days, 22:00, 84 users,  load average: 0.12, 0.07,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Sep 25, 2019, at 4:07 AM, Peter Zijlstra peterz@infradead.org wrote:
+Hi Adam,
 
-> On Mon, Sep 23, 2019 at 10:55:32AM -0400, Mathieu Desnoyers wrote:
->> ----- On Sep 23, 2019, at 5:06 AM, Peter Zijlstra peterz@infradead.org wrote:
->> 
->> > On Thu, Sep 19, 2019 at 01:36:58PM -0400, Mathieu Desnoyers wrote:
->> >> Hi,
->> >> 
->> >> Those series of fixes and cleanups are initially motivated by the report
->> >> of race in membarrier, which can load p->mm->membarrier_state after mm
->> >> has been freed (use-after-free).
->> >> 
->> > 
->> > The lot looks good to me; what do you want done with them (them being
->> > RFC and all) ?
->> 
->> I can either re-send them without the RFC tag, or you can pick them directly
->> through the scheduler tree.
+On 19-09-24 09:23, Adam Thomson wrote:
+> On 17 September 2019 13:43, Marco Felsch wrote:
 > 
-> I've picked them up (and fixed them up, they didn't apply to tip) and
-> merge them with Eric's task_rcu_dereference() patches.
+> > Add the documentation which describe the voltage selection gpio support.
+> > This property can be applied to each subnode within the 'regulators'
+> > node so each regulator can be configured differently.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > index edca653a5777..9d9820d8177d 100644
+> > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > @@ -66,6 +66,15 @@ Sub-nodes:
+> >    details of individual regulator device can be found in:
+> >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > 
+> > +  Optional regulator device-specific properties:
+> > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used by the
+> > +    regulator to switch the voltage between active/suspend voltage settings. If
+> > +    the signal is active the active-settings are applied else the suspend
+> > +    settings are applied. Attention: Sharing the same gpio for other purposes
+> > +    or across multiple regulators is possible but the gpio settings must be the
+> > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio device
+> > +    other gpios are not allowed and make no sense.
+> > +
 > 
-> I'll push it out in a bit.
+> Should we not use the binding names that are defined in 'gpio-regulator.yaml' as
+> these seem to be generic and would probably serve the purpose here?
 
-Thanks Peter!
+Hm.. as the description says:
 
-Mathieu
+8<--------------------------------------------------
+gpios:
+   description: Array of one or more GPIO pins used to select the
+   regulator voltage/current listed in "states".
+8<--------------------------------------------------
 
+But we don't have a "states" property and we can't select between
+voltage or current.
+
+Regards,
+  Marco
+
+> >  - rtc : This node defines settings required for the Real-Time Clock associated
+> >    with the DA9062. There are currently no entries in this binding, however
+> >    compatible = "dlg,da9062-rtc" should be added if a node is created.
+> > --
+> > 2.20.1
+> 
+> 
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
