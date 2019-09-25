@@ -6,55 +6,62 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F0BC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40C5C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4B920872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E0121D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390544AbfIYKs5 (ORCPT
+        id S2390615AbfIYKxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:48:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24415 "EHLO mga18.intel.com"
+        Wed, 25 Sep 2019 06:53:48 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32595 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfIYKs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:48:57 -0400
+        id S2390412AbfIYKxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 06:53:47 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 03:48:56 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 03:53:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="340373433"
+   d="scan'208";a="340374263"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 25 Sep 2019 03:48:52 -0700
+  by orsmga004.jf.intel.com with ESMTP; 25 Sep 2019 03:53:43 -0700
 Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iD4qp-00030k-6h; Wed, 25 Sep 2019 13:48:51 +0300
-Date:   Wed, 25 Sep 2019 13:48:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: Intel: Skylake: prevent memory leak in
- snd_skl_parse_uuids
-Message-ID: <20190925104851.GC5933@smile.fi.intel.com>
-References: <20190925040841.29141-1-navid.emamdoost@gmail.com>
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iD4vV-00034Z-VE; Wed, 25 Sep 2019 13:53:41 +0300
+Date:   Wed, 25 Sep 2019 13:53:41 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+Cc:     "Moore, Robert" <robert.moore@intel.com>,
+        Ferry Toth <fntoth@gmail.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+Message-ID: <20190925105341.GD5933@smile.fi.intel.com>
+References: <20190913151228.GT2680@smile.fi.intel.com>
+ <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909161134070.2910@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B968327D@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909181624550.3925@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9686438@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909231100190.16390@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B968B639@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909251131060.65328@fox.voss.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925040841.29141-1-navid.emamdoost@gmail.com>
+In-Reply-To: <alpine.DEB.2.20.1909251131060.65328@fox.voss.local>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,18 +69,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:08:38PM -0500, Navid Emamdoost wrote:
-> In snd_skl_parse_uuids if allocation for module->instance_id fails, the
-> allocated memory for module shoulde be released.
+On Wed, Sep 25, 2019 at 12:18:11PM +0200, Nikolaus Voss wrote:
+> On Tue, 24 Sep 2019, Moore, Robert wrote:
+> > How about this:
+> > Go back to using acpi_tb_install_and_load_table(), but then call acpi_ns_initialize_objects afterwards This is what acpi_load_table does.
+> > 
+> > 
+> >    ACPI_INFO (("Host-directed Dynamic ACPI Table Load:"));
+> >    Status = AcpiTbInstallAndLoadTable (ACPI_PTR_TO_PHYSADDR (Table),
+> >        ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE, &TableIndex);
+> >    if (ACPI_SUCCESS (Status))
+> >    {
+> >        /* Complete the initialization/resolution of new objects */
+> > 
+> >        AcpiNsInitializeObjects ();
+> >    }
+> 
+> The idea was to have all drivers use the same interface for dynamically
+> loading ACPI tables, i.e. efivar_ssdt_load() (which already used
+> acpi_load_table()) and the acpi_configfs driver. The efivar driver doesn't
+> provide a possibility to unload the table, so acpi_load_table() is okay for
+> this purpose. 
 
-Since it's using devm_*() for the second allocation it would be cleaner to
-either switch it to regular kcalloc() or to switch the first one to
-devm_kzalloc(), whatever suits better.
+> According to Bob, acpi_tb_install_and_load_table() is not part
+> of the external ACPICA API declared under include/acpi (though it is
+> exported).
 
->  		module->instance_id = devm_kzalloc(ctx->dev, size, GFP_KERNEL);
->  		if (!module->instance_id) {
+You are answering to Bob himself :-)
 
-> +			kfree(module);
+So, above is another proposal and we can create a common symmetric APIs in ACPI
+glue layer for all users even if some of them don't care about unloading.
+
+> The counterpart of acpi_load_table() - inline comment "Note1: Mainly
+> intended to support hotplug addition of SSDTs" - seems to be
+> acpi_unload_parent_table() - inline comment "Note: Mainly intended to
+> support hotplug removal of SSDTs" - but it doesn't expect a table index but
+> an acpi_handle as argument, and it is only used within ACPICA, so IMO the
+> API can't be properly used in our case and should be improved even though
+> unloading tables is deprecated.
+> 
+> If changing the API is not an option, we can choose between Rafael's way
+> (extending the API instead of changing it) or Bob's proposal (doing the same
+> thing - hotplug-loading a SSDT - in different ways, in case of acpi_configfs
+> using ACPICA internal API). I don't have a clear favorite, but I'm tending
+> to Rafael's solution my favorite being the API change.
 
 -- 
 With Best Regards,
