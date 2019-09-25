@@ -2,548 +2,163 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B5EC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7D8C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEC721D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49F22146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439149AbfIYQAF (ORCPT
+        id S2439496AbfIYQAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:00:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42579 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731737AbfIYQAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:00:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iD9hu-0004J7-Op; Wed, 25 Sep 2019 17:59:58 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iD9ht-0007QO-TZ; Wed, 25 Sep 2019 17:59:57 +0200
-Date:   Wed, 25 Sep 2019 17:59:57 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] regulator: da9062: add voltage selection gpio support
-Message-ID: <20190925155957.de6odahy2ebhzx5c@pengutronix.de>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-4-m.felsch@pengutronix.de>
- <AM5PR1001MB099431ECB45A103A22646CB680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Wed, 25 Sep 2019 12:00:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:53198 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbfIYQAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:00:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84A591570;
+        Wed, 25 Sep 2019 09:00:47 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 652063F59C;
+        Wed, 25 Sep 2019 09:00:46 -0700 (PDT)
+Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
+To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <20190925151404.23222-1-steven.price@arm.com>
+ <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
+Date:   Wed, 25 Sep 2019 17:00:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB099431ECB45A103A22646CB680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:51:58 up 130 days, 22:10, 84 users,  load average: 0.10, 0.04,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
-
-On 19-09-24 09:48, Adam Thomson wrote:
-> On 17 September 2019 13:43, Marco Felsch wrote:
+On 25/09/2019 16:56, Grodzovsky, Andrey wrote:
+> On 9/25/19 11:14 AM, Steven Price wrote:
 > 
-> > The DA9062/1 devices can switch their regulator voltages between
-> > voltage-A (active) and voltage-B (suspend) settings. Switching the
-> > voltages can be controlled by ther internal state-machine or by a gpio
-> > input signal and can be configured for each individual regulator. This
-> > commit adds the gpio-based voltage switching support.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/regulator/da9062-regulator.c | 149 +++++++++++++++++++++++++++
-> >  1 file changed, 149 insertions(+)
-> > 
-> > diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-
-> > regulator.c
-> > index 9b2ca472f70c..9d6eb7625948 100644
-> > --- a/drivers/regulator/da9062-regulator.c
-> > +++ b/drivers/regulator/da9062-regulator.c
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/init.h>
-> >  #include <linux/err.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> > @@ -15,6 +16,7 @@
-> >  #include <linux/regulator/machine.h>
-> >  #include <linux/regulator/of_regulator.h>
-> >  #include <linux/mfd/da9062/core.h>
-> > +#include <linux/mfd/da9062/gpio.h>
-> >  #include <linux/mfd/da9062/registers.h>
-> > 
-> >  /* Regulator IDs */
-> > @@ -50,6 +52,7 @@ struct da9062_regulator_info {
-> >  	struct reg_field sleep;
-> >  	struct reg_field suspend_sleep;
-> >  	unsigned int suspend_vsel_reg;
-> > +	struct reg_field vsel_gpi;
-> >  	/* Event detection bit */
-> >  	struct reg_field oc_event;
-> >  };
-> > @@ -65,6 +68,7 @@ struct da9062_regulator {
-> >  	struct regmap_field			*suspend;
-> >  	struct regmap_field			*sleep;
-> >  	struct regmap_field			*suspend_sleep;
-> > +	struct regmap_field			*vsel_gpi;
-> >  };
-> > 
-> >  /* Encapsulates all information for the regulators driver */
-> > @@ -351,6 +355,65 @@ static const struct regulator_ops da9062_ldo_ops = {
-> >  	.set_suspend_mode	= da9062_ldo_set_suspend_mode,
-> >  };
-> > 
-> > +static int da9062_config_gpi(struct device_node *np,
-> > +			     const struct regulator_desc *desc,
-> > +			     struct regulator_config *cfg, const char *gpi_id)
-> > +{
-> > +	struct da9062_regulator *regl = cfg->driver_data;
-> > +	struct gpio_desc *gpi;
-> > +	unsigned int nr;
-> > +	int ret;
-> > +	char *prop, *label;
-> > +
-> > +	prop = kasprintf(GFP_KERNEL, "dlg,%s-sense-gpios", gpi_id);
-> > +	if (!prop)
-> > +		return -ENOMEM;
-> > +	label = kasprintf(GFP_KERNEL, "%s-%s-gpi", desc->name, gpi_id);
-> > +	if (!label) {
-> > +		ret = -ENOMEM;
-> > +		goto free;
-> 
-> If we use the generic bindings names then the above will change I guess.
-
-Yes.
-
-> > +	}
-> > +
-> > +	/*
-> > +	 * We only must ensure that the gpio device is probed before the
-> > +	 * regulator driver so no need to store the reference global. Luckily
-> > +	 * devm_* releases the gpio upon a unbound action.
-> > +	 */
-> > +	gpi = devm_gpiod_get_from_of_node(cfg->dev, np, prop, 0, GPIOD_IN |
-> > +					  GPIOD_FLAGS_BIT_NONEXCLUSIVE,
-> > label);
-> > +	if (IS_ERR(gpi)) {
-> > +		ret = PTR_ERR(gpi);
-> > +		goto free;
-> > +	}
-> > +
-> > +	if (!gpi) {
-> > +		ret = 0;
-> > +		goto free;
-> > +	}
-> > +
-> > +	/* We need the local number */
-> > +	nr = da9062_gpio_get_hwgpio(gpi);
-> > +	if (nr < 1 || nr > 3) {
-> > +		ret = -EINVAL;
-> > +		goto free;
-> > +	}
-> > +
-> > +	ret = regmap_field_write(regl->vsel_gpi, nr);
-> 
-> Actually thinking about this some more, should we really be setting alternate
-> functions of the GPIO here? Would this not be done through GPIO/Pinmux
-> frameworks? That way the GPIO would be blocked off from other's requesting it.
-> This seems a little unsafe, unless I'm mistaken.
-
-The GPIO is used as input, see the flags I passed to
-devm_gpiod_get_from_of_node(). What I did here is to tell the regulator
-to listen to the gpio input instead of the sequencer. But as I said the
-gpio is still configured as input which is absolutly correct. Please
-check [1] chapter 7.7.1
-
-[1] https://www.dialog-semiconductor.com/sites/default/files/da9062-a_datasheet_2v3.pdf
-
-Regards,
-  Marco
-
-> > +
-> > +free:
-> > +	kfree(prop);
-> > +	kfree(label);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int da9062_parse_dt(struct device_node *np,
-> > +			   const struct regulator_desc *desc,
-> > +			   struct regulator_config *cfg)
-> > +{
-> > +	return da9062_config_gpi(np, desc, cfg, "vsel");
-> > +}
-> > +
-> >  /* DA9061 Regulator information */
-> >  static const struct da9062_regulator_info local_da9061_regulator_info[] = {
-> >  	{
-> > @@ -358,6 +421,7 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  		.desc.name = "DA9061 BUCK1",
-> >  		.desc.of_match = of_match_ptr("buck1"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (300) * 1000,
-> >  		.desc.uV_step = (10) * 1000,
-> > @@ -388,12 +452,17 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9061_ID_BUCK2,
-> >  		.desc.name = "DA9061 BUCK2",
-> >  		.desc.of_match = of_match_ptr("buck2"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (800) * 1000,
-> >  		.desc.uV_step = (20) * 1000,
-> > @@ -424,12 +493,17 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9061_ID_BUCK3,
-> >  		.desc.name = "DA9061 BUCK3",
-> >  		.desc.of_match = of_match_ptr("buck3"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (530) * 1000,
-> >  		.desc.uV_step = (10) * 1000,
-> > @@ -460,12 +534,17 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9061_ID_LDO1,
-> >  		.desc.name = "DA9061 LDO1",
-> >  		.desc.of_match = of_match_ptr("ldo1"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -489,6 +568,10 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -499,6 +582,7 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  		.desc.name = "DA9061 LDO2",
-> >  		.desc.of_match = of_match_ptr("ldo2"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -522,6 +606,10 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -532,6 +620,7 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  		.desc.name = "DA9061 LDO3",
-> >  		.desc.of_match = of_match_ptr("ldo3"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -555,6 +644,10 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -565,6 +658,7 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  		.desc.name = "DA9061 LDO4",
-> >  		.desc.of_match = of_match_ptr("ldo4"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -588,6 +682,10 @@ static const struct da9062_regulator_info
-> > local_da9061_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -602,6 +700,7 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  		.desc.name = "DA9062 BUCK1",
-> >  		.desc.of_match = of_match_ptr("buck1"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (300) * 1000,
-> >  		.desc.uV_step = (10) * 1000,
-> > @@ -632,12 +731,17 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9062_ID_BUCK2,
-> >  		.desc.name = "DA9062 BUCK2",
-> >  		.desc.of_match = of_match_ptr("buck2"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (300) * 1000,
-> >  		.desc.uV_step = (10) * 1000,
-> > @@ -668,12 +772,17 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK2_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK2_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK2_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9062_ID_BUCK3,
-> >  		.desc.name = "DA9062 BUCK3",
-> >  		.desc.of_match = of_match_ptr("buck3"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (800) * 1000,
-> >  		.desc.uV_step = (20) * 1000,
-> > @@ -704,12 +813,17 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9062_ID_BUCK4,
-> >  		.desc.name = "DA9062 BUCK4",
-> >  		.desc.of_match = of_match_ptr("buck4"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_buck_ops,
-> >  		.desc.min_uV = (530) * 1000,
-> >  		.desc.uV_step = (10) * 1000,
-> > @@ -740,12 +854,17 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
-> >  	},
-> >  	{
-> >  		.desc.id = DA9062_ID_LDO1,
-> >  		.desc.name = "DA9062 LDO1",
-> >  		.desc.of_match = of_match_ptr("ldo1"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -769,6 +888,10 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -779,6 +902,7 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  		.desc.name = "DA9062 LDO2",
-> >  		.desc.of_match = of_match_ptr("ldo2"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -802,6 +926,10 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -812,6 +940,7 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  		.desc.name = "DA9062 LDO3",
-> >  		.desc.of_match = of_match_ptr("ldo3"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -835,6 +964,10 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -845,6 +978,7 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  		.desc.name = "DA9062 LDO4",
-> >  		.desc.of_match = of_match_ptr("ldo4"),
-> >  		.desc.regulators_node = of_match_ptr("regulators"),
-> > +		.desc.of_parse_cb = da9062_parse_dt,
-> >  		.desc.ops = &da9062_ldo_ops,
-> >  		.desc.min_uV = (900) * 1000,
-> >  		.desc.uV_step = (50) * 1000,
-> > @@ -868,6 +1002,10 @@ static const struct da9062_regulator_info
-> > local_da9062_regulator_info[] = {
-> >  			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> >  			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
-> > +		.vsel_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-> > +			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
-> > +			sizeof(unsigned int) * 8 -
-> > +			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
-> >  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
-> >  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
-> >  			sizeof(unsigned int) * 8 -
-> > @@ -988,6 +1126,15 @@ static int da9062_regulator_probe(struct
-> > platform_device *pdev)
-> >  				return PTR_ERR(regl->suspend_sleep);
-> >  		}
-> > 
-> > +		if (regl->info->vsel_gpi.reg) {
-> > +			regl->vsel_gpi = devm_regmap_field_alloc(
-> > +					&pdev->dev,
-> > +					chip->regmap,
-> > +					regl->info->vsel_gpi);
-> > +			if (IS_ERR(regl->vsel_gpi))
-> > +				return PTR_ERR(regl->vsel_gpi);
-> > +		}
-> > +
-> >  		/* Register regulator */
-> >  		memset(&config, 0, sizeof(config));
-> >  		config.dev = chip->dev;
-> > @@ -997,6 +1144,8 @@ static int da9062_regulator_probe(struct
-> > platform_device *pdev)
-> >  		regl->rdev = devm_regulator_register(&pdev->dev, &regl->desc,
-> >  						     &config);
-> >  		if (IS_ERR(regl->rdev)) {
-> > +			if (PTR_ERR(regl->rdev) == -EPROBE_DEFER)
-> > +				return -EPROBE_DEFER;
-> >  			dev_err(&pdev->dev,
-> >  				"Failed to register %s regulator\n",
-> >  				regl->desc.name);
-> > --
-> > 2.20.1
+>> drm_sched_cleanup_jobs() attempts to free finished jobs, however because
+>> it is called as the condition of wait_event_interruptible() it must not
+>> sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
+>>
+>> Instead let's rename drm_sched_cleanup_jobs() to
+>> drm_sched_get_cleanup_job() and simply return a job for processing if
+>> there is one. The caller can then call the free_job() callback outside
+>> the wait_event_interruptible() where sleeping is possible before
+>> re-checking and returning to sleep if necessary.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>   drivers/gpu/drm/scheduler/sched_main.c | 44 ++++++++++++++------------
+>>   1 file changed, 24 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+>> index 9a0ee74d82dc..0ed4aaa4e6d1 100644
+>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+>>   }
+>>   
+>>   /**
+>> - * drm_sched_cleanup_jobs - destroy finished jobs
+>> + * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
+>>    *
+>>    * @sched: scheduler instance
+>>    *
+>> - * Remove all finished jobs from the mirror list and destroy them.
+>> + * Returns the next finished job from the mirror list (if there is one)
+>> + * ready for it to be destroyed.
+>>    */
+>> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
+>> +static struct drm_sched_job *
+>> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
+>>   {
+>> +	struct drm_sched_job *job = NULL;
+>>   	unsigned long flags;
+>>   
+>>   	/* Don't destroy jobs while the timeout worker is running */
+>>   	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
+>>   	    !cancel_delayed_work(&sched->work_tdr))
+>> -		return;
+>> -
+>> -
+>> -	while (!list_empty(&sched->ring_mirror_list)) {
+>> -		struct drm_sched_job *job;
+>> +		return NULL;
+>>   
+>> -		job = list_first_entry(&sched->ring_mirror_list,
+>> +	job = list_first_entry_or_null(&sched->ring_mirror_list,
+>>   				       struct drm_sched_job, node);
+>> -		if (!dma_fence_is_signaled(&job->s_fence->finished))
+>> -			break;
+>>   
+>> -		spin_lock_irqsave(&sched->job_list_lock, flags);
+>> +	spin_lock_irqsave(&sched->job_list_lock, flags);
+>> +
+>> +	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+>>   		/* remove job from ring_mirror_list */
+>>   		list_del_init(&job->node);
+>> -		spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>> -
+>> -		sched->ops->free_job(job);
+>> +	} else {
+>> +		job = NULL;
+>> +		/* queue timeout for next job */
+>> +		drm_sched_start_timeout(sched);
+>>   	}
+>>   
+>> -	/* queue timeout for next job */
+>> -	spin_lock_irqsave(&sched->job_list_lock, flags);
+>> -	drm_sched_start_timeout(sched);
+>>   	spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>>   
+>> +	return job;
+>>   }
+>>   
+>>   /**
+>> @@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
+>>   		struct drm_sched_fence *s_fence;
+>>   		struct drm_sched_job *sched_job;
+>>   		struct dma_fence *fence;
+>> +		struct drm_sched_job *cleanup_job = NULL;
+>>   
+>>   		wait_event_interruptible(sched->wake_up_worker,
+>> -					 (drm_sched_cleanup_jobs(sched),
+>> +					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
+>>   					 (!drm_sched_blocked(sched) &&
+>>   					  (entity = drm_sched_select_entity(sched))) ||
+>> -					 kthread_should_stop()));
+>> +					 kthread_should_stop());
 > 
 > 
+> Can't we just call drm_sched_cleanup_jobs right here, remove all the 
+> conditions in wait_event_interruptible (make it always true) and after 
+> drm_sched_cleanup_jobs is called test for all those conditions and 
+> return to sleep if they evaluate to false ? drm_sched_cleanup_jobs is 
+> called unconditionally inside wait_event_interruptible anyway... This is 
+> more of a question to Christian.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Christian may know better than me, but I think those conditions need to
+be in wait_event_interruptible() to avoid race conditions. If we simply
+replace all the conditions with a literal "true" then
+wait_event_interruptible() will never actually sleep.
+
+Steve
