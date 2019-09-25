@@ -2,111 +2,218 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F67C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78946C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A4B21D82
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF0921D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407256AbfIYOFj (ORCPT
+        id S2407284AbfIYOH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:05:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22962 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbfIYOFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:05:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C77AC01D36C;
-        Wed, 25 Sep 2019 14:05:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C86FF5D9CC;
-        Wed, 25 Sep 2019 14:05:37 +0000 (UTC)
-Subject: Re: [BACKPORT 4.14.y v3 1/3] locking/lockdep: Add debug_locks check
- in __lock_downgrade()
-To:     Baolin Wang <baolin.wang@linaro.org>, stable@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com
-Cc:     arnd@arndb.de, orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1569405445.git.baolin.wang@linaro.org>
- <4ac2e84637ceaf5ec67cfc11ad58c489778693a8.1569405445.git.baolin.wang@linaro.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <87e81724-9f1a-8716-5b4f-f2aac6f25c5a@redhat.com>
-Date:   Wed, 25 Sep 2019 10:05:37 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 25 Sep 2019 10:07:26 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44953 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730549AbfIYOH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:07:26 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w6so4970807oie.11;
+        Wed, 25 Sep 2019 07:07:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gNzfLxyphufZW7oX+loBgrNcosGjw89AhG0FkoAT9T0=;
+        b=jRCif3RwOJk355RMCF33P71BEScuDGW5cFMuie/ytvRMidSDpDSDvad0HDoYUy8m1a
+         VGuIuMPCJqxoyAqeBMlYoMDbUVjR6Mox/6tTOyS96T/Bz9s/K295PYfS0Lc0SqXdcyGj
+         PZMeoRF3HZrCv4pItBGBfGEZwSBpwpS1+YQ6/HsNG6Sbwq8KqNPJSicrj06Ml2uePwk3
+         5QdFonEe8jsgIJezXT8TnXJaf30p8uAFg7PMYFh5PISJsi/x0IImuARKPbcnidVdzHJv
+         9q4vAWPmnkv92ZhC2vivBImgoaJGvZ7Z0xN7n8nEsIcbUxMX8jrbrGzh45/VblDBj3z1
+         nt2Q==
+X-Gm-Message-State: APjAAAX2NrkP89hn04aL1qxQiOpDUoZC2L0u+UuVgx+3BPKIO1eClv3+
+        dbuVxbScwMzAYMrKEHajyM6wQMFA
+X-Google-Smtp-Source: APXvYqw97uq6u2EmbpKgvJdqwO6IoIQF1m7BSY2Zl2+p0NsCfksR0UbyyEvRdfbJksGLmQ7y4qQb3Q==
+X-Received: by 2002:aca:c358:: with SMTP id t85mr4808768oif.98.1569420444015;
+        Wed, 25 Sep 2019 07:07:24 -0700 (PDT)
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
+        by smtp.gmail.com with ESMTPSA id j11sm1600365otk.80.2019.09.25.07.07.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Sep 2019 07:07:23 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id m16so4991022oic.5;
+        Wed, 25 Sep 2019 07:07:23 -0700 (PDT)
+X-Received: by 2002:aca:d988:: with SMTP id q130mr4486320oig.13.1569420442960;
+ Wed, 25 Sep 2019 07:07:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4ac2e84637ceaf5ec67cfc11ad58c489778693a8.1569405445.git.baolin.wang@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 25 Sep 2019 14:05:38 +0000 (UTC)
+References: <20190924024548.4356-1-biwen.li@nxp.com> <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 25 Sep 2019 09:07:12 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ+=au2qRL2K-tzhH8HK1+sO+ut9YBhYw4UhWSv5FF88A@mail.gmail.com>
+Message-ID: <CADRPPNQ+=au2qRL2K-tzhH8HK1+sO+ut9YBhYw4UhWSv5FF88A@mail.gmail.com>
+Subject: Re: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr'
+ property
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 6:01 AM, Baolin Wang wrote:
-> From: Waiman Long <longman@redhat.com>
+On Tue, Sep 24, 2019 at 11:27 PM Biwen Li <biwen.li@nxp.com> wrote:
 >
-> [Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf]
->
-> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-> warning right after a previous lockdep warning. It is likely that the
-> previous warning turned off lock debugging causing the lockdep to have
-> inconsistency states leading to the lock downgrade warning.
->
-> Fix that by add a check for debug_locks at the beginning of
-> __lock_downgrade().
->
-> Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-> Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  kernel/locking/lockdep.c |    3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 565005a..5c370c6 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -3650,6 +3650,9 @@ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
->  	unsigned int depth;
->  	int i;
->  
-> +	if (unlikely(!debug_locks))
-> +		return 0;
-> +
->  	depth = curr->lockdep_depth;
->  	/*
->  	 * This function is about (re)setting the class of a held lock,
+> > > >
+> > > > > > > > > >
+> > > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
+> > > > > > > > > > an errata
+> > > > > > > > > > A-008646 on LS1021A
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > > > > > > ---
+> > > > > > > > > > Change in v3:
+> > > > > > > > > >       - rename property name
+> > > > > > > > > >         fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > > > > > > > >
+> > > > > > > > > > Change in v2:
+> > > > > > > > > >       - update desc of the property 'fsl,rcpm-scfg'
+> > > > > > > > > >
+> > > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > > > > > > > ++++++++++++++
+> > > > > > > > > >  1 file changed, 14 insertions(+)
+> > > > > > > > > >
+> > > > > > > > > > diff --git
+> > > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version            Example
+> > > > Chips
+> > > > > > > > > >  Optional properties:
+> > > > > > > > > >   - little-endian : RCPM register block is Little Endian.
+> > > > > > > > > > Without it
+> > > > > RCPM
+> > > > > > > > > >     will be Big Endian (default case).
+> > > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
+> > > > > > > > > > + SoC LS1021A,
+> > > > > > > > >
+> > > > > > > > > You probably should mention this is related to a hardware
+> > > > > > > > > issue on LS1021a and only needed on LS1021a.
+> > > > > > > > Okay, got it, thanks, I will add this in v4.
+> > > > > > > > >
+> > > > > > > > > > +   Must include n + 1 entries (n =
+> > > > > > > > > > + #fsl,rcpm-wakeup-cells, such
+> > > as:
+> > > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
+> > > > > > > > > > + 2
+> > > > > > > > > > + +
+> > > > > > > > > > + 1
+> > > > > entries).
+> > > > > > > > >
+> > > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
+> > > > > > > > > registers on an
+> > > > > SoC.
+> > > > > > > > > However you are defining an offset to scfg registers here.
+> > > > > > > > > Why these two are related?  The length here should
+> > > > > > > > > actually be related to the #address-cells of the soc/.
+> > > > > > > > > But since this is only needed for LS1021, you can
+> > > > > > > > just make it 3.
+> > > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
+> > > > > > > > device node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
+> > > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
+> > > > > IPPDEXPCR1).
+> > > > > > > > But because of the hardware issue on LS1021A, I need store
+> > > > > > > > the value of IPPDEXPCR registers to an alt address. So I
+> > > > > > > > defining an offset to scfg registers, then RCPM driver get
+> > > > > > > > an abosolute address from offset, RCPM driver write the
+> > > > > > > > value of IPPDEXPCR registers to these abosolute
+> > > > > > > > addresses(backup the value of IPPDEXPCR
+> > > > > registers).
+> > > > > > >
+> > > > > > > I understand what you are trying to do.  The problem is that
+> > > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and an
+> > offset.
+> > > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+> > > > > > You maybe like this: fsl,ippdexpcr-alt-addr = <&scfg 0x51c>;/*
+> > > > > > SCFG_SPARECR8 */
+> > > > >
+> > > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
+> > > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
+> > > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
+> > binding.
+> > > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
+> > > > #address-cells instead of #fsl,rcpm-wakeup-cells.
+> > >
+> > > Yes.
+> > I got an example from drivers/pci/controller/dwc/pci-layerscape.c
+> > and arch/arm/boot/dts/ls1021a.dtsi as follows:
+> > fsl,pcie-scfg = <&scfg 0>, 0 is an index
+> >
+> > In my fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>, It means that 0x0 is an alt
+> > offset address for IPPDEXPCR0, 0x51c is an alt offset address For
+> > IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
+> > SCFG_SPARECR8.
+> Maybe I need write it as:
+> fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x0 0x0 0x51c>;
+> first two 0x0 compose an alt offset address for IPPDEXPCR0,
+> last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
 
-Apparently, there are 2 such patches in the upstream kernel - commit
-513e1073d52e55b8024b4f238a48de7587c64ccf and
-71492580571467fb7177aade19c18ce7486267f5. These are probably caused by
-the fact that there are 2 places in the code that can match the hunks.
-Anyway, this looks like it is applying to the wrong function. It should
-be applied to __lock_downgrade. Though it shouldn't harm if it is
-applied to the wrong function.
+I remember the hardware issue is only is only related to IPPDEXPCR1
+register, no idea why you need to define IPPDEXPCR0 in the binding.
 
-Cheers,
-Longman
-
+>
+> Best Regards,
+> Biwen Li
+> > >
+> > > Regards,
+> > > Leo
+> > > > >
+> > > > > > >
+> > > > > > > > >
+> > > > > > > > > > +   The first entry must be a link to the SCFG device node.
+> > > > > > > > > > +   The non-first entry must be offset of registers of SCFG.
+> > > > > > > > > >
+> > > > > > > > > >  Example:
+> > > > > > > > > >  The RCPM node for T4240:
+> > > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> > > > > > > > > >               #fsl,rcpm-wakeup-cells = <2>;
+> > > > > > > > > >       };
+> > > > > > > > > >
+> > > > > > > > > > +The RCPM node for LS1021A:
+> > > > > > > > > > +     rcpm: rcpm@1ee2140 {
+> > > > > > > > > > +             compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
+> > > > > > 2.1+";
+> > > > > > > > > > +             reg = <0x0 0x1ee2140 0x0 0x8>;
+> > > > > > > > > > +             #fsl,rcpm-wakeup-cells = <2>;
+> > > > > > > > > > +             fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
+> > > > > > > > > > SCFG_SPARECR8 */
+> > > > > > > > > > +     };
+> > > > > > > > > > +
+> > > > > > > > > > +
+> > > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> > > > > > > > > >  -------------------------------------------
+> > > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
+> > > > > > > > > > device node if the device
+> > > > > > > > > > --
+> > > > > > > > > > 2.17.1
+>
