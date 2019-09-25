@@ -2,61 +2,67 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602BBC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BC6C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C29222BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C711321D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iKTW5eGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393199AbfIYUcT (ORCPT
+        id S2393235AbfIYUcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 16:32:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35296 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389778AbfIYUcS (ORCPT
+        Wed, 25 Sep 2019 16:32:24 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36933 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393204AbfIYUcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 16:32:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y21so176884wmi.0;
-        Wed, 25 Sep 2019 13:32:17 -0700 (PDT)
+        Wed, 25 Sep 2019 16:32:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id b19so421052iob.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Joen6PgN4Ppb107hjPSYd8q2loeVTGPWBeR8yaoJJfc=;
+        b=iKTW5eGmeo7sl0Q4HF9ZqwfjLbHPh77cZyWr36n8dzNdMbT+HJemF9vuYIeQp42jxo
+         Qacg5Pz2zsOsDg/o/arm+Ck81IAphdlBANecSt6LiqOvq9WAOZlKhtqxEJAO4BWKsFmr
+         qDJICSw4ZPcg1YZeuD4zDxTZD0XFTlD27h63s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9msODsp1f3ntoBvQarVOQqQV429arne9yrJNCKUXVXc=;
-        b=Z1wasGaUInOb/wgCSGocPXC2c3mEd23s6FKA3UPmT43zj/y4/xK7j39of/3TPy2wFM
-         MO4Ny0LUIBqOzyynNcfMrakdwLT0nZSNqlQ5TEtBUrkmhpGcQdWzAZQX3EOMeIzXGxpW
-         aN3SCjO5TyBaYg+JVEK5hMbb44E5tIT04vjW4oQ80R4XMwMAG93lKe1vwRPlblI4PiVD
-         OQkjEx5M9aaupXxQQQHgxxptTXVGaimjWtgRduyHp+hIOaW7wD/JpX4qkAulI5gA9EX8
-         81LgP/FhQ6MQkdxCmgn6k+hcXn/lDaeTbCN6UQEA2l/8NEptfz9nEiOwB778O80KRWQZ
-         bxBw==
-X-Gm-Message-State: APjAAAV2SGEyrgtEQunFxeIJgNrwDDJdKMoPjd1b7YwovWm7gtm1NNVS
-        9AOYFODxq8A+V1XyLz96vFw=
-X-Google-Smtp-Source: APXvYqz7DKuSwCaT7Oqi7TD0hTMLSVZGaKUxZ8UDtvuWifMHzKPO9jzopX+sJDAL8LazUfq8VHznYw==
-X-Received: by 2002:a1c:9a46:: with SMTP id c67mr52161wme.115.1569443537037;
-        Wed, 25 Sep 2019 13:32:17 -0700 (PDT)
-Received: from localhost.localdomain (99-48-196-88.sta.estpak.ee. [88.196.48.99])
-        by smtp.googlemail.com with ESMTPSA id t14sm105774wrs.6.2019.09.25.13.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 13:32:16 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] brcmsmac: remove duplicated if condition
-Date:   Wed, 25 Sep 2019 23:31:52 +0300
-Message-Id: <20190925203152.21548-1-efremov@linux.com>
+        bh=Joen6PgN4Ppb107hjPSYd8q2loeVTGPWBeR8yaoJJfc=;
+        b=Ik+RPFdpNS0JUtz3ZGLXYJtBFd3pDCXgfskcHZLmQ8kBmSquJ6StsR+TbrswX7D1kf
+         ecNzxDli2uixFw5gWVxY7cvM8t3bTmwdwmFL0l4OBhkY6icBEpVb+bDxqZlGnPO+nEZV
+         8+m9XFR5BNXESWpQUWFaMWgsWmOLm9DuaQO/PmA3Ji2hQsb/JnXTfzkmVZSLzNn2NgQ0
+         iUD4goXP8pUzOwnzylKLmZHlkU02f+zR/wD6J+bhq9kCFbbEvkjW2MI0dLEdAVnQtaf0
+         m/IUTaltMX8rXCyAZ3MffbJtKB91eQKFJmPXbwE2In68fYFT2xCPnlJr3UIpjDu54gVl
+         Hd4w==
+X-Gm-Message-State: APjAAAX1NzGBW25tFBWfpYLm2phIDSynicK8VjBUR5HQsM/h9RJgflB6
+        Ki1Ri0ne87BAqvMLmysx8Mathw==
+X-Google-Smtp-Source: APXvYqwP6ll3AAaHm5zA/bZMtHo3VackpD0kbI9u/xv9rtajmPg9oQEH0fjV0awqQtIwDacR9W4tiA==
+X-Received: by 2002:a6b:b704:: with SMTP id h4mr1413903iof.218.1569443541534;
+        Wed, 25 Sep 2019 13:32:21 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id 80sm449790iou.13.2019.09.25.13.32.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Sep 2019 13:32:21 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, enric.balletbo@collabora.com,
+        bleung@chromium.org, dlaurie@chromium.org, djkurtz@chromium.org,
+        dtor@google.com, Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v3] rtc: wilco-ec: Handle reading invalid times
+Date:   Wed, 25 Sep 2019 14:32:09 -0600
+Message-Id: <20190925203209.79941-1-ncrews@chromium.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -65,36 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nested 'li_mimo == &locale_bn' check is excessive and always
-true. Thus it can be safely removed.
+If the RTC HW returns an invalid time, the rtc_year_days()
+call would crash. This patch adds error logging in this
+situation, and removes the tm_yday and tm_wday calculations.
+These fields should not be relied upon by userspace
+according to man rtc, and thus we don't need to calculate
+them.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Nick Crews <ncrews@chromium.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmsmac/channel.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-wilco-ec.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-index db783e94f929..5a6d9c86552a 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-@@ -496,13 +496,11 @@ brcms_c_channel_reg_limits(struct brcms_cm_info *wlc_cm, u16 chanspec,
- 	 * table and override CDD later
- 	 */
- 	if (li_mimo == &locale_bn) {
--		if (li_mimo == &locale_bn) {
--			maxpwr20 = QDB(16);
--			maxpwr40 = 0;
-+		maxpwr20 = QDB(16);
-+		maxpwr40 = 0;
+diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+index 8ad4c4e6d557..53da355d996a 100644
+--- a/drivers/rtc/rtc-wilco-ec.c
++++ b/drivers/rtc/rtc-wilco-ec.c
+@@ -110,10 +110,15 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+ 	tm->tm_mday	= rtc.day;
+ 	tm->tm_mon	= rtc.month - 1;
+ 	tm->tm_year	= rtc.year + (rtc.century * 100) - 1900;
+-	tm->tm_yday	= rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+-
+-	/* Don't compute day of week, we don't need it. */
+-	tm->tm_wday = -1;
++	/* Ignore other tm fields, man rtc says userspace shouldn't use them. */
++
++	if (rtc_valid_tm(tm)) {
++		dev_err(dev,
++			 "Time from RTC is invalid: second=%u, minute=%u, hour=%u, day=%u, month=%u, year=%u, century=%u",
++			 rtc.second, rtc.minute, rtc.hour, rtc.day, rtc.month,
++			 rtc.year, rtc.century);
++		return -EIO;
++	}
  
--			if (chan >= 3 && chan <= 11)
--				maxpwr40 = QDB(16);
--		}
-+		if (chan >= 3 && chan <= 11)
-+			maxpwr40 = QDB(16);
- 
- 		for (i = 0; i < BRCMS_NUM_RATES_MCS_1_STREAM; i++) {
- 			txpwr->mcs_20_siso[i] = (u8) maxpwr20;
+ 	return 0;
+ }
 -- 
 2.21.0
 
