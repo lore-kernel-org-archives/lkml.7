@@ -2,41 +2,41 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF66EC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83065C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8784A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2E12146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633749AbfIYCDV (ORCPT
+        id S2633759AbfIYCDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 22:03:21 -0400
+        Tue, 24 Sep 2019 22:03:25 -0400
 Received: from mga17.intel.com ([192.55.52.151]:32026 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394649AbfIYCDT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 22:03:19 -0400
+        id S2633750AbfIYCDV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 22:03:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 19:03:19 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 19:03:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
-   d="scan'208";a="213896594"
+   d="scan'208";a="213896608"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2019 19:03:16 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2019 19:03:19 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 1/2] perf stat: Support --all-kernel and --all-user options
-Date:   Wed, 25 Sep 2019 10:02:17 +0800
-Message-Id: <20190925020218.8288-2-yao.jin@linux.intel.com>
+Subject: [PATCH v1 2/2] perf stat: Support topdown with --all-kernel/--all-user
+Date:   Wed, 25 Sep 2019 10:02:18 +0800
+Message-Id: <20190925020218.8288-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190925020218.8288-1-yao.jin@linux.intel.com>
 References: <20190925020218.8288-1-yao.jin@linux.intel.com>
@@ -45,372 +45,416 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-perf record has supported --all-kernel / --all-user to configure all used
-events to run in kernel space or in user space. But perf stat doesn't support
-that. It would be useful to support these options so that we can collect
-metrics for e.g. user space only without having to type ":u" in the events
-manually.
+When perf stat --topdown is enabled, the internal event list is expanded to:
+"{topdown-total-slots,topdown-slots-retired,topdown-recovery-bubbles,topdown-fetch-bubbles,topdown-slots-issued}".
 
-Also it would be useful if --all-user / --all-kernel could be specified
-together, and the tool would automatically add two copies of the events,
-so that we get a break down between user and kernel.
+With this patch,
 
-Since we need to support specifying both --all-user and --all-kernel together,
-we can't do as what the perf record does for supporting --all-user /
---all-kernel (it sets attr->exclude_kernel and attr->exclude_user).
+1. When --all-user is enabled, it's expanded to:
+"{topdown-total-slots:u,topdown-slots-retired:u,topdown-recovery-bubbles:u,topdown-fetch-bubbles:u,topdown-slots-issued:u}"
 
-This patch uses another solution which appends the modifiers ":u"/":k" to
-event string.
+2. When --all-kernel is enabled, it's expanded to:
+"{topdown-total-slots:k,topdown-slots-retired:k,topdown-recovery-bubbles:k,topdown-fetch-bubbles:k,topdown-slots-issued:k}"
+
+3. Both are enabled, it's expanded to:
+"{topdown-total-slots:k,topdown-slots-retired:k,topdown-recovery-bubbles:k,topdown-fetch-bubbles:k,topdown-slots-issued:k},{topdown-total-slots:u,topdown-slots-retired:u,topdown-recovery-bubbles:u,topdown-fetch-bubbles:u,topdown-slots-issued:u}"
+
+This patch creates new topdown stat type (STAT_TOPDOWN_XXX_K /
+STAT_TOPDOWN_XXX_U), and save the event counting value to type
+related entry in runtime_stat rblist.
 
 For example,
-perf stat -e cycles,instructions --all-user --all-kernel
 
-It's automatically expanded to:
-perf stat -e cycles:k,instructions:k,cycles:u,instructions:u
-
-More examples,
-
- root@kbl:~# perf stat -e cycles --all-kernel --all-user -a -- sleep 1
+ root@kbl:~# perf stat -a --topdown --all-kernel -- sleep 1
 
  Performance counter stats for 'system wide':
 
-        20,884,637      cycles:k
-     4,511,494,722      cycles:u
+                                  retiring:k    bad speculation:k     frontend bound:k      backend bound:k
+S0-D0-C0           2                 7.6%                 1.8%                40.5%                50.0%
+S0-D0-C1           2                15.4%                 3.4%                14.4%                66.8%
+S0-D0-C2           2                15.8%                 5.1%                26.9%                52.2%
+S0-D0-C3           2                 5.7%                 5.7%                46.2%                42.4%
 
-       1.000891147 seconds time elapsed
+       1.000771709 seconds time elapsed
 
- root@kbl:~# perf stat -e cycles,instructions --all-kernel --all-user -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-        19,156,665      cycles:k
-         7,265,342      instructions:k            #    0.38  insn per cycle
-     4,511,186,293      cycles:u
-       121,881,436      instructions:u            #    0.03  insn per cycle
-
-       1.001153540 seconds time elapsed
-
- root@kbl:~#  perf stat -e "{cycles,instructions}" --all-kernel --all-user -a -- sleep 1
+ root@kbl:~# perf stat -a --topdown --all-user -- sleep 1
 
  Performance counter stats for 'system wide':
 
-        16,230,472      cycles:k
-         5,357,549      instructions:k            #    0.33  insn per cycle
-     4,510,695,030      cycles:u
-       122,097,780      instructions:u            #    0.03  insn per cycle
+                                  retiring:u    bad speculation:u     frontend bound:u      backend bound:u
+S0-D0-C0           2                 0.5%                 0.0%                 0.0%                99.4%
+S0-D0-C1           2                 5.7%                 5.8%                77.7%                10.7%
+S0-D0-C2           2                15.5%                20.5%                35.8%                28.2%
+S0-D0-C3           2                14.1%                 0.5%                 1.5%                83.9%
 
-       1.000933419 seconds time elapsed
-
- root@kbl:~# perf stat -e "{cycles,instructions},{cache-misses,cache-references}" --all-kernel --all-user -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       111,688,302      cycles:k                                                      (74.81%)
-        24,322,238      instructions:k            #    0.22  insn per cycle           (74.81%)
-         1,115,414      cache-misses:k            #   21.292 % of all cache refs      (75.02%)
-         5,238,665      cache-references:k                                            (75.02%)
-     4,506,792,681      cycles:u                                                      (75.22%)
-       124,199,635      instructions:u            #    0.03  insn per cycle           (75.22%)
-        43,846,543      cache-misses:u            #   62.616 % of all cache refs      (74.97%)
-        70,024,231      cache-references:u                                            (74.97%)
-
-       1.001186804 seconds time elapsed
-
-Note:
-
-1. This patch can only configure the specified events (-e xxx) to run
-   in user space or in kernel space. For supporting other options, such as
-   --topdown, need follow-up patches.
-
-2. In perf-record, it has already supported the --all-kernel and
-   --all-user, but they can't be combined. We should keep the behavior
-   consistent among all perf subtools. So if this patch can be accepted,
-   will post follow-up patches for supporting other subtools for the
-   same behavior.
+       1.000773028 seconds time elapsed
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/Documentation/perf-record.txt |   3 +-
- tools/perf/Documentation/perf-stat.txt   |   7 +
- tools/perf/builtin-stat.c                | 163 ++++++++++++++++++++++-
- tools/perf/util/stat.h                   |  11 ++
- 4 files changed, 182 insertions(+), 2 deletions(-)
+ tools/perf/builtin-stat.c     |  37 +++++++-
+ tools/perf/util/stat-shadow.c | 167 +++++++++++++++++++++++++---------
+ tools/perf/util/stat.h        |  12 +++
+ 3 files changed, 171 insertions(+), 45 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index c6f9f31b6039..739e29905184 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -495,7 +495,8 @@ Produce compressed trace using specified level n (default: 1 - fastest compressi
- Configure all used events to run in kernel space.
- 
- --all-user::
--Configure all used events to run in user space.
-+Configure all used events to run in user space. The --all-kernel
-+and --all-user can't be combined.
- 
- --kernel-callchains::
- Collect callchains only from kernel space. I.e. this option sets
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 930c51c01201..3f630e2f4144 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -323,6 +323,13 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
- 
- Users who wants to get the actual value can apply --no-metric-only.
- 
-+--all-kernel::
-+Configure all specified events to run in kernel space.
-+
-+--all-user::
-+Configure all specified events to run in user space. The --all-kernel
-+and --all-user can be combined.
-+
- EXAMPLES
- --------
- 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 468fc49420ce..7f4d22b00d04 100644
+index 7f4d22b00d04..b766293b9a15 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -65,6 +65,7 @@
- #include "util/target.h"
- #include "util/time-utils.h"
- #include "util/top.h"
-+#include "util/strbuf.h"
- #include "asm/bug.h"
+@@ -1436,7 +1436,8 @@ static int add_default_attributes(void)
  
- #include <linux/time64.h>
-@@ -723,12 +724,124 @@ static int parse_metric_groups(const struct option *opt,
- 	return metricgroup__parse_groups(opt, str, &stat_config.metric_events);
- }
- 
-+static int get_char_num(const char *str, char ch)
-+{
-+	int i = 0;
-+
-+	while (*str != '\0') {
-+		if (*str == ch)
-+			i++;
-+		str++;
-+	}
-+
-+	return i;
-+}
-+
-+static int append_uk(struct strbuf *new_str, char *old_str, char ch)
-+{
-+	char *str_dup, *name, *next, *sep;
-+	int event_num = get_char_num(old_str, ',') + 1;
-+
-+	str_dup = strdup(old_str);
-+	if (!str_dup)
-+		return -1;
-+
-+	name = strtok_r(str_dup, ",", &next);
-+	while (name) {
-+		sep = strchr(name, ':');
-+		if (sep)
-+			*sep = 0;
-+
-+		if (--event_num)
-+			strbuf_addf(new_str, "%s:%c,", name, ch);
-+		else
-+			strbuf_addf(new_str, "%s:%c", name, ch);
-+
-+		name = strtok_r(NULL, ",", &next);
-+	}
-+
-+	free(str_dup);
-+	return 0;
-+}
-+
-+static int get_group_num(char *str)
-+{
-+	return get_char_num(str, '}');
-+}
-+
-+static int append_group_uk(struct strbuf *new_str, const char *old_str, bool k)
-+{
-+	char *str_dup, *group_str, *group_next, ch;
-+	int group_num;
-+	bool no_group;
-+
-+	str_dup = strdup(old_str);
-+	if (!str_dup)
-+		return -1;
-+
-+	group_num = get_group_num(str_dup);
-+	ch = (k) ? 'k' : 'u';
-+	no_group = (group_num) ? false : true;
-+
-+	group_str = strtok_r(str_dup, "}", &group_next);
-+	while (group_str) {
-+		append_uk(new_str, group_str, ch);
-+
-+		if (!no_group) {
-+			if (--group_num)
-+				strbuf_addf(new_str, "},");
-+			else
-+				strbuf_addf(new_str, "}");
-+		}
-+
-+		group_str = strtok_r(NULL, "}", &group_next);
-+		if (group_str && *group_str == ',')
-+			group_str++;
-+	}
-+
-+	free(str_dup);
-+	return 0;
-+}
-+
-+static int append_modifier(struct strbuf *new_str, const char *str,
-+			   bool all_kernel, bool all_user)
-+{
-+	int ret;
-+
-+	strbuf_init(new_str, 512);
-+
-+	if (all_kernel && all_user) {
-+		ret = append_group_uk(new_str, str, true);
-+		if (ret)
-+			return ret;
-+
-+		strbuf_addf(new_str, ",");
-+		ret = append_group_uk(new_str, str, false);
-+	} else
-+		ret = append_group_uk(new_str, str, all_kernel);
-+
-+	return ret;
-+}
-+
-+static int parse_events_option_wrap(const struct option *opt, const char *str,
-+				    int unset __maybe_unused)
-+{
-+	if (stat_config.opt_num < PERF_STAT_EVENT_OPT_MAX) {
-+		stat_config.event_opt[stat_config.opt_num].opt = opt;
-+		stat_config.event_opt[stat_config.opt_num].event_str = str;
-+		stat_config.opt_num++;
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
- static struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
- 	OPT_CALLBACK('e', "event", &evsel_list, "event",
- 		     "event selector. use 'perf list' to list available events",
--		     parse_events_option),
-+		     parse_events_option_wrap),
- 	OPT_CALLBACK(0, "filter", &evsel_list, "filter",
- 		     "event filter", parse_filter),
- 	OPT_BOOLEAN('i', "no-inherit", &stat_config.no_inherit,
-@@ -800,6 +913,10 @@ static struct option stat_options[] = {
- 			"measure topdown level 1 statistics"),
- 	OPT_BOOLEAN(0, "smi-cost", &smi_cost,
- 			"measure SMI cost"),
-+	OPT_BOOLEAN(0, "all-user", &stat_config.all_user,
-+		    "Configure all used events to run in user space."),
-+	OPT_BOOLEAN(0, "all-kernel", &stat_config.all_kernel,
-+		    "Configure all used events to run in kernel space."),
- 	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
- 		     "monitor specified metrics or metric groups (separated by ,)",
- 		     parse_metric_groups),
-@@ -1680,6 +1797,44 @@ static void setup_system_wide(int forks)
- 	}
- }
- 
-+static int parse_events_again(void)
-+{
-+	int i, ret;
-+
-+	if (!stat_config.all_kernel && !stat_config.all_user) {
-+		for (i = 0; i < stat_config.opt_num; i++) {
-+			ret = parse_events_option(stat_config.event_opt[i].opt,
-+					stat_config.event_opt[i].event_str, 0);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		return 0;
-+	}
-+
-+	for (i = 0; i < stat_config.opt_num; i++) {
+ 	if (topdown_run) {
+ 		char *str = NULL;
+-		bool warn = false;
++		bool warn = false, append_uk = false;
 +		struct strbuf new_str;
+ 
+ 		if (stat_config.aggr_mode != AGGR_GLOBAL &&
+ 		    stat_config.aggr_mode != AGGR_CORE) {
+@@ -1457,6 +1458,21 @@ static int add_default_attributes(void)
+ 			return -1;
+ 		}
+ 		if (topdown_attrs[0] && str) {
++			int ret;
 +
-+		ret = append_modifier(&new_str,
-+				      stat_config.event_opt[i].event_str,
-+				      stat_config.all_kernel,
-+				      stat_config.all_user);
-+		if (ret)
-+			return ret;
++			if (stat_config.all_kernel || stat_config.all_user) {
++				ret = append_modifier(&new_str, str,
++						stat_config.all_kernel,
++						stat_config.all_user);
++				if (ret)
++					return ret;
 +
-+		pr_debug("New event string with appended modifiers: %s\n",
-+			 new_str.buf);
++				free(str);
++				str = strbuf_detach(&new_str, NULL);
++				strbuf_release(&new_str);
++				append_uk = true;
++			}
 +
-+		ret = parse_events_option(stat_config.event_opt[i].opt,
-+					  new_str.buf, 0);
-+		strbuf_release(&new_str);
-+		if (ret)
-+			return ret;
+ 			if (warn)
+ 				arch_topdown_group_warn();
+ 			err = parse_events(evsel_list, str, &errinfo);
+@@ -1468,6 +1484,25 @@ static int add_default_attributes(void)
+ 				free(str);
+ 				return -1;
+ 			}
++
++			if (append_uk) {
++				struct evsel *evsel;
++				char *p;
++
++				evlist__for_each_entry(evsel_list, evsel) {
++					/*
++					 * We appended the modifiers ":u"/":k"
++					 * to evsel->name. Since the events have
++					 * been parsed, remove the appended
++					 * modifiers from event name here.
++					 */
++					if (evsel->name) {
++						p = strchr(evsel->name, ':');
++						if (p)
++							*p = 0;
++					}
++				}
++			}
+ 		} else {
+ 			fprintf(stderr, "System does not support topdown\n");
+ 			return -1;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 70c87fdb2a43..013e0f772658 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -204,6 +204,24 @@ static void update_runtime_stat(struct runtime_stat *st,
+ 		update_stats(&v->stats, count);
+ }
+ 
++static void update_runtime_stat_uk(struct runtime_stat *st,
++				   enum stat_type type,
++				   int ctx, int cpu, u64 count,
++				   struct evsel *counter, int type_off)
++{
++	struct perf_event_attr *attr = &counter->core.attr;
++
++	if (!attr->exclude_user && !attr->exclude_kernel)
++		update_runtime_stat(st, type, ctx, cpu, count);
++	else if (attr->exclude_user) {
++		update_runtime_stat(st, type + type_off,
++				    ctx, cpu, count);
++	} else {
++		update_runtime_stat(st, type + type_off * 2,
++				    ctx, cpu, count);
 +	}
-+
-+	return 0;
 +}
 +
- int cmd_stat(int argc, const char **argv)
- {
- 	const char * const stat_usage[] = {
-@@ -1708,6 +1863,12 @@ int cmd_stat(int argc, const char **argv)
- 	argc = parse_options_subcommand(argc, argv, stat_options, stat_subcommands,
- 					(const char **) stat_usage,
- 					PARSE_OPT_STOP_AT_NON_OPTION);
+ /*
+  * Update various tracking values we maintain to print
+  * more semantic information such as miss/hit ratios,
+@@ -229,20 +247,25 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+ 	else if (perf_stat_evsel__is(counter, ELISION_START))
+ 		update_runtime_stat(st, STAT_ELISION, ctx, cpu, count);
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_TOTAL_SLOTS))
+-		update_runtime_stat(st, STAT_TOPDOWN_TOTAL_SLOTS,
+-				    ctx, cpu, count);
++		update_runtime_stat_uk(st, STAT_TOPDOWN_TOTAL_SLOTS,
++				       ctx, cpu, count, counter,
++				       STAT_TOPDOWN_NUM);
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_ISSUED))
+-		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_ISSUED,
+-				    ctx, cpu, count);
++		update_runtime_stat_uk(st, STAT_TOPDOWN_SLOTS_ISSUED,
++				       ctx, cpu, count, counter,
++				       STAT_TOPDOWN_NUM);
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_RETIRED))
+-		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_RETIRED,
+-				    ctx, cpu, count);
++		update_runtime_stat_uk(st, STAT_TOPDOWN_SLOTS_RETIRED,
++				       ctx, cpu, count, counter,
++				       STAT_TOPDOWN_NUM);
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_FETCH_BUBBLES))
+-		update_runtime_stat(st, STAT_TOPDOWN_FETCH_BUBBLES,
+-				    ctx, cpu, count);
++		update_runtime_stat_uk(st, STAT_TOPDOWN_FETCH_BUBBLES,
++				       ctx, cpu, count, counter,
++				       STAT_TOPDOWN_NUM);
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_RECOVERY_BUBBLES))
+-		update_runtime_stat(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
+-				    ctx, cpu, count);
++		update_runtime_stat_uk(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
++				       ctx, cpu, count, counter,
++				       STAT_TOPDOWN_NUM);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+ 		update_runtime_stat(st, STAT_STALLED_CYCLES_FRONT,
+ 				    ctx, cpu, count);
+@@ -410,6 +433,20 @@ static double runtime_stat_avg(struct runtime_stat *st,
+ 	return avg_stats(&v->stats);
+ }
+ 
++static double runtime_stat_avg_uk(struct runtime_stat *st,
++				  enum stat_type type, int ctx, int cpu,
++				  struct evsel *counter, int type_off)
++{
++	struct perf_event_attr *attr = &counter->core.attr;
 +
-+	if (parse_events_again() != 0) {
-+		parse_options_usage(stat_usage, stat_options, "e", 1);
-+		goto out;
++	if (!attr->exclude_user && !attr->exclude_kernel)
++		return runtime_stat_avg(st, type, ctx, cpu);
++	else if (attr->exclude_user)
++		return runtime_stat_avg(st, type + type_off, ctx, cpu);
++
++	return runtime_stat_avg(st, type + type_off * 2, ctx, cpu);
++}
++
+ static double runtime_stat_n(struct runtime_stat *st,
+ 			     enum stat_type type, int ctx, int cpu)
+ {
+@@ -639,56 +676,67 @@ static double sanitize_val(double x)
+ 	return x;
+ }
+ 
+-static double td_total_slots(int ctx, int cpu, struct runtime_stat *st)
++static double td_total_slots(int ctx, int cpu, struct runtime_stat *st,
++			     struct evsel *evsel)
+ {
+-	return runtime_stat_avg(st, STAT_TOPDOWN_TOTAL_SLOTS, ctx, cpu);
++	return runtime_stat_avg_uk(st, STAT_TOPDOWN_TOTAL_SLOTS, ctx, cpu,
++				   evsel, STAT_TOPDOWN_NUM);
+ }
+ 
+-static double td_bad_spec(int ctx, int cpu, struct runtime_stat *st)
++static double td_bad_spec(int ctx, int cpu, struct runtime_stat *st,
++			  struct evsel *evsel)
+ {
+ 	double bad_spec = 0;
+ 	double total_slots;
+ 	double total;
+ 
+-	total = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_ISSUED, ctx, cpu) -
+-		runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED, ctx, cpu) +
+-		runtime_stat_avg(st, STAT_TOPDOWN_RECOVERY_BUBBLES, ctx, cpu);
++	total = runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_ISSUED, ctx, cpu,
++				    evsel, STAT_TOPDOWN_NUM) -
++		runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_RETIRED, ctx, cpu,
++				    evsel, STAT_TOPDOWN_NUM) +
++		runtime_stat_avg_uk(st, STAT_TOPDOWN_RECOVERY_BUBBLES, ctx, cpu,
++				    evsel, STAT_TOPDOWN_NUM);
+ 
+-	total_slots = td_total_slots(ctx, cpu, st);
++	total_slots = td_total_slots(ctx, cpu, st, evsel);
+ 	if (total_slots)
+ 		bad_spec = total / total_slots;
+ 	return sanitize_val(bad_spec);
+ }
+ 
+-static double td_retiring(int ctx, int cpu, struct runtime_stat *st)
++static double td_retiring(int ctx, int cpu, struct runtime_stat *st,
++			  struct evsel *evsel)
+ {
+ 	double retiring = 0;
+-	double total_slots = td_total_slots(ctx, cpu, st);
+-	double ret_slots = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED,
+-					    ctx, cpu);
++	double total_slots = td_total_slots(ctx, cpu, st, evsel);
++	double ret_slots = runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_RETIRED,
++					       ctx, cpu, evsel,
++					       STAT_TOPDOWN_NUM);
+ 
+ 	if (total_slots)
+ 		retiring = ret_slots / total_slots;
+ 	return retiring;
+ }
+ 
+-static double td_fe_bound(int ctx, int cpu, struct runtime_stat *st)
++static double td_fe_bound(int ctx, int cpu, struct runtime_stat *st,
++			  struct evsel *evsel)
+ {
+ 	double fe_bound = 0;
+-	double total_slots = td_total_slots(ctx, cpu, st);
+-	double fetch_bub = runtime_stat_avg(st, STAT_TOPDOWN_FETCH_BUBBLES,
+-					    ctx, cpu);
++	double total_slots = td_total_slots(ctx, cpu, st, evsel);
++	double fetch_bub = runtime_stat_avg_uk(st, STAT_TOPDOWN_FETCH_BUBBLES,
++					       ctx, cpu, evsel,
++					       STAT_TOPDOWN_NUM);
+ 
+ 	if (total_slots)
+ 		fe_bound = fetch_bub / total_slots;
+ 	return fe_bound;
+ }
+ 
+-static double td_be_bound(int ctx, int cpu, struct runtime_stat *st)
++static double td_be_bound(int ctx, int cpu, struct runtime_stat *st,
++			  struct evsel *evsel)
+ {
+-	double sum = (td_fe_bound(ctx, cpu, st) +
+-		      td_bad_spec(ctx, cpu, st) +
+-		      td_retiring(ctx, cpu, st));
++	double sum = (td_fe_bound(ctx, cpu, st, evsel) +
++		      td_bad_spec(ctx, cpu, st, evsel) +
++		      td_retiring(ctx, cpu, st, evsel));
+ 	if (sum == 0)
+ 		return 0;
+ 	return sanitize_val(1.0 - sum);
+@@ -814,6 +862,33 @@ static void generic_metric(struct perf_stat_config *config,
+ 		zfree(&pctx.ids[i].name);
+ }
+ 
++static void print_metric_uk(struct perf_stat_config *config,
++			    void *ctx, const char *color,
++			    const char *fmt, const char *unit,
++			    double val, struct evsel *evsel,
++			    print_metric_t print_metric)
++{
++	struct perf_event_attr *attr = &evsel->core.attr;
++	char *new_unit;
++
++	if (!attr->exclude_user && !attr->exclude_kernel) {
++		print_metric(config, ctx, color, fmt, unit, val);
++		return;
 +	}
 +
- 	perf_stat__collect_metric_expr(evsel_list);
- 	perf_stat__init_shadow_stats();
++	new_unit = calloc(1, strlen(unit) + 3);
++	if (!new_unit)
++		return;
++
++	if (attr->exclude_user)
++		sprintf(new_unit, "%s:k", unit);
++	else
++		sprintf(new_unit, "%s:u", unit);
++
++	print_metric(config, ctx, color, fmt, new_unit, val);
++	free(new_unit);
++}
++
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+ 				   double avg, int cpu,
+@@ -986,28 +1061,30 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
+ 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_BUBBLES)) {
+-		double fe_bound = td_fe_bound(ctx, cpu, st);
++		double fe_bound = td_fe_bound(ctx, cpu, st, evsel);
  
+ 		if (fe_bound > 0.2)
+ 			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
+-				fe_bound * 100.);
++		print_metric_uk(config, ctxp, color, "%8.1f%%",
++				"frontend bound",
++				fe_bound * 100., evsel, print_metric);
+ 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_RETIRED)) {
+-		double retiring = td_retiring(ctx, cpu, st);
++		double retiring = td_retiring(ctx, cpu, st, evsel);
+ 
+ 		if (retiring > 0.7)
+ 			color = PERF_COLOR_GREEN;
+-		print_metric(config, ctxp, color, "%8.1f%%", "retiring",
+-				retiring * 100.);
++		print_metric_uk(config, ctxp, color, "%8.1f%%", "retiring",
++				retiring * 100., evsel, print_metric);
+ 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_RECOVERY_BUBBLES)) {
+-		double bad_spec = td_bad_spec(ctx, cpu, st);
++		double bad_spec = td_bad_spec(ctx, cpu, st, evsel);
+ 
+ 		if (bad_spec > 0.1)
+ 			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "bad speculation",
+-				bad_spec * 100.);
++		print_metric_uk(config, ctxp, color, "%8.1f%%",
++				"bad speculation",
++				bad_spec * 100., evsel, print_metric);
+ 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_ISSUED)) {
+-		double be_bound = td_be_bound(ctx, cpu, st);
++		double be_bound = td_be_bound(ctx, cpu, st, evsel);
+ 		const char *name = "backend bound";
+ 		static int have_recovery_bubbles = -1;
+ 
+@@ -1020,11 +1097,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 
+ 		if (be_bound > 0.2)
+ 			color = PERF_COLOR_RED;
+-		if (td_total_slots(ctx, cpu, st) > 0)
+-			print_metric(config, ctxp, color, "%8.1f%%", name,
+-					be_bound * 100.);
+-		else
+-			print_metric(config, ctxp, NULL, NULL, name, 0);
++		if (td_total_slots(ctx, cpu, st, evsel) > 0)
++			print_metric_uk(config, ctxp, color, "%8.1f%%", name,
++					be_bound * 100., evsel, print_metric);
++		else {
++			print_metric_uk(config, ctxp, NULL, NULL, name, 0,
++					evsel, print_metric);
++		}
+ 	} else if (evsel->metric_expr) {
+ 		generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
+ 				evsel->metric_name, NULL, avg, cpu, out, st);
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index edbeb2f63e8d..8154e07ced64 100644
+index 8154e07ced64..1bae80ed5543 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -93,6 +93,13 @@ struct runtime_stat {
- typedef int (*aggr_get_id_t)(struct perf_stat_config *config,
- 			     struct perf_cpu_map *m, int cpu);
+@@ -60,6 +60,8 @@ enum {
  
-+struct perf_stat_event_opt {
-+	const struct option	*opt;
-+	const char		*event_str;
-+};
-+
-+#define PERF_STAT_EVENT_OPT_MAX        128
-+
- struct perf_stat_config {
- 	enum aggr_mode		 aggr_mode;
- 	bool			 scale;
-@@ -106,6 +113,8 @@ struct perf_stat_config {
- 	bool			 big_num;
- 	bool			 no_merge;
- 	bool			 walltime_run_table;
-+	bool			 all_kernel;
-+	bool			 all_user;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
-@@ -126,6 +135,8 @@ struct perf_stat_config {
- 	struct perf_cpu_map		*cpus_aggr_map;
- 	u64			*walltime_run;
- 	struct rblist		 metric_events;
-+	struct perf_stat_event_opt	event_opt[PERF_STAT_EVENT_OPT_MAX];
-+	int			opt_num;
- };
+ #define NUM_CTX CTX_BIT_MAX
  
- void update_stats(struct stats *stats, u64 val);
++#define STAT_TOPDOWN_NUM	5
++
+ enum stat_type {
+ 	STAT_NONE = 0,
+ 	STAT_NSECS,
+@@ -81,6 +83,16 @@ enum stat_type {
+ 	STAT_TOPDOWN_SLOTS_RETIRED,
+ 	STAT_TOPDOWN_FETCH_BUBBLES,
+ 	STAT_TOPDOWN_RECOVERY_BUBBLES,
++	STAT_TOPDOWN_TOTAL_SLOTS_K,
++	STAT_TOPDOWN_SLOTS_ISSUED_K,
++	STAT_TOPDOWN_SLOTS_RETIRED_K,
++	STAT_TOPDOWN_FETCH_BUBBLES_K,
++	STAT_TOPDOWN_RECOVERY_BUBBLES_K,
++	STAT_TOPDOWN_TOTAL_SLOTS_U,
++	STAT_TOPDOWN_SLOTS_ISSUED_U,
++	STAT_TOPDOWN_SLOTS_RETIRED_U,
++	STAT_TOPDOWN_FETCH_BUBBLES_U,
++	STAT_TOPDOWN_RECOVERY_BUBBLES_U,
+ 	STAT_SMI_NUM,
+ 	STAT_APERF,
+ 	STAT_MAX
 -- 
 2.17.1
 
