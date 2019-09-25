@@ -2,219 +2,207 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A0FC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEDEC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A5A20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303E7208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="USlapULo"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RFXt8KJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfIYXOw (ORCPT
+        id S1727850AbfIYXTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:14:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38651 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfIYXOw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:14:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h195so473324pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3yR13IGBtpRxVrAvXtfdwL1FPEzwU8Klk4nC+0EqJDk=;
-        b=USlapULohZkvBJ17J2gKRIWAKw/YXLuN9Fnt7BuRoAbcPLpaksvJ19mWQjaAdswy9I
-         XJ3EaMa0HMcTzhP7IHvOXewlMJLc4YjrgiwltQHTNYsK9SIZ1fM4mw3qJUZ6I961Y3rq
-         xMpnts49joruj2BWQz0UB7FFSvWLzWnus5LdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3yR13IGBtpRxVrAvXtfdwL1FPEzwU8Klk4nC+0EqJDk=;
-        b=QsrzmM3t1qA4J9GO8a10r8LdsVQ4klM03QCXcs0tP8oBuraH9PSJ2uQLVr29pQIvaI
-         ANmhW1S+VhcDlZVhT/BEALw9rSOkJpMmYOGrESfRbleq4DS5A9onJHte9vKlinRsAO/V
-         kPxn0vOIJodlfbrZ0/5xkQSs+1Zhwk04rscu0EdSIUj90ygquFYfZorVTZvbFWZ7k1FP
-         sDNKqum2ZP5sQ8O0aQo82yMF0kevJbhShfvsJMJLp4YYrVBePD8KPrudNb6X/zwYZfFx
-         LuDuAvpEkRWzNvsuii7WodWgGAHjciLcB8nACuf0TKt8XFeSytNxb5JkqRY3u4a8J6a9
-         u1jw==
-X-Gm-Message-State: APjAAAXu4Ik+MYwH3qISwjxIhVpPrB0xhL4a6i/j6mb08IfmSFhPNJ2X
-        DqSq/y3bgkOs/HJFsBy+rXMJpRbMgJ8=
-X-Google-Smtp-Source: APXvYqy10lz2t+xFYDw8ejqY/v+AUKNcAsXJqKVO6YWQl/wFQTx9PSW3o6jaAjC3MWIfLPMq/Q3cnw==
-X-Received: by 2002:a17:90a:3462:: with SMTP id o89mr238538pjb.2.1569453291258;
-        Wed, 25 Sep 2019 16:14:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 22sm90977pfo.131.2019.09.25.16.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 16:14:50 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 16:14:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?J=E9r=E9mie?= Galarneau 
-        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
-        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
-        akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH] audit: Report suspicious O_CREAT usage
-Message-ID: <201909251614.5FDA48B1@keescook>
-References: <201909251348.A1542A52@keescook>
+        Wed, 25 Sep 2019 19:19:02 -0400
+Received: from mail-eopbgr810111.outbound.protection.outlook.com ([40.107.81.111]:51651
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbfIYXTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:19:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LFLEX36xuv+KdsTI1bQcYOt6gXdW7cjV8VGxGIFzQUQnyW/bM+iL11D8oArcCeRgWtMEWktQuKpCkhOZyQ40SD9YCxK2giUz1D+IuJK2FGrErxW32kD3OxZvzFlQh/h5nbL5+zs3BoFGrEaNOJYUVHFvb58i/IiFIT3senK7MtkMtm+go0C/EILWnfi3stBpP514F1MlO5hFVnRpOqDqt7Of832UDpAni/6FJR/9LZXdQlQ54oF9QcyaDciNEqeZqpP0KNSClj5k3fvxYF2iyiesl9F133w6Q2pSGzMhZYWP5cQFAiMiFY839u+BpHBwrnDpfYW/qNaIVuel3m7twQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
+ b=LyhxEKmYOwEBQwGbcUMRxJobn9CZCYznXJUiLae9dZCf08ypI7tso05iARQBiikuOsmxACmJ+sNsDZGwzKBqVRV3jXdi6Qe+l56uYuJjGqePbWALJx6JD0lz3EfUEZvh4JIR9pEfQcYOFXUSS69mOk/FCUEu3cJtSoIy1s9BLm+E4Lopy43hyJ/RdH0SPHC4C+j0/vctxtqLUFiJcVU/AzoRzjdYrFroGxzLP4WAU3WhstR1BTDKV9xZrR4Nzxb8P5/3tazoaQnw/5Xf9NTzjqftp0L+lx0YPGImGZxyXjd6FGakhEyKSrFZcr8yBLdxFouDTkJLu8tcGWOn6zK1cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
+ b=RFXt8KJ8WJbaUfNiM5PK5pcJe4fimK+DY3dTVriDfXxaPEmh7uZ01J4xR/ftXYHDEc27tGikHSfKYvoy1gqqgTCphwWMLZwJzyMvZg4+X5tlv8IXiH8LZDfom8s4iRzmKFh4NKs02z2jwcPsiny5l0ttpOy6upOd5N6eXSYsOtk=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0926.namprd21.prod.outlook.com (52.132.117.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.6; Wed, 25 Sep 2019 23:18:59 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 23:18:59 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU offlining
+ by unbinding the timer
+Thread-Topic: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU
+ offlining by unbinding the timer
+Thread-Index: AQHVc/ecbv5QrwA48EqrdEdWUjIEMQ==
+Date:   Wed, 25 Sep 2019 23:18:59 +0000
+Message-ID: <1569453525-41874-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0039.namprd12.prod.outlook.com
+ (2603:10b6:301:2::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR2101MB0926:|SN6PR2101MB0926:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <SN6PR2101MB09264A58F56408F55E82B867BF870@SN6PR2101MB0926.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(99286004)(256004)(8676002)(81166006)(8936002)(386003)(6506007)(14444005)(478600001)(966005)(102836004)(10290500003)(3450700001)(36756003)(7736002)(52116002)(4720700003)(3846002)(50226002)(6486002)(81156014)(6636002)(25786009)(5660300002)(43066004)(107886003)(2201001)(66946007)(66476007)(64756008)(66556008)(66446008)(71190400001)(2616005)(4326008)(476003)(6436002)(14454004)(2906002)(6116002)(305945005)(86362001)(66066001)(110136005)(6512007)(6306002)(26005)(316002)(1511001)(186003)(10090500001)(71200400001)(22452003)(2501003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0926;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Ea2UFSUQIZ9a9ZTkmcSUOv518ncNZFxpa0HS6xUkcBbQlM19BrAX8o38jRWJCvfSi2rcO/MPf7Zs6piLRkwz9+Tlu3TAOC1abO1L+mXSWOVnDGQUEX3aFKRKop5Lst0x3I07k0orLZtxN8lFW1n7D8ZK64BOly4EYMxRs7h4zsxw70tZKX7OksXSt3nU2p2sUL9FPlubq3koSYCEqCEZSQpLYrz4U7rRFg0XDA+/qv9yomDk5KT0m/YEKH1D40JI+iDJHirl2FsMS3IXmTeIpTpnv3zaCjN/cApd86zDQAbRPuSnPi1fHN7Y3A6pWBxRStkyCXHznfGzRd63HLLpBRXyA90EuEEXrGKqxjl18fnkWTq7FI66ITSfeiIOVHM2oRi0oLLSeMlIS5P8uMHPv7etaWifSuKI+MnL2bTJLCex6yhHHPLlN2YanlQL3Lr1MXubfaHPfyJhJP6vLABpA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <201909251348.A1542A52@keescook>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 23:18:59.2813
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q8welkBKSr4yfy9yrF5Q7aCQGHtZALKiOiSl/iW/TW/F4JvQZWkcHMhccawqM0KvKLXYlYZjqDwuF5BLtHSdXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0926
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 02:02:33PM -0700, Kees Cook wrote:
-> This renames the very specific audit_log_link_denied() to
-> audit_log_path_denied() and adds the AUDIT_* type as an argument. This
-> allows for the creation of the new AUDIT_ANOM_CREAT that can be used to
-> report the fifo/regular file creation restrictions that were introduced
-> in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and
-> regular files"). Without this change, discovering that the restriction
-> is enabled can be very challenging:
-> https://lore.kernel.org/lkml/CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQOdkFq0PA@mail.gmail.com
-> 
-> Reported-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> This is not a complete fix because reporting was broken in commit
-> 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
-> audit_dummy_context")
-> which specifically goes against the intention of these records: they
-> should _always_ be reported. If auditing isn't enabled, they should be
-> ratelimited.
-> 
-> Instead of using audit, should this just go back to using
-> pr_ratelimited()?
-> ---
->  fs/namei.c                 |  7 +++++--
->  include/linux/audit.h      |  5 +++--
->  include/uapi/linux/audit.h |  1 +
->  kernel/audit.c             | 11 ++++++-----
->  4 files changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 671c3c1a3425..0e60f81e1d5a 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -925,7 +925,7 @@ static inline int may_follow_link(struct nameidata *nd)
->  		return -ECHILD;
->  
->  	audit_inode(nd->name, nd->stack[0].link.dentry, 0);
-> -	audit_log_link_denied("follow_link");
-> +	audit_log_path_denied(AUDIT_ANOM_LINK, "follow_link");
->  	return -EACCES;
->  }
->  
-> @@ -993,7 +993,7 @@ static int may_linkat(struct path *link)
->  	if (safe_hardlink_source(inode) || inode_owner_or_capable(inode))
->  		return 0;
->  
-> -	audit_log_link_denied("linkat");
-> +	audit_log_path_denied(AUDIT_ANOM_LINK, "linkat");
->  	return -EPERM;
->  }
->  
-> @@ -1031,6 +1031,9 @@ static int may_create_in_sticky(struct dentry * const dir,
->  	    (dir->d_inode->i_mode & 0020 &&
->  	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
->  	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
-> +		audit_log_path_denied(AUDIT_ANOM_CREAT,
-> +				      S_ISFIFO(inode->i_mode) ? "fifo"
-> +							      : "regular");
->  		return -EACCES;
->  	}
->  	return 0;
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index aee3dc9eb378..b3715e2ee1c5 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -156,7 +156,8 @@ extern void		    audit_log_d_path(struct audit_buffer *ab,
->  					     const struct path *path);
->  extern void		    audit_log_key(struct audit_buffer *ab,
->  					  char *key);
-> -extern void		    audit_log_link_denied(const char *operation);
-> +extern void		    audit_log_path_denied(int type,
-> +						  const char *operation);
->  extern void		    audit_log_lost(const char *message);
->  
->  extern int audit_log_task_context(struct audit_buffer *ab);
-> @@ -217,7 +218,7 @@ static inline void audit_log_d_path(struct audit_buffer *ab,
->  { }
->  static inline void audit_log_key(struct audit_buffer *ab, char *key)
->  { }
-> -static inline void audit_log_link_denied(const char *string)
-> +static inline void audit_log_path_denied(int type, const char *string);
+The commit fd1fea6834d0 says "No behavior is changed", but actually it
+removes the clockevents_unbind_device() call from hv_synic_cleanup().
 
-Oops, typo above (should be no trailing ";"). Thanks 0day-bot! I didn't
-build without CONFIG_AUDIT. :)
+In the discussion earlier this month, I thought the unbind call is
+unnecessary (see https://www.spinics.net/lists/arm-kernel/msg739888.html),
+however, after more investigation, when a VM runs on Hyper-V, it turns out
+the unbind call must be kept, otherwise CPU offling may not work, because
+a per-cpu timer device is still needed, after hv_synic_cleanup() disables
+the per-cpu Hyper-V timer device.
 
--Kees
+The issue is found in the hibernation test. These are the details:
 
->  { }
->  static inline int audit_log_task_context(struct audit_buffer *ab)
->  {
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index c89c6495983d..3ad935527177 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -143,6 +143,7 @@
->  #define AUDIT_ANOM_PROMISCUOUS      1700 /* Device changed promiscuous mode */
->  #define AUDIT_ANOM_ABEND            1701 /* Process ended abnormally */
->  #define AUDIT_ANOM_LINK		    1702 /* Suspicious use of file links */
-> +#define AUDIT_ANOM_CREAT	    1703 /* Suspicious file creation */
->  #define AUDIT_INTEGRITY_DATA	    1800 /* Data integrity verification */
->  #define AUDIT_INTEGRITY_METADATA    1801 /* Metadata integrity verification */
->  #define AUDIT_INTEGRITY_STATUS	    1802 /* Integrity enable status */
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index da8dc0db5bd3..ed7402ac81b6 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -2155,18 +2155,19 @@ void audit_log_task_info(struct audit_buffer *ab)
->  EXPORT_SYMBOL(audit_log_task_info);
->  
->  /**
-> - * audit_log_link_denied - report a link restriction denial
-> - * @operation: specific link operation
-> + * audit_log_path_denied - report a path restriction denial
-> + * @type: audit message type (AUDIT_ANOM_LINK, AUDIT_ANOM_CREAT, etc)
-> + * @operation: specific operation name
->   */
-> -void audit_log_link_denied(const char *operation)
-> +void audit_log_path_denied(int type, const char *operation)
->  {
->  	struct audit_buffer *ab;
->  
->  	if (!audit_enabled || audit_dummy_context())
->  		return;
->  
-> -	/* Generate AUDIT_ANOM_LINK with subject, operation, outcome. */
-> -	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_ANOM_LINK);
-> +	/* Generate log with subject, operation, outcome. */
-> +	ab = audit_log_start(audit_context(), GFP_KERNEL, type);
->  	if (!ab)
->  		return;
->  	audit_log_format(ab, "op=%s", operation);
-> -- 
-> 2.17.1
-> 
-> 
-> -- 
-> Kees Cook
+1. CPU0 hangs in wait_for_ap_thread(), when trying to offline CPU1:
 
--- 
-Kees Cook
+hibernation_snapshot
+  create_image
+    suspend_disable_secondary_cpus
+      freeze_secondary_cpus
+        _cpu_down(1, 1, CPUHP_OFFLINE)
+          cpuhp_kick_ap_work
+            cpuhp_kick_ap
+              __cpuhp_kick_ap
+                wait_for_ap_thread()
+
+2. CPU0 hangs because CPU1 hangs this way: after CPU1 disables the per-cpu
+Hyper-V timer device in hv_synic_cleanup(), CPU1 sets a timer... Please
+read on to see how this can happen.
+
+2.1 By "_cpu_down(1, 1, CPUHP_OFFLINE):", CPU0 first tries to move CPU1 to
+the CPUHP_TEARDOWN_CPU state and this wakes up the cpuhp/1 thread on CPU1;
+the thread is basically a loop of executing various callbacks defined in
+the global array cpuhp_hp_states[]: see smpboot_thread_fn().
+
+2.2 This is how a callback is called on CPU1:
+  smpboot_thread_fn
+    ht->thread_fn(td->cpu), i.e. cpuhp_thread_fun
+      cpuhp_invoke_callback
+        state =3D st->state
+        st->state--
+        cpuhp_get_step(state)->teardown.single()
+
+2.3 At first, the state of CPU1 is CPUHP_ONLINE, which defines a
+.teardown.single of NULL, so the execution of the code returns to the loop
+in smpboot_thread_fn(), and then reruns cpuhp_invoke_callback() with a
+smaller st->state.
+
+2.4 The .teardown.single of every state between CPUHP_ONLINE and
+CPUHP_TEARDOWN_CPU runs one by one.
+
+2.5 When it comes to the CPUHP_AP_ONLINE_DYN range, hv_synic_cleanup()
+runs: see vmbus_bus_init(). It calls hv_stimer_cleanup() ->
+hv_ce_shutdown() to disable the per-cpu timer device, so timer interrupt
+will no longer happen on CPU1.
+
+2.6 Later, the .teardown.single of CPUHP_AP_SMPBOOT_THREADS, i.e.
+smpboot_park_threads(), starts to run, trying to park all the other
+hotplug_threads, e.g. ksoftirqd/1 and rcuc/1; here a timer can be set up
+this way and the timer will never be fired since CPU1 doesn't have
+an active timer device now, so CPU1 hangs and can not be offlined:
+  smpboot_park_threads
+    smpboot_park_thread
+      kthread_park
+        wait_task_inactive
+          schedule_hrtimeout(&to, HRTIMER_MODE_REL)
+
+With this patch, when the per-cpu Hyper-V timer device is disabled, the
+system switches to the Local APIC timer, and the hang issue can not
+happen.
+
+Fixes: fd1fea6834d0 ("clocksource/drivers: Make Hyper-V clocksource ISA agn=
+ostic")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+The patch was firstly posted on Jul 27: https://lkml.org/lkml/2019/7/27/5
+
+There is no change since then.
+
+ drivers/clocksource/hyperv_timer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyper=
+v_timer.c
+index ba2c79e6a0ee..17b96f9ed0c9 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -139,6 +139,7 @@ void hv_stimer_cleanup(unsigned int cpu)
+ 	/* Turn off clockevent device */
+ 	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+ 		ce =3D per_cpu_ptr(hv_clock_event, cpu);
++		clockevents_unbind_device(ce, cpu);
+ 		hv_ce_shutdown(ce);
+ 	}
+ }
+--=20
+2.19.1
+
