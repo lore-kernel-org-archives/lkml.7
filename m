@@ -2,432 +2,165 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B831C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D81C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088312146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GttsSrRE"
+	by mail.kernel.org (Postfix) with ESMTP id 9FBC721D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569427661;
+	bh=BDhFvt5VGk5cpLsmQKS0fUfwCU66ZuF9Gw8byviviXQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OUaNYu2RNR/Ox+uouRs+SEkDF2B6KEJmVJhQ+wO3c6gzEldoVLpog2Jni8aSolOq6
+	 LwtugVebK2M4DZnwJ1rDsfb53eFhoEs6xkmYckgNXlZe3LGeMY4t7LRba5Ze68idxp
+	 8JsleFje5JWU3LowAne9RbvnLqK2Tm4G3kskd8L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501876AbfIYQFA (ORCPT
+        id S2501922AbfIYQHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:05:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34362 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439801AbfIYQE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:04:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a11so7640382wrx.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ij6KjSR+lw1BQY7TXj2EigwOZMb+P0hFM5LFXgBiMgc=;
-        b=GttsSrREeRUalnrJO1ptygwbrFti+NUmA+9jgc4ur0uQ9+X4LpZyPCAT7vCxbbiLw3
-         kAyG89zLM9zJMPbTMuocLLp0dLRr5Am8Md+Tscbjk3MUvPfghJ8tVBswRVqgHNbH5Mon
-         LGL92mP9pZcFezVxWmKlz5RqktX9M+gdfWtbgNs2iEikm8J+FeZEnqpUpn1Pu83NFuRl
-         erCLkY8vVm4xFbzD6pTBg6VhvPlhyVwXiNLRzT77QipX0vKMph1feCwxrsPn6WWvTZsY
-         hmk9OQCMSuCapLDOtFMh0M+fnnMxzshPsdmIICUtU5754gUiujJcJRiP1Dd50NYnNb/v
-         C7/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ij6KjSR+lw1BQY7TXj2EigwOZMb+P0hFM5LFXgBiMgc=;
-        b=R7ACwEceE3UnTCx0C3MXt4VYBta2/gcJKVIJPEeDQ78/U33kSnydtxL8qqNIunQGHr
-         bBOo2eiZg24uY81pWk21/WC1VmN+ZXsd9hBI64hZUmBrVjojKubPz9Sp1otQ9BY5bJnr
-         of8hSTPlq9ropl95t2RfDzMtXwwqJzKYEGnPuFK+Ouj4dxA8AI/1SA4pufQV+5nRdBYk
-         zT26VAAQqQyvAZ4gvmhhYe7patiIfXtTSPIdWHWTMmwJAPQwnNpcJBSsyU1e2r4JbAG0
-         6FCP7RYS4Y/gXHAoCYU1+8kAt6rtyDPApjRMWgrnjS6FRNDQ8kkpyk6bKpghhxTq1Fam
-         n87g==
-X-Gm-Message-State: APjAAAXpX3uRmduSCy1IteVu/JK3Hz/OcuPa+beuQlw+jqw/gksnyFNP
-        /4w+bldYdkXqZoU477CGszWlEg==
-X-Google-Smtp-Source: APXvYqwCfOwN9m3fxmaibVuR6yyr8B/+xl1IYzzE4PtAv/mPVljXgIGmruoyXXzsfwt4PaIMjAj8xA==
-X-Received: by 2002:adf:ef05:: with SMTP id e5mr9791832wro.127.1569427494026;
-        Wed, 25 Sep 2019 09:04:54 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id a7sm5760321wra.43.2019.09.25.09.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 09:04:53 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Rosin <peda@axentia.se>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2] dt-bindings: at24: convert the binding document to yaml
-Date:   Wed, 25 Sep 2019 18:04:51 +0200
-Message-Id: <20190925160451.11116-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        Wed, 25 Sep 2019 12:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727993AbfIYQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:07:39 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756CA21E6F;
+        Wed, 25 Sep 2019 16:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569427658;
+        bh=BDhFvt5VGk5cpLsmQKS0fUfwCU66ZuF9Gw8byviviXQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZJuV1cg80pgN5dVIrsTjC7nHNpCLFivnDjpwqkOACU+jgzrs95f/ObjU5069y94x6
+         lIYLvZ5Z7fUWPr+ln7f2YxRfxo0Zbx7YXvc/WRwt3Y5Gwp01ZAG03eVOmAmpcuqA7q
+         dmDoEZvV0iEhslx4g4bWqERTerzWbEQeJhtFz0iM=
+Received: by mail-qt1-f175.google.com with SMTP id c21so7185020qtj.12;
+        Wed, 25 Sep 2019 09:07:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAVNM6tmq0uayl7fAteNRWeJ6dXHYFExP0h5hrs0FvkzxT12bph2
+        TFQWRgz0K9X/EdsaX38ux5jZh9kaAPZpWiKh7w==
+X-Google-Smtp-Source: APXvYqz1oy5m7mjvghNWjvvttiTqJZiM9hvPOK4OCMBp672J3JDiM/K63youpJW2QLzFXg+mEvd77PmoRL1xNiFzCqU=
+X-Received: by 2002:ac8:75c7:: with SMTP id z7mr19500qtq.136.1569427657263;
+ Wed, 25 Sep 2019 09:07:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+In-Reply-To: <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Sep 2019 11:07:25 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKuz7WEB9zP6apZrdsC_8Q4OQmSuvqgLzJFPsZio0Z6=g@mail.gmail.com>
+Message-ID: <CAL_JsqKuz7WEB9zP6apZrdsC_8Q4OQmSuvqgLzJFPsZio0Z6=g@mail.gmail.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, Sep 25, 2019 at 9:53 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > Hi All,
+> > > this series tries to address one of the issues blocking us from
+> > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> > > devices not represented in DT which sit behind a PCI bus fail to get the
+> > > bus' DMA addressing constraints.
+> > >
+> > > This is due to the fact that of_dma_configure() assumes it's receiving a
+> > > DT node representing the device being configured, as opposed to the PCIe
+> > > bridge node we currently pass. This causes the code to directly jump
+> > > into PCI's parent node when checking for 'dma-ranges' and misses
+> > > whatever was set there.
+> > >
+> > > To address this I create a new API in OF - inspired from Robin Murphys
+> > > original proposal[2] - which accepts a bus DT node as it's input in
+> > > order to configure a device's DMA constraints. The changes go deep into
+> > > of/address.c's implementation, as a device being having a DT node
+> > > assumption was pretty strong.
+> > >
+> > > On top of this work, I also cleaned up of_dma_configure() removing its
+> > > redundant arguments and creating an alternative function for the special
+> > > cases
+> > > not applicable to either the above case or the default usage.
+> > >
+> > > IMO the resulting functions are more explicit. They will probably
+> > > surface some hacky usages that can be properly fixed as I show with the
+> > > DT fixes on the Layerscape platform.
+> > >
+> > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> > > on a Seattle AMD board.
+> >
+> > Humm, I've been working on this issue too. Looks similar though yours
+> > has a lot more churn and there's some other bugs I've found.
+>
+> That's good news, and yes now that I see it, some stuff on my series is overly
+> complicated. Specially around of_translate_*().
+>
+> On top of that, you removed in of_dma_get_range():
+>
+> -       /*
+> -        * At least empty ranges has to be defined for parent node if
+> -        * DMA is supported
+> -        */
+> -       if (!ranges)
+> -               break;
+>
+> Which I assumed was bound to the standard and makes things easier.
 
-Convert the binding document for at24 EEPROMs from txt to yaml. The
-compatible property uses a regex pattern to address all the possible
-combinations of "vendor,model" strings.
+The standard is whatever we say it is and what exists in the wild...
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-v1 -> v2:
-- modified the compatible property: we now list all possible combinations and
-  non-standard types with appropriate fallbacks to be as strict as possible
-- minor changes to other properties: added constraints, converted to enums
-  where applicable and referenced the types from schema
+Probably better for me to get the series posted for context, but the
+above is removed because we could be passing in the bus device/child
+node and checking for 'dma-ranges' rather than only the bus node.
+While this does mean 'dma-ranges' could be in a child node which is
+wrong, it simplifies the only caller of_dma_configure(). And really,
+there's no way to detect that error. Someone could call
+of_dma_configure(NULL, child, ...). Perhaps we could assert that
+'ranges' is present whenever 'dma-ranges' is.
 
-Rob: please advise whether it's possible to somehow encapsulate the list
-of vendors in some kind of variable to not repeat it everywhere. I didn't
-find any such example.
+Back to the standard, I think it can be summarized as a device's
+immediate parent (a bus node) must contain 'dma-ranges'. All the
+parent nodes of the bus node should also have 'dma-ranges', but
+missing is treated as empty (1:1 translation). 'dma-ranges' missing in
+all the parent nodes is also treated as 1:1 translation and no
+addressing restrictions.
 
-The file passes a test with dt-doc-validate.
+> > Can you test out this branch[1]. I don't have any h/w needing this,
+> > but wrote a unittest and tested with modified QEMU.
+>
+> I reviewed everything, I did find a minor issue, see the patch attached.
+>
+> Also I tested your branch both on an RPi4, with a PCI device that depends on
+> these changes and by comparing the OF debugs logs on a Layerscape board which
+> uses dma-ranges, dma-coherent and IOMMU. All works as expected.
+>
+> Will you send this series for v5.5? Please keep me in the loop, I'll review and
+> test the final version.
 
- .../devicetree/bindings/eeprom/at24.txt       |  90 +-------
- .../devicetree/bindings/eeprom/at24.yaml      | 214 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 216 insertions(+), 90 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+Yes, sending it out soon.
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-index 22aead844d0f..c94acbb8cb0c 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-@@ -1,89 +1 @@
--EEPROMs (I2C)
--
--Required properties:
--
--  - compatible: Must be a "<manufacturer>,<model>" pair. The following <model>
--                values are supported (assuming "atmel" as manufacturer):
--
--                "atmel,24c00",
--                "atmel,24c01",
--                "atmel,24cs01",
--                "atmel,24c02",
--                "atmel,24cs02",
--                "atmel,24mac402",
--                "atmel,24mac602",
--                "atmel,spd",
--                "atmel,24c04",
--                "atmel,24cs04",
--                "atmel,24c08",
--                "atmel,24cs08",
--                "atmel,24c16",
--                "atmel,24cs16",
--                "atmel,24c32",
--                "atmel,24cs32",
--                "atmel,24c64",
--                "atmel,24cs64",
--                "atmel,24c128",
--                "atmel,24c256",
--                "atmel,24c512",
--                "atmel,24c1024",
--                "atmel,24c2048",
--
--                If <manufacturer> is not "atmel", then a fallback must be used
--                with the same <model> and "atmel" as manufacturer.
--
--                Example:
--                        compatible = "microchip,24c128", "atmel,24c128";
--
--                Supported manufacturers are:
--
--                "catalyst",
--                "microchip",
--                "nxp",
--                "ramtron",
--                "renesas",
--                "rohm",
--                "st",
--
--                Some vendors use different model names for chips which are just
--                variants of the above. Known such exceptions are listed below:
--
--                "nxp,se97b" - the fallback is "atmel,24c02",
--                "renesas,r1ex24002" - the fallback is "atmel,24c02"
--                "renesas,r1ex24016" - the fallback is "atmel,24c16"
--                "renesas,r1ex24128" - the fallback is "atmel,24c128"
--                "rohm,br24t01" - the fallback is "atmel,24c01"
--
--  - reg: The I2C address of the EEPROM.
--
--Optional properties:
--
--  - pagesize: The length of the pagesize for writing. Please consult the
--              manual of your device, that value varies a lot. A wrong value
--              may result in data loss! If not specified, a safety value of
--              '1' is used which will be very slow.
--
--  - read-only: This parameterless property disables writes to the eeprom.
--
--  - size: Total eeprom size in bytes.
--
--  - no-read-rollover: This parameterless property indicates that the
--                      multi-address eeprom does not automatically roll over
--                      reads to the next slave address. Please consult the
--                      manual of your device.
--
--  - wp-gpios: GPIO to which the write-protect pin of the chip is connected.
--
--  - address-width: number of address bits (one of 8, 16).
--
--  - num-addresses: total number of i2c slave addresses this device takes
--
--Example:
--
--eeprom@52 {
--	compatible = "atmel,24c32";
--	reg = <0x52>;
--	pagesize = <32>;
--	wp-gpios = <&gpio1 3 0>;
--	num-addresses = <8>;
--};
-+This file has been moved to at24.yaml.
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-new file mode 100644
-index 000000000000..46a0abc9199a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-@@ -0,0 +1,214 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 BayLibre SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: I2C EEPROMs compatible with Atmel's AT24
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+properties:
-+  compatible:
-+    minItems: 1
-+    maxItems: 2
-+    oneOf:
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c00$"
-+        - const: atmel,24c00
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c01$"
-+        - const: atmel,24c01
-+      - items:
-+        - const: rohm,br24t01
-+        - const: atmel,24c01
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs01$"
-+        - const: atmel,24cs01
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c02$"
-+        - const: atmel,24c02
-+      - items:
-+        - const: nxp,se97b
-+        - const: atmel,24c02
-+      - items:
-+        - const: renesas,r1ex24002
-+        - const: atmel,24c02
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs02$"
-+        - const: atmel,24cs02
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24mac402$"
-+        - const: atmel,24mac402
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24mac602$"
-+        - const: atmel,24mac602
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),spd$"
-+        - const: atmel,spd
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c04$"
-+        - const: atmel,24c04
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs04$"
-+        - const: atmel,24cs04
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c08$"
-+        - const: atmel,24c08
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs08$"
-+        - const: atmel,24cs08
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c16$"
-+        - const: atmel,24c16
-+      - items:
-+        - const: renesas,r1ex24016
-+        - const: atmel,24c16
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs16$"
-+        - const: atmel,24cs16
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c32$"
-+        - const: atmel,24c32
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs32$"
-+        - const: atmel,24cs32
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c64$"
-+        - const: atmel,24c64
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24cs64$"
-+        - const: atmel,24cs64
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c128$"
-+        - const: atmel,24c128
-+      - items:
-+        - const: renesas,r1ex24128
-+        - const: atmel,24c128
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c256$"
-+        - const: atmel,24c256
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c512$"
-+        - const: atmel,24c512
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c1024$"
-+        - const: atmel,24c1024
-+      - items:
-+        - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c20148$"
-+        - const: atmel,24c2048
-+      - items:
-+        - const: atmel,24c00
-+      - items:
-+        - const: atmel,24c01
-+      - items:
-+        - const: atmel,24cs01
-+      - items:
-+        - const: atmel,24c02
-+      - items:
-+        - const: atmel,24cs02
-+      - items:
-+        - const: atmel,24mac402
-+      - items:
-+        - const: atmel,24mac602
-+      - items:
-+        - const: atmel,spd
-+      - items:
-+        - const: atmel,24c04
-+      - items:
-+        - const: atmel,24cs04
-+      - items:
-+        - const: atmel,24c08
-+      - items:
-+        - const: atmel,24cs08
-+      - items:
-+        - const: atmel,24c16
-+      - items:
-+        - const: atmel,24cs16
-+      - items:
-+        - const: atmel,24c32
-+      - items:
-+        - const: atmel,24cs32
-+      - items:
-+        - const: atmel,24c64
-+      - items:
-+        - const: atmel,24cs64
-+      - items:
-+        - const: atmel,24c128
-+      - items:
-+        - const: atmel,24c256
-+      - items:
-+        - const: atmel,24c512
-+      - items:
-+        - const: atmel,24c1024
-+      - items:
-+        - const: atmel,24c2048
-+
-+  reg:
-+    description:
-+      I2C slave address of the EEPROM.
-+    maxItems: 1
-+
-+  pagesize:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The length of the pagesize for writing. Please consult the
-+      manual of your device, that value varies a lot. A wrong value
-+      may result in data loss! If not specified, a safety value of
-+      '1' is used which will be very slow.
-+    enum: [ 1, 8, 16, 32, 64, 128, 258 ]
-+    default: 1
-+
-+  read-only:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      This parameterless property disables writes to the eeprom.
-+
-+  size:
-+    description:
-+      Total eeprom size in bytes.
-+    type: integer
-+
-+  no-read-rollover:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      This parameterless property indicates that the multi-address
-+      eeprom does not automatically roll over reads to the next slave
-+      address. Please consult the manual of your device.
-+
-+  wp-gpios:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+    maxItems: 1
-+
-+  address-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Number of address bits (one of 8, 16).
-+    default: 8
-+    enum: [ 8, 16 ]
-+
-+  num-addresses:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Total number of i2c slave addresses this device takes.
-+    default: 1
-+    minimum: 1
-+    maximum: 8
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    eeprom@52 {
-+        compatible = "microchip,24c32", "atmel,24c32";
-+        reg = <0x52>;
-+        pagesize = <32>;
-+        wp-gpios = <&gpio1 3 0>;
-+        num-addresses = <8>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a400af0501c9..3c7ced686966 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2698,7 +2698,7 @@ M:	Bartosz Golaszewski <bgolaszewski@baylibre.com>
- L:	linux-i2c@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
- S:	Maintained
--F:	Documentation/devicetree/bindings/eeprom/at24.txt
-+F:	Documentation/devicetree/bindings/eeprom/at24.yaml
- F:	drivers/misc/eeprom/at24.c
- 
- ATA OVER ETHERNET (AOE) DRIVER
--- 
-2.23.0
-
+Rob
