@@ -2,149 +2,127 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E6C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC83C43630
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEAA21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9DA2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439064AbfIYPOi (ORCPT
+        id S2439160AbfIYPQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:14:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:52002 "EHLO foss.arm.com"
+        Wed, 25 Sep 2019 11:16:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54372 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfIYPOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:14:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 050E51570;
-        Wed, 25 Sep 2019 08:14:37 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3CDF3F59C;
-        Wed, 25 Sep 2019 08:14:35 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH] drm: Don't free jobs in wait_event_interruptible()
-Date:   Wed, 25 Sep 2019 16:14:04 +0100
-Message-Id: <20190925151404.23222-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726496AbfIYPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:16:19 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 05B5285540
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:16:19 +0000 (UTC)
+Received: by mail-io1-f70.google.com with SMTP id w16so10087666ioc.15
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:16:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=WoZ3HLwN6X4dNm7Y0wAK5ji0bCw6LaTLIwuuJsi7KNE=;
+        b=dAgPUZqgi+B8w1gGMKBLdnOdIl3zSQzkGooV2pneC//poH9FyHOQKVoRaq+PzxvzO5
+         oVY5ndP2T9XI7ZuOcdDZ+8W41cwPd+ScW4akgQU+kBz5h9OpmwRQCir1ytPLFOig96N7
+         mqG+8EKFcRXa8fqp8U3eA1Fw8/ejZqCdXpJSVeRZ35JWguB3aIzhrK61Gusyfy0hX2BG
+         e4BWm0QAGtt5Z/h9CBBcGYi5nXTTREtqxkJNhbkZu28fUCsp+tEYolk1f39VSENyM+Tk
+         kQ7aCVsb/FciTYW0aLlMb4XFU7/5hW1m5s2bFzzl3fO6cQoZatmuNk+5oAG/n/UrMlQF
+         4ebw==
+X-Gm-Message-State: APjAAAVpt3nn3bSBwSrb2jkdGjYKtNZyuEuoK81bbqVf/rRJJCzwXI1L
+        dQY6HTrlW33ftLHWcmkPn7hX58OznQAFBDGa6wdRblWR3IuG4byK60MpIpW2Fzkoh0bppQxi7Dq
+        +3DISj0CBX79goZZP4L4i/jTA
+X-Received: by 2002:a6b:b593:: with SMTP id e141mr11215323iof.233.1569424578389;
+        Wed, 25 Sep 2019 08:16:18 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyclCyMAN4oFi2IQAAmhPq0cIxvkiB9BgZVPkpxcPaiUF3OHEyJLBDQ0SzqmUXs9Ly1ogiCAg==
+X-Received: by 2002:a6b:b593:: with SMTP id e141mr11215286iof.233.1569424578099;
+        Wed, 25 Sep 2019 08:16:18 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id w16sm217154ilc.62.2019.09.25.08.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 08:16:17 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 08:16:16 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] efi+tpm: Don't access event->count when it isn't
+ mapped.
+Message-ID: <20190925151616.3glkehdrmuwtosn3@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190925101622.31457-1-jarkko.sakkinen@linux.intel.com>
+ <CAKv+Gu9xLXWj8e70rs6Oy3aT_+qvemMJqtOETQG+7z==Nf_RcQ@mail.gmail.com>
+ <20190925145011.GC23867@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190925145011.GC23867@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
+On Wed Sep 25 19, Jarkko Sakkinen wrote:
+>On Wed, Sep 25, 2019 at 12:25:05PM +0200, Ard Biesheuvel wrote:
+>> On Wed, 25 Sep 2019 at 12:16, Jarkko Sakkinen
+>> <jarkko.sakkinen@linux.intel.com> wrote:
+>> >
+>> > From: Peter Jones <pjones@redhat.com>
+>> >
+>> > Some machines generate a lot of event log entries.  When we're
+>> > iterating over them, the code removes the old mapping and adds a
+>> > new one, so once we cross the page boundary we're unmapping the page
+>> > with the count on it.  Hilarity ensues.
+>> >
+>> > This patch keeps the info from the header in local variables so we don't
+>> > need to access that page again or keep track of if it's mapped.
+>> >
+>> > Fixes: 44038bc514a2 ("tpm: Abstract crypto agile event size calculations")
+>> > Cc: linux-efi@vger.kernel.org
+>> > Cc: linux-integrity@vger.kernel.org
+>> > Cc: stable@vger.kernel.org
+>> > Signed-off-by: Peter Jones <pjones@redhat.com>
+>> > Tested-by: Lyude Paul <lyude@redhat.com>
+>> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> > Acked-by: Matthew Garrett <mjg59@google.com>
+>> > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>
+>> Thanks Jarkko.
+>>
+>> Shall I take these through the EFI tree?
+>
+>Would be great, if you could because I already sent one PR with fixes for
+>v5.4-rc1 yesterday.
+>
+>/Jarkko
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
-
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- drivers/gpu/drm/scheduler/sched_main.c | 44 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 9a0ee74d82dc..0ed4aaa4e6d1 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job = NULL;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
--
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+		return NULL;
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
-+
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		while (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			cleanup_job = drm_sched_get_cleanup_job(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
--- 
-2.20.1
-
+My patch collides with this, so I will submit a v3 that applies on top of
+these once I've run a test with all 3 applied on this t480s.
