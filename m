@@ -2,227 +2,219 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197A8C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7428BC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA40021D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F98620673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442732AbfIYIYp convert rfc822-to-8bit (ORCPT
+        id S2634083AbfIYI01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:24:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32480 "EHLO mga11.intel.com"
+        Wed, 25 Sep 2019 04:26:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38164 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405820AbfIYIYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:24:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 01:24:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="364256679"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga005.jf.intel.com with ESMTP; 25 Sep 2019 01:24:42 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 01:24:42 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Sep 2019 01:24:41 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 25 Sep 2019 01:24:41 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.92]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 16:24:38 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "idos@mellanox.com" <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>
-Subject: RE: [PATCH V2 0/8] mdev based hardware virtio offloading support
-Thread-Topic: [PATCH V2 0/8] mdev based hardware virtio offloading support
-Thread-Index: AQHVct+eQdtHh3CM1kSintZ5w217Z6c8D0tg
-Date:   Wed, 25 Sep 2019 08:24:38 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F68D@SHSMSX104.ccr.corp.intel.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
-In-Reply-To: <20190924135332.14160-1-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzNlNTRhOTItZmM2My00ZDE0LWI1MjgtY2VmOWFlNDZkMWJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaERhd1cxSkkrS1Y5NEZRdThqNm9jSFJJNHZmRU1SUStsRnp4WnpwMkYzVU5RNGducjNJTThkRHhlUkpXMng4bCJ9
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S2390395AbfIYI01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:26:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 544931DCD;
+        Wed, 25 Sep 2019 08:26:26 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-14.ams2.redhat.com [10.36.117.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AF61167A3;
+        Wed, 25 Sep 2019 08:26:22 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v1] drivers/base/memory.c: Drop the mem_sysfs_mutex
+Date:   Wed, 25 Sep 2019 10:26:21 +0200
+Message-Id: <20190925082621.4927-1-david@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 25 Sep 2019 08:26:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jason Wang [mailto:jasowang@redhat.com]
-> Sent: Tuesday, September 24, 2019 9:53 PM
-> 
-> Hi all:
-> 
-> There are hardware that can do virtio datapath offloading while having
-> its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
-> 
-> Though the series only contains kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
-> 
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
-> 
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
+The mem_sysfs_mutex isn't really helpful. Also, it's not really clear what
+the mutex protects at all.
 
-id_table claimed ... this series ...
+The device lists of the memory subsystem are protected separately. We don't
+need that mutex when looking up. creating, or removing independent
+devices. find_memory_block_by_id() will perform locking on its own and
+grab a reference of the returned device.
 
-> device specific parents ops out of the common ones.
-> 
-> Pktgen test was done with virito-net + mvnet loop back device.
-> 
-> Please review.
-> 
-> [1] https://lkml.org/lkml/2019/9/16/869
-> 
-> Changes from V1:
-> 
-> - move virtio_mdev.c to drivers/virtio
-> - store class_id in mdev_device instead of mdev_parent
-> - store device_ops in mdev_device instead of mdev_parent
-> - reorder the patch, vringh fix comes first
-> - really silent compiling warnings
-> - really switch to use u16 for class_id
-> - uevent and modpost support for mdev class_id
-> - vraious tweaks per comments from Parav
-> 
-> Changes from RFC-V2:
-> 
-> - silent compile warnings on some specific configuration
-> - use u16 instead u8 for class id
-> - reseve MDEV_ID_VHOST for future vhost-mdev work
-> - introduce "virtio" type for mvnet and make "vhost" type for future
->   work
-> - add entries in MAINTAINER
-> - tweak and typos fixes in commit log
-> 
-> Changes from RFC-V1:
-> 
-> - rename device id to class id
-> - add docs for class id and device specific ops (device_ops)
-> - split device_ops into seperate headers
-> - drop the mdev_set_dma_ops()
-> - use device_ops to implement the transport API, then it's not a part
->   of UAPI any more
-> - use GFP_ATOMIC in mvnet sample device and other tweaks
-> - set_vring_base/get_vring_base support for mvnet device
-> 
-> Jason Wang (8):
->   vringh: fix copy direction of vringh_iov_push_kern()
->   mdev: class id support
->   mdev: bus uevent support
->   modpost: add support for mdev class id
->   mdev: introduce device specific ops
->   mdev: introduce virtio device and its device ops
->   virtio: introduce a mdev based transport
->   docs: sample driver to demonstrate how to implement virtio-mdev
->     framework
-> 
->  .../driver-api/vfio-mediated-device.rst       |   7 +-
->  MAINTAINERS                                   |   2 +
->  drivers/gpu/drm/i915/gvt/kvmgt.c              |  18 +-
->  drivers/s390/cio/vfio_ccw_ops.c               |  18 +-
->  drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
->  drivers/vfio/mdev/mdev_core.c                 |  19 +
->  drivers/vfio/mdev/mdev_driver.c               |  22 +
->  drivers/vfio/mdev/mdev_private.h              |   2 +
->  drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
->  drivers/vhost/vringh.c                        |   8 +-
->  drivers/virtio/Kconfig                        |   7 +
->  drivers/virtio/Makefile                       |   1 +
->  drivers/virtio/virtio_mdev.c                  | 417 +++++++++++
->  include/linux/mdev.h                          |  52 +-
->  include/linux/mod_devicetable.h               |   8 +
->  include/linux/vfio_mdev.h                     |  52 ++
->  include/linux/virtio_mdev.h                   | 145 ++++
->  samples/Kconfig                               |   7 +
->  samples/vfio-mdev/Makefile                    |   1 +
->  samples/vfio-mdev/mbochs.c                    |  20 +-
->  samples/vfio-mdev/mdpy.c                      |  20 +-
->  samples/vfio-mdev/mtty.c                      |  18 +-
->  samples/vfio-mdev/mvnet.c                     | 692 ++++++++++++++++++
->  scripts/mod/devicetable-offsets.c             |   3 +
->  scripts/mod/file2alias.c                      |  10 +
->  25 files changed, 1524 insertions(+), 84 deletions(-)
->  create mode 100644 drivers/virtio/virtio_mdev.c
->  create mode 100644 include/linux/vfio_mdev.h
->  create mode 100644 include/linux/virtio_mdev.h
->  create mode 100644 samples/vfio-mdev/mvnet.c
-> 
-> --
-> 2.19.1
+At the time memory_dev_init() is called, we cannot have concurrent
+hot(un)plug operations yet - we're still fairly early during boot. We
+don't need any locking.
+
+The creation/removal of memory block devices should be protected
+on a higher level - especially using the device hotplug lock to avoid
+documented issues (see Documentation/core-api/memory-hotplug.rst) - or
+if that is reworked, using similar locking.
+
+Protecting in the context of these functions only doesn't really make
+sense. Especially, if we would have a situation where the same memory
+blocks are created/deleted at the same time, there is something horribly
+going wrong (imagining adding/removing a DIMM at the same time from two
+call paths) - after the functions succeeded something else in the
+callers would blow up (e.g., create_memory_block_devices() succeeded but
+there are no memory block devices anymore).
+
+All relevant call paths (except when adding memory early during boot
+via ACPI, which is now documented) hold the device hotplug lock when
+adding memory, and when removing memory. Let's document that instead.
+
+Add a simple safety net to create_memory_block_devices() in case we
+would actually remove memory blocks while adding them, so we'll never
+dereference a NULL pointer. Simplify memory_dev_init() now that the
+lock is gone.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+Tested using my usual x86-64 DIMM based hot(un)plug setup.
+
+---
+ drivers/base/memory.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 6bea4f3f8040..634aab8e1e19 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -19,15 +19,12 @@
+ #include <linux/memory.h>
+ #include <linux/memory_hotplug.h>
+ #include <linux/mm.h>
+-#include <linux/mutex.h>
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ 
+ #include <linux/atomic.h>
+ #include <linux/uaccess.h>
+ 
+-static DEFINE_MUTEX(mem_sysfs_mutex);
+-
+ #define MEMORY_CLASS_NAME	"memory"
+ 
+ #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+@@ -702,6 +699,8 @@ static void unregister_memory(struct memory_block *memory)
+  * Create memory block devices for the given memory area. Start and size
+  * have to be aligned to memory block granularity. Memory block devices
+  * will be initialized as offline.
++ *
++ * Called under device_hotplug_lock.
+  */
+ int create_memory_block_devices(unsigned long start, unsigned long size)
+ {
+@@ -715,7 +714,6 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+ 			 !IS_ALIGNED(size, memory_block_size_bytes())))
+ 		return -EINVAL;
+ 
+-	mutex_lock(&mem_sysfs_mutex);
+ 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+ 		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
+ 		if (ret)
+@@ -727,11 +725,12 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+ 		for (block_id = start_block_id; block_id != end_block_id;
+ 		     block_id++) {
+ 			mem = find_memory_block_by_id(block_id);
++			if (WARN_ON_ONCE(!mem))
++				continue;
+ 			mem->section_count = 0;
+ 			unregister_memory(mem);
+ 		}
+ 	}
+-	mutex_unlock(&mem_sysfs_mutex);
+ 	return ret;
+ }
+ 
+@@ -739,6 +738,8 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+  * Remove memory block devices for the given memory area. Start and size
+  * have to be aligned to memory block granularity. Memory block devices
+  * have to be offline.
++ *
++ * Called under device_hotplug_lock.
+  */
+ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ {
+@@ -751,7 +752,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ 			 !IS_ALIGNED(size, memory_block_size_bytes())))
+ 		return;
+ 
+-	mutex_lock(&mem_sysfs_mutex);
+ 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+ 		mem = find_memory_block_by_id(block_id);
+ 		if (WARN_ON_ONCE(!mem))
+@@ -760,7 +760,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ 		unregister_memory_block_under_nodes(mem);
+ 		unregister_memory(mem);
+ 	}
+-	mutex_unlock(&mem_sysfs_mutex);
+ }
+ 
+ /* return true if the memory block is offlined, otherwise, return false */
+@@ -794,12 +793,13 @@ static const struct attribute_group *memory_root_attr_groups[] = {
+ };
+ 
+ /*
+- * Initialize the sysfs support for memory devices...
++ * Initialize the sysfs support for memory devices. At the time this function
++ * is called, we cannot have concurrent creation/deletion of memory block
++ * devices, the device_hotplug_lock is not needed.
+  */
+ void __init memory_dev_init(void)
+ {
+ 	int ret;
+-	int err;
+ 	unsigned long block_sz, nr;
+ 
+ 	/* Validate the configured memory block size */
+@@ -810,24 +810,19 @@ void __init memory_dev_init(void)
+ 
+ 	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
+ 	if (ret)
+-		goto out;
++		panic("%s() failed to register subsystem: %d\n", __func__, ret);
+ 
+ 	/*
+ 	 * Create entries for memory sections that were found
+ 	 * during boot and have been initialized
+ 	 */
+-	mutex_lock(&mem_sysfs_mutex);
+ 	for (nr = 0; nr <= __highest_present_section_nr;
+ 	     nr += sections_per_block) {
+-		err = add_memory_block(nr);
+-		if (!ret)
+-			ret = err;
++		ret = add_memory_block(nr);
++		if (ret)
++			panic("%s() failed to add memory block: %d\n", __func__,
++			      ret);
+ 	}
+-	mutex_unlock(&mem_sysfs_mutex);
+-
+-out:
+-	if (ret)
+-		panic("%s() failed: %d\n", __func__, ret);
+ }
+ 
+ /**
+-- 
+2.21.0
 
