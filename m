@@ -2,288 +2,266 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D64C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFCFC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0FC20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E1120872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CcMJTl1+";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LCDZr8Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfIYWMw (ORCPT
+        id S1728942AbfIYWNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:12:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24431 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbfIYWMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:12:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 15:12:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,549,1559545200"; 
-   d="gz'50?scan'50,208,50";a="389381145"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Sep 2019 15:02:46 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iDFMz-0004Wq-KV; Thu, 26 Sep 2019 06:02:45 +0800
-Date:   Thu, 26 Sep 2019 06:02:11 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kbuild-all@01.org, Paul Moore <paul@paul-moore.com>,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?J=E9r=E9mie?= Galarneau 
-        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
-        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
-        akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH] audit: Report suspicious O_CREAT usage
-Message-ID: <201909260509.Ilv7TH89%lkp@intel.com>
-References: <201909251348.A1542A52@keescook>
+        Wed, 25 Sep 2019 18:13:35 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:65070 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbfIYWNf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1569449655; x=1600985655;
+  h=from:to:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=EFOOhMDtZK9gk31m+L93pzC4fVWd1eHrMOOY0EVeiHc=;
+  b=CcMJTl1+pUEqbYsTq+kQ1vjyIixKu6VEGZ2X80PL9mdG4/lJwweha+E+
+   Pgu0CzeD+dnTeO1/c6DlqgqVnjEkHeU/8iVjcRgoO0gL3kwQWwCT8h4k3
+   nkk8W+Qns7uE1tdgeqPd21fc3y3AiHxiGPvOzjKHtC2muf5MW2dYr8wyN
+   UDsD8ylOJuU3eEhWLC5cU9i2JZnOtFQxEdnbO1E/wf14whXAHt6lmKBpH
+   ST8rUhYoQJKKgTshs5/02YUK+82BIkiI1lKaje4bCpyzhgbgXowgC+jyO
+   DC2IaQ/OMEbzwfIe6Yu1h7GzxE3+C4NBftNk6svIfVEoWfQqrC9Jrf/BY
+   A==;
+IronPort-SDR: xyt+VlrhkjmXu5AWIsXcVI6p/bIibuqXxkTgqo1tJroQkk9OKSdjidM9hNyRD19qPsvIeAkqFU
+ IDRAq7BuHICW3CPL3dWfabO2vvhz35NZ0X1liRuiYdE4EsvSv9NQDP8LFALbXUP6VhH0J8watt
+ OKPvbzXK+TBM+bsVUYvU3+euZt4+XG4n5PoNh6fhQ8VwYeNrBFIAJvn+5PT7CwlZPYPuwOptmS
+ RD1orwmQZZWQQXJTe0KqtR+Xw+gcHPM/8zg1s5UvAWvW4+4sTiwf7TGTC6cukZPRm+8JjBGkkN
+ yEA=
+X-URL-LookUp-ScanningError: 1
+X-IronPort-AV: E=Sophos;i="5.64,549,1559491200"; 
+   d="scan'208";a="219954271"
+Received: from mail-bn3nam01lp2056.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.56])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Sep 2019 06:14:13 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ePQiiCyxOn1l5FdT7KO4VmhSpRC83IVNjqdNcd6ZPWSm9DwZnl3gxjwknNYy3pWwex3XQ/4rMBuvKEa0np5rAy762FpQ12UhGhWQTwTl9qXI7UOdK9DqYGPs48v1qTHDirLLKSm33QWrmE8o1wPKNGEoFsdfCFQsabrnUSsWtOfq0Cx23tjBNkKmKFU0mxmnVV90+er4djXUWZNEgJfqBzFX89Bbs6nxUhaQNaf8p7fny1RFMNh9bq1bVB2fyQ08SvyYzig30ZJfzVYj/iDjnyiqq5sQiakVeMvwTkYm/emb5O9SzEIRqxKaiJAiO6S1ku7naalp36hKZ0Tz0lvPnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2exqWsD3muopUcCBwwtXgLaibLOP9fxzKS4iOapggMc=;
+ b=A5v0eTyORpsLFxdVjFDhotl7ZbgineDKWC9WM8tlcxZzPCL/zV4Ec833aVigUEM2xY3pl748B8YZRhbHyVPQA7YR5sT0akdrN+knkIgtkIyGlht55UCq5ehk57+37DVfN8QfHyPXwVkzmiBM+JfjOQ10P+bbVyWoBBObP7mP/2gI9Sqjjs+FNIl9UZuXpzFlw6jl6y4dQDeLcDuVbf9AmWnnlBnCBoFvQjUhrNuimYJv3OD5K1kN62E17cqiU17uFQaDcbO/7v8qS98qvkQ3aDYUnwVio8rAp+hSshPY2Q9cJasQvqvPXvepUH7/kfw5j/YWMQwZTRwUnTrxmvMoxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2exqWsD3muopUcCBwwtXgLaibLOP9fxzKS4iOapggMc=;
+ b=LCDZr8Srpkd342lWbzdVSflWk//cvBBo9RVLInm4FU4YTzGE+IUatcYv4q/A97CsWqFhlB8BZ78mrfqMgZsGzQLiajKBwSIudQhD1dr1TgB8fFGK2llWJDrZnRQxZjQJi62V0E7kEUn8oNSOqKWl6kFF5hH14uT5OgreTDTnIgw=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
+ BYAPR04MB4199.namprd04.prod.outlook.com (20.176.251.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Wed, 25 Sep 2019 22:13:30 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::9821:67e1:9799:b117]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::9821:67e1:9799:b117%3]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 22:13:30 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: WARNING in blk_mq_init_sched
+Thread-Topic: WARNING in blk_mq_init_sched
+Thread-Index: AQHVc8ItP5axwXV6OEOhaCfuM27lXg==
+Date:   Wed, 25 Sep 2019 22:13:30 +0000
+Message-ID: <BYAPR04MB58169DBC0647FE4C91338844E7870@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <0000000000007909bf059363878e@google.com>
+ <BYAPR04MB5816244183004247FD3D1074E7870@BYAPR04MB5816.namprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c5ddd795-8c25-4a61-7e62-08d742059941
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4199;
+x-ms-traffictypediagnostic: BYAPR04MB4199:
+x-ms-exchange-purlcount: 5
+x-microsoft-antispam-prvs: <BYAPR04MB41998E49E17F79D13B92AF3EE7870@BYAPR04MB4199.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(199004)(189003)(8936002)(76116006)(71200400001)(71190400001)(186003)(86362001)(316002)(2201001)(7116003)(486006)(25786009)(9686003)(2501003)(74316002)(102836004)(55016002)(478600001)(26005)(7736002)(110136005)(6506007)(66066001)(53546011)(6246003)(305945005)(99286004)(8676002)(81156014)(81166006)(52536014)(6306002)(5660300002)(7696005)(76176011)(446003)(6436002)(3846002)(14454004)(6116002)(476003)(229853002)(66556008)(66946007)(64756008)(66476007)(2906002)(256004)(66446008)(33656002)(14444005)(966005)(99710200001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4199;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jwltx1eBaxMoM2KhYVL2+UB+nk9hE9eLlaOua54TgaHkoiBgjqrwt5zJ3JTDWv0Qi3hkcUs2ymGTrjAQUIdOYsUPuBKy4VZRafbYFKIm2+NrWguM8ja899xr68a50RZAdpX0o0hLYS1mx9r1deDNBFa3WyYyqAqPTVdTG2LIYrCxsdwvaSU35L0T5yTC7FvB+WJ71ahOWVrL5sS+Ny7v7tauKZdnrw9HQ2Qkzr+ccT3hixT6VxtGpk/1jRCu6xqL0AE6r41/Us9yzOS/gfKsi/ODeguFpOwNGIVusPfuFUWDzQFeuLi4N0j6YfNEXT8EeRpG9DAIZU3MRv1VCEcokBxX+F+/2TEaORIsdskh842C1R7F4fiYkqwvc3sfhDkTYWYtxiL8ZDPsGWDEsH7RLEcgCByVCAer9HAKJ2FI5LezuRtYNYjOBAelDaN2cmCGCZVsdzT8m5gMZQkIQTkgkQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="jxm6am24gmzrkwwr"
-Content-Disposition: inline
-In-Reply-To: <201909251348.A1542A52@keescook>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5ddd795-8c25-4a61-7e62-08d742059941
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:13:30.7631
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5Y7qn1A6dkBj0wk1+IQuiy/rIKO8OeUxU8N4xPO8VjdEE8ieyy5kMper8aEWTXBcj5csZ7Wk+YZ4seIvxyvpDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4199
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---jxm6am24gmzrkwwr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Kees,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[cannot apply to v5.3 next-20190924]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Kees-Cook/audit-Report-suspicious-O_CREAT-usage/20190926-050423
-config: i386-tinyconfig (attached as .config)
-compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=i386 
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/fsnotify.h:16:0,
-                    from fs/namei.c:25:
-   include/linux/audit.h:222:1: error: expected identifier or '(' before '{' token
-    { }
-    ^
-   In file included from include/linux/fsnotify.h:16:0,
-                    from fs/namei.c:25:
->> include/linux/audit.h:221:20: warning: 'audit_log_path_denied' used but never defined
-    static inline void audit_log_path_denied(int type, const char *string);
-                       ^~~~~~~~~~~~~~~~~~~~~
-
-vim +/audit_log_path_denied +221 include/linux/audit.h
-
-   187	
-   188	#else /* CONFIG_AUDIT */
-   189	static inline __printf(4, 5)
-   190	void audit_log(struct audit_context *ctx, gfp_t gfp_mask, int type,
-   191		       const char *fmt, ...)
-   192	{ }
-   193	static inline struct audit_buffer *audit_log_start(struct audit_context *ctx,
-   194							   gfp_t gfp_mask, int type)
-   195	{
-   196		return NULL;
-   197	}
-   198	static inline __printf(2, 3)
-   199	void audit_log_format(struct audit_buffer *ab, const char *fmt, ...)
-   200	{ }
-   201	static inline void audit_log_end(struct audit_buffer *ab)
-   202	{ }
-   203	static inline void audit_log_n_hex(struct audit_buffer *ab,
-   204					   const unsigned char *buf, size_t len)
-   205	{ }
-   206	static inline void audit_log_n_string(struct audit_buffer *ab,
-   207					      const char *buf, size_t n)
-   208	{ }
-   209	static inline void  audit_log_n_untrustedstring(struct audit_buffer *ab,
-   210							const char *string, size_t n)
-   211	{ }
-   212	static inline void audit_log_untrustedstring(struct audit_buffer *ab,
-   213						     const char *string)
-   214	{ }
-   215	static inline void audit_log_d_path(struct audit_buffer *ab,
-   216					    const char *prefix,
-   217					    const struct path *path)
-   218	{ }
-   219	static inline void audit_log_key(struct audit_buffer *ab, char *key)
-   220	{ }
- > 221	static inline void audit_log_path_denied(int type, const char *string);
- > 222	{ }
-   223	static inline int audit_log_task_context(struct audit_buffer *ab)
-   224	{
-   225		return 0;
-   226	}
-   227	static inline void audit_log_task_info(struct audit_buffer *ab)
-   228	{ }
-   229	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---jxm6am24gmzrkwwr
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-CKKWZ+gIOp4efyc4UPgXl2jGeRtoAAA=
-
---jxm6am24gmzrkwwr--
+On 2019/09/25 10:56, Damien Le Moal wrote:=0A=
+> On 2019/09/25 9:56, syzbot wrote:=0A=
+>> Hello,=0A=
+>>=0A=
+>> syzbot found the following crash on:=0A=
+>>=0A=
+>> HEAD commit:    f7c3bf8f Merge tag 'gfs2-for-5.4' of git://git.kernel.or=
+g/..=0A=
+>> git tree:       upstream=0A=
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15f5baf96000=
+00=0A=
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D50d4af03d68a=
+470c=0A=
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=3Db2c197f98f8654=
+3b69c8=0A=
+>> compiler:       clang version 9.0.0 (/home/glider/llvm/clang  =0A=
+>> 80fee25776c2fb61e74c1ecb1a523375c2500b69)=0A=
+>>=0A=
+>> Unfortunately, I don't have any reproducer for this crash yet.=0A=
+>>=0A=
+>> IMPORTANT: if you fix the bug, please add the following tag to the commi=
+t:=0A=
+>> Reported-by: syzbot+b2c197f98f86543b69c8@syzkaller.appspotmail.com=0A=
+> =0A=
+> Oh... When the queue is initialized and the elevator initialization done =
+by=0A=
+> elevator_init_mq() is executed without the queue sysfs lock held. In that=
+ step,=0A=
+> if the elevator initialization fails, blk_mq_sched_free_requests() is cal=
+led and=0A=
+> will trip on the lockdep_assert_held(&q->sysfs_lock) check on entry. I gu=
+ess=0A=
+> that is what is causing the crash ? But I thought lockdep_assert_held() o=
+nly=0A=
+> spits out warnings...=0A=
+> =0A=
+> Ming,=0A=
+> =0A=
+> Your patch c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_ini=
+t_mq")=0A=
+> removed the sysfs_lock use in elevator_init_mq(). With that, should we mo=
+ve the=0A=
+> lockdep_assert_held(&q->sysfs_lock) call out of blk_mq_sched_free_request=
+s() and=0A=
+> directly call it lockdep before calling that function (that's ugly) or do=
+ you=0A=
+> see a nice trick for handling the special case that is the first initiali=
+zation ?=0A=
+=0A=
+Please ignore. It looks like the gfs2 tree tested does not have commit=0A=
+954b4a5ce4a8 ("block: Change elevator_init_mq() to always succeed") which=
+=0A=
+removes the possibility of having blk_mq_sched_free_requests() being called=
+=0A=
+during the first elevator initialization without the sysfs lock being held.=
+=0A=
+=0A=
+So if the crash is indeed triggered by the lockdep_assert_held() call, then=
+ this=0A=
+problem will be fixed after a rebase on 5.4-rc1.=0A=
+=0A=
+> =0A=
+> Cheers.=0A=
+> =0A=
+>>=0A=
+>> ------------[ cut here ]------------=0A=
+>> WARNING: CPU: 1 PID: 25817 at block/blk-mq-sched.c:558  =0A=
+>> blk_mq_sched_free_requests block/blk-mq-sched.c:558 [inline]=0A=
+>> WARNING: CPU: 1 PID: 25817 at block/blk-mq-sched.c:558  =0A=
+>> blk_mq_init_sched+0xad6/0xc00 block/blk-mq-sched.c:543=0A=
+>> Kernel panic - not syncing: panic_on_warn set ...=0A=
+>> CPU: 1 PID: 25817 Comm: syz-executor.4 Not tainted 5.3.0+ #0=0A=
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS =
+ =0A=
+>> Google 01/01/2011=0A=
+>> Call Trace:=0A=
+>>   __dump_stack lib/dump_stack.c:77 [inline]=0A=
+>>   dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113=0A=
+>>   panic+0x25c/0x799 kernel/panic.c:219=0A=
+>>   __warn+0x22f/0x230 kernel/panic.c:576=0A=
+>>   report_bug+0x190/0x290 lib/bug.c:186=0A=
+>>   fixup_bug arch/x86/kernel/traps.c:179 [inline]=0A=
+>>   do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272=0A=
+>>   do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291=0A=
+>>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028=0A=
+>> RIP: 0010:blk_mq_sched_free_requests block/blk-mq-sched.c:558 [inline]=
+=0A=
+>> RIP: 0010:blk_mq_init_sched+0xad6/0xc00 block/blk-mq-sched.c:543=0A=
+>> Code: f6 e8 9e 03 00 00 49 83 c6 10 4c 89 f7 e8 82 08 37 04 e9 ce fd ff =
+ff  =0A=
+>> e8 c8 81 3f fe 48 c7 c7 72 5c 35 88 31 c0 e8 1d ae 28 fe <0f> 0b e9 ce f=
+9  =0A=
+>> ff ff e8 ae 81 3f fe 48 c7 c7 72 5c 35 88 31 c0 e8=0A=
+>> RSP: 0018:ffff88802225fbb8 EFLAGS: 00010246=0A=
+>> RAX: 0000000000000024 RBX: 0000000000000000 RCX: 489d2508ed9c7100=0A=
+>> RDX: ffffc9000e9a6000 RSI: 0000000000009af7 RDI: 0000000000009af8=0A=
+>> RBP: ffff88802225fc50 R08: ffffffff815c9744 R09: ffffed1015d66090=0A=
+>> R10: ffffed1015d66090 R11: 0000000000000000 R12: dffffc0000000000=0A=
+>> R13: ffff888026958990 R14: ffff888026958080 R15: ffff8880269580d0=0A=
+>>   elevator_init_mq+0x317/0x450 block/elevator.c:719=0A=
+>>   __device_add_disk+0x6d/0x1140 block/genhd.c:705=0A=
+>>   device_add_disk+0x2a/0x40 block/genhd.c:763=0A=
+>>   add_disk include/linux/genhd.h:429 [inline]=0A=
+>>   loop_add+0x5d1/0x780 drivers/block/loop.c:2051=0A=
+>>   loop_control_ioctl+0x422/0x640 drivers/block/loop.c:2174=0A=
+>>   do_vfs_ioctl+0x744/0x1730 fs/ioctl.c:46=0A=
+>>   ksys_ioctl fs/ioctl.c:713 [inline]=0A=
+>>   __do_sys_ioctl fs/ioctl.c:720 [inline]=0A=
+>>   __se_sys_ioctl fs/ioctl.c:718 [inline]=0A=
+>>   __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:718=0A=
+>>   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290=0A=
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe=0A=
+>> RIP: 0033:0x459a09=0A=
+>> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 =
+f7  =0A=
+>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 f=
+f  =0A=
+>> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00=0A=
+>> RSP: 002b:00007fce60497c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010=
+=0A=
+>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a09=0A=
+>> RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000006=0A=
+>> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000=0A=
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce604986d4=0A=
+>> R13: 00000000004c3118 R14: 00000000004d69f8 R15: 00000000ffffffff=0A=
+>> Kernel Offset: disabled=0A=
+>> Rebooting in 86400 seconds..=0A=
+>>=0A=
+>>=0A=
+>> ---=0A=
+>> This bug is generated by a bot. It may contain errors.=0A=
+>> See https://goo.gl/tpsmEJ for more information about syzbot.=0A=
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.=0A=
+>>=0A=
+>> syzbot will keep track of this bug report. See:=0A=
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
