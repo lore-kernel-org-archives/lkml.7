@@ -2,224 +2,208 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5622BC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B95C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBB320640
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569416629;
-	bh=AVgTSuNTDJc7iXNeTqA0sXqLJXLcLZYIhEIn009zdq0=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=sBxddByk42TfK3omNKXD3vfDCj8qScVneIMoV86WKvZFaMpqIqGwZU15SbcSkgedf
-	 0z2ozsho2ogMHVj2vNibrjmBh99XwWP6HMyxGopn+zg/UuWcPaOGtfhdiRs7pSHccF
-	 hwFJjg9qBuzDJ6//zrzUWtA6oR/NnTIr2GuP/swU=
+	by mail.kernel.org (Postfix) with ESMTP id 7A309214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405966AbfIYNDs (ORCPT
+        id S2405991AbfIYNEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 09:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 09:04:55 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34446 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405791AbfIYNDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 09:03:47 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E0820640;
-        Wed, 25 Sep 2019 13:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569416626;
-        bh=AVgTSuNTDJc7iXNeTqA0sXqLJXLcLZYIhEIn009zdq0=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=qKGGvw1i1ai+L0FxHSH9DhoTp180KS8i9qwzLXy6SuWTXZZ6Z5GUr031DfDTbQeRU
-         PSKONg0CEkMQHH5j9cMCka3B/6QY4wwaZCzriz0uisOB9AjjzvxgyWXyvjVAoAM7sn
-         GbCemJGObzn1+qfw//0DEiSBtF/V2Nqmf6WroFpU=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Wed, 25 Sep 2019 06:03:45 -0700
-Message-Id: <20190925130346.42E0820640@mail.kernel.org>
+        id S2405791AbfIYNEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 09:04:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 27B1B2001F1;
+        Wed, 25 Sep 2019 15:04:53 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 185E3200040;
+        Wed, 25 Sep 2019 15:04:53 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BF03D20634;
+        Wed, 25 Sep 2019 15:04:52 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: caam - use mapped_{src,dst}_nents for descriptor
+Date:   Wed, 25 Sep 2019 16:04:36 +0300
+Message-Id: <1569416676-21810-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-09-25 04:20:07)
-> Hi Stephen,
->=20
-> Please find my comments.
->=20
-> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-09-23 01:01:11)
-> >> Hi Stephen,
-> >>
-> >> Thanks for your comments.
-> >>
-> >> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
-> >>> Quoting Taniya Das (2019-09-18 02:50:18)
-> >>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc=
-7180.c
-> >>>> new file mode 100644
-> >>>> index 000000000000..d47865d5408f
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> > [...]
-> >>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
-> >>>> +       .halt_reg =3D 0x77094,
-> >>>> +       .halt_check =3D BRANCH_HALT,
-> >>>> +       .hwcg_reg =3D 0x77094,
-> >>>> +       .hwcg_bit =3D 1,
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x77094,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
-> >>>> +                       .parent_data =3D &(const struct clk_parent_d=
-ata){
-> >>>> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_src=
-.clkr.hw,
-> >>>> +                       },
-> >>>> +                       .num_parents =3D 1,
-> >>>> +                       .flags =3D CLK_SET_RATE_PARENT,
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
-> >>>> +       .halt_reg =3D 0x7701c,
-> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>
-> >>> Again, nobody has fixed the UFS driver to not need to do this halt sk=
-ip
-> >>> check for these clks? It's been over a year.
-> >>>
-> >>
-> >> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
-> >> configuration and thus during the late initcall of clk_disable there
-> >> could be warnings of "clock stuck ON" in the dmesg. That is the reason
-> >> also to use the BRANCH_HALT_SKIP flag.
-> >=20
-> > Oh that's bad. Why do the clks stay on when we try to turn them off?
-> >
->=20
-> Those could be due to the configuration selected by HW and SW cannot=20
-> override them, so traditionally we have never polled for CLK_OFF for=20
-> these clocks.
+The mapped_{src,dst}_nents _returned_ from the dma_map_sg
+call (which could be less than src/dst_nents) have to be
+used to generate the job descriptors.
 
-Is that the case or just a guess?
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+ drivers/crypto/caam/caampkc.c | 54 ++++++++++++++++++++++++-------------------
+ drivers/crypto/caam/caampkc.h |  8 +++++--
+ 2 files changed, 36 insertions(+), 26 deletions(-)
 
->=20
-> >>
-> >> I would also check internally for the UFS driver fix you are referring=
- here.
-> >=20
-> > Sure. I keep asking but nothing is done :(
-> >=20
-> >>
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x7701c,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> > [...]
-> >>>> +
-> >>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
-> >>>> +       .halt_reg =3D 0xf058,
-> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>
-> >>> Why does this need halt_skip?
-> >>
-> >> This is required as the source is external PHY, so we want to not check
-> >> for HALT.
-> >=20
-> > This doesn't really answer my question. If the source is an external phy
-> > then it should be listed as a clock in the DT binding and the parent
-> > should be specified here. Unless something doesn't work because of that?
-> >=20
->=20
-> The USB phy is managed by the USB driver and clock driver is not aware=20
-> if USB driver models the phy as a clock. Thus we do want to keep a=20
-> dependency on the parent and not poll for CLK_ENABLE.
-
-The clk driver should be aware of the USB driver modeling the phy as a
-clk. We do that for other phys so what is the difference here?
-
->=20
-> >>
-> >>>
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0xf058,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
-> >>>> +       .halt_reg =3D 0x6a004,
-> >>>> +       .halt_check =3D BRANCH_HALT,
-> >>>> +       .hwcg_reg =3D 0x6a004,
-> >>>> +       .hwcg_bit =3D 1,
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x6a004,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled =
-*/
-> >>>
-> >>> There's no parent though... So I guess this means it keeps it enabled
-> >>> implicitly in hardware?
-> >>>
-> >>
-> >> These are not left enabled, but want to leave them enabled for clients
-> >> on config NOC.
-> >=20
-> > Sure. It just doesn't make sense to create clk structures and expose
-> > them in the kernel when we just want to turn the bits on and leave them
-> > on forever. Why not just do some register writes in probe for this
-> > driver? Doesn't that work just as well and use less memory?
-> >=20
->=20
-> Even if I write these registers during probe, the late init check=20
-> 'clk_core_is_enabled' would return true and would be turned OFF, that is =
-
-> the reason for marking them CRITICAL.
->=20
-
-That wouldn't happen if the clks weren't registered though, no?
+diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
+index 83f96d4..71090cd 100644
+--- a/drivers/crypto/caam/caampkc.c
++++ b/drivers/crypto/caam/caampkc.c
+@@ -252,9 +252,9 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+ 		       GFP_KERNEL : GFP_ATOMIC;
+ 	int sg_flags = (flags == GFP_ATOMIC) ? SG_MITER_ATOMIC : 0;
+-	int sgc;
+ 	int sec4_sg_index, sec4_sg_len = 0, sec4_sg_bytes;
+ 	int src_nents, dst_nents;
++	int mapped_src_nents, mapped_dst_nents;
+ 	unsigned int diff_size = 0;
+ 	int lzeros;
+ 
+@@ -285,13 +285,27 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 				     req_ctx->fixup_src_len);
+ 	dst_nents = sg_nents_for_len(req->dst, req->dst_len);
+ 
+-	if (!diff_size && src_nents == 1)
++	mapped_src_nents = dma_map_sg(dev, req_ctx->fixup_src, src_nents,
++				      DMA_TO_DEVICE);
++	if (unlikely(!mapped_src_nents)) {
++		dev_err(dev, "unable to map source\n");
++		return ERR_PTR(-ENOMEM);
++	}
++	mapped_dst_nents = dma_map_sg(dev, req->dst, dst_nents,
++				      DMA_FROM_DEVICE);
++	if (unlikely(!mapped_dst_nents)) {
++		dev_err(dev, "unable to map destination\n");
++		goto src_fail;
++	}
++
++	if (!diff_size && mapped_src_nents == 1)
+ 		sec4_sg_len = 0; /* no need for an input hw s/g table */
+ 	else
+-		sec4_sg_len = src_nents + !!diff_size;
++		sec4_sg_len = mapped_src_nents + !!diff_size;
+ 	sec4_sg_index = sec4_sg_len;
+-	if (dst_nents > 1)
+-		sec4_sg_len += pad_sg_nents(dst_nents);
++
++	if (mapped_dst_nents > 1)
++		sec4_sg_len += pad_sg_nents(mapped_dst_nents);
+ 	else
+ 		sec4_sg_len = pad_sg_nents(sec4_sg_len);
+ 
+@@ -301,19 +315,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	edesc = kzalloc(sizeof(*edesc) + desclen + sec4_sg_bytes,
+ 			GFP_DMA | flags);
+ 	if (!edesc)
+-		return ERR_PTR(-ENOMEM);
+-
+-	sgc = dma_map_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
+-	if (unlikely(!sgc)) {
+-		dev_err(dev, "unable to map source\n");
+-		goto src_fail;
+-	}
+-
+-	sgc = dma_map_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
+-	if (unlikely(!sgc)) {
+-		dev_err(dev, "unable to map destination\n");
+ 		goto dst_fail;
+-	}
+ 
+ 	edesc->sec4_sg = (void *)edesc + sizeof(*edesc) + desclen;
+ 	if (diff_size)
+@@ -324,7 +326,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 		sg_to_sec4_sg_last(req_ctx->fixup_src, req_ctx->fixup_src_len,
+ 				   edesc->sec4_sg + !!diff_size, 0);
+ 
+-	if (dst_nents > 1)
++	if (mapped_dst_nents > 1)
+ 		sg_to_sec4_sg_last(req->dst, req->dst_len,
+ 				   edesc->sec4_sg + sec4_sg_index, 0);
+ 
+@@ -335,6 +337,9 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	if (!sec4_sg_bytes)
+ 		return edesc;
+ 
++	edesc->mapped_src_nents = mapped_src_nents;
++	edesc->mapped_dst_nents = mapped_dst_nents;
++
+ 	edesc->sec4_sg_dma = dma_map_single(dev, edesc->sec4_sg,
+ 					    sec4_sg_bytes, DMA_TO_DEVICE);
+ 	if (dma_mapping_error(dev, edesc->sec4_sg_dma)) {
+@@ -351,11 +356,11 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	return edesc;
+ 
+ sec4_sg_fail:
+-	dma_unmap_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
++	kfree(edesc);
+ dst_fail:
+-	dma_unmap_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
++	dma_unmap_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
+ src_fail:
+-	kfree(edesc);
++	dma_unmap_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ 
+@@ -428,17 +433,18 @@ static int set_rsa_priv_f1_pdb(struct akcipher_request *req,
+ 		return -ENOMEM;
+ 	}
+ 
+-	if (edesc->src_nents > 1) {
++	if (edesc->mapped_src_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_G;
+ 		pdb->g_dma = edesc->sec4_sg_dma;
+-		sec4_sg_index += edesc->src_nents;
++		sec4_sg_index += edesc->mapped_src_nents;
++
+ 	} else {
+ 		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+ 
+ 		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
+ 	}
+ 
+-	if (edesc->dst_nents > 1) {
++	if (edesc->mapped_dst_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_F;
+ 		pdb->f_dma = edesc->sec4_sg_dma +
+ 			     sec4_sg_index * sizeof(struct sec4_sg_entry);
+diff --git a/drivers/crypto/caam/caampkc.h b/drivers/crypto/caam/caampkc.h
+index 2c488c9..c68fb4c 100644
+--- a/drivers/crypto/caam/caampkc.h
++++ b/drivers/crypto/caam/caampkc.h
+@@ -112,8 +112,10 @@ struct caam_rsa_req_ctx {
+ 
+ /**
+  * rsa_edesc - s/w-extended rsa descriptor
+- * @src_nents     : number of segments in input scatterlist
+- * @dst_nents     : number of segments in output scatterlist
++ * @src_nents     : number of segments in input s/w scatterlist
++ * @dst_nents     : number of segments in output s/w scatterlist
++ * @mapped_src_nents: number of segments in input h/w link table
++ * @mapped_dst_nents: number of segments in output h/w link table
+  * @sec4_sg_bytes : length of h/w link table
+  * @sec4_sg_dma   : dma address of h/w link table
+  * @sec4_sg       : pointer to h/w link table
+@@ -123,6 +125,8 @@ struct caam_rsa_req_ctx {
+ struct rsa_edesc {
+ 	int src_nents;
+ 	int dst_nents;
++	int mapped_src_nents;
++	int mapped_dst_nents;
+ 	int sec4_sg_bytes;
+ 	dma_addr_t sec4_sg_dma;
+ 	struct sec4_sg_entry *sec4_sg;
+-- 
+2.1.0
 
