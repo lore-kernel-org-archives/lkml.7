@@ -2,129 +2,107 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73809C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C571BC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BF421D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAF7217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tdtrMAQT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S10PDyI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392413AbfIYGIW (ORCPT
+        id S2411856AbfIYGOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:08:22 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:59704 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfIYGIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:08:21 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190925060819epoutp011759d3fa67a2a54b6738fa10746b391a~HmW_SJUrd1921819218epoutp01J
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 06:08:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190925060819epoutp011759d3fa67a2a54b6738fa10746b391a~HmW_SJUrd1921819218epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569391699;
-        bh=NVSqgS2sD3/bkGbAWvXS1ICQ4/XfwFVNzH6vZ3uBpAc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=tdtrMAQTO/h3zjIB+p1CA0FYyYtK9Kl++wjI5TPba9KyRgdqqXU/OFwL5qEadtCr5
-         5k7ykNtjAi3yRCxrReY/RTVcJM37Ch3F5pvsgUIVLk+2L6Qe0jD2vR/9EVEJEYqTGt
-         35q7b7nfIi2iJ7WUf4yUuavzQEjAnzvTuCOEjoVQ=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190925060819epcas1p3852244ec3df9ed08372c2464adbb60fe~HmW9y2g_A1302913029epcas1p3C;
-        Wed, 25 Sep 2019 06:08:19 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 46dSKX5hCDzMqYkh; Wed, 25 Sep
-        2019 06:08:16 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.AE.04144.0540B8D5; Wed, 25 Sep 2019 15:08:16 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190925060816epcas1p2a22fe3c6cd996269b95f40e030fccdc2~HmW7EXp2f2871028710epcas1p2t;
-        Wed, 25 Sep 2019 06:08:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190925060816epsmtrp2ff6b0a96c92f9122ba56859a55ac5639~HmW7DhQr43029130291epsmtrp2g;
-        Wed, 25 Sep 2019 06:08:16 +0000 (GMT)
-X-AuditID: b6c32a35-2c7ff70000001030-e8-5d8b0450b28c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        72.5B.04081.0540B8D5; Wed, 25 Sep 2019 15:08:16 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190925060815epsmtip277b765775c4a29f81a5abf1c2c6e3577~HmW6l-Lsz0925809258epsmtip2D;
-        Wed, 25 Sep 2019 06:08:15 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 00/11] Simple QoS for exynos-bus driver using
- interconnect
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org,
-        "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <0cceb46a-fca1-62ae-c2cc-fb0f9b9bd132@samsung.com>
-Date:   Wed, 25 Sep 2019 15:12:39 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <c06ca89f2b40e0282f19727b95da5e5b0158d7e3.camel@samsung.com>
+        Wed, 25 Sep 2019 02:14:40 -0400
+Received: from mail-eopbgr30077.outbound.protection.outlook.com ([40.107.3.77]:34150
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404606AbfIYGOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 02:14:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gKDK3UC++eWzCA8xg8JJYb/w2Xk/o+cP0ff/91YN+1eI9CWNfwP3xAKEudh1oUT8rjk4tPXi2spYeyaZnZfpC/oe8+4GYzEiANvrwiAjXoO8sFGocNMYwyd6MmbbOBED5PdDKl5BtTtskZIBGtCvWbDizDul3gQxD4POoJmF/JSJ+C8jjbLAyqcPCvMHTXWul11prsCQDiURToaOJsptGUJDpQSZqssNUbojL1KQ0cCrXebqem6cj39G+DonXJMu7edsBnUYn85Cx0Vrwi1wzZUZpeZkcEcvjwHisEUAXf1YNA9MfOgZ9FBk73LgqutEYhoNrfshdpstaBH8IT+NAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFFqjkSTwjWJ61G2p/Ns/OxWyB6zFWGzNWYZpu9nznk=;
+ b=Aij/c5v5dCNbt8Tt4sEmUwhjB/fdHayD2EAwI+zAf4bXcWhHHwtKA2b8icZRAT/rwnVxCwT9zR1mhHHbOO03CSiDahv3+5BlxKLOJtA3AGA/t3qoBUnI3KIxu6WyKPQwkaplMwZi4rJDgRawtaNDi0fjbPFC63lAwjM9EpAjtaCjjXM/zvHRLdP3YhkrkjgUSBfIh8CnysXdbtonxdziS2dkhdjfdEiNNYfPlhMeIufpZj/IvyyELpAoJpkx1xepviS617ev5PRjmfLWGg1a+jNZU5p00LpUOoyAkvgO/B5a8IZe7GJ3s1Fw8BCFcq0MY1L9Bm8WeAVd+Qr43PVkaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFFqjkSTwjWJ61G2p/Ns/OxWyB6zFWGzNWYZpu9nznk=;
+ b=S10PDyI7YCAR4PxxQliKTCExL4i+UEoFomsWNGj2kI3ccX3NYeJd4VNOc7AH3RWyZ7CDpPXRVHcP8Nivou400pPzOgYOioqbKYUDU8aYEFOZG3dY0zw6I2RgmApdMXxQmSeiJGaQYWKQVWxQ8VYw1NuobEfOUgDAXCkYQpaKLBQ=
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com (20.179.24.74) by
+ VI1PR04MB4270.eurprd04.prod.outlook.com (52.134.31.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.23; Wed, 25 Sep 2019 06:14:35 +0000
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::c887:7d43:1e17:9485]) by VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::c887:7d43:1e17:9485%7]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 06:14:35 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
+Thread-Topic: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
+Thread-Index: AQHVc2iALMH+ZTgD6EK6yTZZJtKpAg==
+Date:   Wed, 25 Sep 2019 06:14:34 +0000
+Message-ID: <20190925061433.GA16686@fsr-ub1664-121>
+References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
+ <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
+In-Reply-To: <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNJsWRmVeSWpSXmKPExsWy7bCmgW4AS3esQd9ELYv781oZLTbOWM9q
-        8fKQpsX8I+dYLa58fc9mMX3vJjaLSfcnsFicP7+B3WLF3Y+sFpseX2O1uLxrDpvF594jjBYz
-        zu9jslh75C67xe3GFWwWMya/ZHMQ8Ni0qpPN4861PWwe97uPM3lsXlLvsfHdDiaPvi2rGD0+
-        b5ILYI/KtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wB
-        ul1JoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBk
-        ClSYkJ1xcsc0xoJNxhXvXjxha2CcodXFyMkhIWAicef1LMYuRi4OIYEdjBL7F81gh3A+MUpM
-        WvkIKvONUaLj4xzmLkYOsJbPPckQ8b2MEq+XPIAqes8o8WJNKzPIXGGBcIm5rx+wgiREBP4z
-        SpxethLMYQYZ9XXeBhaQKjYBLYn9L26wgdj8AooSV388ZgSxeQXsJI5c/QVWwyKgKvHrwWQw
-        W1QgQuLTg8OsEDWCEidnPmEBOYlTwFPiRjPYGGYBcYlbT+YzQdjyEs1bZzOD7JUQOMYucX7K
-        VyaIr10kWnumsEPYwhKvjm+BsqUkPr/bywZhV0usPHmEDaK5g1Fiy/4LrBAJY4n9SyczgSxm
-        FtCUWL9LHyKsKLHz91xGCJtXomHjb3aII/gk3n3tYYUEHa9ER5sQRImyxOUHd5kmMCrPQvLN
-        LCQvzELywiyEZQsYWVYxiqUWFOempxYbFhgiR/cmRnDC1jLdwTjlnM8hRgEORiUeXgfWrlgh
-        1sSy4srcQ4wSHMxKIryzZIBCvCmJlVWpRfnxRaU5qcWHGE2BgT2RWUo0OR+YTfJK4g1NjYyN
-        jS1MDM1MDQ2VxHk90htihQTSE0tSs1NTC1KLYPqYODilGhjlxL6n9fdz7z8gtuHLZ029/Iq3
-        FqEHgpa9/39L30Ru2b2UD7wXZq/d9bn1xSGbevOLN/bNTblX7tIyL83xTVvQjjebG+ymyi58
-        9EBussyf1+s18tdt89Vz8lrisXvGi5UH17nPbt+XJ9F8a2KA5FYb562cahd3S68Jm3FQsJNh
-        zVUbjdrNd0UnKbEUZyQaajEXFScCACZmiSDuAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvG4AS3eswfOlLBb357UyWmycsZ7V
-        4uUhTYv5R86xWlz5+p7NYvreTWwWk+5PYLE4f34Du8WKux9ZLTY9vsZqcXnXHDaLz71HGC1m
-        nN/HZLH2yF12i9uNK9gsZkx+yeYg4LFpVSebx51re9g87ncfZ/LYvKTeY+O7HUwefVtWMXp8
-        3iQXwB7FZZOSmpNZllqkb5fAlXFyxzTGgk3GFe9ePGFrYJyh1cXIwSEhYCLxuSe5i5GLQ0hg
-        N6PEjnOHmboYOYHikhLTLh5lhqgRljh8uBgkLCTwllFi9R09EFtYIFxi7usHrCC9IgL/GSUe
-        th1jBHGYBb4xSvR9XsYGMXUrk8T0H2dZQFrYBLQk9r+4wQZi8wsoSlz98ZgRxOYVsJM4cvUX
-        WA2LgKrErweTwWxRgQiJwztmQdUISpyc+YQF5CJOAU+JG81gY5gF1CX+zLvEDGGLS9x6Mp8J
-        wpaXaN46m3kCo/AsJN2zkLTMQtIyC0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5
-        uZsYwXGrpbmD8fKS+EOMAhyMSjy8DqxdsUKsiWXFlbmHGCU4mJVEeGfJAIV4UxIrq1KL8uOL
-        SnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpgZDkxeeOmDV7bzR5qvvbaliT1
-        hMtUbo1Ol8DdFwpbtHbvd3nG7CGq+nb+wqgs4aYf85cUno6XvjAnrP7WgdulBS58k1u/HFjD
-        JJe7WrG0WsIwX+nfuYtHRDlidv9/8uy+PefB31knj0zJ3/3+5eXNMw72WWf+YGm0LxPydv42
-        8888Zd2/88N9LymxFGckGmoxFxUnAgAKosEA1wIAAA==
-X-CMS-MailID: 20190925060816epcas1p2a22fe3c6cd996269b95f40e030fccdc2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-X-CPGSPASS: Y
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919142321eucas1p164c2591ad402427cb71fd00c348a29ec
-References: <CGME20190919142321eucas1p164c2591ad402427cb71fd00c348a29ec@eucas1p1.samsung.com>
-        <20190919142236.4071-1-a.swigon@samsung.com>
-        <fe6d026d-71b5-438d-6932-6a2234fc72c2@samsung.com>
-        <d8550f93-d4cf-f215-c083-8ecad267d430@samsung.com>
-        <c06ca89f2b40e0282f19727b95da5e5b0158d7e3.camel@samsung.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.palcu@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b7e88fe7-1cb8-41d3-2b44-08d7417fa331
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4270;
+x-ms-traffictypediagnostic: VI1PR04MB4270:|VI1PR04MB4270:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB42709C77C7BD6966E5858437FF870@VI1PR04MB4270.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(52314003)(478600001)(966005)(71200400001)(71190400001)(5660300002)(3846002)(6116002)(1076003)(81156014)(81166006)(26005)(7416002)(7736002)(8936002)(305945005)(8676002)(45080400002)(66066001)(316002)(2906002)(14454004)(86362001)(54906003)(99286004)(25786009)(102836004)(44832011)(6512007)(9686003)(476003)(33716001)(256004)(446003)(33656002)(229853002)(6486002)(6436002)(6306002)(11346002)(66446008)(64756008)(66556008)(66476007)(4326008)(76116006)(91956017)(186003)(6246003)(6916009)(486006)(76176011)(53546011)(6506007)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4270;H:VI1PR04MB6237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7Zp2xphtbR3Umwk5sHTwyIfeXBtZzn9hrl0gj2whMI8NJfvublIRnRw75w34IlqUXXQBxSENt1wvESitBrh545vk1fKCkZcywpq7MJkDS7iet+y/evsniXt9pOTeB7tUvdL50E2o5sabuBYfDoHg3TyA+pJykjtebqF8aQdqkcXSvaiDLkFgpcDg8hhDLVhGlPNJXRqRlQqSonjjF5kCjuefDRVmmP93JuIFWTLRkac3Cd2nVHdRjlOQXdz/Ek6zIkAb75MkGG2kfnQEeaWG4HlVn9vn+f70qXJPSfX1GcVIVJ1cJqYm9n2iqVI+XuS7ADqzEoGTJ453XZjf7u7AFZ3/bJMxbTqE2tSN8YU68B5yZYf92EZiOZKW+aBZCAAvvEclj2VTTLN1fVAt0eOgyn1mDzeJ9NGtfxnLaCVzrqFStPq6TxnL4gJahjxpsu0h4EMxZecdOjkKzSSoXO6LPw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <C68E1DEA7D81984A98B5320990996987@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7e88fe7-1cb8-41d3-2b44-08d7417fa331
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 06:14:34.9365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jzdu8ZmyCyuD0/aVGrKqMrcMdF1X2aCj+R19uN93QSR0fefFJbBgZ8g0kAdxg74wYma/gkMG8WvKbQx16BcUfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4270
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -132,147 +110,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 19. 9. 25. 오후 2:47, Artur Świgoń wrote:
-> Hi,
-> 
-> On Fri, 2019-09-20 at 11:14 +0900, Chanwoo Choi wrote:
->> Hi Artur,
->>
->> I tried to just build this patch on mainline kernel or linux-next.
->> But, when I applied them, merge conflict happens. You didn't develop
->> them on latest version. Please rebase them based on latest mainline kernel.
-> 
-> I developed on top of next-20190918 on which I applied
-> https://patchwork.kernel.org/cover/11149497/ as I mentioned in the cover
-> letter. The dev_pm_qos patches and my RFC have just cleanly rebased together on
-> top of next-20190920. Could you check if you have the dev_pm_qos patches (v5,
-> the version number is missing in this one; link above) and if so, where does the
-> conflict appear?
+On Tue, Sep 24, 2019 at 01:53:28PM -0500, Rob Herring wrote:
+> On Mon, Sep 23, 2019 at 9:14 AM Laurentiu Palcu <laurentiu.palcu@nxp.com>=
+ wrote:
+> >
+> > Add bindings for iMX8MQ Display Controller Subsystem.
+> >
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > ---
+> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++=
+++++++++
+> >  1 file changed, 86 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,i=
+mx8mq-dcss.yaml
+>=20
+> Fails to build with 'make dt_binding_check':
 
-I faced on the merge conflict of drivers/devfreq/exynos-bus.c.
-I think that It is not related to to dev_pm_qos patch.
+Must be because of the extra '0x' Stephen Boyd pointed out. Funny thing
+is I ran:
 
-Maybe, Kamil's patches[1] changed the many things of exynos-bus.c
-If your test branch doesn't contain following patches, 
-you need to rebase your patches based on latest mainline kernel 
-from Linus Torvald.
-[1] https://patchwork.kernel.org/cover/11083663/
-- [RESEND PATCH v5 0/4] add coupled regulators for Exynos5422/5800
+make dtbs_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/display=
+/imx/nxp,imx8mq-dcss.yaml
 
-Today, I tried to apply these patch again based on latest mainline kernel.
-The merge conflict happen still.
+at my side, before sending out the patchset, and it passed. The command
+also runs dt_binding_check, AFAIS:
 
-- merge conflict log
-Applying: devfreq: exynos-bus: Extract exynos_bus_profile_init()
-error: patch failed: drivers/devfreq/exynos-bus.c:334
-error: drivers/devfreq/exynos-bus.c: patch does not apply
-Patch failed at 0001 devfreq: exynos-bus: Extract exynos_bus_profile_init()
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+  CHKDT   Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yam=
+l
+  DTC     Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.exa=
+mple.dt.yaml
+  CHECK   Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.exa=
+mple.dt.yaml
 
+Not sure what I'm doing wrong when running it. I should've catched that. :/
 
-> 
->> On 19. 9. 20. 오전 10:07, Chanwoo Choi wrote:
->>> Hi Artur,
->>>
->>> On v1, I mentioned that we need to discuss how to change
->>> the v2 for this. But, I have not received any reply from you on v1.
->>> And, without your reply from v1, you just send v2.
->>>
->>> I think that it is not proper development sequence.
->>> I have spent many times to review your patches
->>> and also I'll review your patches. You have to take care
->>> the reply of reviewer and and keep the basic rule
->>> of mailing contribution for discussion.
->>>
->>> On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
->>>> The following patchset adds interconnect[1][2] framework support to the
->>>> exynos-bus devfreq driver. Extending the devfreq driver with interconnect
->>>> capabilities started as a response to the issue referenced in [3]. The
->>>> patches can be subdivided into four logical groups:
->>>>
->>>> (a) Refactoring the existing devfreq driver in order to improve readability
->>>> and accommodate for adding new code (patches 01--04/11).
->>>>
->>>> (b) Tweaking the interconnect framework to support the exynos-bus use case
->>>> (patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
->>>> avoid hardcoding every single graph edge in the DT or driver source, and
->>>> relaxing the requirement contained in that function removes the need to
->>>> provide dummy node IDs in the DT. Adjusting the logic in
->>>> apply_constraints() (drivers/interconnect/core.c) accounts for the fact
->>>> that every bus is a separate entity and therefore a separate interconnect
->>>> provider, albeit constituting a part of a larger hierarchy.
->>>>
->>>> (c) Implementing interconnect providers in the exynos-bus devfreq driver
->>>> and adding required DT properties for one selected platform, namely
->>>> Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
->>>> generic driver for various Exynos SoCs, node IDs are generated dynamically
->>>> rather than hardcoded. This has been determined to be a simpler approach,
->>>> but depends on changes described in (b).
->>>>
->>>> (d) Implementing a sample interconnect consumer for exynos-mixer targeted
->>>> at the issue referenced in [3], again with DT info only for Exynos4412
->>>> (patches 10--11/11).
->>>>
->>>> Integration of devfreq and interconnect functionalities is achieved by
->>>> using dev_pm_qos_*() API[5]. All new code works equally well when
->>>> CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
->>>> interconnect API functions are no-ops.
->>>>
->>>> This patchset depends on [5].
->>>>
->>>> --- Changes since v1 [6]:
->>>> * Rebase on [4] (coupled regulators).
->>>> * Rebase on [5] (dev_pm_qos for devfreq).
->>>> * Use dev_pm_qos_*() API[5] instead of overriding frequency in
->>>>   exynos_bus_target().
->>>> * Use IDR for node ID allocation.
->>>> * Avoid goto in functions extracted in patches 01 & 02 (cf. patch 04).
->>>> * Reverse order of multiplication and division in
->>>>   mixer_set_memory_bandwidth() (patch 11) to avoid integer overflow.
->>>>
->>>> ---
->>>> Artur Świgoń
->>>> Samsung R&D Institute Poland
->>>> Samsung Electronics
->>>>
->>>> ---
->>>> References:
->>>> [1] Documentation/interconnect/interconnect.rst
->>>> [2] Documentation/devicetree/bindings/interconnect/interconnect.txt
->>>> [3] https://patchwork.kernel.org/patch/10861757/ (original issue)
->>>> [4] https://patchwork.kernel.org/cover/11083663/ (coupled regulators; merged)
->>>> [5] https://patchwork.kernel.org/cover/11149497/ (dev_pm_qos for devfreq)
->>>> [6] https://patchwork.kernel.org/cover/11054417/ (v1 of this RFC)
->>>>
->>>> Artur Świgoń (10):
->>>>   devfreq: exynos-bus: Extract exynos_bus_profile_init()
->>>>   devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
->>>>   devfreq: exynos-bus: Change goto-based logic to if-else logic
->>>>   devfreq: exynos-bus: Clean up code
->>>>   interconnect: Export of_icc_get_from_provider()
->>>>   interconnect: Relax requirement in of_icc_get_from_provider()
->>>>   interconnect: Relax condition in apply_constraints()
->>>>   arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
->>>>   devfreq: exynos-bus: Add interconnect functionality to exynos-bus
->>>>   arm: dts: exynos: Add interconnects to Exynos4412 mixer
->>>>
->>>> Marek Szyprowski (1):
->>>>   drm: exynos: mixer: Add interconnect support
->>>>
->>>>  .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
->>>>  arch/arm/boot/dts/exynos4412.dtsi             |  10 +
->>>>  drivers/devfreq/exynos-bus.c                  | 319 +++++++++++++-----
->>>>  drivers/gpu/drm/exynos/exynos_mixer.c         |  71 +++-
->>>>  drivers/interconnect/core.c                   |  12 +-
->>>>  include/linux/interconnect-provider.h         |   6 +
->>>>  6 files changed, 327 insertions(+), 92 deletions(-)
->>>>
->>>
->>>
->>
->>
+Anyway, already fixed it and will be included in v2.
+
+Thanks,
+laurentiu
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>=20
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+work.ozlabs.org%2Fpatch%2F1166073%2F&amp;data=3D02%7C01%7Claurentiu.palcu%4=
+0nxp.com%7Cf97847ce739b46fdb72308d74120858b%7C686ea1d3bc2b4c6fa92cd99c5c301=
+635%7C0%7C0%7C637049480244424980&amp;sdata=3Dfjyq52livEnMAQYzVAGqO%2FOtmLS8=
+3dungSvPqHYle10%3D&amp;reserved=3D0=
