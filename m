@@ -2,78 +2,115 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30C2C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892BBC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882A2217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64528217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405421AbfIYMIH (ORCPT
+        id S2404622AbfIYMKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 08:08:07 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36361 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388199AbfIYMIH (ORCPT
+        Wed, 25 Sep 2019 08:10:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404828AbfIYMKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 08:08:07 -0400
-Received: from windsurf (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 080A0240013;
-        Wed, 25 Sep 2019 12:08:04 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 14:08:04 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
- configuration
-Message-ID: <20190925140804.75ccf336@windsurf>
-In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
-References: <20190614101059.1664-1-repk@triplefau.lt>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 25 Sep 2019 08:10:12 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8PC93lq120118
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:10:11 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v868funf3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:10:10 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Wed, 25 Sep 2019 13:10:09 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 25 Sep 2019 13:10:06 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8PCA5ki19333178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 12:10:05 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77F694C05A;
+        Wed, 25 Sep 2019 12:10:05 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42FF44C04E;
+        Wed, 25 Sep 2019 12:10:05 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.152.224.222])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Sep 2019 12:10:05 +0000 (GMT)
+Subject: Re: [PATCH net v2 0/3] net/smc: move some definitions to UAPI
+To:     David Miller <davem@davemloft.net>, esyr@redhat.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kgraul@linux.ibm.com
+References: <cover.1568993930.git.esyr@redhat.com>
+ <20190924.165240.1617972512581218831.davem@davemloft.net>
+From:   Ursula Braun <ubraun@linux.ibm.com>
+Openpgp: preference=signencrypt
+Date:   Wed, 25 Sep 2019 14:10:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190924.165240.1617972512581218831.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092512-0016-0000-0000-000002B0701F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092512-0017-0000-0000-0000331137E4
+Message-Id: <20af78a4-ded5-57ca-bd77-303cc7a59cf5@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-25_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909250125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 12:10:59 +0200
-Remi Pommarel <repk@triplefau.lt> wrote:
 
-> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> should not modify other interrupts' mask. The ISR mask polarity was also
-> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> should actually be cleared.
+
+On 9/24/19 4:52 PM, David Miller wrote:
+> From: Eugene Syromiatnikov <esyr@redhat.com>
+> Date: Fri, 20 Sep 2019 17:41:47 +0200
 > 
-> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+>> As of now, it's a bit difficult to use SMC protocol, as significant part
+>> of definitions related to it are defined in private headers and are not
+>> part of UAPI. The following commits move some definitions to UAPI,
+>> making them readily available to the user space.
+>>
+>> Changes since v1[1]:
+>>  * Patch "provide fallback diagnostic codes in UAPI" is updated
+>>    in accordance with the updated set of diagnostic codes.
+>>
+>> [1] https://lkml.org/lkml/2018/10/7/177
+> 
+> Isn't it way too late for this?
+> 
+> These definitions will now be duplicates for userland code that
+> defines the values on their own.
+>
 
-Sorry for the long delay, but:
+Dave,
+we have to admit that it is already late for these patches. Nevertheless
+we think it is better to come up with them now than never. We doubt there
+exists already much userland code for it - except our own IBM-provided
+package smc-tools. Thus we appreciate acceptance of these patches.
 
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Kind regards, Ursula
 
-I did verify that indeed the polarity of the PME interrupt bit is
-different between the standard PCI_EXP_RTCTL register and the
-Aardvark-specific ISR0 mask register. And obviously, we shouldn't
-clobber other bits of the ISR0 mask register when changing the PME
-interrupt enable/disable state.
+ 
 
-I did a quick test with a E1000E NIC and it worked fine.
-
-Thanks!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
