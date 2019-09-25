@@ -2,312 +2,156 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4ADC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C5CC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA3B21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F3E21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:44:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MI/R7xaY"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K2adgvYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443270AbfIYSnY (ORCPT
+        id S2443282AbfIYSoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 14:43:24 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42001 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439865AbfIYSnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 14:43:21 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z12so364382pgp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 11:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3A4s4RAXbpx36Yd7dMGiPVWfF4wDLnMwffQrqpB84M0=;
-        b=MI/R7xaYsceleFAz49M00sHxNJtNP9akqwlvZAmxoudAzKmmz7M/h984nTRYIZLyIV
-         wCrF5z9qpwpvcsI5fmQKA2msao8HOViN0LSmtdHnn7e1e8iRzS3r2b8RnmEuBtR5dxeH
-         B90dhU3GBvA301hKZajAs5Q3jo8xBeHkw0wLU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3A4s4RAXbpx36Yd7dMGiPVWfF4wDLnMwffQrqpB84M0=;
-        b=PPl0cSzEAZNN3Bxud00OYD5317Oga/A9pUVpDOcYZ0iF6V+3TcFNLOS11jIrYoPabu
-         KwX9IBxZ7hHhiUndt5pvhIythoNlS6SLyowMlfb5aExK3xqOoXGtcZeYQphTVwf8w6FC
-         Rf/uZFz7w9gfKGQXrGrU6dQqvFgobg8w9iwBXOysObB6fQDi6Ewa45IRqYK5Pf0yxP4U
-         F+Um6LEFIDa+ZOujrwLUtfk17Q1dAQqjuBKUTpLAiK1dGD6gGuu1Qai7J6P4u5zGk8Jm
-         JhXEAGowAvMjNplgdMFhccENSuohF3VT8YxBSEa9AokwxAM63mSRbdUZLFss8ZzTo8bU
-         MCtw==
-X-Gm-Message-State: APjAAAWgwSmsU3Hvvn55rHZoYeK8ZZOIYI501kDCUIfacnFZox/VJksj
-        XamIN1g1KN/G2bj8BNkQ5tPLEw==
-X-Google-Smtp-Source: APXvYqwW5vuL8lovJSQXdUV5+1pDcGdZZ1mTw1Iakz6inPcxVjmOF4tVz0FIAXiNfJXeeaRvnVZuKQ==
-X-Received: by 2002:aa7:9d8d:: with SMTP id f13mr11549654pfq.196.1569437000973;
-        Wed, 25 Sep 2019 11:43:20 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id y28sm6869466pfq.48.2019.09.25.11.43.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 11:43:20 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 2/2] devfreq: Rename df->previous_freq to df->cur_freq
-Date:   Wed, 25 Sep 2019 11:43:14 -0700
-Message-Id: <20190925184314.30251-2-mka@chromium.org>
-X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
-In-Reply-To: <20190925184314.30251-1-mka@chromium.org>
-References: <20190925184314.30251-1-mka@chromium.org>
+        Wed, 25 Sep 2019 14:44:01 -0400
+Received: from mail-eopbgr770138.outbound.protection.outlook.com ([40.107.77.138]:22295
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2443246AbfIYSoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 14:44:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AenTYgbSHYYjwRxEPphsfditXs285K2dyZO1iUBY0keOf6UxgOkLXHxllpb05bNVw9mJzTiktCSUfgL7ufkidpaFgMFYbr1uuetE3MMvMo6tL01TrsPCyeUidAay2Mm05mTvbhoMag/wogSesMY/+izdc/nujfM8edC5wg/s3GevF/VSMd9IBTWqmwfPw0iaLswY5m7eALVDlf9yFxZ8so+9EnMKOkLHgQFpW5wIbsMGXy3P5SgTqtPC8WLJoxMSfnutg7ykyOQLmHPZJw+wChUmXSObb/6U8UWBrMV71CT3dyIfsQpPQMnc3vLJ+bzvjSlCj1A2c1F4iJJTHHTHgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W9i0IDR4i3vLZBG9VEbs3HpnUjGGE+4+pQ9p42kKAFc=;
+ b=BjGUw8vfkyzRSHimvS3iuiXDziBwyUoxGMCb0x/obqWPhD3+/Gwhqe1PxIq1lS+HKMpoUhBcA8e52zq3MUhQ2B7AYRhKoVb0SmzXpHNJPTnNPuLZgJvuxNT0qHkMrfECVuqhxRhFREQ7YJoVKkPCyej1CGhPDT+F1RKu/NbRlmDHAtzRDVoiZUu7cEZqStUjSZBdz1dlbevVD2/QVawjNMaIzkRfGeyfTcO9fz8MQFYDbsYV3d1GZxXgCYWZw0J9/LpGDfKRDhfbhAx68VpQ20OXuG0A/RL5CZNslALK3Z1SO4kRKYrA2cSQDKHaftokq3iVJqtTzXayOdjkjtcrWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W9i0IDR4i3vLZBG9VEbs3HpnUjGGE+4+pQ9p42kKAFc=;
+ b=K2adgvYyvbbCoccZb7RULPanIMdDPgtjU676QzLOlvZHE2YYkRDvFLCLmhJZg/IXpJkymNkGnFbEL38GMl2+x9IkWDS44CO9pyD5S/Dsc7c59fz3kL9rOQ1T4UPZbODeXFEroZt2NOwytKVvD8XFZ0w8IiAYidCpkQVhRhGfj2s=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0895.namprd21.prod.outlook.com (52.132.116.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.3; Wed, 25 Sep 2019 18:43:58 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 18:43:58 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v3] Drivers: hv: vmbus: Fix harmless building warnings without
+ CONFIG_PM_SLEEP
+Thread-Topic: [PATCH v3] Drivers: hv: vmbus: Fix harmless building warnings
+ without CONFIG_PM_SLEEP
+Thread-Index: AQHVc9Ew6ma/FG7fcEi3EqlsYUS2JA==
+Date:   Wed, 25 Sep 2019 18:43:57 +0000
+Message-ID: <1569436998-130708-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR06CA0073.namprd06.prod.outlook.com
+ (2603:10b6:104:3::31) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 18e0c7b3-70f9-4624-dbd7-08d741e852ec
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR2101MB0895:|SN6PR2101MB0895:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB0895D2990559F312B82FA016BF870@SN6PR2101MB0895.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:173;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(199004)(189003)(476003)(26005)(25786009)(7736002)(102836004)(107886003)(6506007)(66476007)(478600001)(4326008)(386003)(14454004)(64756008)(316002)(256004)(22452003)(36756003)(14444005)(43066004)(6116002)(66946007)(66556008)(6436002)(2906002)(110136005)(66446008)(10090500001)(1511001)(86362001)(6486002)(8936002)(81156014)(2616005)(10290500003)(5660300002)(2501003)(71190400001)(6512007)(66066001)(186003)(99286004)(305945005)(3846002)(52116002)(2201001)(8676002)(81166006)(486006)(71200400001)(4720700003)(3450700001)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0895;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4s82ulJIoYpCJmCglzAlkfNkQjix9zO/5ZGY8WsxRXxHLz15BGAEqpM1zR0Pj3UNh8Uk/1KY1xq5DH2WidVMUJuwjUkluH0l/PiSqqJvNwo7DwI4uaWcE48HnEaAQYuFS+CGbUv1tlqSex5Ga2KquookdprRkOc1GUxaHANE+IF4UciR+CEID3+yF2+mD/J52pZ7S7gymuFFs9ySipew29ZXGnA6Jd+hJVC5bFjmWxp/JGrs4KTs4x6wIZRakRw5Rz6JddDZcRBA/Uj9FZuV/PaP30ADvG/tp0Kyc+h9VrE2qskXnP4rKGI8VtY62PU/rRbwyzJDjilWHne140/fQiOOJg0D9Nc/dak6fxxskjaWz4K6OiGr+lxTDoZduPNquRpsBn8amEZBRcsiVpBp20xTRCVWK/1XCjIR2v76Lho=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A836407DFAEA8946A92A7BBB5166D6BA@namprd21.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18e0c7b3-70f9-4624-dbd7-08d741e852ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 18:43:58.1533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kIwOZKgqGc6IjJPjt8skr5qmdeWqTulRGlyFMCAC5lZspGtdcvtur0k3b8PcPKSVv14Py3TbLgcExTGafijrBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0895
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vast majority of code uses df->previous_freq to get the current
-frequency of the devfreq device, not the previous one. Rename the
-struct field to reflect this.
-
-Add a comment to devfreq_update_stats() to make clear that df->cur_freq
-must only be updated after calling this function in the context of a
-frequency transition.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/devfreq/devfreq.c            | 28 ++++++++++++++++------------
- drivers/devfreq/governor_passive.c   |  6 +++---
- drivers/devfreq/governor_userspace.c |  2 +-
- drivers/devfreq/tegra20-devfreq.c    |  2 +-
- drivers/devfreq/tegra30-devfreq.c    |  2 +-
- include/linux/devfreq.h              |  4 ++--
- include/trace/events/devfreq.h       |  2 +-
- 7 files changed, 25 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index fb4318d59aa9..bf42130bb4ec 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -154,6 +154,10 @@ static int set_freq_table(struct devfreq *devfreq)
-  * devfreq_update_stats() - Update statistics of devfreq behavior
-  * @devfreq:	the devfreq instance
-  * @freq:	the update target frequency
-+ *
-+ * If the function is called in the context of a frequency transition
-+ * it expects df->cur_freq to contain the value *before* the transition.
-+ * The field must only be updated after calling devfreq_update_stats().
-  */
- int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
- {
-@@ -162,11 +166,11 @@ int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
- 
- 	cur_time = jiffies;
- 
--	/* Immediately exit if previous_freq is not initialized yet. */
--	if (!devfreq->previous_freq)
-+	/* Immediately exit if cur_freq is not initialized yet. */
-+	if (!devfreq->cur_freq)
- 		goto out;
- 
--	prev_lev = devfreq_get_freq_level(devfreq, devfreq->previous_freq);
-+	prev_lev = devfreq_get_freq_level(devfreq, devfreq->cur_freq);
- 	if (prev_lev < 0) {
- 		ret = prev_lev;
- 		goto out;
-@@ -295,7 +299,7 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
- 	if (devfreq->profile->get_cur_freq)
- 		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
- 	else
--		cur_freq = devfreq->previous_freq;
-+		cur_freq = devfreq->cur_freq;
- 
- 	freqs.old = cur_freq;
- 	freqs.new = new_freq;
-@@ -315,7 +319,7 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
- 		dev_err(&devfreq->dev,
- 			"Couldn't update frequency transition information.\n");
- 
--	devfreq->previous_freq = new_freq;
-+	devfreq->cur_freq = new_freq;
- 
- 	if (devfreq->suspend_freq)
- 		devfreq->resume_freq = cur_freq;
-@@ -450,7 +454,7 @@ void devfreq_monitor_suspend(struct devfreq *devfreq)
- 		return;
- 	}
- 
--	devfreq_update_stats(devfreq, devfreq->previous_freq);
-+	devfreq_update_stats(devfreq, devfreq->cur_freq);
- 	devfreq->stop_polling = true;
- 	mutex_unlock(&devfreq->lock);
- 	cancel_delayed_work_sync(&devfreq->work);
-@@ -483,7 +487,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
- 
- 	if (devfreq->profile->get_cur_freq &&
- 		!devfreq->profile->get_cur_freq(devfreq->dev.parent, &freq))
--		devfreq->previous_freq = freq;
-+		devfreq->cur_freq = freq;
- 
- out:
- 	mutex_unlock(&devfreq->lock);
-@@ -644,7 +648,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 	devfreq->dev.release = devfreq_dev_release;
- 	devfreq->profile = profile;
- 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
--	devfreq->previous_freq = profile->initial_freq;
-+	devfreq->cur_freq = profile->initial_freq;
- 	devfreq->last_status.current_frequency = profile->initial_freq;
- 	devfreq->data = data;
- 	devfreq->nb.notifier_call = devfreq_notifier_call;
-@@ -1235,14 +1239,14 @@ static ssize_t cur_freq_show(struct device *dev, struct device_attribute *attr,
- 		!devfreq->profile->get_cur_freq(devfreq->dev.parent, &freq))
- 		return sprintf(buf, "%lu\n", freq);
- 
--	return sprintf(buf, "%lu\n", devfreq->previous_freq);
-+	return sprintf(buf, "%lu\n", devfreq->cur_freq);
- }
- static DEVICE_ATTR_RO(cur_freq);
- 
- static ssize_t target_freq_show(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%lu\n", to_devfreq(dev)->previous_freq);
-+	return sprintf(buf, "%lu\n", to_devfreq(dev)->cur_freq);
- }
- static DEVICE_ATTR_RO(target_freq);
- 
-@@ -1398,7 +1402,7 @@ static ssize_t trans_stat_show(struct device *dev,
- 	unsigned int max_state = devfreq->profile->max_state;
- 
- 	if (!devfreq->stop_polling &&
--			devfreq_update_stats(devfreq, devfreq->previous_freq))
-+			devfreq_update_stats(devfreq, devfreq->cur_freq))
- 		return 0;
- 	if (max_state == 0)
- 		return sprintf(buf, "Not Supported.\n");
-@@ -1413,7 +1417,7 @@ static ssize_t trans_stat_show(struct device *dev,
- 
- 	for (i = 0; i < max_state; i++) {
- 		if (devfreq->profile->freq_table[i]
--					== devfreq->previous_freq) {
-+					== devfreq->cur_freq) {
- 			len += sprintf(buf + len, "*");
- 		} else {
- 			len += sprintf(buf + len, " ");
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 1c746b96d3db..2d818eaceb39 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -114,7 +114,7 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
- 		dev_err(&devfreq->dev,
- 			"Couldn't update frequency transition information.\n");
- 
--	devfreq->previous_freq = freq;
-+	devfreq->cur_freq = freq;
- 
- out:
- 	mutex_unlock(&devfreq->lock);
-@@ -134,11 +134,11 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
- 
- 	switch (event) {
- 	case DEVFREQ_PRECHANGE:
--		if (parent->previous_freq > freq)
-+		if (parent->cur_freq > freq)
- 			update_devfreq_passive(devfreq, freq);
- 		break;
- 	case DEVFREQ_POSTCHANGE:
--		if (parent->previous_freq < freq)
-+		if (parent->cur_freq < freq)
- 			update_devfreq_passive(devfreq, freq);
- 		break;
- 	}
-diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
-index af94942fcf95..566b8d1f0c17 100644
---- a/drivers/devfreq/governor_userspace.c
-+++ b/drivers/devfreq/governor_userspace.c
-@@ -26,7 +26,7 @@ static int devfreq_userspace_func(struct devfreq *df, unsigned long *freq)
- 	if (data->valid)
- 		*freq = data->user_frequency;
- 	else
--		*freq = df->previous_freq; /* No user freq specified yet */
-+		*freq = df->cur_freq; /* No user freq specified yet */
- 
- 	return 0;
- }
-diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-index ff82bac9ee4e..f99bd6557df5 100644
---- a/drivers/devfreq/tegra20-devfreq.c
-+++ b/drivers/devfreq/tegra20-devfreq.c
-@@ -61,7 +61,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	return 0;
- 
- restore_min_rate:
--	clk_set_min_rate(tegra->emc_clock, devfreq->previous_freq);
-+	clk_set_min_rate(tegra->emc_clock, devfreq->cur_freq);
- 
- 	return err;
- }
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 536273a811fe..7b3bf7a0b15f 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -474,7 +474,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	return 0;
- 
- restore_min_rate:
--	clk_set_min_rate(tegra->emc_clock, devfreq->previous_freq);
-+	clk_set_min_rate(tegra->emc_clock, devfreq->cur_freq);
- 
- 	return err;
- }
-diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-index 2bae9ed3c783..21d0108df4c5 100644
---- a/include/linux/devfreq.h
-+++ b/include/linux/devfreq.h
-@@ -120,7 +120,7 @@ struct devfreq_dev_profile {
-  *		reevaluate operable frequencies. Devfreq users may use
-  *		devfreq.nb to the corresponding register notifier call chain.
-  * @work:	delayed work for load monitoring.
-- * @previous_freq:	previously configured frequency value.
-+ * @cur_freq:	the current frequency.
-  * @data:	Private data of the governor. The devfreq framework does not
-  *		touch this.
-  * @min_freq:	Limit minimum frequency requested by user (0: none)
-@@ -156,7 +156,7 @@ struct devfreq {
- 	struct notifier_block nb;
- 	struct delayed_work work;
- 
--	unsigned long previous_freq;
-+	unsigned long cur_freq;
- 	struct devfreq_dev_status last_status;
- 
- 	void *data; /* private data for governors */
-diff --git a/include/trace/events/devfreq.h b/include/trace/events/devfreq.h
-index cf5b8772175d..916cfaed5489 100644
---- a/include/trace/events/devfreq.h
-+++ b/include/trace/events/devfreq.h
-@@ -22,7 +22,7 @@ TRACE_EVENT(devfreq_monitor,
- 	),
- 
- 	TP_fast_assign(
--		__entry->freq = devfreq->previous_freq;
-+		__entry->freq = devfreq->cur_freq;
- 		__entry->busy_time = devfreq->last_status.busy_time;
- 		__entry->total_time = devfreq->last_status.total_time;
- 		__entry->polling_ms = devfreq->profile->polling_ms;
--- 
-2.23.0.444.g18eeb5a265-goog
-
+SWYgQ09ORklHX1BNX1NMRUVQIGlzIG5vdCBzZXQsIHdlIGNhbiBjb21tZW50IG91dCB0aGVzZSBm
+dW5jdGlvbnMgdG8gYXZvaWQNCnRoZSBiZWxvdyB3YXJuaW5nczoNCg0KZHJpdmVycy9odi92bWJ1
+c19kcnYuYzoyMjA4OjEyOiB3YXJuaW5nOiDigJh2bWJ1c19idXNfcmVzdW1l4oCZIGRlZmluZWQg
+YnV0IG5vdCB1c2VkIFstV3VudXNlZC1mdW5jdGlvbl0NCmRyaXZlcnMvaHYvdm1idXNfZHJ2LmM6
+MjEyODoxMjogd2FybmluZzog4oCYdm1idXNfYnVzX3N1c3BlbmTigJkgZGVmaW5lZCBidXQgbm90
+IHVzZWQgWy1XdW51c2VkLWZ1bmN0aW9uXQ0KZHJpdmVycy9odi92bWJ1c19kcnYuYzo5Mzc6MTI6
+IHdhcm5pbmc6IOKAmHZtYnVzX3Jlc3VtZeKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVz
+ZWQtZnVuY3Rpb25dDQpkcml2ZXJzL2h2L3ZtYnVzX2Rydi5jOjkxODoxMjogd2FybmluZzog4oCY
+dm1idXNfc3VzcGVuZOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVuY3Rpb25d
+DQoNCkZpeGVzOiAyNzFiMjIyNGQ0MmYgKCJEcml2ZXJzOiBodjogdm1idXM6IEltcGxlbWVudCBz
+dXNwZW5kL3Jlc3VtZSBmb3IgVlNDIGRyaXZlcnMgZm9yIGhpYmVybmF0aW9uIikNCkZpeGVzOiBm
+NTMzMzVlMzI4OWYgKCJEcml2ZXJzOiBodjogdm1idXM6IFN1c3BlbmQvcmVzdW1lIHRoZSB2bWJ1
+cyBpdHNlbGYgZm9yIGhpYmVybmF0aW9uIikNClJlcG9ydGVkLWJ5OiBBcm5kIEJlcmdtYW5uIDxh
+cm5kQGFybmRiLmRlPg0KUmV2aWV3ZWQtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNy
+b3NvZnQuY29tPg0KU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNv
+bT4NCi0tLQ0KDQpJbiB2MjoNCgl0ZXN0IENPTkZJR19QTV9TTEVFUCByYXRoZXIgdGhhbiBDT05G
+SUdfUE0uIFRoYW5rcywgQXJuZCENCg0KSW4gdjM6DQoJQWRkIE1pY2hhZWwncyBSZXZpZXdlZC1i
+eS4NCglObyBvdGhlciBjaGFuZ2UuDQoNCiBkcml2ZXJzL2h2L3ZtYnVzX2Rydi5jIHwgNiArKysr
+KysNCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2h2L3ZtYnVzX2Rydi5jIGIvZHJpdmVycy9odi92bWJ1c19kcnYuYw0KaW5kZXggMzkxZjBi
+MjI1YzlhLi41M2E2MGM4MWUyMjAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5j
+DQorKysgYi9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5jDQpAQCAtOTEyLDYgKzkxMiw3IEBAIHN0YXRp
+YyB2b2lkIHZtYnVzX3NodXRkb3duKHN0cnVjdCBkZXZpY2UgKmNoaWxkX2RldmljZSkNCiAJCWRy
+di0+c2h1dGRvd24oZGV2KTsNCiB9DQogDQorI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KIC8qDQog
+ICogdm1idXNfc3VzcGVuZCAtIFN1c3BlbmQgYSB2bWJ1cyBkZXZpY2UNCiAgKi8NCkBAIC05NDks
+NiArOTUwLDcgQEAgc3RhdGljIGludCB2bWJ1c19yZXN1bWUoc3RydWN0IGRldmljZSAqY2hpbGRf
+ZGV2aWNlKQ0KIA0KIAlyZXR1cm4gZHJ2LT5yZXN1bWUoZGV2KTsNCiB9DQorI2VuZGlmIC8qIENP
+TkZJR19QTV9TTEVFUCAqLw0KIA0KIC8qDQogICogdm1idXNfZGV2aWNlX3JlbGVhc2UgLSBGaW5h
+bCBjYWxsYmFjayByZWxlYXNlIG9mIHRoZSB2bWJ1cyBjaGlsZCBkZXZpY2UNCkBAIC0xMDcwLDYg
+KzEwNzIsNyBAQCB2b2lkIHZtYnVzX29uX21zZ19kcGModW5zaWduZWQgbG9uZyBkYXRhKQ0KIAl2
+bWJ1c19zaWduYWxfZW9tKG1zZywgbWVzc2FnZV90eXBlKTsNCiB9DQogDQorI2lmZGVmIENPTkZJ
+R19QTV9TTEVFUA0KIC8qDQogICogRmFrZSBSRVNDSU5EX0NIQU5ORUwgbWVzc2FnZXMgdG8gY2xl
+YW4gdXAgaHZfc29jayBjaGFubmVscyBieSBmb3JjZSBmb3INCiAgKiBoaWJlcm5hdGlvbiwgYmVj
+YXVzZSBodl9zb2NrIGNvbm5lY3Rpb25zIGNhbiBub3QgcGVyc2lzdCBhY3Jvc3MgaGliZXJuYXRp
+b24uDQpAQCAtMTEwNSw2ICsxMTA4LDcgQEAgc3RhdGljIHZvaWQgdm1idXNfZm9yY2VfY2hhbm5l
+bF9yZXNjaW5kZWQoc3RydWN0IHZtYnVzX2NoYW5uZWwgKmNoYW5uZWwpDQogCQkgICAgICB2bWJ1
+c19jb25uZWN0aW9uLndvcmtfcXVldWUsDQogCQkgICAgICAmY3R4LT53b3JrKTsNCiB9DQorI2Vu
+ZGlmIC8qIENPTkZJR19QTV9TTEVFUCAqLw0KIA0KIC8qDQogICogRGlyZWN0IGNhbGxiYWNrIGZv
+ciBjaGFubmVscyB1c2luZyBvdGhlciBkZWZlcnJlZCBwcm9jZXNzaW5nDQpAQCAtMjEyNSw2ICsy
+MTI5LDcgQEAgc3RhdGljIGludCB2bWJ1c19hY3BpX2FkZChzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRl
+dmljZSkNCiAJcmV0dXJuIHJldF92YWw7DQogfQ0KIA0KKyNpZmRlZiBDT05GSUdfUE1fU0xFRVAN
+CiBzdGF0aWMgaW50IHZtYnVzX2J1c19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQog
+CXN0cnVjdCB2bWJ1c19jaGFubmVsICpjaGFubmVsLCAqc2M7DQpAQCAtMjI0Nyw2ICsyMjUyLDcg
+QEAgc3RhdGljIGludCB2bWJ1c19idXNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCiANCiAJ
+cmV0dXJuIDA7DQogfQ0KKyNlbmRpZiAvKiBDT05GSUdfUE1fU0xFRVAgKi8NCiANCiBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lkIHZtYnVzX2FjcGlfZGV2aWNlX2lkc1tdID0gew0K
+IAl7IlZNQlVTIiwgMH0sDQotLSANCjIuMTkuMQ0KDQo=
