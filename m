@@ -2,459 +2,243 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83065C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352C9C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2E12146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF209214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 02:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hsyHzuzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633759AbfIYCDZ (ORCPT
+        id S2633782AbfIYCJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 22:03:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32026 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633750AbfIYCDV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 22:03:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 19:03:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
-   d="scan'208";a="213896608"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2019 19:03:19 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 2/2] perf stat: Support topdown with --all-kernel/--all-user
-Date:   Wed, 25 Sep 2019 10:02:18 +0800
-Message-Id: <20190925020218.8288-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190925020218.8288-1-yao.jin@linux.intel.com>
-References: <20190925020218.8288-1-yao.jin@linux.intel.com>
+        Tue, 24 Sep 2019 22:09:09 -0400
+Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:39153
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389401AbfIYCJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 22:09:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LXaT3d8drmG5EUG2JlDd/HipV7sAYaOAgANzSYW4QxUOl8QdJEell8l2/VbPzjIp8vD/J5zcFJKu/t18RQb3wuV+Z9KOlPZqrUKNQ6ld4h6jjV+4vkYim72IfejGzdqcJ0gJTfXghcWKxzMbOnD4YU1QoUO87HXM4hNqNlUIBd8XJjaK5DUFEBseTNJwAZ6mP00Q+SxwblWbSnGIXZWMT9HEoWc3Gk18rloiW+u7/aCuhAexbRGMWoEn1ZDzbsnovZdFxOsd9VK7do0+c54LQZAKwZVS0End55KI2vLiobPS++FA2YNcF12YtHbbGhYOtewwVTXeSsbWzpEJaWdP1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Jl2nPB2K53BgB4d/OGg7loTW2jHUGBeb7LcciZEA54=;
+ b=O0JIK5hqFBr5wjXUWaUBlpJLlpLCsg7V8xKUGA5XX4Xd4P4YaWRrS7kh46gBVXIrWGV47BpYIWfiZ1uzCopg1jsZABAeZL14W7U2okyE6tCyj69Fgmfl22AfY2Pmz4+Y0RW19G0Q28GWIbGtPxKAznXLCzlYEyhzBdgdqSa/kpMVkUtbLpM/szYtCQeT+K7QQbwXv4qb3rGCfswBQjsjaaqe6gRlmmU7NXH3g7KP/Rid1AYN/AGVMDYlqlAkc3wkgcbY41QxaU2U5bcgquutaov6QE3K2vhkpsQ86izkqO6GHed8HZuzrz6gxdqYyTpu6vCLBwKHs0fkCsmj2eTbug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Jl2nPB2K53BgB4d/OGg7loTW2jHUGBeb7LcciZEA54=;
+ b=hsyHzuzz90jWUi1inBxWuNI/q5PCZu2uvAn91MIcpJlLenNdocgHywbe36Wk88ilUs/jf+146m53NmPqVC+YgpdCGiv1XA6AXVVoRJii3uO46xDsGSvV0ddkV3368/4wpqw5OGUKGd3ieVlSl3NQoOImIEY3E9fHoI58MCCOYjc=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4451.eurprd04.prod.outlook.com (52.135.149.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.25; Wed, 25 Sep 2019 02:09:04 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6ca2:ec08:2b37:8ab8]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6ca2:ec08:2b37:8ab8%6]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
+ 02:09:04 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V9 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Topic: [PATCH V9 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Index: AQHVc0Y0k9JRzjAEaUGpwXgSV3qtEQ==
+Date:   Wed, 25 Sep 2019 02:09:04 +0000
+Message-ID: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0041.apcprd03.prod.outlook.com
+ (2603:1096:203:2f::29) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fb77d6f4-8357-4347-1d5f-08d7415d5701
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR04MB4451;
+x-ms-traffictypediagnostic: AM0PR04MB4451:|AM0PR04MB4451:
+x-ms-exchange-purlcount: 6
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4451C12B10A15F53544C778088870@AM0PR04MB4451.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(136003)(39860400002)(346002)(189003)(199004)(8676002)(2501003)(66446008)(6116002)(66946007)(6512007)(6306002)(102836004)(6436002)(66476007)(64756008)(26005)(186003)(86362001)(44832011)(386003)(6506007)(54906003)(66556008)(486006)(316002)(8936002)(2616005)(476003)(25786009)(7736002)(256004)(15650500001)(14444005)(305945005)(99286004)(66066001)(14454004)(71200400001)(50226002)(81166006)(81156014)(110136005)(3846002)(478600001)(2906002)(52116002)(966005)(2201001)(36756003)(5660300002)(71190400001)(4326008)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4451;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2n/EmYWMd1Fz4UmkI03/MuYXTF3yqARHgFWgbZCqdTwfquJLOdY6hrCzj6yFOLzpC9Awxo76Q3dIb4+bNk2t10EdAyEtvq0iYhaH28nwkssud8A/T22acIbk7SiRz5BC1iI77lARgY6YqSF2Oezu281VjRBKtI+KRk+nlYnbmXw0Zpk7lmDMYYsOfLW2+4yj5bVOXwNihja92mrM3R5o7jJbdRoQCJwlovp+WLmwwVqH9pBCliU2k+OXLq+uF26//hCLhUcpp23QRdwNb24URDVQ9zsMYXd22SLOtNfKsTlNl8syZ2QacSV7qtrFMN6DPCwdEvdiweuwgr5lOq5pEZT+fz4hqJlyTIoCMWSR3ZNSwBv+DlQkHLDVk2CyYMWWtR3eUsIDQT54O8sFDoKG5mANRU0LWsZHGTaxZhm1R/Cf2ddsNJF8r5yZ524HoBlLPYG/4mcDvetdjLRikBsUpw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb77d6f4-8357-4347-1d5f-08d7415d5701
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 02:09:04.5148
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gGeFiY8J1+XP36q5213MFxPBFQzRGc7I6i3Gt+VdqhUaqaovh0Tvl6UpWEpob2tJXtnzycCD2D6Xc2/n3WVJrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4451
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When perf stat --topdown is enabled, the internal event list is expanded to:
-"{topdown-total-slots,topdown-slots-retired,topdown-recovery-bubbles,topdown-fetch-bubbles,topdown-slots-issued}".
+From: Peng Fan <peng.fan@nxp.com>
 
-With this patch,
+V9:
+ - Add Florian's R-b tag in patch 1/2
+ - Mark arm,func-id as a required property per Andre's comments in patch 1/=
+2.
+ - Make invoke_smc_mbox_fn as a private entry in a channal per Florian's
+   comments in pach 2/2
+ - Include linux/types.h in arm-smccc-mbox.h in patch 2/2
+ - Drop function_id from arm_smccc_mbox_cmd since func-id is from DT
+   in patch 2/2/.
 
-1. When --all-user is enabled, it's expanded to:
-"{topdown-total-slots:u,topdown-slots-retired:u,topdown-recovery-bubbles:u,topdown-fetch-bubbles:u,topdown-slots-issued:u}"
+   Andre,
+    I have marked arm,func-id as a required property and dropped function-i=
+d
+    from client, please see whether you are happy with the patchset.
+    Hope we could finalize and get patches land in.
 
-2. When --all-kernel is enabled, it's expanded to:
-"{topdown-total-slots:k,topdown-slots-retired:k,topdown-recovery-bubbles:k,topdown-fetch-bubbles:k,topdown-slots-issued:k}"
+   Thanks,
+   Peng.
 
-3. Both are enabled, it's expanded to:
-"{topdown-total-slots:k,topdown-slots-retired:k,topdown-recovery-bubbles:k,topdown-fetch-bubbles:k,topdown-slots-issued:k},{topdown-total-slots:u,topdown-slots-retired:u,topdown-recovery-bubbles:u,topdown-fetch-bubbles:u,topdown-slots-issued:u}"
+V8:
+Add missed arm-smccc-mbox.h
 
-This patch creates new topdown stat type (STAT_TOPDOWN_XXX_K /
-STAT_TOPDOWN_XXX_U), and save the event counting value to type
-related entry in runtime_stat rblist.
+V7:
+Typo fix
+#mbox-cells changed to 0
+Add a new header file arm-smccc-mbox.h
+Use ARM_SMCCC_IS_64
 
-For example,
+Andre,
+  The function_id is still kept in arm_smccc_mbox_cmd, because arm,func-id
+property is optional, so clients could pass function_id to mbox driver.
 
- root@kbl:~# perf stat -a --topdown --all-kernel -- sleep 1
+V6:
+Switch to per-channel a mbox controller
+Drop arm,num-chans, transports, method
+Add arm,hvc-mbox compatible
+Fix smc/hvc args, drop client id and use correct type.
+https://patchwork.kernel.org/cover/11146641/
 
- Performance counter stats for 'system wide':
+V5:
+yaml fix
+https://patchwork.kernel.org/cover/11117741/
 
-                                  retiring:k    bad speculation:k     frontend bound:k      backend bound:k
-S0-D0-C0           2                 7.6%                 1.8%                40.5%                50.0%
-S0-D0-C1           2                15.4%                 3.4%                14.4%                66.8%
-S0-D0-C2           2                15.8%                 5.1%                26.9%                52.2%
-S0-D0-C3           2                 5.7%                 5.7%                46.2%                42.4%
+V4:
+yaml fix for num-chans in patch 1/2.
+https://patchwork.kernel.org/cover/11116521/
 
-       1.000771709 seconds time elapsed
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+https://patchwork.kernel.org/cover/11043541/
 
- root@kbl:~# perf stat -a --topdown --all-user -- sleep 1
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
 
- Performance counter stats for 'system wide':
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
 
-                                  retiring:u    bad speculation:u     frontend bound:u      backend bound:u
-S0-D0-C0           2                 0.5%                 0.0%                 0.0%                99.4%
-S0-D0-C1           2                 5.7%                 5.8%                77.7%                10.7%
-S0-D0-C2           2                15.5%                20.5%                35.8%                28.2%
-S0-D0-C3           2                14.1%                 0.5%                 1.5%                83.9%
+The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
+e
+IP to signal a condition to some other processing unit, typically a dedicat=
+ed
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
 
-       1.000773028 seconds time elapsed
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c     |  37 +++++++-
- tools/perf/util/stat-shadow.c | 167 +++++++++++++++++++++++++---------
- tools/perf/util/stat.h        |  12 +++
- 3 files changed, 171 insertions(+), 45 deletions(-)
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI request=
+s.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced =
+via
+this new driver.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7f4d22b00d04..b766293b9a15 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1436,7 +1436,8 @@ static int add_default_attributes(void)
- 
- 	if (topdown_run) {
- 		char *str = NULL;
--		bool warn = false;
-+		bool warn = false, append_uk = false;
-+		struct strbuf new_str;
- 
- 		if (stat_config.aggr_mode != AGGR_GLOBAL &&
- 		    stat_config.aggr_mode != AGGR_CORE) {
-@@ -1457,6 +1458,21 @@ static int add_default_attributes(void)
- 			return -1;
- 		}
- 		if (topdown_attrs[0] && str) {
-+			int ret;
-+
-+			if (stat_config.all_kernel || stat_config.all_user) {
-+				ret = append_modifier(&new_str, str,
-+						stat_config.all_kernel,
-+						stat_config.all_user);
-+				if (ret)
-+					return ret;
-+
-+				free(str);
-+				str = strbuf_detach(&new_str, NULL);
-+				strbuf_release(&new_str);
-+				append_uk = true;
-+			}
-+
- 			if (warn)
- 				arch_topdown_group_warn();
- 			err = parse_events(evsel_list, str, &errinfo);
-@@ -1468,6 +1484,25 @@ static int add_default_attributes(void)
- 				free(str);
- 				return -1;
- 			}
-+
-+			if (append_uk) {
-+				struct evsel *evsel;
-+				char *p;
-+
-+				evlist__for_each_entry(evsel_list, evsel) {
-+					/*
-+					 * We appended the modifiers ":u"/":k"
-+					 * to evsel->name. Since the events have
-+					 * been parsed, remove the appended
-+					 * modifiers from event name here.
-+					 */
-+					if (evsel->name) {
-+						p = strchr(evsel->name, ':');
-+						if (p)
-+							*p = 0;
-+					}
-+				}
-+			}
- 		} else {
- 			fprintf(stderr, "System does not support topdown\n");
- 			return -1;
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 70c87fdb2a43..013e0f772658 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -204,6 +204,24 @@ static void update_runtime_stat(struct runtime_stat *st,
- 		update_stats(&v->stats, count);
- }
- 
-+static void update_runtime_stat_uk(struct runtime_stat *st,
-+				   enum stat_type type,
-+				   int ctx, int cpu, u64 count,
-+				   struct evsel *counter, int type_off)
-+{
-+	struct perf_event_attr *attr = &counter->core.attr;
-+
-+	if (!attr->exclude_user && !attr->exclude_kernel)
-+		update_runtime_stat(st, type, ctx, cpu, count);
-+	else if (attr->exclude_user) {
-+		update_runtime_stat(st, type + type_off,
-+				    ctx, cpu, count);
-+	} else {
-+		update_runtime_stat(st, type + type_off * 2,
-+				    ctx, cpu, count);
-+	}
-+}
-+
- /*
-  * Update various tracking values we maintain to print
-  * more semantic information such as miss/hit ratios,
-@@ -229,20 +247,25 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- 	else if (perf_stat_evsel__is(counter, ELISION_START))
- 		update_runtime_stat(st, STAT_ELISION, ctx, cpu, count);
- 	else if (perf_stat_evsel__is(counter, TOPDOWN_TOTAL_SLOTS))
--		update_runtime_stat(st, STAT_TOPDOWN_TOTAL_SLOTS,
--				    ctx, cpu, count);
-+		update_runtime_stat_uk(st, STAT_TOPDOWN_TOTAL_SLOTS,
-+				       ctx, cpu, count, counter,
-+				       STAT_TOPDOWN_NUM);
- 	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_ISSUED))
--		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_ISSUED,
--				    ctx, cpu, count);
-+		update_runtime_stat_uk(st, STAT_TOPDOWN_SLOTS_ISSUED,
-+				       ctx, cpu, count, counter,
-+				       STAT_TOPDOWN_NUM);
- 	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_RETIRED))
--		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_RETIRED,
--				    ctx, cpu, count);
-+		update_runtime_stat_uk(st, STAT_TOPDOWN_SLOTS_RETIRED,
-+				       ctx, cpu, count, counter,
-+				       STAT_TOPDOWN_NUM);
- 	else if (perf_stat_evsel__is(counter, TOPDOWN_FETCH_BUBBLES))
--		update_runtime_stat(st, STAT_TOPDOWN_FETCH_BUBBLES,
--				    ctx, cpu, count);
-+		update_runtime_stat_uk(st, STAT_TOPDOWN_FETCH_BUBBLES,
-+				       ctx, cpu, count, counter,
-+				       STAT_TOPDOWN_NUM);
- 	else if (perf_stat_evsel__is(counter, TOPDOWN_RECOVERY_BUBBLES))
--		update_runtime_stat(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
--				    ctx, cpu, count);
-+		update_runtime_stat_uk(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
-+				       ctx, cpu, count, counter,
-+				       STAT_TOPDOWN_NUM);
- 	else if (perf_evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
- 		update_runtime_stat(st, STAT_STALLED_CYCLES_FRONT,
- 				    ctx, cpu, count);
-@@ -410,6 +433,20 @@ static double runtime_stat_avg(struct runtime_stat *st,
- 	return avg_stats(&v->stats);
- }
- 
-+static double runtime_stat_avg_uk(struct runtime_stat *st,
-+				  enum stat_type type, int ctx, int cpu,
-+				  struct evsel *counter, int type_off)
-+{
-+	struct perf_event_attr *attr = &counter->core.attr;
-+
-+	if (!attr->exclude_user && !attr->exclude_kernel)
-+		return runtime_stat_avg(st, type, ctx, cpu);
-+	else if (attr->exclude_user)
-+		return runtime_stat_avg(st, type + type_off, ctx, cpu);
-+
-+	return runtime_stat_avg(st, type + type_off * 2, ctx, cpu);
-+}
-+
- static double runtime_stat_n(struct runtime_stat *st,
- 			     enum stat_type type, int ctx, int cpu)
- {
-@@ -639,56 +676,67 @@ static double sanitize_val(double x)
- 	return x;
- }
- 
--static double td_total_slots(int ctx, int cpu, struct runtime_stat *st)
-+static double td_total_slots(int ctx, int cpu, struct runtime_stat *st,
-+			     struct evsel *evsel)
- {
--	return runtime_stat_avg(st, STAT_TOPDOWN_TOTAL_SLOTS, ctx, cpu);
-+	return runtime_stat_avg_uk(st, STAT_TOPDOWN_TOTAL_SLOTS, ctx, cpu,
-+				   evsel, STAT_TOPDOWN_NUM);
- }
- 
--static double td_bad_spec(int ctx, int cpu, struct runtime_stat *st)
-+static double td_bad_spec(int ctx, int cpu, struct runtime_stat *st,
-+			  struct evsel *evsel)
- {
- 	double bad_spec = 0;
- 	double total_slots;
- 	double total;
- 
--	total = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_ISSUED, ctx, cpu) -
--		runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED, ctx, cpu) +
--		runtime_stat_avg(st, STAT_TOPDOWN_RECOVERY_BUBBLES, ctx, cpu);
-+	total = runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_ISSUED, ctx, cpu,
-+				    evsel, STAT_TOPDOWN_NUM) -
-+		runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_RETIRED, ctx, cpu,
-+				    evsel, STAT_TOPDOWN_NUM) +
-+		runtime_stat_avg_uk(st, STAT_TOPDOWN_RECOVERY_BUBBLES, ctx, cpu,
-+				    evsel, STAT_TOPDOWN_NUM);
- 
--	total_slots = td_total_slots(ctx, cpu, st);
-+	total_slots = td_total_slots(ctx, cpu, st, evsel);
- 	if (total_slots)
- 		bad_spec = total / total_slots;
- 	return sanitize_val(bad_spec);
- }
- 
--static double td_retiring(int ctx, int cpu, struct runtime_stat *st)
-+static double td_retiring(int ctx, int cpu, struct runtime_stat *st,
-+			  struct evsel *evsel)
- {
- 	double retiring = 0;
--	double total_slots = td_total_slots(ctx, cpu, st);
--	double ret_slots = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED,
--					    ctx, cpu);
-+	double total_slots = td_total_slots(ctx, cpu, st, evsel);
-+	double ret_slots = runtime_stat_avg_uk(st, STAT_TOPDOWN_SLOTS_RETIRED,
-+					       ctx, cpu, evsel,
-+					       STAT_TOPDOWN_NUM);
- 
- 	if (total_slots)
- 		retiring = ret_slots / total_slots;
- 	return retiring;
- }
- 
--static double td_fe_bound(int ctx, int cpu, struct runtime_stat *st)
-+static double td_fe_bound(int ctx, int cpu, struct runtime_stat *st,
-+			  struct evsel *evsel)
- {
- 	double fe_bound = 0;
--	double total_slots = td_total_slots(ctx, cpu, st);
--	double fetch_bub = runtime_stat_avg(st, STAT_TOPDOWN_FETCH_BUBBLES,
--					    ctx, cpu);
-+	double total_slots = td_total_slots(ctx, cpu, st, evsel);
-+	double fetch_bub = runtime_stat_avg_uk(st, STAT_TOPDOWN_FETCH_BUBBLES,
-+					       ctx, cpu, evsel,
-+					       STAT_TOPDOWN_NUM);
- 
- 	if (total_slots)
- 		fe_bound = fetch_bub / total_slots;
- 	return fe_bound;
- }
- 
--static double td_be_bound(int ctx, int cpu, struct runtime_stat *st)
-+static double td_be_bound(int ctx, int cpu, struct runtime_stat *st,
-+			  struct evsel *evsel)
- {
--	double sum = (td_fe_bound(ctx, cpu, st) +
--		      td_bad_spec(ctx, cpu, st) +
--		      td_retiring(ctx, cpu, st));
-+	double sum = (td_fe_bound(ctx, cpu, st, evsel) +
-+		      td_bad_spec(ctx, cpu, st, evsel) +
-+		      td_retiring(ctx, cpu, st, evsel));
- 	if (sum == 0)
- 		return 0;
- 	return sanitize_val(1.0 - sum);
-@@ -814,6 +862,33 @@ static void generic_metric(struct perf_stat_config *config,
- 		zfree(&pctx.ids[i].name);
- }
- 
-+static void print_metric_uk(struct perf_stat_config *config,
-+			    void *ctx, const char *color,
-+			    const char *fmt, const char *unit,
-+			    double val, struct evsel *evsel,
-+			    print_metric_t print_metric)
-+{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	char *new_unit;
-+
-+	if (!attr->exclude_user && !attr->exclude_kernel) {
-+		print_metric(config, ctx, color, fmt, unit, val);
-+		return;
-+	}
-+
-+	new_unit = calloc(1, strlen(unit) + 3);
-+	if (!new_unit)
-+		return;
-+
-+	if (attr->exclude_user)
-+		sprintf(new_unit, "%s:k", unit);
-+	else
-+		sprintf(new_unit, "%s:u", unit);
-+
-+	print_metric(config, ctx, color, fmt, new_unit, val);
-+	free(new_unit);
-+}
-+
- void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 				   struct evsel *evsel,
- 				   double avg, int cpu,
-@@ -986,28 +1061,30 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		else
- 			print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_BUBBLES)) {
--		double fe_bound = td_fe_bound(ctx, cpu, st);
-+		double fe_bound = td_fe_bound(ctx, cpu, st, evsel);
- 
- 		if (fe_bound > 0.2)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
--				fe_bound * 100.);
-+		print_metric_uk(config, ctxp, color, "%8.1f%%",
-+				"frontend bound",
-+				fe_bound * 100., evsel, print_metric);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_RETIRED)) {
--		double retiring = td_retiring(ctx, cpu, st);
-+		double retiring = td_retiring(ctx, cpu, st, evsel);
- 
- 		if (retiring > 0.7)
- 			color = PERF_COLOR_GREEN;
--		print_metric(config, ctxp, color, "%8.1f%%", "retiring",
--				retiring * 100.);
-+		print_metric_uk(config, ctxp, color, "%8.1f%%", "retiring",
-+				retiring * 100., evsel, print_metric);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_RECOVERY_BUBBLES)) {
--		double bad_spec = td_bad_spec(ctx, cpu, st);
-+		double bad_spec = td_bad_spec(ctx, cpu, st, evsel);
- 
- 		if (bad_spec > 0.1)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "bad speculation",
--				bad_spec * 100.);
-+		print_metric_uk(config, ctxp, color, "%8.1f%%",
-+				"bad speculation",
-+				bad_spec * 100., evsel, print_metric);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_ISSUED)) {
--		double be_bound = td_be_bound(ctx, cpu, st);
-+		double be_bound = td_be_bound(ctx, cpu, st, evsel);
- 		const char *name = "backend bound";
- 		static int have_recovery_bubbles = -1;
- 
-@@ -1020,11 +1097,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 		if (be_bound > 0.2)
- 			color = PERF_COLOR_RED;
--		if (td_total_slots(ctx, cpu, st) > 0)
--			print_metric(config, ctxp, color, "%8.1f%%", name,
--					be_bound * 100.);
--		else
--			print_metric(config, ctxp, NULL, NULL, name, 0);
-+		if (td_total_slots(ctx, cpu, st, evsel) > 0)
-+			print_metric_uk(config, ctxp, color, "%8.1f%%", name,
-+					be_bound * 100., evsel, print_metric);
-+		else {
-+			print_metric_uk(config, ctxp, NULL, NULL, name, 0,
-+					evsel, print_metric);
-+		}
- 	} else if (evsel->metric_expr) {
- 		generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
- 				evsel->metric_name, NULL, avg, cpu, out, st);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 8154e07ced64..1bae80ed5543 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -60,6 +60,8 @@ enum {
- 
- #define NUM_CTX CTX_BIT_MAX
- 
-+#define STAT_TOPDOWN_NUM	5
-+
- enum stat_type {
- 	STAT_NONE = 0,
- 	STAT_NSECS,
-@@ -81,6 +83,16 @@ enum stat_type {
- 	STAT_TOPDOWN_SLOTS_RETIRED,
- 	STAT_TOPDOWN_FETCH_BUBBLES,
- 	STAT_TOPDOWN_RECOVERY_BUBBLES,
-+	STAT_TOPDOWN_TOTAL_SLOTS_K,
-+	STAT_TOPDOWN_SLOTS_ISSUED_K,
-+	STAT_TOPDOWN_SLOTS_RETIRED_K,
-+	STAT_TOPDOWN_FETCH_BUBBLES_K,
-+	STAT_TOPDOWN_RECOVERY_BUBBLES_K,
-+	STAT_TOPDOWN_TOTAL_SLOTS_U,
-+	STAT_TOPDOWN_SLOTS_ISSUED_U,
-+	STAT_TOPDOWN_SLOTS_RETIRED_U,
-+	STAT_TOPDOWN_FETCH_BUBBLES_U,
-+	STAT_TOPDOWN_RECOVERY_BUBBLES_U,
- 	STAT_SMI_NUM,
- 	STAT_APERF,
- 	STAT_MAX
--- 
-2.17.1
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hyperviso=
+rs
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used genericall=
+y
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.yaml       |  96 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 167 +++++++++++++++++=
+++++
+ include/linux/mailbox/arm-smccc-mbox.h             |  20 +++
+ 5 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+ create mode 100644 include/linux/mailbox/arm-smccc-mbox.h
+
+--=20
+2.16.4
 
