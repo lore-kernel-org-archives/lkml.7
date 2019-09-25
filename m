@@ -2,369 +2,202 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20092C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C223DC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F4921D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B5F21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfIYXWF (ORCPT
+        id S1728761AbfIYXZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:22:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59719 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfIYXWF (ORCPT
+        Wed, 25 Sep 2019 19:25:57 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47290 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726203AbfIYXZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:22:05 -0400
-Received: from mon75-17-88-175-211-167.fbx.proxad.net ([88.175.211.167] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iDGbS-0000Wo-Fs; Wed, 25 Sep 2019 23:21:48 +0000
-Date:   Thu, 26 Sep 2019 01:21:41 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] lib: introduce copy_struct_from_user() helper
-Message-ID: <20190925232139.45sbhj34fj7yvxer@wittgenstein>
-References: <20190925230332.18690-1-cyphar@cyphar.com>
- <20190925230332.18690-2-cyphar@cyphar.com>
+        Wed, 25 Sep 2019 19:25:57 -0400
+Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 35C86363302;
+        Thu, 26 Sep 2019 09:25:50 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iDGfN-0006ta-8u; Thu, 26 Sep 2019 09:25:49 +1000
+Date:   Thu, 26 Sep 2019 09:25:49 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+Message-ID: <20190925232549.GG804@dread.disaster.area>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+ <20190924073940.GM6636@dread.disaster.area>
+ <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
+ <20190925071854.GC804@dread.disaster.area>
+ <aeede806-db6b-3e94-3fed-60af5481e0d3@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925230332.18690-2-cyphar@cyphar.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <aeede806-db6b-3e94-3fed-60af5481e0d3@yandex-team.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
+        a=7-415B0cAAAA:8 a=60IASA-pC0RNppBcC7sA:9 a=Zsu9e8Xf_pQmunjS:21
+        a=CjuIK1q_8ugA:10 a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 01:03:29AM +0200, Aleksa Sarai wrote:
-> A common pattern for syscall extensions is increasing the size of a
-> struct passed from userspace, such that the zero-value of the new fields
-> result in the old kernel behaviour (allowing for a mix of userspace and
-> kernel vintages to operate on one another in most cases).
+On Wed, Sep 25, 2019 at 11:15:30AM +0300, Konstantin Khlebnikov wrote:
+> On 25/09/2019 10.18, Dave Chinner wrote:
+> > On Tue, Sep 24, 2019 at 12:00:17PM +0300, Konstantin Khlebnikov wrote:
+> > > On 24/09/2019 10.39, Dave Chinner wrote:
+> > > > On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
+> > > > > On 23/09/2019 17.52, Tejun Heo wrote:
+> > > > > > Hello, Konstantin.
+> > > > > > 
+> > > > > > On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
+> > > > > > > With vm.dirty_write_behind 1 or 2 files are written even faster and
+> > > > > > 
+> > > > > > Is the faster speed reproducible?  I don't quite understand why this
+> > > > > > would be.
+> > > > > 
+> > > > > Writing to disk simply starts earlier.
+> > > > 
+> > > > Stupid question: how is this any different to simply winding down
+> > > > our dirty writeback and throttling thresholds like so:
+> > > > 
+> > > > # echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
+> > > > 
+> > > > to start background writeback when there's 100MB of dirty pages in
+> > > > memory, and then:
+> > > > 
+> > > > # echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
+> > > > 
+> > > > So that writers are directly throttled at 200MB of dirty pages in
+> > > > memory?
+> > > > 
+> > > > This effectively gives us global writebehind behaviour with a
+> > > > 100-200MB cache write burst for initial writes.
+> > > 
+> > > Global limits affect all dirty pages including memory-mapped and
+> > > randomly touched. Write-behind aims only into sequential streams.
+> > 
+> > There are  apps that do sequential writes via mmap()d files.
+> > They should do writebehind too, yes?
 > 
-> While this interface exists for communication in both directions, only
-> one interface is straightforward to have reasonable semantics for
-> (userspace passing a struct to the kernel). For kernel returns to
-> userspace, what the correct semantics are (whether there should be an
-> error if userspace is unaware of a new extension) is very
-> syscall-dependent and thus probably cannot be unified between syscalls
-> (a good example of this problem is [1]).
-> 
-> Previously there was no common lib/ function that implemented
-> the necessary extension-checking semantics (and different syscalls
-> implemented them slightly differently or incompletely[2]). Future
-> patches replace common uses of this pattern to make use of
-> copy_struct_from_user().
-> 
-> Some in-kernel selftests that insure that the handling of alignment and
-> various byte patterns are all handled identically to memchr_inv() usage.
-> 
-> [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
->      robustify sched_read_attr() ABI logic and code")
-> 
-> [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
->      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
->      always rejects differently-sized struct arguments.
-> 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
->  include/linux/bitops.h  |   7 +++
->  include/linux/uaccess.h |   4 ++
->  lib/strnlen_user.c      |   8 +--
->  lib/test_user_copy.c    |  59 ++++++++++++++++++---
->  lib/usercopy.c          | 115 ++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 180 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-> index cf074bce3eb3..a23f4c054768 100644
-> --- a/include/linux/bitops.h
-> +++ b/include/linux/bitops.h
-> @@ -4,6 +4,13 @@
->  #include <asm/types.h>
->  #include <linux/bits.h>
->  
-> +/* Set bits in the first 'n' bytes when loaded from memory */
-> +#ifdef __LITTLE_ENDIAN
-> +#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
-> +#else
-> +#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
-> +#endif
-> +
->  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
->  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
->  
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 34a038563d97..824569e309e4 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -230,6 +230,10 @@ static inline unsigned long __copy_from_user_inatomic_nocache(void *to,
->  
->  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
->  
-> +extern int is_zeroed_user(const void __user *from, size_t count);
-> +extern int copy_struct_from_user(void *dst, size_t ksize,
-> +				 const void __user *src, size_t usize);
-> +
->  /*
->   * probe_kernel_read(): safely attempt to read from a location
->   * @dst: pointer to the buffer that shall take the data
-> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-> index 7f2db3fe311f..39d588aaa8cd 100644
-> --- a/lib/strnlen_user.c
-> +++ b/lib/strnlen_user.c
-> @@ -2,16 +2,10 @@
->  #include <linux/kernel.h>
->  #include <linux/export.h>
->  #include <linux/uaccess.h>
-> +#include <linux/bitops.h>
->  
->  #include <asm/word-at-a-time.h>
->  
-> -/* Set bits in the first 'n' bytes when loaded from memory */
-> -#ifdef __LITTLE_ENDIAN
-> -#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
-> -#else
-> -#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
-> -#endif
-> -
->  /*
->   * Do a strnlen, return length of string *with* final '\0'.
->   * 'count' is the user-supplied count, while 'max' is the
-> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-> index 67bcd5dfd847..f7cde3845ccc 100644
-> --- a/lib/test_user_copy.c
-> +++ b/lib/test_user_copy.c
-> @@ -31,14 +31,58 @@
->  # define TEST_U64
->  #endif
->  
-> -#define test(condition, msg)		\
-> -({					\
-> -	int cond = (condition);		\
-> -	if (cond)			\
-> -		pr_warn("%s\n", msg);	\
-> -	cond;				\
-> +#define test(condition, msg, ...)					\
-> +({									\
-> +	int cond = (condition);						\
-> +	if (cond)							\
-> +		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
-> +	cond;								\
->  })
->  
-> +static int test_is_zeroed_user(char *kmem, char __user *umem, size_t size)
-> +{
-> +	int ret = 0;
-> +	size_t start, end, i;
-> +	size_t zero_start = size / 4;
-> +	size_t zero_end = size - zero_start;
-> +
-> +	/*
-> +	 * We conduct a series of is_zeroed_user() tests on a block of memory
-> +	 * with the following byte-pattern (trying every possible [start,end]
-> +	 * pair):
-> +	 *
-> +	 *   [ 00 ff 00 ff ... 00 00 00 00 ... ff 00 ff 00 ]
-> +	 *
-> +	 * And we verify that is_zeroed_user() acts identically to memchr_inv().
-> +	 */
-> +
-> +	for (i = 0; i < zero_start; i += 2)
-> +		kmem[i] = 0x00;
-> +	for (i = 1; i < zero_start; i += 2)
-> +		kmem[i] = 0xff;
-> +
-> +	for (i = zero_end; i < size; i += 2)
-> +		kmem[i] = 0xff;
-> +	for (i = zero_end + 1; i < size; i += 2)
-> +		kmem[i] = 0x00;
-> +
-> +	ret |= test(copy_to_user(umem, kmem, size),
-> +		    "legitimate copy_to_user failed");
-> +
-> +	for (start = 0; start <= size; start++) {
-> +		for (end = start; end <= size; end++) {
-> +			int retval = is_zeroed_user(umem + start, end - start);
-> +			int expected = memchr_inv(kmem + start, 0, end - start) == NULL;
-> +
-> +			ret |= test(retval != expected,
-> +				    "is_zeroed_user(=%d) != memchr_inv(=%d) mismatch (start=%lu, end=%lu)",
-> +				    retval, expected, start, end);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int __init test_user_copy_init(void)
->  {
->  	int ret = 0;
-> @@ -106,6 +150,9 @@ static int __init test_user_copy_init(void)
->  #endif
->  #undef test_legit
->  
-> +	/* Test usage of is_zeroed_user(). */
-> +	ret |= test_is_zeroed_user(kmem, usermem, PAGE_SIZE);
-> +
->  	/*
->  	 * Invalid usage: none of these copies should succeed.
->  	 */
-> diff --git a/lib/usercopy.c b/lib/usercopy.c
-> index c2bfbcaeb3dc..f795cf0946ad 100644
-> --- a/lib/usercopy.c
-> +++ b/lib/usercopy.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/uaccess.h>
-> +#include <linux/bitops.h>
->  
->  /* out-of-line parts */
->  
-> @@ -31,3 +32,117 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
->  }
->  EXPORT_SYMBOL(_copy_to_user);
->  #endif
-> +
-> +/**
-> + * is_zeroed_user: check if a userspace buffer is full of zeros
-> + * @from:  Source address, in userspace.
-> + * @size: Size of buffer.
-> + *
-> + * This is effectively shorthand for "memchr_inv(from, 0, size) == NULL" for
-> + * userspace addresses. If there are non-zero bytes present then false is
-> + * returned, otherwise true is returned.
-> + *
-> + * Returns:
-> + *  * -EFAULT: access to userspace failed.
-> + */
-> +int is_zeroed_user(const void __user *from, size_t size)
-> +{
-> +	unsigned long val;
-> +	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
-> +
-> +	if (unlikely(!size))
-> +		return true;
+> I see no reason for that. This is different scenario.
 
-You're returning "true" and another implicit boolean with (val == 0)
-down below but -EFAULT in other places. But that function is
-int is_zeroed_user()
-Would probably be good if you either switch to
-bool is_zeroed_user()
-as the name suggests or rename the function and have it return an int
-everywhere.
+It is?
 
-> +
-> +	from -= align;
-> +	size += align;
-> +
-> +	if (!user_access_begin(from, size))
-> +		return -EFAULT;
-> +
-> +	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-> +	if (align)
-> +		val &= ~aligned_byte_mask(align);
-> +
-> +	while (size > sizeof(unsigned long)) {
-> +		if (unlikely(val))
-> +			goto done;
-> +
-> +		from += sizeof(unsigned long);
-> +		size -= sizeof(unsigned long);
-> +
-> +		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-> +	}
-> +
-> +	if (size < sizeof(unsigned long))
-> +		val &= aligned_byte_mask(size);
-> +
-> +done:
-> +	user_access_end();
-> +	return (val == 0);
-> +err_fault:
-> +	user_access_end();
-> +	return -EFAULT;
-> +}
-> +EXPORT_SYMBOL(is_zeroed_user);
-> +
-> +/**
-> + * copy_struct_from_user: copy a struct from userspace
-> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
-> + *         bytes long.
-> + * @ksize: Size of @dst struct.
-> + * @src:   Source address, in userspace.
-> + * @usize: (Alleged) size of @src struct.
-> + *
-> + * Copies a struct from userspace to kernel space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by userspace.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, size);
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then the userspace has passed an old struct to a
-> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
-> + *    are to be zero-filled.
-> + *  * If @usize > @ksize, then the userspace has passed a new struct to an
-> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
-> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -EFAULT: access to userspace failed.
-> + */
-> +int copy_struct_from_user(void *dst, size_t ksize,
-> +			  const void __user *src, size_t usize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = max(ksize, usize) - size;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize) {
-> +		memset(dst + size, 0, rest);
-> +	} else if (usize > ksize) {
-> +		int ret = is_zeroed_user(src + size, rest);
-> +		if (ret <= 0)
-> +			return ret ?: -E2BIG;
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (copy_from_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> -- 
-> 2.23.0
+> Mmap have no clear signal about "end of write", only page fault at
+> beginning. Theoretically we could implement similar sliding window and
+> start writeback on consequent page faults.
+
+sequential IO doing pwrite() in a loop has no clear signal about
+"end of write", either. It's exactly the same as doing a memset(0)
+on a mmap()d region to zero the file. i.e. the write doesn't stop
+until EOF is reached...
+
+> But applications who use memory mapped files probably knows better what
+> to do with this data. I prefer to leave them alone for now.
+
+By that argument, we shouldn't have readahead for mmap() access or
+even read-around for page faults. We can track read and write faults
+exactly for mmap(), so if you are tracking sequential page dirtying
+for writebehind we can do that jsut as easily for mmap (via
+->page_mkwrite) as we can for write() IO.
+
+> > > > ANd, really such strict writebehind behaviour is going to cause all
+> > > > sorts of unintended problesm with filesystems because there will be
+> > > > adverse interactions with delayed allocation. We need a substantial
+> > > > amount of dirty data to be cached for writeback for fragmentation
+> > > > minimisation algorithms to be able to do their job....
+> > > 
+> > > I think most sequentially written files never change after close.
+> > 
+> > There are lots of apps that write zeros to initialise and allocate
+> > space, then go write real data to them. Database WAL files are
+> > commonly initialised like this...
 > 
+> Those zeros are just bunch of dirty pages which have to be written.
+> Sync and memory pressure will do that, why write-behind don't have to?
+
+Huh? IIUC, the writebehind flag is a global behaviour flag for the
+kernel - everything does writebehind or nothing does it, right?
+
+Hence if you turn on writebehind, the writebehind will write the
+zeros to disk before real data can be written. We no longer have
+zeroing as something that sits in the cache until it's overwritten
+with real data - that file now gets written twice and it delays the
+application from actually writing real data until the zeros are all
+on disk.
+
+strict writebehind without the ability to burst temporary/short-term
+data/state into the cache is going to cause a lot of performance
+regressions in applications....
+
+> > > Except of knowing final size of huge files (>16Mb in my patch)
+> > > there should be no difference for delayed allocation.
+> > 
+> > There is, because you throttle the writes down such that there is
+> > only 16MB of dirty data in memory. Hence filesystems will only
+> > typically allocate in 16MB chunks as that's all the delalloc range
+> > spans.
+> > 
+> > I'm not so concerned for XFS here, because our speculative
+> > preallocation will handle this just fine, but for ext4 and btrfs
+> > it's going to interleave the allocate of concurrent streaming writes
+> > and fragment the crap out of the files.
+> > 
+> > In general, the smaller you make the individual file writeback
+> > window, the worse the fragmentation problems gets....
+> 
+> AFAIR ext4 already preallocates extent beyond EOF too.
+
+Only via fallocate(), not for delayed allocation.
+
+> > > Probably write behind could provide hint about streaming pattern:
+> > > pass something like "MSG_MORE" into writeback call.
+> > 
+> > How does that help when we've only got dirty data and block
+> > reservations up to EOF which is no more than 16MB away?
+> 
+> Block allocator should interpret this flags as "more data are
+> expected" and preallocate extent bigger than data and beyond EOF.
+
+Can't do that: delayed allocation is a 2-phase operation that is not
+seperable from the context that is dirtying the pages. The space
+is _accounted as used_ during the write() context, but the _physical
+allocation_ of that space is done in the writeback context. We
+cannot reserve more space in the writeback context, because we may
+already be at ENOSPC by the time writeback comes along. Hence
+writeback must already have all the space it needs to write back the
+dirty pages in memory already accounted as used space before it
+starts running physical allocations.
+
+IOWs, we cannot magically allocate more space than was reserved for
+the data being written in because of some special flag from the
+writeback code. That way lies angry users because we lost their
+data due to ENOSPC issues in writeback.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
