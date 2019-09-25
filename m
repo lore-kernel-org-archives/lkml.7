@@ -2,110 +2,191 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC591C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0407C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCDC2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8506520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWiOz5xt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E+PDCQ/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411353AbfIYBUn (ORCPT
+        id S2411362AbfIYBbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 21:20:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33885 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392379AbfIYBUn (ORCPT
+        Tue, 24 Sep 2019 21:31:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33740 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392412AbfIYBbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 21:20:43 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so9351551ion.1;
-        Tue, 24 Sep 2019 18:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mQUUiLblrejWrKd0KlOdzOcENXF40rH5GYEM9TuaSS4=;
-        b=SWiOz5xtaFHfAe7qhrZOfB3XaTTABaRoUA2WkntQTu6mZLAPtLqltcn1HSz4FOVdmc
-         C4hiQS6HxKitVmGPHJR6BnOiAdmb8p/ke41JsAiVtxDyJj/EtgPgcn000LqwSw2XXpRs
-         aJsehFF9sM31eMjJ3jPJMVhf1moysCBTI8rG+6ARu4tg//7sLz/cZpWsKuTFtLA41S2X
-         Moj049CPHidyuiCC+TLFAA4dTAVT1wk5YorB1e+xMSVKHkW4g3k4FuVp38c12CmbT13R
-         wsO2tqJ0iRFy2a/3SfO203+i0XYenfEQ/WWVu5ywTPrwX422oKO4PeywgDE5pL7ILA7N
-         5lXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mQUUiLblrejWrKd0KlOdzOcENXF40rH5GYEM9TuaSS4=;
-        b=PVpA/fyBIdoLH3ctyZntsZiwJLKRkFCP/mefxIVWehzdNs+J01dhg9UvthHik8uSD0
-         WAfXOKljH2T6Dz6LC8B/araiwV5iwm9zy3h1VlfLlervg6lYtMtGN8XfNFJccvIcoFIf
-         0rOQal8NWpkvib3lEqdVdolhDogapBQWxjPQApj9tuYkO3JWOpr994A5Legt0Ha/Mdpg
-         iLum0KUzciv2wLRhPIGTis08rgOJQbuV/lWNmEkCqbS6tSlvN/HH7apJEJU+Xm1vfhqB
-         SB2zOsviArNFeNhb/VpZyY329Au5/aGwh06J3nI6xfxyUSWEDCs24g1LN/PL7ESZvquK
-         +kzg==
-X-Gm-Message-State: APjAAAWn+51fVnTld2M5xyo/OXfdxePecAEGRlXft7qNHI0Gnp9EyVgR
-        otCkul6uMkwDI6M6UjbBXIo20ZwJqcc=
-X-Google-Smtp-Source: APXvYqwYH0op/7MmCPiM8xAfMsxn7k8FX5LrV/HLNynk01ydo/cjks9o5mJOS8EhqcleAu7Y+qfNeQ==
-X-Received: by 2002:a02:5ec4:: with SMTP id h187mr2345350jab.101.1569374442036;
-        Tue, 24 Sep 2019 18:20:42 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id r12sm28225ilq.70.2019.09.24.18.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 18:20:41 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rtlwifi: prevent memory leak in rtl_usb_probe
-Date:   Tue, 24 Sep 2019 20:20:21 -0500
-Message-Id: <20190925012022.13727-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 24 Sep 2019 21:31:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FPS6+J7Nf2Nso+6mXxRnwR+JEsJSOlRfKzBQGp9VVII=; b=E+PDCQ/+6vSLblFeljTHrstwJ
+        /F4xvnlUwsdU4cmtVvqWHmVqIcwl2KkoBNID62jJU2dDYg9fUm0Kpfn7ar/82fEHjbgeNNn/SobIh
+        18hl4W6A763vX0S0XLnIeAzufSUqaQCJd0ae6k2F4YiIYTZwAGqczm3D/eD3yQpAxQRuOr2yKjYZ2
+        BfEZCBhX3xX/qLD5yFAJESYXasfCZ+THioYaR0afCvRYNIM40GW0AE50LLl7CxNoYrdIplb+bqKGi
+        GXnhSw59dIP2ZYgHg3VZfVQyoA1DGrmjRBNhAlKX04OaGLXzLZNvQaowuXf5zfylUhnWTVQ2aMo9N
+        8ID9QSKJg==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCw9X-0003Ku-EF; Wed, 25 Sep 2019 01:31:35 +0000
+Subject: Re: linux-next: Tree for Sep 16 (kernel/sched/core.c)
+To:     Patrick Bellasi <patrick.bellasi@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190916223850.GQ4352@sirena.co.uk>
+ <1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org>
+ <20190917075242.GB49590@gmail.com> <8736gv2gbv.fsf@arm.com>
+ <30eb4c83-a90d-21aa-3f9e-4da8e66769ef@infradead.org>
+ <20190918060553.GA21173@gmail.com> <87y2yl2a7d.fsf@arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3e6cd315-9588-f90c-867c-92830f68197e@infradead.org>
+Date:   Tue, 24 Sep 2019 18:31:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <87y2yl2a7d.fsf@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rtl_usb_probe if allocation for usb_data fails the allocated hw
-should be released. In addition the allocated rtlpriv->usb_data should
-be released on error handling path.
+On 9/18/19 3:03 AM, Patrick Bellasi wrote:
+> 
+> On Wed, Sep 18, 2019 at 07:05:53 +0100, Ingo Molnar wrote...
+> 
+>> * Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>>> On 9/17/19 6:38 AM, Patrick Bellasi wrote:
+>>>>
+>>>> On Tue, Sep 17, 2019 at 08:52:42 +0100, Ingo Molnar wrote...
+>>>>
+>>>>> * Randy Dunlap <rdunlap@infradead.org> wrote:
+>>>>>
+>>>>>> On 9/16/19 3:38 PM, Mark Brown wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> Changes since 20190915:
+>>>>>>>
+>>>>>>
+>>>>>> on x86_64:
+>>>>>>
+>>>>>> when CONFIG_CGROUPS is not set:
+>>>>
+>>>> Hi Randy,
+>>>> thanks for the report.
+>>>>
+>>>>>>   CC      kernel/sched/core.o
+>>>>>> ../kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
+>>>>>> ../kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
+>>>>>>   struct css_task_iter it;
+>>>>>>                        ^~
+>>>>>>   CC      kernel/printk/printk_safe.o
+>>>>>> ../kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
+>>>>>>   css_task_iter_start(css, 0, &it);
+>>>>>>   ^~~~~~~~~~~~~~~~~~~
+>>>>>>   __sg_page_iter_start
+>>>>>> ../kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
+>>>>>>   while ((p = css_task_iter_next(&it))) {
+>>>>>>               ^~~~~~~~~~~~~~~~~~
+>>>>>>               __sg_page_iter_next
+>>>>>> ../kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
+>>>>>>   css_task_iter_end(&it);
+>>>>>>   ^~~~~~~~~~~~~~~~~
+>>>>>>   get_task_cred
+>>>>>> ../kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
+>>>>>>   struct css_task_iter it;
+>>>>>>                        ^~
+>>>>>>
+>>>>>
+>>>>> I cannot reproduce this build failue: I took Linus's latest which has all 
+>>>>> the -next scheduler commits included (ad062195731b), and an x86-64 "make 
+>>>>> defconfig" and a disabling of CONFIG_CGROUPS still resuls in a kernel 
+>>>>> that builds fine.
+>>>>
+>>>> Same here Ingo, I cannot reproduce on arm64 and !CONFIG_CGROUPS and
+>>>> testing on tip/sched/core.
+>>>>
+>>>> However, if you like, the following patch can make that code a
+>>>> bit more "robust".
+>>>>
+>>>> Best,
+>>>> Patrick
+>>>>
+>>>> ---8<---
+>>>> From 7e17b7bb08dd8dfc57e01c2a7b6875439eb47cbe Mon Sep 17 00:00:00 2001
+>>>> From: Patrick Bellasi <patrick.bellasi@arm.com>
+>>>> Date: Tue, 17 Sep 2019 14:12:10 +0100
+>>>> Subject: [PATCH 1/1] sched/core: uclamp: Fix compile error on !CONFIG_CGROUPS
+>>>>
+>>>> Randy reported a compiler error on x86_64 and !CONFIG_CGROUPS which is due
+>>>> to uclamp_update_active_tasks() using the undefined css_task_iter().
+>>>>
+>>>> Since uclamp_update_active_tasks() is used only when cgroup support is
+>>>> enabled, fix that by properly guarding that function at compile time.
+>>>>
+>>>> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+>>>> Link: https://lore.kernel.org/lkml/1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org/
+>>>> Fixes: commit babbe170e05 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+>>>
+>>> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+>>>
+>>> Thanks.
+>>
+>> Build failures like this one shouldn't depend on the compiler version - 
+>> and it's still a mystery how and why this build bug triggered - we cannot 
+>> apply the fix without knowing the answer to those questions.
+> 
+> Right, but it's also quite strange it's not triggering without the
+> guarding above. The only definition of struct css_task_iter I can see is
+> the one
+> provided in:
+> 
+>    include/linux/cgroup.h:50
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/cgroup.h?h=35f7a95266153b1cf0caca3aa9661cb721864527#n50
+> 
+> which is CONFIG_CGROUPS guarded.
+> 
+>> Can you reproduce the build bug with Linus's latest tree? If not, which 
+>> part of -next triggers the build failure?
+> 
+> I tried again using this morning's Linus tree headed at:
+> 
+>   commit 35f7a9526615 ("Merge tag 'devprop-5.4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm")
+> 
+> and compilation actually fails for me too.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+and linux-next of 20190924 still fails also...
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 4b59f3b46b28..348b0072cdd6 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -1021,8 +1021,10 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	rtlpriv->hw = hw;
- 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
- 				    GFP_KERNEL);
--	if (!rtlpriv->usb_data)
-+	if (!rtlpriv->usb_data) {
-+		ieee80211_free_hw(hw);
- 		return -ENOMEM;
-+	}
- 
- 	/* this spin lock must be initialized early */
- 	spin_lock_init(&rtlpriv->locks.usb_lock);
-@@ -1083,6 +1085,7 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	_rtl_usb_io_handler_release(hw);
- 	usb_put_dev(udev);
- 	complete(&rtlpriv->firmware_loading_complete);
-+	kfree(rtlpriv->usb_data);
- 	return -ENODEV;
- }
- EXPORT_SYMBOL(rtl_usb_probe);
+
+> Everything is fine in v5.3 with !CONFIG_CGROUPS and a git bisect
+> between v5.3 and Linus master points to:
+> 
+>   commit babbe170e053c ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+> 
+> So, I think it's really my fault not properly testing !CONFIG_CGROUP,
+> which is enforced by default from CONFIG_SCHED_AUTOGROUP.
+> 
+> The patch above fixes the compilation error, hope this helps.
+> 
+> Cheers,
+> Patrick
+
+
 -- 
-2.17.1
-
+~Randy
