@@ -2,131 +2,121 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACB8C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612DBC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4998121D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4324521D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391794AbfIYPv7 (ORCPT
+        id S2439770AbfIYPxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:51:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41995 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387835AbfIYPv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:51:59 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iD9a4-0003aB-SQ; Wed, 25 Sep 2019 17:51:52 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iD9a3-00075g-RB; Wed, 25 Sep 2019 17:51:51 +0200
-Date:   Wed, 25 Sep 2019 17:51:51 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-3-m.felsch@pengutronix.de>
- <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Wed, 25 Sep 2019 11:53:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49984 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387746AbfIYPxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:53:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:53:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="193814082"
+Received: from unknown (HELO [10.24.9.85]) ([10.24.9.85])
+  by orsmga006.jf.intel.com with ESMTP; 25 Sep 2019 08:53:07 -0700
+Subject: Re: [PATCH] Documentation/process: Clarify disclosure rules
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
+        ben@decadent.org.uk, labbott@redhat.com, andrew.cooper3@citrix.com,
+        tsoni@codeaurora.org, keescook@chromium.org, tony.luck@intel.com,
+        linux-doc@vger.kernel.org, dan.j.williams@intel.com
+References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
+ <20190910172649.74639177@viggo.jf.intel.com>
+ <20190911154453.GA14152@kroah.com>
+ <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
+ <alpine.DEB.2.21.1909251028390.10825@nanos.tec.linutronix.de>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <64b8d5bb-4d6a-6d60-34b0-90a4f15238dd@intel.com>
+Date:   Wed, 25 Sep 2019 08:53:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:42:18 up 130 days, 22:00, 84 users,  load average: 0.12, 0.07,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1909251028390.10825@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
-
-On 19-09-24 09:23, Adam Thomson wrote:
-> On 17 September 2019 13:43, Marco Felsch wrote:
+On 9/25/19 1:29 AM, Thomas Gleixner wrote:
+> The role of the contact list provided by the disclosing party and how it
+> affects the disclosure process and the ability to include experts into
+> the development process is not really well explained.
 > 
-> > Add the documentation which describe the voltage selection gpio support.
-> > This property can be applied to each subnode within the 'regulators'
-> > node so each regulator can be configured differently.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > index edca653a5777..9d9820d8177d 100644
-> > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > @@ -66,6 +66,15 @@ Sub-nodes:
-> >    details of individual regulator device can be found in:
-> >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > 
-> > +  Optional regulator device-specific properties:
-> > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used by the
-> > +    regulator to switch the voltage between active/suspend voltage settings. If
-> > +    the signal is active the active-settings are applied else the suspend
-> > +    settings are applied. Attention: Sharing the same gpio for other purposes
-> > +    or across multiple regulators is possible but the gpio settings must be the
-> > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio device
-> > +    other gpios are not allowed and make no sense.
-> > +
+> Neither is it entirely clear when the disclosing party will be informed
+> about the fact that a developer who is not covered by an employer NDA needs
+> to be brought in and disclosed.
 > 
-> Should we not use the binding names that are defined in 'gpio-regulator.yaml' as
-> these seem to be generic and would probably serve the purpose here?
+> Explain the role of the contact list and the information policy along with
+> an eventual conflict resolution better.
 
-Hm.. as the description says:
+This addresses the concerns I had about individuals who the community
+needs to participate but which might be encumbered by an agreement
+between their employer and the disclosing party.
 
-8<--------------------------------------------------
-gpios:
-   description: Array of one or more GPIO pins used to select the
-   regulator voltage/current listed in "states".
-8<--------------------------------------------------
+To be explicit, this ack does not represent any official Intel position
+and has not been reviewed by anyone at Intel other than me.
 
-But we don't have a "states" property and we can't select between
-voltage or current.
-
-Regards,
-  Marco
-
-> >  - rtc : This node defines settings required for the Real-Time Clock associated
-> >    with the DA9062. There are currently no entries in this binding, however
-> >    compatible = "dlg,da9062-rtc" should be added if a node is created.
-> > --
-> > 2.20.1
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
