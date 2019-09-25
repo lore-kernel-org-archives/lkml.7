@@ -2,193 +2,155 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50853C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70601C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A33208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569454166;
-	bh=Ogg+uhTUXRNcF6bTJQEM/wrb2sVSMMLx7Q3Fdy6eWac=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=twIJTucz+vhZWlV/hfH6EcYXa0KStxQce4veBRM3Yc7SjJZyPbig22tSSTv7UP/nU
-	 vMEZBNBkayIirx90BRUv3Hz+iX6uMe4twkho1aUC1O4qJf6zzN0rbSG+AK0UMLaXSh
-	 bmmfrQcJsLsVa4JaDhPsw+lZsvZbg4m2blc3/IG8=
+	by mail.kernel.org (Postfix) with ESMTP id 452BB20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfIYX3Z (ORCPT
+        id S1731869AbfIYXd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 19:33:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:34348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfIYX3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:29:25 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53AFD21D7E;
-        Wed, 25 Sep 2019 23:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569454163;
-        bh=Ogg+uhTUXRNcF6bTJQEM/wrb2sVSMMLx7Q3Fdy6eWac=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0jz1v3MjS3mMCH8E6uViwYWmbwPNI1iTIFvCgg2g+HqOWPkCtIOwT01xXy6cy/+il
-         keRrKEhT6RTgKwp14lw2Eo27EFSeq6flnQMyNKfJ3UqFtnZfyWPEkzwWxmIDzaMkSQ
-         lRLbhLNprKDr74pstGkHjAsyUs3aUShzL9/yKEn0=
-Received: by mail-qt1-f172.google.com with SMTP id c3so565995qtv.10;
-        Wed, 25 Sep 2019 16:29:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAXwf0Jay7qCqhlkl094s/SAvIIu6c6L71afaRhWYx5VkEwZd8lL
-        c76XSTDZzxAMSVrgJ0JJv2nWkzieldLLZTOW4Q==
-X-Google-Smtp-Source: APXvYqyVnFfKD4/M5dyzxw92n4hx9dvyADlYPxaSGLejDMBQ+TSPDAwfcMApLzsyRir8CgdchHqVSeqSR5dpXSyyVWI=
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr1101854qtn.110.1569454162399;
- Wed, 25 Sep 2019 16:29:22 -0700 (PDT)
+        id S1731743AbfIYXd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:33:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338911000;
+        Wed, 25 Sep 2019 16:33:27 -0700 (PDT)
+Received: from [172.23.27.158] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 792373F67D;
+        Wed, 25 Sep 2019 16:33:25 -0700 (PDT)
+Subject: Re: [PATCH] arm64: Allow disabling of the compat vDSO
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190925130926.50674-1-catalin.marinas@arm.com>
+ <CAKwvOdn2Sf7aAt0zqUUqGY6nXg-C3be7An9amy4tfiNr_8ERJw@mail.gmail.com>
+ <20190925170838.GK7042@arrakis.emea.arm.com>
+ <CAKwvOd=GcF0Tv2-h0LNMvCzx+tm5skKW1J7P=NTf8xYbmPiOPw@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <868f7611-4f66-7273-a7fd-65a8a6d9216d@arm.com>
+Date:   Thu, 26 Sep 2019 00:35:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190925131252.19359-1-robh@kernel.org> <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e>
-In-Reply-To: <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Sep 2019 18:29:10 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
-Message-ID: <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKwvOd=GcF0Tv2-h0LNMvCzx+tm5skKW1J7P=NTf8xYbmPiOPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 4:24 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+On 9/25/19 6:31 PM, Nick Desaulniers wrote:
+> On Wed, Sep 25, 2019 at 10:08 AM Catalin Marinas
+> <catalin.marinas@arm.com> wrote:
+>>
+>> This is just a temporary hiding of the issue, not a complete fix.
+> 
+> Yep.
+> 
+>> Vincenzo will do the fix later on.
+> 
+> Appreciated, I'm happy to help discuss, review, and test.
+> 
+>>>> - check whether COMPATCC is clang or not rather than CC_IS_CLANG, which
+>>>>   only checks the native compiler
+>>>
+>>> When cross compiling, IIUC CC_IS_CLANG is referring to CC which is the
+>>> cross compiler, which is different than HOSTCC which is the host
+>>> compiler.  HOSTCC is used mostly for things in scripts/ while CC is
+>>> used to compile a majority of the kernel in a cross compile.
+>>
+>> We need the third compiler here for the compat vDSO (at least with gcc),
+>> COMPATCC. I'm tempted to just drop the CONFIG_CROSS_COMPILE_COMPAT_VDSO
+>> altogether and only rely on a COMPATCC. This way we can add
+>> COMPATCC_IS_CLANG etc. in the Kconfig checks directly.
+> 
+> Oh, man, yeah 3 compilers in that case:
+> 1. HOSTCC
+> 2. CC
+> 3. COMPATCC
 >
-> On Wed, 25 Sep 2019 06:12:52 PDT (-0700), robh@kernel.org wrote:
-> > Fix the errors in the RiscV CPU DT schema:
-> >
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> >
-> > Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> > Cc: Palmer Dabbelt <palmer@sifive.com>
-> > Cc: Albert Ou <aou@eecs.berkeley.edu>
-> > Cc: linux-riscv@lists.infradead.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v2:
-> >  - Add timebase-frequency to simulator example.
-> >
-> >  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
-> >  1 file changed, 14 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > index b261a3015f84..eb0ef19829b6 100644
-> > --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > @@ -24,15 +24,17 @@ description: |
-> >
-> >  properties:
-> >    compatible:
-> > -    items:
-> > -      - enum:
-> > -          - sifive,rocket0
-> > -          - sifive,e5
-> > -          - sifive,e51
-> > -          - sifive,u54-mc
-> > -          - sifive,u54
-> > -          - sifive,u5
-> > -      - const: riscv
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - sifive,rocket0
-> > +              - sifive,e5
-> > +              - sifive,e51
-> > +              - sifive,u54-mc
-> > +              - sifive,u54
-> > +              - sifive,u5
-> > +          - const: riscv
-> > +      - const: riscv    # Simulator only
-> >      description:
-> >        Identifies that the hart uses the RISC-V instruction set
-> >        and identifies the type of the hart.
-> > @@ -67,8 +69,6 @@ properties:
-> >        lowercase to simplify parsing.
-> >
-> >    timebase-frequency:
-> > -    type: integer
-> > -    minimum: 1
-> >      description:
-> >        Specifies the clock frequency of the system timer in Hz.
-> >        This value is common to all harts on a single system image.
-> > @@ -102,9 +102,9 @@ examples:
-> >      cpus {
-> >          #address-cells = <1>;
-> >          #size-cells = <0>;
-> > -        timebase-frequency = <1000000>;
-> >          cpu@0 {
-> >                  clock-frequency = <0>;
-> > +                timebase-frequency = <1000000>;
-> >                  compatible = "sifive,rocket0", "riscv";
-> >                  device_type = "cpu";
-> >                  i-cache-block-size = <64>;
-> > @@ -120,6 +120,7 @@ examples:
-> >          };
-> >          cpu@1 {
-> >                  clock-frequency = <0>;
-> > +                timebase-frequency = <1000000>;
-> >                  compatible = "sifive,rocket0", "riscv";
-> >                  d-cache-block-size = <64>;
-> >                  d-cache-sets = <64>;
-> > @@ -153,6 +154,7 @@ examples:
-> >                  device_type = "cpu";
-> >                  reg = <0>;
-> >                  compatible = "riscv";
-> > +                timebase-frequency = <1000000>;
-> >                  riscv,isa = "rv64imafdc";
-> >                  mmu-type = "riscv,sv48";
-> >                  interrupt-controller {
->
-> Looking at this spec
->
->     https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
->
-> section 3.7 says
->
->     Properties that have identical values across cpu nodes may be placed in the
->     /cpus node instead. A client program must
->     first examine a specific cpu node, but if an expected property is not found
->     then it should look at the parent /cpus node.
->     This results in a less verbose representation of properties which are
->     identical across all CPUs.
 
-The cpu sections of the spec are certainly not perfect. They are
-largely from PPC with only the most obviously things wrong fixed...
+The easier way I found to encapsulate the three compilers is using
+CONFIG_CROSS_COMPILE_COMPAT_VDSO, hence I would prefer to not drop it.
 
-> I can never figure out if I'm looking at the right DT specifications so it's
-> possible that is defunct,
+In the case of gcc:
+-------------------
 
-Why? What's not clear which one to look at? If you start at
-devicetree.org the above is where you end up.
+CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
 
-> I just bring this up because we've got an outstanding
-> bug in our port where we're not respecting what section 3.7 says and are only
-> looking at /cpus/timebase-frequency instead of /cpus/cpu@*/timebase-frequency,
-> and I'm wondering if the fix should allow for looking at
-> /cpus/timebase-frequency or just not bother.
+$(CROSS_COMPILE_COMPAT)gcc ...
 
-It's perfectly fine for some deviation for each arch or being more
-restrictive. For Arm, we've generally gone the direction of everything
-goes into the cpu nodes. So tell me what you want, I just need the
-warnings gone.
+In the case of clang:
+---------------------
 
-Rob
+CLANG_TRIPLE ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%-"=%)
+
+clang --target=$(notdir $CLANG_TRIPLE)
+
+This will prevent the vdso32 library generation to depend from a fixed
+configuration that might change in future.
+
+Based on this work we will be able to add COMPAT_CC_IS_CLANG, COMPAT_CC_IS_GCC
+and COMPAT_CC_GCC_VERSION, COMPAT_CC_CLANG_VERSION which will help us in a more
+fine grain control of the compiler versions.
+
+The clang support will be added shortly after the header problems have been
+addressed, because without that and the possibility to have 32bit headers in
+arm64 would result in a broken target.
+
+>>
+>> If clang can build both 32 and 64-bit with the same binary (just
+>> different options), we could maybe have COMPATCC default to CC and add a
+>> check on whether COMPATCC generates 32-bit binaries.
+> 
+> Cross compilation work differently between GCC and Clang from a
+> developers perspective. In GCC, at ./configure time you select which
+> architecture you'd like to cross compile for, and you get one binary
+> that targets one architecture.  You get a nice compiler that can do
+> mostly static dispatch at the cost of needing multiple binaries in
+> admittedly rare scenarios like the one we have here.  Clang defaults
+> to all backends enabled when invoking cmake (though there are options
+> to enable certain backends; Sony for instance enables only x86_64 for
+> their PS4 SDK (and thus I break their build frequently with my arm64
+> unit tests)).
+> 
+> Clang can do all of the above with one binary.  The codebase makes
+> heavy use of OOP+virtual dispatch to run ISA specific and general code
+> transformations (virtual dispatch is slower than static dispatch, but
+> relative to what the compiler is actually doing, I suspect the effects
+> are minimal. Folks are also heavily invested in researching
+> "devirtualization").  With one clang binary, I can do:
+> 
+> # implicitly uses the host's ISA, for me that's x86_64-linux-gnu
+> $ clang foo.c
+> $ clang -target aarch64-linux-gnu foo.c
+> $ clang -target arm-linux-gnueabi foo.c
+> 
+> Admittedly, it's not as simple for the kernel's case; the top level
+> Makefile sets some flags to support invoking Clang from a non-standard
+> location, and telling it where to find binutils because we can't
+> assemble the kernel with LLVM's substitute for GAS).
+> 
+
+Thank you for the explanation, if I understand it correctly the strategy
+proposed above should cover all the cased proposed. Please, let me know if i
+need to tweak something.
+
+The plan is to use binutils to build the vdso libraries with both the compilers.
+
+-- 
+Regards,
+Vincenzo
