@@ -2,209 +2,162 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E19C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EA1C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC0A2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+NMUppG"
+	by mail.kernel.org (Postfix) with ESMTP id 6CA932064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 03:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411472AbfIYDPQ (ORCPT
+        id S2411484AbfIYDP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 23:15:16 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44225 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411457AbfIYDPP (ORCPT
+        Tue, 24 Sep 2019 23:15:57 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:58209 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405270AbfIYDP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 23:15:15 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 21so3458262otj.11;
-        Tue, 24 Sep 2019 20:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=afcCPGULCNOtz/0h05xsNOQts8+NcMH2hirofuxLTdQ=;
-        b=U+NMUppGyzVy2XDqOvfnHJt7FaU8Bs09UlndkxV+Isw+0giosZ4aNeiw+7XOfFXb8T
-         8zNlSSlpkOWrbsSOGKdqudl+lwQ0spV7CnZ9xQYXFDJ5Du26veLJ/NShlVLVapOh2g1a
-         v+BchHQ8LAQ9tAS1UgCGVwwWuw630X669rkFm3jsg6b4NQ7apKzJizHo61TAgNjPW/s3
-         ybmqVdQFqhB6k8y2FoQDo6zaXVZpGU/AY7a9WZ6PdbWHfU5gDeW2WJaHNLdIZDmhdmXb
-         b3u7qtOwp2g/nDygGnZARX4erkjePrmUmlbRNnP4qBEqPCAa2EaOOU7+pSyxzY5wxnr4
-         Lc2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=afcCPGULCNOtz/0h05xsNOQts8+NcMH2hirofuxLTdQ=;
-        b=HZSq3phJVa7wdy5cSS15apmuHZCzt1S5klO3QjpE800k3ztb8vEQ+0ifOsDn//bfKV
-         zLU+EtF74li1+7p1/vXlR6L9/qmMrN1DpfMHHewQIOaKiFWjZvl5GNpMDIFWZ+XothIZ
-         Hy8VzpNu8oXGHB0/BX4Tm+z9arS2wdgjHbF1oxBAxYV7d3/MaxN91oqj5LhFQLSVEGAr
-         ECdOhaBgmgkRqieFCvUiO4N4BGihMln/O/sH4nVBrOz3YtIm0UQCyVCIc8fs4cJvP/so
-         wIQRqHmjqfgwe3vEVEx2F06QSNXy/QDUnK5NkTFyYBQkZvgKA1HhktKTsXOb4RO5FsRI
-         5EcQ==
-X-Gm-Message-State: APjAAAWYS05is7EnC798m0d6aV1yrDhrT8wfz2muOqwMERbVpPkwiPG1
-        tWFIdN+rtjzExtLcxXHcE98YfKL2SAeoP8NIr08=
-X-Google-Smtp-Source: APXvYqx3uHu6GsUxdtRr8tl95tqn/QuheLHwAoSbpsrOzGMBbveA2admP6ZJxsCiutQSZnSIRfD7l6ZLmrRNVy1OUCE=
-X-Received: by 2002:a9d:aa8:: with SMTP id 37mr4453390otq.56.1569381314722;
- Tue, 24 Sep 2019 20:15:14 -0700 (PDT)
+        Tue, 24 Sep 2019 23:15:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TdMZLYy_1569381354;
+Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0TdMZLYy_1569381354)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 25 Sep 2019 11:15:54 +0800
+Date:   Wed, 25 Sep 2019 11:15:54 +0800
+From:   Eryu Guan <eguan@linux.alibaba.com>
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Eryu Guan <guaneryu@gmail.com>,
+        David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
+        Eric Biggers <ebiggers@google.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH xfstests] overlay: Enable character device to be the base
+ fs partition
+Message-ID: <20190925031554.GA67926@e18g06458.et15sqa>
+References: <1569318025-36831-1-git-send-email-chengzhihao1@huawei.com>
+ <CAOQ4uxhL_EZZ_ktv8RYpn-q2nDrA2v7kjv+b99a5ZKg3tmEQ8A@mail.gmail.com>
+ <b215554a-092b-fcf3-e0a3-36fab291b4ff@huawei.com>
 MIME-Version: 1.0
-References: <1567993228-23668-1-git-send-email-wanpengli@tencent.com>
- <29d04ee4-60e7-4df9-0c4f-fc29f2b0c6a8@redhat.com> <CANRm+CxVXsQCmEpxNJSifmQJk5cqoSifFq+huHJE1s7a-=0iXw@mail.gmail.com>
- <2dda32db-5662-f7a6-f52d-b835df1f45f1@redhat.com> <9ef778df-c34a-897c-bcfa-780256fb78ff@redhat.com>
-In-Reply-To: <9ef778df-c34a-897c-bcfa-780256fb78ff@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 25 Sep 2019 11:15:02 +0800
-Message-ID: <CANRm+Cyckfhm59GoP1m_SsHcAAiUAaLtnMLKSY2nJJJeexmTjQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "locking/pvqspinlock: Don't wait if vCPU is preempted"
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, loobinliu@tencent.com,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b215554a-092b-fcf3-e0a3-36fab291b4ff@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Sep 2019 at 21:04, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 11/09/19 06:25, Waiman Long wrote:
-> > On 9/10/19 6:56 AM, Wanpeng Li wrote:
-> >> On Mon, 9 Sep 2019 at 18:56, Waiman Long <longman@redhat.com> wrote:
-> >>> On 9/9/19 2:40 AM, Wanpeng Li wrote:
-> >>>> From: Wanpeng Li <wanpengli@tencent.com>
-> >>>>
-> >>>> This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't =
-wait if
-> >>>> vCPU is preempted), we found great regression caused by this commit.
-> >>>>
-> >>>> Xeon Skylake box, 2 sockets, 40 cores, 80 threads, three VMs, each i=
-s 80 vCPUs.
-> >>>> The score of ebizzy -M can reduce from 13000-14000 records/s to 1700=
--1800
-> >>>> records/s with this commit.
-> >>>>
-> >>>>           Host                       Guest                score
-> >>>>
-> >>>> vanilla + w/o kvm optimizes     vanilla               1700-1800 reco=
-rds/s
-> >>>> vanilla + w/o kvm optimizes     vanilla + revert      13000-14000 re=
-cords/s
-> >>>> vanilla + w/ kvm optimizes      vanilla               4500-5000 reco=
-rds/s
-> >>>> vanilla + w/ kvm optimizes      vanilla + revert      14000-15500 re=
-cords/s
-> >>>>
-> >>>> Exit from aggressive wait-early mechanism can result in yield premat=
-ure and
-> >>>> incur extra scheduling latency in over-subscribe scenario.
-> >>>>
-> >>>> kvm optimizes:
-> >>>> [1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interru=
-pts)
-> >>>> [2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate =
-lock waiter preemption)
-> >>>>
-> >>>> Tested-by: loobinliu@tencent.com
-> >>>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>>> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >>>> Cc: Ingo Molnar <mingo@kernel.org>
-> >>>> Cc: Waiman Long <longman@redhat.com>
-> >>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> >>>> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> >>>> Cc: loobinliu@tencent.com
-> >>>> Cc: stable@vger.kernel.org
-> >>>> Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is pre=
-empted)
-> >>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> >>>> ---
-> >>>>  kernel/locking/qspinlock_paravirt.h | 2 +-
-> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qs=
-pinlock_paravirt.h
-> >>>> index 89bab07..e84d21a 100644
-> >>>> --- a/kernel/locking/qspinlock_paravirt.h
-> >>>> +++ b/kernel/locking/qspinlock_paravirt.h
-> >>>> @@ -269,7 +269,7 @@ pv_wait_early(struct pv_node *prev, int loop)
-> >>>>       if ((loop & PV_PREV_CHECK_MASK) !=3D 0)
-> >>>>               return false;
-> >>>>
-> >>>> -     return READ_ONCE(prev->state) !=3D vcpu_running || vcpu_is_pre=
-empted(prev->cpu);
-> >>>> +     return READ_ONCE(prev->state) !=3D vcpu_running;
-> >>>>  }
-> >>>>
-> >>>>  /*
-> >>> There are several possibilities for this performance regression:
-> >>>
-> >>> 1) Multiple vcpus calling vcpu_is_preempted() repeatedly may cause so=
-me
-> >>> cacheline contention issue depending on how that callback is implemen=
-ted.
-> >>>
-> >>> 2) KVM may set the preempt flag for a short period whenver an vmexit
-> >>> happens even if a vmenter is executed shortly after. In this case, we
-> >>> may want to use a more durable vcpu suspend flag that indicates the v=
-cpu
-> >>> won't get a real vcpu back for a longer period of time.
-> >>>
-> >>> Perhaps you can add a lock event counter to count the number of
-> >>> wait_early events caused by vcpu_is_preempted() being true to see if =
-it
-> >>> really cause a lot more wait_early than without the vcpu_is_preempted=
-()
-> >>> call.
-> >> pv_wait_again:1:179
-> >> pv_wait_early:1:189429
-> >> pv_wait_head:1:263
-> >> pv_wait_node:1:189429
-> >> pv_vcpu_is_preempted:1:45588
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3Dsleep 5=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> pv_wait_again:1:181
-> >> pv_wait_early:1:202574
-> >> pv_wait_head:1:267
-> >> pv_wait_node:1:202590
-> >> pv_vcpu_is_preempted:1:46336
+On Tue, Sep 24, 2019 at 10:19:38PM +0800, Zhihao Cheng wrote:
+> As far as I know, _require_scratch_shutdown() is called after _overay_config_override(), at this moment, FSTYP equals to base fs. According the implementation of _require_scratch_shutdown:
+> 3090 _require_scratch_shutdown()
+> 3091 {
+> 3092     [ -x src/godown ] || _notrun "src/godown executable not found"
+> 3093
+> 3094     _scratch_mkfs > /dev/null 2>&1 || _notrun "_scratch_mkfs failed on $SCRATCH_DEV"
+> 3095     _scratch_mount
+> 3096
+> 3097     if [ $FSTYP = "overlay" ]; then                                            # FSTYP = base fs
+> 3098         if [ -z $OVL_BASE_SCRATCH_DEV ]; then
+> 3099             # In lagacy overlay usage, it may specify directory as
+> 3100             # SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
+> 3101             # will be null, so check OVL_BASE_SCRATCH_DEV before
+> 3102             # running shutdown to avoid shutting down base fs accidently.
+> 3103             _notrun "$SCRATCH_DEV is not a block device"
+> 3104         else
+> 3105             src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
+> 3106             || _notrun "Underlying filesystem does not support shutdown"
+> 3107         fi
+> 3108     else
+> 3109         src/godown -f $SCRATCH_MNT 2>&1 \
+> 3110             || _notrun "$FSTYP does not support shutdown"                      # Executes this path
+> 3111     fi
+> 3112
+> 3113     _scratch_unmount
+> 3114 }
+> So, we can't get output: _notrun "$SCRATCH_DEV is not a block device". Instead, the verbose should like:
+>   after _overlay_config_override FSTYP=ubifs    # Additional print message
+>   FSTYP         -- ubifs
+>   PLATFORM      -- Linux/x86_64
+>   MKFS_OPTIONS  -- /dev/ubi0_1
+>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+> 
+>   generic/042	[not run] ubifs does not support shutdown
+> 
+> But I'll consider describing error more concisely in v2.
+> 
+> 在 2019/9/24 20:33, Amir Goldstein 写道:
+> > On Tue, Sep 24, 2019 at 12:34 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
 > >>
-> >> The sampling period is 5s, 6% of wait_early events caused by
-> >> vcpu_is_preempted() being true.
-> >
-> > 6% isn't that high. However, when one vCPU voluntarily releases its
-> > vCPU, all the subsequently waiters in the queue will do the same. It is
-> > a cascading effect. Perhaps we wait early too aggressive with the
-> > original patch.
-> >
-> > I also look up the email chain of the original commit. The patch
-> > submitter did not provide any performance data to support this change.
-> > The patch just looked reasonable at that time. So there was no
-> > objection. Given that we now have hard evidence that this was not a goo=
-d
-> > idea. I think we should revert it.
-> >
-> > Reviewed-by: Waiman Long <longman@redhat.com>
-> >
-> > Thanks,
-> > Longman
-> >
->
-> Queued, thanks.
+> >> When running overlay tests using character devices as base fs partitions,
+> >> all overlay usecase results become 'notrun'. Function
+> >> '_overay_config_override' (common/config) detects that the current base
+> >> fs partition is not a block device and will set FSTYP to base fs. The
+> >> overlay usecase will check the current FSTYP, and if it is not 'overlay'
+> >> or 'generic', it will skip the execution.
+> >>
+> >> For example, using UBIFS as base fs skips all overlay usecases:
+> >>
+> >>   FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
+> >>   MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
+> >>   MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+> >>
+> >>   overlay/001   [not run] not suitable for this filesystem type: ubifs
+> >>   overlay/002   [not run] not suitable for this filesystem type: ubifs
+> >>   overlay/003   [not run] not suitable for this filesystem type: ubifs
+> >>   ...
+> >>
+> >> When checking that the base fs partition is a block/character device,
+> >> FSTYP is overwritten as 'overlay'. This patch allows the base fs
+> >> partition to be a character device that can also execute overlay
+> >> usecases (such as ubifs).
+> >>
+> >> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> >> ---
+> >>  common/config | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/common/config b/common/config
+> >> index 4c86a49..a22acdb 100644
+> >> --- a/common/config
+> >> +++ b/common/config
+> >> @@ -550,7 +550,7 @@ _overlay_config_override()
+> >>         #    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
+> >>         #    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
+> >>         #    overlayfs base and mount dirs inside base fs mount.
+> >> -       [ -b "$TEST_DEV" ] || return 0
+> >> +       [ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
+> >>
+> >>         # Config file may specify base fs type, but we obay -overlay flag
+> >>         [ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
+> >> @@ -570,7 +570,7 @@ _overlay_config_override()
+> >>         export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
+> >>         export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
+> >>
+> >> -       [ -b "$SCRATCH_DEV" ] || return 0
+> >> +       [ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
+> >>
+> >>         # Store original base fs vars
+> >>         export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
+> >> --
+> >> 2.7.4
+> >>
+> > 
+> > Looks fine.
+> > 
+> > One nit: there is a message in _require_scratch_shutdown():
+> > _notrun "$SCRATCH_DEV is not a block device"
+> > for when $OVL_BASE_SCRATCH_DEV is not defined.
+> > 
+> > Could probably use a better describing error anyway.
 
-Didn't see it in yesterday's updated kvm/queue. :)
+I think what Amir suggested is that, as you add char device support to
+overlay base device, the message in _require_scratch_shutdown() should
+be updated accordingly, not the commit log.
 
-    Wanpeng
+Thanks,
+Eryu
