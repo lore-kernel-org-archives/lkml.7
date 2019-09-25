@@ -2,158 +2,206 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C571BC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E98C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAF7217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:14:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S10PDyI7"
+	by mail.kernel.org (Postfix) with ESMTP id 68E4021D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411856AbfIYGOk (ORCPT
+        id S2411862AbfIYGTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:14:40 -0400
-Received: from mail-eopbgr30077.outbound.protection.outlook.com ([40.107.3.77]:34150
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404606AbfIYGOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:14:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gKDK3UC++eWzCA8xg8JJYb/w2Xk/o+cP0ff/91YN+1eI9CWNfwP3xAKEudh1oUT8rjk4tPXi2spYeyaZnZfpC/oe8+4GYzEiANvrwiAjXoO8sFGocNMYwyd6MmbbOBED5PdDKl5BtTtskZIBGtCvWbDizDul3gQxD4POoJmF/JSJ+C8jjbLAyqcPCvMHTXWul11prsCQDiURToaOJsptGUJDpQSZqssNUbojL1KQ0cCrXebqem6cj39G+DonXJMu7edsBnUYn85Cx0Vrwi1wzZUZpeZkcEcvjwHisEUAXf1YNA9MfOgZ9FBk73LgqutEYhoNrfshdpstaBH8IT+NAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vFFqjkSTwjWJ61G2p/Ns/OxWyB6zFWGzNWYZpu9nznk=;
- b=Aij/c5v5dCNbt8Tt4sEmUwhjB/fdHayD2EAwI+zAf4bXcWhHHwtKA2b8icZRAT/rwnVxCwT9zR1mhHHbOO03CSiDahv3+5BlxKLOJtA3AGA/t3qoBUnI3KIxu6WyKPQwkaplMwZi4rJDgRawtaNDi0fjbPFC63lAwjM9EpAjtaCjjXM/zvHRLdP3YhkrkjgUSBfIh8CnysXdbtonxdziS2dkhdjfdEiNNYfPlhMeIufpZj/IvyyELpAoJpkx1xepviS617ev5PRjmfLWGg1a+jNZU5p00LpUOoyAkvgO/B5a8IZe7GJ3s1Fw8BCFcq0MY1L9Bm8WeAVd+Qr43PVkaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vFFqjkSTwjWJ61G2p/Ns/OxWyB6zFWGzNWYZpu9nznk=;
- b=S10PDyI7YCAR4PxxQliKTCExL4i+UEoFomsWNGj2kI3ccX3NYeJd4VNOc7AH3RWyZ7CDpPXRVHcP8Nivou400pPzOgYOioqbKYUDU8aYEFOZG3dY0zw6I2RgmApdMXxQmSeiJGaQYWKQVWxQ8VYw1NuobEfOUgDAXCkYQpaKLBQ=
-Received: from VI1PR04MB6237.eurprd04.prod.outlook.com (20.179.24.74) by
- VI1PR04MB4270.eurprd04.prod.outlook.com (52.134.31.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Wed, 25 Sep 2019 06:14:35 +0000
-Received: from VI1PR04MB6237.eurprd04.prod.outlook.com
- ([fe80::c887:7d43:1e17:9485]) by VI1PR04MB6237.eurprd04.prod.outlook.com
- ([fe80::c887:7d43:1e17:9485%7]) with mapi id 15.20.2284.023; Wed, 25 Sep 2019
- 06:14:35 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
-Thread-Topic: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
-Thread-Index: AQHVc2iALMH+ZTgD6EK6yTZZJtKpAg==
-Date:   Wed, 25 Sep 2019 06:14:34 +0000
-Message-ID: <20190925061433.GA16686@fsr-ub1664-121>
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
- <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
- <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
-In-Reply-To: <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.palcu@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7e88fe7-1cb8-41d3-2b44-08d7417fa331
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4270;
-x-ms-traffictypediagnostic: VI1PR04MB4270:|VI1PR04MB4270:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB42709C77C7BD6966E5858437FF870@VI1PR04MB4270.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(52314003)(478600001)(966005)(71200400001)(71190400001)(5660300002)(3846002)(6116002)(1076003)(81156014)(81166006)(26005)(7416002)(7736002)(8936002)(305945005)(8676002)(45080400002)(66066001)(316002)(2906002)(14454004)(86362001)(54906003)(99286004)(25786009)(102836004)(44832011)(6512007)(9686003)(476003)(33716001)(256004)(446003)(33656002)(229853002)(6486002)(6436002)(6306002)(11346002)(66446008)(64756008)(66556008)(66476007)(4326008)(76116006)(91956017)(186003)(6246003)(6916009)(486006)(76176011)(53546011)(6506007)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4270;H:VI1PR04MB6237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7Zp2xphtbR3Umwk5sHTwyIfeXBtZzn9hrl0gj2whMI8NJfvublIRnRw75w34IlqUXXQBxSENt1wvESitBrh545vk1fKCkZcywpq7MJkDS7iet+y/evsniXt9pOTeB7tUvdL50E2o5sabuBYfDoHg3TyA+pJykjtebqF8aQdqkcXSvaiDLkFgpcDg8hhDLVhGlPNJXRqRlQqSonjjF5kCjuefDRVmmP93JuIFWTLRkac3Cd2nVHdRjlOQXdz/Ek6zIkAb75MkGG2kfnQEeaWG4HlVn9vn+f70qXJPSfX1GcVIVJ1cJqYm9n2iqVI+XuS7ADqzEoGTJ453XZjf7u7AFZ3/bJMxbTqE2tSN8YU68B5yZYf92EZiOZKW+aBZCAAvvEclj2VTTLN1fVAt0eOgyn1mDzeJ9NGtfxnLaCVzrqFStPq6TxnL4gJahjxpsu0h4EMxZecdOjkKzSSoXO6LPw==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <C68E1DEA7D81984A98B5320990996987@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Sep 2019 02:19:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56540 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729378AbfIYGTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 02:19:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id a22so7439339ioq.23
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 23:19:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cW96M0F/kJO0oAtQ7bv2vEgNKpow1m3Kj4kGAYXb2JY=;
+        b=IZ8b6BQl6A/fRciO4BKivFuBtn0uo0euXozbY4hhs/zl3Pnz9VM+CqDW8jLpsvsLDt
+         1wU48TlDunS8HfNdwENGDyWv4RlqtR81NpqlLESPbunN05Xl3soIKqZO4EeSUcAKSUqe
+         18MQcmLaBayVOLxMnywvD2gzXtr09LNwdWp+6zT5C7EmdrqMB50hX8bJSqnzHIlWGRO0
+         r/MqmwKNN24qPwwg5sOqsZuY7f97dTg9LkvbeMhZfT/jtCz69tHhXy92fYVmpOnKkit2
+         Pwx7ytAqUgEIE2Qi32mISl7AI4il93Ld2+07uiA8dj9G6S5Lt9qdTMe/wCp1opzfgCIn
+         jnRw==
+X-Gm-Message-State: APjAAAXkrh6ZXB3EYnQuMTKlx6k5z6ao5P1tyAxJpluRY8+p8fdp78ds
+        EfLRLzJTiQcfgbC88dpnR+IcF/ITpTAVOHtKdT+TVcPBLexo
+X-Google-Smtp-Source: APXvYqw2F2EwMD4TJ7b/ACk8a3u3T2sDbv/rmwsyD9F2I1+cIjvU0z46h7hDVmp2OYC3qQ/eRbiEqjbk8hfByu/8yNYfuRZimrQw
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7e88fe7-1cb8-41d3-2b44-08d7417fa331
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 06:14:34.9365
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jzdu8ZmyCyuD0/aVGrKqMrcMdF1X2aCj+R19uN93QSR0fefFJbBgZ8g0kAdxg74wYma/gkMG8WvKbQx16BcUfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4270
+X-Received: by 2002:a5d:9f4e:: with SMTP id u14mr899668iot.106.1569392346773;
+ Tue, 24 Sep 2019 23:19:06 -0700 (PDT)
+Date:   Tue, 24 Sep 2019 23:19:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000057e77805935aa13a@google.com>
+Subject: possible deadlock in refcount_dec_and_mutex_lock
+From:   syzbot <syzbot+22987eb604bffbcb717a@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On Tue, Sep 24, 2019 at 01:53:28PM -0500, Rob Herring wrote:
-> On Mon, Sep 23, 2019 at 9:14 AM Laurentiu Palcu <laurentiu.palcu@nxp.com>=
- wrote:
-> >
-> > Add bindings for iMX8MQ Display Controller Subsystem.
-> >
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > ---
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++=
-++++++++
-> >  1 file changed, 86 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,i=
-mx8mq-dcss.yaml
->=20
-> Fails to build with 'make dt_binding_check':
+syzbot found the following crash on:
 
-Must be because of the extra '0x' Stephen Boyd pointed out. Funny thing
-is I ran:
+HEAD commit:    b5b3bd89 Add linux-next specific files for 20190920
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12bd8429600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=eadcd01c1bd90b7f
+dashboard link: https://syzkaller.appspot.com/bug?extid=22987eb604bffbcb717a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-make dtbs_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/display=
-/imx/nxp,imx8mq-dcss.yaml
+Unfortunately, I don't have any reproducer for this crash yet.
 
-at my side, before sending out the patchset, and it passed. The command
-also runs dt_binding_check, AFAIS:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+22987eb604bffbcb717a@syzkaller.appspotmail.com
 
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-  CHKDT   Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yam=
-l
-  DTC     Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.exa=
-mple.dt.yaml
-  CHECK   Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.exa=
-mple.dt.yaml
+block nbd3: Receive control failed (result -22)
+======================================================
+WARNING: possible circular locking dependency detected
+5.3.0-next-20190920 #0 Not tainted
+------------------------------------------------------
+kworker/u5:0/1524 is trying to acquire lock:
+ffff8880a3030978 (&nbd->config_lock){+.+.}, at: refcount_dec_and_mutex_lock  
+lib/refcount.c:319 [inline]
+ffff8880a3030978 (&nbd->config_lock){+.+.}, at:  
+refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
 
-Not sure what I'm doing wrong when running it. I should've catched that. :/
+but task is already holding lock:
+ffff8880a63ffdc0 ((work_completion)(&args->work)){+.+.}, at:  
+process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
 
-Anyway, already fixed it and will be included in v2.
-
-Thanks,
-laurentiu
+which lock already depends on the new lock.
 
 
->=20
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
-work.ozlabs.org%2Fpatch%2F1166073%2F&amp;data=3D02%7C01%7Claurentiu.palcu%4=
-0nxp.com%7Cf97847ce739b46fdb72308d74120858b%7C686ea1d3bc2b4c6fa92cd99c5c301=
-635%7C0%7C0%7C637049480244424980&amp;sdata=3Dfjyq52livEnMAQYzVAGqO%2FOtmLS8=
-3dungSvPqHYle10%3D&amp;reserved=3D0=
+the existing dependency chain (in reverse order) is:
+
+-> #2 ((work_completion)(&args->work)){+.+.}:
+        process_one_work+0x91c/0x1740 kernel/workqueue.c:2245
+        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+        kthread+0x361/0x430 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+-> #1 ((wq_completion)knbd0-recv){+.+.}:
+        flush_workqueue+0x126/0x14c0 kernel/workqueue.c:2774
+        drain_workqueue+0x1b4/0x470 kernel/workqueue.c:2939
+        destroy_workqueue+0x74/0x750 kernel/workqueue.c:4335
+        nbd_config_put+0x3dd/0x870 drivers/block/nbd.c:1181
+        nbd_release+0x103/0x150 drivers/block/nbd.c:1460
+        __blkdev_put+0x4d1/0x810 fs/block_dev.c:1867
+        blkdev_put+0x98/0x560 fs/block_dev.c:1929
+        blkdev_close+0x8b/0xb0 fs/block_dev.c:1936
+        __fput+0x2ff/0x890 fs/file_table.c:280
+        ____fput+0x16/0x20 fs/file_table.c:313
+        task_work_run+0x145/0x1c0 kernel/task_work.c:113
+        exit_task_work include/linux/task_work.h:22 [inline]
+        do_exit+0x904/0x2e60 kernel/exit.c:879
+        do_group_exit+0x135/0x360 kernel/exit.c:983
+        __do_sys_exit_group kernel/exit.c:994 [inline]
+        __se_sys_exit_group kernel/exit.c:992 [inline]
+        __x64_sys_exit_group+0x44/0x50 kernel/exit.c:992
+        do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&nbd->config_lock){+.+.}:
+        check_prev_add kernel/locking/lockdep.c:2476 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+        validate_chain kernel/locking/lockdep.c:2971 [inline]
+        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+        refcount_dec_and_mutex_lock lib/refcount.c:319 [inline]
+        refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
+        nbd_config_put+0x31/0x870 drivers/block/nbd.c:1159
+        recv_work+0x19b/0x200 drivers/block/nbd.c:787
+        process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+        kthread+0x361/0x430 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+Chain exists of:
+   &nbd->config_lock --> (wq_completion)knbd0-recv -->  
+(work_completion)(&args->work)
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock((work_completion)(&args->work));
+                                lock((wq_completion)knbd0-recv);
+                                lock((work_completion)(&args->work));
+   lock(&nbd->config_lock);
+
+  *** DEADLOCK ***
+
+2 locks held by kworker/u5:0/1524:
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
+__write_once_size include/linux/compiler.h:226 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
+arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:855 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
+atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at: set_work_data  
+kernel/workqueue.c:620 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+  #0: ffff8880948d3d28 ((wq_completion)knbd3-recv){+.+.}, at:  
+process_one_work+0x88b/0x1740 kernel/workqueue.c:2240
+  #1: ffff8880a63ffdc0 ((work_completion)(&args->work)){+.+.}, at:  
+process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
+
+stack backtrace:
+CPU: 1 PID: 1524 Comm: kworker/u5:0 Not tainted 5.3.0-next-20190920 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: knbd3-recv recv_work
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
+  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
+  check_prev_add kernel/locking/lockdep.c:2476 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain kernel/locking/lockdep.c:2971 [inline]
+  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+  refcount_dec_and_mutex_lock lib/refcount.c:319 [inline]
+  refcount_dec_and_mutex_lock+0x56/0x90 lib/refcount.c:314
+  nbd_config_put+0x31/0x870 drivers/block/nbd.c:1159
+  recv_work+0x19b/0x200 drivers/block/nbd.c:787
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+block nbd3: shutting down sockets
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
