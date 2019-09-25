@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A11EC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7252C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAB221655
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FED821655
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1R5xT8e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KBSXnigF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633594AbfIYAxH (ORCPT
+        id S2411296AbfIYAwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 20:53:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56938 "EHLO
+        Tue, 24 Sep 2019 20:52:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56880 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411288AbfIYAw3 (ORCPT
+        with ESMTP id S2391712AbfIYAwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 20:52:29 -0400
+        Tue, 24 Sep 2019 20:52:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AegXWtwhJufykUg7KL27jy9vkWxe3tZkmjCUDyo5W6Q=; b=b1R5xT8e1BIe+BWgE8iNLTnzcB
-        oEK7pRSr5HvxwSaSPxqyvanifUKQy9nu2AkVDdox8EtnNSI9xObs/8ifynPAyF2HWAYMJ5wO8el1D
-        JXuxJRSVg0uJE/uWEun84vwBeCy8Pz8ZWGMngjyKJkbpUXgQA5/sY0q7m9WmqqlUOMPysKuzjXRDU
-        /e27fKKPiXEsmoNEJFG72913QHgON4sCZs0vuoj+F3BImN6U1so72WBjm+ymv0c833WJ6E/qtX2hZ
-        9Z5I2eZFaPnPFw22k6/NGi1Bf/mY7JXHhUV/PvR5n7ZFuOcYgO5vlKvJ5inXu5ZFlDmS91gMOAxo8
-        tEp/QWgQ==;
+        bh=42ILn7VMcsrJTz7O5GIB2CEUGt2gPkfqKrZQV8C0eas=; b=KBSXnigFVablb8KQbZq/Yf0TKY
+        A8I7AtrNOd1ysd54G0tMobsxGWAqgz4kRXOciO7kJgO1ccogPjiHPU2VUJu1bEVmw0BL9mTF9GAYI
+        dop6v15ZkD9BQD5mF1RWDh62GDWB/rz9lsS0rxjw97BaE+0YlTIqNznzf19FhudztuATJyttfvoJP
+        wJQTLB+YhNze9mVsWig0hXJCk914UIj/2mzniOFv4OCttoi8RdnnPQ7KJ9eeQfhu5zO9A9sTBRpCF
+        GvLPTgpX3i0DBp4/aNjAgHuxrglwKrasFt7x+z18I4EftTVwJYEh3wE3q+hWX6BMZ4U0ffoGQVvNG
+        OAkd0bFg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCvXV-00076K-99; Wed, 25 Sep 2019 00:52:17 +0000
+        id 1iCvXV-00077C-Nq; Wed, 25 Sep 2019 00:52:17 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 02/15] fs: Introduce i_blocks_per_page
-Date:   Tue, 24 Sep 2019 17:52:01 -0700
-Message-Id: <20190925005214.27240-3-willy@infradead.org>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 12/15] mm: Support removing arbitrary sized pages from mapping
+Date:   Tue, 24 Sep 2019 17:52:11 -0700
+Message-Id: <20190925005214.27240-13-willy@infradead.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190925005214.27240-1-willy@infradead.org>
 References: <20190925005214.27240-1-willy@infradead.org>
@@ -54,117 +55,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: William Kucharski <william.kucharski@oracle.com>
 
-This helper is useful for both large pages in the page cache and for
-supporting block size larger than page size.  Convert some example
-users (we have a few different ways of writing this idiom).
+__remove_mapping() assumes that pages can only be either base pages
+or HPAGE_PMD_SIZE.  Ask the page what size it is.
 
+Signed-off-by: William Kucharski <william.kucharski@oracle.com>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c  |  4 ++--
- fs/jfs/jfs_metapage.c   |  2 +-
- fs/xfs/xfs_aops.c       |  8 ++++----
- include/linux/pagemap.h | 13 +++++++++++++
- 4 files changed, 20 insertions(+), 7 deletions(-)
+ mm/vmscan.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index e25901ae3ff4..0e76a4b6d98a 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -24,7 +24,7 @@ iomap_page_create(struct inode *inode, struct page *page)
- {
- 	struct iomap_page *iop = to_iomap_page(page);
- 
--	if (iop || i_blocksize(inode) == PAGE_SIZE)
-+	if (iop || i_blocks_per_page(inode, page) <= 1)
- 		return iop;
- 
- 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
-@@ -128,7 +128,7 @@ iomap_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	bool uptodate = true;
- 
- 	if (iop) {
--		for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
-+		for (i = 0; i < i_blocks_per_page(inode, page); i++) {
- 			if (i >= first && i <= last)
- 				set_bit(i, iop->uptodate);
- 			else if (!test_bit(i, iop->uptodate))
-diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
-index a2f5338a5ea1..176580f54af9 100644
---- a/fs/jfs/jfs_metapage.c
-+++ b/fs/jfs/jfs_metapage.c
-@@ -473,7 +473,7 @@ static int metapage_readpage(struct file *fp, struct page *page)
- 	struct inode *inode = page->mapping->host;
- 	struct bio *bio = NULL;
- 	int block_offset;
--	int blocks_per_page = PAGE_SIZE >> inode->i_blkbits;
-+	int blocks_per_page = i_blocks_per_page(inode, page);
- 	sector_t page_start;	/* address of page in fs blocks */
- 	sector_t pblock;
- 	int xlen;
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index f16d5f196c6b..102cfd8a97d6 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -68,7 +68,7 @@ xfs_finish_page_writeback(
- 		mapping_set_error(inode->i_mapping, -EIO);
- 	}
- 
--	ASSERT(iop || i_blocksize(inode) == PAGE_SIZE);
-+	ASSERT(iop || i_blocks_per_page(inode, bvec->bv_page) <= 1);
- 	ASSERT(!iop || atomic_read(&iop->write_count) > 0);
- 
- 	if (!iop || atomic_dec_and_test(&iop->write_count))
-@@ -839,7 +839,7 @@ xfs_aops_discard_page(
- 			page, ip->i_ino, offset);
- 
- 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
--			PAGE_SIZE / i_blocksize(inode));
-+			i_blocks_per_page(inode, page));
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
-@@ -877,7 +877,7 @@ xfs_writepage_map(
- 	uint64_t		file_offset;	/* file offset of page */
- 	int			error = 0, count = 0, i;
- 
--	ASSERT(iop || i_blocksize(inode) == PAGE_SIZE);
-+	ASSERT(iop || i_blocks_per_page(inode, page) <= 1);
- 	ASSERT(!iop || atomic_read(&iop->write_count) == 0);
- 
- 	/*
-@@ -886,7 +886,7 @@ xfs_writepage_map(
- 	 * one.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a7f9f379e523..9f44868e640b 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -932,10 +932,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
+ 	 * Note that if SetPageDirty is always performed via set_page_dirty,
+ 	 * and thus under the i_pages lock, then this ordering is not required.
  	 */
- 	for (i = 0, file_offset = page_offset(page);
--	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
-+	     i < i_blocks_per_page(inode, page) && file_offset < end_offset;
- 	     i++, file_offset += len) {
- 		if (iop && !test_bit(i, iop->uptodate))
- 			continue;
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 37a4d9e32cd3..750770a2c685 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -636,4 +636,17 @@ static inline unsigned long dir_pages(struct inode *inode)
- 			       PAGE_SHIFT;
- }
- 
-+/**
-+ * i_blocks_per_page - How many blocks fit in this page.
-+ * @inode: The inode which contains the blocks.
-+ * @page: The (potentially large) page.
-+ *
-+ * Context: Any context.
-+ * Return: The number of filesystem blocks covered by this page.
-+ */
-+static inline
-+unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
-+{
-+	return page_size(page) >> inode->i_blkbits;
-+}
- #endif /* _LINUX_PAGEMAP_H */
+-	if (unlikely(PageTransHuge(page)) && PageSwapCache(page))
+-		refcount = 1 + HPAGE_PMD_NR;
+-	else
+-		refcount = 2;
++	refcount = 1 + compound_nr(page);
+ 	if (!page_ref_freeze(page, refcount))
+ 		goto cannot_free;
+ 	/* note: atomic_cmpxchg in page_ref_freeze provides the smp_rmb */
 -- 
 2.23.0
 
