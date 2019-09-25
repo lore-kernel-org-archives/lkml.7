@@ -2,48 +2,52 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700AC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFCAC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13A3214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DFC21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d2NWBPO+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1WCC3Fi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633638AbfIYAx1 (ORCPT
+        id S2411279AbfIYAwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 20:53:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56960 "EHLO
+        Tue, 24 Sep 2019 20:52:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56884 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411311AbfIYAwf (ORCPT
+        with ESMTP id S2391736AbfIYAwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 20:52:35 -0400
+        Tue, 24 Sep 2019 20:52:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Iij4AiVZizN/3WavyeQe30O/Qctp+EpEPG2/rssTGhE=; b=d2NWBPO+cJQTO7cy/KuThc+Et
-        Jrr0ZF/vteZHveQ2m5qltMFPmGXQdEUTl5DW4vcnTTsNVAqpIpAPCvzd9l2iYORY2XpfiFS03D2ZX
-        MPHFvKHe+WhY69n8zUsQUWNd2s1NbL1ao/+XWh25w+dMquJkQPNssjRALCKe+05KBwB0nsmobvGa2
-        83ati+Zq8wyQ4P5jOlF19o+QkZ77oeHsVWZaj0JWK3GXsefzGqlacBETV4B9OOj3LSTmKKs4eR9uy
-        i5huzFvcFI64wpPWoVxO4t4MdWol9Q4lFpImLpM/e4fXb8R3Lud7P4ZFhXcGNxcn3PGaQz50bWSZd
-        ZyP7JjiVw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gfc79DzYRzAqx05Od1Rvplr/Hq8No1idlzxjKEIY6m4=; b=b1WCC3Fic73cDDRDtJp3WWeVnN
+        97AuG5Jt9tVQDpbibgk2a9TQRVt2ouezcRrIJX2ZCAqd3ziWD/FjFZAXCQDiSxslqN0yHGMaaUxiv
+        RWklDZNuzNQN9LRk8bpbSeuNDy/pLNKD4pULWXu8xQvbe6sN3YmVhKNhctDwiiAXezlrHBufNBXlG
+        iC6BiWo3AWcYPKyjKz6x8Nh2d47BuZAr8/YyS2HSqrWUfSAzGMTgxxiTVDAqta7T7LDMXTWonX2CP
+        fOKvyYwjlEStSmDVxuFiZdzjp1Pg5Hx9+21Gqnt/Omnnt7pn2AzYsMg8fniitqbf4N6F98oLX+Egb
+        xW0lI/6w==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCvXV-00076D-4c; Wed, 25 Sep 2019 00:52:17 +0000
+        id 1iCvXV-00077N-Va; Wed, 25 Sep 2019 00:52:17 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [RFC 00/15] Large pages in the page-cache
-Date:   Tue, 24 Sep 2019 17:51:59 -0700
-Message-Id: <20190925005214.27240-1-willy@infradead.org>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 14/15] mm: Align THP mappings for non-DAX
+Date:   Tue, 24 Sep 2019 17:52:13 -0700
+Message-Id: <20190925005214.27240-15-willy@infradead.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190925005214.27240-1-willy@infradead.org>
+References: <20190925005214.27240-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,62 +55,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: William Kucharski <william.kucharski@oracle.com>
 
-Here's what I'm currently playing with.  I'm having trouble _testing_
-it, but since akpm's patches were just merged into Linus' tree, I
-thought this would be a good point to send out my current work tree.
-Thanks to kbuild bot for finding a bunch of build problems ;-)
+When we have the opportunity to use transparent huge pages to map a
+file, we want to follow the same rules as DAX.
 
-Matthew Wilcox (Oracle) (12):
-  mm: Use vm_fault error code directly
-  fs: Introduce i_blocks_per_page
-  mm: Add file_offset_of_ helpers
-  iomap: Support large pages
-  xfs: Support large pages
-  xfs: Pass a page to xfs_finish_page_writeback
-  mm: Make prep_transhuge_page tail-callable
-  mm: Add __page_cache_alloc_order
-  mm: Allow large pages to be added to the page cache
-  mm: Allow find_get_page to be used for large pages
-  mm: Remove hpage_nr_pages
-  xfs: Use filemap_huge_fault
+Signed-off-by: William Kucharski <william.kucharski@oracle.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ mm/huge_memory.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-William Kucharski (3):
-  mm: Support removing arbitrary sized pages from mapping
-  mm: Add a huge page fault handler for files
-  mm: Align THP mappings for non-DAX
-
- drivers/net/ethernet/ibm/ibmveth.c |   2 -
- drivers/nvdimm/btt.c               |   4 +-
- drivers/nvdimm/pmem.c              |   3 +-
- fs/iomap/buffered-io.c             | 121 +++++++----
- fs/jfs/jfs_metapage.c              |   2 +-
- fs/xfs/xfs_aops.c                  |  37 ++--
- fs/xfs/xfs_file.c                  |   5 +-
- include/linux/huge_mm.h            |  15 +-
- include/linux/iomap.h              |   2 +-
- include/linux/mm.h                 |  12 ++
- include/linux/mm_inline.h          |   6 +-
- include/linux/pagemap.h            |  73 ++++++-
- mm/filemap.c                       | 311 ++++++++++++++++++++++++++---
- mm/gup.c                           |   2 +-
- mm/huge_memory.c                   |  11 +-
- mm/internal.h                      |   4 +-
- mm/memcontrol.c                    |  14 +-
- mm/memory_hotplug.c                |   4 +-
- mm/mempolicy.c                     |   2 +-
- mm/migrate.c                       |  19 +-
- mm/mlock.c                         |   9 +-
- mm/page_io.c                       |   4 +-
- mm/page_vma_mapped.c               |   6 +-
- mm/rmap.c                          |   8 +-
- mm/swap.c                          |   4 +-
- mm/swap_state.c                    |   4 +-
- mm/swapfile.c                      |   2 +-
- mm/vmscan.c                        |   9 +-
- 28 files changed, 519 insertions(+), 176 deletions(-)
-
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index cbe7d0619439..670a1780bd2f 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+ 
+ 	if (addr)
+ 		goto out;
+-	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+-		goto out;
+ 
+ 	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
+ 	if (addr)
 -- 
 2.23.0
 
