@@ -2,119 +2,224 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62FDC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A67C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A135D20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C5A20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389183AbfIYJOm (ORCPT
+        id S2388537AbfIYJOm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 25 Sep 2019 05:14:42 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2718 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388828AbfIYJOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:14:31 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9C859387E7EFF1887A06;
-        Wed, 25 Sep 2019 17:14:25 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
- 17:14:21 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
-References: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
- <20190924074751.GB23050@dhcp22.suse.cz>
- <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
- <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
-Date:   Wed, 25 Sep 2019 17:14:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190924131939.GS23050@dhcp22.suse.cz>
-Content-Type: text/plain; charset="utf-8"
+Received: from mga11.intel.com ([192.55.52.93]:36054 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388718AbfIYJOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:14:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 02:14:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
+   d="scan'208";a="191282057"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga003.jf.intel.com with ESMTP; 25 Sep 2019 02:13:59 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 02:13:59 -0700
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 02:13:59 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.140]) with mapi id 14.03.0439.000;
+ Wed, 25 Sep 2019 17:13:57 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>,
+        "Xia, Chenbo" <chenbo.xia@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>
+Subject: RE: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
+Thread-Topic: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
+Thread-Index: AQHVZIuKvRVFa0XUZUmQ/OLFqyeI/6c8OZog
+Date:   Wed, 25 Sep 2019 09:13:57 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A0A42E9@SHSMSX104.ccr.corp.intel.com>
+References: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
+In-Reply-To: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYmQ5ZmFiZjItODBkMi00ZDA3LWJmOGYtOGIwNGZiZjNhYTc3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVhJNXlcL3NtcDZoZzRobUpBWXdEcGdBTnFCMjVNTE00MGxaT0tWUkhyT2lSRGRFaXJ4RmxUUHJoXC9ZMlJ3eGJlIn0=
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/24 21:19, Michal Hocko wrote:
-> On Tue 24-09-19 14:59:36, Peter Zijlstra wrote:
->> On Tue, Sep 24, 2019 at 02:43:25PM +0200, Peter Zijlstra wrote:
->>> On Tue, Sep 24, 2019 at 02:25:00PM +0200, Michal Hocko wrote:
->>>> On Tue 24-09-19 14:09:43, Peter Zijlstra wrote:
->>>
->>>>> We can push back and say we don't respect the specification because it
->>>>> is batshit insane ;-)
->>>>
->>>> Here is my fingers crossed.
->>>>
->>>> [...]
->>>>
->>>>> Now granted; there's a number of virtual devices that really don't have
->>>>> a node affinity, but then, those are not hurt by forcing them onto a
->>>>> random node, they really don't do anything. Like:
->>>>
->>>> Do you really consider a random node a better fix than simply living
->>>> with a more robust NUMA_NO_NODE which tells the actual state? Page
->>>> allocator would effectivelly use the local node in that case. Any code
->>>> using the cpumask will know that any of the online cpus are usable.
->>>
->>> For the pmu devices? Yes, those 'devices' aren't actually used for
->>> anything other than sysfs entries.
->>>
->>> Nothing else uses the struct device.
->>
->> The below would get rid of the PMU and workqueue warnings with no
->> side-effects (the device isn't used for anything except sysfs).
+Hi Alex,
+
+Any comments on it? :-) With this version, the vfio-mdev-pci driver
+could work with non-singleton groups, also it works with vfio-pci
+as well.
+
+Regards,
+Yi Liu
+
+> From: Liu, Yi L
+> Sent: Thursday, September 5, 2019 3:59 PM
+> To: alex.williamson@redhat.com; kwankhede@nvidia.com
+> Subject: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
 > 
-> Hardcoding to 0 is simply wrong, if the node0 is cpuless for example...
-
-Hi, Peter & Michal
-
-From the discussion above, It seems making the node_to_cpumask_map()
-NUMA_NO_NODE aware is the most feasible way to move forwad.
-
-Any suggestion?
-
+> This patchset aims to add a vfio-pci-like meta driver as a demo
+> user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+> mediated device" patchset from Baolu Lu. Besides the test purpose,
+> per Alex's comments, it could also be a good base driver for
+> experimenting with device specific mdev migration.
 > 
+> Specific interface tested in this proposal:
+>  *) int mdev_set_iommu_device(struct device *dev,
+>  				struct device *iommu_device)
+>     introduced in the patch as below:
+>     "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
+> 
+> Patch Overview:
+>  *) patch 1 ~ 7: code refactor for existing vfio-pci module
+>                  move the common codes from vfio_pci.c to
+>                  vfio_pci_common.c
+>  *) patch 8: add protection to perm_bits alloc/free
+>  *) patch 9: add vfio-mdev-pci sample driver
+>  *) patch 10: refine the sample driver
+>  *) patch 11 - 13: make the sample driver work for non-singleton groups
+>                    also work for vfio-pci and vfio-mdev-pci mixed usage
+>                    includes vfio-mdev-pci driver change and vfio_iommu_type1
+>                    changes.
+> 
+> Links:
+>  *) Link of "vfio/mdev: IOMMU aware mediated device"
+>          https://lwn.net/Articles/780522/
+>  *) Previous versions:
+>          RFC v1: https://lkml.org/lkml/2019/3/4/529
+>          RFC v2: https://lkml.org/lkml/2019/3/13/113
+>          RFC v3: https://lkml.org/lkml/2019/4/24/495
+>          Patch v1: https://www.spinics.net/lists/kvm/msg188952.html
+>  *) may try it with the codes in below repo
+>     current version is branch "v5.3-rc7-pci-mdev":
+>          https://github.com/luxis1999/vfio-mdev-pci-sample-driver.git
+> 
+> Test done on two NICs which share an iommu group.
+> 
+> -------------------------------------------------------------------
+>          |  NIC0           |  NIC1      | vIOMMU  | VMs  | Passtrhu
+> -------------------------------------------------------------------
+>   Test#0 |  vfio-pci       |  vfio-pci  | no      |  1   | pass
+> -------------------------------------------------------------------
+>   Test#1 |  vfio-pci       |  vfio-pci  | no      |  2   | fail[1]
+> -------------------------------------------------------------------
+>   Test#2 |  vfio-pci       |  vfio-pci  | yes     |  1   | fail[2]
+> -------------------------------------------------------------------
+>   Test#3 |  vfio-pci-mdev  |  vfio-pci  | no      |  1   | pass
+> -------------------------------------------------------------------
+>   Test#4 |  vfio-pci-mdev  |  vfio-pci  | no      |  2   | fail[3]
+> -------------------------------------------------------------------
+>   Test#5 |  vfio-pci-mdev  |  vfio-pci  | yes     |  1   | fail[4]
+> -------------------------------------------------------------------
+> Tips:
+> [1] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+>      vfio 0000:01:00.1: failed to open /dev/vfio/1: Device or resource busy
+> [2] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+>      vfio 0000:01:00.1: group 1 used in multiple address spaces
+> [3] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+>      vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
+>      iommu for container: Device or resource busy
+> [4] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+>      vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
+>      iommu for container: Device or resource busy
+>     Or
+>     qemu-system-x86_64: -device vfio-pci,sysfsdev=/sys/bus/mdev/devices/
+>      83b8f4f2-509f-382f-3c1e-e6bfe0fa1003: vfio 83b8f4f2-509f-382f-3c1e-
+>      e6bfe0fa1003: failed to setup container for group 11: Failed to set iommu
+>      for container: Device or resource busy
+> Some other tests are not listed. Like bind NIC0 to vfio-pci-mdev and try to
+> passthru it with "vfio-pci,host=01:00.0", kernel will throw a warn log and
+> fail the operation.
+> 
+> Please feel free give your comments.
+> 
+> Thanks,
+> Yi Liu
+> 
+> Change log:
+>   patch v1 -> patch v2:
+>   - the sample driver implementation refined
+>   - the sample driver can work on non-singleton iommu groups
+>   - the sample driver can work with vfio-pci, devices from a non-singleton
+>     group can either be bound to vfio-mdev-pci or vfio-pci, and the
+>     assignment of this group still follows current vfio assignment rule.
+> 
+>   RFC v3 -> patch v1:
+>   - split the patchset from 3 patches to 9 patches to better demonstrate
+>     the changes step by step
+> 
+>   v2->v3:
+>   - use vfio-mdev-pci instead of vfio-pci-mdev
+>   - place the new driver under drivers/vfio/pci while define
+>     Kconfig in samples/Kconfig to clarify it is a sample driver
+> 
+>   v1->v2:
+>   - instead of adding kernel option to existing vfio-pci
+>     module in v1, v2 follows Alex's suggestion to add a
+>     separate vfio-pci-mdev module.
+>   - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+> 
+> Alex Williamson (1):
+>   samples: refine vfio-mdev-pci driver
+> 
+> Liu Yi L (12):
+>   vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header
+>   vfio_pci: refine user config reference in vfio-pci module
+>   vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
+>   vfio_pci: make common functions be extern
+>   vfio_pci: duplicate vfio_pci.c
+>   vfio_pci: shrink vfio_pci_common.c
+>   vfio_pci: shrink vfio_pci.c
+>   vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
+>   samples: add vfio-mdev-pci driver
+>   samples/vfio-mdev-pci: call vfio_add_group_dev()
+>   vfio/type1: use iommu_attach_group() for wrapping PF/VF as mdev
+>   vfio/type1: track iommu backed group attach
+> 
+>  drivers/vfio/pci/Makefile           |    9 +-
+>  drivers/vfio/pci/vfio_mdev_pci.c    |  497 ++++++++++++
+>  drivers/vfio/pci/vfio_pci.c         | 1449 +---------------------------------
+>  drivers/vfio/pci/vfio_pci_common.c  | 1455
+> +++++++++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_config.c  |    9 +
+>  drivers/vfio/pci/vfio_pci_private.h |   36 +
+>  drivers/vfio/vfio_iommu_type1.c     |  185 ++++-
+>  samples/Kconfig                     |   11 +
+>  8 files changed, 2194 insertions(+), 1457 deletions(-)
+>  create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
+>  create mode 100644 drivers/vfio/pci/vfio_pci_common.c
+> 
+> --
+> 2.7.4
 
