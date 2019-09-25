@@ -2,133 +2,136 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC81C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D296FC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9535E20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C28214D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569430046;
-	bh=qZWh1l9418udA2duAnzDVqksWcn7F7/KPGsUdcOLjvE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Pnd1SAge3Noq+PZN1bN5bszqs2calVmtJDUWxnv5RVhvPimDoB7If16ckwKd36kdN
-	 BhKb2Tny4hDOWDNl03SFpUdBmUjthntoU1x1A4VI8w9MZyA7n+Q5HPshZKVKkQcEud
-	 rWpGvChBxNagi50G+C/gErlsc1sIf/LgLUUfiWZo=
+	s=default; t=1569430065;
+	bh=ctzzg3cNvcsgUCJ4kjZ68qjc1Xi7whKF3KcSVcFkZMI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=DdyypmGqP7ByPNkV81Kb0QI9VHF8K8zeLHNZJDhjXwgRA3BrvAYWnQs0eb39fmQ7f
+	 H7wxoVF2tNFfJDgvJXAoq5w/ssUe+CfSwSBAvfCcjlOde8pAzdUfLXhGZeQj/1hRA4
+	 Iv2NMFU0ytfihlRAgXjfgOMa1w7qkTrdgwlrmZ3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392137AbfIYQrZ (ORCPT
+        id S2502094AbfIYQrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:47:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35814 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392099AbfIYQrY (ORCPT
+        Wed, 25 Sep 2019 12:47:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46127 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392039AbfIYQro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:47:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=SldDdMCvb42kOlw4xzQW7gVTJLjho+01MgP87kKdXpk=; b=axofkkkgudCy
-        wW1h64JlpzlwI9A+1kf4uxowV0hE6LS4aZnPVwdGiz26DHaspPObyClnZmIt5pwQJTpM9vDkQyx+y
-        8UyIzr92Z8lcASQSvjiu//j5k/5PvvyP5cycd+QFa5SKEKyxpMhrCeQaPHCfFIdIxLFEmRZI/4Bcy
-        7liZ0=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDARf-0007uX-Ka; Wed, 25 Sep 2019 16:47:15 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 18588D01BD1; Wed, 25 Sep 2019 17:47:14 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     kbuild test robot <lkp@intel.com>, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: Add call to spi_slave_abort() function when spidev driver is released" to the spi tree
-In-Reply-To: <20190925091143.15468-2-lukma@denx.de>
-X-Patchwork-Hint: ignore
-Message-Id: <20190925164714.18588D01BD1@fitzroy.sirena.org.uk>
-Date:   Wed, 25 Sep 2019 17:47:14 +0100 (BST)
+        Wed, 25 Sep 2019 12:47:44 -0400
+Received: by mail-io1-f67.google.com with SMTP id c6so386094ioo.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NkXsROJEqHRyKdQlVbGyAe4U+SjsHNVLF9ZqIX8Inqc=;
+        b=cvIb5jN5ZNe3gcMhopMVIXvHGnL0ia+pw5VgYZdzsGtBj2PWdLn+6/6Xk9jV6bzT9o
+         h1LVnt9n0pL1jIZHv576RNKWXcxrLcUvyr2BwcIJic2f8GCwC3zB44tI4JW8yP/3Mpu3
+         gud32+/+nqFYxOuwA86a4BFK5VZcMfTsermAU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NkXsROJEqHRyKdQlVbGyAe4U+SjsHNVLF9ZqIX8Inqc=;
+        b=sYGunLcmvqxFIRpZu9wAeKY2s8pfSS2ds83WLJRIL5tl2SHUrGrOtbYc8EIOT88Cf3
+         LNaZ+hX1AH4XHBeX1JAxT1W0UnKV2Ky5xegKFCH9wdTqbKGl7A9B56EmHEiMC24scnQ3
+         Fh21JGytsFWzuA3QJuU9ntjR+8UjwcRrQ45cJ87d6QMBkQBHpZ2KJ1cES8W9krNR4XPH
+         rfjkbjD7nZtw9kYZc+mMc8X6okiMGMBxsJTc008a4IBVGQfJZgT+lXcIPrZB3aPY5Oit
+         j10CvOQ/IBBsGvZuMvCz5ARKfOyPs6DlU2H2HGs7OogTlCkwIuF+7JNVw7z068QHRw2z
+         sJ3Q==
+X-Gm-Message-State: APjAAAWezNeOsvv45mq4nfGJOfxnf19QzuZHTFdKLh1msq15qHEsDdqd
+        OnhLQysmJufD6d3O56nJTNqiuASS0YU=
+X-Google-Smtp-Source: APXvYqzdSzByx/7StFCVjxm7mpWRvxuckLEoPCZv+n1Qfdo3taMQ72Ag4Z6qoA4O/vT1bqCJUSjskw==
+X-Received: by 2002:a5d:8911:: with SMTP id b17mr267767ion.287.1569430063967;
+        Wed, 25 Sep 2019 09:47:43 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id s24sm75616iog.26.2019.09.25.09.47.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 09:47:43 -0700 (PDT)
+Subject: Re: [PATCH] selftests: kvm: Fix libkvm build error
+To:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        shuah@kernel.org
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20190924201451.31977-1-skhan@linuxfoundation.org>
+ <dbfb9d46-488a-b940-c86f-79ad750a324a@redhat.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5fecb8a8-8a6a-1e2b-78e3-5660597a02e4@linuxfoundation.org>
+Date:   Wed, 25 Sep 2019 10:47:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <dbfb9d46-488a-b940-c86f-79ad750a324a@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 9/25/19 1:48 AM, Paolo Bonzini wrote:
+> On 24/09/19 22:14, Shuah Khan wrote:
+>> Fix the following build error:
+>>
+>> libkvm.a(assert.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a PIE object; recompile with -fPIC
+>>
+>> Add -fPIC to CFLAGS to fix it.
+> 
+> This is wrong, these testcases cannot be position-independent
+> executables.  Can you include the failing command line from "V=1"
+> output?
+> 
 
-   spi: Add call to spi_slave_abort() function when spidev driver is released
+You are right. This isn't correct.
 
-has been applied to the spi tree at
+> The problem seems to be that these definitions are not working properly:
+> 
+> no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
+>          $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
+> 
+> LDFLAGS += -pthread $(no-pie-option)
+> 
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+Yup. That is what is happening, when I build using
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+"make TARGETS=kvm kselftest"
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+You can see this below:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 
+-fno-stack-protector -fno-PIE -I../../../../tools/include 
+-I../../../../usr/include/ -Iinclude -Ix86_64 -Iinclude/x86_64 -I.. 
+-pthread    x86_64/cr4_cpuid_sync_test.c
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+vs.
 
-From 9f918a728cf86b2757b6a7025e1f46824bfe3155 Mon Sep 17 00:00:00 2001
-From: Lukasz Majewski <lukma@denx.de>
-Date: Wed, 25 Sep 2019 11:11:42 +0200
-Subject: [PATCH] spi: Add call to spi_slave_abort() function when spidev
- driver is released
+Running make in kvm directory:
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 
+-fno-stack-protector -fPIC -fno-PIE -I../../../../tools/include 
+-I../../../../usr/include/ -Iinclude -Ix86_64 -Iinclude/x86_64 -I.. 
+-pthread  -no-pie   x86_64/cr4_cpuid_sync_test.c
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+I was playing with both options yesterday and totally confused myself
+thinking that adding fPIC helps. It doesn't.
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
+I am looking into this to see how we can make "make kselftest" work.
+Once I figure it out, will send v2. I think for some reason in the
+failing case, no-pie-option and pgste-option are null strings.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spidev.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 255786f2e844..3ea9d8a3e6e8 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -627,6 +627,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+#ifdef CONFIG_SPI_SLAVE
-+	spi_slave_abort(spidev->spi);
-+#endif
- 	mutex_unlock(&device_list_lock);
- 
- 	return 0;
--- 
-2.20.1
-
+thanks,
+-- Shuah
