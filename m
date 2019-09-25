@@ -2,88 +2,90 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A52AC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A18AC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C5A2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MJZLpmUv"
+	by mail.kernel.org (Postfix) with ESMTP id D8F0E21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439375AbfIYPTu (ORCPT
+        id S2439409AbfIYPUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:19:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38494 "EHLO mail.skyhub.de"
+        Wed, 25 Sep 2019 11:20:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:52466 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbfIYPTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:19:50 -0400
-Received: from zn.tnic (p200300EC2F0BA100A072A5F5D97AACB9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:a100:a072:a5f5:d97a:acb9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2DBA21EC0416;
-        Wed, 25 Sep 2019 17:19:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569424788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lIRklpKdSpXuciM7ok3hLglDdun8vq52/9cpIQ737k0=;
-        b=MJZLpmUvhgZlxwdhAxNKJqYc4wVa04bl3UlQOGJKKMtxnMcUtBfvYV8JRR5NMRHV84n2op
-        txP7POVSKqjMUHTeD195NAWuMkOB7TxFm3PaWzqzeApsJxO1eE78QJci3uVXm7C4fgpiq+
-        xtNvYZR6hCBYqFRzJNOMz4m226JCMyk=
-Date:   Wed, 25 Sep 2019 17:19:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Haim Cohen <haim.cohen@intel.com>
-Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
- Control hardware bits
-Message-ID: <20190925151949.GE3891@zn.tnic>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
- <20190924155232.GG19317@zn.tnic>
- <20190925140903.GA19638@linux.intel.com>
+        id S1726679AbfIYPUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:20:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:20:31 -0700
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="183287991"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:20:30 -0700
+Message-ID: <f49df2d42d7e97b61a5e26ff4d89ede5fbe37a35.camel@linux.intel.com>
+Subject: Re: [PATCH] async: Let kfree() out of the critical area of the lock
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        bvanassche@acm.org, bhelgaas@google.com, dsterba@suse.com,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        sakari.ailus@linux.intel.com
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 25 Sep 2019 08:20:30 -0700
+In-Reply-To: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
+References: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190925140903.GA19638@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 05:09:03PM +0300, Jarkko Sakkinen wrote:
-> The driver will support only the case where the bit is set i.e. that
-> it can freely write to the MSRs MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}.
-> It will refuse to initialize otherwise.
+On Wed, 2019-09-25 at 20:52 +0800, Yunfeng Ye wrote:
+> It's not necessary to put kfree() in the critical area of the lock, so
+> let it out.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+>  kernel/async.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/async.c b/kernel/async.c
+> index 4f9c1d6..1de270d 100644
+> --- a/kernel/async.c
+> +++ b/kernel/async.c
+> @@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
+>  	list_del_init(&entry->domain_list);
+>  	list_del_init(&entry->global_list);
+> 
+> -	/* 3) free the entry */
+> -	kfree(entry);
+>  	atomic_dec(&entry_count);
+> -
+>  	spin_unlock_irqrestore(&async_lock, flags);
+> 
+> +	/* 3) free the entry */
+> +	kfree(entry);
+> +
+>  	/* 4) wake up any waiters */
+>  	wake_up(&async_done);
+>  }
 
-See this:
+It probably wouldn't hurt to update the patch description to mention that
+async_schedule_node_domain does the allocation outside of the lock, then
+takes the lock and does the list addition and entry_count increment inside
+the critical section so this is just updating the code to match that it
+seems.
 
-https://lkml.kernel.org/r/20190925085156.GA3891@zn.tnic
+Otherwise the change itself looks safe to me, though I am not sure there
+is a performance gain to be had so this is mostly just a cosmetic patch.
 
-AFAICT, when FEATURE_CONTROL_SGX_LE_WR is not set, you're not clearing
-all SGX feature bits. But you should, methinks.
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-> The next version will thus have only my SOB and author information will
-> be changed. I doubt anyone will complain if I do that.
-
-Ok.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
