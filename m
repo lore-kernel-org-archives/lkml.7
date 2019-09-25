@@ -4,114 +4,266 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0C1C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C01C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8FA214D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A147D20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633990AbfIYHsi (ORCPT
+        id S2406911AbfIYHtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 03:48:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47888 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442570AbfIYHsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:48:38 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 270703CBC1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 07:48:38 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id l6so1908311wrn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 00:48:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IS7JBZ9zrqGVDeRJNFg8m1nKnd2cfm4f/OwgwdjTPRw=;
-        b=udYcnStajUDlsSrd5AnX1sdkv7mIr70p4wcq9p0Mn2lyC6XMWjsPYJZ7ozNrF4K3k9
-         93FLSg8STP59EjJFu0fFlUF5GE6CyULQudfqxQU7W4w6oBULGhi2yIevIaOlu885a+TX
-         +KU5CT9fxSQzBMy2BMi9xVYMge2Uyueoh0x1wcdwn9iGjBa0k2el+kK70QfdicVf2u4k
-         tl2znjDITG+A6+QH6GcBRbFOBNTKZjEP0soKKifyONIoHtUWJWv+F7Z/QouAD+AtE1FT
-         84SJ7NxJ6ruKERRjRk6nn+sq1ttO5PrnjpfIQtBTUb3D8gsAXjcMw6WonoNuJDvWZjXe
-         2OTw==
-X-Gm-Message-State: APjAAAUx0YcKlfNnRb1TmaeuaF0U4XbWAEfxzM0RUBpWtOp57d2Nfi4P
-        CnxJ75/24IP6uNdTpH2XgxmiN3Egn91wXxjdwe9CNjBmYG3nN4JFUCxIwpHL9/irvH/+93TPOcy
-        Jmy9D4xqZTJh62qgWqPYGfAoh
-X-Received: by 2002:a5d:4307:: with SMTP id h7mr7531879wrq.393.1569397716630;
-        Wed, 25 Sep 2019 00:48:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxEpJogKzLfOpsHXL9nPwehQ4M6oLQikRQicx68vJp+AA1DzSOcYm+nBkEmeMRY8Vw9e5ddRg==
-X-Received: by 2002:a5d:4307:: with SMTP id h7mr7531843wrq.393.1569397716293;
-        Wed, 25 Sep 2019 00:48:36 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id d28sm7228325wrb.95.2019.09.25.00.48.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 00:48:35 -0700 (PDT)
-Subject: Re: [PATCH] selftests: kvm: Fix libkvm build error
-To:     Shuah Khan <skhan@linuxfoundation.org>, rkrcmar@redhat.com,
-        shuah@kernel.org
-Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190924201451.31977-1-skhan@linuxfoundation.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <dbfb9d46-488a-b940-c86f-79ad750a324a@redhat.com>
-Date:   Wed, 25 Sep 2019 09:48:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 03:49:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44962 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405047AbfIYHtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 03:49:41 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 34EF5937F50B6811377B;
+        Wed, 25 Sep 2019 15:49:39 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 15:49:35 +0800
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
+        <dan.j.williams@intel.com>, <david@redhat.com>, <cai@lca.pw>
+CC:     <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH V4] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+Message-ID: <66755ea7-ab10-8882-36fd-3e02b03775d5@huawei.com>
+Date:   Wed, 25 Sep 2019 15:49:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190924201451.31977-1-skhan@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/09/19 22:14, Shuah Khan wrote:
-> Fix the following build error:
-> 
-> libkvm.a(assert.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a PIE object; recompile with -fPIC
-> 
-> Add -fPIC to CFLAGS to fix it.
+sparse_buffer_init() use memblock_alloc_try_nid_raw() to allocate memory
+for page management structure, if memory allocation fails from specified
+node, it will fall back to allocate from other nodes.
 
-This is wrong, these testcases cannot be position-independent 
-executables.  Can you include the failing command line from "V=1" 
-output?
+Normally, the page management structure will not exceed 2% of the total
+memory, but a large continuous block of allocation is needed. In most
+cases, memory allocation from the specified node will success always,
+but a node memory become highly fragmented will fail. we expect to
+allocate memory base section rather than by allocating a large block of
+memory from other NUMA nodes
 
-The problem seems to be that these definitions are not working properly:
+Add memblock_alloc_exact_nid_raw() for this situation, which allocate
+boot memory block on the exact node. If a large contiguous block memory
+allocate fail in sparse_buffer_init(), it will fall back to allocate
+small block memory base section.
 
-no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-        $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+v3 -> v4:
+ - add Reviewed-by
+ - modify the comment "@exact_nid is false" instead of "@exact_nid is zero"
 
-LDFLAGS += -pthread $(no-pie-option)
+v2 -> v3:
+ - use "bool exact_nid" instead of "int need_exact_nid"
+ - remove the comment "without panicking"
 
-Thanks,
+v1 -> v2:
+ - use memblock_alloc_exact_nid_raw() rather than using a flag
 
-Paolo
+ include/linux/memblock.h |  3 +++
+ mm/memblock.c            | 65 ++++++++++++++++++++++++++++++++++++++++--------
+ mm/sparse.c              |  2 +-
+ 3 files changed, 58 insertions(+), 12 deletions(-)
 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  tools/testing/selftests/kvm/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 62c591f87dab..b4a55d300e75 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -44,7 +44,7 @@ INSTALL_HDR_PATH = $(top_srcdir)/usr
->  LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
->  LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
->  CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
-> -	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
-> +	-fno-stack-protector -fPIC -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
->  	-I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
->  
->  no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-> 
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index f491690..b38bbef 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -358,6 +358,9 @@ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
+ 					 MEMBLOCK_ALLOC_ACCESSIBLE);
+ }
+
++void *memblock_alloc_exact_nid_raw(phys_addr_t size, phys_addr_t align,
++				 phys_addr_t min_addr, phys_addr_t max_addr,
++				 int nid);
+ void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
+ 				 phys_addr_t min_addr, phys_addr_t max_addr,
+ 				 int nid);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7d4f61a..0de9d83 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1323,12 +1323,13 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+  * @start: the lower bound of the memory region to allocate (phys address)
+  * @end: the upper bound of the memory region to allocate (phys address)
+  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ * @exact_nid: control the allocation fall back to other nodes
+  *
+  * The allocation is performed from memory region limited by
+  * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
+  *
+- * If the specified node can not hold the requested memory the
+- * allocation falls back to any node in the system
++ * If the specified node can not hold the requested memory and @exact_nid
++ * is false, the allocation falls back to any node in the system
+  *
+  * For systems with memory mirroring, the allocation is attempted first
+  * from the regions with mirroring enabled and then retried from any
+@@ -1342,7 +1343,8 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+  */
+ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 					phys_addr_t align, phys_addr_t start,
+-					phys_addr_t end, int nid)
++					phys_addr_t end, int nid,
++					bool exact_nid)
+ {
+ 	enum memblock_flags flags = choose_memblock_flags();
+ 	phys_addr_t found;
+@@ -1365,7 +1367,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 	if (found && !memblock_reserve(found, size))
+ 		goto done;
+
+-	if (nid != NUMA_NO_NODE) {
++	if (nid != NUMA_NO_NODE && !exact_nid) {
+ 		found = memblock_find_in_range_node(size, align, start,
+ 						    end, NUMA_NO_NODE,
+ 						    flags);
+@@ -1413,7 +1415,8 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+ 					     phys_addr_t start,
+ 					     phys_addr_t end)
+ {
+-	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE);
++	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE,
++					false);
+ }
+
+ /**
+@@ -1432,7 +1435,7 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid)
+ {
+ 	return memblock_alloc_range_nid(size, align, 0,
+-					MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++					MEMBLOCK_ALLOC_ACCESSIBLE, nid, false);
+ }
+
+ /**
+@@ -1442,6 +1445,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+  * @min_addr: the lower bound of the memory region to allocate (phys address)
+  * @max_addr: the upper bound of the memory region to allocate (phys address)
+  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ * @exact_nid: control the allocation fall back to other nodes
+  *
+  * Allocates memory block using memblock_alloc_range_nid() and
+  * converts the returned physical address to virtual.
+@@ -1457,7 +1461,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+ static void * __init memblock_alloc_internal(
+ 				phys_addr_t size, phys_addr_t align,
+ 				phys_addr_t min_addr, phys_addr_t max_addr,
+-				int nid)
++				int nid, bool exact_nid)
+ {
+ 	phys_addr_t alloc;
+
+@@ -1469,11 +1473,13 @@ static void * __init memblock_alloc_internal(
+ 	if (WARN_ON_ONCE(slab_is_available()))
+ 		return kzalloc_node(size, GFP_NOWAIT, nid);
+
+-	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
++	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid,
++					exact_nid);
+
+ 	/* retry allocation without lower limit */
+ 	if (!alloc && min_addr)
+-		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid);
++		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid,
++						exact_nid);
+
+ 	if (!alloc)
+ 		return NULL;
+@@ -1482,6 +1488,43 @@ static void * __init memblock_alloc_internal(
+ }
+
+ /**
++ * memblock_alloc_exact_nid_raw - allocate boot memory block on the exact node
++ * without zeroing memory
++ * @size: size of memory block to be allocated in bytes
++ * @align: alignment of the region and block's size
++ * @min_addr: the lower bound of the memory region from where the allocation
++ *	  is preferred (phys address)
++ * @max_addr: the upper bound of the memory region from where the allocation
++ *	      is preferred (phys address), or %MEMBLOCK_ALLOC_ACCESSIBLE to
++ *	      allocate only from memory limited by memblock.current_limit value
++ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ *
++ * Public function, provides additional debug information (including caller
++ * info), if enabled. Does not zero allocated memory.
++ *
++ * Return:
++ * Virtual address of allocated memory block on success, NULL on failure.
++ */
++void * __init memblock_alloc_exact_nid_raw(
++			phys_addr_t size, phys_addr_t align,
++			phys_addr_t min_addr, phys_addr_t max_addr,
++			int nid)
++{
++	void *ptr;
++
++	memblock_dbg("%s: %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa %pS\n",
++		     __func__, (u64)size, (u64)align, nid, &min_addr,
++		     &max_addr, (void *)_RET_IP_);
++
++	ptr = memblock_alloc_internal(size, align,
++					   min_addr, max_addr, nid, true);
++	if (ptr && size > 0)
++		page_init_poison(ptr, size);
++
++	return ptr;
++}
++
++/**
+  * memblock_alloc_try_nid_raw - allocate boot memory block without zeroing
+  * memory and without panicking
+  * @size: size of memory block to be allocated in bytes
+@@ -1512,7 +1555,7 @@ void * __init memblock_alloc_try_nid_raw(
+ 		     &max_addr, (void *)_RET_IP_);
+
+ 	ptr = memblock_alloc_internal(size, align,
+-					   min_addr, max_addr, nid);
++					   min_addr, max_addr, nid, false);
+ 	if (ptr && size > 0)
+ 		page_init_poison(ptr, size);
+
+@@ -1547,7 +1590,7 @@ void * __init memblock_alloc_try_nid(
+ 		     __func__, (u64)size, (u64)align, nid, &min_addr,
+ 		     &max_addr, (void *)_RET_IP_);
+ 	ptr = memblock_alloc_internal(size, align,
+-					   min_addr, max_addr, nid);
++					   min_addr, max_addr, nid, false);
+ 	if (ptr)
+ 		memset(ptr, 0, size);
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 72f010d..1a06471 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -475,7 +475,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+ 	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+ 	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
+ 	sparsemap_buf =
+-		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
++		memblock_alloc_exact_nid_raw(size, PAGE_SIZE,
+ 						addr,
+ 						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 	sparsemap_buf_end = sparsemap_buf + size;
+-- 
+2.7.4
 
