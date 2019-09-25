@@ -2,80 +2,80 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37756C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620C9C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB6E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tjw9Ktoi"
+	by mail.kernel.org (Postfix) with ESMTP id 36B5C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442830AbfIYImF (ORCPT
+        id S2442853AbfIYIqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:42:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48196 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406947AbfIYImE (ORCPT
+        Wed, 25 Sep 2019 04:46:08 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39157 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439374AbfIYIqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:42:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=slIVu/DxGMu9zok1ECDFQwAeqP3IJaeIKjOiSYAzAEU=; b=Tjw9KtoiX/nGWJQfPJoOQAOQQ
-        QV2QqtC45CeRbgBOSMP/S3GPI+/bONBvR+xM5bgJ+yhVUmfXjh+bLKSn3BQPRyPQK8/tTOlt5fWug
-        82xmrFdH+2whhoQ7QEawWGSpblwp5BH3A1cQqje2JyYqFp2eFvgb7Nv6L5m+UnnFEy4Zd+AHiQzDq
-        NrRv8h6g1TXB6G6AAfKtznqARZd8zLSvrqfbMu4NGEPF+MLAQa9Lddz9xN1pcEG501Xb5P9hXybLJ
-        eYW1msD6Iimlez5Ob50WEiSRXa/1VYromx7qx4Bh7+9UaLzZODHx18E5UzsDG64DRNpJHG3rclN98
-        RUz/1zVKA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iD2rw-0008RH-GF; Wed, 25 Sep 2019 08:41:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E25A3012CF;
-        Wed, 25 Sep 2019 10:41:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EFE60203C2D9F; Wed, 25 Sep 2019 10:41:49 +0200 (CEST)
-Date:   Wed, 25 Sep 2019 10:41:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Quentin Perret <qperret@qperret.net>
-Cc:     Pavan Kondeti <pkondeti@codeaurora.org>, mingo@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        juri.lelli@redhat.com, rjw@rjwysocki.net, morten.rasmussen@arm.com,
-        valentin.schneider@arm.com, qais.yousef@arm.com, tkjos@google.com,
+        Wed, 25 Sep 2019 04:46:07 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6D2801C0014;
+        Wed, 25 Sep 2019 08:46:03 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Speed-up energy-aware wake-ups
-Message-ID: <20190925084149.GB4553@hirez.programming.kicks-ass.net>
-References: <20190912094404.13802-1-qperret@qperret.net>
- <20190920030215.GA20250@codeaurora.org>
- <20190920094115.GA11503@qperret.net>
- <20190920103338.GB20250@codeaurora.org>
- <20190920112300.GA13151@qperret.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 0/5] LogiCVC mfd and GPIO support
+Date:   Wed, 25 Sep 2019 10:45:50 +0200
+Message-Id: <20190925084555.147771-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920112300.GA13151@qperret.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 01:23:00PM +0200, Quentin Perret wrote:
-> On Friday 20 Sep 2019 at 16:03:38 (+0530), Pavan Kondeti wrote:
-> > +1. Looks good to me.
-> 
-> Cool, thanks.
-> 
-> Peter/Ingo, is there anything else I should do ? Should I resend the
-> patch 'properly' (that is, not inline) ?
+This series introduces support for the LogiCVC GPIO block to the syscon GPIO
+driver, with dt bindings documentation also including the top-level mfd
+component.
 
-Got it, thanks!
+Changes since v1:
+- Converted dt bindings documentation to dt schemas;
+- Used BIT macro and removed version from structure name;
+- Improved documentation example with gpio-line-names;
+- Added vendor prefix to dt bindings;
+- Added mfd component dt bindings documentation.
+
+Cheers,
+
+Paul
+
+Paul Kocialkowski (5):
+  dt-bindings: Add Xylon vendor prefix
+  dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+  gpio: syscon: Add support for a custom get operation
+  dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+  gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     | 70 +++++++++++++++++
+ .../bindings/mfd/xylon,logicvc.yaml           | 60 +++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ drivers/gpio/gpio-syscon.c                    | 75 ++++++++++++++++++-
+ 4 files changed, 204 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+
+-- 
+2.23.0
+
