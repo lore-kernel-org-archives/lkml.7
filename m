@@ -2,94 +2,190 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A9BC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DDEC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398C821D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lazSvqe+"
+	by mail.kernel.org (Postfix) with ESMTP id 99DBE21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408128AbfIYOuc (ORCPT
+        id S2438271AbfIYOxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:50:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50252 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfIYOuc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:50:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1569423030; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZDBS8kzsJvkPXNA7E89mme3Edh+YPdmEM5FwJycTpEo=;
-        b=lazSvqe+/UcqO20OmSwiSPUafrOafmGhAjFhLu4g0o10d9MQ2m7nnZG04er+DtGS71YLKt
-        7bdANLZHL3Dr2qWisn7gqrm7wQy3Uk535r/HvbQZeN5mMZR/hMz0Tqeyc8hCRMTZ4a1WWC
-        pKKvARrAkPtAVzvYkh7BR+AyhTlqY9E=
-Date:   Wed, 25 Sep 2019 16:50:25 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 29/36] drm/ingenic: use bpp instead of cpp for
- drm_format_info
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Message-Id: <1569423025.1909.1@crapouillou.net>
-In-Reply-To: <1569243189-183445-4-git-send-email-hjc@rock-chips.com>
-References: <1569243189-183445-1-git-send-email-hjc@rock-chips.com>
-        <1569243189-183445-4-git-send-email-hjc@rock-chips.com>
+        Wed, 25 Sep 2019 10:53:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57190 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfIYOxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:53:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 47F59AEE1;
+        Wed, 25 Sep 2019 14:53:02 +0000 (UTC)
+Message-ID: <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>
+Date:   Wed, 25 Sep 2019 16:52:59 +0200
+In-Reply-To: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+         <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5Mzcra9IsjRjM5vnaomh"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandy,
+
+--=-5Mzcra9IsjRjM5vnaomh
+Content-Type: multipart/mixed; boundary="=-QzsDiLgE5dpWVAyKk5Wj"
 
 
-Le lun. 23 sept. 2019 =E0 14:53, Sandy Huang <hjc@rock-chips.com> a=20
-=E9crit :
-> cpp[BytePerPlane] can't describe the 10bit data format correctly,
-> So we use bpp[BitPerPlane] to instead cpp.
->=20
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
-> b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index ec32e1c..70ccec5 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -375,7 +375,7 @@ static void=20
-> ingenic_drm_plane_atomic_update(struct drm_plane *plane,
->=20
->  	width =3D state->crtc->state->adjusted_mode.hdisplay;
->  	height =3D state->crtc->state->adjusted_mode.vdisplay;
-> -	cpp =3D state->fb->format->cpp[plane->index];
-> +	cpp =3D state->fb->format->bpp[plane->index] / 8;
+--=-QzsDiLgE5dpWVAyKk5Wj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-That wouldn't work with 15-bit rgb555...
+On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Hi All,
+> > this series tries to address one of the issues blocking us from
+> > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> > devices not represented in DT which sit behind a PCI bus fail to get th=
+e
+> > bus' DMA addressing constraints.
+> >=20
+> > This is due to the fact that of_dma_configure() assumes it's receiving =
+a
+> > DT node representing the device being configured, as opposed to the PCI=
+e
+> > bridge node we currently pass. This causes the code to directly jump
+> > into PCI's parent node when checking for 'dma-ranges' and misses
+> > whatever was set there.
+> >=20
+> > To address this I create a new API in OF - inspired from Robin Murphys
+> > original proposal[2] - which accepts a bus DT node as it's input in
+> > order to configure a device's DMA constraints. The changes go deep into
+> > of/address.c's implementation, as a device being having a DT node
+> > assumption was pretty strong.
+> >=20
+> > On top of this work, I also cleaned up of_dma_configure() removing its
+> > redundant arguments and creating an alternative function for the specia=
+l
+> > cases
+> > not applicable to either the above case or the default usage.
+> >=20
+> > IMO the resulting functions are more explicit. They will probably
+> > surface some hacky usages that can be properly fixed as I show with the
+> > DT fixes on the Layerscape platform.
+> >=20
+> > This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> > on a Seattle AMD board.
+>=20
+> Humm, I've been working on this issue too. Looks similar though yours
+> has a lot more churn and there's some other bugs I've found.
+
+That's good news, and yes now that I see it, some stuff on my series is ove=
+rly
+complicated. Specially around of_translate_*().
+
+On top of that, you removed in of_dma_get_range():
+
+-	/*
+-	 * At least empty ranges has to be defined for parent node if
+-	 * DMA is supported
+-	 */
+-	if (!ranges)
+-		break;
+
+Which I assumed was bound to the standard and makes things easier.
+
+> Can you test out this branch[1]. I don't have any h/w needing this,
+> but wrote a unittest and tested with modified QEMU.
+
+I reviewed everything, I did find a minor issue, see the patch attached.
+
+Also I tested your branch both on an RPi4, with a PCI device that depends o=
+n
+these changes and by comparing the OF debugs logs on a Layerscape board whi=
+ch
+uses dma-ranges, dma-coherent and IOMMU. All works as expected.
+
+Will you send this series for v5.5? Please keep me in the loop, I'll review=
+ and
+test the final version.
+
+Regards,
+Nicolas
 
 
->=20
->  	priv->dma_hwdesc->addr =3D drm_fb_cma_get_gem_addr(state->fb, state,=20
-> 0);
->  	priv->dma_hwdesc->cmd =3D width * height * cpp / 4;
-> --
-> 2.7.4
->=20
->=20
->=20
+--=-QzsDiLgE5dpWVAyKk5Wj
+Content-Disposition: attachment;
+	filename*0=0001-of-device-do-not-bail-of_dma_configure-when-force_dm.pat;
+	filename*1=ch
+Content-Type: text/x-patch;
+	name="0001-of-device-do-not-bail-of_dma_configure-when-force_dm.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-=
+RnJvbSAyNmQ1MTg1M2MyNWMwNGMyOGRiYzA5MDYxOTUxYTkzYzEwMmRhYmNkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBOaWNvbGFzIFNhZW56IEp1bGllbm5lIDxuc2FlbnpqdWxpZW5u
+ZUBzdXNlLmRlPgpEYXRlOiBXZWQsIDI1IFNlcCAyMDE5IDE2OjI2OjU3ICswMjAwClN1YmplY3Q6
+IFtQQVRDSF0gb2Y6IGRldmljZTogZG8gbm90IGJhaWwgb2ZfZG1hX2NvbmZpZ3VyZSgpIHdoZW4g
+Zm9yY2VfZG1hIGlzCiBzZXQKClNvbWUgWGVuIGRldmljZXMgY2FsbCBvZl9kbWFfY29uZmlndXJl
+KCkgd2l0aG91dCBhbiBhY3R1YWwgRFQgbm9kZSBpbgpvcmRlciBmb3IgaXQgdG8gc2V0IGl0cyAn
+ZG1hX29wcycuIFRoYXQncyB0aGUgb3JpZ2luYWwgaW50ZW50IG9mCidmb3JjZV9kbWEnLCBob25v
+ciB0aGF0IGJlaGF2aW91ci4KClNpZ25lZC1vZmYtYnk6IE5pY29sYXMgU2FlbnogSnVsaWVubmUg
+PG5zYWVuemp1bGllbm5lQHN1c2UuZGU+Ci0tLQogZHJpdmVycy9vZi9kZXZpY2UuYyB8IDIgLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yv
+ZGV2aWNlLmMgYi9kcml2ZXJzL29mL2RldmljZS5jCmluZGV4IGE0NTI2MWUyMTE0NC4uN2JjMDBm
+NzI0NjhmIDEwMDY0NAotLS0gYS9kcml2ZXJzL29mL2RldmljZS5jCisrKyBiL2RyaXZlcnMvb2Yv
+ZGV2aWNlLmMKQEAgLTEwMCw4ICsxMDAsNiBAQCBpbnQgb2ZfZG1hX2NvbmZpZ3VyZShzdHJ1Y3Qg
+ZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCBib29sIGZvcmNlXwogCW5w
+ID0gZGV2LT5vZl9ub2RlOwogCWlmICghbnApCiAJCW5wID0gcGFyZW50OwotCWlmICghbnApCi0J
+CXJldHVybiAtRU5PREVWOwogCiAJcmV0ID0gb2ZfZG1hX2dldF9yYW5nZShucCwgJmRtYV9hZGRy
+LCAmcGFkZHIsICZzaXplKTsKIAlpZiAocmV0IDwgMCkgewotLSAKMi4yMy4wCgo=
+
+
+--=-QzsDiLgE5dpWVAyKk5Wj--
+
+--=-5Mzcra9IsjRjM5vnaomh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2Lf0sACgkQlfZmHno8
+x/7mvQf6A++shc7v4vCUvlFLh6kIZ0UPBKuSnxpUpUn+R3BMoS6J5Ce/ma0SOzIJ
+MRQmawROuL2F6qf0g3ykdpnaSD14TAEB9UnJzLoTkprKRFRhdq4pQjCDGDWIpWSO
+fW6GnBbCLaTa0r38siU1DvnV3ZXCNnmN+lO5mqEp380R7cLwMj0hrH4mzkNuSUHK
+uKWLMd/ZZyDk7e2j1qZ2bXg6PRRSfXZfU7Oqtwt6k7JNoPB/HneraMxoO43EyzDA
+qt4Fxx6cDsZQAPbqJPChpSN4USdi0rN171NlKW3+PRsGfZN4LzUF3MoK2uvReV0n
+DhW7JoNOzqhh0pk2iPTRov0M+zbYEg==
+=jmQ8
+-----END PGP SIGNATURE-----
+
+--=-5Mzcra9IsjRjM5vnaomh--
 
