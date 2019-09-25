@@ -2,70 +2,62 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D035C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602BBC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF1921D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dOzuI9mJ"
+	by mail.kernel.org (Postfix) with ESMTP id 39C29222BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 20:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393165AbfIYUbT (ORCPT
+        id S2393199AbfIYUcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 16:31:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42412 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387768AbfIYUbT (ORCPT
+        Wed, 25 Sep 2019 16:32:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35296 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389778AbfIYUcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 16:31:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n14so8411972wrw.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 13:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AcBsCzwhp5Ecgxfu1Yf/yNSTuRVO8fFdckSjieoTLBs=;
-        b=dOzuI9mJG7MNkBkGgMGYhShhE5duhtiVQDyWLneLxX5wD/HCWf9T/PGCnLnPzC7wtc
-         ysS3Th4+kQaByGMbqsOJTgU9iown1CZdT89pHVI0AwdYL8iFDKcrSGBjpJLG5UVdC/Z5
-         eFEL4LYNjIxiH8xHZSo6ggGvIjxXX0eE8hVW8ghYYZYge090LkWEtqou4uIwMC+Q6C7K
-         BmI6qzs0PsJPxUaEiJH3kQJ+Rut1XEYojN4XokuuEIzUqBoZdypscGa3T0t7AJulGOCi
-         pQeAI/Uc1o44hsSpr1OWt2THVPdcK3Q0ilf9Qd1CykPt2J7mq2nyU7AkflhRneuODZeh
-         d2HA==
+        Wed, 25 Sep 2019 16:32:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y21so176884wmi.0;
+        Wed, 25 Sep 2019 13:32:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AcBsCzwhp5Ecgxfu1Yf/yNSTuRVO8fFdckSjieoTLBs=;
-        b=FBCvjUvXr/7c/ClUbKUgRQGtTzFNgzTUZaEkTwvbrcK0EcMnCwP6GVK6igjqXcfoBw
-         SLSO5rkAWgJQgrn1YI7tibNPVPC6EALRoaFGU5pf0YzjUpvNhaCfTmWCLNP72reh0msU
-         BWhfvgsU95bJ9Ccm0XrSiIC3C9Fi3Fc31z74fpCGf0Q9p122PozTDQj/rJh6KD93a/0N
-         nq6LI/G722QPfowQaN9nXvfTc9CMhxNzVsHhKrPuMiKuU2F3gfYodVpQWQ6Iupxys0lC
-         kyr+ZUiz8VX6YFmMYP2w2RX3QCZAARFx6evp8Cz/YH/p0XaGd58aKIOBNn4qECKTazki
-         UFog==
-X-Gm-Message-State: APjAAAU9t2xbw5eJgo7fQnQx1apzlI3QIlOEjj2rovundPMDfHyvfomq
-        3ePMwYQvpLrvtdJcYppJuMzO1hK9B+U=
-X-Google-Smtp-Source: APXvYqwzQxZ9IYuGZE7fRHX9HR9jZ3vCuFGihvzGzRLMzKQ9kPDNMFvtmH/a4e7Uuo1sLkQjk6Emtw==
-X-Received: by 2002:adf:cc87:: with SMTP id p7mr142508wrj.43.1569443477086;
-        Wed, 25 Sep 2019 13:31:17 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ecba:5540:2c05:40e4:899d:aef0])
-        by smtp.gmail.com with ESMTPSA id j1sm301348wrg.24.2019.09.25.13.31.15
+        bh=9msODsp1f3ntoBvQarVOQqQV429arne9yrJNCKUXVXc=;
+        b=Z1wasGaUInOb/wgCSGocPXC2c3mEd23s6FKA3UPmT43zj/y4/xK7j39of/3TPy2wFM
+         MO4Ny0LUIBqOzyynNcfMrakdwLT0nZSNqlQ5TEtBUrkmhpGcQdWzAZQX3EOMeIzXGxpW
+         aN3SCjO5TyBaYg+JVEK5hMbb44E5tIT04vjW4oQ80R4XMwMAG93lKe1vwRPlblI4PiVD
+         OQkjEx5M9aaupXxQQQHgxxptTXVGaimjWtgRduyHp+hIOaW7wD/JpX4qkAulI5gA9EX8
+         81LgP/FhQ6MQkdxCmgn6k+hcXn/lDaeTbCN6UQEA2l/8NEptfz9nEiOwB778O80KRWQZ
+         bxBw==
+X-Gm-Message-State: APjAAAV2SGEyrgtEQunFxeIJgNrwDDJdKMoPjd1b7YwovWm7gtm1NNVS
+        9AOYFODxq8A+V1XyLz96vFw=
+X-Google-Smtp-Source: APXvYqz7DKuSwCaT7Oqi7TD0hTMLSVZGaKUxZ8UDtvuWifMHzKPO9jzopX+sJDAL8LazUfq8VHznYw==
+X-Received: by 2002:a1c:9a46:: with SMTP id c67mr52161wme.115.1569443537037;
+        Wed, 25 Sep 2019 13:32:17 -0700 (PDT)
+Received: from localhost.localdomain (99-48-196-88.sta.estpak.ee. [88.196.48.99])
+        by smtp.googlemail.com with ESMTPSA id t14sm105774wrs.6.2019.09.25.13.32.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 13:31:16 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     matthias.bgg@gmail.com, wsa@the-dreams.de, qii.wang@mediatek.com,
-        drinkcat@chromium.org, hsinyi@chromium.org, tglx@linutronix.de,
-        Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH] i2c: i2c-mt65xx: fix NULL ptr dereference
-Date:   Wed, 25 Sep 2019 22:31:13 +0200
-Message-Id: <20190925203113.6972-1-fparent@baylibre.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 25 Sep 2019 13:32:16 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] brcmsmac: remove duplicated if condition
+Date:   Wed, 25 Sep 2019 23:31:52 +0300
+Message-Id: <20190925203152.21548-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,32 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit abf4923e97c3 ("i2c: mediatek: disable zero-length transfers
-for mt8183"), there is a NULL pointer dereference for all the SoCs
-that don't have any quirk. mtk_i2c_functionality is not checking that
-the quirks pointer is not NULL before starting to use it.
+The nested 'li_mimo == &locale_bn' check is excessive and always
+true. Thus it can be safely removed.
 
-This commit add a check on the quirk pointer before dereferencing it.
-
-Fixes: abf4923e97c3 ("i2c: mediatek: disable zero-length transfers for mt8183")
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/i2c/busses/i2c-mt65xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/channel.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 29eae1bf4f86..ec00fc6af9ae 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -875,7 +875,7 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
+index db783e94f929..5a6d9c86552a 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
+@@ -496,13 +496,11 @@ brcms_c_channel_reg_limits(struct brcms_cm_info *wlc_cm, u16 chanspec,
+ 	 * table and override CDD later
+ 	 */
+ 	if (li_mimo == &locale_bn) {
+-		if (li_mimo == &locale_bn) {
+-			maxpwr20 = QDB(16);
+-			maxpwr40 = 0;
++		maxpwr20 = QDB(16);
++		maxpwr40 = 0;
  
- static u32 mtk_i2c_functionality(struct i2c_adapter *adap)
- {
--	if (adap->quirks->flags & I2C_AQ_NO_ZERO_LEN)
-+	if (adap->quirks && adap->quirks->flags & I2C_AQ_NO_ZERO_LEN)
- 		return I2C_FUNC_I2C |
- 			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
- 	else
+-			if (chan >= 3 && chan <= 11)
+-				maxpwr40 = QDB(16);
+-		}
++		if (chan >= 3 && chan <= 11)
++			maxpwr40 = QDB(16);
+ 
+ 		for (i = 0; i < BRCMS_NUM_RATES_MCS_1_STREAM; i++) {
+ 			txpwr->mcs_20_siso[i] = (u8) maxpwr20;
 -- 
-2.23.0
+2.21.0
 
