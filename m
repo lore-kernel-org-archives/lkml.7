@@ -2,139 +2,107 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EFBC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEFBC4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62AE72146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569431699;
-	bh=89gdrktY78IgBMDt3Gfn54he9idV2JCVN2ModkkNem8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dGJAx1yqnMnGRGI8bazAuy08Rr1QcoMIQILcCSZacvrXJSrksGjBSigHMWUhYfUVj
-	 8Gn59+eMjw7kocpnH3Nv1TTK0adl+57ihU5KDTk5cuvxhDpBQuiogtoQCTve9Nqlcz
-	 jAc7eDCF9EFdv6iQ5Blwi4aOmqho20ug/I9/29OI=
+	by mail.kernel.org (Postfix) with ESMTP id C8E2F2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502235AbfIYRO6 (ORCPT
+        id S2442849AbfIYRS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:14:58 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53976 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfIYRO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aLQzNm39tdIMTQRnIptN+pzSYiE/srlJQZjWMcvGrPc=; b=vIRk7UL9EyuwGru+KShQfdlrX
-        1SilWNO9Nh+evGCOaUaZNXyXXVz8E9diVHiYEX4kTwWkhyazb3ycaLvYxx6fWgy4hIV4EFbgrxnb9
-        p7x0RK3wnE5UftcSnfEDz+HhqT7F39Ftd5z7NCCf2nwYCU3G/Dvs/sVqrDa9AAK7LF1TE=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDAsQ-000812-IP; Wed, 25 Sep 2019 17:14:54 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 03BCAD01D66; Wed, 25 Sep 2019 18:14:53 +0100 (BST)
-Date:   Wed, 25 Sep 2019 10:14:52 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the risc-v-fixes tree with Linus' tree
-Message-ID: <20190925171452.GK2036@sirena.org.uk>
+        Wed, 25 Sep 2019 13:18:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11420 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440280AbfIYRSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 13:18:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 10:18:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="273030650"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga001.jf.intel.com with ESMTP; 25 Sep 2019 10:18:24 -0700
+Date:   Wed, 25 Sep 2019 10:18:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, Kai Huang <kai.huang@linux.intel.com>,
+        Haim Cohen <haim.cohen@intel.com>
+Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
+ Control hardware bits
+Message-ID: <20190925171824.GF31852@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
+ <20190924155232.GG19317@zn.tnic>
+ <20190924202210.GC16218@linux.intel.com>
+ <20190925085156.GA3891@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mEgWsss+US7fWyVR"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190925085156.GA3891@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 25, 2019 at 10:51:56AM +0200, Borislav Petkov wrote:
+> On Tue, Sep 24, 2019 at 01:22:10PM -0700, Sean Christopherson wrote:
+> > Sadly, because FEATURE_CONTROL must be locked to fully enable SGX, the
+> > reality is that any BIOS that supports SGX will lock FEATURE_CONTROL.
+> 
+> That's fine. The question is, would OEMs leave the hash MSRs writable?
 
---mEgWsss+US7fWyVR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Realistically, there will likely be a non-trivial number of systems with
+SGX_LE_WR=0 but SGX enabled.
 
-Hi all,
+> If, as you say above, we clear SGX feature bit - not only
+> X86_FEATURE_SGX_LC - when the MSRs are not writable, then we're fine.
+> Platforms sticking their own hash in there won't be supported but I
+> guess their aim is not to be supported in Linux anyway.
+> 
+> > That's the status quo today as well since VMX (and SMX/TXT) is also
+> > enabled via FEATURE_CONTROL.  KVM does have logic to enable VMX and lock
+> > FEATURE_CONTROL if the MSR isn't locked, but AIUI that exists only to work
+> > with old BIOSes.
+> > 
+> > If we want to support setting and locking FEATURE_CONTROL in the extremely
+> > unlikely scenario that BIOS left it unlocked, the proper change would be
+> 
+> I wouldn't be too surprised if this happened. BIOS is very inventive.
 
-Today's linux-next merge of the risc-v-fixes tree got a conflict in:
+Given the number of steps BIOS needs to take to enable SGX, that'd be one
+"inventive" BIOS. :-)
 
-  arch/riscv/include/asm/pgtable.h
+Anyways, adding logic to opportunistically set FEATURE_CONTROL during boot
+should be trivial.  I'll prep a patch and send it separately from the SGX
+series, moving the existing KVM code would be a good change irrespective
+of SGX.
 
-between commit:
+> > One note on Launch Control that isn't covered in the SDM: the LE hash
+> > MSRs can also be written before SGX is activated.  SGX activation must
+> > occur before FEATURE_CONTROL is locked, meaning BIOS can set the LE
+> > hash MSRs to a non-intel and then lock FEATURE_CONTROL with SGX_LE_WR=0.
+> 
+> This is exactly what I'm afraid of. The OEM vendors locking this down.
 
-  782de70c42930ba ("mm: consolidate pgtable_cache_init() and pgd_cache_init=
-()")
-
-=66rom Linus' tree and commit:
-
-  b6f2b2e600a27b7 ("RISC-V: Fix building error when CONFIG_SPARSEMEM_MANUAL=
-=3Dy")
-
-=66rom the risc-v-fixes tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc arch/riscv/include/asm/pgtable.h
-index c60123f018f50,4f4162d90586d..0000000000000
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@@ -424,18 -436,11 +436,6 @@@ extern void *dtb_early_va
-  extern void setup_bootmem(void);
-  extern void paging_init(void);
- =20
-- #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-- #define VMALLOC_END      (PAGE_OFFSET - 1)
-- #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--=20
-- #define FIXADDR_TOP      VMALLOC_START
-- #ifdef CONFIG_64BIT
-- #define FIXADDR_SIZE     PMD_SIZE
-- #else
-- #define FIXADDR_SIZE     PGDIR_SIZE
-- #endif
-- #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
- -static inline void pgtable_cache_init(void)
- -{
- -	/* No page table caches to initialize */
- -}
---
-  /*
-   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-
---mEgWsss+US7fWyVR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2LoIwACgkQJNaLcl1U
-h9Ap6Qf8DT2faMTcscCRsAs0NR57fTzrUkbKVVZkwGSjhZAgaZ3cFeHpVYqlloZg
-X9KOdOG2JhrlvrYmEoyX9aKh4/c3GLs25PC3FidQG6RULOasgJvJYaO8/UDct6iz
-MEilerQKUPLlye3fyOAz45hhmDe80CLCpVFKlXHZGOilpBTrl4jfBeMEWEU24LPh
-wkLXsv4keO2e40Krgex05d7GztnQQIWLpZXlUfZmVv+2Bx6N2hLtsUfiDOLGz0hJ
-fk3CodIheoNwtIB1JARf4wvn0KsYp6krXLM+Wsd0x55jvC120BVRsxl8YknDW4LM
-ux/jkLDUkjij8WhzclqD9uvEuzlBjg==
-=EJ+I
------END PGP SIGNATURE-----
-
---mEgWsss+US7fWyVR--
+It's inevitable that some systems will lock down the LE hash MSRs, either
+intentionally or due to lack of support for SGX_LE_WR.  The latter is
+probably going to be more common than OEMs intentionally locking the MSRs,
+because some Intel reference BIOSes simply don't support SGX_LE_WR, e.g. I
+have a Coffee Lake SDP that has hardware support for SGX_LC, but the BIOS
+doesn't provide any way to set SGX_LE_WR or leave FEATURE_CONTROL unlocked.
