@@ -2,74 +2,580 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7339DC4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADA4C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F0F214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CBF20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 01:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388961AbfIYBLY (ORCPT
+        id S2389606AbfIYBPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 21:11:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47679 "EHLO mga07.intel.com"
+        Tue, 24 Sep 2019 21:15:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47924 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387402AbfIYBLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 21:11:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S2389195AbfIYBPg (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 21:15:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 18:11:22 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 18:15:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,546,1559545200"; 
-   d="scan'208";a="188634031"
-Received: from wujunyox-mobl3.ger.corp.intel.com (HELO localhost) ([10.249.38.101])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Sep 2019 18:11:15 -0700
-Date:   Wed, 25 Sep 2019 04:11:15 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [Patch v6 4/4] KEYS: trusted: Move TPM2 trusted keys code
-Message-ID: <20190925011115.GA3503@linux.intel.com>
-References: <1568630064-14887-1-git-send-email-sumit.garg@linaro.org>
- <1568630064-14887-5-git-send-email-sumit.garg@linaro.org>
- <20190917181415.GA8472@linux.intel.com>
- <20190917181507.GB8472@linux.intel.com>
- <CAFA6WYMbUGQ6+-XvR9_qSc=oVe1QSTg4kB-+y6rBmQLq+B6skg@mail.gmail.com>
+   d="scan'208";a="389055382"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Sep 2019 18:15:32 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v8] perf diff: Report noisy for cycles diff
+Date:   Wed, 25 Sep 2019 09:14:46 +0800
+Message-Id: <20190925011446.30678-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYMbUGQ6+-XvR9_qSc=oVe1QSTg4kB-+y6rBmQLq+B6skg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 11:53:08AM +0530, Sumit Garg wrote:
-> No worries :). I will send next version of patch-set.
-> 
-> FYI, I will be travelling for Linaro Connect next week so you could
-> expect some delays in my responses.
+This patch prints the stddev and hist for the cycles diff of
+program block. It can help us to understand if the cycles
+is noisy or not.
 
-These patches will go to v5.5. There is nothing to rush.
+This patch is inspired by Andi Kleen's patch
+https://lwn.net/Articles/600471/
 
-/Jarkko
+We create new option '--cycles-hist'.
+
+Example:
+
+perf record -b ./div
+perf record -b ./div
+perf diff -c cycles
+
+  # Baseline                                       [Program Block Range] Cycles Diff  Shared Object      Symbol
+  # ........  ......................................................................  .................  ............................
+  #
+      46.72%                                             [div.c:40 -> div.c:40]    0  div                [.] main
+      46.72%                                             [div.c:42 -> div.c:44]    0  div                [.] main
+      46.72%                                             [div.c:42 -> div.c:39]    0  div                [.] main
+      20.54%                                 [random_r.c:357 -> random_r.c:394]    1  libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:388 -> random_r.c:388]    0  libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:388 -> random_r.c:391]    0  libc-2.27.so       [.] __random_r
+      17.04%                                     [random.c:288 -> random.c:291]    0  libc-2.27.so       [.] __random
+      17.04%                                     [random.c:291 -> random.c:291]    0  libc-2.27.so       [.] __random
+      17.04%                                     [random.c:293 -> random.c:293]    0  libc-2.27.so       [.] __random
+      17.04%                                     [random.c:295 -> random.c:295]    0  libc-2.27.so       [.] __random
+      17.04%                                     [random.c:295 -> random.c:295]    0  libc-2.27.so       [.] __random
+      17.04%                                     [random.c:298 -> random.c:298]    0  libc-2.27.so       [.] __random
+       8.40%                                             [div.c:22 -> div.c:25]    0  div                [.] compute_flag
+       8.40%                                             [div.c:27 -> div.c:28]    0  div                [.] compute_flag
+       5.14%                                           [rand.c:26 -> rand.c:27]    0  libc-2.27.so       [.] rand
+       5.14%                                           [rand.c:28 -> rand.c:28]    0  libc-2.27.so       [.] rand
+       2.15%                                         [rand@plt+0 -> rand@plt+0]    0  div                [.] rand@plt
+       0.00%                                                                          [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
+       0.00%                                       [do_mmap+714 -> do_mmap+732]  -10  [kernel.kallsyms]  [k] do_mmap
+       0.00%                                       [do_mmap+737 -> do_mmap+765]    1  [kernel.kallsyms]  [k] do_mmap
+       0.00%                                       [do_mmap+262 -> do_mmap+299]    0  [kernel.kallsyms]  [k] do_mmap
+       0.00%         [__x86_indirect_thunk_r15+0 -> __x86_indirect_thunk_r15+0]    7  [kernel.kallsyms]  [k] __x86_indirect_thunk_r15
+       0.00%                   [native_sched_clock+0 -> native_sched_clock+119]   -1  [kernel.kallsyms]  [k] native_sched_clock
+       0.00%                        [native_write_msr+0 -> native_write_msr+16]  -13  [kernel.kallsyms]  [k] native_write_msr
+
+When we enable the option '--cycles-hist', the output is
+
+perf diff -c cycles --cycles-hist
+
+  # Baseline                                       [Program Block Range] Cycles Diff        stddev/Hist  Shared Object      Symbol
+  # ........  ......................................................................  .................  .................  ............................
+  #
+      46.72%                                             [div.c:40 -> div.c:40]    0  ± 37.8% ▁█▁▁██▁█   div                [.] main
+      46.72%                                             [div.c:42 -> div.c:44]    0  ± 49.4% ▁▁▂█▂▂▂▂   div                [.] main
+      46.72%                                             [div.c:42 -> div.c:39]    0  ± 24.1% ▃█▂▄▁▃▂▁   div                [.] main
+      20.54%                                 [random_r.c:357 -> random_r.c:394]    1  ± 33.5% ▅▂▁█▃▁▂▁   libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:357 -> random_r.c:380]    0  ± 39.4% ▁▁█▁██▅▁   libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:388 -> random_r.c:388]    0                     libc-2.27.so       [.] __random_r
+      20.54%                                 [random_r.c:388 -> random_r.c:391]    0  ± 41.2% ▁▃▁▂█▄▃▁   libc-2.27.so       [.] __random_r
+      17.04%                                     [random.c:288 -> random.c:291]    0  ± 48.8% ▁▁▁▁███▁   libc-2.27.so       [.] __random
+      17.04%                                     [random.c:291 -> random.c:291]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+      17.04%                                     [random.c:293 -> random.c:293]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+      17.04%                                     [random.c:295 -> random.c:295]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+      17.04%                                     [random.c:295 -> random.c:295]    0                     libc-2.27.so       [.] __random
+      17.04%                                     [random.c:298 -> random.c:298]    0  ± 75.6% ▃█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+       8.40%                                             [div.c:22 -> div.c:25]    0  ± 42.1% ▁▃▁▁███▁   div                [.] compute_flag
+       8.40%                                             [div.c:27 -> div.c:28]    0  ± 41.8% ██▁▁▄▁▁▄   div                [.] compute_flag
+       5.14%                                           [rand.c:26 -> rand.c:27]    0  ± 37.8% ▁▁▁████▁   libc-2.27.so       [.] rand
+       5.14%                                           [rand.c:28 -> rand.c:28]    0                     libc-2.27.so       [.] rand
+       2.15%                                         [rand@plt+0 -> rand@plt+0]    0                     div                [.] rand@plt
+       0.00%                                                                                             [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
+       0.00%                                       [do_mmap+714 -> do_mmap+732]  -10                     [kernel.kallsyms]  [k] do_mmap
+       0.00%                                       [do_mmap+737 -> do_mmap+765]    1                     [kernel.kallsyms]  [k] do_mmap
+       0.00%                                       [do_mmap+262 -> do_mmap+299]    0                     [kernel.kallsyms]  [k] do_mmap
+       0.00%         [__x86_indirect_thunk_r15+0 -> __x86_indirect_thunk_r15+0]    7                     [kernel.kallsyms]  [k] __x86_indirect_thunk_r15
+       0.00%                   [native_sched_clock+0 -> native_sched_clock+119]   -1  ± 38.5% ▄█▁        [kernel.kallsyms]  [k] native_sched_clock
+       0.00%                        [native_write_msr+0 -> native_write_msr+16]  -13  ± 47.1% ▁█▇▃▁▁     [kernel.kallsyms]  [k] native_write_msr
+
+ v8:
+ ---
+ Rebase to perf/core branch
+
+ v7:
+ ---
+ 1. v6 got Jiri's ACK.
+ 2. Rebase to latest perf/core branch.
+
+ v6:
+ ---
+ 1. Jiri provides better code for using data__hpp_register() in ui_init().
+    Use this code in v6.
+
+ v5:
+ ---
+ 1. Refine the use of data__hpp_register() in ui_init() according to
+    Jiri's suggestion.
+
+ v4:
+ ---
+ 1. Rename the new option from '--noisy' to '--cycles-hist'
+ 2. Remove the option '-n'.
+ 3. Only update the spark value and stats when '--cycles-hist' is enabled.
+ 4. Remove the code of printing '..'.
+
+ v3:
+ ---
+ 1. Move the histogram to a separate column
+ 2. Move the svals[] out of struct stats
+
+ v2:
+ ---
+ Jiri got a compile error,
+
+  CC       builtin-diff.o
+  builtin-diff.c: In function ‘compute_cycles_diff’:
+  builtin-diff.c:712:10: error: taking the absolute value of unsigned type ‘u64’ {aka ‘long unsigned int’} has no effect [-Werror=absolute-value]
+  712 |          labs(pair->block_info->cycles_spark[i] -
+      |          ^~~~
+
+ Because the result of u64 - u64 is still u64. Now we change the type of
+ cycles_spark[] to s64.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/Documentation/perf-diff.txt |   5 +
+ tools/perf/builtin-diff.c              | 143 +++++++++++++++++++++++++
+ tools/perf/util/Build                  |   1 +
+ tools/perf/util/annotate.c             |   4 +
+ tools/perf/util/annotate.h             |   2 +
+ tools/perf/util/sort.h                 |   4 +
+ tools/perf/util/spark.c                |  34 ++++++
+ tools/perf/util/spark.h                |   8 ++
+ tools/perf/util/symbol.h               |   2 +
+ 9 files changed, 203 insertions(+)
+ create mode 100644 tools/perf/util/spark.c
+ create mode 100644 tools/perf/util/spark.h
+
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index d5cc15e651cf..f50ca0fef0a4 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -95,6 +95,11 @@ OPTIONS
+         diff.compute config option.  See COMPARISON METHODS section for
+         more info.
+ 
++--cycles-hist::
++	Report a histogram and the standard deviation for cycles data.
++	It can help us to judge if the reported cycles data is noisy or
++	not. This option should be used with '-c cycles'.
++
+ -p::
+ --period::
+         Show period values for both compared hist entries.
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index c37a78677955..5281629c27b1 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -23,6 +23,7 @@
+ #include "util/time-utils.h"
+ #include "util/annotate.h"
+ #include "util/map.h"
++#include "util/spark.h"
+ #include <linux/err.h>
+ #include <linux/zalloc.h>
+ #include <subcmd/pager.h>
+@@ -53,6 +54,7 @@ enum {
+ 	PERF_HPP_DIFF__FORMULA,
+ 	PERF_HPP_DIFF__DELTA_ABS,
+ 	PERF_HPP_DIFF__CYCLES,
++	PERF_HPP_DIFF__CYCLES_HIST,
+ 
+ 	PERF_HPP_DIFF__MAX_INDEX
+ };
+@@ -87,6 +89,7 @@ static bool force;
+ static bool show_period;
+ static bool show_formula;
+ static bool show_baseline_only;
++static bool cycles_hist;
+ static unsigned int sort_compute = 1;
+ 
+ static s64 compute_wdiff_w1;
+@@ -164,6 +167,10 @@ static struct header_column {
+ 	[PERF_HPP_DIFF__CYCLES] = {
+ 		.name  = "[Program Block Range] Cycles Diff",
+ 		.width = 70,
++	},
++	[PERF_HPP_DIFF__CYCLES_HIST] = {
++		.name  = "stddev/Hist",
++		.width = NUM_SPARKS + 9,
+ 	}
+ };
+ 
+@@ -610,6 +617,9 @@ static void init_block_info(struct block_info *bi, struct symbol *sym,
+ 	bi->cycles_aggr = ch->cycles_aggr;
+ 	bi->num = ch->num;
+ 	bi->num_aggr = ch->num_aggr;
++
++	memcpy(bi->cycles_spark, ch->cycles_spark,
++	       NUM_SPARKS * sizeof(u64));
+ }
+ 
+ static int process_block_per_sym(struct hist_entry *he)
+@@ -689,6 +699,21 @@ static struct hist_entry *get_block_pair(struct hist_entry *he,
+ 	return NULL;
+ }
+ 
++static void init_spark_values(unsigned long *svals, int num)
++{
++	for (int i = 0; i < num; i++)
++		svals[i] = 0;
++}
++
++static void update_spark_value(unsigned long *svals, int num,
++			       struct stats *stats, u64 val)
++{
++	int n = stats->n;
++
++	if (n < num)
++		svals[n] = val;
++}
++
+ static void compute_cycles_diff(struct hist_entry *he,
+ 				struct hist_entry *pair)
+ {
+@@ -697,6 +722,26 @@ static void compute_cycles_diff(struct hist_entry *he,
+ 		pair->diff.cycles =
+ 			pair->block_info->cycles_aggr / pair->block_info->num_aggr -
+ 			he->block_info->cycles_aggr / he->block_info->num_aggr;
++
++		if (!cycles_hist)
++			return;
++
++		init_stats(&pair->diff.stats);
++		init_spark_values(pair->diff.svals, NUM_SPARKS);
++
++		for (int i = 0; i < pair->block_info->num; i++) {
++			u64 val;
++
++			if (i >= he->block_info->num || i >= NUM_SPARKS)
++				break;
++
++			val = labs(pair->block_info->cycles_spark[i] -
++				     he->block_info->cycles_spark[i]);
++
++			update_spark_value(pair->diff.svals, NUM_SPARKS,
++					   &pair->diff.stats, val);
++			update_stats(&pair->diff.stats, val);
++		}
+ 	}
+ }
+ 
+@@ -1255,6 +1300,9 @@ static const struct option options[] = {
+ 		    "Show period values."),
+ 	OPT_BOOLEAN('F', "formula", &show_formula,
+ 		    "Show formula."),
++	OPT_BOOLEAN(0, "cycles-hist", &cycles_hist,
++		    "Show cycles histogram and standard deviation "
++		    "- WARNING: use only with -c cycles."),
+ 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
+ 		    "dump raw trace in ASCII"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+@@ -1462,6 +1510,90 @@ static int hpp__color_cycles(struct perf_hpp_fmt *fmt,
+ 	return __hpp__color_compare(fmt, hpp, he, COMPUTE_CYCLES);
+ }
+ 
++static int all_zero(unsigned long *vals, int len)
++{
++	int i;
++
++	for (i = 0; i < len; i++)
++		if (vals[i] != 0)
++			return 0;
++	return 1;
++}
++
++static int print_cycles_spark(char *bf, int size, unsigned long *svals, u64 n)
++{
++	int printed;
++
++	if (n <= 1)
++		return 0;
++
++	if (n > NUM_SPARKS)
++		n = NUM_SPARKS;
++	if (all_zero(svals, n))
++		return 0;
++
++	printed = print_spark(bf, size, svals, n);
++	printed += scnprintf(bf + printed, size - printed, " ");
++	return printed;
++}
++
++static int hpp__color_cycles_hist(struct perf_hpp_fmt *fmt,
++			    struct perf_hpp *hpp, struct hist_entry *he)
++{
++	struct diff_hpp_fmt *dfmt =
++		container_of(fmt, struct diff_hpp_fmt, fmt);
++	struct hist_entry *pair = get_pair_fmt(he, dfmt);
++	struct block_hist *bh = container_of(he, struct block_hist, he);
++	struct block_hist *bh_pair;
++	struct hist_entry *block_he;
++	char spark[32], buf[128];
++	double r;
++	int ret, pad;
++
++	if (!pair) {
++		if (bh->block_idx)
++			hpp->skip = true;
++
++		goto no_print;
++	}
++
++	bh_pair = container_of(pair, struct block_hist, he);
++
++	block_he = hists__get_entry(&bh_pair->block_hists, bh->block_idx);
++	if (!block_he) {
++		hpp->skip = true;
++		goto no_print;
++	}
++
++	ret = print_cycles_spark(spark, sizeof(spark), block_he->diff.svals,
++				 block_he->diff.stats.n);
++
++	r = rel_stddev_stats(stddev_stats(&block_he->diff.stats),
++			     avg_stats(&block_he->diff.stats));
++
++	if (ret) {
++		/*
++		 * Padding spaces if number of sparks less than NUM_SPARKS
++		 * otherwise the output is not aligned.
++		 */
++		pad = NUM_SPARKS - ((ret - 1) / 3);
++		scnprintf(buf, sizeof(buf), "%s%5.1f%% %s", "\u00B1", r, spark);
++		ret = scnprintf(hpp->buf, hpp->size, "%*s",
++				dfmt->header_width, buf);
++
++		if (pad) {
++			ret += scnprintf(hpp->buf + ret, hpp->size - ret,
++					 "%-*s", pad, " ");
++		}
++
++		return ret;
++	}
++
++no_print:
++	return scnprintf(hpp->buf, hpp->size, "%*s",
++			dfmt->header_width, " ");
++}
++
+ static void
+ hpp__entry_unpair(struct hist_entry *he, int idx, char *buf, size_t size)
+ {
+@@ -1667,6 +1799,10 @@ static void data__hpp_register(struct data__file *d, int idx)
+ 		fmt->color = hpp__color_cycles;
+ 		fmt->sort  = hist_entry__cmp_nop;
+ 		break;
++	case PERF_HPP_DIFF__CYCLES_HIST:
++		fmt->color = hpp__color_cycles_hist;
++		fmt->sort  = hist_entry__cmp_nop;
++		break;
+ 	default:
+ 		fmt->sort  = hist_entry__cmp_nop;
+ 		break;
+@@ -1692,10 +1828,14 @@ static int ui_init(void)
+ 		 *   PERF_HPP_DIFF__DELTA
+ 		 *   PERF_HPP_DIFF__RATIO
+ 		 *   PERF_HPP_DIFF__WEIGHTED_DIFF
++		 *   PERF_HPP_DIFF__CYCLES
+ 		 */
+ 		data__hpp_register(d, i ? compute_2_hpp[compute] :
+ 					  PERF_HPP_DIFF__BASELINE);
+ 
++		if (cycles_hist && i)
++			data__hpp_register(d, PERF_HPP_DIFF__CYCLES_HIST);
++
+ 		/*
+ 		 * And the rest:
+ 		 *
+@@ -1850,6 +1990,9 @@ int cmd_diff(int argc, const char **argv)
+ 	if (quiet)
+ 		perf_quiet_option();
+ 
++	if (cycles_hist && (compute != COMPUTE_CYCLES))
++		usage_with_options(diff_usage, options);
++
+ 	symbol__annotation_init();
+ 
+ 	if (symbol__init(NULL) < 0)
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index fd89d6a8cd65..fb46b6543050 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -93,6 +93,7 @@ perf-y += cloexec.o
+ perf-y += call-path.o
+ perf-y += rwsem.o
+ perf-y += thread-stack.o
++perf-y += spark.o
+ perf-$(CONFIG_AUXTRACE) += auxtrace.o
+ perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+ perf-$(CONFIG_AUXTRACE) += intel-pt.o
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 69d0a1991b29..5146d037b91e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -853,6 +853,10 @@ static int __symbol__account_cycles(struct cyc_hist *ch,
+ 			   ch[offset].start < start)
+ 			return 0;
+ 	}
++
++	if (ch[offset].num < NUM_SPARKS)
++		ch[offset].cycles_spark[ch[offset].num] = cycles;
++
+ 	ch[offset].have_start = have_start;
+ 	ch[offset].start = start;
+ 	ch[offset].cycles += cycles;
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index d94be9140e31..7776ff4480af 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -11,6 +11,7 @@
+ #include <pthread.h>
+ #include <asm/bug.h>
+ #include "symbol_conf.h"
++#include "spark.h"
+ 
+ struct hist_browser_timer;
+ struct hist_entry;
+@@ -235,6 +236,7 @@ struct cyc_hist {
+ 	u64	cycles_aggr;
+ 	u64	cycles_max;
+ 	u64	cycles_min;
++	s64	cycles_spark[NUM_SPARKS];
+ 	u32	num;
+ 	u32	num_aggr;
+ 	u8	have_start;
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 7b93f34ac1f4..5aff9542d9b7 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -10,6 +10,8 @@
+ #include "callchain.h"
+ #include "values.h"
+ #include "hist.h"
++#include "stat.h"
++#include "spark.h"
+ 
+ struct option;
+ struct thread;
+@@ -71,6 +73,8 @@ struct hist_entry_diff {
+ 		/* PERF_HPP_DIFF__CYCLES */
+ 		s64	cycles;
+ 	};
++	struct stats	stats;
++	unsigned long	svals[NUM_SPARKS];
+ };
+ 
+ struct hist_entry_ops {
+diff --git a/tools/perf/util/spark.c b/tools/perf/util/spark.c
+new file mode 100644
+index 000000000000..70272a8b81a6
+--- /dev/null
++++ b/tools/perf/util/spark.c
+@@ -0,0 +1,34 @@
++#include <stdio.h>
++#include <limits.h>
++#include <string.h>
++#include <stdlib.h>
++#include "spark.h"
++#include "stat.h"
++
++#define SPARK_SHIFT 8
++
++/* Print spark lines on outf for numval values in val. */
++int print_spark(char *bf, int size, unsigned long *val, int numval)
++{
++	static const char *ticks[NUM_SPARKS] = {
++		"▁",  "▂", "▃", "▄", "▅", "▆", "▇", "█"
++	};
++	int i, printed = 0;
++	unsigned long min = ULONG_MAX, max = 0, f;
++
++	for (i = 0; i < numval; i++) {
++		if (val[i] < min)
++			min = val[i];
++		if (val[i] > max)
++			max = val[i];
++	}
++	f = ((max - min) << SPARK_SHIFT) / (NUM_SPARKS - 1);
++	if (f < 1)
++		f = 1;
++	for (i = 0; i < numval; i++) {
++		printed += scnprintf(bf + printed, size - printed, "%s",
++				     ticks[((val[i] - min) << SPARK_SHIFT) / f]);
++	}
++
++	return printed;
++}
+diff --git a/tools/perf/util/spark.h b/tools/perf/util/spark.h
+new file mode 100644
+index 000000000000..25402d7d7a64
+--- /dev/null
++++ b/tools/perf/util/spark.h
+@@ -0,0 +1,8 @@
++#ifndef SPARK_H
++#define SPARK_H 1
++
++#define NUM_SPARKS 8
++
++int print_spark(char *bf, int size, unsigned long *val, int numval);
++
++#endif
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 0b0c6b5b1899..cc2a89b99d3d 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -11,6 +11,7 @@
+ #include <stdio.h>
+ #include "path.h"
+ #include "symbol_conf.h"
++#include "spark.h"
+ 
+ #ifdef HAVE_LIBELF_SUPPORT
+ #include <libelf.h>
+@@ -111,6 +112,7 @@ struct block_info {
+ 	u64			end;
+ 	u64			cycles;
+ 	u64			cycles_aggr;
++	s64			cycles_spark[NUM_SPARKS];
+ 	int			num;
+ 	int			num_aggr;
+ 	refcount_t		refcnt;
+-- 
+2.17.1
+
