@@ -2,155 +2,144 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70601C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78872C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452BB20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3826221D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PJGjXs82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbfIYXd3 (ORCPT
+        id S1731971AbfIYXf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:33:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:34348 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731743AbfIYXd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:33:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338911000;
-        Wed, 25 Sep 2019 16:33:27 -0700 (PDT)
-Received: from [172.23.27.158] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 792373F67D;
-        Wed, 25 Sep 2019 16:33:25 -0700 (PDT)
-Subject: Re: [PATCH] arm64: Allow disabling of the compat vDSO
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190925130926.50674-1-catalin.marinas@arm.com>
- <CAKwvOdn2Sf7aAt0zqUUqGY6nXg-C3be7An9amy4tfiNr_8ERJw@mail.gmail.com>
- <20190925170838.GK7042@arrakis.emea.arm.com>
- <CAKwvOd=GcF0Tv2-h0LNMvCzx+tm5skKW1J7P=NTf8xYbmPiOPw@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <868f7611-4f66-7273-a7fd-65a8a6d9216d@arm.com>
-Date:   Thu, 26 Sep 2019 00:35:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAKwvOd=GcF0Tv2-h0LNMvCzx+tm5skKW1J7P=NTf8xYbmPiOPw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 25 Sep 2019 19:35:29 -0400
+Received: from mail-eopbgr1310101.outbound.protection.outlook.com ([40.107.131.101]:37171
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728876AbfIYXf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:35:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ITqXaQc2qgNI7cZlkGn4VO77yr2ZjQO4jdmydvLRZ8Psgh+NlBLCxHWM+EFA2u26wASbLJNh4mEiUpcg2sOnPYBXX3vpAuPgB06N16ZjixOFDx1t/XRfE/fP5CMCS7wyzJHH67o25t6Wky+0WPMwzj/joCTyyN5Q5KEpRZ9J+d4c5m9cfpQe8q9ZVelAfB+BdDRqEIP4J6hiHFjjWcjlKZRRQktiYJOUmuUfQZtNSXD7j7fWErGyFKGhOgtylIwjtM5gAjsUNjVKfVhgNkv+PaQXfNwiLBztzrxr9guU64hgKxB9uk7aFw/c0YhoG7lZEahlMcXZ+bVRvOuWV/2JAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i4piu0DfMGs4Dz6ShCcCahkWEkVUcxK8oVExZ5c/5oc=;
+ b=XJQO612TX+eHwqMA+N7x583ATHOqAj1ZXwG+ZBSxTaRLLzsYpq94Lo3imdkMjoixMo6GebAJhhelV/c85U+Ig6oSahFvdU49kBmVCblnzgg6xD3GdTGC0BgHmik0CEFlaGUherzAMGWCYagfCzaNTHAAf02fim4KWNtlujaWtM69v0wibmVuzeeJ41rltTAHjvdWZtl5YqcAOiiwT1ievinXrODgJBZxS/5JS0FqqmA5iYcZhtIqBGGF6+BjjFGtqJMiorkA5uMujWVVQIcRlh+/RG273Oj21pkjJW3+xTO46TvpwyNS8RQykC9KbzFiZmxk60NWAxMxpHZbloasnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i4piu0DfMGs4Dz6ShCcCahkWEkVUcxK8oVExZ5c/5oc=;
+ b=PJGjXs82KI3FfT1X7o0bbaK7EsbbrOwYubwXE00+31pJma//i/+P8HZEOJtJ+uka5Qrg+hFolgPXaxwpSbDJ+asdYKXsdCTltKARGTUOl/5GXEfuxWqTmNdVZsylEPiN/xTKvtrT7GvjslVIHXXaZbuGkmvEUugJzY2rTRBDjyA=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.5; Wed, 25 Sep 2019 23:35:18 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 23:35:18 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Topic: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Index: AQHVc/fwSon8M7RoH0Cu+okwDUbU56c9CFiQ
+Date:   Wed, 25 Sep 2019 23:35:18 +0000
+Message-ID: <PU1P153MB0169A28B05A7CDE04A57AA58BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+ <1567723581-29088-4-git-send-email-decui@microsoft.com>
+ <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
+In-Reply-To: <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T23:35:15.9030009Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=47e669de-0e0b-4a54-8f04-fada6bf4e618;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10b12606-6f9f-415f-f5c8-08d74211066e
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB013917B8D55F0EE875F4C1A6BF870@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(10290500003)(52536014)(1511001)(5660300002)(110136005)(478600001)(81166006)(6636002)(2501003)(7416002)(8990500004)(74316002)(7736002)(6246003)(4326008)(316002)(81156014)(8676002)(6116002)(446003)(11346002)(486006)(305945005)(8936002)(2906002)(2201001)(33656002)(476003)(14454004)(55016002)(229853002)(6436002)(86362001)(186003)(99286004)(14444005)(256004)(15650500001)(10090500001)(66946007)(9686003)(66476007)(76116006)(66446008)(64756008)(66556008)(7696005)(102836004)(76176011)(71190400001)(25786009)(71200400001)(53546011)(6506007)(46003)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mUS4uwy2zkmGX23NBnf+TCH+Sfr7yfx0nZtgktVAiVtefr/Ov1sCg72gTIAG13P4cVprtuO68S2cnxYUZeJbBMp/3/4VKp7C9w5gZkyjZ+uAJENJcHcyMYYMMXirN+6cSLJs+BI/mu9ztaxRChDSNlqLlIqc2MRhv8dIrhBoPnJnzYolrEvGf2CAe+dUEVWz5VsUDoid11irdCpe3YgcGMm9e1UyObg50LrWZSWXEKjRqm5aQBG0gbyQwvffZ+FpWtiZ83B94rD4Tvl5V5Tc16kdJhR3uJN+fZtFQOld+/jtSOKpLXA9cJDUfPzZtr09Y39lv7wUg+Oke7lc/kJ/P2PB8NTTxQCPB+hlSZ+/Qhez4sc6wdNyBn0EJ1IGNz1mP2EFTX8zg51e7OVA9ezq+g5YTP1uAXEmWDVTFbKkyTE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10b12606-6f9f-415f-f5c8-08d74211066e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 23:35:18.1629
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: afAzjQ6falO30Mfnrf9zinqS33RwzxnMVSApmwl3cNfvJjDt/BXSLX80X0cTlkxAavAxMi9dUIba8qsAqIXAxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 6:31 PM, Nick Desaulniers wrote:
-> On Wed, Sep 25, 2019 at 10:08 AM Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
->>
->> This is just a temporary hiding of the issue, not a complete fix.
-> 
-> Yep.
-> 
->> Vincenzo will do the fix later on.
-> 
-> Appreciated, I'm happy to help discuss, review, and test.
-> 
->>>> - check whether COMPATCC is clang or not rather than CC_IS_CLANG, which
->>>>   only checks the native compiler
->>>
->>> When cross compiling, IIUC CC_IS_CLANG is referring to CC which is the
->>> cross compiler, which is different than HOSTCC which is the host
->>> compiler.  HOSTCC is used mostly for things in scripts/ while CC is
->>> used to compile a majority of the kernel in a cross compile.
->>
->> We need the third compiler here for the compat vDSO (at least with gcc),
->> COMPATCC. I'm tempted to just drop the CONFIG_CROSS_COMPILE_COMPAT_VDSO
->> altogether and only rely on a COMPATCC. This way we can add
->> COMPATCC_IS_CLANG etc. in the Kconfig checks directly.
-> 
-> Oh, man, yeah 3 compilers in that case:
-> 1. HOSTCC
-> 2. CC
-> 3. COMPATCC
->
-
-The easier way I found to encapsulate the three compilers is using
-CONFIG_CROSS_COMPILE_COMPAT_VDSO, hence I would prefer to not drop it.
-
-In the case of gcc:
--------------------
-
-CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
-
-$(CROSS_COMPILE_COMPAT)gcc ...
-
-In the case of clang:
----------------------
-
-CLANG_TRIPLE ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%-"=%)
-
-clang --target=$(notdir $CLANG_TRIPLE)
-
-This will prevent the vdso32 library generation to depend from a fixed
-configuration that might change in future.
-
-Based on this work we will be able to add COMPAT_CC_IS_CLANG, COMPAT_CC_IS_GCC
-and COMPAT_CC_GCC_VERSION, COMPAT_CC_CLANG_VERSION which will help us in a more
-fine grain control of the compiler versions.
-
-The clang support will be added shortly after the header problems have been
-addressed, because without that and the possibility to have 32bit headers in
-arm64 would result in a broken target.
-
->>
->> If clang can build both 32 and 64-bit with the same binary (just
->> different options), we could maybe have COMPATCC default to CC and add a
->> check on whether COMPATCC generates 32-bit binaries.
-> 
-> Cross compilation work differently between GCC and Clang from a
-> developers perspective. In GCC, at ./configure time you select which
-> architecture you'd like to cross compile for, and you get one binary
-> that targets one architecture.  You get a nice compiler that can do
-> mostly static dispatch at the cost of needing multiple binaries in
-> admittedly rare scenarios like the one we have here.  Clang defaults
-> to all backends enabled when invoking cmake (though there are options
-> to enable certain backends; Sony for instance enables only x86_64 for
-> their PS4 SDK (and thus I break their build frequently with my arm64
-> unit tests)).
-> 
-> Clang can do all of the above with one binary.  The codebase makes
-> heavy use of OOP+virtual dispatch to run ISA specific and general code
-> transformations (virtual dispatch is slower than static dispatch, but
-> relative to what the compiler is actually doing, I suspect the effects
-> are minimal. Folks are also heavily invested in researching
-> "devirtualization").  With one clang binary, I can do:
-> 
-> # implicitly uses the host's ISA, for me that's x86_64-linux-gnu
-> $ clang foo.c
-> $ clang -target aarch64-linux-gnu foo.c
-> $ clang -target arm-linux-gnueabi foo.c
-> 
-> Admittedly, it's not as simple for the kernel's case; the top level
-> Makefile sets some flags to support invoking Clang from a non-standard
-> location, and telling it where to find binutils because we can't
-> assemble the kernel with LLVM's substitute for GAS).
-> 
-
-Thank you for the explanation, if I understand it correctly the strategy
-proposed above should cover all the cased proposed. Please, let me know if i
-need to tweak something.
-
-The plan is to use binutils to build the vdso libraries with both the compilers.
-
--- 
-Regards,
-Vincenzo
+PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4NCj4gU2Vu
+dDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjUsIDIwMTkgNDoyMSBQTQ0KPiBUbzogRGV4dWFuIEN1
+aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT47IGFybmRAYXJuZGIuZGU7IGJwQGFsaWVuOC5kZTsNCj4g
+SGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IGhwYUB6eXRvci5jb207IEtZ
+IFNyaW5pdmFzYW4NCj4gPGt5c0BtaWNyb3NvZnQuY29tPjsgbGludXgtaHlwZXJ2QHZnZXIua2Vy
+bmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbWluZ29AcmVkaGF0LmNv
+bTsgc2FzaGFsQGtlcm5lbC5vcmc7IFN0ZXBoZW4NCj4gSGVtbWluZ2VyIDxzdGhlbW1pbkBtaWNy
+b3NvZnQuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOyB4ODZAa2VybmVsLm9yZzsNCj4gTWljaGFl
+bCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+OyBTYXNoYSBMZXZpbg0KPiA8QWxleGFu
+ZGVyLkxldmluQG1pY3Jvc29mdC5jb20+DQo+IENjOiBsaW51eC1hcmNoQHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMvM10gY2xvY2tzb3VyY2UvZHJpdmVyczogU3Vz
+cGVuZC9yZXN1bWUgSHlwZXItVg0KPiBjbG9ja3NvdXJjZSBmb3IgaGliZXJuYXRpb24NCj4gDQo+
+IE9uIDA2LzA5LzIwMTkgMDA6NDcsIERleHVhbiBDdWkgd3JvdGU6DQo+ID4gVGhpcyBpcyBuZWVk
+ZWQgZm9yIGhpYmVybmF0aW9uLCBlLmcuIHdoZW4gd2UgcmVzdW1lIHRoZSBvbGQga2VybmVsLCB3
+ZSBuZWVkDQo+ID4gdG8gZGlzYWJsZSB0aGUgImN1cnJlbnQiIGtlcm5lbCdzIFRTQyBwYWdlIGFu
+ZCB0aGVuIHJlc3VtZSB0aGUgb2xkIGtlcm5lbCdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+RGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogTWljaGFl
+bCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo+IA0KPiBJIGNhbiB0YWtlIHRoaXMg
+cGF0Y2ggaWYgbmVlZGVkLg0KDQpUaGFua3MsIERhbmllbCEgVXN1YWxseSB0Z2x4IHRha2VzIGNh
+cmUgb2YgdGhlIHBhdGNoZXMsIGJ1dCBpdCBsb29rcyByZWNlbnRseSBoZQ0KbWF5IGJlIHRvbyBi
+dXN5IHRvIGhhbmRsZSB0aGUgMyBwYXRjaGVzLiANCg0KSSBndWVzcyB5b3UgY2FuIHRha2UgdGhl
+IHBhdGNoLCBpZiB0Z2x4IGhhcyBubyBvYmplY3Rpb24uIDotKQ0KSWYgeW91IHRha2UgdGhlIHBh
+dGNoLCBwbGVhc2UgdGFrZSBhbGwgdGhlIDMgcGF0Y2hlcy4NCg0KVGhhbmtzLA0KLS0gRGV4dWFu
+DQo=
