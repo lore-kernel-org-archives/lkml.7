@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EEDC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA47C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF31214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C153214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 17:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392204AbfIYRAT (ORCPT
+        id S2392246AbfIYRAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 13:00:19 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:11662 "EHLO mx2.mailbox.org"
+        Wed, 25 Sep 2019 13:00:22 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:11874 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440084AbfIYRAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 13:00:17 -0400
+        id S2392184AbfIYRAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 13:00:19 -0400
 Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 5CD2AA1C4D;
-        Wed, 25 Sep 2019 19:00:14 +0200 (CEST)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 7F4CBA215B;
+        Wed, 25 Sep 2019 19:00:17 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp2.mailbox.org ([80.241.60.240])
         by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id R9YPquIgVEuV; Wed, 25 Sep 2019 19:00:10 +0200 (CEST)
+        with ESMTP id thKUZRbKVv89; Wed, 25 Sep 2019 19:00:14 +0200 (CEST)
 From:   Aleksa Sarai <cyphar@cyphar.com>
 To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -41,9 +41,9 @@ Cc:     Aleksa Sarai <cyphar@cyphar.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         libc-alpha@sourceware.org, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/4] clone3: switch to copy_struct_from_user()
-Date:   Wed, 25 Sep 2019 18:59:13 +0200
-Message-Id: <20190925165915.8135-3-cyphar@cyphar.com>
+Subject: [PATCH v1 4/4] perf_event_open: switch to copy_struct_from_user()
+Date:   Wed, 25 Sep 2019 18:59:15 +0200
+Message-Id: <20190925165915.8135-5-cyphar@cyphar.com>
 In-Reply-To: <20190925165915.8135-1-cyphar@cyphar.com>
 References: <20190925165915.8135-1-cyphar@cyphar.com>
 MIME-Version: 1.0
@@ -54,80 +54,82 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The change is very straightforward, and helps unify the syscall
-interface for struct-from-userspace syscalls. Additionally, explicitly
-define CLONE_ARGS_SIZE_VER0 to match the other users of the
-struct-extension pattern.
+interface for struct-from-userspace syscalls.
 
 Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
 ---
- include/uapi/linux/sched.h |  2 ++
- kernel/fork.c              | 34 +++++++---------------------------
- 2 files changed, 9 insertions(+), 27 deletions(-)
+ kernel/events/core.c | 47 +++++++++-----------------------------------
+ 1 file changed, 9 insertions(+), 38 deletions(-)
 
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index b3105ac1381a..0945805982b4 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -47,6 +47,8 @@ struct clone_args {
- 	__aligned_u64 tls;
- };
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0463c1151bae..038ed126bc1b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10498,55 +10498,26 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
+ 	u32 size;
+ 	int ret;
  
-+#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
-+
- /*
-  * Scheduling policies
-  */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 541fd805fb88..a86e3841ee4e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2530,39 +2530,19 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- #ifdef __ARCH_WANT_SYS_CLONE3
- noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
- 					      struct clone_args __user *uargs,
--					      size_t size)
-+					      size_t usize)
- {
-+	int err;
- 	struct clone_args args;
- 
--	if (unlikely(size > PAGE_SIZE))
-+	if (unlikely(usize > PAGE_SIZE))
- 		return -E2BIG;
--
--	if (unlikely(size < sizeof(struct clone_args)))
-+	if (unlikely(usize < CLONE_ARGS_SIZE_VER0))
- 		return -EINVAL;
- 
--	if (unlikely(!access_ok(uargs, size)))
+-	if (!access_ok(uattr, PERF_ATTR_SIZE_VER0))
 -		return -EFAULT;
 -
--	if (size > sizeof(struct clone_args)) {
+-	/*
+-	 * zero the full structure, so that a short copy will be nice.
+-	 */
++	/* Zero the full structure, so that a short copy will be nice. */
+ 	memset(attr, 0, sizeof(*attr));
+ 
+ 	ret = get_user(size, &uattr->size);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (size > PAGE_SIZE)	/* silly large */
+-		goto err_size;
+-
+-	if (!size)		/* abi compat */
++	/* ABI compatibility quirk: */
++	if (!size)
+ 		size = PERF_ATTR_SIZE_VER0;
+-
+-	if (size < PERF_ATTR_SIZE_VER0)
++	if (size < PERF_ATTR_SIZE_VER0 || size > PAGE_SIZE)
+ 		goto err_size;
+ 
+-	/*
+-	 * If we're handed a bigger struct than we know of,
+-	 * ensure all the unknown bits are 0 - i.e. new
+-	 * user-space does not rely on any kernel feature
+-	 * extensions we dont know about yet.
+-	 */
+-	if (size > sizeof(*attr)) {
 -		unsigned char __user *addr;
 -		unsigned char __user *end;
 -		unsigned char val;
 -
--		addr = (void __user *)uargs + sizeof(struct clone_args);
--		end = (void __user *)uargs + size;
+-		addr = (void __user *)uattr + sizeof(*attr);
+-		end  = (void __user *)uattr + size;
 -
 -		for (; addr < end; addr++) {
--			if (get_user(val, addr))
--				return -EFAULT;
+-			ret = get_user(val, addr);
+-			if (ret)
+-				return ret;
 -			if (val)
--				return -E2BIG;
+-				goto err_size;
 -		}
--
--		size = sizeof(struct clone_args);
--	}
--
--	if (copy_from_user(&args, uargs, size))
--		return -EFAULT;
-+	err = copy_struct_from_user(&args, sizeof(args), uargs, usize);
-+	if (err)
-+		return err;
+-		size = sizeof(*attr);
++	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
++	if (ret) {
++		if (ret == -E2BIG)
++			goto err_size;
++		return ret;
+ 	}
  
- 	/*
- 	 * Verify that higher 32bits of exit_signal are unset and that
+-	ret = copy_from_user(attr, uattr, size);
+-	if (ret)
+-		return -EFAULT;
+-
+ 	attr->size = size;
+ 
+ 	if (attr->__reserved_1)
 -- 
 2.23.0
 
