@@ -2,131 +2,85 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E686C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66080C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB4D20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CF321D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:10:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxKTN8lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfIYKJa (ORCPT
+        id S1732624AbfIYKKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:09:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39274 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfIYKJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:09:30 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CCC431A0824;
-        Wed, 25 Sep 2019 12:09:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B6C71A00DD;
-        Wed, 25 Sep 2019 12:09:23 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2FE40402ED;
-        Wed, 25 Sep 2019 18:09:18 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] firmware: imx: Skip return value check for some special SCU firmware APIs
-Date:   Wed, 25 Sep 2019 18:07:46 +0800
-Message-Id: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 25 Sep 2019 06:10:40 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46714 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfIYKKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 06:10:39 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u22so5818987qtq.13;
+        Wed, 25 Sep 2019 03:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QJAwGk6DiGPuEl9vVf9Y57sR48ZzWXO2zIkN7FNDT54=;
+        b=uxKTN8lk1tw7q4BKtlWni5omGg5CksepRgdbb0Y8/fPCjGUk12xHmAkvag8jD+m6y+
+         wDujUC/f4KA/DYatOKT3q1/vM70kArBh26AejVLzBbXQZmDKT7YAGMnNUhXVQGa0MgF6
+         cAJ9vQMyTeAknsaJBXQwc2MaEKFBwu1yhyUT18UUXXz1hU095tWaXFVAvNGs2J3rw4m+
+         +fnIqQhm09JOsVEZ/5bg0qH03P6ecDeaqB5YVWIFui2NHbzs5qH7JHADqvPfAKZMPX+S
+         +7D1hzSITmfNaGWYJtEjG3GGAGLuGks11h7OXREuj3SMzdnKIlEPsaqiA11B9SGTbVEc
+         5JSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QJAwGk6DiGPuEl9vVf9Y57sR48ZzWXO2zIkN7FNDT54=;
+        b=ITQAybLJkB2WEvfwpPquzlwuk+DszXOb43kRmt56rvlZTeagcmUuup1B4JgJ+FfkgW
+         4ec8OzLRQUXuutLTsICDtk4sow7TmQ3DN+CjpeKSqBqMh1AaKwWGabauesb/0479Kufm
+         W/M8YlEnvo1ISR+9My/PY5DQBVhoqy4pI5jvE9Gts/QPAkjlC8SuDxvL1RdKE4puTNGL
+         R9gkX3nRjFMBhhLg3tFC+i+RCfBi2Y8AGi0/PtqXFV3iAL3snozofn6wfMc75R4RoJuk
+         lZFhjK3cQJeY7f/8wDCKewq0/S5uW/GLZ69NyKoVHpWdyc9wzbSKEXcq7PA5cAgq0bL/
+         wdTA==
+X-Gm-Message-State: APjAAAVjacjcvJrd1r5qhXeUvcr4nnuGPg8F91+J5nytAuyThz30KJVi
+        L2U5CNAIOAlTAqLr3gvhpE+7L3G+EdLDP/wFfMg=
+X-Google-Smtp-Source: APXvYqznDQSK+aaA6ZkdljBwkl0tTHX+rs+6dthLZ6KWbbv0oRm88ROn7k3x3V7tl2fIP8pOnHLy68ONiUomuQImPIo=
+X-Received: by 2002:a0c:9846:: with SMTP id e6mr6669660qvd.114.1569406238740;
+ Wed, 25 Sep 2019 03:10:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190923071145.GB2746429@kroah.com> <Pine.LNX.4.44L0.1909231053500.24712-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909231053500.24712-100000@netrider.rowland.org>
+From:   Austin Kim <austindh.kim@gmail.com>
+Date:   Wed, 25 Sep 2019 19:10:33 +0900
+Message-ID: <CADLLry4ZW_jEfgcuAFUkRHZp8=hR9MgwQzKEB9nvJ=H9edwvow@mail.gmail.com>
+Subject: Re: [PATCH] usb: hub: Minor refactoring in usb_hub_init()
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
+        Thinh.Nguyen@synopsys.com, nsaenzjulienne@suse.de,
+        jflat@chromium.org, malat@debian.org,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SCU firmware does NOT always have return value stored in message
-header's function element even the API has response data, those special
-APIs are defined as void function in SCU firmware, so they should be
-treated as return success always.
+> If you really want to fix up this subroutine, you could change the two
+> "return -1" statements.  They should return an appropriate error code,
+> not just -1.
+>
+> Alan Stern
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-	- This patch is based on the patch of https://patchwork.kernel.org/patch/11129553/
----
- drivers/firmware/imx/imx-scu.c | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+Thanks for valuable feedback over the patch.
+If I generate new patch later, let me make sure to contain an
+appropriate error code.
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index 869be7a..ced5b12 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -78,6 +78,11 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] = {
- 	-EIO,	 /* IMX_SC_ERR_FAIL */
- };
- 
-+static const struct imx_sc_rpc_msg whitelist[] = {
-+	{ .svc = IMX_SC_RPC_SVC_MISC, .func = IMX_SC_MISC_FUNC_UNIQUE_ID },
-+	{ .svc = IMX_SC_RPC_SVC_MISC, .func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS },
-+};
-+
- static struct imx_sc_ipc *imx_sc_ipc_handle;
- 
- static inline int imx_sc_to_linux_errno(int errno)
-@@ -157,11 +162,24 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	return 0;
- }
- 
-+static bool imx_scu_call_skip_return_value_check(uint8_t svc, uint8_t func)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(whitelist); i++)
-+		if (svc == whitelist[i].svc &&
-+			func == whitelist[i].func)
-+			return true;
-+
-+	return false;
-+}
-+
- /*
-  * RPC command/response
-  */
- int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
- {
-+	uint8_t saved_svc, saved_func;
- 	struct imx_sc_rpc_msg *hdr;
- 	int ret;
- 
-@@ -171,8 +189,11 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
- 	mutex_lock(&sc_ipc->lock);
- 	reinit_completion(&sc_ipc->done);
- 
--	if (have_resp)
-+	if (have_resp) {
- 		sc_ipc->msg = msg;
-+		saved_svc = ((struct imx_sc_rpc_msg *)msg)->svc;
-+		saved_func = ((struct imx_sc_rpc_msg *)msg)->func;
-+	}
- 	sc_ipc->count = 0;
- 	ret = imx_scu_ipc_write(sc_ipc, msg);
- 	if (ret < 0) {
-@@ -190,7 +211,16 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
- 
- 		/* response status is stored in hdr->func field */
- 		hdr = msg;
--		ret = hdr->func;
-+		/*
-+		 * Some special SCU firmware APIs do NOT have return value
-+		 * in hdr->func, but they do have response data, those special
-+		 * APIs are defined as void function in SCU firmware, so they
-+		 * should be treated as return success always.
-+		 */
-+		if (!imx_scu_call_skip_return_value_check(saved_svc, saved_func))
-+			ret = hdr->func;
-+		else
-+			ret = 0;
- 	}
- 
- out:
--- 
-2.7.4
-
+Thanks,
+Austin Kim
