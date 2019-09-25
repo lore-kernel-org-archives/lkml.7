@@ -2,89 +2,70 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC2C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5979AC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4936320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C6021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569369925;
+	bh=qRxEzXlEBtalKZuXKuvnGDLBT+hKNkBkjvfjq4nsnRo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=rztp5zOt4+eO6wyKuNJ1OYtbaA4txsSYBol0xPYSeWrj7LBrNFSaj27Hy8wUj9jkf
+	 ANfO2wC+fnP8WzJ3rsDuhNGd4tGaZ/a0XRtYRlnuTN7YSpr7EbIP+zxUyedsOP3WGU
+	 4PAk266qYnR8Htf+s0W2yH0OtvT88eTLfxfxzRVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411195AbfIYACS (ORCPT
+        id S2390091AbfIYAFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 20:02:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12839 "EHLO mga03.intel.com"
+        Tue, 24 Sep 2019 20:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411144AbfIYACS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 20:02:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 17:02:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,545,1559545200"; 
-   d="scan'208";a="218812189"
-Received: from wujunyox-mobl3.ger.corp.intel.com (HELO localhost) ([10.249.38.101])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2019 17:02:14 -0700
-Date:   Wed, 25 Sep 2019 03:02:14 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org
-Subject: [GIT PULL] tpmdd fixes for Linux v5.4-rc1
-Message-ID: <20190925000214.GA23372@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726118AbfIYAFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Sep 2019 20:05:23 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.4-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569369923;
+        bh=qRxEzXlEBtalKZuXKuvnGDLBT+hKNkBkjvfjq4nsnRo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=EbMKXNPZA+CjDJmT8Dj/egNa+iYVdGKUkjQheFWHC6DadqL40Zx07FwzoRBpxdyiH
+         rTxmDrehXv3ebU8unAAime9IgxWH8iVUD3ei321fKmAsxpjNQUDtM/kxKvsvBEYPyW
+         Po0VwjUY4GpVg7savctZFO0mGaz7/1Rni5PkmKMU=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <s5hblv9kid0.wl-tiwai@suse.de>
+References: <s5hblv9kid0.wl-tiwai@suse.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <s5hblv9kid0.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ tags/sound-fix-5.4-rc1
+X-PR-Tracked-Commit-Id: f41f900568d9ffd896cc941db7021eb14bd55910
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3cf7487c5de713b706ca2e1f66ec5f9b27fe265a
+Message-Id: <156936992314.955.13581615350699122660.pr-tracker-bot@kernel.org>
+Date:   Wed, 25 Sep 2019 00:05:23 +0000
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+The pull request you sent on Tue, 24 Sep 2019 14:07:39 +0200:
 
-These are bug fixes for bugs found after my v5.4 PR.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.4-rc1
 
-/Jarkko
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3cf7487c5de713b706ca2e1f66ec5f9b27fe265a
 
-The following changes since commit 4c07e2ddab5b6b57dbcb09aedbda1f484d5940cc:
+Thank you!
 
-  Merge tag 'mfd-next-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd (2019-09-23 19:37:49 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20190925
-
-for you to fetch changes up to e13cd21ffd50a07b55dcc4d8c38cedf27f28eaa1:
-
-  tpm: Wrap the buffer from the caller to tpm_buf in tpm_send() (2019-09-25 02:43:57 +0300)
-
-----------------------------------------------------------------
-tpmdd fixes for Linux v5.4
-
-----------------------------------------------------------------
-Denis Efremov (1):
-      MAINTAINERS: keys: Update path to trusted.h
-
-Jarkko Sakkinen (2):
-      selftests/tpm2: Add the missing TEST_FILES assignment
-      tpm: Wrap the buffer from the caller to tpm_buf in tpm_send()
-
-Petr Vorel (1):
-      selftests/tpm2: Add log and *.pyc to .gitignore
-
-Roberto Sassu (1):
-      KEYS: trusted: correctly initialize digests and fix locking issue
-
- MAINTAINERS                           |  2 +-
- drivers/char/tpm/tpm-interface.c      | 23 +++++++++++------------
- security/keys/trusted.c               |  5 +++++
- tools/testing/selftests/.gitignore    |  2 ++
- tools/testing/selftests/tpm2/Makefile |  1 +
- 5 files changed, 20 insertions(+), 13 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
