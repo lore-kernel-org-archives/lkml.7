@@ -2,137 +2,263 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3676C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF03C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0422082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53432082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 07:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442552AbfIYHTG (ORCPT
+        id S2442562AbfIYHTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 25 Sep 2019 03:19:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2715 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2442539AbfIYHTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Sep 2019 03:19:06 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53052 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437009AbfIYHTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 03:19:05 -0400
-Received: from dread.disaster.area (pa49-181-226-196.pa.nsw.optusnet.com.au [49.181.226.196])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id EB1DA361E27;
-        Wed, 25 Sep 2019 17:18:56 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.2)
-        (envelope-from <david@fromorbit.com>)
-        id 1iD1Ze-0000dv-UZ; Wed, 25 Sep 2019 17:18:54 +1000
-Date:   Wed, 25 Sep 2019 17:18:54 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
- writes
-Message-ID: <20190925071854.GC804@dread.disaster.area>
-References: <156896493723.4334.13340481207144634918.stgit@buzz>
- <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
- <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
- <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
- <20190924073940.GM6636@dread.disaster.area>
- <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E191FDD61EC67B132DCD;
+        Wed, 25 Sep 2019 15:19:02 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
+ 15:18:58 +0800
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        <akpm@linux-foundation.org>, <osalvador@suse.de>, <mhocko@suse.co>,
+        <dan.j.williams@intel.com>, <david@redhat.com>, <cai@lca.pw>
+CC:     <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH V3] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+Message-ID: <e836da55-19f7-e505-7f2a-5f790d61b912@huawei.com>
+Date:   Wed, 25 Sep 2019 15:18:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=dRuLqZ1tmBNts2YiI0zFQg==:117 a=dRuLqZ1tmBNts2YiI0zFQg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=J70Eh1EUuV4A:10
-        a=7-415B0cAAAA:8 a=6F92pvpVPx2gsWRY0UYA:9 a=wAJ2GCMRiFgksX7F:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:00:17PM +0300, Konstantin Khlebnikov wrote:
-> On 24/09/2019 10.39, Dave Chinner wrote:
-> > On Mon, Sep 23, 2019 at 06:06:46PM +0300, Konstantin Khlebnikov wrote:
-> > > On 23/09/2019 17.52, Tejun Heo wrote:
-> > > > Hello, Konstantin.
-> > > > 
-> > > > On Fri, Sep 20, 2019 at 10:39:33AM +0300, Konstantin Khlebnikov wrote:
-> > > > > With vm.dirty_write_behind 1 or 2 files are written even faster and
-> > > > 
-> > > > Is the faster speed reproducible?  I don't quite understand why this
-> > > > would be.
-> > > 
-> > > Writing to disk simply starts earlier.
-> > 
-> > Stupid question: how is this any different to simply winding down
-> > our dirty writeback and throttling thresholds like so:
-> > 
-> > # echo $((100 * 1000 * 1000)) > /proc/sys/vm/dirty_background_bytes
-> > 
-> > to start background writeback when there's 100MB of dirty pages in
-> > memory, and then:
-> > 
-> > # echo $((200 * 1000 * 1000)) > /proc/sys/vm/dirty_bytes
-> > 
-> > So that writers are directly throttled at 200MB of dirty pages in
-> > memory?
-> > 
-> > This effectively gives us global writebehind behaviour with a
-> > 100-200MB cache write burst for initial writes.
-> 
-> Global limits affect all dirty pages including memory-mapped and
-> randomly touched. Write-behind aims only into sequential streams.
+sparse_buffer_init() use memblock_alloc_try_nid_raw() to allocate memory
+for page management structure, if memory allocation fails from specified
+node, it will fall back to allocate from other nodes.
 
-There are  apps that do sequential writes via mmap()d files.
-They should do writebehind too, yes?
+Normally, the page management structure will not exceed 2% of the total
+memory, but a large continuous block of allocation is needed. In most
+cases, memory allocation from the specified node will success always,
+but a node memory become highly fragmented will fail. we expect to
+allocate memory base section rather than by allocating a large block of
+memory from other NUMA nodes
 
-> > ANd, really such strict writebehind behaviour is going to cause all
-> > sorts of unintended problesm with filesystems because there will be
-> > adverse interactions with delayed allocation. We need a substantial
-> > amount of dirty data to be cached for writeback for fragmentation
-> > minimisation algorithms to be able to do their job....
-> 
-> I think most sequentially written files never change after close.
+Add memblock_alloc_exact_nid_raw() for this situation, which allocate
+boot memory block on the exact node. If a large contiguous block memory
+allocate fail in sparse_buffer_init(), it will fall back to allocate
+small block memory base section.
 
-There are lots of apps that write zeros to initialise and allocate
-space, then go write real data to them. Database WAL files are
-commonly initialised like this...
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+v2 -> v3:
+ - use "bool exact_nid" instead of "int need_exact_nid"
+ - remove the comment "without panicking"
 
-> Except of knowing final size of huge files (>16Mb in my patch)
-> there should be no difference for delayed allocation.
+v1 -> v2:
+ - use memblock_alloc_exact_nid_raw() rather than using a flag
 
-There is, because you throttle the writes down such that there is
-only 16MB of dirty data in memory. Hence filesystems will only
-typically allocate in 16MB chunks as that's all the delalloc range
-spans.
+ include/linux/memblock.h |  3 +++
+ mm/memblock.c            | 65 ++++++++++++++++++++++++++++++++++++++++--------
+ mm/sparse.c              |  2 +-
+ 3 files changed, 58 insertions(+), 12 deletions(-)
 
-I'm not so concerned for XFS here, because our speculative
-preallocation will handle this just fine, but for ext4 and btrfs
-it's going to interleave the allocate of concurrent streaming writes
-and fragment the crap out of the files.
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index f491690..b38bbef 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -358,6 +358,9 @@ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
+ 					 MEMBLOCK_ALLOC_ACCESSIBLE);
+ }
 
-In general, the smaller you make the individual file writeback
-window, the worse the fragmentation problems gets....
++void *memblock_alloc_exact_nid_raw(phys_addr_t size, phys_addr_t align,
++				 phys_addr_t min_addr, phys_addr_t max_addr,
++				 int nid);
+ void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
+ 				 phys_addr_t min_addr, phys_addr_t max_addr,
+ 				 int nid);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7d4f61a..0de9d83 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1323,12 +1323,13 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+  * @start: the lower bound of the memory region to allocate (phys address)
+  * @end: the upper bound of the memory region to allocate (phys address)
+  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ * @exact_nid: control the allocation fall back to other nodes
+  *
+  * The allocation is performed from memory region limited by
+  * memblock.current_limit if @max_addr == %MEMBLOCK_ALLOC_ACCESSIBLE.
+  *
+- * If the specified node can not hold the requested memory the
+- * allocation falls back to any node in the system
++ * If the specified node can not hold the requested memory and @exact_nid
++ * is zero, the allocation falls back to any node in the system
+  *
+  * For systems with memory mirroring, the allocation is attempted first
+  * from the regions with mirroring enabled and then retried from any
+@@ -1342,7 +1343,8 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
+  */
+ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 					phys_addr_t align, phys_addr_t start,
+-					phys_addr_t end, int nid)
++					phys_addr_t end, int nid,
++					bool exact_nid)
+ {
+ 	enum memblock_flags flags = choose_memblock_flags();
+ 	phys_addr_t found;
+@@ -1365,7 +1367,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 	if (found && !memblock_reserve(found, size))
+ 		goto done;
 
-> Probably write behind could provide hint about streaming pattern:
-> pass something like "MSG_MORE" into writeback call.
+-	if (nid != NUMA_NO_NODE) {
++	if (nid != NUMA_NO_NODE && !exact_nid) {
+ 		found = memblock_find_in_range_node(size, align, start,
+ 						    end, NUMA_NO_NODE,
+ 						    flags);
+@@ -1413,7 +1415,8 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+ 					     phys_addr_t start,
+ 					     phys_addr_t end)
+ {
+-	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE);
++	return memblock_alloc_range_nid(size, align, start, end, NUMA_NO_NODE,
++					false);
+ }
 
-How does that help when we've only got dirty data and block
-reservations up to EOF which is no more than 16MB away?
+ /**
+@@ -1432,7 +1435,7 @@ phys_addr_t __init memblock_phys_alloc_range(phys_addr_t size,
+ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid)
+ {
+ 	return memblock_alloc_range_nid(size, align, 0,
+-					MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++					MEMBLOCK_ALLOC_ACCESSIBLE, nid, false);
+ }
 
-Cheers,
+ /**
+@@ -1442,6 +1445,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+  * @min_addr: the lower bound of the memory region to allocate (phys address)
+  * @max_addr: the upper bound of the memory region to allocate (phys address)
+  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ * @exact_nid: control the allocation fall back to other nodes
+  *
+  * Allocates memory block using memblock_alloc_range_nid() and
+  * converts the returned physical address to virtual.
+@@ -1457,7 +1461,7 @@ phys_addr_t __init memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t ali
+ static void * __init memblock_alloc_internal(
+ 				phys_addr_t size, phys_addr_t align,
+ 				phys_addr_t min_addr, phys_addr_t max_addr,
+-				int nid)
++				int nid, bool exact_nid)
+ {
+ 	phys_addr_t alloc;
 
-Dave.
+@@ -1469,11 +1473,13 @@ static void * __init memblock_alloc_internal(
+ 	if (WARN_ON_ONCE(slab_is_available()))
+ 		return kzalloc_node(size, GFP_NOWAIT, nid);
+
+-	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
++	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid,
++					exact_nid);
+
+ 	/* retry allocation without lower limit */
+ 	if (!alloc && min_addr)
+-		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid);
++		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, nid,
++						exact_nid);
+
+ 	if (!alloc)
+ 		return NULL;
+@@ -1482,6 +1488,43 @@ static void * __init memblock_alloc_internal(
+ }
+
+ /**
++ * memblock_alloc_exact_nid_raw - allocate boot memory block on the exact node
++ * without zeroing memory
++ * @size: size of memory block to be allocated in bytes
++ * @align: alignment of the region and block's size
++ * @min_addr: the lower bound of the memory region from where the allocation
++ *	  is preferred (phys address)
++ * @max_addr: the upper bound of the memory region from where the allocation
++ *	      is preferred (phys address), or %MEMBLOCK_ALLOC_ACCESSIBLE to
++ *	      allocate only from memory limited by memblock.current_limit value
++ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
++ *
++ * Public function, provides additional debug information (including caller
++ * info), if enabled. Does not zero allocated memory.
++ *
++ * Return:
++ * Virtual address of allocated memory block on success, NULL on failure.
++ */
++void * __init memblock_alloc_exact_nid_raw(
++			phys_addr_t size, phys_addr_t align,
++			phys_addr_t min_addr, phys_addr_t max_addr,
++			int nid)
++{
++	void *ptr;
++
++	memblock_dbg("%s: %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa %pS\n",
++		     __func__, (u64)size, (u64)align, nid, &min_addr,
++		     &max_addr, (void *)_RET_IP_);
++
++	ptr = memblock_alloc_internal(size, align,
++					   min_addr, max_addr, nid, true);
++	if (ptr && size > 0)
++		page_init_poison(ptr, size);
++
++	return ptr;
++}
++
++/**
+  * memblock_alloc_try_nid_raw - allocate boot memory block without zeroing
+  * memory and without panicking
+  * @size: size of memory block to be allocated in bytes
+@@ -1512,7 +1555,7 @@ void * __init memblock_alloc_try_nid_raw(
+ 		     &max_addr, (void *)_RET_IP_);
+
+ 	ptr = memblock_alloc_internal(size, align,
+-					   min_addr, max_addr, nid);
++					   min_addr, max_addr, nid, false);
+ 	if (ptr && size > 0)
+ 		page_init_poison(ptr, size);
+
+@@ -1547,7 +1590,7 @@ void * __init memblock_alloc_try_nid(
+ 		     __func__, (u64)size, (u64)align, nid, &min_addr,
+ 		     &max_addr, (void *)_RET_IP_);
+ 	ptr = memblock_alloc_internal(size, align,
+-					   min_addr, max_addr, nid);
++					   min_addr, max_addr, nid, false);
+ 	if (ptr)
+ 		memset(ptr, 0, size);
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 72f010d..1a06471 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -475,7 +475,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+ 	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+ 	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
+ 	sparsemap_buf =
+-		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
++		memblock_alloc_exact_nid_raw(size, PAGE_SIZE,
+ 						addr,
+ 						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 	sparsemap_buf_end = sparsemap_buf + size;
 -- 
-Dave Chinner
-david@fromorbit.com
+2.7.4
+
