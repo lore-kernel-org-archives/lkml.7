@@ -2,96 +2,74 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E55C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616B2C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2812A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F74A21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfIYJlr (ORCPT
+        id S1727851AbfIYJmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:41:47 -0400
-Received: from relay.sw.ru ([185.231.240.75]:50350 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbfIYJlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:41:47 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92.2)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iD3ne-0004yL-1n; Wed, 25 Sep 2019 12:41:30 +0300
-Subject: Re: [PATCH] mm, debug, kasan: save and dump freeing stack trace for
- kasan
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Qian Cai <cai@lca.pw>, Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
- <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
- <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
- <1568297308.19040.5.camel@mtksdccf07>
- <613f9f23-c7f0-871f-fe13-930c35ef3105@suse.cz>
- <79fede05-735b-8477-c273-f34db93fd72b@virtuozzo.com>
- <6d58ce86-b2a4-40af-bf40-c604b457d086@suse.cz>
- <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
- <d98bf550-367d-0744-025a-52307248ec82@suse.cz>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <28e076ed-d4c2-c29d-f0cb-b976e8c0725a@virtuozzo.com>
-Date:   Wed, 25 Sep 2019 12:41:18 +0300
+        Wed, 25 Sep 2019 05:42:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54980 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfIYJmY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:42:24 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 32CE828E2F3
+Subject: Re: [PATCH] drm/rockchip: Add AFBC support
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        Maxime Ripard <mripard@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, nd <nd@arm.com>
+References: <20190923122014.18229-1-andrzej.p@collabora.com>
+ <20190925093913.z4vduybwcokn3awi@DESKTOP-E1NTVVP.localdomain>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <e5fdc7ff-6171-6190-1bca-9f517f69b03c@collabora.com>
+Date:   Wed, 25 Sep 2019 11:42:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <d98bf550-367d-0744-025a-52307248ec82@suse.cz>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190925093913.z4vduybwcokn3awi@DESKTOP-E1NTVVP.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Brian,
 
+W dniu 25.09.2019 o 11:39, Brian Starkey pisze:
+> Hi Andrzej,
+> 
+> Thanks for the patch, it's nice to see another AFBC implementation
+> coming in.
+> 
 
-On 9/23/19 11:20 AM, Vlastimil Babka wrote:
-> On 9/16/19 5:57 PM, Andrey Ryabinin wrote:
->> I'd rather keep all logic in one place, i.e. "if (!page_owner_disabled && (IS_ENABLED(CONFIG_KASAN) || debug_pagealloc_enabled())"
->> With this no changes in early_debug_pagealloc() required and CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y should also work correctly.
-> 
-> OK.
-> 
-> ----8<----
-> 
-> From 7437c43f02682fdde5680fa83e87029f7529e222 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Mon, 16 Sep 2019 11:28:19 +0200
-> Subject: [PATCH] mm, debug, kasan: save and dump freeing stack trace for kasan
-> 
-> The commit "mm, page_owner, debug_pagealloc: save and dump freeing stack trace"
-> enhanced page_owner to also store freeing stack trace, when debug_pagealloc is
-> also enabled. KASAN would also like to do this [1] to improve error reports to
-> debug e.g. UAF issues. This patch therefore introduces a helper config option
-> PAGE_OWNER_FREE_STACK, which is enabled when PAGE_OWNER and either of
-> DEBUG_PAGEALLOC or KASAN is enabled. Boot-time, the free stack saving is
-> enabled when booting a KASAN kernel with page_owner=on, or non-KASAN kernel
-> with debug_pagealloc=on and page_owner=on.
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=203967
-> 
-> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> Suggested-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Suggested-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
+I did a false start, though. But the work is in progress. Thanks for the review, 
+anyway.
 
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> For future versions, could you please Cc ayan.halder@arm.com? It would
+> have been nice to have someone @arm.com on patches which use/impact
+> Arm modifiers. Sadly I don't know how to make get_maintainer.pl help
+
+Of course.
+
+Andrzej
