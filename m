@@ -2,206 +2,307 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A662FC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1ABC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF2921D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:02:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PhYrdbXF"
+	by mail.kernel.org (Postfix) with ESMTP id 413FB21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393522AbfIYVCh (ORCPT
+        id S2393552AbfIYVE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:02:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37718 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfIYVCh (ORCPT
+        Wed, 25 Sep 2019 17:04:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35416 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393442AbfIYVEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:02:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so196734pfo.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 14:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=7xhrP95QBYJiSF2YxdsM/vyNYpW4G7L9q0PwFgts0Eg=;
-        b=PhYrdbXFW7DxjoTBihqkbscUj3ihaM+7AY9Uko1qzd/uFoRL8eCcWcrRFhuukFI+Oz
-         tHzDS4E8nYIttCuj/nMIfyN+ttt8eZInD6Ld0sgEK6AuJlEQGAUO5CV2x0pMB6curxMS
-         NQeJZM+/oKiZHqo7s+oNvkBKelSGTUnca6lg8=
+        Wed, 25 Sep 2019 17:04:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m7so7187400lji.2;
+        Wed, 25 Sep 2019 14:04:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=7xhrP95QBYJiSF2YxdsM/vyNYpW4G7L9q0PwFgts0Eg=;
-        b=N1i4VHaGlNOZykAcJxm9a+BYfJLA4s8C6ODqUlmUuQyGuW+ld7kXS9xN0FRrRi9tyx
-         472akzd9mXx9744tyQpYjFVCYCnIfnFVpx5mslkwYqlN0ZniZ6KNj8RVCvNZnapd4UZV
-         5jIWR2KLPTTo3k4Pw8KCTUZu3n7NBJXtfBFNUBG5FwiGI7K+Gn/bxiTJoujDI6p26pOi
-         d3MPJDQWLzrDiPPzPQSJ/x15YnDqW+z3foqs0ixs3iYZS707gTCOxSpdh6eQYKEhYCt8
-         sEr8RXIbpUExLenPvIRJwAz5mFhF95Abh3toxEVAO/hoo0hLBGczXw6ryiyDPo1PDasr
-         h5Kw==
-X-Gm-Message-State: APjAAAWDtljf1yw4Pj6LzYLvKjfhjZ4pD+2odSccLeAJrILtVHPxE4NY
-        PXt7kBcdtDMw52qPcjUKj6jVyQ==
-X-Google-Smtp-Source: APXvYqy8enN66HCBAXgdyj2WiN3UN+3QBv7218MOZV3xhCqI5u1BW3NXe4CmUibg81qEWdaXeJbpZA==
-X-Received: by 2002:a17:90a:8c14:: with SMTP id a20mr8916240pjo.45.1569445355367;
-        Wed, 25 Sep 2019 14:02:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p66sm13856502pfg.127.2019.09.25.14.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 14:02:34 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 14:02:33 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?J=E9r=E9mie?= Galarneau 
-        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
-        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
-        akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
-        torvalds@linux-foundation.org
-Subject: [PATCH] audit: Report suspicious O_CREAT usage
-Message-ID: <201909251348.A1542A52@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tPIJe+nuH7nZU/RRcFIuElCRuMYRs87sXSRLU5FwkSw=;
+        b=AEC6nKldX/JUF5ZKPJ3peStZ7WW6gD9TLZ6/2iCGCoUkAxiNWrJLFoejX42Nv+gnen
+         urV9pbPAO/nhZgjNXnYQU+FIs5U60JTeJdgyWf0MCZTHdH7nufkO6ihokaWihAv3WIfF
+         WWYR6fRyG5DIzB5F40gGMH/eQO9K4hX6squ7IofooVcFwvrr+e0aKYxSOD7OB3FbmGIk
+         Srf2c5iRy4dUx2apRCT9/2C08Eqm8utw8eUDmtB2pPiQMEqYbRJVOOfsdSQt6MyUaYNU
+         J/KEb5l0/KVswHsMF0hCIFrUUIn4VUSRQuiSjfstSvcgNUJSo917uqyBWttYOj5sQvjb
+         mgpA==
+X-Gm-Message-State: APjAAAWy4+/tKEKmoCf/iPqD62VRJhb2755U1d6X205LhXQ8/Lhv3wQ3
+        pkL3FGSnIdVy9ddv4E3mJAr85DDYUbvzhStIQIQ=
+X-Google-Smtp-Source: APXvYqyvsFqhUxTietRWpwN+juOayGM8i36gwALJTEobmFnAxVdCjFOepZ+GQdfbcdcXAOzP9AOzS3x7KcSU0gXRcho=
+X-Received: by 2002:a2e:9a89:: with SMTP id p9mr175818lji.131.1569444974857;
+ Wed, 25 Sep 2019 13:56:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20190920135137.10052-1-ricardo@ribalda.com> <20190920135137.10052-2-ricardo@ribalda.com>
+ <20190925081927.55j2rs22ed2evc72@uno.localdomain>
+In-Reply-To: <20190925081927.55j2rs22ed2evc72@uno.localdomain>
+From:   Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Date:   Wed, 25 Sep 2019 22:55:57 +0200
+Message-ID: <CAPybu_0TFBmmWFqSDgskz3iu2mYOdT3VtgUwG=csvSg=SqvqQw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] media: v4l2-core: Implement v4l2_ctrl_new_std_compound
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This renames the very specific audit_log_link_denied() to
-audit_log_path_denied() and adds the AUDIT_* type as an argument. This
-allows for the creation of the new AUDIT_ANOM_CREAT that can be used to
-report the fifo/regular file creation restrictions that were introduced
-in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and
-regular files"). Without this change, discovering that the restriction
-is enabled can be very challenging:
-https://lore.kernel.org/lkml/CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQOdkFq0PA@mail.gmail.com
+Hi Jacopo
 
-Reported-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This is not a complete fix because reporting was broken in commit
-15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
-audit_dummy_context")
-which specifically goes against the intention of these records: they
-should _always_ be reported. If auditing isn't enabled, they should be
-ratelimited.
+Thanks for your review!
 
-Instead of using audit, should this just go back to using
-pr_ratelimited()?
----
- fs/namei.c                 |  7 +++++--
- include/linux/audit.h      |  5 +++--
- include/uapi/linux/audit.h |  1 +
- kernel/audit.c             | 11 ++++++-----
- 4 files changed, 15 insertions(+), 9 deletions(-)
+On Wed, Sep 25, 2019 at 10:18 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Ricardo,
+>
+> On Fri, Sep 20, 2019 at 03:51:31PM +0200, Ricardo Ribalda Delgado wrote:
+> > Currently compound controls do not have a simple way of initializing its
+> > values. This results in ofuscated code with type_ops init.
+> >
+> > This patch introduces a new field on the control with the default value
+> > for the compound control that can be set with the brand new
+> > v4l2_ctrl_new_std_compound function
+> >
+> > Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
+> > Signed-off-by: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-ctrls.c | 50 ++++++++++++++++++++++++----
+> >  include/media/v4l2-ctrls.h           | 22 +++++++++++-
+> >  2 files changed, 64 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 1d8f38824631..219d8aeefa20 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -29,6 +29,8 @@
+> >  #define call_op(master, op) \
+> >       (has_op(master, op) ? master->ops->op(master) : 0)
+> >
+> > +static const union v4l2_ctrl_ptr ptr_null;
+> > +
+> >  /* Internal temporary helper struct, one for each v4l2_ext_control */
+> >  struct v4l2_ctrl_helper {
+> >       /* Pointer to the control reference of the master control */
+> > @@ -1530,7 +1532,10 @@ static void std_init_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+> >       struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+> >       void *p = ptr.p + idx * ctrl->elem_size;
+> >
+> > -     memset(p, 0, ctrl->elem_size);
+> > +     if (ctrl->p_def.p)
+> > +             memcpy(p, ctrl->p_def.p, ctrl->elem_size);
+> > +     else
+> > +             memset(p, 0, ctrl->elem_size);
+> >
+> >       /*
+> >        * The cast is needed to get rid of a gcc warning complaining that
+> > @@ -2354,7 +2359,8 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+> >                       s64 min, s64 max, u64 step, s64 def,
+> >                       const u32 dims[V4L2_CTRL_MAX_DIMS], u32 elem_size,
+> >                       u32 flags, const char * const *qmenu,
+> > -                     const s64 *qmenu_int, void *priv)
+> > +                     const s64 *qmenu_int, const union v4l2_ctrl_ptr p_def,
+> > +                     void *priv)
+> >  {
+> >       struct v4l2_ctrl *ctrl;
+> >       unsigned sz_extra;
+> > @@ -2460,6 +2466,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+> >                is_array)
+> >               sz_extra += 2 * tot_ctrl_size;
+> >
+> > +     if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p)
+> > +             sz_extra += elem_size;
+> > +
+>
+> I'm not sure I get how sz_extra is used in this function and what's
+> its purpose, just be aware that the previous if() condition already
+>
+>         sz_extra += 2 * tot_ctrl_size
+>
+> for compound controls.
+>
+> Are you just making space for the new p_def elements ? Should't you
+> then use tot_cltr_size ? In patch 3 you add support for AREA which has
+> a single element, but could p_def in future transport multiple values?
+>
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 671c3c1a3425..0e60f81e1d5a 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -925,7 +925,7 @@ static inline int may_follow_link(struct nameidata *nd)
- 		return -ECHILD;
- 
- 	audit_inode(nd->name, nd->stack[0].link.dentry, 0);
--	audit_log_link_denied("follow_link");
-+	audit_log_path_denied(AUDIT_ANOM_LINK, "follow_link");
- 	return -EACCES;
- }
- 
-@@ -993,7 +993,7 @@ static int may_linkat(struct path *link)
- 	if (safe_hardlink_source(inode) || inode_owner_or_capable(inode))
- 		return 0;
- 
--	audit_log_link_denied("linkat");
-+	audit_log_path_denied(AUDIT_ANOM_LINK, "linkat");
- 	return -EPERM;
- }
- 
-@@ -1031,6 +1031,9 @@ static int may_create_in_sticky(struct dentry * const dir,
- 	    (dir->d_inode->i_mode & 0020 &&
- 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
- 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
-+		audit_log_path_denied(AUDIT_ANOM_CREAT,
-+				      S_ISFIFO(inode->i_mode) ? "fifo"
-+							      : "regular");
- 		return -EACCES;
- 	}
- 	return 0;
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index aee3dc9eb378..b3715e2ee1c5 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -156,7 +156,8 @@ extern void		    audit_log_d_path(struct audit_buffer *ab,
- 					     const struct path *path);
- extern void		    audit_log_key(struct audit_buffer *ab,
- 					  char *key);
--extern void		    audit_log_link_denied(const char *operation);
-+extern void		    audit_log_path_denied(int type,
-+						  const char *operation);
- extern void		    audit_log_lost(const char *message);
- 
- extern int audit_log_task_context(struct audit_buffer *ab);
-@@ -217,7 +218,7 @@ static inline void audit_log_d_path(struct audit_buffer *ab,
- { }
- static inline void audit_log_key(struct audit_buffer *ab, char *key)
- { }
--static inline void audit_log_link_denied(const char *string)
-+static inline void audit_log_path_denied(int type, const char *string);
- { }
- static inline int audit_log_task_context(struct audit_buffer *ab)
- {
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index c89c6495983d..3ad935527177 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -143,6 +143,7 @@
- #define AUDIT_ANOM_PROMISCUOUS      1700 /* Device changed promiscuous mode */
- #define AUDIT_ANOM_ABEND            1701 /* Process ended abnormally */
- #define AUDIT_ANOM_LINK		    1702 /* Suspicious use of file links */
-+#define AUDIT_ANOM_CREAT	    1703 /* Suspicious file creation */
- #define AUDIT_INTEGRITY_DATA	    1800 /* Data integrity verification */
- #define AUDIT_INTEGRITY_METADATA    1801 /* Metadata integrity verification */
- #define AUDIT_INTEGRITY_STATUS	    1802 /* Integrity enable status */
-diff --git a/kernel/audit.c b/kernel/audit.c
-index da8dc0db5bd3..ed7402ac81b6 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -2155,18 +2155,19 @@ void audit_log_task_info(struct audit_buffer *ab)
- EXPORT_SYMBOL(audit_log_task_info);
- 
- /**
-- * audit_log_link_denied - report a link restriction denial
-- * @operation: specific link operation
-+ * audit_log_path_denied - report a path restriction denial
-+ * @type: audit message type (AUDIT_ANOM_LINK, AUDIT_ANOM_CREAT, etc)
-+ * @operation: specific operation name
-  */
--void audit_log_link_denied(const char *operation)
-+void audit_log_path_denied(int type, const char *operation)
- {
- 	struct audit_buffer *ab;
- 
- 	if (!audit_enabled || audit_dummy_context())
- 		return;
- 
--	/* Generate AUDIT_ANOM_LINK with subject, operation, outcome. */
--	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_ANOM_LINK);
-+	/* Generate log with subject, operation, outcome. */
-+	ab = audit_log_start(audit_context(), GFP_KERNEL, type);
- 	if (!ab)
- 		return;
- 	audit_log_format(ab, "op=%s", operation);
+I am making space for p_def. I only want to make space for one
+element, because that value will be used for all of them if there is
+an array.
+In case the user wants to provide a different value per element of the
+array he has to provide a function initializer, just like with the not
+compo\
+
+> >       ctrl = kvzalloc(sizeof(*ctrl) + sz_extra, GFP_KERNEL);
+> >       if (ctrl == NULL) {
+> >               handler_set_err(hdl, -ENOMEM);
+> > @@ -2503,6 +2512,12 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+> >               ctrl->p_new.p = &ctrl->val;
+> >               ctrl->p_cur.p = &ctrl->cur.val;
+> >       }
+> > +
+> > +     if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p) {
+> > +             ctrl->p_def.p = ctrl->p_cur.p + tot_ctrl_size;
+> > +             memcpy(ctrl->p_def.p, p_def.p, elem_size);
+> > +     }
+> > +
+> >       for (idx = 0; idx < elems; idx++) {
+> >               ctrl->type_ops->init(ctrl, idx, ctrl->p_cur);
+> >               ctrl->type_ops->init(ctrl, idx, ctrl->p_new);
+> > @@ -2554,7 +2569,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+> >                       type, min, max,
+> >                       is_menu ? cfg->menu_skip_mask : step, def,
+> >                       cfg->dims, cfg->elem_size,
+> > -                     flags, qmenu, qmenu_int, priv);
+> > +                     flags, qmenu, qmenu_int, ptr_null, priv);
+> >       if (ctrl)
+> >               ctrl->is_private = cfg->is_private;
+> >       return ctrl;
+> > @@ -2579,7 +2594,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_std(struct v4l2_ctrl_handler *hdl,
+> >       }
+> >       return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
+> >                            min, max, step, def, NULL, 0,
+> > -                          flags, NULL, NULL, NULL);
+> > +                          flags, NULL, NULL, ptr_null, NULL);
+> >  }
+> >  EXPORT_SYMBOL(v4l2_ctrl_new_std);
+> >
+> > @@ -2612,7 +2627,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu(struct v4l2_ctrl_handler *hdl,
+> >       }
+> >       return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
+> >                            0, max, mask, def, NULL, 0,
+> > -                          flags, qmenu, qmenu_int, NULL);
+> > +                          flags, qmenu, qmenu_int, ptr_null, NULL);
+> >  }
+> >  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu);
+> >
+> > @@ -2644,11 +2659,32 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
+> >       }
+> >       return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
+> >                            0, max, mask, def, NULL, 0,
+> > -                          flags, qmenu, NULL, NULL);
+> > +                          flags, qmenu, NULL, ptr_null, NULL);
+> >
+> >  }
+> >  EXPORT_SYMBOL(v4l2_ctrl_new_std_menu_items);
+> >
+> > +/* Helper function for standard compound controls */
+> > +struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
+> > +                             const struct v4l2_ctrl_ops *ops, u32 id,
+> > +                             const union v4l2_ctrl_ptr p_def)
+> > +{
+> > +     const char *name;
+> > +     enum v4l2_ctrl_type type;
+> > +     u32 flags;
+> > +     s64 min, max, step, def;
+> > +
+> > +     v4l2_ctrl_fill(id, &name, &type, &min, &max, &step, &def, &flags);
+> > +     if (type < V4L2_CTRL_COMPOUND_TYPES) {
+> > +             handler_set_err(hdl, -EINVAL);
+> > +             return NULL;
+> > +     }
+> > +     return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
+> > +                          min, max, step, def, NULL, 0,
+> > +                          flags, NULL, NULL, p_def, NULL);
+> > +}
+> > +EXPORT_SYMBOL(v4l2_ctrl_new_std_compound);
+> > +
+> >  /* Helper function for standard integer menu controls */
+> >  struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+> >                       const struct v4l2_ctrl_ops *ops,
+> > @@ -2669,7 +2705,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_int_menu(struct v4l2_ctrl_handler *hdl,
+> >       }
+> >       return v4l2_ctrl_new(hdl, ops, NULL, id, name, type,
+> >                            0, max, 0, def, NULL, 0,
+> > -                          flags, NULL, qmenu_int, NULL);
+> > +                          flags, NULL, qmenu_int, ptr_null, NULL);
+> >  }
+> >  EXPORT_SYMBOL(v4l2_ctrl_new_int_menu);
+> >
+> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> > index 570ff4b0205a..4b356df850a1 100644
+> > --- a/include/media/v4l2-ctrls.h
+> > +++ b/include/media/v4l2-ctrls.h
+> > @@ -200,6 +200,9 @@ typedef void (*v4l2_ctrl_notify_fnc)(struct v4l2_ctrl *ctrl, void *priv);
+> >   *           not freed when the control is deleted. Should this be needed
+> >   *           then a new internal bitfield can be added to tell the framework
+> >   *           to free this pointer.
+> > + * @p_def:   The control's default value represented via a union which
+> > + *           provides a standard way of accessing control types
+> > + *           through a pointer (for compound controls only).
+> >   * @p_cur:   The control's current value represented via a union which
+> >   *           provides a standard way of accessing control types
+> >   *           through a pointer.
+> > @@ -254,6 +257,7 @@ struct v4l2_ctrl {
+> >               s32 val;
+> >       } cur;
+> >
+> > +     union v4l2_ctrl_ptr p_def;
+> >       union v4l2_ctrl_ptr p_new;
+> >       union v4l2_ctrl_ptr p_cur;
+> >  };
+> > @@ -618,7 +622,6 @@ struct v4l2_ctrl *v4l2_ctrl_new_std(struct v4l2_ctrl_handler *hdl,
+> >  struct v4l2_ctrl *v4l2_ctrl_new_std_menu(struct v4l2_ctrl_handler *hdl,
+> >                                        const struct v4l2_ctrl_ops *ops,
+> >                                        u32 id, u8 max, u64 mask, u8 def);
+> > -
+>
+> This seems unrelated
+
+Good catch!
+>
+> >  /**
+> >   * v4l2_ctrl_new_std_menu_items() - Create a new standard V4L2 menu control
+> >   *   with driver specific menu.
+> > @@ -646,6 +649,23 @@ struct v4l2_ctrl *v4l2_ctrl_new_std_menu_items(struct v4l2_ctrl_handler *hdl,
+> >                                              u64 mask, u8 def,
+> >                                              const char * const *qmenu);
+> >
+> > +/**
+> > + * v4l2_ctrl_new_std_compound() - Allocate and initialize a new standard V4L2
+> > + *      compound control.
+> > + *
+> > + * @hdl:       The control handler.
+> > + * @ops:       The control ops.
+> > + * @id:                The control ID.
+> > + * @p_def:     The control's p_def value.
+>
+> Nit:
+> s/p_def value/default value/ ?
+>
+>
+> Thanks
+>    j
+
+Fixing all and uploading to my github waiting for more reviews :)
+>
+> > + *
+> > + * Sames as v4l2_ctrl_new_std(), but with support to compound controls, thanks
+> > + * to the @p_def field.
+> > + *
+> > + */
+> > +struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
+> > +                             const struct v4l2_ctrl_ops *ops, u32 id,
+> > +                             const union v4l2_ctrl_ptr p_def);
+> > +
+> >  /**
+> >   * v4l2_ctrl_new_int_menu() - Create a new standard V4L2 integer menu control.
+> >   *
+> > --
+> > 2.23.0
+> >
+
+
+
 -- 
-2.17.1
-
-
--- 
-Kees Cook
+Ricardo Ribalda
