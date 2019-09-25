@@ -2,163 +2,138 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7D8C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4207AC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49F22146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A9221D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SkqMrQKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439496AbfIYQAs (ORCPT
+        id S2439699AbfIYQBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:00:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:53198 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfIYQAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:00:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84A591570;
-        Wed, 25 Sep 2019 09:00:47 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 652063F59C;
-        Wed, 25 Sep 2019 09:00:46 -0700 (PDT)
-Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
-To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <20190925151404.23222-1-steven.price@arm.com>
- <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
-Date:   Wed, 25 Sep 2019 17:00:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Sep 2019 12:01:06 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34812 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439511AbfIYQBF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:01:05 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 3so7192238qta.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 09:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wE7o18rA9f1oaiSrLT04Q82HAXBxKMsgWbvymZifnKw=;
+        b=SkqMrQKbTN+NXMJ2fzwQ2PUgrpPvP6OQkXVj50wFBR3F5FBhYZpARNLhaxLZH6kmLi
+         jiDcHfsXu83EX5Q55QCWht3wu/s06SOEQuklc8sNbT5HgRp5hX37KRjPTO1mNl3vYyxv
+         AxDl4WMOwW1U+6mmETKpbNYL6YgFEzEmp+NqGlI14AtFPDO7CPNxvTpDpYoUNdHfznFx
+         J3eujsmn0K4lSAeXb/KANtZyMCaahf7L3ORbNdKTWR/YPomnp/cGwqYWJCnqh29n47Aq
+         RQ7pZBLbQoty6BjCukHTVNSXNxcxClD/SIWrH5ehuJBeQGICooMI7MmKlRWjw41ZVft6
+         4HWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wE7o18rA9f1oaiSrLT04Q82HAXBxKMsgWbvymZifnKw=;
+        b=atMItB+qg/hEMTwP7xSzz8OlqKQDTeBpPhCB/ip/3Z0tJAwsYnmbR/3b793LrkKeR4
+         KKYlRTiIK0humXEmW4/p3CWSYlNs/HsriwVHgEPUcCcMdG81faIrcP0v5Zx/s4BqpZzW
+         l5aJRguzh2FrI0NiNwJ1lUAW2X8a4RvYLqs6GVGlHQQnPSq0+lsrqPN+RYal2XW3gC/P
+         f8tSJ9CE0aIuDNZjYKxUYDmWvamo2T79wLvvDFGI25ufn1XEjTT/KPGN2jTsOD9z+HT6
+         0U7VveqULEvmXTaeKu2kzmp9rLW/i+uyA9NAtlKL/Erlpx9eWGngZbE63uda+G1bU8Bw
+         GJsQ==
+X-Gm-Message-State: APjAAAWnqG0WFo63c77pL95qv4C6+1xQSdbleR9zh+VuN/wl0WhoGoWU
+        bWHRAcRBe06a3LEv+VkCaF9k2g==
+X-Google-Smtp-Source: APXvYqzP1UPwIUGNslKSU1q+gwg/MeyuFYBDOZpmYJumxVb0J/cxQW7zvtSioCviXWbdxxVaKUUJwg==
+X-Received: by 2002:ac8:2c8f:: with SMTP id 15mr9585039qtw.3.1569427264317;
+        Wed, 25 Sep 2019 09:01:04 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t63sm3225912qkf.48.2019.09.25.09.01.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 09:01:03 -0700 (PDT)
+Message-ID: <1569427262.5576.225.camel@lca.pw>
+Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+From:   Qian Cai <cai@lca.pw>
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed, 25 Sep 2019 12:01:02 -0400
+In-Reply-To: <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
+References: <20190924143615.19628-1-david@redhat.com>
+         <1569337401.5576.217.camel@lca.pw> <20190924151147.GB23050@dhcp22.suse.cz>
+         <1569351244.5576.219.camel@lca.pw>
+         <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/09/2019 16:56, Grodzovsky, Andrey wrote:
-> On 9/25/19 11:14 AM, Steven Price wrote:
+On Wed, 2019-09-25 at 09:02 +0200, David Hildenbrand wrote:
+> On 24.09.19 20:54, Qian Cai wrote:
+> > On Tue, 2019-09-24 at 17:11 +0200, Michal Hocko wrote:
+> > > On Tue 24-09-19 11:03:21, Qian Cai wrote:
+> > > [...]
+> > > > While at it, it might be a good time to rethink the whole locking over there, as
+> > > > it right now read files under /sys/kernel/slab/ could trigger a possible
+> > > > deadlock anyway.
+> > > > 
+> > > 
+> > > [...]
+> > > > [  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
+> > > > [  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
+> > > > [  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
+> > > > [  442.469930][ T5224]        lock_acquire+0x31c/0x360
+> > > > [  442.474803][ T5224]        get_online_mems+0x54/0x150
+> > > > [  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
+> > > > [  442.485072][ T5224]        total_objects_show+0x28/0x34
+> > > > [  442.490292][ T5224]        slab_attr_show+0x38/0x54
+> > > > [  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
+> > > > [  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
+> > > > [  442.505433][ T5224]        seq_read+0x30c/0x8a8
+> > > > [  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
+> > > > [  442.515007][ T5224]        __vfs_read+0x88/0x20c
+> > > > [  442.519620][ T5224]        vfs_read+0xd8/0x10c
+> > > > [  442.524060][ T5224]        ksys_read+0xb0/0x120
+> > > > [  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
+> > > > [  442.533634][ T5224]        el0_svc_handler+0x170/0x240
+> > > > [  442.538768][ T5224]        el0_svc+0x8/0xc
+> > > 
+> > > I believe the lock is not really needed here. We do not deallocated
+> > > pgdat of a hotremoved node nor destroy the slab state because an
+> > > existing slabs would prevent hotremove to continue in the first place.
+> > > 
+> > > There are likely details to be checked of course but the lock just seems
+> > > bogus.
+> > 
+> > Check 03afc0e25f7f ("slab: get_online_mems for
+> > kmem_cache_{create,destroy,shrink}"). It actually talk about the races during
+> > memory as well cpu hotplug, so it might even that cpu_hotplug_lock removal is
+> > problematic?
+> > 
 > 
->> drm_sched_cleanup_jobs() attempts to free finished jobs, however because
->> it is called as the condition of wait_event_interruptible() it must not
->> sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
->>
->> Instead let's rename drm_sched_cleanup_jobs() to
->> drm_sched_get_cleanup_job() and simply return a job for processing if
->> there is one. The caller can then call the free_job() callback outside
->> the wait_event_interruptible() where sleeping is possible before
->> re-checking and returning to sleep if necessary.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   drivers/gpu/drm/scheduler/sched_main.c | 44 ++++++++++++++------------
->>   1 file changed, 24 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
->> index 9a0ee74d82dc..0ed4aaa4e6d1 100644
->> --- a/drivers/gpu/drm/scheduler/sched_main.c
->> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
->>   }
->>   
->>   /**
->> - * drm_sched_cleanup_jobs - destroy finished jobs
->> + * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
->>    *
->>    * @sched: scheduler instance
->>    *
->> - * Remove all finished jobs from the mirror list and destroy them.
->> + * Returns the next finished job from the mirror list (if there is one)
->> + * ready for it to be destroyed.
->>    */
->> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
->> +static struct drm_sched_job *
->> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
->>   {
->> +	struct drm_sched_job *job = NULL;
->>   	unsigned long flags;
->>   
->>   	/* Don't destroy jobs while the timeout worker is running */
->>   	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
->>   	    !cancel_delayed_work(&sched->work_tdr))
->> -		return;
->> -
->> -
->> -	while (!list_empty(&sched->ring_mirror_list)) {
->> -		struct drm_sched_job *job;
->> +		return NULL;
->>   
->> -		job = list_first_entry(&sched->ring_mirror_list,
->> +	job = list_first_entry_or_null(&sched->ring_mirror_list,
->>   				       struct drm_sched_job, node);
->> -		if (!dma_fence_is_signaled(&job->s_fence->finished))
->> -			break;
->>   
->> -		spin_lock_irqsave(&sched->job_list_lock, flags);
->> +	spin_lock_irqsave(&sched->job_list_lock, flags);
->> +
->> +	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
->>   		/* remove job from ring_mirror_list */
->>   		list_del_init(&job->node);
->> -		spin_unlock_irqrestore(&sched->job_list_lock, flags);
->> -
->> -		sched->ops->free_job(job);
->> +	} else {
->> +		job = NULL;
->> +		/* queue timeout for next job */
->> +		drm_sched_start_timeout(sched);
->>   	}
->>   
->> -	/* queue timeout for next job */
->> -	spin_lock_irqsave(&sched->job_list_lock, flags);
->> -	drm_sched_start_timeout(sched);
->>   	spin_unlock_irqrestore(&sched->job_list_lock, flags);
->>   
->> +	return job;
->>   }
->>   
->>   /**
->> @@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
->>   		struct drm_sched_fence *s_fence;
->>   		struct drm_sched_job *sched_job;
->>   		struct dma_fence *fence;
->> +		struct drm_sched_job *cleanup_job = NULL;
->>   
->>   		wait_event_interruptible(sched->wake_up_worker,
->> -					 (drm_sched_cleanup_jobs(sched),
->> +					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
->>   					 (!drm_sched_blocked(sched) &&
->>   					  (entity = drm_sched_select_entity(sched))) ||
->> -					 kthread_should_stop()));
->> +					 kthread_should_stop());
-> 
-> 
-> Can't we just call drm_sched_cleanup_jobs right here, remove all the 
-> conditions in wait_event_interruptible (make it always true) and after 
-> drm_sched_cleanup_jobs is called test for all those conditions and 
-> return to sleep if they evaluate to false ? drm_sched_cleanup_jobs is 
-> called unconditionally inside wait_event_interruptible anyway... This is 
-> more of a question to Christian.
+> Which removal are you referring to? get_online_mems() does not mess with
+> the cpu hotplug lock (and therefore this patch).
 
-Christian may know better than me, but I think those conditions need to
-be in wait_event_interruptible() to avoid race conditions. If we simply
-replace all the conditions with a literal "true" then
-wait_event_interruptible() will never actually sleep.
+The one in your patch. I suspect there might be races among the whole NUMA node
+hotplug, kmem_cache_create, and show_slab_objects(). See bfc8c90139eb ("mem-
+hotplug: implement get/put_online_mems")
 
-Steve
+"kmem_cache_{create,destroy,shrink} need to get a stable value of cpu/node
+online mask, because they init/destroy/access per-cpu/node kmem_cache parts,
+which can be allocated or destroyed on cpu/mem hotplug."
+
+Both online_pages() and show_slab_objects() need to get a stable value of
+cpu/node online mask.
