@@ -2,134 +2,236 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B80C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40990C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D392B21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C74720673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jblpeYxK"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FceGiady"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfIYWEG (ORCPT
+        id S1727817AbfIYWEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:04:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43767 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbfIYWEF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:04:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id v2so931111iob.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 15:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rhSXr0xwJou4CoHBVDkYpqEBKlvURobJgoh1V6NDSjs=;
-        b=jblpeYxKQoyJmfsZMCmiDcmuM+FHKLJTEP5QO8aqTtsPSA162GLOOMY3I1QvTVagmR
-         La3h7pZ71pbLo35PzU6woYBU3jvuLcYdgR1/NDzFhZYf/WRwZje7zyIuYHgi28z1703K
-         8nEZ9pnX5ZyvreXvrTK07tJ4OBeo0Dq/fPdMrXnydLlEde3EGaYx+0jhEq2wn7tjgYWM
-         Q+dAosbXaZGoVrsNFmjknJ/M8YTn8mMKQmLadL54FxuQYRXZPyPv4mY5eXhLieCXbtJD
-         s2C7LEcUR65NjG7xXUCtfyBtZOVFAjrza2HtAgB1GaVK/K4bk/U11pAdiSAAi5ZFpm6g
-         k8Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rhSXr0xwJou4CoHBVDkYpqEBKlvURobJgoh1V6NDSjs=;
-        b=epgmO6PIBkHmbSpjkNiu/cKh5zYxMc+1+HwlHddUmc9M2LhX+vFk/8yjNfivTsRBee
-         rxF9F1G4LbFaR0/7tFEx7ZS/uve75yt5/ckvGjCnpfmY9MDc/gJrw63M+OTNZml+wcMv
-         PSWWkDc3wTuK8suQguV8Djz/XBOicgLu0rPWOucY67zMJ8TMGvemtuaYNDmNb1lXnPhH
-         UDJbOzTB2zQLMIh9xoYOyw6UKBl4vQlUF8XvSRHuhADt/5t9vEv9J50iCucyFVpSj85H
-         RrOPh/xNWTwpW7tnnEqNVc0gw6ooJtFJKmvGXROvG6cwNBkJIbpcre9IqT34Uur193K9
-         xRLw==
-X-Gm-Message-State: APjAAAVaEyZXqGh1sz3OtCXXaD17E/vhjGj7fQuknTmiFmhrYHrkL9eZ
-        +kN6wy4HE284netkUOJ9z97ekw==
-X-Google-Smtp-Source: APXvYqy0FhjpHx52fw8cVLnKaT3mISXokIpYLz5tzwz8cwp42mILIHWjKtVz8t1TqzCc2JV+cmz07g==
-X-Received: by 2002:a5e:d817:: with SMTP id l23mr232373iok.142.1569449043502;
-        Wed, 25 Sep 2019 15:04:03 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id t8sm58874ild.7.2019.09.25.15.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 15:04:02 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 16:03:57 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hugh Dickins <hughd@google.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        David Rientjes <rientjes@google.com>,
-        Lance Roy <ldr709@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Aaron Lu <ziqian.lzq@antfin.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        David Hildenbrand <david@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 4/4] mm: remove unnecessary smp_wmb() in
- __SetPageUptodate()
-Message-ID: <20190925220357.GA162930@google.com>
-References: <20190914070518.112954-1-yuzhao@google.com>
- <20190924232459.214097-1-yuzhao@google.com>
- <20190924232459.214097-4-yuzhao@google.com>
- <20190924235036.GA24516@bombadil.infradead.org>
+        Wed, 25 Sep 2019 18:04:09 -0400
+Received: from mail-eopbgr820093.outbound.protection.outlook.com ([40.107.82.93]:56576
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727197AbfIYWEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:04:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G/p0igB1SXmItGZvb2pr2ve3Rk2x16t2n3MR5Ah2KkKgNLWOTnNaCAQDTlfap9RU7/OcnHkVQm7PE4Fud9K+qUZA701e8oZUDcHIV4UHm2eHYV9cWxIGITcb9+wHoD/F4tQ6lsvkCbeJEJSGH9R4TUlRml+SPN7JIxe96VhKXq3RmboKWp+I86xd4/RDT0EWEsvpuPeQ1sAWASc4pfm4kkfBNxJdBMK/UvaBvoDnQ9GtsxO9zdB7GykRC83uM1f2P9GPkOfgOASwLrllryB2ED4YYBZXsyIX3cjernzov/27RosTIcRsI/kpz1Yd5S2S9h4WZ+Ypl+Okv6Alj6R4VA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOr3onUxRcpbq5hwk+0IMExh3ZYH3QBT3khVb05JrnQ=;
+ b=GhCnQexXUBwLJl2b96AOTNaKFbK66Jc1SQEd9Y9cw98DBtbMEigehnyBoq9Ayp4pbceCYjaR4DnxbS8KuDjYkWZJxoOTNmN0fZd+A9xZ22GpoB6TxXr18QJvccs9HlWKRxaa6Q+rmFU9xv4LyPgJLNhs84QG//ae2xCnYx5Nii99BbAUFti1lZ5eE+TaYtD2SWAR1rlceSoTUGZKZZko1O/VMK1slTL/NTNyEcgrquT9c6nlGCL9C3TFJoRaerZjvVFs/qv+ivZyo5T/ozRgw/fuKroSlgbTCEYhxRhl2d31cgMcHEQHao9UpcqrD40KZyQoldpmu8SV4/N6zSdgEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOr3onUxRcpbq5hwk+0IMExh3ZYH3QBT3khVb05JrnQ=;
+ b=FceGiady5cRj7v04KxQb/GFuGKLgDyBLr7OitnoK5h7eWqXMYX9MCMCBRtfH9yhAGDkcOq4/GFU+CX8rqLS2bV7DbJZMXoZ0Z6RVxWhDV1j5bE2LqZyAC0jLcPZOUD22PrF7e6G+z7J4Y3GIcss6FoKK9ymsc0VYS4ILYTpMbh0=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0992.namprd21.prod.outlook.com (52.132.114.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.7; Wed, 25 Sep 2019 22:04:05 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 22:04:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2][PATCH net] hv_netvsc: Add the support of hibernation
+Thread-Topic: [PATCH v2][PATCH net] hv_netvsc: Add the support of hibernation
+Thread-Index: AQHVc+0lDC5AZrZT/kSUmTsZN92eDA==
+Date:   Wed, 25 Sep 2019 22:04:04 +0000
+Message-ID: <1569449034-29924-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR14CA0035.namprd14.prod.outlook.com
+ (2603:10b6:300:12b::21) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ffaa024-c710-401c-3c9b-08d7420447cc
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR2101MB0992:|SN6PR2101MB0992:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <SN6PR2101MB0992D6F74A0767570FF5B256BF870@SN6PR2101MB0992.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 01713B2841
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(40224003)(199004)(189003)(3450700001)(1511001)(22452003)(6436002)(6486002)(3846002)(107886003)(7736002)(4720700003)(6636002)(36756003)(6306002)(6512007)(5660300002)(966005)(4326008)(2501003)(14454004)(6116002)(25786009)(71200400001)(2906002)(10290500003)(71190400001)(110136005)(66556008)(6506007)(386003)(66066001)(102836004)(2616005)(486006)(478600001)(2201001)(86362001)(66446008)(476003)(43066004)(81166006)(52116002)(66476007)(186003)(26005)(66946007)(64756008)(99286004)(305945005)(50226002)(256004)(81156014)(5024004)(10090500001)(8936002)(14444005)(8676002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0992;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HnnZkUtC84Lxvx9W4+gIMSMUfqE6OKpBSBrFvX4mWqtgRUDFP3AfDonV4vy7CzJqLwh6C4jsdylYSVQdUwf4HRjUPrLyckd6hD6Ez82l6Kfm4Y1QGMOwXYgE0cVucbRszGAc+YYmJo8wU5v3nZOTP6IzvGCypTgs1G7zU+s/XMeHmK6jKGKFLT+F9qI8Wn+XkoI/PxP8qMq3c49UoX/x+jdOQ7dkHindIAKfnyVaTQMsPnvzd9KDb4Xuw6bFuO2Wflyra5Zb28nLCi4bSfOn0F0ySZprNS2zfqhK9uvKbw+Et1daQQay6NhTfDoFgfWorZJH/TsEwHPTcpVa0kDnlseNNcyCM+RWqdS8x+sReW6zDCOWBcWUN9A6aVonipJ526Lbt9JGDLjlXScbxjtPBlQgJGLXMFT3lORsiDVOP+G/3l6lAZLM1ZLYvprYC0//huSWWlpxSr0BISW0Z6xTkA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924235036.GA24516@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ffaa024-c710-401c-3c9b-08d7420447cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:04:04.9943
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UX4avhtUsE4H/xSv537oUmahab7P7Aqk1+0Fyxd3/rXyZQ1qTjRuamnBEZ8AWCh5UrU8qvhrCmD362+jbyOUhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0992
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 04:50:36PM -0700, Matthew Wilcox wrote:
-> On Tue, Sep 24, 2019 at 05:24:59PM -0600, Yu Zhao wrote:
-> > +/*
-> > + * Only use this function when there is a following write barrier, e.g.,
-> > + * an explicit smp_wmb() and/or the page will be added to page or swap
-> > + * cache locked.
-> > + */
-> >  static __always_inline void __SetPageUptodate(struct page *page)
-> >  {
-> >  	VM_BUG_ON_PAGE(PageTail(page), page);
-> > -	smp_wmb();
-> >  	__set_bit(PG_uptodate, &page->flags);
-> >  }
-> 
-> Isn't this now the same as __SETPAGEFLAG(uptodate, Uptodate, PF_NO_TAIL)?
+The existing netvsc_detach() and netvsc_attach() APIs make it easy to
+implement the suspend/resume callbacks.
 
-Indeed. I'll use the macro in the next version.
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+This patch is basically a pure Hyper-V specific change. I request this
+patch should go through Sasha's Hyper-V tree rather than the net tree.
+
+Sasha's Hyper-V tree is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+
+Previously there was a dependency on the commit 271b2224d42f ("Drivers:
+hv: vmbus: Implement suspend/resume for VSC drivers for hibernation"),
+which was only on Sasha Levin's Hyper-V tree's hyperv-next branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=3Dh=
+yperv-next
+. Now the patch has been merged into Linus's master tree, but as of now,
+the patch (271b2224d42f) has not appeared in the net.git tree, so IMO
+it's better for this patch to go through the Hyper-V tree. The added
+code in this patch is unlikely to cause a conflict.
+
+In v2:
+    Removed the superfluous "cancel_work_sync(&nvdev->subchan_work)".
+
+    Changed the [PATCH net-next] to [PATCH net] in the Subject, because
+    IMO this is more of a bug fix rather than a new feaure.
+
+    No other change.
+
+ drivers/net/hyperv/hyperv_net.h |  3 ++
+ drivers/net/hyperv/netvsc_drv.c | 57 +++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_ne=
+t.h
+index ecc9af050387..b8763ee4c0d0 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -952,6 +952,9 @@ struct net_device_context {
+ 	u32 vf_alloc;
+ 	/* Serial number of the VF to team with */
+ 	u32 vf_serial;
++
++	/* Used to temporarily save the config info across hibernation */
++	struct netvsc_device_info *saved_netvsc_dev_info;
+ };
+=20
+ /* Per channel data */
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index afdcc5664ea6..53a9451a58a7 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2392,6 +2392,61 @@ static int netvsc_remove(struct hv_device *dev)
+ 	return 0;
+ }
+=20
++static int netvsc_suspend(struct hv_device *dev)
++{
++	struct net_device_context *ndev_ctx;
++	struct net_device *vf_netdev, *net;
++	struct netvsc_device *nvdev;
++	int ret;
++
++	net =3D hv_get_drvdata(dev);
++
++	ndev_ctx =3D netdev_priv(net);
++	cancel_delayed_work_sync(&ndev_ctx->dwork);
++
++	rtnl_lock();
++
++	nvdev =3D rtnl_dereference(ndev_ctx->nvdev);
++	if (nvdev =3D=3D NULL) {
++		ret =3D -ENODEV;
++		goto out;
++	}
++
++	vf_netdev =3D rtnl_dereference(ndev_ctx->vf_netdev);
++	if (vf_netdev)
++		netvsc_unregister_vf(vf_netdev);
++
++	/* Save the current config info */
++	ndev_ctx->saved_netvsc_dev_info =3D netvsc_devinfo_get(nvdev);
++
++	ret =3D netvsc_detach(net, nvdev);
++out:
++	rtnl_unlock();
++
++	return ret;
++}
++
++static int netvsc_resume(struct hv_device *dev)
++{
++	struct net_device *net =3D hv_get_drvdata(dev);
++	struct net_device_context *net_device_ctx;
++	struct netvsc_device_info *device_info;
++	int ret;
++
++	rtnl_lock();
++
++	net_device_ctx =3D netdev_priv(net);
++	device_info =3D net_device_ctx->saved_netvsc_dev_info;
++
++	ret =3D netvsc_attach(net, device_info);
++
++	rtnl_unlock();
++
++	kfree(device_info);
++	net_device_ctx->saved_netvsc_dev_info =3D NULL;
++
++	return ret;
++}
+ static const struct hv_vmbus_device_id id_table[] =3D {
+ 	/* Network guid */
+ 	{ HV_NIC_GUID, },
+@@ -2406,6 +2461,8 @@ static struct  hv_driver netvsc_drv =3D {
+ 	.id_table =3D id_table,
+ 	.probe =3D netvsc_probe,
+ 	.remove =3D netvsc_remove,
++	.suspend =3D netvsc_suspend,
++	.resume =3D netvsc_resume,
+ 	.driver =3D {
+ 		.probe_type =3D PROBE_FORCE_SYNCHRONOUS,
+ 	},
+--=20
+2.19.1
+
