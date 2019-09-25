@@ -2,219 +2,138 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7428BC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA75C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F98620673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AF420673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:26:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rnYUVZzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634083AbfIYI01 (ORCPT
+        id S2634095AbfIYI0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:26:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38164 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390395AbfIYI01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:26:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 544931DCD;
-        Wed, 25 Sep 2019 08:26:26 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AF61167A3;
-        Wed, 25 Sep 2019 08:26:22 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v1] drivers/base/memory.c: Drop the mem_sysfs_mutex
-Date:   Wed, 25 Sep 2019 10:26:21 +0200
-Message-Id: <20190925082621.4927-1-david@redhat.com>
+        Wed, 25 Sep 2019 04:26:30 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54340 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390395AbfIYI03 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:26:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DRbHerM9iFz/oCn53SFE8k+MUPxbTmaLoiDUNBRlp3M=; b=rnYUVZzVhCIRJFlNBHNU4yQ6c
+        nSSiXlUyE8NHe8EwbRiudXxM85s2Eq4Z3XQMo2djwEBzDtmXYif4TXhkMeo0XSfIwO922cPnaDtVr
+        MZsO/09KOVCZerABUxo4USdA/fcZaBOU9T0mYy4fg9cfejBFMSsHPk89ubyTemv6Wt8mvil5k4/f4
+        6XvSQIaVzp9kEGCWvnlwNlJybmuUc5ZjU3r//pGiX3csY66tRhgpdH4PQBM6MA0NuEeuUYfQALVA7
+        pqFLBHD0ZUWcby3aILQ3YAjjx8XKM4mTnavryOTbNNO06Jf8tkYieJ3V8l5hp62jW7niXHip3S7j8
+        oe05RdneA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iD2c9-0001dI-7g; Wed, 25 Sep 2019 08:25:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF4EF302A71;
+        Wed, 25 Sep 2019 10:24:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B8CBD203E5080; Wed, 25 Sep 2019 10:25:30 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 10:25:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hugh Dickins <hughd@google.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Lance Roy <ldr709@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Aaron Lu <ziqian.lzq@antfin.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        David Hildenbrand <david@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 3/4] mm: don't expose non-hugetlb page to fast gup
+ prematurely
+Message-ID: <20190925082530.GD4536@hirez.programming.kicks-ass.net>
+References: <20190914070518.112954-1-yuzhao@google.com>
+ <20190924232459.214097-1-yuzhao@google.com>
+ <20190924232459.214097-3-yuzhao@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 25 Sep 2019 08:26:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924232459.214097-3-yuzhao@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mem_sysfs_mutex isn't really helpful. Also, it's not really clear what
-the mutex protects at all.
+On Tue, Sep 24, 2019 at 05:24:58PM -0600, Yu Zhao wrote:
+> We don't want to expose a non-hugetlb page to the fast gup running
+> on a remote CPU before all local non-atomic ops on the page flags
+> are visible first.
+> 
+> For an anon page that isn't in swap cache, we need to make sure all
+> prior non-atomic ops, especially __SetPageSwapBacked() in
+> page_add_new_anon_rmap(), are ordered before set_pte_at() to prevent
+> the following race:
+> 
+> 	CPU 1				CPU1
+> 	set_pte_at()			get_user_pages_fast()
+> 	  page_add_new_anon_rmap()	  gup_pte_range()
+> 	  __SetPageSwapBacked()		    SetPageReferenced()
+> 
+> This demonstrates a non-fatal scenario. Though haven't been directly
+> observed, the fatal ones can exist, e.g., PG_lock set by fast gup
+> caller and then overwritten by __SetPageSwapBacked().
+> 
+> For an anon page that is already in swap cache or a file page, we
+> don't need smp_wmb() before set_pte_at() because adding to swap or
+> file cach serves as a valid write barrier. Using non-atomic ops
+> thereafter is a bug, obviously.
+> 
+> smp_wmb() is added following 11 of total 12 page_add_new_anon_rmap()
+> call sites, with the only exception being
+> do_huge_pmd_wp_page_fallback() because of an existing smp_wmb().
+> 
 
-The device lists of the memory subsystem are protected separately. We don't
-need that mutex when looking up. creating, or removing independent
-devices. find_memory_block_by_id() will perform locking on its own and
-grab a reference of the returned device.
+I'm thinking this patch make stuff rather fragile.. Should we instead
+stick the barrier in set_p*d_at() instead? Or rather, make that store a
+store-release?
 
-At the time memory_dev_init() is called, we cannot have concurrent
-hot(un)plug operations yet - we're still fairly early during boot. We
-don't need any locking.
-
-The creation/removal of memory block devices should be protected
-on a higher level - especially using the device hotplug lock to avoid
-documented issues (see Documentation/core-api/memory-hotplug.rst) - or
-if that is reworked, using similar locking.
-
-Protecting in the context of these functions only doesn't really make
-sense. Especially, if we would have a situation where the same memory
-blocks are created/deleted at the same time, there is something horribly
-going wrong (imagining adding/removing a DIMM at the same time from two
-call paths) - after the functions succeeded something else in the
-callers would blow up (e.g., create_memory_block_devices() succeeded but
-there are no memory block devices anymore).
-
-All relevant call paths (except when adding memory early during boot
-via ACPI, which is now documented) hold the device hotplug lock when
-adding memory, and when removing memory. Let's document that instead.
-
-Add a simple safety net to create_memory_block_devices() in case we
-would actually remove memory blocks while adding them, so we'll never
-dereference a NULL pointer. Simplify memory_dev_init() now that the
-lock is gone.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-Tested using my usual x86-64 DIMM based hot(un)plug setup.
-
----
- drivers/base/memory.c | 33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6bea4f3f8040..634aab8e1e19 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -19,15 +19,12 @@
- #include <linux/memory.h>
- #include <linux/memory_hotplug.h>
- #include <linux/mm.h>
--#include <linux/mutex.h>
- #include <linux/stat.h>
- #include <linux/slab.h>
- 
- #include <linux/atomic.h>
- #include <linux/uaccess.h>
- 
--static DEFINE_MUTEX(mem_sysfs_mutex);
--
- #define MEMORY_CLASS_NAME	"memory"
- 
- #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
-@@ -702,6 +699,8 @@ static void unregister_memory(struct memory_block *memory)
-  * Create memory block devices for the given memory area. Start and size
-  * have to be aligned to memory block granularity. Memory block devices
-  * will be initialized as offline.
-+ *
-+ * Called under device_hotplug_lock.
-  */
- int create_memory_block_devices(unsigned long start, unsigned long size)
- {
-@@ -715,7 +714,6 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
- 			 !IS_ALIGNED(size, memory_block_size_bytes())))
- 		return -EINVAL;
- 
--	mutex_lock(&mem_sysfs_mutex);
- 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
- 		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
- 		if (ret)
-@@ -727,11 +725,12 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
- 		for (block_id = start_block_id; block_id != end_block_id;
- 		     block_id++) {
- 			mem = find_memory_block_by_id(block_id);
-+			if (WARN_ON_ONCE(!mem))
-+				continue;
- 			mem->section_count = 0;
- 			unregister_memory(mem);
- 		}
- 	}
--	mutex_unlock(&mem_sysfs_mutex);
- 	return ret;
- }
- 
-@@ -739,6 +738,8 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
-  * Remove memory block devices for the given memory area. Start and size
-  * have to be aligned to memory block granularity. Memory block devices
-  * have to be offline.
-+ *
-+ * Called under device_hotplug_lock.
-  */
- void remove_memory_block_devices(unsigned long start, unsigned long size)
- {
-@@ -751,7 +752,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
- 			 !IS_ALIGNED(size, memory_block_size_bytes())))
- 		return;
- 
--	mutex_lock(&mem_sysfs_mutex);
- 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
- 		mem = find_memory_block_by_id(block_id);
- 		if (WARN_ON_ONCE(!mem))
-@@ -760,7 +760,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
- 		unregister_memory_block_under_nodes(mem);
- 		unregister_memory(mem);
- 	}
--	mutex_unlock(&mem_sysfs_mutex);
- }
- 
- /* return true if the memory block is offlined, otherwise, return false */
-@@ -794,12 +793,13 @@ static const struct attribute_group *memory_root_attr_groups[] = {
- };
- 
- /*
-- * Initialize the sysfs support for memory devices...
-+ * Initialize the sysfs support for memory devices. At the time this function
-+ * is called, we cannot have concurrent creation/deletion of memory block
-+ * devices, the device_hotplug_lock is not needed.
-  */
- void __init memory_dev_init(void)
- {
- 	int ret;
--	int err;
- 	unsigned long block_sz, nr;
- 
- 	/* Validate the configured memory block size */
-@@ -810,24 +810,19 @@ void __init memory_dev_init(void)
- 
- 	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
- 	if (ret)
--		goto out;
-+		panic("%s() failed to register subsystem: %d\n", __func__, ret);
- 
- 	/*
- 	 * Create entries for memory sections that were found
- 	 * during boot and have been initialized
- 	 */
--	mutex_lock(&mem_sysfs_mutex);
- 	for (nr = 0; nr <= __highest_present_section_nr;
- 	     nr += sections_per_block) {
--		err = add_memory_block(nr);
--		if (!ret)
--			ret = err;
-+		ret = add_memory_block(nr);
-+		if (ret)
-+			panic("%s() failed to add memory block: %d\n", __func__,
-+			      ret);
- 	}
--	mutex_unlock(&mem_sysfs_mutex);
--
--out:
--	if (ret)
--		panic("%s() failed: %d\n", __func__, ret);
- }
- 
- /**
--- 
-2.21.0
 
