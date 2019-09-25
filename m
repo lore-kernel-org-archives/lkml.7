@@ -2,102 +2,88 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5CDC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0B3C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E4921D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1Wr3dxg"
+	by mail.kernel.org (Postfix) with ESMTP id 7E13A21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438088AbfIYOpx (ORCPT
+        id S2438139AbfIYOrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:45:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35006 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437125AbfIYOpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:45:52 -0400
-Received: by mail-io1-f68.google.com with SMTP id q10so14545776iop.2;
-        Wed, 25 Sep 2019 07:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nAVrJDHIDBra40Uuy+AUfb+6zUJ3+jZrE+iUF3Dk0KI=;
-        b=N1Wr3dxg1K5qGKh0yZEcC9dF1F1gc3gevxYHOg7ybqpWJvAd7y8ymsN0VnXvlNBwAk
-         w/ZMRXwi6Fnc648J/ttWXTwE6meZc2zSY3ipcoQWb30bfajA0VO7zMXEEjlGCWpv8Z9w
-         CN+iitFsXtvoDyYc/+6YsU2KA4OThlhq8XQ8IQIqTepUux0cwtCM91GQox5zpmrVBtTC
-         HpEWxKzYUJkuImrjpaT6ePht9MhCqu+RRfgnriVHHKX14BaV316lo5M0LkR79t++0l8F
-         QveO7RfZrgOau8iD/Ojs+lwxELBAkttFQ/r+0Sqtm+zOEjrrz+pyagX72gS/GmvDiwFk
-         rzqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nAVrJDHIDBra40Uuy+AUfb+6zUJ3+jZrE+iUF3Dk0KI=;
-        b=cdwITw2KLYSCNTrLG5JOv1034qu3bDebQHzuZsWVB8e5gNbu1KklixK2RCTYS0LT0a
-         PPGO7K0JYYEy1IAh3KFbd2331CRWl85CIZeiC9NpzGvGeH9KoO96wIDjw895X9yFGYOV
-         JWKDxfxuCJiAre44gblB9WlYK2shVtkrbWZKsioReh3wZ/ka7aYCB4h4dg4Ir5oKfAq+
-         4B6/xz2uFC6TJLId6zSnbAQH4JUwWCqxJinAkPRa8DEhOCzqIOWMI4fPdK+QXyY8724w
-         ZrjzAZI3uVCmswZitzBUcp/3XGX+Y/qEK9Axm/RmS5Ra2zYvRhMDYF6VqJrnyJ3PWqtC
-         8W+Q==
-X-Gm-Message-State: APjAAAWsBg3a/1h/ajpz/dbVvma0a2z+oKvzI9m2pzpgOq4r0NKcSPll
-        YTq8vCXNYvHRAAuKDEi8JxU=
-X-Google-Smtp-Source: APXvYqwgciqG0jk2Z8tPYToMmFpz6Nd+M5UHoGUHpSWp3wEpe437YXczlA7Ik1I7iOiNMNzkkEBpqw==
-X-Received: by 2002:a02:3f12:: with SMTP id d18mr1897410jaa.39.1569422751853;
-        Wed, 25 Sep 2019 07:45:51 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id v3sm7174457ioh.51.2019.09.25.07.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 07:45:51 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/hfi1: prevent memory leak in sdma_init
-Date:   Wed, 25 Sep 2019 09:45:42 -0500
-Message-Id: <20190925144543.10141-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 25 Sep 2019 10:47:06 -0400
+Received: from mga18.intel.com ([134.134.136.126]:43839 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437125AbfIYOrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:47:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 07:47:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="188798997"
+Received: from kmakows-mobl.ger.corp.intel.com (HELO localhost) ([10.249.39.225])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Sep 2019 07:46:58 -0700
+Date:   Wed, 25 Sep 2019 17:46:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 04/24] x86/cpu/intel: Detect SGX supprt
+Message-ID: <20190925144657.GA23867@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-5-jarkko.sakkinen@linux.intel.com>
+ <20190924161301.GI19317@zn.tnic>
+ <20190924174311.GB16218@linux.intel.com>
+ <20190924182119.GL19317@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924182119.GL19317@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sdma_init if rhashtable_init fails the allocated memory for
-tmp_sdma_rht should be released.
+On Tue, Sep 24, 2019 at 08:21:19PM +0200, Borislav Petkov wrote:
+> On Tue, Sep 24, 2019 at 10:43:11AM -0700, Sean Christopherson wrote:
+> > The intent of running on every CPU is to verify MSR_IA32_FEATURE_CONTROL
+> > is correctly configured on all CPUs.  It's extremely unlikely that
+> > firmware would misconfigure or fail to write the MSR on only APs, but if
+> > that does happen we'll spam dmesg and possibly panic or hang the kernel.
+> > 
+> > The severity of the fallout is why we're being paranoid.  KVM is similarly
+> > paranoid about VMX enabling since it'll BUG() on an unexpected fault due
+> > to a misconfigured FEATURE_CONTROL.
+> 
+> None of that is in the commit message or written anywhere AFAICT. And my
+> crystal ball doesn't show it either so please write down properly why
+> this is needed. Better over the function as a comment I'd say.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/infiniband/hw/hfi1/sdma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Added a remark:
 
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index 2395fd4233a7..2ed7bfd5feea 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -1526,8 +1526,11 @@ int sdma_init(struct hfi1_devdata *dd, u8 port)
- 	}
- 
- 	ret = rhashtable_init(tmp_sdma_rht, &sdma_rht_params);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kfree(tmp_sdma_rht);
- 		goto bail;
-+	}
-+
- 	dd->sdma_rht = tmp_sdma_rht;
- 
- 	dd_dev_info(dd, "SDMA num_sdma: %u\n", dd->num_sdma);
--- 
-2.17.1
+    The check is done for every CPU, not just BSP, in order to verify that
+    MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
+    parts of the kernel, like the enclave driver, expect the same
+    configuration from all CPUs.
 
+I think here is not necessary to go into KVM implementation details to
+make a case for this one. This is just a sane contract/expectation for
+anything using SGX and thus it is better to validate it before anything
+gets to use it.
+
+/Jarkko
