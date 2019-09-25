@@ -2,95 +2,129 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00151C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06CBC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F50205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGVJ2tpP"
+	by mail.kernel.org (Postfix) with ESMTP id 81546222C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439062AbfIYP1y (ORCPT
+        id S2439587AbfIYP27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:27:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46755 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfIYP1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:27:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id c6so14843315ioo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2+zHjBJOK/Ikhp7L/0qx76YfF7Qn9O6VldPJapiJGlI=;
-        b=FGVJ2tpPz/6hyiob5/CLxDUtNIS1KBhHsg6QTIgJ9RdZMdsF7QtzqIj2dUsEmzw8Xp
-         IXB1WrZXpLkCp6jffgW+LDiOymFzysyoTGw2XuDsibzHOCWeFS4yPhcwqhWMqH6eHuEB
-         p799Kbz/UvkUS8MMgYgd3ac6+cXMSSWCmnhpCgFTS8aoH7YihDLoxFc8ZlLz9ISByN68
-         pT+m6U7GChTAranD/5OAOhmtM8Ycq5wfQT5Kf7MZ0tyKugnkC/VmZD4YNvMfDs8bxrnX
-         TOjcLrG2OgNQpS83nZgTI6xG+PmdBe8KJhupOKlV4Ko83qLnEOiCvJRE72+y/x/73hAi
-         BP5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2+zHjBJOK/Ikhp7L/0qx76YfF7Qn9O6VldPJapiJGlI=;
-        b=NJNS86fNscGZmht92p1SUGO8IE4G8kPyTjGE9V3dzwIbavtSKUL32A6AN3meYtfaeL
-         6dxHGTzG+lnpu5YkpTszIEcDi/4bvAMwCHA7zKj9D7TwoJHk1lyeEwFu55vkBCtUKutj
-         qIRLhjWJ4VjM7Zy6EjnK1gBHtPKTS9btdM6jDTxsFOEsHlchLQBuSoFzDkPF4kKOXch8
-         7ISQDWRAi5VZTEqjii5lbhyC/9wXD2tBQ1tbmudbvdJY+LnbhJS1zE3RGgwd0QydeLJq
-         gOKdxq1rRD4r8yFePOtMgp+mqd/79rsPrhN9tz96sNmlwfcFjJHfu1IFonIVle7k8lH8
-         tHrw==
-X-Gm-Message-State: APjAAAXNNNNgx0zKvqf45PsGjLjNCxlNLggmWExmu6NpWEHicDa+ePMq
-        xWIfsiAF4UyyUBez+OKIFeM=
-X-Google-Smtp-Source: APXvYqzp3ccougPfL2l0BTcmUQrF3WVO+YxQ1XS6EjNndJp1/fLSWNtvaA9dSrXYvvcWcOYQShRiRQ==
-X-Received: by 2002:a92:3dd0:: with SMTP id k77mr897317ilf.154.1569425271293;
-        Wed, 25 Sep 2019 08:27:51 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id f5sm4881239ioh.87.2019.09.25.08.27.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 08:27:50 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] misc: fastrpc: prevent memory leak in fastrpc_dma_buf_attach
-Date:   Wed, 25 Sep 2019 10:27:41 -0500
-Message-Id: <20190925152742.16258-1-navid.emamdoost@gmail.com>
+        Wed, 25 Sep 2019 11:28:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20433 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727489AbfIYP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:28:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:28:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
+   d="scan'208";a="196032269"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2019 08:28:57 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH 0/6] Support XSAVES supervisor states
+Date:   Wed, 25 Sep 2019 08:10:16 -0700
+Message-Id: <20190925151022.21688-1-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fastrpc_dma_buf_attach if dma_get_sgtable fails the allocated memory
-for a should be released.
+There are two types of XSAVE-managed states (xstates): user and supervisor.
+This series introduces the supervisor xstate support in preparation for new
+features that will make use of supervisor xstates.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/misc/fastrpc.c | 1 +
- 1 file changed, 1 insertion(+)
+This series has been separated for ease of review from the series that add
+supervisor xstate features [3].
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 47ae84afac2e..1b1a794d639d 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -527,6 +527,7 @@ static int fastrpc_dma_buf_attach(struct dma_buf *dmabuf,
- 			      FASTRPC_PHYS(buffer->phys), buffer->size);
- 	if (ret < 0) {
- 		dev_err(buffer->dev, "failed to get scatterlist from DMA API\n");
-+		kfree(a);
- 		return -EINVAL;
- 	}
- 
+In current and near future generations of Intel processors there are three
+classes of objects that can be managed as supervisor xstates:
+
+- Processor Trace (PT):
+    Linux already supports PT, but PT xstates are not saved to the FPU
+    context and not context-switched by the kernel.  There are no plans to
+    integrate PT into XSAVES supervisor states.
+
+- ENQCMD Process Address Space ID (MSR_IA32_PASID):
+    ENQCMD is a new instruction and will be introduced shortly in a
+    separate series [2].
+
+- Control-flow Enforcement Technology (CET):
+    CET is being reviewed on the LKML [2] [3].
+
+Supervisor xstates can be accessed only from the kernel (PL-0) with XSAVES/
+XRSTORS instructions.  They cannot be accessed with other XSAVE*/XRSTOR*
+instructions.  MSR_IA32_XSS sets enabled supervisor xstates, while XCR0
+sets enabled user xstates.
+
+This series separates the two xstate types by declaring new macros for each
+type.  The kernel finds all available features during system initialization
+and stores them in xfeatures_mask_all.  It then retrieves perspective
+xstate type with xfeatures_mask_supervisor()/xfeatures_mask_user() for
+handling signals and PTRACE.
+
+[1] Detailed information on supervisor xstates can be found in "Intel 64
+    and IA-32 Architectures Software Developer's Manual":
+
+    https://software.intel.com/en-us/download/intel-64-and-ia-32-
+    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+[2] Detailed information on CET, the ENQCMD instruction and MSR_IA32_PASID
+    can be found in "Intel Architecture Instruction Set Extensions and
+    Future Features Programming Reference":
+
+    https://software.intel.com/sites/default/files/managed/c5/15/
+    architecture-instruction-set-extensions-programming-reference.pdf
+
+[3] CET patches:
+
+    https://lkml.kernel.org/r/20190813205225.12032-1-yu-cheng.yu@intel.com/
+    https://lkml.kernel.org/r/20190813205359.12196-1-yu-cheng.yu@intel.com/
+
+Fenghua Yu (3):
+  x86/fpu/xstate: Define new macros for supervisor and user xstates
+  x86/fpu/xstate: Define new functions for clearing fpregs and xstates
+  x86/fpu/xstate: Rename validate_xstate_header() to
+    validate_xstate_header_from_user()
+
+Yu-cheng Yu (3):
+  x86/fpu/xstate: Fix small issues before adding supervisor xstates
+  x86/fpu/xstate: Separate user and supervisor xfeatures mask
+  x86/fpu/xstate: Introduce XSAVES supervisor states
+
+ arch/x86/include/asm/fpu/internal.h |   5 +-
+ arch/x86/include/asm/fpu/xstate.h   |  46 ++++++----
+ arch/x86/kernel/fpu/core.c          |  32 ++++---
+ arch/x86/kernel/fpu/init.c          |   3 +-
+ arch/x86/kernel/fpu/regset.c        |   2 +-
+ arch/x86/kernel/fpu/signal.c        |  21 +++--
+ arch/x86/kernel/fpu/xstate.c        | 131 ++++++++++++++++------------
+ arch/x86/kernel/process.c           |   2 +-
+ arch/x86/kernel/signal.c            |   2 +-
+ 9 files changed, 149 insertions(+), 95 deletions(-)
+
 -- 
 2.17.1
 
