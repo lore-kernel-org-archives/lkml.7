@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AE1C43630
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7F7C4360D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14564205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEDE21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439618AbfIYP3A (ORCPT
+        id S2439644AbfIYP3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:29:00 -0400
+        Wed, 25 Sep 2019 11:29:02 -0400
 Received: from mga03.intel.com ([134.134.136.65]:20433 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbfIYP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:28:59 -0400
+        id S1731748AbfIYP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:29:00 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
   by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 08:28:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
-   d="scan'208";a="196032272"
+   d="scan'208";a="196032282"
 Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2019 08:28:57 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2019 08:28:58 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
@@ -43,9 +43,9 @@ To:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH 1/6] x86/fpu/xstate: Fix small issues before adding supervisor xstates
-Date:   Wed, 25 Sep 2019 08:10:17 -0700
-Message-Id: <20190925151022.21688-2-yu-cheng.yu@intel.com>
+Subject: [PATCH 4/6] x86/fpu/xstate: Introduce XSAVES supervisor states
+Date:   Wed, 25 Sep 2019 08:10:20 -0700
+Message-Id: <20190925151022.21688-5-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190925151022.21688-1-yu-cheng.yu@intel.com>
 References: <20190925151022.21688-1-yu-cheng.yu@intel.com>
@@ -54,68 +54,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In response to earlier comments, fix small issues before introducing XSAVES
-supervisor states:
-- Add spaces around '*'.
-- Fix comments of xfeature_is_supervisor().
-- Replace ((u64)1 << 63) with XCOMP_BV_COMPACTED_FORMAT.
-
-No functional changes from this patch.
+Enable XSAVES supervisor states by setting MSR_IA32_XSS bits according to
+CPUID enumeration results.  Also revise comments at various places.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/fpu/xstate.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ arch/x86/kernel/fpu/xstate.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index e5cb67d67c03..b793fc2156b9 100644
+index b7f2808dd3f4..a183c319d808 100644
 --- a/arch/x86/kernel/fpu/xstate.c
 +++ b/arch/x86/kernel/fpu/xstate.c
-@@ -60,7 +60,7 @@ u64 xfeatures_mask __read_mostly;
+@@ -233,13 +233,14 @@ void fpu__init_cpu_xstate(void)
+ 	 * states can be set here.
+ 	 */
+ 	xsetbv(XCR_XFEATURE_ENABLED_MASK, xfeatures_mask_user());
++
++	/*
++	 * MSR_IA32_XSS sets supervisor states managed by XSAVES.
++	 */
++	if (boot_cpu_has(X86_FEATURE_XSAVES))
++		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
+ }
  
- static unsigned int xstate_offsets[XFEATURE_MAX] = { [ 0 ... XFEATURE_MAX - 1] = -1};
- static unsigned int xstate_sizes[XFEATURE_MAX]   = { [ 0 ... XFEATURE_MAX - 1] = -1};
--static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask)*8];
-+static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask) * 8];
+-/*
+- * Note that in the future we will likely need a pair of
+- * functions here: one for user xstates and the other for
+- * system xstates.  For now, they are the same.
+- */
+ static int xfeature_enabled(enum xfeature xfeature)
+ {
+ 	return !!(xfeatures_mask_all & (1UL << xfeature));
+@@ -623,9 +624,6 @@ static void do_extra_xstate_size_checks(void)
+  * the size of the *user* states.  If we use it to size a buffer
+  * that we use 'XSAVES' on, we could potentially overflow the
+  * buffer because 'XSAVES' saves system states too.
+- *
+- * Note that we do not currently set any bits on IA32_XSS so
+- * 'XCR0 | IA32_XSS == XCR0' for now.
+  */
+ static unsigned int __init get_xsaves_size(void)
+ {
+@@ -748,7 +746,11 @@ void __init fpu__init_system_xstate(void)
+ 	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
+ 	xfeatures_mask_all = eax + ((u64)edx << 32);
+ 
+-	/* Place supervisor features in xfeatures_mask_all here */
++	/*
++	 * Find supervisor xstates supported by the processor.
++	 */
++	cpuid_count(XSTATE_CPUID, 1, &eax, &ebx, &ecx, &edx);
++	xfeatures_mask_all |= ecx + ((u64)edx << 32);
+ 
+ 	if ((xfeatures_mask_user() & XFEATURE_MASK_FPSSE) != XFEATURE_MASK_FPSSE) {
+ 		/*
+@@ -788,9 +790,10 @@ void __init fpu__init_system_xstate(void)
+ 	setup_xstate_comp();
+ 	print_xstate_offset_size();
+ 
+-	pr_info("x86/fpu: Enabled xstate features 0x%llx: user 0x%llx, context size is %d bytes, using '%s' format.\n",
++	pr_info("x86/fpu: Enabled xstate features 0x%llx: user 0x%llx and supervisor %llx, context size is %d bytes, using '%s' format.\n",
+ 		xfeatures_mask_all,
+ 		xfeatures_mask_user(),
++		xfeatures_mask_supervisor(),
+ 		fpu_kernel_xstate_size,
+ 		boot_cpu_has(X86_FEATURE_XSAVES) ? "compacted" : "standard");
+ 	return;
+@@ -810,6 +813,13 @@ void fpu__resume_cpu(void)
+ 	 */
+ 	if (boot_cpu_has(X86_FEATURE_XSAVE))
+ 		xsetbv(XCR_XFEATURE_ENABLED_MASK, xfeatures_mask_user());
++
++	/*
++	 * Restore IA32_XSS. The same CPUID bit enumerates support
++	 * of XSAVES and MSR_IA32_XSS.
++	 */
++	if (boot_cpu_has(X86_FEATURE_XSAVES))
++		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
+ }
  
  /*
-  * The XSAVE area of kernel can be in standard or compacted format;
-@@ -110,12 +110,8 @@ EXPORT_SYMBOL_GPL(cpu_has_xfeatures);
- static int xfeature_is_supervisor(int xfeature_nr)
- {
- 	/*
--	 * We currently do not support supervisor states, but if
--	 * we did, we could find out like this.
--	 *
--	 * SDM says: If state component 'i' is a user state component,
--	 * ECX[0] return 0; if state component i is a supervisor
--	 * state component, ECX[0] returns 1.
-+	 * Extended State Enumeration Sub-leaves (EAX = 0DH, ECX = n, n > 1)
-+	 * returns ECX[0] set to (1) for a supervisor state.
- 	 */
- 	u32 eax, ebx, ecx, edx;
- 
-@@ -342,7 +338,7 @@ static int xfeature_is_aligned(int xfeature_nr)
-  */
- static void __init setup_xstate_comp(void)
- {
--	unsigned int xstate_comp_sizes[sizeof(xfeatures_mask)*8];
-+	unsigned int xstate_comp_sizes[sizeof(xfeatures_mask) * 8];
- 	int i;
- 
- 	/*
-@@ -415,7 +411,8 @@ static void __init setup_init_fpu_buf(void)
- 	print_xstate_features();
- 
- 	if (boot_cpu_has(X86_FEATURE_XSAVES))
--		init_fpstate.xsave.header.xcomp_bv = (u64)1 << 63 | xfeatures_mask;
-+		init_fpstate.xsave.header.xcomp_bv = XCOMP_BV_COMPACTED_FORMAT |
-+						     xfeatures_mask;
- 
- 	/*
- 	 * Init all the features state with header.xfeatures being 0x0
 -- 
 2.17.1
 
