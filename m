@@ -2,104 +2,120 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12E6C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B25C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3ACD21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B06521D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arASj5Yv"
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="fpgGkcR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438783AbfIYPC4 (ORCPT
+        id S2438896AbfIYPDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:02:56 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44698 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731142AbfIYPCz (ORCPT
+        Wed, 25 Sep 2019 11:03:55 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33029 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfIYPDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:02:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so14606376iog.11;
-        Wed, 25 Sep 2019 08:02:53 -0700 (PDT)
+        Wed, 25 Sep 2019 11:03:55 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so7364782wrs.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id;
-        bh=MWyh3PNmOklfeVqzYOrNwzDcAH8lax2jMCGmRDG4urM=;
-        b=arASj5Yv5bqz17U8QZVYbble7TDB5sj0TMbNk56fxz5ejOoHyT3kYbYJ/QtfbbLSs6
-         iEjbcUYxhDqPRDkxpycr9uysp4vVx+usX4dONocnmhwJEwUZNwBO9gxatNe8zkYv3cBV
-         6/zgf3/mu1ElXkjkjabewFHnWgFLNY2bEKtd9Wx3P6FGJyuwNg5dgB8SDQb/2DSr4X9q
-         aUgMqjBas1yw+cOjn/+KzpYS5k6gjQTDGNc4k+SZec43+S+O208YvxdUJ1ivWceNMa90
-         RFPA3kk2XYQIgbJVbmqVTOzfX1l/qDVCb/GHdWaEq3GUolGoF7RGnD3ntqNF7uyElR4g
-         1cfA==
+        bh=vZ1ZsSVj18a6RvTBAEr2379v7Y7nRqSApdj4dC7ZSqE=;
+        b=fpgGkcR6PeJ4SAhhpwKidK9B5w7sjAWVH2wvqRQ4LIvIpIvc3OIBuUlVqThZTJKiK7
+         fVCEL1P8JI82K0B2ELC7DC0ydThjPHvhVQlLkGrU62xtPFw8gDzRqrWD8RRV5klViBv9
+         /8vW5p8ua1TL+cdZLl8K+laWT7dti4mc/tn6j/3e9MxywiUFteLbSq3Ckk2XnbdqwHKa
+         dlQfSFcki5lUItZs92CaKHhfu+ytsPZFLvkDf2IxR3rde0xyPySS2G6SqESIyVwegojF
+         SlcLYuQXlLjm/lTUoyBUR5QtWwpnjoY2mdVeioCbo+4JPG9yrcQNVvDqkWu58MdWD7eG
+         1WMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MWyh3PNmOklfeVqzYOrNwzDcAH8lax2jMCGmRDG4urM=;
-        b=a11vAjMQ8OwRtbrsNLlkXz9P6ewInEp9Y3Yp+tDjNcUdkcFEfckW79Eoc5EIFPd58E
-         KdJncVKoKTHG4PNxbHcjBXFY82d8wYP+gzkfv4Fx5zKfi9ZRj03gupr1tq8kAizI6+QM
-         fQUaDU5Z+kETTNPQx4V9W9WsMituZTsmC3yIjhtyaY9qnvDFpjeIcFi8ityCJ59nqaBs
-         xDkYx9NCUK/ZkRujeIznZ3kaCDvgTxG/PM02POWE8/CEnkaS4oVwMqIJ1WJqRO4cW5Rd
-         ak9LLUKankinb6T5dd1BPeVmOq4MJJnB8OrnMrENhtYgLgCDELF9090hqfpBkv4FW4zN
-         vGOQ==
-X-Gm-Message-State: APjAAAULnVDgP2mQfcWBZXj8JYWYlmhlw/fk0WqZRMbvjRR4s+BO+yLW
-        YtHDvZSJqP12YLMYI6zTrm0=
-X-Google-Smtp-Source: APXvYqwPBH16FuEXUH7rOy3JWTXRjXFzwF9Spfa1QHh9p2MfWd+kBFJthLybBlVk8lVb6Ym4UWB2NA==
-X-Received: by 2002:a5d:8ad4:: with SMTP id e20mr2109019iot.203.1569423773435;
-        Wed, 25 Sep 2019 08:02:53 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id 2sm206447ilw.50.2019.09.25.08.02.52
+        bh=vZ1ZsSVj18a6RvTBAEr2379v7Y7nRqSApdj4dC7ZSqE=;
+        b=HLjNSAC9b51ln7jpVGS9Yg/p5dvto+/F1EaPlBMNc0ZYDykPNUb2ttWp3bC9OeI/FX
+         pbaDI3ylu9QT9C9UXAsfe964C3yj7FvUZDd1VjUVXMKzGFLL9D0ZbQfkBk7XVZ5dxhRL
+         MQacwrtSVSrHR4Rb9PX1IAJsVyE72ahTgP16fM0nurU1f8EbcUxkG9wnk7cKfNm4rz1b
+         Vo7yD1Pk5xzV8+P3pDyUyufWGv81HDKIhV1hCNgWff7a2iI9prihgQJXhI/AXmp2KK6g
+         YD/1kDYHvt/dZHhapuQdNJ+u+Ls/kiOhm8Von/VraAxRWw5SyOWZa3NJK7Mvzrx274g7
+         Z2dA==
+X-Gm-Message-State: APjAAAUohYSk6TrI/9rMWkVTkc+sC2tZl5xgUigwvnz72fVOP5+iXO2D
+        tPi3LYiDrbbmeb6SyeLvrvrOycjZI7Y=
+X-Google-Smtp-Source: APXvYqzLCQRLt3BbVYhAWHnsOxMRH3w0UIVd7l4KMahMn4jJj2c6Dh0Ibh/pMwPIFb/mu1qlUm9Lzw==
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr10600742wrj.269.1569423831754;
+        Wed, 25 Sep 2019 08:03:51 -0700 (PDT)
+Received: from baileys.linbit (212-186-191-219.static.upcbusiness.at. [212.186.191.219])
+        by smtp.gmail.com with ESMTPSA id x5sm6285337wrt.75.2019.09.25.08.03.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 08:02:52 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: rc: prevent memory leak in cx23888_ir_probe
-Date:   Wed, 25 Sep 2019 10:02:41 -0500
-Message-Id: <20190925150244.13644-1-navid.emamdoost@gmail.com>
+        Wed, 25 Sep 2019 08:03:51 -0700 (PDT)
+From:   Joel Colledge <joel.colledge@linbit.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Joel Colledge <joel.colledge@linbit.com>
+Subject: [PATCH] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is set
+Date:   Wed, 25 Sep 2019 17:03:08 +0200
+Message-Id: <20190925150308.6609-1-joel.colledge@linbit.com>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In cx23888_ir_probe if kfifo_alloc fails the allocated memory for state
-should be released.
+When CONFIG_PRINTK_CALLER is set, struct printk_log contains an
+additional member caller_id. As a result, the offset of the log text is
+different.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+This fixes the following error:
+
+  (gdb) lx-dmesg
+  Python Exception <class 'ValueError'> embedded null character:
+  Error occurred in Python command: embedded null character
+
+Signed-off-by: Joel Colledge <joel.colledge@linbit.com>
 ---
- drivers/media/pci/cx23885/cx23888-ir.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ scripts/gdb/linux/constants.py.in | 1 +
+ scripts/gdb/linux/dmesg.py        | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23888-ir.c b/drivers/media/pci/cx23885/cx23888-ir.c
-index e880afe37f15..90e7c32c54bb 100644
---- a/drivers/media/pci/cx23885/cx23888-ir.c
-+++ b/drivers/media/pci/cx23885/cx23888-ir.c
-@@ -1167,8 +1167,11 @@ int cx23888_ir_probe(struct cx23885_dev *dev)
- 		return -ENOMEM;
+diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
+index 2efbec6b6b8d..3c9794a0bf55 100644
+--- a/scripts/gdb/linux/constants.py.in
++++ b/scripts/gdb/linux/constants.py.in
+@@ -74,4 +74,5 @@ LX_CONFIG(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST)
+ LX_CONFIG(CONFIG_HIGH_RES_TIMERS)
+ LX_CONFIG(CONFIG_NR_CPUS)
+ LX_CONFIG(CONFIG_OF)
++LX_CONFIG(CONFIG_PRINTK_CALLER)
+ LX_CONFIG(CONFIG_TICK_ONESHOT)
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6d2e09a2ad2f..1352680ef731 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -14,6 +14,7 @@
+ import gdb
+ import sys
  
- 	spin_lock_init(&state->rx_kfifo_lock);
--	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE, GFP_KERNEL))
-+	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE,
-+			GFP_KERNEL)) {
-+		kfree(state);
- 		return -ENOMEM;
-+	}
++from linux import constants
+ from linux import utils
  
- 	state->dev = dev;
- 	sd = &state->sd;
+ 
+@@ -53,7 +54,8 @@ class LxDmesg(gdb.Command):
+                 continue
+ 
+             text_len = utils.read_u16(log_buf[pos + 10:pos + 12])
+-            text = log_buf[pos + 16:pos + 16 + text_len].decode(
++            text_start = pos + (20 if constants.LX_CONFIG_PRINTK_CALLER else 16)
++            text = log_buf[text_start:text_start + text_len].decode(
+                 encoding='utf8', errors='replace')
+             time_stamp = utils.read_u64(log_buf[pos:pos + 8])
+ 
 -- 
 2.17.1
 
