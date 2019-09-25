@@ -2,243 +2,224 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1A2C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5622BC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09E62146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBB320640
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 13:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569416629;
+	bh=AVgTSuNTDJc7iXNeTqA0sXqLJXLcLZYIhEIn009zdq0=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=sBxddByk42TfK3omNKXD3vfDCj8qScVneIMoV86WKvZFaMpqIqGwZU15SbcSkgedf
+	 0z2ozsho2ogMHVj2vNibrjmBh99XwWP6HMyxGopn+zg/UuWcPaOGtfhdiRs7pSHccF
+	 hwFJjg9qBuzDJ6//zrzUWtA6oR/NnTIr2GuP/swU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405928AbfIYNAU (ORCPT
+        id S2405966AbfIYNDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 09:00:20 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:41374 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405791AbfIYNAT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 09:00:19 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: idpVvdvL2fkwNRWkhXUesMnDFm5fA30nYF2WwWXF5zYEc5xCiIShIhA2Uo22oy/P40YbReDA2h
- oKuAsu5ng00HWsHzVw9V/S/Tn9LD1hLrZp14vytr8L3cwqFRgyDQPJGCeUMX2mvu1RXrRuWm6n
- CZbnOAlUgzGFALcMbVw8Ak9ay8dV8Ib+Rh6km0jtauCp7f3TfxAlFJYUd9GgyFCocF2atwqgf1
- n5ALW91wguj3zZjHziLJa8dWmJb+aN89PGzbY4liOe7RWR4nIG+qo3PLJlxw7crF5TTqhb4TiV
- 3rw=
-X-IronPort-AV: E=Sophos;i="5.64,548,1559545200"; 
-   d="scan'208";a="47569547"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Sep 2019 06:00:18 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Sep 2019 06:00:12 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 25 Sep 2019 06:00:09 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>,
-        <Claudiu.Beznea@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v2] i2c: at91: Send bus clear command if SCL or SDA is down
-Date:   Wed, 25 Sep 2019 15:59:35 +0300
-Message-ID: <20190925125935.24453-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 25 Sep 2019 09:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405791AbfIYNDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 09:03:47 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42E0820640;
+        Wed, 25 Sep 2019 13:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569416626;
+        bh=AVgTSuNTDJc7iXNeTqA0sXqLJXLcLZYIhEIn009zdq0=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=qKGGvw1i1ai+L0FxHSH9DhoTp180KS8i9qwzLXy6SuWTXZZ6Z5GUr031DfDTbQeRU
+         PSKONg0CEkMQHH5j9cMCka3B/6QY4wwaZCzriz0uisOB9AjjzvxgyWXyvjVAoAM7sn
+         GbCemJGObzn1+qfw//0DEiSBtF/V2Nqmf6WroFpU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+User-Agent: alot/0.8.1
+Date:   Wed, 25 Sep 2019 06:03:45 -0700
+Message-Id: <20190925130346.42E0820640@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After a transfer timeout, some faulty I2C slave devices might hold down
-the SCL or the SDA pins. We can generate a bus clear command, hoping that
-the slave might release the pins.
+Quoting Taniya Das (2019-09-25 04:20:07)
+> Hi Stephen,
+>=20
+> Please find my comments.
+>=20
+> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-09-23 01:01:11)
+> >> Hi Stephen,
+> >>
+> >> Thanks for your comments.
+> >>
+> >> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
+> >>> Quoting Taniya Das (2019-09-18 02:50:18)
+> >>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc=
+7180.c
+> >>>> new file mode 100644
+> >>>> index 000000000000..d47865d5408f
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> >>>> +                       .ops =3D &clk_branch2_ops,
+> >>>> +               },
+> >>>> +       },
+> >>>> +};
+> >>>> +
+> > [...]
+> >>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
+> >>>> +       .halt_reg =3D 0x77094,
+> >>>> +       .halt_check =3D BRANCH_HALT,
+> >>>> +       .hwcg_reg =3D 0x77094,
+> >>>> +       .hwcg_bit =3D 1,
+> >>>> +       .clkr =3D {
+> >>>> +               .enable_reg =3D 0x77094,
+> >>>> +               .enable_mask =3D BIT(0),
+> >>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
+> >>>> +                       .parent_data =3D &(const struct clk_parent_d=
+ata){
+> >>>> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_src=
+.clkr.hw,
+> >>>> +                       },
+> >>>> +                       .num_parents =3D 1,
+> >>>> +                       .flags =3D CLK_SET_RATE_PARENT,
+> >>>> +                       .ops =3D &clk_branch2_ops,
+> >>>> +               },
+> >>>> +       },
+> >>>> +};
+> >>>> +
+> >>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
+> >>>> +       .halt_reg =3D 0x7701c,
+> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
+> >>>
+> >>> Again, nobody has fixed the UFS driver to not need to do this halt sk=
+ip
+> >>> check for these clks? It's been over a year.
+> >>>
+> >>
+> >> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
+> >> configuration and thus during the late initcall of clk_disable there
+> >> could be warnings of "clock stuck ON" in the dmesg. That is the reason
+> >> also to use the BRANCH_HALT_SKIP flag.
+> >=20
+> > Oh that's bad. Why do the clks stay on when we try to turn them off?
+> >
+>=20
+> Those could be due to the configuration selected by HW and SW cannot=20
+> override them, so traditionally we have never polled for CLK_OFF for=20
+> these clocks.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
+Is that the case or just a guess?
 
-Changes in v2:
- - added '.has_clear_cmd' struct member to specify which IPs support the
-   clear command; for now, only SAMA5D2 supports it;
- - added Ludovic's V1 ack since there were no major changes;
+>=20
+> >>
+> >> I would also check internally for the UFS driver fix you are referring=
+ here.
+> >=20
+> > Sure. I keep asking but nothing is done :(
+> >=20
+> >>
+> >>>> +       .clkr =3D {
+> >>>> +               .enable_reg =3D 0x7701c,
+> >>>> +               .enable_mask =3D BIT(0),
+> >>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
+> >>>> +                       .ops =3D &clk_branch2_ops,
+> >>>> +               },
+> >>>> +       },
+> >>>> +};
+> >>>> +
+> > [...]
+> >>>> +
+> >>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
+> >>>> +       .halt_reg =3D 0xf058,
+> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
+> >>>
+> >>> Why does this need halt_skip?
+> >>
+> >> This is required as the source is external PHY, so we want to not check
+> >> for HALT.
+> >=20
+> > This doesn't really answer my question. If the source is an external phy
+> > then it should be listed as a clock in the DT binding and the parent
+> > should be specified here. Unless something doesn't work because of that?
+> >=20
+>=20
+> The USB phy is managed by the USB driver and clock driver is not aware=20
+> if USB driver models the phy as a clock. Thus we do want to keep a=20
+> dependency on the parent and not poll for CLK_ENABLE.
 
- drivers/i2c/busses/i2c-at91-core.c   |  8 ++++++++
- drivers/i2c/busses/i2c-at91-master.c | 21 +++++++++++++++++++++
- drivers/i2c/busses/i2c-at91.h        |  7 ++++++-
- 3 files changed, 35 insertions(+), 1 deletion(-)
+The clk driver should be aware of the USB driver modeling the phy as a
+clk. We do that for other phys so what is the difference here?
 
-diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-index 435c7d7377a3..cb07489e698f 100644
---- a/drivers/i2c/busses/i2c-at91-core.c
-+++ b/drivers/i2c/busses/i2c-at91-core.c
-@@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config = {
- 	.has_unre_flag = true,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata at91sam9261_config = {
-@@ -76,6 +77,7 @@ static struct at91_twi_pdata at91sam9261_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata at91sam9260_config = {
-@@ -84,6 +86,7 @@ static struct at91_twi_pdata at91sam9260_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata at91sam9g20_config = {
-@@ -92,6 +95,7 @@ static struct at91_twi_pdata at91sam9g20_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata at91sam9g10_config = {
-@@ -100,6 +104,7 @@ static struct at91_twi_pdata at91sam9g10_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static const struct platform_device_id at91_twi_devtypes[] = {
-@@ -130,6 +135,7 @@ static struct at91_twi_pdata at91sam9x5_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = false,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata sama5d4_config = {
-@@ -138,6 +144,7 @@ static struct at91_twi_pdata sama5d4_config = {
- 	.has_unre_flag = false,
- 	.has_alt_cmd = false,
- 	.has_hold_field = true,
-+	.has_clear_cmd = false,
- };
- 
- static struct at91_twi_pdata sama5d2_config = {
-@@ -146,6 +153,7 @@ static struct at91_twi_pdata sama5d2_config = {
- 	.has_unre_flag = true,
- 	.has_alt_cmd = true,
- 	.has_hold_field = true,
-+	.has_clear_cmd = true,
- };
- 
- static const struct of_device_id atmel_twi_dt_ids[] = {
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index a3fcc35ffd3b..8082dff77724 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -440,6 +440,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 	unsigned long time_left;
- 	bool has_unre_flag = dev->pdata->has_unre_flag;
- 	bool has_alt_cmd = dev->pdata->has_alt_cmd;
-+	bool has_clear_cmd = dev->pdata->has_clear_cmd;
- 
- 	/*
- 	 * WARNING: the TXCOMP bit in the Status Register is NOT a clear on
-@@ -599,6 +600,26 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 		at91_twi_write(dev, AT91_TWI_CR,
- 			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
- 	}
-+
-+	/*
-+	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
-+	 * we can send a bus clear command, hoping that the pins will be
-+	 * released
-+	 */
-+	if (has_clear_cmd && !(dev->transfer_status & AT91_TWI_SDA) ||
-+	    !(dev->transfer_status & AT91_TWI_SCL)) {
-+		dev_dbg(dev->dev,
-+			"SDA/SCL are down; sending bus clear command\n");
-+		if (dev->use_alt_cmd) {
-+			unsigned int acr;
-+
-+			acr = at91_twi_read(dev, AT91_TWI_ACR);
-+			acr &= ~AT91_TWI_ACR_DATAL_MASK;
-+			at91_twi_write(dev, AT91_TWI_ACR, acr);
-+		}
-+		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
-+	}
-+
- 	return ret;
- }
- 
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 499b506f6128..0827c28a84db 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -36,6 +36,7 @@
- #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
- #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
- #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
-+#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
- #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
- #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
- #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
-@@ -69,6 +70,8 @@
- #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
- #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
- #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
-+#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
-+#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
- 
- #define	AT91_TWI_INT_MASK \
- 	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
-@@ -81,7 +84,8 @@
- #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
- 
- #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
--#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
-+#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
-+#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
- #define	AT91_TWI_ACR_DIR	BIT(8)
- 
- #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
-@@ -108,6 +112,7 @@ struct at91_twi_pdata {
- 	bool has_unre_flag;
- 	bool has_alt_cmd;
- 	bool has_hold_field;
-+	bool has_clear_cmd;
- 	struct at_dma_slave dma_slave;
- };
- 
--- 
-2.20.1
+>=20
+> >>
+> >>>
+> >>>> +       .clkr =3D {
+> >>>> +               .enable_reg =3D 0xf058,
+> >>>> +               .enable_mask =3D BIT(0),
+> >>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
+> >>>> +                       .ops =3D &clk_branch2_ops,
+> >>>> +               },
+> >>>> +       },
+> >>>> +};
+> >>>> +
+> >>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
+> >>>> +       .halt_reg =3D 0x6a004,
+> >>>> +       .halt_check =3D BRANCH_HALT,
+> >>>> +       .hwcg_reg =3D 0x6a004,
+> >>>> +       .hwcg_bit =3D 1,
+> >>>> +       .clkr =3D {
+> >>>> +               .enable_reg =3D 0x6a004,
+> >>>> +               .enable_mask =3D BIT(0),
+> >>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
+> >>>> +                       .ops =3D &clk_branch2_ops,
+> >>>> +               },
+> >>>> +       },
+> >>>> +};
+> >>>> +
+> >>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled =
+*/
+> >>>
+> >>> There's no parent though... So I guess this means it keeps it enabled
+> >>> implicitly in hardware?
+> >>>
+> >>
+> >> These are not left enabled, but want to leave them enabled for clients
+> >> on config NOC.
+> >=20
+> > Sure. It just doesn't make sense to create clk structures and expose
+> > them in the kernel when we just want to turn the bits on and leave them
+> > on forever. Why not just do some register writes in probe for this
+> > driver? Doesn't that work just as well and use less memory?
+> >=20
+>=20
+> Even if I write these registers during probe, the late init check=20
+> 'clk_core_is_enabled' would return true and would be turned OFF, that is =
+
+> the reason for marking them CRITICAL.
+>=20
+
+That wouldn't happen if the clks weren't registered though, no?
 
