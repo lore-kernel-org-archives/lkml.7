@@ -2,156 +2,317 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6CDC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E9C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6789421D79
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3CF21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a4Odjpqn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DIhNgioj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732674AbfIYPiz (ORCPT
+        id S2387492AbfIYPjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:38:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34245 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfIYPiz (ORCPT
+        Wed, 25 Sep 2019 11:39:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38490 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732678AbfIYPjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:38:55 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a11so7536432wrx.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cx/GNZpNHYFwIzpok9xHy8DS/NWBlVTJrgPnmAduazI=;
-        b=a4OdjpqnUrTK9YT8UuDyOGUcXUkwmuGF6IHh7EkZ3lXavXtW+EzlXYBVRB286Vu84F
-         gFOF0gwx7eARJtK03E+khCuzVZWCzAGrLhu1PDCduazoxEvea+ktREvrx5MIXdBMZKO+
-         ulxTy8XB2Mc7B0dFFUlhwjsPIRClD6g/lRzw5sK4TSw/GSOGlbt9iIrMdxalBwZsI7Ie
-         GaqoCUyJ8bFk1j5u4/HxxGukXUmq7EfDe/EBZ1SuTJpkUjR3gVovYhjpTj7gyCg6to1u
-         Y0vMEpxnZDc6e5X3B1V34CQuEOEL3B9fgkJDcSFOXYjjesI8PzMmqWypMIK2+6tUtApZ
-         HOzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cx/GNZpNHYFwIzpok9xHy8DS/NWBlVTJrgPnmAduazI=;
-        b=RbmzbE0vo0RNNOPrxE44sMImc5glkRIjpOt02NwoyONKBhr0284Am5VRasaXtIVyah
-         qzfqIu+oHiVxLlBfBQszaWWCNICH0h0riXVV9vMDXBHIzwzmTcXsNWnZQIuHQTvZ1Uyb
-         EX64yq0gXOqodY+lud1KcMunbbEU/lTmhNno7Oadg0vkCLahM2kItrmMBgY8y0Nt7/XH
-         h38NSrYyxQet9UFsqBR86stbWvDuXReJyluAJ0UGZMMCPyyoAau7ogYCf4cmUYkXXxYN
-         kFBCLHp1c9/rhSylkpwAx8rGKaZH1KXgoqDuANR7sJDH2kRljjqqhys0bp3GwbSqfDB+
-         d1ag==
-X-Gm-Message-State: APjAAAWEi78MYe4Xv4PZhwQ2tT+cqF0EAMhnkK8qd1nZjzAEufxnBK2/
-        cCYIrqjTzVj2Imte11vb9l0mKpkN4S4f/BjNSYNRFIWMcQ8=
-X-Google-Smtp-Source: APXvYqxTEINYkf4GdvAEm2yCr3TpuMgb5ftmOJJbDktR7h0txYnodr3vAVACKcrPiBCHzq1YVlyAvE1YNiwqBaMMUEE=
-X-Received: by 2002:adf:f406:: with SMTP id g6mr9566277wro.325.1569425932603;
- Wed, 25 Sep 2019 08:38:52 -0700 (PDT)
+        Wed, 25 Sep 2019 11:39:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PFJICb131906;
+        Wed, 25 Sep 2019 15:39:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=6rY5aCwQWf85yRzpyo4UPgFVHuIc/CHc5aLcZ8UNSBs=;
+ b=DIhNgiojoGV8FSHlz1mZG/UuoLHAozDObg8p0FKxfyTw4kew6nAwLlI30e9RvXT+MHUy
+ yjoN9QQ60MNj7ZRc5mSFt2NItNg7A5xa4vNQRxl+b2rAOSCbCtUToAL4aBZ/vRmMFr4D
+ oopGU7ANWBQDxKbsiJOsVZ9IPCnPKmEWSP/u6trNHTt9PdRVlEpzw8KKGHlBm6+UGeo7
+ ZsBtmaE3yQa+OObW2F24PoCM/H3cjq/nmDcA7Bn9m7EU01CW8Rbp/Rh637FxVqarpv8J
+ FhNZ6GA3XYfYTUnDCK+XVhMh5S/fSh4MapBFQXyO+gOrsfnVBEmKjN0k+Gq9xlak+M8v Aw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v5b9twmuq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 15:39:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8PFNOef048547;
+        Wed, 25 Sep 2019 15:39:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2v82q9v6xx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Sep 2019 15:39:17 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8PFdAdT032606;
+        Wed, 25 Sep 2019 15:39:11 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Sep 2019 08:39:10 -0700
+Subject: Re: pstore does not work under xen
+To:     James Dingwall <james@dingwall.me.uk>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        xen-devel <xen-devel@lists.xenproject.org>
+References: <20190919102643.GA9400@dingwall.me.uk>
+ <3908561D78D1C84285E8C5FCA982C28F7F472015@ORSMSX115.amr.corp.intel.com>
+ <20190919161430.GA28042@dingwall.me.uk>
+ <ae56e2c0-b2d3-835d-04cb-e4404d979859@oracle.com>
+ <20190923154227.GA11201@dingwall.me.uk> <201909231556.7FF7A11@keescook>
+ <be41da82-3adc-4ab1-e4f9-5fdf11ac4b08@oracle.com>
+ <20190925110152.GA31550@dingwall.me.uk>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <c60c87d4-132d-b390-8b0e-1130fb434285@oracle.com>
+Date:   Wed, 25 Sep 2019 11:38:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <201908141353.043EF60B@keescook> <20190904103803.iv7agcw2suv6fcib@willie-the-truck>
- <201909041336.E6DE4B69@keescook> <20190906104419.cyewsrnwcks7cbny@willie-the-truck>
- <CAKv+Gu9yHxUV2GAuPG=HWGRt81LhSVisABDpUZxyDkLJffxy6A@mail.gmail.com> <201909231614.34B54F4076@keescook>
-In-Reply-To: <201909231614.34B54F4076@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 25 Sep 2019 17:38:41 +0200
-Message-ID: <CAKv+Gu-TS+vRxVAcV_sVH5bXKU5Gnb8xb1HE-NuJLepZ4Tu1XQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub/arm64: Report meaningful relocation errors
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190925110152.GA31550@dingwall.me.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909250145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9390 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909250145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Sep 2019 at 01:17, Kees Cook <keescook@chromium.org> wrote:
+On 9/25/19 7:01 AM, James Dingwall wrote:
+> On Mon, Sep 23, 2019 at 08:41:05PM -0400, Boris Ostrovsky wrote:
+>> On 9/23/19 6:59 PM, Kees Cook wrote:
+>>> On Mon, Sep 23, 2019 at 03:42:27PM +0000, James Dingwall wrote:
+>>>> On Thu, Sep 19, 2019 at 12:37:40PM -0400, Boris Ostrovsky wrote:
+>>>>> On 9/19/19 12:14 PM, James Dingwall wrote:
+>>>>>> On Thu, Sep 19, 2019 at 03:51:33PM +0000, Luck, Tony wrote:
+>>>>>>>> I have been investigating a regression in our environment where pstore 
+>>>>>>>> (efi-pstore specifically but I suspect this would affect all 
+>>>>>>>> implementations) no longer works after upgrading from a 4.4 to 5.0 
+>>>>>>>> kernel when running under xen.  (This is an Ubuntu kernel but I don't 
+>>>>>>>> think there are patches which affect this area.)
+>>>>>>> I don't have any answer for this ... but want to throw out the idea that
+>>>>>>> VMM systems could provide some hypercalls to guests to save/return
+>>>>>>> some blob of memory (perhaps the "save" triggers automagically if the
+>>>>>>> guest crashes?).
+>>>>>>>
+>>>>>>> That would provide a much better pstore back end than relying on emulation
+>>>>>>> of EFI persistent variables (which have severe contraints on size, and don't
+>>>>>>> support some pstore modes because you can't dynamically update EFI variables
+>>>>>>> hundreds of times per second).
+>>>>>>>
+>>>>>> For clarification this is a dom0 crash rather than an HVM guest with EFI.  I
+>>>>>> should probably have also mentioned the xen verion has changed from 4.8.4 to
+>>>>>> 4.11.2 in case its behaviour on detection of crashed domain has changed.
+>>>>>>
+>>>>>> (For capturing guest crashes we have enabled xenconsole logging so the
+>>>>>> hvc0 log is available in dom0.)
+>>>>> Do you only see this difference between 4.4 and 5.0 when you crash via
+>>>>> sysrq?
+>>>>>
+>>>>> Because that's where things changed. On 4.4 we seem to be forcing an
+>>>>> oops, which eventually calls kmsg_dump() and then panic. On 5.0 we call
+>>>>> panic() directly from sysrq handler. And because Xen's panic notifier
+>>>>> doesn't return we never get a chance to call kmsg_dump().
+>>>>>
+>>>> Ok, I see that change in 8341f2f222d729688014ce8306727fdb9798d37e.  I 
+>>>> hadn't tested it any other way before.  Using the null pointer 
+>>>> de-reference module code at [1] a pstore record is generated as expected 
+>>>> when the module is loaded (panic_on_oops=1).
+>>> This change looks correct -- it just gets us directly to the panic()
+>>> state instead of exercising the various exception handlers.
+>>>
+>>>> I have also tested swapping the kmsg_dump() / 
+>>>> atomic_notifier_call_chain() around in panic.c and this also results in 
+>>>> a pstore record being created with sysrq-c.  I don't know if that would 
+>>>> be an acceptable solution though since it may break behaviour that other 
+>>>> things depend on.
+>>> I don't think reordering these is a good idea: as the comments say,
+>>> there might be work done in the notifier chain that kmsg_dump() will
+>>> want to capture (e.g. the KASLR base offset).
+>>>
+>>> The situation seems to be that notifier callbacks must return -- I think
+>>> Xen needs fixing here.
+>>>
+>> I only had one quick sanity test with a PV guest so this needs more
+>> testing. James, can you give it a try?
+> I have tested the patch in a pv domU and in dom0.  The kernel was built 
+> with a default Ubuntu .config which sets CONFIG_PANIC_TIMEOUT=0. uname 
+> -r = 5.0.0-27-generic.
 >
-> On Fri, Sep 06, 2019 at 10:34:47AM -0700, Ard Biesheuvel wrote:
-> > On Fri, 6 Sep 2019 at 03:44, Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Wed, Sep 04, 2019 at 01:38:04PM -0700, Kees Cook wrote:
-> > > > On Wed, Sep 04, 2019 at 11:38:03AM +0100, Will Deacon wrote:
-> > > > > On Wed, Aug 14, 2019 at 01:55:50PM -0700, Kees Cook wrote:
-> > > > > > diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-> > > > > > index 1550d244e996..24022f956e01 100644
-> > > > > > --- a/drivers/firmware/efi/libstub/arm64-stub.c
-> > > > > > +++ b/drivers/firmware/efi/libstub/arm64-stub.c
-> > > > > > @@ -111,6 +111,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
-> > > > > >           status = efi_random_alloc(sys_table_arg, *reserve_size,
-> > > > > >                                     MIN_KIMG_ALIGN, reserve_addr,
-> > > > > >                                     (u32)phys_seed);
-> > > > > > +         if (status != EFI_SUCCESS)
-> > > > > > +                 pr_efi_err(sys_table_arg, "KASLR allocate_pages() failed\n");
-> > > > > >
-> > > > > >           *image_addr = *reserve_addr + offset;
-> > > > > >   } else {
-> > > > > > @@ -135,6 +137,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
-> > > > > >                                   EFI_LOADER_DATA,
-> > > > > >                                   *reserve_size / EFI_PAGE_SIZE,
-> > > > > >                                   (efi_physical_addr_t *)reserve_addr);
-> > > > > > +         if (status != EFI_SUCCESS)
-> > > > > > +                 pr_efi_err(sys_table_arg, "regular allocate_pages() failed\n");
-> > > > > >   }
-> > > > >
-> > > > > Not sure I see the need to distinsuish the 'KASLR' case from the 'regular'
-> > > > > case -- only one should run, right?  That also didn't seem to be part of
-> > > > > the use-case in the commit, unless I'm missing something.
-> > > >
-> > > > I just did that to help with differentiating the cases. Maybe something
-> > > > was special about KASLR picking the wrong location that triggered the
-> > > > failure, etc.
-> > > >
-> > > > > Maybe combine the prints as per the diff below?
-> > > >
-> > > > That could work. If you're against the KASLR vs regular thing, I can
-> > > > respin the patch?
-> > >
-> > > Happy to Ack it with that change, although I suppose it's ultimately up
-> > > to Ard :)
-> > >
-> >
-> > No objections from me, but I prefer Will's version.
+> In the domU (no custom kernel parameters):
 >
-> I took a look at this again... to report the failures as Will suggests,
-> it would look like this:
+> - sysrq-c: I saw my debug printk messages about kmsg_dump() being 
+> invoked after the traceback and the domain became listed as crashed in 
+> the xl status output.
 >
-> --- a/drivers/firmware/efi/libstub/arm64-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm64-stub.c
-> @@ -138,12 +138,14 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
->         }
+> - halt -p: clean shutdown
 >
->         if (status != EFI_SUCCESS) {
-> +               pr_efi_err(sys_table_arg, "allocate_pages() failed\n");
-> +
->                 *reserve_size = kernel_memsize + TEXT_OFFSET;
->                 status = efi_low_alloc(sys_table_arg, *reserve_size,
->                                        MIN_KIMG_ALIGN, reserve_addr);
+> - shutdown -r now: clean reboot
 >
->                 if (status != EFI_SUCCESS) {
-> -                       pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
-> +                       pr_efi_err(sys_table_arg, "efi_low_alloc() failed\n");
->                         *reserve_size = 0;
->                         return status;
->                 }
 >
-> My reasoning for putting the failure earlier is to differentiate which
-> path was taken where the allocate_pages() failed: either regular or
-> KASLR. If that's really not considered important here, I can send the
-> above patch... Thoughts?
+> In the domU with panic=15 in kernel parameters:
 >
+> - sysrq-c: as without panic=15 then final message "Rebooting in 15 
+> seconds.." printed but domain never rebooted.  Without this patch the 
+> domain doesn't reboot or print the Rebooting message presumably because 
+> of the non-returning panic handler.  If that message is reached then I 
+> think I would expect a reboot.  (In our Linux 4.4 / Xen 4.8.4 
+> environment no value of panic resulted in reboot.)
 
-The first pr_efi_err() in the patch above complains about a condition
-that is not actually an error.
+(+xen-devel which I just noticed has not been copied on this thread)
 
-If you are interested in recording the path taken through this
-function, I have no objections to putting a normal pr_efi() print
-inside the KASLR block that shows that the physical placement of the
-kernel is being randomized. Then, we can keep only the second
-pr_efi_err() above to report the failure.
+Whether a guest is rebooted is controlled by on_crash parameter in the
+config file. By default it's 'destroy'.
+
+
+>
+> - halt -p: clean shutdown
+>
+> - shutdown -r now: clean reboot
+>
+>
+> In dom0 with oops=panic panic=15 in the kernel parameters:
+>
+> - sysrq-c: kmsg_dump() debug messages printed, last linux message 
+> "Rebooting in 15 seconds..", after 15s "(XEN) Hardware Dom0 crashed: 
+> rebooting machine in 5 seconds.", after 5s system rebooted.  On the 
+> next start a pstore record is present as expected.
+>
+> - halt -p: clean shutdown, no pstore record present on next start.
+>
+> - shutdown -r now: clean reboot, no pstore record present on next 
+> start.
+>
+>
+> In dom0 with panic=0:
+>
+> - sysrq-c: dom0 crashes, no reboot messages printed from Xen or kernel 
+> and system hangs.  A pstore record is present on next start.
+>
+> - halt -p: clean shutdown, no pstore record present on next start.
+>
+> - shutdown -r now: clean reboot, no pstore record present on next 
+> start.
+>
+>
+> In my opinion this patch:
+>  - fixes the original issue of no pstore record being generated for a 
+> dom0 panic.
+>  - respects the dom0 panic=... value.  This is a change in behaviour in 
+> how xen handles the crashed dom0 from always rebooting to only rebooting 
+> if panic > 0.
+
+Even thought this is now correct behavior it's a change from what we've
+always had. And I think we should preserve that.
+
+Meaning that we have to ignore if panic_timeout is set to zero either on
+boot line or via sysfs.
+
+
+-boris
+
+>  - causes a Rebooting message to be printed in a crashed pv domU when 
+> panic > 0 but the domain does not reboot when it should.
+>
+> James
+>
+>>
+>> diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+>> index 750f46ad018a..d88f118028b4 100644
+>> --- a/arch/x86/xen/enlighten.c
+>> +++ b/arch/x86/xen/enlighten.c
+>> @@ -269,16 +269,17 @@ void xen_reboot(int reason)
+>>                 BUG();
+>>  }
+>>  
+>> +static int reboot_reason = SHUTDOWN_reboot;
+>>  void xen_emergency_restart(void)
+>>  {
+>> -       xen_reboot(SHUTDOWN_reboot);
+>> +       xen_reboot(reboot_reason);
+>>  }
+>>  
+>>  static int
+>>  xen_panic_event(struct notifier_block *this, unsigned long event, void
+>> *ptr)
+>>  {
+>>         if (!kexec_crash_loaded())
+>> -               xen_reboot(SHUTDOWN_crash);
+>> +               reboot_reason = SHUTDOWN_crash;
+>>         return NOTIFY_DONE;
+>>  }
+>>  
+>> @@ -290,6 +291,8 @@ static struct notifier_block xen_panic_block = {
+>>  int xen_panic_handler_init(void)
+>>  {
+>>         atomic_notifier_chain_register(&panic_notifier_list,
+>> &xen_panic_block);
+>> +       if (panic_timeout == 0)
+>> +               set_arch_panic_timeout(-1, CONFIG_PANIC_TIMEOUT);
+>>         return 0;
+>>  }
+>>
+>>
+
