@@ -2,116 +2,80 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E51C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE17C4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7A020872
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0031E20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 00:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvRj3VPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbfIYAQn (ORCPT
+        id S2411313AbfIYAwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Sep 2019 20:16:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37694 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbfIYAQm (ORCPT
+        Tue, 24 Sep 2019 20:52:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404146AbfIYAwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Sep 2019 20:16:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c17so2174344pgg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 17:16:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=GUy92otsO7OGtR8tORwxTtrbT2fTJHl/EHieICSRiM4=;
-        b=huDyHwbD0ZYUou4byMiMzemgMgNWiyXj5kNXrKZzm703+iHDTZVuTDJUMGPrR8rdSo
-         kTcIqRpH2o+E441XL2OZxBx3/BsbtCEhl8NmI5cPn377iwbBK+rWAdzp1jnvxsuio/CT
-         YDxLARoYQUV6gThkzODo878ESSbbXgfYggSwkV6LaspG+0STZ4XxmZLWlpBAn0MSjiiT
-         MtbcZsj1xrtB9YIj+0Hh/YWGHk6lyQXLI5ct71jyXkCi3oVE909d5M/FKcN3RIKX+KTU
-         fV2ayJOTeBcY/eSx/GR2vWM5JwSwXFP+6bA0pOciBFPf80WbtrM0rHGknr3Ynv5A6b2E
-         IZXA==
-X-Gm-Message-State: APjAAAUQBQ5dJ+s5p24Xcei0EN0K/i51iUXDS3XmCticUZXAJ8OMgAGM
-        dZJIT8OAjksqY/EBCa0oz+e+xjk4J2I=
-X-Google-Smtp-Source: APXvYqwXGPVj8lR5SB6ESQqPEewNM1bRVXwCbupxnsqlnpTm8UhKAltemb3fquXUV/G/YaODLvhEpQ==
-X-Received: by 2002:aa7:86c1:: with SMTP id h1mr6564484pfo.128.1569370600147;
-        Tue, 24 Sep 2019 17:16:40 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id z3sm1104571pjd.25.2019.09.24.17.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 17:16:39 -0700 (PDT)
-Subject: [PATCH] RISC-V: Clear load reservations while restoring hart contexts
-Date:   Tue, 24 Sep 2019 17:15:56 -0700
-Message-Id: <20190925001556.12827-1-palmer@sifive.com>
+        Tue, 24 Sep 2019 20:52:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IYJnfPXQbX2KlchjxVENlwTcxZRg1vNrwgB6nJ+Nk+o=; b=uvRj3VPweMBLx72xxubKIor8iq
+        XeXDZdyVqWM27tGKBPBDx1XBnC9cEsaNrnmPRK1zWRHopGOOFEmzAJNbGCvzIaRh7D64dmbJn75Vg
+        7Oc4zzfR6j1S/CMnMaNyozzl4LQhTKeoujlhXtgdAg6WlAx0Lf8BuxE+B+4HCe/9DbTD8dxMXLcLK
+        NTYP6FCDuOHAbfvVOLJ9npLV93mIZBeo2Eq+RbyqIcdqF2qc+8f7nWx2uzI2F2MSAMLDDLSHT24sI
+        lmDu2cBd3FQ2B7lD8J8NL7DwdaNMxOBk2T7gmPDFoTLw5aLTAU1G2CPC5hXpN9EnJp4REFhW4JFUG
+        otHYz3EQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCvXV-00076G-68; Wed, 25 Sep 2019 00:52:17 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH 01/15] mm: Use vm_fault error code directly
+Date:   Tue, 24 Sep 2019 17:52:00 -0700
+Message-Id: <20190925005214.27240-2-willy@infradead.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190925005214.27240-1-willy@infradead.org>
+References: <20190925005214.27240-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        marco@decred.org, me@carlosedp.com, joel@sing.id.au,
-        Palmer Dabbelt <palmer@sifive.com>
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:      linux-riscv@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is almost entirely a comment.  The bug is unlikely to manifest on
-existing hardware because there is a timeout on load reservations, but
-manifests on QEMU because there is no timeout.
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Use VM_FAULT_OOM instead of indirecting through vmf_error(-ENOMEM).
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- arch/riscv/include/asm/asm.h |  1 +
- arch/riscv/kernel/entry.S    | 21 ++++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/asm.h b/arch/riscv/include/asm/asm.h
-index 5a02b7d50940..9c992a88d858 100644
---- a/arch/riscv/include/asm/asm.h
-+++ b/arch/riscv/include/asm/asm.h
-@@ -22,6 +22,7 @@
- 
- #define REG_L		__REG_SEL(ld, lw)
- #define REG_S		__REG_SEL(sd, sw)
-+#define REG_SC		__REG_SEL(sc.d, sc.w)
- #define SZREG		__REG_SEL(8, 4)
- #define LGREG		__REG_SEL(3, 2)
- 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 74ccfd464071..9fbb256da55d 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -98,7 +98,26 @@ _save_context:
-  */
- 	.macro RESTORE_ALL
- 	REG_L a0, PT_SSTATUS(sp)
--	REG_L a2, PT_SEPC(sp)
-+	/*
-+	 * The current load reservation is effectively part of the processor's
-+	 * state, in the sense that load reservations cannot be shared between
-+	 * different hart contexts.  We can't actually save and restore a load
-+	 * reservation, so instead here we clear any existing reservation --
-+	 * it's always legal for implementations to clear load reservations at
-+	 * any point (as long as the forward progress guarantee is kept, but
-+	 * we'll ignore that here).
-+	 *
-+	 * Dangling load reservations can be the result of taking a trap in the
-+	 * middle of an LR/SC sequence, but can also be the result of a taken
-+	 * forward branch around an SC -- which is how we implement CAS.  As a
-+	 * result we need to clear reservations between the last CAS and the
-+	 * jump back to the new context.  While it is unlikely the store
-+	 * completes, implementations are allowed to expand reservations to be
-+	 * arbitrarily large.
-+	 */
-+	REG_L  a2, PT_SEPC(sp)
-+	REG_SC x0, a2, PT_SEPC(sp)
-+
- 	csrw CSR_SSTATUS, a0
- 	csrw CSR_SEPC, a2
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1146fcfa3215..625ef3ef19f3 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2533,7 +2533,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+ 		if (!page) {
+ 			if (fpin)
+ 				goto out_retry;
+-			return vmf_error(-ENOMEM);
++			return VM_FAULT_OOM;
+ 		}
+ 	}
  
 -- 
-2.21.0
+2.23.0
 
