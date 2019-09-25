@@ -2,121 +2,87 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD955C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E853CC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D94321D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B997321D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 06:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393055AbfIYG3E (ORCPT
+        id S2392888AbfIYGaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 02:29:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2778 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390491AbfIYG3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 02:29:04 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 31D1BA6A5DDE99DB5B69;
-        Wed, 25 Sep 2019 14:28:51 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
- 14:28:42 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <guaneryu@gmail.com>, <amir73il@gmail.com>,
-        <david.oberhollenzer@sigma-star.at>, <ebiggers@google.com>,
-        <yi.zhang@huawei.com>
-CC:     <fstests@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH xfstests v3] overlay: Enable character device to be the base fs partition
-Date:   Wed, 25 Sep 2019 14:35:33 +0800
-Message-ID: <1569393333-128141-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 25 Sep 2019 02:30:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60371 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411892AbfIYGaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 02:30:17 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iD0oQ-0000V4-7q; Wed, 25 Sep 2019 08:30:06 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iD0oN-0004YK-QR; Wed, 25 Sep 2019 08:30:03 +0200
+Date:   Wed, 25 Sep 2019 08:30:03 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v9 03/11] pwm: mediatek: remove a property "has-clks"
+Message-ID: <20190925063003.aht4platmfalcqru@pengutronix.de>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+ <1568933351-8584-4-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1568933351-8584-4-git-send-email-sam.shih@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running overlay tests using character devices as base fs partitions,
-all overlay usecase results become 'notrun'. Function
-'_overay_config_override' (common/config) detects that the current base
-fs partition is not a block device and will set FSTYP to base fs. The
-overlay usecase will check the current FSTYP, and if it is not 'overlay'
-or 'generic', it will skip the execution.
+On Fri, Sep 20, 2019 at 06:49:03AM +0800, Sam Shih wrote:
+> We can use fixed-clock to repair mt7628 pwm during configure from
+> userspace. The SoC is legacy MIPS and has no complex clock tree.
+> Due to we can get clock frequency for period calculation from DT
+> fixed-clock, so we can remove has-clock property, and directly
+> use devm_clk_get and clk_get_rate.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Acked-by: Uwe Kleine-Kö <u.kleine-koenig@pengutronix.de>
+> ---
+> Changes since v9:
+> Added an Acked-by tag
 
-For example, using UBIFS as base fs skips all overlay usecases:
+Argh, my name was croped and ended up in this state in
+5c50982af47ffe36df3e31bc9e11be5a067ddd18. Thierry, any chance to repair
+that? Something
+like
 
-  FSTYP         -- ubifs       # FSTYP should be overridden as 'overlay'
-  MKFS_OPTIONS  -- /dev/ubi0_1 # Character device
-  MOUNT_OPTIONS -- -t ubifs /dev/ubi0_1 /tmp/scratch
+	git filter-branch --msg-filter 'sed "s/Kleine-Kö /Kleine-König /"' linus/master..
 
-  overlay/001	[not run] not suitable for this filesystem type: ubifs
-  overlay/002	[not run] not suitable for this filesystem type: ubifs
-  overlay/003	[not run] not suitable for this filesystem type: ubifs
+Thanks
+Uwe
 
-When checking that the base fs partition is a block/character device,
-FSTYP is overwritten as 'overlay'. This patch allows the base fs
-partition to be a character device that can also execute overlay
-usecases (such as ubifs).
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
- common/config | 6 +++---
- common/rc     | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/common/config b/common/config
-index 4c86a49..4eda36c 100644
---- a/common/config
-+++ b/common/config
-@@ -532,7 +532,7 @@ _canonicalize_mountpoint()
- # When SCRATCH/TEST_* vars are defined in evironment and not
- # in config file, this function is called after vars have already
- # been overriden in the previous test.
--# In that case, TEST_DEV is a directory and not a blockdev and
-+# In that case, TEST_DEV is a directory and not a blockdev/chardev and
- # the function will return without overriding the SCRATCH/TEST_* vars.
- _overlay_config_override()
- {
-@@ -550,7 +550,7 @@ _overlay_config_override()
- 	#    the new OVL_BASE_SCRATCH/TEST_DEV/MNT vars are set to the values
- 	#    of the configured base fs and SCRATCH/TEST_DEV vars are set to the
- 	#    overlayfs base and mount dirs inside base fs mount.
--	[ -b "$TEST_DEV" ] || return 0
-+	[ -b "$TEST_DEV" ] || [ -c "$TEST_DEV" ] || return 0
- 
- 	# Config file may specify base fs type, but we obay -overlay flag
- 	[ "$FSTYP" == overlay ] || export OVL_BASE_FSTYP="$FSTYP"
-@@ -570,7 +570,7 @@ _overlay_config_override()
- 	export TEST_DIR="$OVL_BASE_TEST_DIR/$OVL_MNT"
- 	export MOUNT_OPTIONS="$OVERLAY_MOUNT_OPTIONS"
- 
--	[ -b "$SCRATCH_DEV" ] || return 0
-+	[ -b "$SCRATCH_DEV" ] || [ -c "$SCRATCH_DEV" ] || return 0
- 
- 	# Store original base fs vars
- 	export OVL_BASE_SCRATCH_DEV="$SCRATCH_DEV"
-diff --git a/common/rc b/common/rc
-index 66c7fd4..8d57c37 100644
---- a/common/rc
-+++ b/common/rc
-@@ -3100,7 +3100,7 @@ _require_scratch_shutdown()
- 			# SCRATCH_DEV, in this case OVL_BASE_SCRATCH_DEV
- 			# will be null, so check OVL_BASE_SCRATCH_DEV before
- 			# running shutdown to avoid shutting down base fs accidently.
--			_notrun "$SCRATCH_DEV is not a block device"
-+			_notrun "This test requires a valid $OVL_BASE_SCRATCH_DEV as ovl base fs"
- 		else
- 			src/godown -f $OVL_BASE_SCRATCH_MNT 2>&1 \
- 			|| _notrun "Underlying filesystem does not support shutdown"
 -- 
-2.7.4
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
