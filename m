@@ -2,72 +2,56 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE9C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88674C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBC221D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F182146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437439AbfIYOby (ORCPT
+        id S2437495AbfIYOcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:31:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39312 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437142AbfIYObV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:31:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 093EDB136;
-        Wed, 25 Sep 2019 14:31:19 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Qian Cai <cai@lca.pw>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH 0/3] followups to debug_pagealloc improvements through page_owner
-Date:   Wed, 25 Sep 2019 16:30:53 +0200
-Message-Id: <20190925143056.25853-5-vbabka@suse.cz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190925143056.25853-1-vbabka@suse.cz>
-References: <20190925143056.25853-1-vbabka@suse.cz>
+        Wed, 25 Sep 2019 10:32:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:50982 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437142AbfIYOcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 10:32:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C507728;
+        Wed, 25 Sep 2019 07:32:12 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FB9E3F59C;
+        Wed, 25 Sep 2019 07:32:12 -0700 (PDT)
+Date:   Wed, 25 Sep 2019 15:32:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jeremy Cline <jcline@redhat.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: kmemleak: DEBUG_KMEMLEAK_EARLY_LOG_SIZE changed
+ names
+Message-ID: <20190925143209.GE7042@arrakis.emea.arm.com>
+References: <20190925143114.19698-1-jcline@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925143114.19698-1-jcline@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are followups to [1] which made it to Linus meanwhile. Patches 1 and 3
-are based on Kirill's review, patch 2 on KASAN request [2]. It would be nice
-if all of this made it to 5.4 with [1] already there (or at least Patch 1).
+On Wed, Sep 25, 2019 at 02:31:14PM +0000, Jeremy Cline wrote:
+> Commit c5665868183f ("mm: kmemleak: use the memory pool for early
+> allocations") renamed CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE to
+> CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE. Update the documentation reference
+> to reflect that.
+> 
+> Signed-off-by: Jeremy Cline <jcline@redhat.com>
 
-[1] https://lore.kernel.org/linux-mm/20190820131828.22684-1-vbabka@suse.cz/
-[2] https://lore.kernel.org/linux-arm-kernel/20190911083921.4158-1-walter-zh.wu@mediatek.com/
+I forgot about this. Thanks.
 
-Vlastimil Babka (3):
-  mm, page_owner: fix off-by-one error in __set_page_owner_handle()
-  mm, debug, kasan: save and dump freeing stack trace for kasan
-  mm, page_owner: rename flag indicating that page is allocated
-
- Documentation/dev-tools/kasan.rst |  4 +++
- include/linux/page_ext.h          | 10 +++++-
- mm/Kconfig.debug                  |  4 +++
- mm/page_ext.c                     | 23 +++++-------
- mm/page_owner.c                   | 58 +++++++++++++++++--------------
- 5 files changed, 57 insertions(+), 42 deletions(-)
-
--- 
-2.23.0
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
