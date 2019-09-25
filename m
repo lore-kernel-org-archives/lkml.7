@@ -2,92 +2,123 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97FCC4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E145C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D4C21D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LK7791fG"
+	by mail.kernel.org (Postfix) with ESMTP id 2B815222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 18:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbfIYSA2 (ORCPT
+        id S2437956AbfIYSEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 14:00:28 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39837 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfIYSA2 (ORCPT
+        Wed, 25 Sep 2019 14:04:46 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41832 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfIYSEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 14:00:28 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so6619975ljj.6;
-        Wed, 25 Sep 2019 11:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bXErfHRA5V2j3IUtubyzRXAx2v534OGMhyigdUPBMkg=;
-        b=LK7791fGIcuVhpBiCLk3PBGgYW4+HzNT3JotY3GbmDZnU9bwPlxKQfDVI6CtTb54PS
-         /BbkkL/bWQ60N4KacXiZ85US+3S0Mru0wazmMxJ64M6jVhBATVv2Xgi+YNEMf3UCdDZH
-         Zu6E8L5g3kpTsDA5qp/WtBPQvAcBA8U1PL19Tkblf891QNHemU2By5XqxNV+3ZwmvptB
-         zQdWKnmbtJuU5G6TRxItZ9gTcOVeBZk1XgBvvq2PVPXmh2f5Em8l+ZrNaiH/EdhtM8Vj
-         mtbzosw/1a+aE80JLW3IpH/RKrFWI62tXUo3PNZsMxkC8pH7LiW32jPgAfIkM2NSrdeR
-         +2bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bXErfHRA5V2j3IUtubyzRXAx2v534OGMhyigdUPBMkg=;
-        b=oFYe28299GZPIMtsZxu+F8NEMXbfMfn8w+n1V5JbtaOFFH4CT/OThXCAMcCesDFNHM
-         vk0hH4YUQad7ED/E9YqOou53743K0bsmXTDej/UaD0YXz5RzIPMov0xaXue3HnVmIfut
-         ip8zIsjaG5+mAugTo7lOaKRomuyTGVRUZjatOQUgSZJv5QW5/ftS+HAsIieiQ4grkx1u
-         EvVnD025tO/A1wydphKCgPZSy7YcM7FzvKLRDsfXLnlrWBk6rwJq4bcQe+wBoC3KglUR
-         amJ0Kl2bGSjslihvpZ3PCIqyLQlfjp/EvHqOSzggDD8zFY8JREsbZuoTAMI0XNI0eBYx
-         wI0g==
-X-Gm-Message-State: APjAAAXWVLx6NTQYyuUzKMCUMFKJOLQ226npIPIKO/BxVXeU3DvB5qra
-        AkvpJsvkh9Wl+40ktHzNYwTl9mEdGuSrCF46gw13BYcU
-X-Google-Smtp-Source: APXvYqz9QCn5sWNeOv03oMOxgE5+x5J9dl1ayPpJXqo6/K9aKxKAWK2BN4GIo+xjV+DJ6cfijaHL75/TULdR8VvoRFk=
-X-Received: by 2002:a2e:b0f4:: with SMTP id h20mr2354841ljl.10.1569434425656;
- Wed, 25 Sep 2019 11:00:25 -0700 (PDT)
+        Wed, 25 Sep 2019 14:04:46 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDBe8-0006bq-19; Wed, 25 Sep 2019 18:04:12 +0000
+Date:   Wed, 25 Sep 2019 19:04:12 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/4] lib: introduce copy_struct_from_user() helper
+Message-ID: <20190925180412.GK26530@ZenIV.linux.org.uk>
+References: <20190925165915.8135-1-cyphar@cyphar.com>
+ <20190925165915.8135-2-cyphar@cyphar.com>
+ <CAHk-=wjFeNjhtUxQ8npmXORz5RLQU7B_3wD=45eug1+MXnuYvA@mail.gmail.com>
+ <20190925172049.skm6ohnnxpofdkzv@yavin>
+ <CAHk-=wjagt257WHiOr2v1Bx_3q7tuzogabw_1EnodKm0vt+-WQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190925174616.3714-1-dmurphy@ti.com> <20190925174616.3714-12-dmurphy@ti.com>
-In-Reply-To: <20190925174616.3714-12-dmurphy@ti.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 25 Sep 2019 15:00:34 -0300
-Message-ID: <CAOMZO5CeDKohK5np29X1fvzqBiCw6S3QmbpJ7jjn+avObKNqFw@mail.gmail.com>
-Subject: Re: [PATCH v9 11/15] ARM: dts: imx6dl-yapp4: Add reg property to the
- lp5562 channel node
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjagt257WHiOr2v1Bx_3q7tuzogabw_1EnodKm0vt+-WQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Wed, Sep 25, 2019 at 10:48:31AM -0700, Linus Torvalds wrote:
+> On Wed, Sep 25, 2019 at 10:21 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> >
+> > Just to make sure I understand, the following diff would this solve the
+> > problem? If so, I'll apply it, and re-send in a few hours.
+> 
+> Actually, looking at it more, it's still buggy.
+> 
+> That final "size smaller than unsigned long" doesn't correctly handle
+> the case of (say) a single byte in the middle of a 8-byte word.
+> 
+> So you need to do something like this:
+> 
+>     int is_zeroed_user(const void __user *from, size_t size)
+>   {
+>         unsigned long val, mask, align;
+> 
+>         if (unlikely(!size))
+>                 return true;
+> 
+>         if (!user_access_begin(from, size))
+>                 return -EFAULT;
+> 
+>         align = (uintptr_t) from % sizeof(unsigned long);
+>         from -= align;
+>         size += align;
+> 
+>         mask = ~aligned_byte_mask(align);
+> 
+>         while (size >= sizeof(unsigned long)) {
+>                 unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+>                 val &= mask;
+>                 if (unlikely(val))
+>                         goto done;
+>                 mask = ~0ul;
+>                 from += sizeof(unsigned long);
+>                 size -= sizeof(unsigned long);
+>         }
+> 
+>         if (size) {
+>                 /* (@from + @size) is unaligned. */
+>                 unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+>                 mask &= aligned_byte_mask(size);
+>                 val &= mask;
+>         }
 
-On Wed, Sep 25, 2019 at 2:41 PM Dan Murphy <dmurphy@ti.com> wrote:
+IMO it's better to lift reading the first word out of the loop, like this:
 
->
->                 chan0 {
+	align = (uintptr_t) from % sizeof(unsigned long);
+	from -= align;
 
-This should be chan@0
+	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+	if (align) {
+		size += align;
+		val &= ~aligned_byte_mask(align);
+	}
 
->                         chan-name = "R";
->                         led-cur = /bits/ 8 <0x20>;
->                         max-cur = /bits/ 8 <0x60>;
-> +                       reg = <0>;
+	while (size > sizeof(unsigned long)) {
+		if (unlikely(val))
+			goto done;
+		from += sizeof(unsigned long);
+		size -= sizeof(unsigned long);
+		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+	}
 
-Passing reg without its corresponding @ entry gives a dtc warning when
-building with W=1.
+	if (size != size(unsigned long))
+		val &= aligned_byte_mask(size);
+done:
+
+Do you see any problems with that variant?
