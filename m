@@ -2,163 +2,137 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC462C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD8C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B859821D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F70521D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 22:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="egd20KHO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/wqCKzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfIYWtl (ORCPT
+        id S1729857AbfIYWuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 18:49:41 -0400
-Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:22541
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729604AbfIYWtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:49:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HEdk/oQONk6bv73qNqg/Bh/TJB3Vtyt+nFdFo5t3tPq9tqxCX8iqxNG6YB92OijW3q0Z2UhxRDdcJiueA2NIZF2Qls5TyUcY9UZGcaNEuuwpclk1ne4s/VK0tpwTDYFDObXVX6+3m9Uph6Tav9YMXCOeaSs+MFaoHxvb0I2B5OLYQU5tRlMsAOeFGFlHkQKEIHIjJk6Xu588RlH5CsTvaJlY+H+3xvqGLslowerVO4sI2n0HkVzTQEA/ZT7wPD23XsOriuwm5UbOy8UVCJxmtv+7xgQhQz0XkKUC83aGkOAbr+zukrsGu/d/YgodLZFoSdGOn9mB0cZZEvls4ke3TQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/5Hot15RqpbN++rLgjrxKMVjJYK8CfoIl0+eZL8bG0=;
- b=ACzSc1rTLkCYRc+ZcOD3fomT0bqfss/ez2VHxGeW7ItgSPmx8uUw7t0N28hmNPmIYY9Sz06TztnAA7y1AunA1+i1aHYka5WjqF+sBC8bZNHCaBIS64bjWwXFhwpf2vD6Lg/RZzJXhAe+pUkvs9IkHr8WySdPTS+yYSO0pi6aXxJr928Sk+Z8sYoa+ra1mUh+fnxwPK1yW4tKFc0HKzuVPsKr+xyLZj9EJAZ5hSA9ZLTeHrEkC4Xnh7I55Z+AEPKj3TBwWD9jFr4LtdQvhfehQZFJXEG7qqcCiX11Dm1pauCG6WQZQ2noHgSG8fPPfRZ1FyfJVESHOCYiNFFJXNBC6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/5Hot15RqpbN++rLgjrxKMVjJYK8CfoIl0+eZL8bG0=;
- b=egd20KHORIAxvH/34gZ05dJ553g4Jr8dqgCh40uV0wOwHwOjI+IluOe6DgxtQqoyEepQ8tCrxHNtD7WlWxCq8PaDB3jkZmtXWOniCx1Gd8J55mgVWjAjvjNl8+L2OzNwBjqvvms1SHQNZ7vMW5EzT9VoN5oRIoPDS1xsIAbQhik=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Wed, 25 Sep 2019 22:49:35 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 22:49:35 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v5 0/3] Enhance Hyper-V for hibernation
-Thread-Topic: [PATCH v5 0/3] Enhance Hyper-V for hibernation
-Thread-Index: AQHVZDvWiJN7KE4mZkeEB0PYga91O6c9Gb9w
-Date:   Wed, 25 Sep 2019 22:49:35 +0000
-Message-ID: <PU1P153MB01692C8EC435F7F108564BAEBF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1567723581-29088-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:49:32.7769187Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5220183a-209f-4c76-a7f5-88915c722ca3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 792fe893-6aed-498f-4344-08d7420aa373
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0137:|PU1P153MB0137:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <PU1P153MB013792FCBD8C2EBBD4B251CEBF870@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(1511001)(10290500003)(110136005)(478600001)(6636002)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(2501003)(55016002)(99286004)(22452003)(10090500001)(316002)(256004)(6306002)(86362001)(14444005)(9686003)(8990500004)(2201001)(71200400001)(71190400001)(33656002)(5660300002)(52536014)(6246003)(2906002)(966005)(6116002)(4326008)(14454004)(102836004)(6436002)(186003)(305945005)(6506007)(46003)(7416002)(7736002)(229853002)(476003)(7696005)(76176011)(486006)(25786009)(81156014)(8676002)(11346002)(8936002)(81166006)(74316002)(446003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MbljAvkGnmlJYBADJuNlLmBQ4V4ZaTCx+lRcZlJpDtxBWaDYCk/nsV4o0lc3MbanfKtXtgnbhneI3VwQyUe9003sJLjKohxLRzoWSKM6Gq/WmcerCHGTTDQaJAOF87CzxJeAcqoIVcQ27n/cz+uvTxex0bXM1/PpHvklOX5Aq5J2OWaOEOENHPIYXVLAJSZ7s2lj610iihr5OhLDbOWi9Ohr77ZkrgWboB1HsQX0be2kPrmhYxHuFCVPHVdAjzKEg/C2900ARUd5pEJ2WDrsKbs/nwe6sMrdHoP07fYkGXq1H1ebKS28/bCCmcYrHAy7ARGpDY8KLfXSdJ1N+Eb7ia4/KJF0WBmsys2jB7ILg9SxpwZ7Ytcv+0p80a75zz5RMvCDM0gmuCbnmuMxnTN6oCmi3ZbaA9+d/ssorV1glzo+R4q/VQ2OnmC4QdLs7TSMN2SqjJ3Upvwl2wH3FepUsQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Sep 2019 18:50:10 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35458 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729604AbfIYWuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:50:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so498139wrt.2;
+        Wed, 25 Sep 2019 15:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fs2mUK+2SrnaDGqHEbHBhhO8ASliMTqMkt3FxwYhzMM=;
+        b=E/wqCKzMUINn3pXJ68SvL15btqfissC4d4pkTe0Q8lTcEjR1cETLNEXy1QYbFRyjuO
+         PFzZ8aL7Ab30A6d0IFYcguJB8xSyyKw7lw9y9sd6tqrsZM2iy7SqvRNgvX2gPjrVUPVt
+         COIaZumF6HWCV55vuCqyfDMRQejB9VTm0/5VdxpydAN0185DFvIqf3Z3azqun/GS0Lr+
+         LJcBrxZVsh+1dc4pE+7yv1G6sKunkhl57eRC7cyWi2vQ7iR8cyQC/aOHt8CPD/xsk4+q
+         YP8HAa75SIxoQHO+1UJLl8OtIFLj9L80WSxEYpVrArvv7m1Op67pY0fjROoE8EpDMsM/
+         /LmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fs2mUK+2SrnaDGqHEbHBhhO8ASliMTqMkt3FxwYhzMM=;
+        b=ZnyzEB2BuKwnWaTFZZyEoUZFhn58nfBbTQJ1HvoysLz8hgHSwSDITyurLP2vFqhqBZ
+         W0UkiytYbxaUkO8dNJ8BwnacN8IunlmcuMEM5nA322/mReoQhX5cuC3NMEsQbEaGgSxA
+         4qFbpA4yNC8lIqK0DSU++3+iCBi1vzLaoqfABgbAF89I7Y+QSQQyMedKMNnLPKSxW4Ne
+         jPPr78FSrTu84D8d3wXe+I2pdzYuZoFNGHHEjOrkKf1bQaA8NKtPZ6jVZw6fyqZ/1XI0
+         ezTW03pKQnq/Y0OwQAk3r7U6fzF6P/QyzfHd00NloALT3hBsc36pdUd+h+cNIivGqzB/
+         4E8A==
+X-Gm-Message-State: APjAAAUsn1EssGXBNMGIdVQ/rigi9pFVb6LOqEAjddMWwAbP0vXNbLfT
+        6KCXjglrgmNT5JkMatlXmy8=
+X-Google-Smtp-Source: APXvYqwforAtGJdFg61VD7jXa2EmiEueft4/tswPr0fsD/8XC2L+O0qahphA4KCActPT7LHQ1JsYIw==
+X-Received: by 2002:adf:db47:: with SMTP id f7mr442320wrj.1.1569451807649;
+        Wed, 25 Sep 2019 15:50:07 -0700 (PDT)
+Received: from localhost (p200300E41F0FEE00021F3CFFFE37B91B.dip0.t-ipconnect.de. [2003:e4:1f0f:ee00:21f:3cff:fe37:b91b])
+        by smtp.gmail.com with ESMTPSA id g13sm1041612wrm.42.2019.09.25.15.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 15:50:05 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 00:50:05 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v10 07/12] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Message-ID: <20190925225005.GB8115@mithrandir>
+References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+ <1569421957-20765-8-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 792fe893-6aed-498f-4344-08d7420aa373
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:49:35.1173
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z1Tw3C8+9yPTLOFw5rF6AUrDFfYZvoWoEc+RQcb6GkSXF1xm6+9z9iUDAt3vSHYf6bBLPLZy752h/2PQjJ8kCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <1569421957-20765-8-git-send-email-sam.shih@mediatek.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Thursday, September 5, 2019 3:47 PM
->=20
-> This patchset (consisting of 3 patches) was part of the v4 patchset (cons=
-isting
-> of 12 patches): https://lkml.org/lkml/2019/9/2/894
->=20
-> I realized these 3 patches must go through the tip.git tree, because I ha=
-ve
-> to rebase 2 of the 3 patches due to recent changes from others in the tip
-> tree.
->=20
-> All the 3 patches are now rebased to the tip tree's timers/core branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Dtime=
-rs/core
-> , and all the 3 patches have Michael Kelley's Signed-off-by's.
->=20
-> Please review.
->=20
-> Thanks!
-> Dexuan
->=20
-> Dexuan Cui (3):
->   x86/hyper-v: Suspend/resume the hypercall page for hibernation
->   x86/hyper-v: Implement hv_is_hibernation_supported()
->   clocksource/drivers: Suspend/resume Hyper-V clocksource for
->     hibernation
->=20
->  arch/x86/hyperv/hv_init.c          | 40
-> ++++++++++++++++++++++++++++++++++++++
->  drivers/clocksource/hyperv_timer.c | 25 ++++++++++++++++++++++++
->  include/asm-generic/mshyperv.h     |  2 ++
->  3 files changed, 67 insertions(+)
 
-Hi tglx and all,
-Can you please take a look at this patchset (3 patches in total)?
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-IMO it's better for the 3 patches to go through the tip.git tree, but if yo=
-u
-(the x86 maintainers) have no objection, the patches can also go through
-Saha Levin's Hyper-V tree, because the dependent patches have landed
-in Linus's tree now.
+On Wed, Sep 25, 2019 at 10:32:32PM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+>=20
+> This adds a property "num-pwms" in example so that we could
+> specify the number of PWM channels via device tree.
+>=20
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Changes since v10:
+> 1. Follow reviewers's comments:
+> - derive the number of PWMs from the specific compatible string
+[...]
+> + - num-pwms: the number of PWM channels.
+[...]
 
-Thanks,
--- Dexuan
+Why is num-pwms still there if you derive it from the compatible string?
+I guess I must not have made myself clear. Please drop this.
+
+Also, as I mentioned earlier, I've already applied the patches from v9
+that were suitable. Please take a look.
+
+Thierry
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2L7xwACgkQ3SOs138+
+s6EKQBAAkjKF3mGlNiF2VtYjBYbi8012ySVpqf2IVmJEdG1xulyW6cUqSPW50ZRu
+biZJTXPgRLuLLIt9/vt5h/XKjvXevhTlhgv3FCWTl+tgqpgo9xhDpFANSZksadH9
+EsVp5NE1/jgTvdPa/0iYJiDHzF6pg/+zNRweveinqkVcM5mfICWwK42vZVOHx23b
+O+Nzhgr/D1ExmA4W6BUQ8BdCnCyVr8OAL7eYiRWRDwC9esDg34fuq9/irwcMo+mc
+MZE5ieoQmMvs4GOYjOdNy4G5OrBlfadzfpU95xtshQTUyv+w+TX5bj9mWpkZWlgX
+ah5DydkbX7fgR0BMnD8K0UqFr8GOgiJOmQ3VU1Q/orjaw/k0byjAQ3DoEjzGUoS+
+hAy+zt5H+IwVmMO+U9giO66xOWZLKBLa1loJJpSJ0ly0mYCO5KsJx1digyBAc1l5
+DELrYLXnLaXvxQfibweSxiKbCpOeJrsY5REaU5cmbasIFGSYRtvvI6/emTe+YUgW
+IPQ6s3CgvLVw/F+IvZle7CAfuhvltywTksUsYLsJYDjszGhuhYQiM26yjSzE62eM
+ykgQxzfDn/SN1H/cqEQgoTgMmUSxBJNa6SKYrRSlTuyWkj/74pWQdzP9hzUwi7c7
+moqU0o8poSC29OA665w+DJ4AMeQ8QSGNm+ZOO9SpmGBY8752amg=
+=QjmR
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
