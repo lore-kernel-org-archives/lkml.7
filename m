@@ -2,79 +2,103 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432AEC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644E3C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DB52146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B182146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 12:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405793AbfIYMwo (ORCPT
+        id S2405845AbfIYMyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 08:52:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2782 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732452AbfIYMwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 08:52:44 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 196E799B9D28E90673AE;
-        Wed, 25 Sep 2019 20:52:40 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Sep 2019
- 20:52:36 +0800
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        <bvanassche@acm.org>, <bhelgaas@google.com>, <dsterba@suse.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        <alexander.h.duyck@linux.intel.com>, <sakari.ailus@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH] async: Let kfree() out of the critical area of the lock
-Message-ID: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
-Date:   Wed, 25 Sep 2019 20:52:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 25 Sep 2019 08:54:36 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52301 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405798AbfIYMyg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 08:54:36 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8PCsAFi024978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Sep 2019 08:54:17 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D5A834200BF; Wed, 25 Sep 2019 08:54:09 -0400 (EDT)
+Date:   Wed, 25 Sep 2019 08:54:09 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: implement write-behind policy for sequential file
+ writes
+Message-ID: <20190925125409.GD18094@mit.edu>
+References: <156896493723.4334.13340481207144634918.stgit@buzz>
+ <875f3b55-4fe1-e2c3-5bee-ca79e4668e72@yandex-team.ru>
+ <20190923145242.GF2233839@devbig004.ftw2.facebook.com>
+ <ed5d930c-88c6-c8e4-4a6c-529701caa993@yandex-team.ru>
+ <20190924073940.GM6636@dread.disaster.area>
+ <edafed8a-5269-1e54-fe31-7ba87393eb34@yandex-team.ru>
+ <20190925071854.GC804@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925071854.GC804@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not necessary to put kfree() in the critical area of the lock, so
-let it out.
+On Wed, Sep 25, 2019 at 05:18:54PM +1000, Dave Chinner wrote:
+> > > ANd, really such strict writebehind behaviour is going to cause all
+> > > sorts of unintended problesm with filesystems because there will be
+> > > adverse interactions with delayed allocation. We need a substantial
+> > > amount of dirty data to be cached for writeback for fragmentation
+> > > minimisation algorithms to be able to do their job....
+> > 
+> > I think most sequentially written files never change after close.
+> 
+> There are lots of apps that write zeros to initialise and allocate
+> space, then go write real data to them. Database WAL files are
+> commonly initialised like this...
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- kernel/async.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Fortunately, most of the time Enterprise Database files which are
+initialized with a fd which is then kept open.  And it's only a single
+file.  So that's a hueristic that's not too bad to handle so long as
+it's only triggered when there are no open file descriptors on said
+inode.  If something is still keeping the file open, then we do need
+to be very careful about writebehind.
 
-diff --git a/kernel/async.c b/kernel/async.c
-index 4f9c1d6..1de270d 100644
---- a/kernel/async.c
-+++ b/kernel/async.c
-@@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
- 	list_del_init(&entry->domain_list);
- 	list_del_init(&entry->global_list);
+That behind said, with databases, they are goind to be calling
+fdatasync(2) and fsync(2) all the time, so it's unlikely writebehind
+is goint to be that much of an issue, so long as the max writebehind
+knob isn't set too insanely low.  It's been over ten years since I
+last looked at this, and so things may have very likely changed, but
+one enterprise database I looked at would fallocate 32M, and then
+write 32M of zeros to make sure blocks were marked as initialized, so
+that further random writes wouldn't cause metadata updates.
 
--	/* 3) free the entry */
--	kfree(entry);
- 	atomic_dec(&entry_count);
--
- 	spin_unlock_irqrestore(&async_lock, flags);
+Now, there *are* applications which log to files via append, and in
+the worst case, they don't actually keep a fd open.  Examples of this
+would include scripts that call logger(1) very often.  But in general,
+taking into account whether or not there is still a fd holding the
+inode open to influence how aggressively we do writeback does make
+sense.
 
-+	/* 3) free the entry */
-+	kfree(entry);
-+
- 	/* 4) wake up any waiters */
- 	wake_up(&async_done);
- }
--- 
-2.7.4
+Finally, we should remember that this will impact battery life on
+laptops.  Perhaps not so much now that most laptops have SSD's instead
+of HDD's, but aggressive writebehind does certainly have tradeoffs,
+and what makes sense for a NVMe attached SSD is going to be very
+different for a $2 USB thumb drive picked up at the checkout aisle of
+Staples....
 
+						- Ted
