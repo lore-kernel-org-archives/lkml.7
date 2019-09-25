@@ -2,134 +2,102 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABFCC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA21C432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCD92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AE72082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnMdEFq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442693AbfIYIHV (ORCPT
+        id S2442719AbfIYIHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:07:21 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:55076 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404849AbfIYIHT (ORCPT
+        Wed, 25 Sep 2019 04:07:47 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45322 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405820AbfIYIHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:07:19 -0400
-Received: from hjc?rock-chips.com (unknown [192.168.167.42])
-        by regular1.263xmail.com (Postfix) with ESMTP id EA12B305;
-        Wed, 25 Sep 2019 16:07:05 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P2645T139744972404480S1569398812082049_;
-        Wed, 25 Sep 2019 16:07:05 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <b7eb8ce1b1359ea5bd932d20f67e4313>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: dri-devel@lists.freedesktop.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Sandy Huang <hjc@rock-chips.com>
-To:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     hjc@rock-chips.com, heiko@sntech.de, Ayan.Halder@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-Date:   Wed, 25 Sep 2019 16:06:38 +0800
-Message-Id: <1569398801-92201-2-git-send-email-hjc@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569398801-92201-1-git-send-email-hjc@rock-chips.com>
-References: <1569398801-92201-1-git-send-email-hjc@rock-chips.com>
+        Wed, 25 Sep 2019 04:07:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u12so2061964pls.12;
+        Wed, 25 Sep 2019 01:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=I9xTtNwt/ddRBRmVEa6PjbkYWK8+44/EROKOCF09I4E=;
+        b=FnMdEFq2NIVbnFZRgogBOoKNlAk7UQ1uFwN1UmbbAIbbHtmevrwcSS0FtIP097bW2j
+         RYfYUTpgLp8usBIXdLx4eLQJO2eb4n/l1K20qUWO8nOx3gkAzpda7nnDJ8egOtxTFN7/
+         b1Vqj13V3YToUF6IuV/5LeZu0x1Cmp2eDCKaJqso62vTNBMnnxH2dVG0jD5lM0nKQJ4n
+         QMTe/1tTqut5KQkkrwVnlaDbXVL6cTJbzDQjXESEQh7Z8aRIwUHCW+4Ppu/+XZhAu8a3
+         FW9yAILeemJE8gNCtEL34PzBu0Wbuncg5dSBuL6jImDZ86FI64yOGZWBUMvM9c8JkcJ6
+         fv5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=I9xTtNwt/ddRBRmVEa6PjbkYWK8+44/EROKOCF09I4E=;
+        b=U8ioSo4bWiEaS1qFv4ri6WEapwVMpuW5NWj2F6YKE3XKHvxKhsbd2cqObrmGN1IjFs
+         bxePCZyRnfLwn9ycLg48SdTHCLWS2TOOYhW1AsEz7XhHzJ9wXL4r8Ii4QAOXDhA4pOgU
+         M1ReW1lMW/4kPtp5I5tjwcaO6YfWeTQFsBRbSM9qoaDMKnkBbkLdFFBMCgbxWwA7OT4Z
+         5DyEyzlxQwzkDP1ocWqPdTPETudQ+h+iSvM2gGQ506JIbtkm2ToenSIQGY3/7rUD841k
+         nagN2HWrMJCBDdphvat/cIYkWvCn/wu/wkcYxr5rKDsUHm+Z0gygDFWye44z3C9bsIur
+         ymaA==
+X-Gm-Message-State: APjAAAV+I2pokk3ZZ/Xc8U7MlfiQDK9vW4eMXB70E4AcYE5rAEuzBuMY
+        Tlnkp28WHWb76TjcdNlpFkuti8pUnszXYYglyzk=
+X-Google-Smtp-Source: APXvYqx/NhfLui6xTKQiaj/7wEEQlMArZPw8hSSqB/XWTSjN+xlNNkkowlHUbqD+QVq2l7DiHZ/v08C83T1aPYeaXWw=
+X-Received: by 2002:a17:902:b110:: with SMTP id q16mr7591414plr.262.1569398866679;
+ Wed, 25 Sep 2019 01:07:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <156824368856.28378.14511879419677114177@WARFSTATION>
+ <20190912073358.n5bxqosowhky5uhb@pali> <156882055514.9370.16951540573597044820@WARFSTATION>
+ <20190922134323.mowwoyeuqoalpwsg@pali> <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Sep 2019 11:07:35 +0300
+Message-ID: <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
+ Inspiron 10xx
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These new format is supported by some rockchip socs:
+On Mon, Sep 23, 2019 at 4:24 PM <Mario.Limonciello@dell.com> wrote:
+> > From: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > Sent: Sunday, September 22, 2019 8:43 AM
+> > To: Pacien TRAN-GIRARD
+> > Cc: Matthew Garrett; Darren Hart; Andy Shevchenko; platform-driver-
+> > x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> > Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlig=
+ht on
+> > Inspiron 10xx
 
-DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
-DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
-DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> > We need to wait what Mario wrote about this particular problem.
+> >
+>
+> I agree an Inspiron is unlikely to be updated 9 years later.  I think the=
+ right thing
+> to do in this instance is to blacklist this particular platform in kernel=
+ driver.
 
-Signed-off-by: Sandy Huang <hjc@rock-chips.com>
----
- drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
- include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
- 2 files changed, 32 insertions(+)
+Does it mean you are okay with the proposed patch? Can you give your tag th=
+en?
 
-diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-index c630064..f25fa81 100644
---- a/drivers/gpu/drm/drm_fourcc.c
-+++ b/drivers/gpu/drm/drm_fourcc.c
-@@ -274,6 +274,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
- 		{ .format = DRM_FORMAT_YUV420_10BIT,    .depth = 0,
- 		  .num_planes = 1, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
- 		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
-+		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
-+		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
-+		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
-+		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
-+		  .is_yuv = true },
-+		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,
-+		  .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
-+		  .is_yuv = true },
- 	};
- 
- 	unsigned int i;
-diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-index 3feeaa3..0479f47 100644
---- a/include/uapi/drm/drm_fourcc.h
-+++ b/include/uapi/drm/drm_fourcc.h
-@@ -238,6 +238,20 @@ extern "C" {
- #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
- 
- /*
-+ * 2 plane YCbCr 10bit
-+ * index 0 = Y plane, [9:0] Y
-+ * index 1 = Cr:Cb plane, [19:0]
-+ * or
-+ * index 1 = Cb:Cr plane, [19:0]
-+ */
-+#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
-+#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
-+#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
-+
-+/*
-  * 2 plane YCbCr MSB aligned
-  * index 0 = Y plane, [15:0] Y:x [10:6] little endian
-  * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
--- 
-2.7.4
-
-
-
+--=20
+With Best Regards,
+Andy Shevchenko
