@@ -2,109 +2,108 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A864C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5E3C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F046921D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WANrQ3Jb"
+	by mail.kernel.org (Postfix) with ESMTP id 147B921D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 19:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392467AbfIYT40 (ORCPT
+        id S2392511AbfIYT5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 15:56:26 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36734 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731229AbfIYT4Z (ORCPT
+        Wed, 25 Sep 2019 15:57:51 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:40855 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732757AbfIYT5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 15:56:25 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8PJmV8r016820
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 12:56:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=ofCa75SVwrrk9TV45ZJF/7e5KFYqn8OqLVCsplE8mxc=;
- b=WANrQ3JbuqFkb99Ne+C1HvGYLcODZehbh8insmZR2ZyC5XmdfjelmOUFbjZXm5g1UKFm
- VRVKO5NgL54GFZcBeLeooM20+9t/VQ5JwjXYhs82ybs35qIHPZkmS7BubjiXujk9TpZ5
- xW1skNRsnUqgYsHYq4/r4TIY4xXNtDF2ZRM= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2v7tdww0c5-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 12:56:24 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 25 Sep 2019 12:56:21 -0700
-Received: by devvm1362.cln1.facebook.com (Postfix, from userid 167109)
-        id 99EFE242D061D; Wed, 25 Sep 2019 12:56:19 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Jon Haslam <jonhaslam@fb.com>
-Smtp-Origin-Hostname: devvm1362.cln1.facebook.com
-To:     <linux-kernel@vger.kernel.org>
-CC:     <linux-doc@vger.kernel.org>, <corbet@lwn.net>,
-        <hannes@cmpxchg.org>, <tj@kernel.org>, <guro@fb.com>,
-        Jon Haslam <jonhaslam@fb.com>
-Smtp-Origin-Cluster: cln1c09
-Subject: [PATCH] docs: fix memory.low description in cgroup-v2.rst
-Date:   Wed, 25 Sep 2019 12:56:04 -0700
-Message-ID: <20190925195604.2153529-1-jonhaslam@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 25 Sep 2019 15:57:51 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46dpkh5lbNz1rVv9;
+        Wed, 25 Sep 2019 21:57:48 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46dpkh57sXz1qqkC;
+        Wed, 25 Sep 2019 21:57:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id cr9k4nVtNq2p; Wed, 25 Sep 2019 21:57:47 +0200 (CEST)
+X-Auth-Info: Yu5piwI6ei8JIHvmH/iv2EXB26CPdpNzMAt4N9ZIxqk=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 25 Sep 2019 21:57:47 +0200 (CEST)
+Date:   Wed, 25 Sep 2019 21:57:39 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        krzk@kernel.org
+Subject: Re: [PATCH v2 1/2] spi: Add call to spi_slave_abort() function when
+ spidev driver is released
+Message-ID: <20190925215739.6692ee89@jawa>
+In-Reply-To: <20190925164517.GI2036@sirena.org.uk>
+References: <20190924110547.14770-1-lukma@denx.de>
+        <20190925091143.15468-1-lukma@denx.de>
+        <20190925091143.15468-2-lukma@denx.de>
+        <20190925164517.GI2036@sirena.org.uk>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-25_09:2019-09-25,2019-09-25 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 phishscore=0 clxscore=1011 suspectscore=1
- lowpriorityscore=0 mlxlogscore=826 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909250162
-X-FB-Internal: deliver
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/CKOQSV_mYnHZAmlMvZlX5hf"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current cgroup-v2.rst file contains an incorrect description of when
-memory is reclaimed from a cgroup that is using the 'memory.low'
-mechanism. This fix simply corrects the text to reflect the actual
-implementation.
+--Sig_/CKOQSV_mYnHZAmlMvZlX5hf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 7854207fe954 ("mm/docs: describe memory.low refinements")
-Signed-off-by: Jon Haslam <jonhaslam@fb.com>
----
- Documentation/admin-guide/cgroup-v2.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hi Mark,
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 0fa8c0e615c2..26d1cde6b34a 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1117,8 +1117,8 @@ PAGE_SIZE multiple when read back.
- 
- 	Best-effort memory protection.  If the memory usage of a
- 	cgroup is within its effective low boundary, the cgroup's
--	memory won't be reclaimed unless memory can be reclaimed
--	from unprotected cgroups.
-+	memory won't be reclaimed unless there is no reclaimable
-+	memory available in unprotected cgroups.
- 
- 	Effective low boundary is limited by memory.low values of
- 	all ancestor cgroups. If there is memory.low overcommitment
-@@ -1914,7 +1914,7 @@ Cpuset Interface Files
- 
-         It accepts only the following input values when written to.
- 
--        "root"   - a paritition root
-+        "root"   - a partition root
-         "member" - a non-root member of a partition
- 
- 	When set to be a partition root, the current cgroup is the
--- 
-2.17.1
+> On Wed, Sep 25, 2019 at 11:11:42AM +0200, Lukasz Majewski wrote:
+> > This change is necessary for spidev devices (e.g. /dev/spidev3.0)
+> > working in the slave mode (like NXP's dspi driver for Vybrid SoC). =20
+>=20
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
+>=20
+> That said I'll handle this this one time.
 
+Thanks for help (and patience).
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/CKOQSV_mYnHZAmlMvZlX5hf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2LxrMACgkQAR8vZIA0
+zr38owf+NfpYq4idAYaz+acP1zbwiI6XJ+N6XPIdsxu6mT8UYz0fEfStkeuiCr+J
+YTYcu5Krtr7nWv12Dgh+kDTCDqp3Pn9I+mRwOxEz2O6Rr9GqcE17LX8sFeBWToRW
+3MT0phpVUKPwO3jqke9uoSItQ66we4UjGArhgiq5c14GYWSJl0TTwRyDwpkXKB0X
+TlkAE/8H5Hld5ioXglA056fnYcXXz7sPYXUMmw8cm0jGwjzLTAjWs/WzI8S89TQF
+Y3S+QVnskhA+r+XoMFZo6wpelqZQD3RULU6K/4ryoUYyiN8Buo1XGrVZBOJvUpIY
+db8l3hi11iraVVU2bFilUdc59nofBw==
+=M3+b
+-----END PGP SIGNATURE-----
+
+--Sig_/CKOQSV_mYnHZAmlMvZlX5hf--
