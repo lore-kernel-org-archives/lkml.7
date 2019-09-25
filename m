@@ -6,112 +6,68 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7155FC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0AAC432C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAF42082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91FB21971
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfIYJnk (ORCPT
+        id S1728745AbfIYJqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:43:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33813 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfIYJni (ORCPT
+        Wed, 25 Sep 2019 05:46:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58059 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfIYJqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:43:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b128so3084157pfa.1;
-        Wed, 25 Sep 2019 02:43:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VXvDSaY3Y2wgbv4+QK7v6TUhR5B+Dfsy/va1gYkqKSw=;
-        b=dFQgRclSfEdXmlN8qbBFjULjiZOGBgrEIZWiVW+xeVioJw56iJ217LsqrVCF92C6Hb
-         NAk+gawhA2X5xpHbKzq+QLC2ufS6YPXVDj3EruFb6WEsoB4PPhf6W2QdIPZAy5gZQ6qR
-         bdKuHR5WZCIwTVxM75dsGY4VA67biAjgoEBUGMHNFpL+DU+UnfIdfH89dTIyaiDqOOKq
-         tD568uk5zlgssVNQek8NxlWCS8anrJKT0+Xeupf8HsSfs1p/urmie8J0bM5sR5+cXo6M
-         fV6w33CVcLG9mqKIl1Z3Cdqt+jvkFntheXgVgDk0O5nqhcrAM4HgNVnKgF58VYhFTU8l
-         KEzA==
-X-Gm-Message-State: APjAAAU2t3efFNiPJDLjta31VhcWYrwJtudUEJqI5Kq55LmQ6qJE1lIV
-        p6nkrvoP+SBS6gHJb5QHp6I=
-X-Google-Smtp-Source: APXvYqweqhPXFv3kkh3H68bwtqju0Z6SSrDGbQbicbbJ0yUogK7Vu7Z6sHzVwgRIEdzOyW2WAClSRQ==
-X-Received: by 2002:a65:504c:: with SMTP id k12mr8009638pgo.252.1569404617324;
-        Wed, 25 Sep 2019 02:43:37 -0700 (PDT)
-Received: from localhost.localdomain (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id s24sm3819715pgm.3.2019.09.25.02.43.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Sep 2019 02:43:36 -0700 (PDT)
-From:   You-Sheng Yang <vicamo.yang@canonical.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hui Wang <hui.wang@canonical.com>, Julian Sax <jsbc@gmx.de>,
-        HungNien Chen <hn.chen@weidahitech.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] HID: i2c-hid: add 60ms SET_POWER delay for Goodix touchpad
-Date:   Wed, 25 Sep 2019 17:43:26 +0800
-Message-Id: <20190925094326.41693-3-vicamo.yang@canonical.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190925094326.41693-1-vicamo.yang@canonical.com>
-References: <20190925094326.41693-1-vicamo.yang@canonical.com>
+        Wed, 25 Sep 2019 05:46:20 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iD3rl-0003NL-SF; Wed, 25 Sep 2019 09:45:45 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: amd: acp3x: clean up indentation issue
+Date:   Wed, 25 Sep 2019 10:45:45 +0100
+Message-Id: <20190925094545.19941-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Goodix touchpad 27C6:01F0 fails to switch to PTP mode when resumed from
-suspend. The traffic after resumed looks like:
+From: Colin Ian King <colin.king@canonical.com>
 
-  [ 275.312190] i2c_hid i2c-DELL096E:00: i2c_hid_set_power
-  [ 275.312191] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 01 08
-  [ 283.926905] i2c_hid i2c-DELL096E:00: i2c_hid_set_power
-  [ 283.926910] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 00 08
-  [ 283.927146] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
-  [ 283.927149] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 37 03 06 00 05 00 07 00 00
-  [ 283.927872] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
-  [ 283.927874] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 33 03 06 00 05 00 03 03 00
-  [ 283.929148] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
-  [ 283.929151] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 35 03 06 00 05 00 05 03 00
-  [ 289.262675] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 00 00 00 00 00 00 00
-  [ 289.270314] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fe 00 00 00 00 00 00
-  [ 289.276806] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fd 00 00 00 00 00 00
-  ...
+There is a statement that is indented one level too deeply,
+remove the extraneous tab.
 
-The time delay between i2c_hid_set_power and i2c_hid_set_or_send_report
-is less than vendor recommended 60ms, so it failed to complete its power
-state transition, ignored i2c_hid_set_or_send_report and is still
-operating in legacy mouse mode, and therefore it gives unsupported input
-reports.
-
-This change updates the quirk for the device to specifies a 60ms
-post-setpower-delay-ms.
-
-References: https://bugzilla.kernel.org/show_bug.cgi?id=204991
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/hid/i2c-hid/i2c-hid-core.c | 2 +-
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index a5bc2786dc440..8c01ce33f1c61 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -180,7 +180,7 @@ static const struct i2c_hid_quirks {
- 	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
- 		I2C_HID_QUIRK_NO_RUNTIME_PM },
- 	{ I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
--		I2C_HID_QUIRK_NO_RUNTIME_PM },
-+		I2C_HID_QUIRK_NO_RUNTIME_PM, 60 },
- 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
- 		 I2C_HID_QUIRK_BOGUS_IRQ },
- 	{ 0, 0 }
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index bc4dfafdfcd1..ea57088d50ce 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -631,7 +631,7 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "IORESOURCE_IRQ FAILED\n");
+-			return -ENODEV;
++		return -ENODEV;
+ 	}
+ 
+ 	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
 -- 
-2.23.0
+2.20.1
 
