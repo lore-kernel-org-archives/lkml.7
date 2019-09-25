@@ -2,224 +2,111 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A67C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC7DC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C5A20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661FA20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 09:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569402986;
+	bh=Z2Uag+DwW909ph/1HOySpUCCmNKluWCbwO7QFKK6F8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r0kM6O+8zR7RfWh9zHQtQS0ATNxms+QbvRaSIBuZaVtM8eeLeQWlauPJnTvdO54wn
+	 W6Huphr3uHUNy6i2OjJbYr+b7qUcjwcDMV8gS+mnTshfh1IC0HmSNqiWqm+ERuFaTE
+	 alzFpfGdNSpc/Nnxm8hoXlFE/gBYKnGcTbPVmyrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388537AbfIYJOm convert rfc822-to-8bit (ORCPT
+        id S1727106AbfIYJQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 05:14:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36054 "EHLO mga11.intel.com"
+        Wed, 25 Sep 2019 05:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388718AbfIYJOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 05:14:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 02:14:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,547,1559545200"; 
-   d="scan'208";a="191282057"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga003.jf.intel.com with ESMTP; 25 Sep 2019 02:13:59 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 02:13:59 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Sep 2019 02:13:59 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.140]) with mapi id 14.03.0439.000;
- Wed, 25 Sep 2019 17:13:57 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>,
-        "Xia, Chenbo" <chenbo.xia@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>
-Subject: RE: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
-Thread-Topic: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
-Thread-Index: AQHVZIuKvRVFa0XUZUmQ/OLFqyeI/6c8OZog
-Date:   Wed, 25 Sep 2019 09:13:57 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A0A42E9@SHSMSX104.ccr.corp.intel.com>
-References: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
-In-Reply-To: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYmQ5ZmFiZjItODBkMi00ZDA3LWJmOGYtOGIwNGZiZjNhYTc3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVhJNXlcL3NtcDZoZzRobUpBWXdEcGdBTnFCMjVNTE00MGxaT0tWUkhyT2lSRGRFaXJ4RmxUUHJoXC9ZMlJ3eGJlIn0=
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726185AbfIYJPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 05:15:31 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17A020673;
+        Wed, 25 Sep 2019 09:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569402925;
+        bh=Z2Uag+DwW909ph/1HOySpUCCmNKluWCbwO7QFKK6F8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LUAdHLEB0Njr3vPkEeYEnn9UJ65aNeraXjCw8vvFf6X7fzKvIP2kobELTTOGaz+Ai
+         F/6Pk5OGh6G++u9o8W46kH+kpymk6XLNk9oIVvO3P5dgTlNDCS89SC0ZdQYzlIooNS
+         HHynK47zEbah8oMWrSK4ChXXBYoripfPPxhyqVt0=
+Date:   Wed, 25 Sep 2019 11:15:22 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        David Dai <daidavid1@codeaurora.org>
+Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get()
+ and reduce DT binding
+Message-ID: <20190925091522.jf5q2jdo6njfkxto@gilmour>
+References: <20190925054133.206992-1-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="aomtcuidegtr2wsv"
+Content-Disposition: inline
+In-Reply-To: <20190925054133.206992-1-swboyd@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
 
-Any comments on it? :-) With this version, the vfio-mdev-pci driver
-could work with non-singleton groups, also it works with vfio-pci
-as well.
+--aomtcuidegtr2wsv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Yi Liu
+Hi Stephen,
 
-> From: Liu, Yi L
-> Sent: Thursday, September 5, 2019 3:59 PM
-> To: alex.williamson@redhat.com; kwankhede@nvidia.com
-> Subject: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
-> 
-> This patchset aims to add a vfio-pci-like meta driver as a demo
-> user of the vfio changes introduced in "vfio/mdev: IOMMU aware
-> mediated device" patchset from Baolu Lu. Besides the test purpose,
-> per Alex's comments, it could also be a good base driver for
-> experimenting with device specific mdev migration.
-> 
-> Specific interface tested in this proposal:
->  *) int mdev_set_iommu_device(struct device *dev,
->  				struct device *iommu_device)
->     introduced in the patch as below:
->     "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
-> 
-> Patch Overview:
->  *) patch 1 ~ 7: code refactor for existing vfio-pci module
->                  move the common codes from vfio_pci.c to
->                  vfio_pci_common.c
->  *) patch 8: add protection to perm_bits alloc/free
->  *) patch 9: add vfio-mdev-pci sample driver
->  *) patch 10: refine the sample driver
->  *) patch 11 - 13: make the sample driver work for non-singleton groups
->                    also work for vfio-pci and vfio-mdev-pci mixed usage
->                    includes vfio-mdev-pci driver change and vfio_iommu_type1
->                    changes.
-> 
-> Links:
->  *) Link of "vfio/mdev: IOMMU aware mediated device"
->          https://lwn.net/Articles/780522/
->  *) Previous versions:
->          RFC v1: https://lkml.org/lkml/2019/3/4/529
->          RFC v2: https://lkml.org/lkml/2019/3/13/113
->          RFC v3: https://lkml.org/lkml/2019/4/24/495
->          Patch v1: https://www.spinics.net/lists/kvm/msg188952.html
->  *) may try it with the codes in below repo
->     current version is branch "v5.3-rc7-pci-mdev":
->          https://github.com/luxis1999/vfio-mdev-pci-sample-driver.git
-> 
-> Test done on two NICs which share an iommu group.
-> 
-> -------------------------------------------------------------------
->          |  NIC0           |  NIC1      | vIOMMU  | VMs  | Passtrhu
-> -------------------------------------------------------------------
->   Test#0 |  vfio-pci       |  vfio-pci  | no      |  1   | pass
-> -------------------------------------------------------------------
->   Test#1 |  vfio-pci       |  vfio-pci  | no      |  2   | fail[1]
-> -------------------------------------------------------------------
->   Test#2 |  vfio-pci       |  vfio-pci  | yes     |  1   | fail[2]
-> -------------------------------------------------------------------
->   Test#3 |  vfio-pci-mdev  |  vfio-pci  | no      |  1   | pass
-> -------------------------------------------------------------------
->   Test#4 |  vfio-pci-mdev  |  vfio-pci  | no      |  2   | fail[3]
-> -------------------------------------------------------------------
->   Test#5 |  vfio-pci-mdev  |  vfio-pci  | yes     |  1   | fail[4]
-> -------------------------------------------------------------------
-> Tips:
-> [1] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
->      vfio 0000:01:00.1: failed to open /dev/vfio/1: Device or resource busy
-> [2] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
->      vfio 0000:01:00.1: group 1 used in multiple address spaces
-> [3] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
->      vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
->      iommu for container: Device or resource busy
-> [4] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
->      vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
->      iommu for container: Device or resource busy
->     Or
->     qemu-system-x86_64: -device vfio-pci,sysfsdev=/sys/bus/mdev/devices/
->      83b8f4f2-509f-382f-3c1e-e6bfe0fa1003: vfio 83b8f4f2-509f-382f-3c1e-
->      e6bfe0fa1003: failed to setup container for group 11: Failed to set iommu
->      for container: Device or resource busy
-> Some other tests are not listed. Like bind NIC0 to vfio-pci-mdev and try to
-> passthru it with "vfio-pci,host=01:00.0", kernel will throw a warn log and
-> fail the operation.
-> 
-> Please feel free give your comments.
-> 
-> Thanks,
-> Yi Liu
-> 
-> Change log:
->   patch v1 -> patch v2:
->   - the sample driver implementation refined
->   - the sample driver can work on non-singleton iommu groups
->   - the sample driver can work with vfio-pci, devices from a non-singleton
->     group can either be bound to vfio-mdev-pci or vfio-pci, and the
->     assignment of this group still follows current vfio assignment rule.
-> 
->   RFC v3 -> patch v1:
->   - split the patchset from 3 patches to 9 patches to better demonstrate
->     the changes step by step
-> 
->   v2->v3:
->   - use vfio-mdev-pci instead of vfio-pci-mdev
->   - place the new driver under drivers/vfio/pci while define
->     Kconfig in samples/Kconfig to clarify it is a sample driver
-> 
->   v1->v2:
->   - instead of adding kernel option to existing vfio-pci
->     module in v1, v2 follows Alex's suggestion to add a
->     separate vfio-pci-mdev module.
->   - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
-> 
-> Alex Williamson (1):
->   samples: refine vfio-mdev-pci driver
-> 
-> Liu Yi L (12):
->   vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header
->   vfio_pci: refine user config reference in vfio-pci module
->   vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
->   vfio_pci: make common functions be extern
->   vfio_pci: duplicate vfio_pci.c
->   vfio_pci: shrink vfio_pci_common.c
->   vfio_pci: shrink vfio_pci.c
->   vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
->   samples: add vfio-mdev-pci driver
->   samples/vfio-mdev-pci: call vfio_add_group_dev()
->   vfio/type1: use iommu_attach_group() for wrapping PF/VF as mdev
->   vfio/type1: track iommu backed group attach
-> 
->  drivers/vfio/pci/Makefile           |    9 +-
->  drivers/vfio/pci/vfio_mdev_pci.c    |  497 ++++++++++++
->  drivers/vfio/pci/vfio_pci.c         | 1449 +---------------------------------
->  drivers/vfio/pci/vfio_pci_common.c  | 1455
-> +++++++++++++++++++++++++++++++++++
->  drivers/vfio/pci/vfio_pci_config.c  |    9 +
->  drivers/vfio/pci/vfio_pci_private.h |   36 +
->  drivers/vfio/vfio_iommu_type1.c     |  185 ++++-
->  samples/Kconfig                     |   11 +
->  8 files changed, 2194 insertions(+), 1457 deletions(-)
->  create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
->  create mode 100644 drivers/vfio/pci/vfio_pci_common.c
-> 
-> --
-> 2.7.4
+On Tue, Sep 24, 2019 at 10:41:33PM -0700, Stephen Boyd wrote:
+> The DT binding could also be simplified somewhat. Currently a path needs
+> to be specified in DT for each and every use case that is possible for a
+> device to want. Typically the path is to memory, which looks to be
+> reserved for in the binding with the "dma-mem" named path, but sometimes
+> the path is from a device to the CPU or more generically from a device
+> to another device which could be a CPU, cache, DMA master, or another
+> device if some sort of DMA to DMA scenario is happening. Let's remove
+> the pair part of the binding so that we just list out a device's
+> possible endpoints on the bus or busses that it's connected to.
+>
+> If the kernel wants to figure out what the path is to memory or the CPU
+> or a cache or something else it should be able to do that by finding the
+> node for the "destination" endpoint, extracting that node's
+> "interconnects" property, and deriving the path in software. For
+> example, we shouldn't need to write out each use case path by path in DT
+> for each endpoint node that wants to set a bandwidth to memory. We
+> should just be able to indicate what endpoint(s) a device sits on based
+> on the interconnect provider in the system and then walk the various
+> interconnects to find the path from that source endpoint to the
+> destination endpoint.
 
+The dma-mem name is used by the OF core to adjust the mapping of the
+devices as well. So, any solution needs to be generic (or provide a
+generic helper).
+
+Maxime
+
+--aomtcuidegtr2wsv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYswKgAKCRDj7w1vZxhR
+xe8UAQC3EqIcKg882wsQj/TdlIO/sf9HoBIDnQnVNJ2t2kaPsAD/Qsa+D9ZQUlKc
+qhYx4agifh1/WXVN4H+Wb39VO4vx5wk=
+=Z0s1
+-----END PGP SIGNATURE-----
+
+--aomtcuidegtr2wsv--
