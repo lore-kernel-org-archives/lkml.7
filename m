@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0C7C43630
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BC8C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FB621D81
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A56C21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 23:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2vPkiRm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1rHJE7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732334AbfIYXmd (ORCPT
+        id S1732552AbfIYXmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 19:42:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34677 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfIYXmd (ORCPT
+        Wed, 25 Sep 2019 19:42:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33149 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfIYXmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:42:33 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k7so414911pll.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:42:32 -0700 (PDT)
+        Wed, 25 Sep 2019 19:42:35 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so554952pfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 16:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BqAPbs/wZUWEhGivyo3NLB3Z3ocJiJHq8gLjsQrSOVI=;
-        b=l2vPkiRmlXdJHN6GeFN8Z8GiZhmhg12dGgNyE97gFX1t7ha+98miz02tsg7Iek0dCg
-         YoIg336NYQakybahq3pjXQV13OnYmh9bWgL1jRY5E9CDaycXkOrtT5JroxmvjkHypxwI
-         gnxiap1CkAzXLcRY+iCMlLe9fxDBjp8FCX88MgFfNwx8Vr2u+lX9qbsEuSBaq2xUjRcm
-         znMZhxhAgK1OX2g9PYKludIijQYdXzfey0dI+iQlBB6LHM21pWsoyNUlz7DGJE/4PwO3
-         E1Bc5MEG371EEWMJNAGOFduBccgOxXKkgNPh/klrf+8pgvOIaRzM2e43J2lr/WYyce8k
-         JjZQ==
+        bh=YKLbWLWjJ/GA5qz2gzrLI3oAv45tZggVEaoyYmAEWtc=;
+        b=l1rHJE7hxxmeTFkh1J9YV8QMV1yV0qFXV/DmDWNsLVb2CYq7qYSUgzimth3Sm/WpfC
+         YWcrIQUFR2O2toA2iR/QzLOROQiwG171rBZSbi0sjNtVqYU9zdends52ay6d2mJkaVFC
+         FtShBLWc9mElkWRSKgv70PgTH40gn+Tc8nJi53MKUQNJZuSmlje0XLRZvVRfk85PwRL0
+         W3vhi922biTqSjfQTQnZD+R33u6YXHQoFZ8QthoyMdEBFMRdrQrhrzyFhUDHaSDfyRVv
+         EP6IDGGBXKPs00w/3avZo8yti/H9cxL6e/7vcJNssTDqNu5lRTEuw3edBZQUJPxyoXYH
+         XP2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BqAPbs/wZUWEhGivyo3NLB3Z3ocJiJHq8gLjsQrSOVI=;
-        b=LjNqZNW1mcG2lXtZoCy2hsSPApi9uqVIgsgInXbYslT+IKsxijCVW3XpXlCkr+OiiV
-         AGrMIDB0pIQH3qyZH3m8CrCMaNXiKbgXZIKuEAo2ZLvHgl0Ur6ftST0MC3aMO4PLnw58
-         5GFWU490ZxQzAY4/yqonM6y5eP2x/EtoC7L49ZTgabG1Ab8DAQNNQ5OIwQGDedBsGEAQ
-         54d66gGnvXS/nTd/31+DkgJed3/Wx30IxeNB1Fazj1h4jttwxN3PawQBGbcLbyUVPa5+
-         GC4e/9+bKqENyhCZu3wVA6KsPMWm3fb/0MATT7xW5Qa/5K/k/BOQVxlG8FRvyvciBI13
-         1Y+g==
-X-Gm-Message-State: APjAAAUXs7yLijtBWWKg50U0U0VzRk/YcrVRNgTZQ5OyvOZxHI9C8K5C
-        uBOECQ2aEulWOw/pqejRfSunfGWQrfw=
-X-Google-Smtp-Source: APXvYqzMUd03gD/db63Y3t5pD+j0LGb6omLi0D1rmvHroR9ZzP4ylqsiPQgYxlYCCvBxuIxa9kobfw==
-X-Received: by 2002:a17:902:6bc5:: with SMTP id m5mr707175plt.169.1569454951894;
-        Wed, 25 Sep 2019 16:42:31 -0700 (PDT)
+        bh=YKLbWLWjJ/GA5qz2gzrLI3oAv45tZggVEaoyYmAEWtc=;
+        b=VaZVQfk0W/BrR4j/HuEYf2bH6DO7p4gYy3HEEKtlgm7scu5Nnr+zRUbAgotAkEEZ/O
+         1Jf+Qd0BVKnnLFGxOqGiXPXlsU08uftkJ6+moHKlDxsaagS8eFqp/5msJeUbYEnTMFvQ
+         uh1fpLr/eM48PzDZXi/7ACf+fM5PiJ2MbSF/d5P8Y6GBT9Og5tiHCnoZxRD0VH4QnpBv
+         l1WrfXz6Jhn2DB/l2ldCqVIUfNX623GSCb4j958BcNv2bbYVjGAFhb8vvErWLepUrwAc
+         Uvd7Un0TE9JrNw6Ukx+fKNXD4Xk/Ap8wMvHMlCjRdQOis52HjumWKvs01Irm5N6QHWhp
+         7aNA==
+X-Gm-Message-State: APjAAAUyGUri6UV6Oa7x5EqzDLXreC0FH+y3rkp60gIPbQdrR/JpsMtc
+        eBa5Y5mXlEykRbqcmHerFKpOXtN/md8=
+X-Google-Smtp-Source: APXvYqx/aC5q8MMHMmA8YIA0gNGSPcJcNCThJHGYsY3eE0QwFH+ToKX9bx4/+M03ERzZoDMMHZ0kbg==
+X-Received: by 2002:a63:ff1a:: with SMTP id k26mr471666pgi.154.1569454954359;
+        Wed, 25 Sep 2019 16:42:34 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id d1sm131127pfc.98.2019.09.25.16.42.29
+        by smtp.gmail.com with ESMTPSA id d1sm131127pfc.98.2019.09.25.16.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 16:42:31 -0700 (PDT)
+        Wed, 25 Sep 2019 16:42:33 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
+Cc:     Yu Chen <chenyu56@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Felipe Balbi <balbi@kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Yu Chen <chenyu56@huawei.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/5] dt-bindings: usb: dwc3: Add a property to do a CGTL soft reset on mode switching
-Date:   Wed, 25 Sep 2019 23:42:20 +0000
-Message-Id: <20190925234224.95216-2-john.stultz@linaro.org>
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 2/5] usb: dwc3: Execute GCTL Core Soft Reset while switch mode for Hisilicon Kirin Soc
+Date:   Wed, 25 Sep 2019 23:42:21 +0000
+Message-Id: <20190925234224.95216-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190925234224.95216-1-john.stultz@linaro.org>
 References: <20190925234224.95216-1-john.stultz@linaro.org>
@@ -78,8 +78,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a dt-binding for quirk needed to do a GCTL soft reset on mode
-switching
+From: Yu Chen <chenyu56@huawei.com>
+
+A GCTL soft reset should be executed when switch mode for dwc3 core
+of Hisilicon Kirin Soc.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Felipe Balbi <balbi@kernel.org>
@@ -91,24 +93,79 @@ Cc: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/dwc3/core.c | 20 ++++++++++++++++++++
+ drivers/usb/dwc3/core.h |  3 +++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 66780a47ad85..cf4ef6c22fb3 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -77,6 +77,8 @@ Optional properties:
- 			during HS transmit.
-  - snps,dis_metastability_quirk: when set, disable metastability workaround.
- 			CAUTION: use only if you are absolutely sure of it.
-+ - snps,gctl-reset-quirk: when set, GCTL soft reset will be executed on mode
-+			switch.
-  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
- 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
-  - snps,hird-threshold: HIRD threshold
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 999ce5e84d3c..440261432421 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
+ 	dwc->current_dr_role = mode;
+ }
+ 
++static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
++{
++	u32 reg;
++
++	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
++	reg |= DWC3_GCTL_CORESOFTRESET;
++	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
++
++	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
++	reg &= ~DWC3_GCTL_CORESOFTRESET;
++	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
++}
++
+ static void __dwc3_set_mode(struct work_struct *work)
+ {
+ 	struct dwc3 *dwc = work_to_dwc(work);
+@@ -156,6 +169,10 @@ static void __dwc3_set_mode(struct work_struct *work)
+ 
+ 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
+ 
++	/* Execute a GCTL Core Soft Reset when switch mode */
++	if (dwc->gctl_reset_quirk)
++		dwc3_gctl_core_soft_reset(dwc);
++
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	switch (dwc->desired_dr_role) {
+@@ -1316,6 +1333,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 	dwc->dis_metastability_quirk = device_property_read_bool(dev,
+ 				"snps,dis_metastability_quirk");
+ 
++	dwc->gctl_reset_quirk = device_property_read_bool(dev,
++				"snps,gctl-reset-quirk");
++
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+ 
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 1c8b349379af..b3cb6eec3f8f 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -1029,6 +1029,7 @@ struct dwc3_scratchpad_array {
+  * 	2	- No de-emphasis
+  * 	3	- Reserved
+  * @dis_metastability_quirk: set to disable metastability quirk.
++ * @gctl_reset_quirk: set to do a gctl soft-reset while switch operation mode.
+  * @imod_interval: set the interrupt moderation interval in 250ns
+  *                 increments or 0 to disable.
+  */
+@@ -1219,6 +1220,8 @@ struct dwc3 {
+ 
+ 	unsigned		dis_metastability_quirk:1;
+ 
++	unsigned		gctl_reset_quirk:1;
++
+ 	u16			imod_interval;
+ };
+ 
 -- 
 2.17.1
 
