@@ -2,130 +2,118 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,WEIRD_QUOTING autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D91C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADF0C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1145E20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7F5217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634132AbfIYIaZ (ORCPT
+        id S2634153AbfIYIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:30:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36354 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634101AbfIYIaZ (ORCPT
+        Wed, 25 Sep 2019 04:32:44 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39277 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634140AbfIYIcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:30:25 -0400
-Received: from [65.39.69.237] (helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iD2gY-0007mG-I2; Wed, 25 Sep 2019 10:30:06 +0200
-Date:   Wed, 25 Sep 2019 10:29:49 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
-        ben@decadent.org.uk, labbott@redhat.com, andrew.cooper3@citrix.com,
-        tsoni@codeaurora.org, keescook@chromium.org, tony.luck@intel.com,
-        linux-doc@vger.kernel.org, dan.j.williams@intel.com
-Subject: [PATCH] Documentation/process: Clarify disclosure rules
-In-Reply-To: <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
-Message-ID: <alpine.DEB.2.21.1909251028390.10825@nanos.tec.linutronix.de>
-References: <20190910172644.4D2CDF0A@viggo.jf.intel.com> <20190910172649.74639177@viggo.jf.intel.com> <20190911154453.GA14152@kroah.com> <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 25 Sep 2019 04:32:43 -0400
+X-Originating-IP: 79.19.63.71
+Received: from uno.localdomain (host71-63-dynamic.19-79-r.retail.telecomitalia.it [79.19.63.71])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2ABE6E0007;
+        Wed, 25 Sep 2019 08:32:39 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 10:34:21 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: Re: [PATCH v6 4/7] Documentation: media: Document V4L2_CTRL_TYPE_AREA
+Message-ID: <20190925083421.ronwsvmqeu5quxpx@uno.localdomain>
+References: <20190920135137.10052-1-ricardo@ribalda.com>
+ <20190920135137.10052-5-ricardo@ribalda.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jvmepk34h776iu7a"
+Content-Disposition: inline
+In-Reply-To: <20190920135137.10052-5-ricardo@ribalda.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The role of the contact list provided by the disclosing party and how it
-affects the disclosure process and the ability to include experts into
-the development process is not really well explained.
 
-Neither is it entirely clear when the disclosing party will be informed
-about the fact that a developer who is not covered by an employer NDA needs
-to be brought in and disclosed.
+--jvmepk34h776iu7a
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Explain the role of the contact list and the information policy along with
-an eventual conflict resolution better.
+Hi Ricardo,
 
-Reported-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- Documentation/process/embargoed-hardware-issues.rst |   40 ++++++++++++++++----
- 1 file changed, 33 insertions(+), 7 deletions(-)
+On Fri, Sep 20, 2019 at 03:51:34PM +0200, Ricardo Ribalda Delgado wrote:
+> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>
+> A struct v4l2_area containing the width and the height of a rectangular
+> area.
+>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  Documentation/media/uapi/v4l/vidioc-queryctrl.rst | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> index a3d56ffbf4cc..33aff21b7d11 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-queryctrl.rst
+> @@ -443,6 +443,12 @@ See also the examples in :ref:`control`.
+>        - n/a
+>        - A struct :c:type:`v4l2_ctrl_mpeg2_quantization`, containing MPEG-2
+>  	quantization matrices for stateless video decoders.
+> +    * - ``V4L2_CTRL_TYPE_AREA``
+> +      - n/a
+> +      - n/a
+> +      - n/a
+> +      - A struct :c:type:`v4l2_area`, containing the width and the height
+> +        of a rectangular area. Units depend on the use case.
 
---- a/Documentation/process/embargoed-hardware-issues.rst
-+++ b/Documentation/process/embargoed-hardware-issues.rst
-@@ -143,6 +143,20 @@ via their employer, they cannot enter in
- in their role as Linux kernel developers. They will, however, agree to
- adhere to this documented process and the Memorandum of Understanding.
- 
-+The disclosing party should provide a list of contacts for all other
-+entities who have already been, or should be, informed about the issue.
-+This serves several purposes:
-+
-+ - The list of disclosed entities allows communication accross the
-+   industry, e.g. other OS vendors, HW vendors, etc.
-+
-+ - The disclosed entities can be contacted to name experts who should
-+   participate in the mitigation development.
-+
-+ - If an expert which is required to handle an issue is employed by an
-+   listed entity or member of an listed entity, then the response teams can
-+   request the disclosure of that expert from that entity. This ensures
-+   that the expert is also part of the entity's response team.
- 
- Disclosure
- """"""""""
-@@ -158,10 +172,7 @@ Mitigation development
- """"""""""""""""""""""
- 
- The initial response team sets up an encrypted mailing-list or repurposes
--an existing one if appropriate. The disclosing party should provide a list
--of contacts for all other parties who have already been, or should be,
--informed about the issue. The response team contacts these parties so they
--can name experts who should be subscribed to the mailing-list.
-+an existing one if appropriate.
- 
- Using a mailing-list is close to the normal Linux development process and
- has been successfully used in developing mitigations for various hardware
-@@ -175,9 +186,24 @@ development branch against the mainline
- stable kernel versions as necessary.
- 
- The initial response team will identify further experts from the Linux
--kernel developer community as needed and inform the disclosing party about
--their participation. Bringing in experts can happen at any time of the
--development process and often needs to be handled in a timely manner.
-+kernel developer community as needed. Bringing in experts can happen at any
-+time of the development process and needs to be handled in a timely manner.
-+
-+If an expert is employed by or member of an entity on the disclosure list
-+provided by the disclosing party, then participation will be requested from
-+the relevant entity.
-+
-+If not, then the disclosing party will be informed about the experts
-+participation. The experts are covered by the Memorandum of Understanding
-+and the disclosing party is requested to acknowledge the participation. In
-+case that the disclosing party has a compelling reason to object, then this
-+objection has to be raised within five work days and resolved with the
-+incident team immediately. If the disclosing party does not react within
-+five work days this is taken as silent acknowledgement.
-+
-+After acknowledgement or resolution of an objection the expert is disclosed
-+by the incident team and brought into the development process.
-+
- 
- Coordinated release
- """""""""""""""""""
+I recall Hans too was in favour of having min, max and step defined
+(and applied to both width and height).
+
+Really a minor issue from my side, feel free to keep it the way it is
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+   j
+>      * - ``V4L2_CTRL_TYPE_H264_SPS``
+>        - n/a
+>        - n/a
+> --
+> 2.23.0
+>
+
+--jvmepk34h776iu7a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2LJowACgkQcjQGjxah
+Vjxe7RAAs5u7tbvDOZmmKv/xCoPoxID0YGDFn+9bzAQu2F/cUHGbIrJjLMx2oBFo
+xRskqRp6wdztDyngFlVtDTaaEqvGtfhRagAJ7xe0gXvZAoKgMchCv027lWAz4KyL
+wIHOFqrAFvvy3dqc4V/pzfifgzqUCC6NtMXEkyNSPopbVZG+PVOHdADfL3cDzqxT
+TObImqKYGfXkEZJJCX6hYWulJr53JRf8Ks2UHrO8z5SGo5xU/hzMWZY/2GH8lo9b
+vN29/q3urnCExZjwGSJyGQ7KE3HRXRywo1AO+QNvT4bnr4+zJ++HO2QmWcfemcn2
+sqjkfYN3EKaCe/I0ZhO/Rb9C+kvWypGIguvLCuQuZO+mJky3Hh7sxdCW5AUUey2j
+BJe+LrweRz5QIorCxWSxMg5IaU/DvS3vPiXacX+aEDncSyT2LEVrVEl1E2UJKnHr
+K4F4TKNr00U73kw7wm7YNS8v4g4ZMzzrppoR6Hlrugl5FlwCsZauBDeaGDoM1joI
+5EsaDPDkTUBn/4W7LbPZfipUccue1xFp+257wT6tDRhQ/S0gqax9JoRWOxMqpo7f
+JtNpCpbA9zdYmT+ZuELoMnTKRc3jMRFf0SX7S8mph7p/y991gtweFPbN0iEVbZ2k
+/2EinpLCT6zWw1rBQM38Wngs7tx6MUG0HJk01i3x9bJImhi0was=
+=aOcf
+-----END PGP SIGNATURE-----
+
+--jvmepk34h776iu7a--
