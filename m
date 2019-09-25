@@ -2,125 +2,101 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8799FC432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8830C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B451205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BFC20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 21:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL09BxT4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYEw+SbH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfIYViB (ORCPT
+        id S1728635AbfIYVjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 17:38:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45212 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbfIYViB (ORCPT
+        Wed, 25 Sep 2019 17:39:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38234 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfIYVjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:38:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q7so16583pgi.12;
-        Wed, 25 Sep 2019 14:38:00 -0700 (PDT)
+        Wed, 25 Sep 2019 17:39:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id u8so865598iom.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 14:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZccWoHs0aZ7q3rRGAukQCFv+3XXyFmALCfYZzOtaP3U=;
-        b=eL09BxT48UtYPUKD39Szei4FINUzf9IfnaIA+aXUeoEWEY0srk5x0jHyCWHCTryHRr
-         e9McwamGNp4TbGVT36kh5Dt+LvRL3j1YMIS+Pa8NSf7UDMRQ/0sXYbmxPOUmpbkRPkyQ
-         yoVAHKbZTAYTCeyoa5sdixdLxaK7u+ScgS/Oc+4512908PO842zTk2VPzRj/x+mZP3B7
-         hF2u8f7DR/ScMj8ANUXqlfCSwcgwEFaOIljZjrGBLQuTfTQi62mEw+eSME/hOxO8vYxT
-         l8x4WqkkfRIoJB0fPBxsV/jz51KeyO2QQBIQ4ZwNXZo/Hjtnh8kJbcTXrzExvWvUhvON
-         V9Rw==
+        h=from:to:cc:subject:date:message-id;
+        bh=o3HD36ChA358R1g516TCEdPi0qQJP37RNyq0UULAKoE=;
+        b=QYEw+SbHZ1Q9KQHDVL8wxYW7IxX4ybtdF8LH+N2Hf5uctzZH5OV04sT3j25fMZY0zl
+         TkZ+05YYBG9WB9bGpgUB//eDXtqeWpeXh0VzR5DusiO2OrboaX2RffltQPewDx6aJGYk
+         sbXx2whaNeE+prUhBmxJR9c9HVS9DbOz1bXj26W2UcIZnIRXUBSNowXlZVFXxQIhZupz
+         wJCu+vxgj9fbuABOc07scMy1MYOUIsaKbMGOyoo6leMdRektNUZT6zlhkfpBN0k3a4Wl
+         smM+ASdTnN/2UCe4Xb9LJ1LfXmG3XWES2NuqUGB2Z0erZ8zPSw2k2Ah+7iA7fUqbhqAy
+         0LPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZccWoHs0aZ7q3rRGAukQCFv+3XXyFmALCfYZzOtaP3U=;
-        b=BpFoPc3DaaeHyMYE6WqHMsZHIgzWpReczHnXxAP+IZ8vKvntGP/C79rD0hYA6gWdwa
-         MNLRRwhz9MjAGeeUMvhaFqtfV9xljyUbkth6DzheC2Cx2tyBC9orEwkAf22OLeXSYu4R
-         57xtQPjmJlCnMLDgXL6vs0ub+HYMgPH+DV8CBBg1YX3YmduvNgiGObxrLSeG5fgHwIMG
-         BZj9eGHBIpHtWOn5Iu2VlWtb8SwpvWQoedAnzN9aqQCZ6UsrZEWyhIY4qFu4BBVfhLv0
-         1H/OSLSUwsNtGihxnSjets2ulefLR898s1jaLVelN9YL5ptmttSOo/MNeBJpz42QD35N
-         IRBA==
-X-Gm-Message-State: APjAAAX3unXuqrIXanJKB46grLsk1PyNZI+xu4QTaoyfubMIstaKQAMN
-        c+l//9cmvY1CE2AuIgtCqk0WBuWF
-X-Google-Smtp-Source: APXvYqy5EC/MPkIuEx5ZvT6ACo/QPHTMP0hx/Lw8kMfRH8DToRdLOanXABcaXgVj2063J3WYqQTvqQ==
-X-Received: by 2002:aa7:9d8e:: with SMTP id f14mr374658pfq.217.1569447480344;
-        Wed, 25 Sep 2019 14:38:00 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id j10sm36291pjn.3.2019.09.25.14.37.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 14:37:59 -0700 (PDT)
-Subject: Re: [PATCH] ipv6: Properly check reference count flag before taking
- reference
-To:     Petr Vorel <pvorel@suse.cz>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190923144612.29668-1-Jason@zx2c4.com>
- <20190923150600.GA27191@dell5510>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <222450f1-d0ab-f7ac-5331-b631ef78ec15@gmail.com>
-Date:   Wed, 25 Sep 2019 14:37:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190923150600.GA27191@dell5510>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=o3HD36ChA358R1g516TCEdPi0qQJP37RNyq0UULAKoE=;
+        b=LvcUbqpWsIzlqJGbtCLobnt+5IOfe+EqPkXh2r9auNQKupSCxFXYWKU6pSCLcey0oq
+         2ESCpJQzIPQ7+3QZ9sR9dIC3bj1WttSPUpfNjNOvuRmnhMePHYTEO0o4Ae5MvgzFihDB
+         O1tRToyc4c42ShSn51rV9XCyt16F6cimpaq7fH8TkIIq6sWcnXN5RKKxlAXVulo6B1FL
+         V6j/z4ZcVsM3mhBoZJF0SRLeoOAeOYe+toMP9fdqPv4g7JE3sknMcgIR4QKrlYFnzzCB
+         kLEw0QRAKHK7GTa0zdPZwtb6JWZilQDh9+rCVpuSmRU9vak1kMOLNV7vm2nOmhoHthpK
+         qq7w==
+X-Gm-Message-State: APjAAAXeK4FNMUH+5dbCKfKm1ap6OrzdsW2+QChtGOnaqWsCao7BWC7A
+        f6gXedZGp9lR7dl8hpIGsbU=
+X-Google-Smtp-Source: APXvYqyd5xfldJC7URqaq9MRA3HvLuFOQ5gWKYubAdtAe3l2ZINQBnN59h8HMHR8LNUcFKUHoIKQJw==
+X-Received: by 2002:a6b:fa07:: with SMTP id p7mr115825ioh.164.1569447552596;
+        Wed, 25 Sep 2019 14:39:12 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id s201sm896898ios.83.2019.09.25.14.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 14:39:12 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] udf: prevent memory leak in udf_new_inode
+Date:   Wed, 25 Sep 2019 16:39:03 -0500
+Message-Id: <20190925213904.12128-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In udf_new_inode if either udf_new_block or insert_inode_locked fials
+the allocated memory for iinfo->i_ext.i_data should be released.
 
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ fs/udf/ialloc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 9/23/19 8:06 AM, Petr Vorel wrote:
-> Hi,
-> 
->> People are reporting that WireGuard experiences erratic crashes on 5.3,
->> and bisected it down to 7d30a7f6424e. Casually flipping through that
->> commit I noticed that a flag is checked using `|` instead of `&`, which in
->> this current case, means that a reference is never incremented, which
->> would result in the use-after-free users are seeing. This commit changes
->> the `|` to the proper `&` test.
-> 
->> Cc: stable@vger.kernel.org
->> Fixes: 7d30a7f6424e ("Merge branch 'ipv6-avoid-taking-refcnt-on-dst-during-route-lookup'")
->> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> 
-> Reviewed-by: Petr Vorel <pvorel@suse.cz>
-> 
-> NOTE: this change was added in d64a1f574a29 ("ipv6: honor RT6_LOOKUP_F_DST_NOREF in rule lookup logic")
-> 
-> Kind regards,
-> Petr
-> 
+diff --git a/fs/udf/ialloc.c b/fs/udf/ialloc.c
+index 0adb40718a5d..b8ab3acab6b6 100644
+--- a/fs/udf/ialloc.c
++++ b/fs/udf/ialloc.c
+@@ -86,6 +86,7 @@ struct inode *udf_new_inode(struct inode *dir, umode_t mode)
+ 			      dinfo->i_location.partitionReferenceNum,
+ 			      start, &err);
+ 	if (err) {
++		kfree(iinfo->i_ext.i_data);
+ 		iput(inode);
+ 		return ERR_PTR(err);
+ 	}
+@@ -130,6 +131,7 @@ struct inode *udf_new_inode(struct inode *dir, umode_t mode)
+ 	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+ 	iinfo->i_crtime = inode->i_mtime;
+ 	if (unlikely(insert_inode_locked(inode) < 0)) {
++		kfree(iinfo->i_ext.i_data);
+ 		make_bad_inode(inode);
+ 		iput(inode);
+ 		return ERR_PTR(-EIO);
+-- 
+2.17.1
 
-This was fixed earlier I think
-
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=7b09c2d052db4b4ad0b27b97918b46a7746966fa
-
->> ---
->>  net/ipv6/ip6_fib.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
->> diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
->> index 87f47bc55c5e..6e2af411cd9c 100644
->> --- a/net/ipv6/ip6_fib.c
->> +++ b/net/ipv6/ip6_fib.c
->> @@ -318,7 +318,7 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
->>  	if (rt->dst.error == -EAGAIN) {
->>  		ip6_rt_put_flags(rt, flags);
->>  		rt = net->ipv6.ip6_null_entry;
->> -		if (!(flags | RT6_LOOKUP_F_DST_NOREF))
->> +		if (!(flags & RT6_LOOKUP_F_DST_NOREF))
->>  			dst_hold(&rt->dst);
->>  	}
