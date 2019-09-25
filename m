@@ -2,97 +2,160 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EFC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102ACC432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36EE21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACAF21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 16:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bm/dhap0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smygSNg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbfIYQc4 (ORCPT
+        id S2389312AbfIYQev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 12:32:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39122 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbfIYQcz (ORCPT
+        Wed, 25 Sep 2019 12:34:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33219 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfIYQeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 12:32:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Cp8u678gxU6rWkwDy/6jtdY/npvr9qVwuPGguClJ3Q0=; b=bm/dhap0jOx3jDv4S6/nBTafv
-        67krTmzxr3/0gEAruaH+phtGC6GDn9QJiLrrAwIIpZ2ZtSxH11XCvlhGz3q0UyMr91UWYhpd4pl5d
-        dMUTFHTd56sBE4kRoFeDwpFJy319uOCg8levABupZnBj+4vxco/QhxT429KTPTyWjME7XEdK9/5cp
-        NWdUrHgOobsB5++MeEUfwlM9PNPH7uLonD/D/0MoEBxYs59QmYWaGFT9dtPOG8+9n+Sk76aYGiVCm
-        duwKCOw2ZU9RpLrr4344CMuDyZ4tXHVm7nIrPVWGZ2YYuD1pXvOd80TLgOcTBhr+/qZQ9UE7YNTjv
-        zsKlBG0iw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDACw-0006La-W3; Wed, 25 Sep 2019 16:32:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 88A8D305E35;
-        Wed, 25 Sep 2019 18:31:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C71320249302; Wed, 25 Sep 2019 18:31:54 +0200 (CEST)
-Date:   Wed, 25 Sep 2019 18:31:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190925163154.GF4553@hirez.programming.kicks-ass.net>
-References: <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <20190925104040.GD4553@hirez.programming.kicks-ass.net>
- <20190925132544.GL23050@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925132544.GL23050@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 25 Sep 2019 12:34:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so7725985wrs.0;
+        Wed, 25 Sep 2019 09:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=s+6/bt73F0nPkh+ms30j0ei78DCt1MwVFFVQl9AGl+A=;
+        b=smygSNg9FtLOVqPacXXLuBqzZgNquwgf502lQnDrZZV5nuuo1H5s/ex7lbhjMHm7or
+         W5f9sP6CfAj+zLQVBgnlN1BNRQ/Yiu10T/wrAw9PtG28Eo1CRYdl+oeO4TROcZzQS2WE
+         gwrlNPb6xbDF/I7/AqayB1DVxtgWwm6oW+212q5UpYOTFsHGtpRbSfxhya14GvH7272F
+         xF2+lsaLwAtHatm8iRhPM6GjMO0HOy/Lav8cY4AoZlp9nsHLgUnJQE6d3hAwA4UFEoXP
+         kHb+O9tMEzdTX6lw0EXzCGtD23AqF+/TwTcoyhi/gSKJqU3FW7uNrqAnrBsso92RRSjy
+         L0DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=s+6/bt73F0nPkh+ms30j0ei78DCt1MwVFFVQl9AGl+A=;
+        b=uZmx7b4QFSz0DPhpOGXmau4ueunQ4fmBukYnyHH5Wx0aemMq7K8b147ZLNuGZCGuu1
+         PsE7xfmOBrZwtQ7zV2agv6PS39wJ/POvEP2Ouafi3tDFedFe404OY4M4MyXSeQ7mjJkk
+         YzflGrgcJzNqYSQjQLKJQnpaRDufAqkCHe7nwQzxcBP3a++T/XBUSmxi4BU3ZdWTZuy7
+         8rujjY9fEBkOuRxOdpmOiG5nw4WFUkA8uJ/Sy5M9NehHUyhXRspIgKoPsMN21ko+kJaM
+         oAbWMQrKhMJs5wzViUhTA1MNKCA0tLexJg45x26wMBVss/iynnOecTfUFwcR5xqAOv3U
+         gA4g==
+X-Gm-Message-State: APjAAAVIQ6Ek0N7+KapieCSoO+7xpyCkIQGYKG6jTlr4sdhng1+qFSEN
+        mNO4yyNrQvRW7VeOr413qewreHdI
+X-Google-Smtp-Source: APXvYqzG9uZ++lfYDbCS8zeD0orJK6Hij8TVimAq9rhTUfa9PhmpSpHL6h6GyA04sZa+N/qoS5hQMw==
+X-Received: by 2002:a5d:4f86:: with SMTP id d6mr10247057wru.384.1569429288225;
+        Wed, 25 Sep 2019 09:34:48 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b16sm9170000wrh.5.2019.09.25.09.34.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 09:34:47 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Subject: [PATCH] KVM: nVMX: cleanup and fix host 64-bit mode checks
+Date:   Wed, 25 Sep 2019 18:34:46 +0200
+Message-Id: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 03:25:44PM +0200, Michal Hocko wrote:
-> I am sorry but I still do not understand why you consider this whack a
-> mole better then simply live with the fact that NUMA_NO_NODE is a
-> reality and that using the full cpu mask is a reasonable answer to that.
+KVM was incorrectly checking vmcs12->host_ia32_efer even if the "load
+IA32_EFER" exit control was reset.  Also, some checks were not using
+the new CC macro for tracing.
 
-Because it doesn't make physical sense. A device _cannot_ be local to
-all CPUs in a NUMA system.
+Cleanup everything so that the vCPU's 64-bit mode is determined
+directly from EFER_LMA and the VMCS checks are based on that, which
+matches section 26.2.4 of the SDM.
+
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Fixes: 5845038c111db27902bc220a4f70070fe945871c
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 53 ++++++++++++++++++++---------------------------
+ 1 file changed, 22 insertions(+), 31 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 70d59d9304f2..e108847f6cf8 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2664,8 +2664,26 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
+ 	    CC(!kvm_pat_valid(vmcs12->host_ia32_pat)))
+ 		return -EINVAL;
+ 
+-	ia32e = (vmcs12->vm_exit_controls &
+-		 VM_EXIT_HOST_ADDR_SPACE_SIZE) != 0;
++#ifdef CONFIG_X86_64
++	ia32e = !!(vcpu->arch.efer & EFER_LMA);
++#else
++	if (CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE))
++		return -EINVAL;
++
++	ia32e = false;
++#endif
++
++	if (ia32e) {
++		if (CC(!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) ||
++		    CC(!(vmcs12->host_cr4 & X86_CR4_PAE)))
++			return -EINVAL;
++	} else {
++		if (CC(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) ||
++		    CC(vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
++		    CC(vmcs12->host_cr4 & X86_CR4_PCIDE) ||
++		    CC(((vmcs12->host_rip) >> 32) & 0xffffffff))
++			return -EINVAL;
++	}
+ 
+ 	if (CC(vmcs12->host_cs_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
+ 	    CC(vmcs12->host_ss_selector & (SEGMENT_RPL_MASK | SEGMENT_TI_MASK)) ||
+@@ -2684,35 +2702,8 @@ static int nested_vmx_check_host_state(struct kvm_vcpu *vcpu,
+ 	    CC(is_noncanonical_address(vmcs12->host_gs_base, vcpu)) ||
+ 	    CC(is_noncanonical_address(vmcs12->host_gdtr_base, vcpu)) ||
+ 	    CC(is_noncanonical_address(vmcs12->host_idtr_base, vcpu)) ||
+-	    CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)))
+-		return -EINVAL;
+-
+-	if (!(vmcs12->host_ia32_efer & EFER_LMA) &&
+-	    ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
+-	    (vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE))) {
+-		return -EINVAL;
+-	}
+-
+-	if ((vmcs12->host_ia32_efer & EFER_LMA) &&
+-	    !(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)) {
+-		return -EINVAL;
+-	}
+-
+-	if (!(vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
+-	    ((vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE) ||
+-	    (vmcs12->host_cr4 & X86_CR4_PCIDE) ||
+-	    (((vmcs12->host_rip) >> 32) & 0xffffffff))) {
+-		return -EINVAL;
+-	}
+-
+-	if ((vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE) &&
+-	    ((!(vmcs12->host_cr4 & X86_CR4_PAE)) ||
+-	    (is_noncanonical_address(vmcs12->host_rip, vcpu)))) {
+-		return -EINVAL;
+-	}
+-#else
+-	if (vmcs12->vm_entry_controls & VM_ENTRY_IA32E_MODE ||
+-	    vmcs12->vm_exit_controls & VM_EXIT_HOST_ADDR_SPACE_SIZE)
++	    CC(is_noncanonical_address(vmcs12->host_tr_base, vcpu)) ||
++	    CC(is_noncanonical_address(vmcs12->host_rip, vcpu)))
+ 		return -EINVAL;
+ #endif
+ 
+-- 
+1.8.3.1
+
