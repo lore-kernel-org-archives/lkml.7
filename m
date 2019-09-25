@@ -2,92 +2,130 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,WEIRD_QUOTING autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A87C432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D91C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C913B20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="uFLcSUjc"
+	by mail.kernel.org (Postfix) with ESMTP id 1145E20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 08:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442761AbfIYIaA (ORCPT
+        id S2634132AbfIYIaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 04:30:00 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:36941 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442734AbfIYI37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 04:29:59 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f04a7c82;
-        Wed, 25 Sep 2019 07:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :from:date:message-id:subject:to:content-type; s=mail; bh=F1x6e+
-        cCGG/zD2EMOllsVE7y05c=; b=uFLcSUjcfehMSQaYeALWaBn4jNxO+wgx8fX7h0
-        FcPxVROU1FWNhQqgVP3Y2Wzpdsk3riWgZHyoVC5J5TWJfGEX7V1/FcrBhjxsETS/
-        TF2T8T/lcbgsmxElLSK6D1ULFg2ggjEm9uzcdWFVIBY1xrn2QptvD1H0PNVKOjeZ
-        l1G93XobpNjHPRUR1e7jalUVGKpSQH6nxMjAnvLz6Tulr6hbTFxsMXdGTBVUh8/J
-        dzSN9eQ2s2WbG4NQU8wn9F+uPVT74v5kFhPhZ3yOTYvyZH/qX2dvBTrlu6+99GLw
-        ZDuGwpmEo309sBG+lhwVd1cRv0/HgTP+hK46WgzDst/3yS+w==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a9f835e9 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 25 Sep 2019 07:44:14 +0000 (UTC)
-Received: by mail-oi1-f169.google.com with SMTP id k20so4168533oih.3;
-        Wed, 25 Sep 2019 01:29:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAX5vOoLino9OV/hOQ10LIPZ8F/g9SVMMi8+J7Hfs6EuUuudnsev
-        69dVWixZoM7BtkmESZgLbxOdU+ZBCGIsNYw5Mns=
-X-Google-Smtp-Source: APXvYqwNXLHiOGCKCubwzVxRj/ec4LjQJFZ7Aw+gylPjxUUmM/jS8eL6FGpbNGuX9OzHxhRru7lSKTbuxmkXFmEDZYQ=
-X-Received: by 2002:aca:f555:: with SMTP id t82mr3519613oih.66.1569400196781;
- Wed, 25 Sep 2019 01:29:56 -0700 (PDT)
+        Wed, 25 Sep 2019 04:30:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36354 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634101AbfIYIaZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 04:30:25 -0400
+Received: from [65.39.69.237] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iD2gY-0007mG-I2; Wed, 25 Sep 2019 10:30:06 +0200
+Date:   Wed, 25 Sep 2019 10:29:49 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
+        ben@decadent.org.uk, labbott@redhat.com, andrew.cooper3@citrix.com,
+        tsoni@codeaurora.org, keescook@chromium.org, tony.luck@intel.com,
+        linux-doc@vger.kernel.org, dan.j.williams@intel.com
+Subject: [PATCH] Documentation/process: Clarify disclosure rules
+In-Reply-To: <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
+Message-ID: <alpine.DEB.2.21.1909251028390.10825@nanos.tec.linutronix.de>
+References: <20190910172644.4D2CDF0A@viggo.jf.intel.com> <20190910172649.74639177@viggo.jf.intel.com> <20190911154453.GA14152@kroah.com> <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 25 Sep 2019 10:29:45 +0200
-X-Gmail-Original-Message-ID: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
-Message-ID: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
-Subject: WireGuard to port to existing Crypto API
-To:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+The role of the contact list provided by the disclosing party and how it
+affects the disclosure process and the ability to include experts into
+the development process is not really well explained.
 
-I'm at the Kernel Recipes conference now and got a chance to talk with
-DaveM a bit about WireGuard upstreaming. His viewpoint has recently
-solidified: in order to go upstream, WireGuard must port to the
-existing crypto API, and handle the Zinc project separately. As DaveM
-is the upstream network tree maintainer, his opinion is quite
-instructive.
+Neither is it entirely clear when the disclosing party will be informed
+about the fact that a developer who is not covered by an employer NDA needs
+to be brought in and disclosed.
 
-I've long resisted the idea of porting to the existing crypto API,
-because I think there are serious problems with it, in terms of
-primitives, API, performance, and overall safety. I didn't want to
-ship WireGuard in a form that I thought was sub-optimal from a
-security perspective, since WireGuard is a security-focused project.
+Explain the role of the contact list and the information policy along with
+an eventual conflict resolution better.
 
-But it seems like with or without us, WireGuard will get ported to the
-existing crypto API. So it's probably better that we just fully
-embrace it, and afterwards work evolutionarily to get Zinc into Linux
-piecemeal. I've ported WireGuard already several times as a PoC to the
-API and have a decent idea of the ways it can go wrong and generally
-how to do it in the least-bad way.
+Reported-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ Documentation/process/embargoed-hardware-issues.rst |   40 ++++++++++++++++----
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
-I realize this kind of compromise might come as a disappointment for
-some folks. But it's probably better that as a project we remain
-intimately involved with our Linux kernel users and the security of
-the implementation, rather than slinking away in protest because we
-couldn't get it all in at once. So we'll work with upstream, port to
-the crypto API, and get the process moving again. We'll pick up the
-Zinc work after that's done.
-
-I also understand there might be interested folks out there who enjoy
-working with the crypto API quite a bit and would be happy to work on
-the WireGuard port. Please do get in touch if you'd like to
-collaborate.
-
-Jason
+--- a/Documentation/process/embargoed-hardware-issues.rst
++++ b/Documentation/process/embargoed-hardware-issues.rst
+@@ -143,6 +143,20 @@ via their employer, they cannot enter in
+ in their role as Linux kernel developers. They will, however, agree to
+ adhere to this documented process and the Memorandum of Understanding.
+ 
++The disclosing party should provide a list of contacts for all other
++entities who have already been, or should be, informed about the issue.
++This serves several purposes:
++
++ - The list of disclosed entities allows communication accross the
++   industry, e.g. other OS vendors, HW vendors, etc.
++
++ - The disclosed entities can be contacted to name experts who should
++   participate in the mitigation development.
++
++ - If an expert which is required to handle an issue is employed by an
++   listed entity or member of an listed entity, then the response teams can
++   request the disclosure of that expert from that entity. This ensures
++   that the expert is also part of the entity's response team.
+ 
+ Disclosure
+ """"""""""
+@@ -158,10 +172,7 @@ Mitigation development
+ """"""""""""""""""""""
+ 
+ The initial response team sets up an encrypted mailing-list or repurposes
+-an existing one if appropriate. The disclosing party should provide a list
+-of contacts for all other parties who have already been, or should be,
+-informed about the issue. The response team contacts these parties so they
+-can name experts who should be subscribed to the mailing-list.
++an existing one if appropriate.
+ 
+ Using a mailing-list is close to the normal Linux development process and
+ has been successfully used in developing mitigations for various hardware
+@@ -175,9 +186,24 @@ development branch against the mainline
+ stable kernel versions as necessary.
+ 
+ The initial response team will identify further experts from the Linux
+-kernel developer community as needed and inform the disclosing party about
+-their participation. Bringing in experts can happen at any time of the
+-development process and often needs to be handled in a timely manner.
++kernel developer community as needed. Bringing in experts can happen at any
++time of the development process and needs to be handled in a timely manner.
++
++If an expert is employed by or member of an entity on the disclosure list
++provided by the disclosing party, then participation will be requested from
++the relevant entity.
++
++If not, then the disclosing party will be informed about the experts
++participation. The experts are covered by the Memorandum of Understanding
++and the disclosing party is requested to acknowledge the participation. In
++case that the disclosing party has a compelling reason to object, then this
++objection has to be raised within five work days and resolved with the
++incident team immediately. If the disclosing party does not react within
++five work days this is taken as silent acknowledgement.
++
++After acknowledgement or resolution of an objection the expert is disclosed
++by the incident team and brought into the development process.
++
+ 
+ Coordinated release
+ """""""""""""""""""
