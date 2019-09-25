@@ -2,218 +2,175 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78946C432C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B47C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF0921D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA4821D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 14:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407284AbfIYOH0 (ORCPT
+        id S2407331AbfIYOIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 10:07:26 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44953 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730549AbfIYOH0 (ORCPT
+        Wed, 25 Sep 2019 10:08:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30650 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730549AbfIYOIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 10:07:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w6so4970807oie.11;
-        Wed, 25 Sep 2019 07:07:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gNzfLxyphufZW7oX+loBgrNcosGjw89AhG0FkoAT9T0=;
-        b=jRCif3RwOJk355RMCF33P71BEScuDGW5cFMuie/ytvRMidSDpDSDvad0HDoYUy8m1a
-         VGuIuMPCJqxoyAqeBMlYoMDbUVjR6Mox/6tTOyS96T/Bz9s/K295PYfS0Lc0SqXdcyGj
-         PZMeoRF3HZrCv4pItBGBfGEZwSBpwpS1+YQ6/HsNG6Sbwq8KqNPJSicrj06Ml2uePwk3
-         5QdFonEe8jsgIJezXT8TnXJaf30p8uAFg7PMYFh5PISJsi/x0IImuARKPbcnidVdzHJv
-         9q4vAWPmnkv92ZhC2vivBImgoaJGvZ7Z0xN7n8nEsIcbUxMX8jrbrGzh45/VblDBj3z1
-         nt2Q==
-X-Gm-Message-State: APjAAAX2NrkP89hn04aL1qxQiOpDUoZC2L0u+UuVgx+3BPKIO1eClv3+
-        dbuVxbScwMzAYMrKEHajyM6wQMFA
-X-Google-Smtp-Source: APXvYqw97uq6u2EmbpKgvJdqwO6IoIQF1m7BSY2Zl2+p0NsCfksR0UbyyEvRdfbJksGLmQ7y4qQb3Q==
-X-Received: by 2002:aca:c358:: with SMTP id t85mr4808768oif.98.1569420444015;
-        Wed, 25 Sep 2019 07:07:24 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id j11sm1600365otk.80.2019.09.25.07.07.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 07:07:23 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id m16so4991022oic.5;
-        Wed, 25 Sep 2019 07:07:23 -0700 (PDT)
-X-Received: by 2002:aca:d988:: with SMTP id q130mr4486320oig.13.1569420442960;
- Wed, 25 Sep 2019 07:07:22 -0700 (PDT)
+        Wed, 25 Sep 2019 10:08:17 -0400
+X-UUID: 19718c1b18de4097918ef4cbc03071f4-20190925
+X-UUID: 19718c1b18de4097918ef4cbc03071f4-20190925
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1720719353; Wed, 25 Sep 2019 22:08:10 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 25 Sep 2019 22:08:08 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 25 Sep 2019 22:08:08 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v2] mm: slub: print the offset of fault addresses
+Date:   Wed, 25 Sep 2019 22:08:07 +0800
+Message-ID: <20190925140807.20490-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20190924024548.4356-1-biwen.li@nxp.com> <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 25 Sep 2019 09:07:12 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQ+=au2qRL2K-tzhH8HK1+sO+ut9YBhYw4UhWSv5FF88A@mail.gmail.com>
-Message-ID: <CADRPPNQ+=au2qRL2K-tzhH8HK1+sO+ut9YBhYw4UhWSv5FF88A@mail.gmail.com>
-Subject: Re: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr'
- property
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Ran Wang <ran.wang_1@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 11:27 PM Biwen Li <biwen.li@nxp.com> wrote:
->
-> > > >
-> > > > > > > > > >
-> > > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
-> > > > > > > > > > an errata
-> > > > > > > > > > A-008646 on LS1021A
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > > > > > > > ---
-> > > > > > > > > > Change in v3:
-> > > > > > > > > >       - rename property name
-> > > > > > > > > >         fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> > > > > > > > > >
-> > > > > > > > > > Change in v2:
-> > > > > > > > > >       - update desc of the property 'fsl,rcpm-scfg'
-> > > > > > > > > >
-> > > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > > > > > > > > > ++++++++++++++
-> > > > > > > > > >  1 file changed, 14 insertions(+)
-> > > > > > > > > >
-> > > > > > > > > > diff --git
-> > > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
-> > > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version            Example
-> > > > Chips
-> > > > > > > > > >  Optional properties:
-> > > > > > > > > >   - little-endian : RCPM register block is Little Endian.
-> > > > > > > > > > Without it
-> > > > > RCPM
-> > > > > > > > > >     will be Big Endian (default case).
-> > > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
-> > > > > > > > > > + SoC LS1021A,
-> > > > > > > > >
-> > > > > > > > > You probably should mention this is related to a hardware
-> > > > > > > > > issue on LS1021a and only needed on LS1021a.
-> > > > > > > > Okay, got it, thanks, I will add this in v4.
-> > > > > > > > >
-> > > > > > > > > > +   Must include n + 1 entries (n =
-> > > > > > > > > > + #fsl,rcpm-wakeup-cells, such
-> > > as:
-> > > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
-> > > > > > > > > > + 2
-> > > > > > > > > > + +
-> > > > > > > > > > + 1
-> > > > > entries).
-> > > > > > > > >
-> > > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
-> > > > > > > > > registers on an
-> > > > > SoC.
-> > > > > > > > > However you are defining an offset to scfg registers here.
-> > > > > > > > > Why these two are related?  The length here should
-> > > > > > > > > actually be related to the #address-cells of the soc/.
-> > > > > > > > > But since this is only needed for LS1021, you can
-> > > > > > > > just make it 3.
-> > > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
-> > > > > > > > device node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
-> > > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
-> > > > > IPPDEXPCR1).
-> > > > > > > > But because of the hardware issue on LS1021A, I need store
-> > > > > > > > the value of IPPDEXPCR registers to an alt address. So I
-> > > > > > > > defining an offset to scfg registers, then RCPM driver get
-> > > > > > > > an abosolute address from offset, RCPM driver write the
-> > > > > > > > value of IPPDEXPCR registers to these abosolute
-> > > > > > > > addresses(backup the value of IPPDEXPCR
-> > > > > registers).
-> > > > > > >
-> > > > > > > I understand what you are trying to do.  The problem is that
-> > > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and an
-> > offset.
-> > > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
-> > > > > > You maybe like this: fsl,ippdexpcr-alt-addr = <&scfg 0x51c>;/*
-> > > > > > SCFG_SPARECR8 */
-> > > > >
-> > > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
-> > > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
-> > > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
-> > binding.
-> > > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
-> > > > #address-cells instead of #fsl,rcpm-wakeup-cells.
-> > >
-> > > Yes.
-> > I got an example from drivers/pci/controller/dwc/pci-layerscape.c
-> > and arch/arm/boot/dts/ls1021a.dtsi as follows:
-> > fsl,pcie-scfg = <&scfg 0>, 0 is an index
-> >
-> > In my fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>, It means that 0x0 is an alt
-> > offset address for IPPDEXPCR0, 0x51c is an alt offset address For
-> > IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
-> > SCFG_SPARECR8.
-> Maybe I need write it as:
-> fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x0 0x0 0x51c>;
-> first two 0x0 compose an alt offset address for IPPDEXPCR0,
-> last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
+With the commit ad67b74d2469d9b8 ("printk: hash addresses printed with
+%p"), it is a little bit harder to match the fault addresses printed by
+check_bytes_and_report() or slab_pad_check() in the dump because the
+fault addresses may not show up in the dump.
 
-I remember the hardware issue is only is only related to IPPDEXPCR1
-register, no idea why you need to define IPPDEXPCR0 in the binding.
+Print the offset of the fault addresses to make it easier to match the
+incorrect poison or padding values in the dump.
 
->
-> Best Regards,
-> Biwen Li
-> > >
-> > > Regards,
-> > > Leo
-> > > > >
-> > > > > > >
-> > > > > > > > >
-> > > > > > > > > > +   The first entry must be a link to the SCFG device node.
-> > > > > > > > > > +   The non-first entry must be offset of registers of SCFG.
-> > > > > > > > > >
-> > > > > > > > > >  Example:
-> > > > > > > > > >  The RCPM node for T4240:
-> > > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
-> > > > > > > > > >               #fsl,rcpm-wakeup-cells = <2>;
-> > > > > > > > > >       };
-> > > > > > > > > >
-> > > > > > > > > > +The RCPM node for LS1021A:
-> > > > > > > > > > +     rcpm: rcpm@1ee2140 {
-> > > > > > > > > > +             compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
-> > > > > > 2.1+";
-> > > > > > > > > > +             reg = <0x0 0x1ee2140 0x0 0x8>;
-> > > > > > > > > > +             #fsl,rcpm-wakeup-cells = <2>;
-> > > > > > > > > > +             fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
-> > > > > > > > > > SCFG_SPARECR8 */
-> > > > > > > > > > +     };
-> > > > > > > > > > +
-> > > > > > > > > > +
-> > > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> > > > > > > > > >  -------------------------------------------
-> > > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
-> > > > > > > > > > device node if the device
-> > > > > > > > > > --
-> > > > > > > > > > 2.17.1
->
+Before:
+We have to search the "63" in the dump. If we want to get the offset of
+63, we have to count it from the start of Object dump.
+
+=============================================================
+BUG kmalloc-128 (Not tainted): Poison overwritten
+-------------------------------------------------------------
+
+Disabling lock debugging due to kernel taint
+INFO: 0x00000000570da294-0x00000000570da294.
+First byte 0x63 instead of 0x6b
+...
+INFO: Object 0x000000006ebb3b9e @offset=14208 fp=0x0000000065862488
+Redzone 00000000a6abccff: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000000741c16f0: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 0000000061ad278f: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 000000000467c1bd: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 000000008812766b: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 000000003d9b8f25: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 0000000000d80c33: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000000867b0d90: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Object 000000006ebb3b9e: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000005ea59a9f: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000003ef8bddc: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000008190375d: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000006df7fb32: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 0000000069474eae: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 0000000008073b7d: 6b 6b 6b 6b 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000b45ae74d: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+
+After:
+We know the fault address is at @offset=1508, and the Object is at
+@offset=1408, so we know the fault address is at offset=100 within the
+object.
+
+=========================================================
+BUG kmalloc-128 (Not tainted): Poison overwritten
+---------------------------------------------------------
+
+Disabling lock debugging due to kernel taint
+INFO: 0x00000000638ec1d1-0x00000000638ec1d1 @offset=1508.
+First byte 0x63 instead of 0x6b
+...
+INFO: Object 0x000000008171818d @offset=1408 fp=0x0000000066dae230
+Redzone 00000000e2697ab6: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 0000000064b6a381: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000000e413a234: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 0000000004c1dfeb: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 000000009ad24d42: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 000000002a196a23: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000000a7b8468a: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 0000000088db6da3: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Object 000000008171818d: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000007c4035d4: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000004dd281a4: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 0000000079121dff: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000000756682a9: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 0000000053b7e541: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 0000000091f8d530: 6b 6b 6b 6b 63 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 000000009c76035c: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+
+Change since v1:
+1. do not replace DUMP_PREFIX_ADDRESS with DUMP_PREFIX_OFFSET because
+the hash addresses are useful
+2. print the offset of the fault address
+
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ mm/slub.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 42c1b3af3c98..21d26cd3e3bc 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -736,6 +736,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
+ {
+ 	u8 *fault;
+ 	u8 *end;
++	u8 *addr = page_address(page);
+ 
+ 	metadata_access_enable();
+ 	fault = memchr_inv(start, value, bytes);
+@@ -748,8 +749,9 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
+ 		end--;
+ 
+ 	slab_bug(s, "%s overwritten", what);
+-	pr_err("INFO: 0x%p-0x%p. First byte 0x%x instead of 0x%x\n",
+-					fault, end - 1, fault[0], value);
++	pr_err("INFO: 0x%p-0x%p @offset=%tu. First byte 0x%x instead of 0x%x\n",
++					fault, end - 1, fault - addr,
++					fault[0], value);
+ 	print_trailer(s, page, object);
+ 
+ 	restore_bytes(s, what, value, fault, end);
+@@ -844,7 +846,8 @@ static int slab_pad_check(struct kmem_cache *s, struct page *page)
+ 	while (end > fault && end[-1] == POISON_INUSE)
+ 		end--;
+ 
+-	slab_err(s, page, "Padding overwritten. 0x%p-0x%p", fault, end - 1);
++	slab_err(s, page, "Padding overwritten. 0x%p-0x%p @offset=%tu",
++			fault, end - 1, fault - start);
+ 	print_section(KERN_ERR, "Padding ", pad, remainder);
+ 
+ 	restore_bytes(s, "slab padding", POISON_INUSE, fault, end);
+-- 
+2.18.0
+
