@@ -2,296 +2,159 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B43CC432C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD20C432C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9752082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAFB21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 10:25:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UYwl+Pky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbfIYKY7 (ORCPT
+        id S2389667AbfIYKZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 06:24:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:46042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387531AbfIYKY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 06:24:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CEF71570;
-        Wed, 25 Sep 2019 03:24:58 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 323673F694;
-        Wed, 25 Sep 2019 03:24:58 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id E608B682851; Wed, 25 Sep 2019 11:24:56 +0100 (BST)
-Date:   Wed, 25 Sep 2019 11:24:56 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 1/2] drm/komeda: Add line size support
-Message-ID: <20190925102456.njecolasjwsfrvel@e110455-lin.cambridge.arm.com>
-References: <20190924080022.19250-1-lowry.li@arm.com>
- <20190924080022.19250-2-lowry.li@arm.com>
+        Wed, 25 Sep 2019 06:25:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50450 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387531AbfIYKZT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 06:25:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so4699430wmg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 03:25:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YsAAEdAnYhuD24RBj5UQt7anrWgvey/6pgyZTzvHDNQ=;
+        b=UYwl+PkyE4LyhX9Bwrtb55DJgg0t6nDhFP4+vHYPs9lVb6ey6p7/I5j20teQl4ZfpR
+         Nk2jXO+EBFUtoef2hQdcvhCtLvcSZorF8q/9g5rWe9wlwTXl3Q8HkLxvmoumVf0eRrJu
+         b2E6WjNKME9ZLlZiD68k3jAe/290lCuRcyNDTDSxFv2j4Sm/YKV0bZPpv6BNUQFVrTlk
+         ar60ZfEexPr6n+3URWiNaDFmUFACj81yMsBRbamdwi0AwjhWif1dJEMu1tMGuntCU1ZW
+         p/gpStXXnCVfS4sN93ObS7XF8txCNS32KWSMhkX6+8Cux29ANksMX5NcbsJpj+6hhz75
+         uXVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YsAAEdAnYhuD24RBj5UQt7anrWgvey/6pgyZTzvHDNQ=;
+        b=Tby6EWuu4Bc9NbIqWlOMzKwU8+jgxqApNvuuvRNUucSvnuCG8OJCyEuXXIU8hdLol5
+         mW7QUw+9nTm/uve1JwLa8VapN1z3HCwl+W65Or/jxOCvdC0U2gt6Wj0roMiz0PYAaVr3
+         xA88LebtO0lgEEGiZHQ9ZO+otct6jVPkqCkHaPIsYrz+sCQzNI65jcT1NJsa1U5Qw2Cx
+         ytZiq4sybLpCuiuwB6gDZ3+eGk5VS1VpBBJ6RbNA5jMo2CC8JjldS8O9KMl/dkMYA0XD
+         5j+hs7W2FMQdpmQFTBePLMXPxOo/viK03wbf9JSTe2IsQva1BvvOapOP3M6WWn1CkCsN
+         zTXQ==
+X-Gm-Message-State: APjAAAV7gdbh06FvhPWNtqohnmv5LScWIRhb0s1GQZVbsUzzT/6r4KO7
+        +p+he6EEdzkc/05ipoza4AAZrmLeM7y0WlL7UvRMHw==
+X-Google-Smtp-Source: APXvYqyMgrnfISClQMEiMxR6OyDaNMbH+h4WHpY7n7XWx+b/qrWGNgEE7v4W9or4yhiQx8R3PWEvEbMpiqSBoVaZx9w=
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr6505018wmc.136.1569407117052;
+ Wed, 25 Sep 2019 03:25:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190924080022.19250-2-lowry.li@arm.com>
-User-Agent: NeoMutt/20180716
+References: <20190925101622.31457-1-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20190925101622.31457-1-jarkko.sakkinen@linux.intel.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 25 Sep 2019 12:25:05 +0200
+Message-ID: <CAKv+Gu9xLXWj8e70rs6Oy3aT_+qvemMJqtOETQG+7z==Nf_RcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] efi+tpm: Don't access event->count when it isn't mapped.
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lowry,
+On Wed, 25 Sep 2019 at 12:16, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> From: Peter Jones <pjones@redhat.com>
+>
+> Some machines generate a lot of event log entries.  When we're
+> iterating over them, the code removes the old mapping and adds a
+> new one, so once we cross the page boundary we're unmapping the page
+> with the count on it.  Hilarity ensues.
+>
+> This patch keeps the info from the header in local variables so we don't
+> need to access that page again or keep track of if it's mapped.
+>
+> Fixes: 44038bc514a2 ("tpm: Abstract crypto agile event size calculations")
+> Cc: linux-efi@vger.kernel.org
+> Cc: linux-integrity@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Peter Jones <pjones@redhat.com>
+> Tested-by: Lyude Paul <lyude@redhat.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Acked-by: Matthew Garrett <mjg59@google.com>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-On Tue, Sep 24, 2019 at 08:00:44AM +0000, Lowry Li (Arm Technology China) wrote:
-> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> 
-> On D71, we are using the global line size. From D32, every
-> component have a line size register to indicate the fifo size.
-> 
-> So this patch is to set line size support and do the line size
-> check.
-> 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+Thanks Jarkko.
+
+Shall I take these through the EFI tree?
+
+
 > ---
->  .../arm/display/komeda/d71/d71_component.c    | 57 ++++++++++++++++---
->  .../gpu/drm/arm/display/komeda/d71/d71_regs.h |  9 +--
->  .../drm/arm/display/komeda/komeda_pipeline.h  |  2 +
->  .../display/komeda/komeda_pipeline_state.c    | 17 ++++++
->  4 files changed, 70 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> index 7b374a3b911e..357837b9d6ed 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> @@ -106,6 +106,23 @@ static void dump_block_header(struct seq_file *sf, void __iomem *reg)
->  			   i, hdr.output_ids[i]);
->  }
->  
-> +/* On D71, we are using the global line size. From D32, every component have
-> + * a line size register to indicate the fifo size.
-> + */
-> +static u32 __get_blk_line_size(struct d71_dev *d71, u32 __iomem *reg,
-> +			       u32 max_default)
-> +{
-> +	if (!d71->periph_addr)
-> +		max_default = malidp_read32(reg, BLK_MAX_LINE_SIZE);
+>  include/linux/tpm_eventlog.h | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> index 63238c84dc0b..12584b69a3f3 100644
+> --- a/include/linux/tpm_eventlog.h
+> +++ b/include/linux/tpm_eventlog.h
+> @@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         u16 halg;
+>         int i;
+>         int j;
+> +       u32 count, event_type;
+>
+>         marker = event;
+>         marker_start = marker;
+> @@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         }
+>
+>         event = (struct tcg_pcr_event2_head *)mapping;
+> +       /*
+> +        * the loop below will unmap these fields if the log is larger than
+> +        * one page, so save them here for reference.
+> +        */
+> +       count = READ_ONCE(event->count);
+> +       event_type = READ_ONCE(event->event_type);
+>
+>         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+>
+>         /* Check if event is malformed. */
+> -       if (event->count > efispecid->num_algs) {
+> +       if (count > efispecid->num_algs) {
+>                 size = 0;
+>                 goto out;
+>         }
+>
+> -       for (i = 0; i < event->count; i++) {
+> +       for (i = 0; i < count; i++) {
+>                 halg_size = sizeof(event->digests[i].alg_id);
+>
+>                 /* Map the digest's algorithm identifier */
+> @@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>                 + event_field->event_size;
+>         size = marker - marker_start;
+>
+> -       if ((event->event_type == 0) && (event_field->event_size == 0))
+> +       if (event_type == 0 && event_field->event_size == 0)
+>                 size = 0;
 > +
-> +	return max_default;
-> +}
-> +
-> +static u32 get_blk_line_size(struct d71_dev *d71, u32 __iomem *reg)
-> +{
-> +	return __get_blk_line_size(d71, reg, d71->max_line_size);
-> +}
-
-I know you're trying to save typing the extra parameter, but looking at the rest of
-the diff I think it would look better if you get rid of get_blk_line_size() function
-and use the name for the function with 3 parameters.
-
-Otherwise, patch looks good to me.
-
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> +
->  static u32 to_rot_ctrl(u32 rot)
->  {
->  	u32 lr_ctrl = 0;
-> @@ -365,7 +382,28 @@ static int d71_layer_init(struct d71_dev *d71,
->  	else
->  		layer->layer_type = KOMEDA_FMT_SIMPLE_LAYER;
->  
-> -	set_range(&layer->hsize_in, 4, d71->max_line_size);
-> +	if (!d71->periph_addr) {
-> +		/* D32 or newer product */
-> +		layer->line_sz = malidp_read32(reg, BLK_MAX_LINE_SIZE);
-> +		layer->yuv_line_sz = L_INFO_YUV_MAX_LINESZ(layer_info);
-> +	} else if (d71->max_line_size > 2048) {
-> +		/* D71 4K */
-> +		layer->line_sz = d71->max_line_size;
-> +		layer->yuv_line_sz = layer->line_sz / 2;
-> +	} else	{
-> +		/* D71 2K */
-> +		if (layer->layer_type == KOMEDA_FMT_RICH_LAYER) {
-> +			/* rich layer is 4K configuration */
-> +			layer->line_sz = d71->max_line_size * 2;
-> +			layer->yuv_line_sz = layer->line_sz / 2;
-> +		} else {
-> +			layer->line_sz = d71->max_line_size;
-> +			layer->yuv_line_sz = 0;
-> +		}
-> +	}
-> +
-> +	set_range(&layer->hsize_in, 4, layer->line_sz);
-> +
->  	set_range(&layer->vsize_in, 4, d71->max_vsize);
->  
->  	malidp_write32(reg, LAYER_PALPHA, D71_PALPHA_DEF_MAP);
-> @@ -456,9 +494,11 @@ static int d71_wb_layer_init(struct d71_dev *d71,
->  
->  	wb_layer = to_layer(c);
->  	wb_layer->layer_type = KOMEDA_FMT_WB_LAYER;
-> +	wb_layer->line_sz = get_blk_line_size(d71, reg);
-> +	wb_layer->yuv_line_sz = wb_layer->line_sz;
->  
-> -	set_range(&wb_layer->hsize_in, D71_MIN_LINE_SIZE, d71->max_line_size);
-> -	set_range(&wb_layer->vsize_in, D71_MIN_VERTICAL_SIZE, d71->max_vsize);
-> +	set_range(&wb_layer->hsize_in, 64, wb_layer->line_sz);
-> +	set_range(&wb_layer->vsize_in, 64, d71->max_vsize);
->  
->  	return 0;
->  }
-> @@ -595,8 +635,8 @@ static int d71_compiz_init(struct d71_dev *d71,
->  
->  	compiz = to_compiz(c);
->  
-> -	set_range(&compiz->hsize, D71_MIN_LINE_SIZE, d71->max_line_size);
-> -	set_range(&compiz->vsize, D71_MIN_VERTICAL_SIZE, d71->max_vsize);
-> +	set_range(&compiz->hsize, 64, get_blk_line_size(d71, reg));
-> +	set_range(&compiz->vsize, 64, d71->max_vsize);
->  
->  	return 0;
->  }
-> @@ -753,7 +793,7 @@ static int d71_scaler_init(struct d71_dev *d71,
->  	}
->  
->  	scaler = to_scaler(c);
-> -	set_range(&scaler->hsize, 4, 2048);
-> +	set_range(&scaler->hsize, 4, __get_blk_line_size(d71, reg, 2048));
->  	set_range(&scaler->vsize, 4, 4096);
->  	scaler->max_downscaling = 6;
->  	scaler->max_upscaling = 64;
-> @@ -862,7 +902,7 @@ static int d71_splitter_init(struct d71_dev *d71,
->  
->  	splitter = to_splitter(c);
->  
-> -	set_range(&splitter->hsize, 4, d71->max_line_size);
-> +	set_range(&splitter->hsize, 4, get_blk_line_size(d71, reg));
->  	set_range(&splitter->vsize, 4, d71->max_vsize);
->  
->  	return 0;
-> @@ -933,7 +973,8 @@ static int d71_merger_init(struct d71_dev *d71,
->  
->  	merger = to_merger(c);
->  
-> -	set_range(&merger->hsize_merged, 4, 4032);
-> +	set_range(&merger->hsize_merged, 4,
-> +		  __get_blk_line_size(d71, reg, 4032));
->  	set_range(&merger->vsize_merged, 4, 4096);
->  
->  	return 0;
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h b/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
-> index 2d5e6d00b42c..1727dc993909 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
-> @@ -10,6 +10,7 @@
->  /* Common block registers offset */
->  #define BLK_BLOCK_INFO		0x000
->  #define BLK_PIPELINE_INFO	0x004
-> +#define BLK_MAX_LINE_SIZE	0x008
->  #define BLK_VALID_INPUT_ID0	0x020
->  #define BLK_OUTPUT_ID0		0x060
->  #define BLK_INPUT_ID0		0x080
-> @@ -321,6 +322,7 @@
->  #define L_INFO_RF		BIT(0)
->  #define L_INFO_CM		BIT(1)
->  #define L_INFO_ABUF_SIZE(x)	(((x) >> 4) & 0x7)
-> +#define L_INFO_YUV_MAX_LINESZ(x)	(((x) >> 16) & 0xFFFF)
->  
->  /* Scaler registers */
->  #define SC_COEFFTAB		0x0DC
-> @@ -494,13 +496,6 @@ enum d71_blk_type {
->  #define D71_DEFAULT_PREPRETCH_LINE	5
->  #define D71_BUS_WIDTH_16_BYTES		16
->  
-> -#define D71_MIN_LINE_SIZE		64
-> -#define D71_MIN_VERTICAL_SIZE		64
-> -#define D71_SC_MIN_LIN_SIZE		4
-> -#define D71_SC_MIN_VERTICAL_SIZE	4
-> -#define D71_SC_MAX_LIN_SIZE		2048
-> -#define D71_SC_MAX_VERTICAL_SIZE	4096
-> -
->  #define D71_SC_MAX_UPSCALING		64
->  #define D71_SC_MAX_DOWNSCALING		6
->  #define D71_SC_SPLIT_OVERLAP		8
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> index 910d279ae48d..92aba58ce2a5 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> @@ -227,6 +227,8 @@ struct komeda_layer {
->  	/* accepted h/v input range before rotation */
->  	struct malidp_range hsize_in, vsize_in;
->  	u32 layer_type; /* RICH, SIMPLE or WB */
-> +	u32 line_sz;
-> +	u32 yuv_line_sz; /* maximum line size for YUV422 and YUV420 */
->  	u32 supported_rots;
->  	/* komeda supports layer split which splits a whole image to two parts
->  	 * left and right and handle them by two individual layer processors
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> index 5526731f5a33..6df442666cfe 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> @@ -285,6 +285,7 @@ komeda_layer_check_cfg(struct komeda_layer *layer,
->  		       struct komeda_data_flow_cfg *dflow)
->  {
->  	u32 src_x, src_y, src_w, src_h;
-> +	u32 line_sz, max_line_sz;
->  
->  	if (!komeda_fb_is_layer_supported(kfb, layer->layer_type, dflow->rot))
->  		return -EINVAL;
-> @@ -314,6 +315,22 @@ komeda_layer_check_cfg(struct komeda_layer *layer,
->  		return -EINVAL;
->  	}
->  
-> +	if (drm_rotation_90_or_270(dflow->rot))
-> +		line_sz = dflow->in_h;
-> +	else
-> +		line_sz = dflow->in_w;
-> +
-> +	if (kfb->base.format->hsub > 1)
-> +		max_line_sz = layer->yuv_line_sz;
-> +	else
-> +		max_line_sz = layer->line_sz;
-> +
-> +	if (line_sz > max_line_sz) {
-> +		DRM_DEBUG_ATOMIC("Required line_sz: %d exceeds the max size %d\n",
-> +				 line_sz, max_line_sz);
-> +		return -EINVAL;
-> +	}
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+>  out:
+>         if (do_mapping)
+>                 TPM_MEMUNMAP(mapping, mapping_size);
+> --
+> 2.20.1
+>
