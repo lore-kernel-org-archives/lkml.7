@@ -2,178 +2,85 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1A6C4360D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1307DC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF8E205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA26121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 15:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="nFhz4TvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439761AbfIYPaQ (ORCPT
+        id S1732289AbfIYPdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 11:30:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727381AbfIYPaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:30:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86EB3ACA5;
-        Wed, 25 Sep 2019 15:30:12 +0000 (UTC)
-Message-ID: <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Date:   Wed, 25 Sep 2019 17:30:10 +0200
-In-Reply-To: <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
-         <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
-         <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
-         <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Jc6/4bVbm9VDLL08SmH3"
-User-Agent: Evolution 3.32.4 
+        Wed, 25 Sep 2019 11:33:18 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41255 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbfIYPdS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 11:33:18 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f20so3483076edv.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 08:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xXF8fOz68zu8jSsi2oLIZNjcKNSoQ5Q7ICUWMBhW7DM=;
+        b=nFhz4TvKr9xBPUOqvetSHmUbh3EQ9lCExfFxilYXCW6hELd5xrptu0jhKEK25o20EJ
+         Gg+aZGbC6Gz3auQyizHzo+v1pDRbzSZjr1eDys1u37dLQaCrZdDdJ7Z0zkaQF6vDrLjU
+         Rqvk3/vbAa2BoNNPP5rnqdkP951jp2KtC72hcQN5nt5FnqwwEvmCwCIV1r794Dgcm+sY
+         wjeInu9jOq1/8eyq2q4W/yCVWbeCOWtbiByMG+RIeAEvFhOIqJqxZh4I46CGvYENVgsO
+         iQ3SXRlCmb9r1A4+GTrR0Wacrn49h/SVnBHVwSV6/h/Sm65vGxPsrAdXBKbChI83A2fx
+         tUBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xXF8fOz68zu8jSsi2oLIZNjcKNSoQ5Q7ICUWMBhW7DM=;
+        b=CylY1U5OtDyyxS/mvSXmBwu2ZMp2V989AL5cFdVZdku2cwBSqWh8DX/utfvmCTBJIh
+         /e7mjNnz2JTU/L9ZE1EzdTpof0i/OypsXoFA8dPD+BeKgepmpH1MsavQ00tB2IwuXyd0
+         E/kn3tYxcX3pXYQdIeIquQsY3uuiBzPZl4yYZ9u/ZIt4W8kByelkVloOjOjNiptvOuET
+         Ow4HuQVIWsRdgmpwDGsBN4lSV0nY0zjdoslmKLKRFdyPBABPi7llV2mXvTTANRK8Qsmu
+         ZfsjilK7YIeAA/K0TePFxQi+uGLWQDRVD/9Pj/RKCFs+zCHd1/Dm+Hk80KJXo0p/E4gs
+         HVYA==
+X-Gm-Message-State: APjAAAVn11ZO92h6T8Em6sj6u6829KHgnH1803jwG384wHiq8T45w1Xk
+        ii5jco9IapxNP9FLGz96I9ntvSI4yILJrm1rIw5gEA==
+X-Google-Smtp-Source: APXvYqxX489cqrkLHt3Qn91y6+7hXWDB8tLdECyqKNPDtfNZ49G/iag+TIVI/SOqZQbaXZn2k9NWW+dNMN7NIGCwum8=
+X-Received: by 2002:a05:6402:1ade:: with SMTP id ba30mr3673543edb.304.1569425596583;
+ Wed, 25 Sep 2019 08:33:16 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190923203427.294286-1-pasha.tatashin@soleen.com>
+ <20190923203427.294286-2-pasha.tatashin@soleen.com> <20190925060445.GA30921@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190925060445.GA30921@dhcp-128-65.nay.redhat.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 25 Sep 2019 11:33:05 -0400
+Message-ID: <CA+CK2bBscWKpQ43jjzaN33wHm5m7W8ZGiW7YCTE+Syzu2ZunoQ@mail.gmail.com>
+Subject: Re: [PATCH v5 01/17] kexec: quiet down kexec reboot
+To:     Dave Young <dyoung@redhat.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Acked-by: Dave Young <dyoung@redhat.com>
 
---=-Jc6/4bVbm9VDLL08SmH3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
-> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> > On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
-> > > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-> > > <nsaenzjulienne@suse.de> wrote:
-> > > > Hi All,
-> > > > this series tries to address one of the issues blocking us from
-> > > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact tha=
-t
-> > > > devices not represented in DT which sit behind a PCI bus fail to ge=
-t the
-> > > > bus' DMA addressing constraints.
-> > > >=20
-> > > > This is due to the fact that of_dma_configure() assumes it's receiv=
-ing a
-> > > > DT node representing the device being configured, as opposed to the=
- PCIe
-> > > > bridge node we currently pass. This causes the code to directly jum=
-p
-> > > > into PCI's parent node when checking for 'dma-ranges' and misses
-> > > > whatever was set there.
-> > > >=20
-> > > > To address this I create a new API in OF - inspired from Robin Murp=
-hys
-> > > > original proposal[2] - which accepts a bus DT node as it's input in
-> > > > order to configure a device's DMA constraints. The changes go deep =
-into
-> > > > of/address.c's implementation, as a device being having a DT node
-> > > > assumption was pretty strong.
-> > > >=20
-> > > > On top of this work, I also cleaned up of_dma_configure() removing =
-its
-> > > > redundant arguments and creating an alternative function for the sp=
-ecial
-> > > > cases
-> > > > not applicable to either the above case or the default usage.
-> > > >=20
-> > > > IMO the resulting functions are more explicit. They will probably
-> > > > surface some hacky usages that can be properly fixed as I show with=
- the
-> > > > DT fixes on the Layerscape platform.
-> > > >=20
-> > > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver =
-and
-> > > > on a Seattle AMD board.
-> > >=20
-> > > Humm, I've been working on this issue too. Looks similar though yours
-> > > has a lot more churn and there's some other bugs I've found.
-> >=20
-> > That's good news, and yes now that I see it, some stuff on my series is
-> > overly
-> > complicated. Specially around of_translate_*().
-> >=20
-> > On top of that, you removed in of_dma_get_range():
-> >=20
-> > -	/*
-> > -	 * At least empty ranges has to be defined for parent node if
-> > -	 * DMA is supported
-> > -	 */
-> > -	if (!ranges)
-> > -		break;
-> >=20
-> > Which I assumed was bound to the standard and makes things easier.
-> >=20
-> > > Can you test out this branch[1]. I don't have any h/w needing this,
-> > > but wrote a unittest and tested with modified QEMU.
-> >=20
-> > I reviewed everything, I did find a minor issue, see the patch attached=
-.
->=20
-> WRT that patch, the original intent of "force_dma" was purely to=20
-> consider a device DMA-capable regardless of the presence of=20
-> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF=
-=20
-> device has always been bogus - magic paravirt devices which appear out=
-=20
-> of nowhere and expect to be treated as genuine DMA masters are a=20
-> separate problem that we haven't really approached yet.
-
-I agree it's clearly abusing the function. I have no problem with the behav=
-iour
-change if it's OK with you.
-
-Robin, have you looked into supporting multiple dma-ranges? It's the next t=
-hing
-we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in th=
-e
-works already.
-
-Regards,
-Nicolas
-
-
---=-Jc6/4bVbm9VDLL08SmH3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2LiAIACgkQlfZmHno8
-x/7J7Af+NrtcYkM0WphLDC8n2KXI1Rofej10z7b8lAcPZvn586CNcayUtga34+e3
-jMIOwHl9qzzFJrgAT9FoyDjkcJ0gfVWKSzQYB798pTOVEND7LdUsHH0ZNqNqf4YM
-yRmNNvCpZi+i83aeetAQjPoMUeDjKU0dMCX7oEzfvlrmxi4YRx59jcOfIbaqr2Hg
-SGipuOc97V/so7VcwvypG9xeYU/zTeZ0wFoQzT7X4OdEUp4uBAgHoeou4kez1gSy
-27EmZX8DU3l7YbWTM5SBP13uDcQ0I2y25cjjy55r4gBm+zQYdGCuh3oHbdOvyws/
-xjAYrC9sFk3+VCjuPTn9CTbfyDqZ8A==
-=9rW4
------END PGP SIGNATURE-----
-
---=-Jc6/4bVbm9VDLL08SmH3--
-
+Thank you,
+Pasha
