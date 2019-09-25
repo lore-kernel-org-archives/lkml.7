@@ -2,110 +2,207 @@ Return-Path: <SRS0=wETr=XU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC3C4320D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9913FC4320D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DF7217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA1C21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Sep 2019 05:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C1NbiwNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411759AbfIYFYQ (ORCPT
+        id S2411774AbfIYFlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 01:24:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37914 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411745AbfIYFYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 01:24:15 -0400
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 18E113B714
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 05:24:15 +0000 (UTC)
-Received: by mail-pl1-f200.google.com with SMTP id z7so2650572plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:24:15 -0700 (PDT)
+        Wed, 25 Sep 2019 01:41:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46500 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411763AbfIYFlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 01:41:37 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so2537480pgm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Sep 2019 22:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SMmj88Vr2l+xbZTK/K4atYZIDcxMS64bKPr57HDmIYI=;
+        b=C1NbiwNtjlXTB9x++cXzglb3d3D+ImIUC9JjRVW878u4eONBMNiLKP4MGygGhFo7lK
+         e4x5Iy5yPYX/Kf/e+zMVXtaVw8ACEAHjX8vfNhe9e//vwtRnZw/0lb/NtcirM+inu/To
+         tNXxsXVdTQYs27NFYNmGHD9deK0rNmVktMDU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/HNMfngrL2dVAv5oEf18q1bL4tnGnZHoARTtclw/zOQ=;
-        b=Axdq9Zw0cyexjOZRoCY0x4m/hgNED57havN03D4y4oGxZxHK97ix+QZhYCfF5XiBsc
-         JrafHjuIcqw6iE82joxo0sxLdI/cVtjK8JnzkB7gMq8Ih51UER0sKMLngstKBxri6vWr
-         5lNgdqwL82aDFq8/LbWvznSiMoxNp71ER0FkWIxAuEADAyCdMCKk41Wn0cVxQgGINCbp
-         Ap3do/JkxpDTad+OoohD4ebO3/qQbU8ACnqYmkOopagMqlu7/863HVZqm0SQz2UjlyPe
-         Edtx04G1H7C0mSLkfJeHRbZJWpD2/YArfRCTUfYq3kBYex8obtzdeqIVyBP64Z36Jl7Y
-         iekQ==
-X-Gm-Message-State: APjAAAUtpjBMi5jUm9Kyx0SyuYLJVS8N2IQi0jRFmrrl50l0gSpf4jNX
-        fTYtpiv2j3hORGxNLJkA6DnJlpN6qrZ2HgLarBE7Od3pLftClbpyGrnXHq/nmxa/hXRLLssuOru
-        qHThuhOCug9odYHV0oEjSYftR
-X-Received: by 2002:a62:5e42:: with SMTP id s63mr6745436pfb.96.1569389054615;
-        Tue, 24 Sep 2019 22:24:14 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxwAC3wXoJ2PHgPRN3g8rZaANg2eV6wPnk6cDT4cSKrtUcaQ5efDKrefQ8BuOVG39h90nRsFQ==
-X-Received: by 2002:a62:5e42:: with SMTP id s63mr6745421pfb.96.1569389054455;
-        Tue, 24 Sep 2019 22:24:14 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d76sm9015810pga.80.2019.09.24.22.24.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SMmj88Vr2l+xbZTK/K4atYZIDcxMS64bKPr57HDmIYI=;
+        b=CDCWy3hws4iEEK19IygD/UceSTCXHOGDAfgJt3vciLNKRmMXbYjK3WH0Woqyn4yXSY
+         Bep0YIrqwiB6ZEBdcmgRx1bq5KvBa2Y/Y6hYf97dpUZVJ/4X1A9GGSelwMq05orG461C
+         G9fXDI/ENTuVj/Ok+qTyMQFDUDScEeaIQVQV/Ia/nes188dXSm6rXLq0si0tJYzMfABb
+         yINPZlIIdFUDtYemSMCe5NONKFN2iNeli9V3p2GGVVjhXI5nGZWPtGeEJjmMcx6y5UCl
+         XfhsokFieMXTreW6gmZOozZnVWacl9I6t1XLv/aQoPi4jPDR2Y3s7+4nIg94xt7vZAJP
+         OZqg==
+X-Gm-Message-State: APjAAAXy+RqNAoGWAkdQq5WkxamrXRCbQBE9tnawi0CVTx9CGyFftXu9
+        xRBsQ02SN59rWwRjir0ouE1HsQ==
+X-Google-Smtp-Source: APXvYqzIdxtQTexWuejObIPusF+Jq6P2KW0CJO27N8YbknDzpjAq1m179AKDu99+yDB7J9F/5nTCpw==
+X-Received: by 2002:a65:6799:: with SMTP id e25mr7341485pgr.271.1569390095094;
+        Tue, 24 Sep 2019 22:41:35 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g12sm6551472pfb.97.2019.09.24.22.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2019 22:24:13 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 13:24:02 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-Message-ID: <20190925052402.GM28074@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190923203102.GB21816@araj-mobl1.jf.intel.com>
- <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
- <20190925043050.GK28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
+        Tue, 24 Sep 2019 22:41:34 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        David Dai <daidavid1@codeaurora.org>
+Subject: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
+Date:   Tue, 24 Sep 2019 22:41:33 -0700
+Message-Id: <20190925054133.206992-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 04:38:31AM +0000, Tian, Kevin wrote:
-> > From: Peter Xu [mailto:peterx@redhat.com]
-> > Sent: Wednesday, September 25, 2019 12:31 PM
-> > 
-> > On Tue, Sep 24, 2019 at 09:38:53AM +0800, Lu Baolu wrote:
-> > > > > intel_mmmap_range(domain, addr, end, phys_addr, prot)
-> > > >
-> > > > Maybe think of a different name..? mmmap seems a bit weird :-)
-> > >
-> > > Yes. I don't like it either. I've thought about it and haven't
-> > > figured out a satisfied one. Do you have any suggestions?
-> > 
-> > How about at least split the word using "_"?  Like "mm_map", then
-> > apply it to all the "mmm*" prefixes.  Otherwise it'll be easily
-> > misread as mmap() which is totally irrelevant to this...
-> > 
-> 
-> what is the point of keeping 'mm' here? replace it with 'iommu'?
+I don't see any users of icc_get() in the kernel today, and adding them
+doesn't make sense. That's because adding calls to that function in a
+driver will make the driver SoC specific given that the arguments are
+some sort of source and destination numbers that would typically be
+listed in DT or come from platform data so they can match a global
+numberspace of interconnect numbers. It would be better to follow the
+approach of other kernel frameworks where the API is the same no matter
+how the platform is described (i.e. platform data, DT, ACPI, etc.) and
+swizzle the result in the framework to match whatever the device is by
+checking for a DT node pointer or a fwnode pointer, etc. Therefore,
+install icc_get() as the defacto API and make drivers use that instead
+of of_icc_get() which implies the driver is DT specific when it doesn't
+need to be.
 
-I'm not sure of what Baolu thought, but to me "mm" makes sense itself
-to identify this from real IOMMU page tables (because IIUC these will
-be MMU page tables).  We can come up with better names, but IMHO
-"iommu" can be a bit misleading to let people refer to the 2nd level
-page table.
+The DT binding could also be simplified somewhat. Currently a path needs
+to be specified in DT for each and every use case that is possible for a
+device to want. Typically the path is to memory, which looks to be
+reserved for in the binding with the "dma-mem" named path, but sometimes
+the path is from a device to the CPU or more generically from a device
+to another device which could be a CPU, cache, DMA master, or another
+device if some sort of DMA to DMA scenario is happening. Let's remove
+the pair part of the binding so that we just list out a device's
+possible endpoints on the bus or busses that it's connected to.
 
-Regards,
+If the kernel wants to figure out what the path is to memory or the CPU
+or a cache or something else it should be able to do that by finding the
+node for the "destination" endpoint, extracting that node's
+"interconnects" property, and deriving the path in software. For
+example, we shouldn't need to write out each use case path by path in DT
+for each endpoint node that wants to set a bandwidth to memory. We
+should just be able to indicate what endpoint(s) a device sits on based
+on the interconnect provider in the system and then walk the various
+interconnects to find the path from that source endpoint to the
+destination endpoint.
 
+Obviously this patch doesn't compile but I'm sending it out to start
+this discussion so we don't get stuck on the binding or the kernel APIs
+for a long time. It looks like we should be OK in terms of backwards
+compatibility because we can just ignore the second element in an old
+binding, but maybe we'll want to describe paths in different directions
+(e.g. the path from the CPU to the SD controller may be different than
+the path the SD controller takes to the CPU) and that may require
+extending interconnect-names to indicate what direction/sort of path it
+is. I'm basically thinking about master vs. slave ports in AXI land.
+
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: <linux-pm@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: David Dai <daidavid1@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ .../bindings/interconnect/interconnect.txt    | 19 ++++---------------
+ include/linux/interconnect.h                  | 13 ++-----------
+ 2 files changed, 6 insertions(+), 26 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 6f5d23a605b7..f8979186b8a7 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -11,7 +11,7 @@ The interconnect provider binding is intended to represent the interconnect
+ controllers in the system. Each provider registers a set of interconnect
+ nodes, which expose the interconnect related capabilities of the interconnect
+ to consumer drivers. These capabilities can be throughput, latency, priority
+-etc. The consumer drivers set constraints on interconnect path (or endpoints)
++etc. The consumer drivers set constraints on interconnect paths (or endpoints)
+ depending on the use case. Interconnect providers can also be interconnect
+ consumers, such as in the case where two network-on-chip fabrics interface
+ directly.
+@@ -42,23 +42,12 @@ multiple paths from different providers depending on use case and the
+ components it has to interact with.
+ 
+ Required properties:
+-interconnects : Pairs of phandles and interconnect provider specifier to denote
+-	        the edge source and destination ports of the interconnect path.
+-
+-Optional properties:
+-interconnect-names : List of interconnect path name strings sorted in the same
+-		     order as the interconnects property. Consumers drivers will use
+-		     interconnect-names to match interconnect paths with interconnect
+-		     specifier pairs.
+-
+-                     Reserved interconnect names:
+-			 * dma-mem: Path from the device to the main memory of
+-			            the system
++interconnects : phandle and interconnect provider specifier to denote
++	        the edge source for this node.
+ 
+ Example:
+ 
+ 	sdhci@7864000 {
+ 		...
+-		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
+-		interconnect-names = "sdhc-mem";
++		interconnects = <&pnoc MASTER_SDCC_1>;
+ 	};
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index d70a914cba11..e1ae704f5ab1 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -25,23 +25,14 @@ struct device;
+ 
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
+-struct icc_path *icc_get(struct device *dev, const int src_id,
+-			 const int dst_id);
+-struct icc_path *of_icc_get(struct device *dev, const char *name);
++struct icc_path *icc_get(struct device *dev, const char *name);
+ void icc_put(struct icc_path *path);
+ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+ void icc_set_tag(struct icc_path *path, u32 tag);
+ 
+ #else
+ 
+-static inline struct icc_path *icc_get(struct device *dev, const int src_id,
+-				       const int dst_id)
+-{
+-	return NULL;
+-}
+-
+-static inline struct icc_path *of_icc_get(struct device *dev,
+-					  const char *name)
++static inline struct icc_path *icc_get(struct device *dev, const char *name)
+ {
+ 	return NULL;
+ }
+
+base-commit: b5b3bd898ba99fb0fb6aed3b23ec6353a1724d6f
 -- 
-Peter Xu
+Sent by a computer through tubes
+
