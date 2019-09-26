@@ -2,345 +2,194 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9782C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19338C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A43217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569489664;
-	bh=Y+SD64wkghYn0I0R/39NddGVoN1hJwFHnuCmOeAxM/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EhZHiD0I8oe0EvB3lI+zN8FsZ1AE65RewhLNmH0WSNCFjVWF/PFm4XfQROIY4tIVV
-	 D6Geuxwi+beCPXR9j8dY2J6amkwFHOiHjQzLtA0jF+ydQ3xi+RAOjVU2iWN0/ENCZ4
-	 W1h6tPJi+LKZVnQC2KzvI+vTnMnn45fHgqCMs8C8=
+	by mail.kernel.org (Postfix) with ESMTP id D7781217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="k/ffxFhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfIZJVD (ORCPT
+        id S1730298AbfIZJWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:21:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44387 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfIZJVD (ORCPT
+        Thu, 26 Sep 2019 05:22:14 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.2]:58951 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbfIZJWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:21:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i18so1535880wru.11;
-        Thu, 26 Sep 2019 02:20:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0yFgoWaDFqXC6Q4Iw65F2epQQ4rqVPkyo8j0S3UI0fw=;
-        b=iZKq2gtg9D6Ng1+95TUUzwfh38flkeUM3gq0EmFmIwd8a54Nb7oKSOhUkV1ZNzUut1
-         XmSOMrtZFynQw8yg4bSZQoLTks0BAoCP2B6yMCase1Wh4/7vvpbS6j8N5Gkx2tOyELi/
-         779QPE2A14nPwhFWHh/5YAIF4lPeNwAOCk1M1v42QoSCbCFXSMjQBytPpPNSl+kjBbpg
-         DucxXs9CR1G4YoVuKT0kIBJOrNy2jouaY0Hz9eYYatkSXCnPTKftcOMhSShEfdxJp8nZ
-         HeYIW8ECXB0Y+qLLiiyYbpQI5OnCSxvg94KhutgWX3d6SIZvYrUVnpabZRzARFGauz0z
-         FTaQ==
-X-Gm-Message-State: APjAAAXd9/3gsvDRe8Cxjo+NJe9MeynJaP2dXTIm18qrBAbULnwAB+EN
-        8llMOf6eiieuRZPU3He0Hq8=
-X-Google-Smtp-Source: APXvYqxXI3Jvln6ixBkRS1hL3oyOLtrK3tUaJhrXOIGErzBhakNRh0Xi682urKxf2Nm4Kl/qlmBfYQ==
-X-Received: by 2002:a5d:4646:: with SMTP id j6mr1975308wrs.173.1569489658421;
-        Thu, 26 Sep 2019 02:20:58 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id d28sm2678651wrb.95.2019.09.26.02.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 02:20:57 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 11:20:55 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: timer: Convert Exynos MCT bindings
- to json-schema
-Message-ID: <20190926092055.GA15552@pi3>
-References: <CGME20190923161449epcas3p4bf25ddc76d4893a93b9472c3a286f410@epcas3p4.samsung.com>
- <20190923161411.9236-1-krzk@kernel.org>
- <aa4acd33-eff3-175f-b86a-459ba8c1d17c@samsung.com>
+        Thu, 26 Sep 2019 05:22:13 -0400
+Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.eu-central-1.aws.symcld.net id 1C/AF-19332-1438C8D5; Thu, 26 Sep 2019 09:22:09 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPJsWRWlGSWpSXmKPExsWSoc9lpuvY3BN
+  rcOULl8WROV+ZLaY+fMJm8e1KB5PF5V1z2BxYPHbOusvu0fazzGPTqk42j8+b5AJYolgz85Ly
+  KxJYM2af/cNc8Jm3Ys76BSwNjFe4uxi5OBgFljJLLLt7mQXCOcYisbXtNROEs5lR4nfvTzYQh
+  0XgBLPE5sfvwTJCAtOYJN5M2sgC4TxhlPjzuJexi5GTg03AQmLyiQdsILaIgLNE165WsHZmgY
+  uMEhuaG8ASwgIpErvOTGeBKEqV2PfwHHsXIweQbSQx85M/SJhFQFXi3tYNrCA2r0CixKmfW9l
+  BbCGg+U0Lu5hBbE4BS4lZ026B1TAKyEp8aVwNFmcWEJe49WQ+E4gtISAgsWTPeWYIW1Ti5eN/
+  UPWpEiebbjBCxHUkzl5/AmUrScybewTKlpW4NL8byvaVWLdsB1z9lmPzoWwLiSXdrSwg50sIq
+  Ej8O1QJES6QmHDyPFSJmsTiK7tZIGwZiaaHvewQ9mdWiSdnQicw6s9CcjWErSOxYPcnNghbW2
+  LZwtfMs8AhIShxcuYTlgWMLKsYLZKKMtMzSnITM3N0DQ0MdA0NjXUNdI1N9BKrdBP1Ukt1k1P
+  zSooSgZJ6ieXFesWVuck5KXp5qSWbGIFpKaWQQWkH46ZZb/QOMUpyMCmJ8qpI98QK8SXlp1Rm
+  JBZnxBeV5qQWH2KU4eBQkuAVbwDKCRalpqdWpGXmAFMkTFqCg0dJhLewESjNW1yQmFucmQ6RO
+  sWoyzHh5dxFzEIsefl5qVLivIYgRQIgRRmleXAjYOn6EqOslDAvIwMDgxBPQWpRbmYJqvwrRn
+  EORiVh3hUgU3gy80rgNr0COoIJ6Ii8/G6QI0oSEVJSDUzb9nw0idrr1vydz/DsWmW2RqaICb2
+  i5yVumisdXFjh9erju8awY9vM5e6fveJtvl3OLmyHuN7LHyk8Z50vV059YdL+spfl85YDS1pM
+  Jj6L+5D98f5F9V2yxX19AqZLHeRdOQMTFQ6Fr7kd/8fN6sW7jSu9ly1cJ/bhh8H6FRL7HAoWV
+  bCdN3kyo+ZVvUjH/3un6hf2X//JszkxI9X/FlsD6/qsb1ZX9iQsfRhT8OIVt3zNcpnJC5iFGl
+  duTNZ1fpdXJfjw59l51ZzqxXUf37PP/3I+cia7kTPTuWXmRuEvcoP2uYVcf1AV0frsRdqG+5m
+  17Cd8Ns5yt6m1U9nZmnn28qFWhvqtwSKNbNMC25uUWIozEg21mIuKEwEJUvueUgQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-18.tower-223.messagelabs.com!1569489728!446!1
+X-Originating-IP: [104.47.10.54]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.12; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 538 invoked from network); 26 Sep 2019 09:22:09 -0000
+Received: from mail-db5eur03lp2054.outbound.protection.outlook.com (HELO EUR03-DB5-obe.outbound.protection.outlook.com) (104.47.10.54)
+  by server-18.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 26 Sep 2019 09:22:09 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B5EsBlBebMs4VGGEMI2A9S4J+TP+DZjz99qiIC3LOLjb3r9OeiwHbntBCxkEdXlzQzCZF3TMi9x3eriu6U0FrgUAOjRyIzDbPK6IcMvY4Ad4CUFx2NoMDRl/DG2EiEktVPryIyi+mnSP1Pt1sXqTAUxPMiCVYPuW1gWwoxw6Ne93zqCcwmrVA+VpwbpycTir5Vkt/+Nkb6gaZJ6q/iCx3nTmkhf1DMcmG0QYwpDb6P310EdmO/5eBMpPfhE1a6aWrT1JYIZKswnlk9MFTOJE8ywLdPZmPPQuzX98LR0QAtPLKPquktcXzdcD0S3qIxL0sZreErxFDZrI3UAdRELAuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZEKK2cpwnF0zovO+jZCEHx4ciplMSbqw2rtdjGsA5ao=;
+ b=Aj0ja3/tV6+hIb4pWv1TRVyFhW+L/KPtZQMgTD0+THpSCVHjQyi8kPpyWNj9oMOvVQZJ9LWhj9hNc5TQvcMapQTVw0PS55IcmKVJry0nI/ks4MFGBOGy9B3V3+5LCDpidqFYcxKDw6UJFryUpkHn7XUmLOxYWd11shL5FBnYIVjy79pEUngqmiLC+LdJH23UNmH066izFVZnDlwMR9EAgkWLyzGBwApBRYnx1JUiD2MGAJHT2JbH/hSah+1lAt8TsyU68+kg5LZJv+6nxy0fNiEukEZ8QSjSUBGzmyySx/OQ2fiABWv394EkvGYCvBnqlNTg7bb6iTGRBy6Z1rccgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector2-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZEKK2cpwnF0zovO+jZCEHx4ciplMSbqw2rtdjGsA5ao=;
+ b=k/ffxFhCUeTc+x1hDBeO1ufWg2TvNfK5VfRj8v67Sact0Gq04ra2joGwDy3bv9Sdm6Wfbf3lWWBxwawXmAlwmerIG3HSyvatw0PLn9qhqTrtsZ0TUFtAMGV1CLJuHKyIHuRFIZnvDa8lRSyM1a3ZA728KCpQfow9eOn9Qh+EsPM=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1121.EURPRD10.PROD.OUTLOOK.COM (10.169.154.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Thu, 26 Sep 2019 09:22:07 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::15de:593a:8380:b8ef]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::15de:593a:8380:b8ef%12]) with mapi id 15.20.2284.028; Thu, 26 Sep
+ 2019 09:22:07 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+CC:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] regulator: da9062: Simplify da9062_buck_set_mode for
+ BUCK_MODE_MANUAL case
+Thread-Topic: [PATCH 1/2] regulator: da9062: Simplify da9062_buck_set_mode for
+ BUCK_MODE_MANUAL case
+Thread-Index: AQHVdC56OTS9Q7efEkSIFtO/XiO5P6c9reKQ
+Date:   Thu, 26 Sep 2019 09:22:07 +0000
+Message-ID: <AM5PR1001MB0994D5D70956F903FDFB989680860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190926055128.23434-1-axel.lin@ingics.com>
+In-Reply-To: <20190926055128.23434-1-axel.lin@ingics.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 592b7283-b84a-49fb-1c0f-08d7426300d1
+x-ms-traffictypediagnostic: AM5PR1001MB1121:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB112141FC3354B92C8B796249A7860@AM5PR1001MB1121.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(189003)(199004)(7736002)(110136005)(14454004)(25786009)(66066001)(7696005)(54906003)(478600001)(256004)(14444005)(316002)(76176011)(6246003)(3846002)(71190400001)(71200400001)(4326008)(9686003)(99286004)(86362001)(2906002)(6116002)(33656002)(6436002)(55016002)(229853002)(81166006)(81156014)(52536014)(8936002)(8676002)(5660300002)(53546011)(186003)(6506007)(55236004)(486006)(102836004)(26005)(11346002)(476003)(446003)(305945005)(76116006)(66446008)(66476007)(74316002)(66556008)(64756008)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1121;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: osVygA9Jc6lCSzXdg9N2910JbI4V4eVt/gysMbyc/e/fAYyqJbRSLGAuqKbQYZOZlCJV7Yc3RpQH6/kEZC5sjv6eztLuxPaTvdHt5SIu514mPVnQT/MpOrptpFqLQJiW+IqN/bVkhXATX3G8xcJxdYzmGkvvfCo5WNbSvtL752H++/NKhoCrj2L4l0EklcV80kD+UiVJjnpEs7d4lbbYrCBq/E3ByDQj6gztf6K4niMBzJNnqDrvuS9riI9sgwLO+S1IpNfRi4zzBgOiCSYDPFrogynoHKoFg3RnXBmCuUSXWBgJHHXib+qO6/Z1EeCelmUuVR7EN6+vBI8hsM6/4S9ZZNGxA6ZBsBiG5IqKrGYia/2lU2bGGrwx5uFNTfaHhJhiuI17oitOWBa8UCPMzwGYlUIuFwnyyhveohWAk7k=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aa4acd33-eff3-175f-b86a-459ba8c1d17c@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 592b7283-b84a-49fb-1c0f-08d7426300d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 09:22:07.8024
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 37rFWtIJcOFej6L5N+n2CsHuE0RB0abyyX+TZIIXnfzXKMQXiKALG7NhXeUgOV3hLk++D4Sl1ZeUNgLWMm+N9cAdBk6gWlNivyk0BywOE9c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 03:40:52PM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
-> 
-> On 23.09.2019 18:14, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
-> > using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Changes since v3:
-> > 1. Use interrupts-extended instead of interrupts-map.
-> >
-> > Changes since v1:
-> > 1. Indent example with four spaces (more readable),
-> > 2. Rename nodes in example to timer,
-> > 3. Remove mct-map subnode.
-> > ---
-> >   .../bindings/timer/samsung,exynos4210-mct.txt |  88 ------------
-> >   .../timer/samsung,exynos4210-mct.yaml         | 125 ++++++++++++++++++
-> >   2 files changed, 125 insertions(+), 88 deletions(-)
-> >   delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> >   create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> > deleted file mode 100644
-> > index 8f78640ad64c..000000000000
-> > --- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> > +++ /dev/null
-> > @@ -1,88 +0,0 @@
-> > -Samsung's Multi Core Timer (MCT)
-> > -
-> > -The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> > -global timer and CPU local timers. The global timer is a 64-bit free running
-> > -up-counter and can generate 4 interrupts when the counter reaches one of the
-> > -four preset counter values. The CPU local timers are 32-bit free running
-> > -down-counters and generate an interrupt when the counter expires. There is
-> > -one CPU local timer instantiated in MCT for every CPU in the system.
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: should be "samsung,exynos4210-mct".
-> > -  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
-> > -  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
-> > -
-> > -- reg: base address of the mct controller and length of the address space
-> > -  it occupies.
-> > -
-> > -- interrupts: the list of interrupts generated by the controller. The following
-> > -  should be the order of the interrupts specified. The local timer interrupts
-> > -  should be specified after the four global timer interrupts have been
-> > -  specified.
-> > -
-> > -	0: Global Timer Interrupt 0
-> > -	1: Global Timer Interrupt 1
-> > -	2: Global Timer Interrupt 2
-> > -	3: Global Timer Interrupt 3
-> > -	4: Local Timer Interrupt 0
-> > -	5: Local Timer Interrupt 1
-> > -	6: ..
-> > -	7: ..
-> > -	i: Local Timer Interrupt n
-> > -
-> > -  For MCT block that uses a per-processor interrupt for local timers, such
-> > -  as ones compatible with "samsung,exynos4412-mct", only one local timer
-> > -  interrupt might be specified, meaning that all local timers use the same
-> > -  per processor interrupt.
-> > -
-> > -Example 1: In this example, the IP contains two local timers, using separate
-> > -	   interrupts, so two local timer interrupts have been specified,
-> > -	   in addition to four global timer interrupts.
-> > -
-> > -	mct@10050000 {
-> > -		compatible = "samsung,exynos4210-mct";
-> > -		reg = <0x10050000 0x800>;
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>, <0 48 0>;
-> > -	};
-> > -
-> > -Example 2: In this example, the timer interrupts are connected to two separate
-> > -	   interrupt controllers. Hence, an interrupt-map is created to map
-> > -	   the interrupts to the respective interrupt controllers.
-> > -
-> > -	mct@101c0000 {
-> > -		compatible = "samsung,exynos4210-mct";
-> > -		reg = <0x101C0000 0x800>;
-> > -		interrupt-parent = <&mct_map>;
-> > -		interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
-> > -
-> > -		mct_map: mct-map {
-> > -			#interrupt-cells = <1>;
-> > -			#address-cells = <0>;
-> > -			#size-cells = <0>;
-> > -			interrupt-map = <0 &gic 0 57 0>,
-> > -					<1 &gic 0 69 0>,
-> > -					<2 &combiner 12 6>,
-> > -					<3 &combiner 12 7>,
-> > -					<4 &gic 0 42 0>,
-> > -					<5 &gic 0 48 0>;
-> > -		};
-> > -	};
-> > -
-> > -Example 3: In this example, the IP contains four local timers, but using
-> > -	   a per-processor interrupt to handle them. Either all the local
-> > -	   timer interrupts can be specified, with the same interrupt specifier
-> > -	   value or just the first one.
-> > -
-> > -	mct@10050000 {
-> > -		compatible = "samsung,exynos4412-mct";
-> > -		reg = <0x10050000 0x800>;
-> > -
-> > -		/* Both ways are possible in this case. Either: */
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>;
-> > -		/* or: */
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> > new file mode 100644
-> > index 000000000000..bff3f54a398f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> > @@ -0,0 +1,125 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC Multi Core Timer (MCT)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +description: |+
-> > +  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> > +  global timer and CPU local timers. The global timer is a 64-bit free running
-> > +  up-counter and can generate 4 interrupts when the counter reaches one of the
-> > +  four preset counter values. The CPU local timers are 32-bit free running
-> > +  down-counters and generate an interrupt when the counter expires. There is
-> > +  one CPU local timer instantiated in MCT for every CPU in the system.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - samsung,exynos4210-mct
-> > +      - samsung,exynos4412-mct
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description: |
-> > +      Interrupts should be put in specific order. This is, the local timer
-> > +      interrupts should be specified after the four global timer interrupts
-> > +      have been specified:
-> > +      0: Global Timer Interrupt 0
-> > +      1: Global Timer Interrupt 1
-> > +      2: Global Timer Interrupt 2
-> > +      3: Global Timer Interrupt 3
-> > +      4: Local Timer Interrupt 0
-> > +      5: Local Timer Interrupt 1
-> > +      6: ..
-> > +      7: ..
-> > +      i: Local Timer Interrupt n
-> > +      For MCT block that uses a per-processor interrupt for local timers, such
-> > +      as ones compatible with "samsung,exynos4412-mct", only one local timer
-> > +      interrupt might be specified, meaning that all local timers use the same
-> > +      per processor interrupt.
-> > +    minItems: 5               # 4 Global + 1 local
-> > +    maxItems: 20              # 4 Global + 16 local
-> > +
-> > +  interrupts-extended:
-> > +    description: |
-> > +      If interrupts are coming from different controllers, this property
-> > +      can be used instead of regular "interrupts" property.
-> > +      The format is exactly the same as with "interrupts".
-> > +      Interrupts should be put in specific order. This is, the local timer
-> > +    minItems: 5               # 4 Global + 1 local
-> > +    maxItems: 20              # 4 Global + 16 local
-> > +
-> > +required:
-> > +  - compatible
-> > +  - interrupts
-> > +  - reg
-> > +
-> > +allOf:
-> > +  - if:
-> > +      not:
-> > +        required:
-> > +          - interrupts
-> > +    then:
-> > +      required:
-> > +        - interrupts-extended
-> > +
-> > +examples:
-> > +  - |
-> > +    // In this example, the IP contains two local timers, using separate
-> > +    // interrupts, so two local timer interrupts have been specified,
-> > +    // in addition to four global timer interrupts.
-> > +
-> > +    timer@10050000 {
-> > +        compatible = "samsung,exynos4210-mct";
-> > +        reg = <0x10050000 0x800>;
-> > +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > +                     <0 42 0>, <0 48 0>;
-> > +    };
-> > +
-> > +  - |
-> > +    // In this example, the timer interrupts are connected to two separate
-> > +    // interrupt controllers. Hence, an interrupts-extended is needed.
-> > +
-> > +    timer@101c0000 {
-> > +        compatible = "samsung,exynos4210-mct";
-> > +        reg = <0x101C0000 0x800>;
-> > +        interrupts-extended = <&gic 0 57 0>,
-> > +                              <&gic 0 69 0>,
-> > +                              <&combiner 12 6>,
-> > +                              <&combiner 12 7>,
-> > +                              <&gic 0 42 0>,
-> > +                              <&gic 0 48 0>;
-> > +    };
-> > +
-> > +  - |
-> > +    // In this example, the IP contains four local timers, but using
-> > +    // a per-processor interrupt to handle them. Only one first local
-> > +    // interrupt is specified.
-> > +
-> > +    timer@10050000 {
-> > +        compatible = "samsung,exynos4412-mct";
-> > +        reg = <0x10050000 0x800>;
-> > +
-> > +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > +                     <0 42 0>;
-> > +    };
-> > +
-> > +  - |
-> > +    // In this example, the IP contains four local timers, but using
-> > +    // a per-processor interrupt to handle them. All the local timer
-> > +    // interrupts are specified.
-> > +
-> > +    timer@10050000 {
-> > +        compatible = "samsung,exynos4412-mct";
-> > +        reg = <0x10050000 0x800>;
-> > +
-> > +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > +                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> > +    };
-> I would add "#include <dt-bindings/interrupt-controller/arm-gic.h>" and
-> replace zeros with proper defines like GIC_SPI and GIC_PPI. The last two
-> examples describes per-processor-interrupts, but have 0 in the specifier
-> cell 0. I would also use proper IRQ_TYPE_LEVEL_HIGH at cell 3 instead
-> of 0. I would also consider adding artificial 'interrupt-parent = &git'
-> property to the 1st, 3rd and 4th examples to make it clear that they
-> refer to ARM GIC bindings.
+On 26 September 2019 06:51, Axel Lin wrote:
 
-Makes sense, but how about doing this in separate patch? The example code
-was like this amd this just converts the bindings so I think it is better
-to reduce the amount of feature-like improvements.
+> The sleep flag bit decides the mode for BUCK_MODE_MANUAL case, simplify
+> the logic as the result is the same.
+>=20
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
 
-Best regards,
-Krzysztof
+This patch will need to be rebased on Marco's update titled:
+
+	"regulator: da9062: fix suspend_enable/disable preparation"
+
+However, changes look fine so:
+
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+> ---
+>  drivers/regulator/da9062-regulator.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9=
+062-
+> regulator.c
+> index 710e67081d53..739a40f256f6 100644
+> --- a/drivers/regulator/da9062-regulator.c
+> +++ b/drivers/regulator/da9062-regulator.c
+> @@ -136,7 +136,7 @@ static int da9062_buck_set_mode(struct regulator_dev
+> *rdev, unsigned mode)
+>  static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
+>  {
+>  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
+> -	unsigned int val, mode =3D 0;
+> +	unsigned int val;
+>  	int ret;
+>=20
+>  	ret =3D regmap_field_read(regl->mode, &val);
+> @@ -146,7 +146,6 @@ static unsigned da9062_buck_get_mode(struct
+> regulator_dev *rdev)
+>  	switch (val) {
+>  	default:
+>  	case BUCK_MODE_MANUAL:
+> -		mode =3D REGULATOR_MODE_FAST |
+> REGULATOR_MODE_STANDBY;
+>  		/* Sleep flag bit decides the mode */
+>  		break;
+>  	case BUCK_MODE_SLEEP:
+> @@ -162,11 +161,9 @@ static unsigned da9062_buck_get_mode(struct
+> regulator_dev *rdev)
+>  		return 0;
+>=20
+>  	if (val)
+> -		mode &=3D REGULATOR_MODE_STANDBY;
+> +		return REGULATOR_MODE_STANDBY;
+>  	else
+> -		mode &=3D REGULATOR_MODE_NORMAL |
+> REGULATOR_MODE_FAST;
+> -
+> -	return mode;
+> +		return REGULATOR_MODE_FAST;
+>  }
+>=20
+>  /*
+> --
+> 2.20.1
 
