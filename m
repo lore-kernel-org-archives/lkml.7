@@ -2,99 +2,146 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9613C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC452C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F6B222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B01222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXIF5TwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfIZIlf (ORCPT
+        id S1729580AbfIZImq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:41:35 -0400
-Received: from sauhun.de ([88.99.104.3]:37168 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfIZIlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:41:35 -0400
-Received: from localhost (unknown [65.39.69.237])
-        by pokefinder.org (Postfix) with ESMTPSA id 5B2052C01EC;
-        Thu, 26 Sep 2019 10:41:30 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 10:41:27 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PULL REQUEST] i2c for 5.4
-Message-ID: <20190926084127.GA1862@kunai>
-References: <20190924193054.GA2215@kunai>
- <CAHk-=wi1WroG_uZ44au_KdEcujkCvcwz+d05EDR_=6vHb8xQaw@mail.gmail.com>
+        Thu, 26 Sep 2019 04:42:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22948 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726393AbfIZImq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 04:42:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569487363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=1z+xvVMawTHS8E7IV5HtLpWm+mC44JoWwY3oLMaHguc=;
+        b=DXIF5TwHBlxDPlarq+2l2oreddjUeaU77EK+YNxBnB7JzqKaW/4uHUuRuOvwuBf9OBuZ9W
+        Gw/NgW28C6l9SPLP0t2mM4S/MoC7oBHYz4NGOXhbSLmromkRPxgVLK0HOQHB5fkEMU/Zov
+        DXflM3dO6KDNW+GC6FuHlrP2oZ4KUAM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-110-b__KOa_0OYWeDrzqTvzekw-1; Thu, 26 Sep 2019 04:42:41 -0400
+Received: by mail-wm1-f72.google.com with SMTP id q9so816886wmj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 01:42:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o+SEWE7G4AdORNcTi1tw9YQZ4tXXB3xOkXrkeIS3AkM=;
+        b=hTtIKUNLN/BsPf3qySDeCJ9hZCsqmRotRrV1XmBHaeCh0D4plHOgYI2lj1nysZUL1z
+         yIrklpTe1eA4cvASjciaGk3ugh+k4qAS+zCvolgsGkKGpBXpCj/8wu6/7rdRxDApTAGK
+         s57Jj2KOj6f/nuJyhI0fbVdqKuDUPT2b4ZdlaA1QwIAVL9R574UIRe7gobYzaSi2rIDk
+         r4SqzimlAEaUBTsqrCYPobgukcN+8rQspI8cgRAV1CARkuwyvolkcTsJy6nXkiXJwG2Q
+         vN9FNWbl9zclkzsTTKa94P+al2+TGOyJXNIlWiEjuyKa68omCn19hpCcN/ik7yDgKguQ
+         M9kQ==
+X-Gm-Message-State: APjAAAU2T1Kyw88fcJSlOn9xH0iTpH5vY5JoN1V1C037OvrL7BvcHMqh
+        Tm8R3fP+8JRsPC9lQOwtyNjY2NFXX076ToC8gJpzJnimBVuN04bhSI0t3t8fAcAVik0Q9ISHvd7
+        hRRscLxdJrB0kHtF/EgaOI1RG
+X-Received: by 2002:a5d:49c3:: with SMTP id t3mr1846740wrs.151.1569487360022;
+        Thu, 26 Sep 2019 01:42:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwBct3zOdHtdxrLlHsSLaUksk4VXWTnA45yCTfyFmUAYZ2XJdu6WLhVoVo+g2mejNtS0AOt3w==
+X-Received: by 2002:a5d:49c3:: with SMTP id t3mr1846722wrs.151.1569487359724;
+        Thu, 26 Sep 2019 01:42:39 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id l10sm2461090wrh.20.2019.09.26.01.42.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 01:42:39 -0700 (PDT)
+Subject: Re: [PATCH] KVM: nVMX: cleanup and fix host 64-bit mode checks
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
+ <CALMp9eTBPTnsRDipdGDgmugWgfFEjQ2wd_9-JY0ZeM9YG2fBjg@mail.gmail.com>
+ <3460bd57-6fdd-f73c-9ce0-c97d4cc85f63@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <1543003a-9a2f-2a52-444a-d55bde6b8e2f@redhat.com>
+Date:   Thu, 26 Sep 2019 10:42:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi1WroG_uZ44au_KdEcujkCvcwz+d05EDR_=6vHb8xQaw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3460bd57-6fdd-f73c-9ce0-c97d4cc85f63@oracle.com>
+Content-Language: en-US
+X-MC-Unique: b__KOa_0OYWeDrzqTvzekw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-> > - new driver for ICY, an Amiga Zorro card :)
+On 26/09/19 01:55, Krish Sadhukhan wrote:
 >=20
-> Christ. Will that thing _never_ die?
+>=20
+> On 09/25/2019 09:47 AM, Jim Mattson wrote:
+>> On Wed, Sep 25, 2019 at 9:34 AM Paolo Bonzini <pbonzini@redhat.com>
+>> wrote:
+>>> KVM was incorrectly checking vmcs12->host_ia32_efer even if the "load
+>>> IA32_EFER" exit control was reset.=C2=A0 Also, some checks were not usi=
+ng
+>>> the new CC macro for tracing.
+>>>
+>>> Cleanup everything so that the vCPU's 64-bit mode is determined
+>>> directly from EFER_LMA and the VMCS checks are based on that, which
+>>> matches section 26.2.4 of the SDM.
+>>>
+>>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Cc: Jim Mattson <jmattson@google.com>
+>>> Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+>>> Fixes: 5845038c111db27902bc220a4f70070fe945871c
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>> =C2=A0 arch/x86/kvm/vmx/nested.c | 53
+>>> ++++++++++++++++++++---------------------------
+>>> =C2=A0 1 file changed, 22 insertions(+), 31 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>> index 70d59d9304f2..e108847f6cf8 100644
+>>> --- a/arch/x86/kvm/vmx/nested.c
+>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>> @@ -2664,8 +2664,26 @@ static int nested_vmx_check_host_state(struct
+>>> kvm_vcpu *vcpu,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 CC(!kvm_pat_valid(vmcs12->host_ia32_pat)))
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>>
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ia32e =3D (vmcs12->vm_exit_contro=
+ls &
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 VM_EXIT_HOST_ADDR_SPACE_SIZE) !=3D 0;
+>>> +#ifdef CONFIG_X86_64
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ia32e =3D !!(vcpu->arch.efer & EF=
+ER_LMA);
+>>> +#else
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (CC(vmcs12->vm_entry_controls =
+& VM_ENTRY_IA32E_MODE))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EINVAL;
+>> This check is redundant, since it is checked in the else block below.
+>=20
+> Should we be re-using is_long_mode() instead of duplicating the code ?
 
-Well, a couple of happy users there...
+Of course!  I have already pushed the patch, but I will send a follow up.
 
-> I don't know what the proper mutt incantation is to make it join the
-> modern world, but I'm sure one exists, and then your emails would get
-> names right too. Even if they are some funky Swedish ones with =C3=A5=C3=
-=A4=C3=B6.
+Paolo
 
-Sorry, my template for pull-requests had bogus header overriding the
-default utf-8 of my config. I fixed it now. Thanks for pointing it out.
-
-> (And no, don't use Latin1 - it may cover Swedish and German etc, but
-> you really want to go with proper utf-8 and be able to handle true
-> complex character sets, not just the Western European ones).
-
-Heh, no need to convince me, I am all for utf-8!
-
-Regards,
-
-   Wolfram
-
-
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2MebcACgkQFA3kzBSg
-KbbPew/8C5Cg7gXflRpP7sT2XwDafwFNolQzyA1KoTi1TGR6+5p8iQvo8fGy76dr
-/iXIa97HPKpr/QQvdp6hYAG6/DNgByOf5FrbYv+5IQ3zOwOhdAEi6Jz0hZ/SCKTI
-V26eryi6oiDX1SpSY0pFo6mODxP9wAb3vC/omiPEFhNHz4bA+6ljdehWb31c9J/r
-wk+CbKlXoEdB1BhgSfuLpu/wemCBDu1cW3hFoBXRnIlKipHyDIpQukop9jwH+zxg
-lCN32U+LRm+h+6GuMzQ88RjaD7BTIHINijTsgZywrsZlC5sERjCgU9nNVSEhMqfU
-QqY57I3Y+nPC6gh0jt5mE5a8QvOcbTLJ+ClvGiDLq0A0a2x2SWrpkPN1B0HCWxfB
-8W0517CtbH6NgG1o54fbqOtSWhWmiDOu4/4uWM9qwEBvvPwJFROVCIproO4rKde8
-dude8sgYNIK9nuh+u+H/irYcTk9t4xPsiRt2YhC/iWJ/0I8XUQeBN18wC1fk+lP2
-HixvCV42/Y8OwdlWqDHo5WWlnYRKo4xqKSZLzz5BtUri/U84LnDcQNoT/XKtytzM
-33qbZaMm6QMbHBpkz3+kx6NUTXHgzgqSkLP7bmXkGOktErCni7fVKMXMXOwWy9JO
-U0jZoBogEVXTEIZpVLVAYPIPsYLytT3GDFoVr/hhQJ14kSeZtg0=
-=V5uj
------END PGP SIGNATURE-----
-
---EeQfGwPcQSOJBaQU--
