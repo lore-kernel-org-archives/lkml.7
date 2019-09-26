@@ -2,111 +2,148 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37DCC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3433BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5B3222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gcSB2dB3"
+	by mail.kernel.org (Postfix) with ESMTP id 0B101207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfIZMR6 (ORCPT
+        id S1726195AbfIZMUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:17:58 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:16532 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfIZMR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569500276; x=1601036276;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=My9iW0ZYZXMJ01JS7LXIoYyI2Pxn/CJO9L+IqUSg2aY=;
-  b=gcSB2dB3rM/7rHcTGHUuJN6DYFdUSLe9mdUwRu/aBiupgmzxXIvbFe4y
-   SDQbPyvzFrXzsN90eEYAAa5TG7xSk5sUcQ+7TaOwNwDhudqkZ+G6YJ4wY
-   ORxcmAHSuVk65EWWpZQWrmMRa3hW9tYmSRZFdjBoyJFnTtpWI7uORydU3
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.64,551,1559520000"; 
-   d="scan'208";a="423773963"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 26 Sep 2019 12:17:54 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id C9A7AA2461;
-        Thu, 26 Sep 2019 12:17:53 +0000 (UTC)
-Received: from EX13D10EUA001.ant.amazon.com (10.43.165.242) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 26 Sep 2019 12:17:52 +0000
-Received: from EX13D22EUA004.ant.amazon.com (10.43.165.129) by
- EX13D10EUA001.ant.amazon.com (10.43.165.242) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 26 Sep 2019 12:17:51 +0000
-Received: from EX13D22EUA004.ant.amazon.com ([10.43.165.129]) by
- EX13D22EUA004.ant.amazon.com ([10.43.165.129]) with mapi id 15.00.1367.000;
- Thu, 26 Sep 2019 12:17:51 +0000
-From:   "Kiyanovski, Arthur" <akiyano@amazon.com>
-To:     Colin King <colin.king@canonical.com>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Bshara, Saeed" <saeedb@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Jubran, Samih" <sameehj@amazon.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] net: ena: clean up indentation issue
-Thread-Topic: [PATCH] net: ena: clean up indentation issue
-Thread-Index: AQHVdFzcGzusACwMIUKNmXCucf2dHqc93yZA
-Date:   Thu, 26 Sep 2019 12:17:22 +0000
-Deferred-Delivery: Thu, 26 Sep 2019 12:16:52 +0000
-Message-ID: <4ed1ded9cc7f40e496f02007e05b61eb@EX13D22EUA004.ant.amazon.com>
-References: <20190926112252.21498-1-colin.king@canonical.com>
-In-Reply-To: <20190926112252.21498-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.48]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 26 Sep 2019 08:20:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:48064 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfIZMUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:20:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 240B6142F;
+        Thu, 26 Sep 2019 05:20:15 -0700 (PDT)
+Received: from [10.37.12.151] (unknown [10.37.12.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFDC43F67D;
+        Thu, 26 Sep 2019 05:20:13 -0700 (PDT)
+Subject: Re: [PATCH 1/4] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926060353.54894-1-vincenzo.frascino@arm.com>
+ <20190926060353.54894-2-vincenzo.frascino@arm.com>
+ <20190926080616.GB26802@iMac.local>
+ <0ff3d5f4-11c9-4207-c6ab-2f8e9ee7de5e@arm.com>
+Message-ID: <ad90f9bb-aa39-615c-3ae5-bea394bd787c@arm.com>
+Date:   Thu, 26 Sep 2019 13:22:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <0ff3d5f4-11c9-4207-c6ab-2f8e9ee7de5e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5r
-aW5nQGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBTZXB0ZW1iZXIgMjYsIDIwMTkg
-MjoyMyBQTQ0KPiBUbzogQmVsZ2F6YWwsIE5ldGFuZWwgPG5ldGFuZWxAYW1hem9uLmNvbT47IEJz
-aGFyYSwgU2FlZWQNCj4gPHNhZWVkYkBhbWF6b24uY29tPjsgTWFjaHVsc2t5LCBab3JpayA8em9y
-aWtAYW1hem9uLmNvbT47IERhdmlkIFMgLg0KPiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+
-OyBLaXlhbm92c2tpLCBBcnRodXIgPGFraXlhbm9AYW1hem9uLmNvbT47DQo+IEp1YnJhbiwgU2Ft
-aWggPHNhbWVlaGpAYW1hem9uLmNvbT47IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGtl
-cm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCj4gU3ViamVjdDogW1BBVENIXSBuZXQ6IGVuYTogY2xlYW4gdXAgaW5kZW50YXRpb24gaXNz
-dWUNCj4gDQo+IEZyb206IENvbGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+
-DQo+IA0KPiBUaGVyZSBtZW1zZXQgaXMgaW5kZW50ZWQgaW5jb3JyZWN0bHksIHJlbW92ZSB0aGUg
-ZXh0cmFuZW91cyB0YWJzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNv
-bGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9h
-bWF6b24vZW5hL2VuYV9ldGhfY29tLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfZXRoX2NvbS5jDQo+IGIvZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvYW1hem9uL2VuYS9lbmFfZXRoX2NvbS5jDQo+IGluZGV4IDM4MDQ2YmYwZmY0NC4uMjg0
-NWFjMjc3NzI0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5h
-L2VuYV9ldGhfY29tLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9l
-bmFfZXRoX2NvbS5jDQo+IEBAIC0yMTEsOCArMjExLDggQEAgc3RhdGljIGludCBlbmFfY29tX3Nx
-X3VwZGF0ZV9sbHFfdGFpbChzdHJ1Y3QNCj4gZW5hX2NvbV9pb19zcSAqaW9fc3EpDQo+IA0KPiAg
-CQlwa3RfY3RybC0+Y3Vycl9ib3VuY2VfYnVmID0NCj4gIAkJCWVuYV9jb21fZ2V0X25leHRfYm91
-bmNlX2J1ZmZlcigmaW9fc3EtDQo+ID5ib3VuY2VfYnVmX2N0cmwpOw0KPiAtCQkJbWVtc2V0KGlv
-X3NxLT5sbHFfYnVmX2N0cmwuY3Vycl9ib3VuY2VfYnVmLA0KPiAtCQkJICAgICAgIDB4MCwgbGxx
-X2luZm8tPmRlc2NfbGlzdF9lbnRyeV9zaXplKTsNCj4gKwkJbWVtc2V0KGlvX3NxLT5sbHFfYnVm
-X2N0cmwuY3Vycl9ib3VuY2VfYnVmLA0KPiArCQkgICAgICAgMHgwLCBsbHFfaW5mby0+ZGVzY19s
-aXN0X2VudHJ5X3NpemUpOw0KPiANCj4gIAkJcGt0X2N0cmwtPmlkeCA9IDA7DQo+ICAJCWlmICh1
-bmxpa2VseShsbHFfaW5mby0+ZGVzY19zdHJpZGVfY3RybCA9PQ0KPiBFTkFfQURNSU5fU0lOR0xF
-X0RFU0NfUEVSX0VOVFJZKSkNCj4gLS0NCj4gMi4yMC4xDQoNCkxHVE0gVGhhbmtzISANCg==
+On 9/26/19 11:56 AM, Vincenzo Frascino wrote:
+> On 9/26/19 9:06 AM, Catalin Marinas wrote:
+>> On Thu, Sep 26, 2019 at 07:03:50AM +0100, Vincenzo Frascino wrote:
+>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>> index 37c610963eee..afe8c948b493 100644
+>>> --- a/arch/arm64/Kconfig
+>>> +++ b/arch/arm64/Kconfig
+>>> @@ -110,7 +110,7 @@ config ARM64
+>>>  	select GENERIC_STRNLEN_USER
+>>>  	select GENERIC_TIME_VSYSCALL
+>>>  	select GENERIC_GETTIMEOFDAY
+>>> -	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
+>>> +	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && COMPAT_CC_IS_GCC)
+>>>  	select HANDLE_DOMAIN_IRQ
+>>>  	select HARDIRQS_SW_RESEND
+>>>  	select HAVE_PCI
+>>> @@ -313,6 +313,9 @@ config KASAN_SHADOW_OFFSET
+>>>  	default 0xeffffff900000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
+>>>  	default 0xffffffffffffffff
+>>>  
+>>> +config COMPAT_CC_IS_GCC
+>>> +	def_bool $(success,$(CROSS_COMPILE_COMPAT)gcc --version | head -n 1 | grep -q arm)
+>>
+>> Nitpick: I prefer COMPATCC instead of COMPAT_CC for consistency with
+>> HOSTCC.
+>>
+> 
+> Ok, will change this in v2.
+> 
+>> Now, could we not generate a COMPATCC in the Makefile and use
+>> $(COMPATCC) here instead of $(CROSS_COMPILE_COMPAT)gcc? It really
+>> doesn't make sense to check that gcc is gcc.
+>>
+> 
+> All right, COMPATCC is already in the makefile, I will use it in here.
+>
+
+What you are proposing seems not possible because Kconfig runs first and then
+the arch Makefile, hence compatcc does not take effect on the Kconfig. I will
+post v2 with what I proposed, please feel free to comment if you have a better idea.
+
+arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for
+REMOTEPROC
+#
+
+# configuration written to .config
+
+#
+
+make[1]: Leaving directory '/data1/Projects/LinuxKernel/linux-out'
+
+make[1]: Entering directory '/data1/Projects/LinuxKernel/linux-out'
+
+$COMPATCC is [arm-linux-gnueabihf-gcc]
+
+  GEN     Makefile
+
+>> A next step would be to check that COMPATCC can actually generate 32-bit
+>> objects. But it's not essential at this stage.
+>>
+> 
+> We are already checking this making sure that arm is present in the triple (grep
+> -q arm).
+> 
+>>> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+>>> index 84a3d502c5a5..34f53eb11878 100644
+>>> --- a/arch/arm64/Makefile
+>>> +++ b/arch/arm64/Makefile
+>>> @@ -54,19 +54,8 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
+>>>  endif
+>>>  
+>>>  ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+>>> -  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
+>>> -
+>>> -  ifeq ($(CONFIG_CC_IS_CLANG), y)
+>>> -    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
+>>> -  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
+>>> -    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
+>>> -  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
+>>> -    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
+>>> -  else
+>>> -    export CROSS_COMPILE_COMPAT
+>>> -    export CONFIG_COMPAT_VDSO := y
+>>> -    compat_vdso := -DCONFIG_COMPAT_VDSO=1
+>>> -  endif
+>>> +  export CONFIG_COMPAT_VDSO := y
+>>> +  compat_vdso := -DCONFIG_COMPAT_VDSO=1
+>>>  endif
+>>
+>> Has CONFIG_CROSS_COMPILE_COMPAT_VDSO actually been removed from
+>> lib/vdso/Kconfig? (I haven't checked the subsequent patches).
+>>
+> 
+
+-- 
+Regards,
+Vincenzo
