@@ -4,132 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D963EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06991C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B491C222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD81E222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfIZITt (ORCPT
+        id S1728012AbfIZIXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:19:49 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:1722 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726060AbfIZITs (ORCPT
+        Thu, 26 Sep 2019 04:23:07 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:50626 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfIZIXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:19:48 -0400
-X-IronPort-AV: E=Sophos;i="5.64,551,1559491200"; 
-   d="scan'208";a="76053882"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Sep 2019 16:19:45 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id D50D14CE14F5;
-        Thu, 26 Sep 2019 16:19:48 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 26 Sep 2019 16:19:57 +0800
-Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
- "reloc"
-To:     <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
-CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <corbet@lwn.net>
-References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
- <20190926060139.GA100481@gmail.com>
- <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
- <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-Message-ID: <dff52431-ce54-7c64-b223-36f4491c53b0@cn.fujitsu.com>
-Date:   Thu, 26 Sep 2019 16:20:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 04:23:06 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id E6F8D25AF0D;
+        Thu, 26 Sep 2019 18:23:04 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id ECA80943750; Thu, 26 Sep 2019 10:23:02 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 10:23:02 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: renesas: rcar-sysc: fix memory leak in
+ rcar_sysc_pd_init
+Message-ID: <20190926082302.smaruxtgamgwoxad@verge.net.au>
+References: <20190925210354.8845-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: D50D14CE14F5.AA496
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925210354.8845-1-navid.emamdoost@gmail.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 3:58 PM, hpa@zytor.com wrote:
-> On September 26, 2019 12:55:51 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->> On 9/26/19 2:01 PM, Ingo Molnar wrote:
->>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->>>
->>>> The fields marked with (reloc) actually are not dedicated for
->> writing,
->>>> but communicating info for relocatable kernel with boot loaders. For
->>>> example:
->>>>
->>>>     ============    ============
->>>>     Field name:     pref_address
->>>>     Type:           read (reloc)
->>>>     Offset/size:    0x258/8
->>>>     Protocol:       2.10+
->>>>     ============    ============
->>>>
->>>>     ============    ========================
->>>>     Field name:     code32_start
->>>>     Type:           modify (optional, reloc)
->>>>     Offset/size:    0x214/4
->>>>     Protocol:       2.00+
->>>>     ============    ========================
->>>>
->>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
->>>> ---
->>>> Unless I have incorrect non-native understanding for "fill in", I
->> think
->>>> this is inaccurate.
->>>>
->>>>  Documentation/x86/boot.rst | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
->>>> index 08a2f100c0e6..a611bf04492d 100644
->>>> --- a/Documentation/x86/boot.rst
->>>> +++ b/Documentation/x86/boot.rst
->>>> @@ -243,7 +243,7 @@ bootloader ("modify").
->>>>  
->>>>  All general purpose boot loaders should write the fields marked
->>>>  (obligatory).  Boot loaders who want to load the kernel at a
->>>> -nonstandard address should fill in the fields marked (reloc); other
->>>> +nonstandard address should consult with the fields marked (reloc);
->> other
->>>>  boot loaders can ignore those fields.
->>>>  
->>>>  The byte order of all fields is littleendian (this is x86, after
->> all.)
->>>
->>> Well, this documentation is written from the point of view of a 
->>> *bootloader*, not the kernel. So the 'fill in' says that the
->> bootloader 
->>> should write those fields - which is correct, right?
->>>
->>
->> Take pref_address or relocatable_kernel for example, they have type:
->> read (reloc), does boot loader need to write them? I don't see grub
->> does
->> this at least.
+Ni Navid,
+
+thanks for your patch.
+
+On Wed, Sep 25, 2019 at 04:03:53PM -0500, Navid Emamdoost wrote:
+> In rcar_sysc_pd_init when looping over info->areas errors may happen but
+> the error handling path does not clean up the intermediate allocated
+> memories.
 > 
-> Read means the boot later reads them.
+> This patch changes the error handling path in major and a little the loop
+>  itself. Inside the loop if an error happens the current pd will be
+> released and then it goes to error handling path where it releases any
+>  previously allocated domains.
 > 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/soc/renesas/rcar-sysc.c | 27 ++++++++++++++++++++++++---
+>  1 file changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
+> index 59b5e6b10272..f9613c1ee0a0 100644
+> --- a/drivers/soc/renesas/rcar-sysc.c
+> +++ b/drivers/soc/renesas/rcar-sysc.c
+> @@ -330,10 +330,10 @@ static int __init rcar_sysc_pd_init(void)
+>  {
+>  	const struct rcar_sysc_info *info;
+>  	const struct of_device_id *match;
+> -	struct rcar_pm_domains *domains;
+> +	struct rcar_pm_domains *domains = NULL;
+>  	struct device_node *np;
+>  	void __iomem *base;
+> -	unsigned int i;
+> +	unsigned int i, num_areas = 0;
+>  	int error;
 
-Sorry I don't know what is going wrong in my mind. For me, if
-pref_address has "read (reloc)", base on the current document, it means
-boot loader will read it and also write it, which is conflicting. And
-the purpose of pref_address should just inform boot loader that kernel
-whats itself to be loaded at certain address, it don't want to be written.
+Please preserve reverse xmas tree sorting of local variables.
 
--- 
-Sincerely,
-Cao jin
+>  	np = of_find_matching_node_and_match(NULL, rcar_sysc_matches, &match);
+> @@ -382,6 +382,7 @@ static int __init rcar_sysc_pd_init(void)
+>  		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
+>  		if (!pd) {
+>  			error = -ENOMEM;
+> +			num_areas = i;
+>  			goto out_put;
+>  		}
+>  
+> @@ -393,8 +394,11 @@ static int __init rcar_sysc_pd_init(void)
+>  		pd->flags = area->flags;
+>  
+>  		error = rcar_sysc_pd_setup(pd);
+> -		if (error)
+> +		if (error) {
+> +			kfree(pd);
+> +			num_areas = i;
+>  			goto out_put;
+> +		}
+>  
+>  		domains->domains[area->isr_bit] = &pd->genpd;
+>  
+> @@ -406,13 +410,30 @@ static int __init rcar_sysc_pd_init(void)
+>  		if (error) {
+>  			pr_warn("Failed to add PM subdomain %s to parent %u\n",
+>  				area->name, area->parent);
+> +			kfree(pd);
+> +			num_areas = i;
+>  			goto out_put;
+>  		}
+>  	}
+>  
+>  	error = of_genpd_add_provider_onecell(np, &domains->onecell_data);
+> +	of_node_put(np);
+> +
+> +	return error;
+>  
+>  out_put:
+> +	if (domains) {
+> +		for (i = 0; i < num_areas; i++) {
+> +			const struct rcar_sysc_area *area = &info->areas[i];
+> +
+> +			if (!area->name) {
+> +				/* Skip NULLified area */
+> +				continue;
+> +			}
+> +			kfree(domains->domains[area->isr_bit]);
 
+This cleanup doesn't feel correct to me.
 
+For one I think the allocated memory is at
+to_rcar_pd(domains->domains[area->isr_bit]);
+
+And for antoher I wonder if it is also necessary to unwind initialisation done
+by rcar_sysc_pd_setup() and pm_genpd_add_subdomain();
+
+I think this leads us to the heart of why such unwinding is not present
+and that is, I suspect, that its reasonably complex and in the event of
+failure the system is very likely unusable. So leaking a bit of memory,
+while unpleasent, doesn't effect the user experience.
+
+> +		}
+> +		kfree(domains);
+> +	}
+>  	of_node_put(np);
+>  	return error;
+
+I think it would be more in keeping with kernel coding style to add
+some extra labels for different error paths. I also think you can
+utilise the fact that i is already set to the number of allocated areas.
+
+Something like this (completely untested):
+
+out_free_areas:
+	while (--i > 0) {
+		/* Cleanup of 'i' goes here */
+	}
+out_free_domains:
+	kfree(domains);
+out_put:
+	of_node_put(np);
+	return error;
+
+>  }
+> -- 
+> 2.17.1
+> 
