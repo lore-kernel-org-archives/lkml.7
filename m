@@ -2,127 +2,76 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18910C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ED0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF07722459
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BF52245D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569534416;
-	bh=YFSTeeZZg2BEdjJrQ0yOpq9LuFuTUYJSINpPZwsXoNA=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=qXH56Ag/ZTjZrilz9iqkJ68P1GJz0T8mxknt8/Br6YKRUQuplTPYO9hYxV030X/K8
-	 EOx3G3VtjrR6oNr2TAXAPzyct/eqin0M8colU892YtdRX717QWzgNbXaeYKOm4kULi
-	 Ec0s1H8aFj+E9C0XjuScBZ24l6oCrEk2UH2NHQmk=
+	s=default; t=1569534469;
+	bh=CUtsMY/ddf2XOeF3tW6tq3ghiSZNTVgm3jplb/AVHwE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tgXiz3c0UmByU1bRXEuaa1xuel4nTEgUtLc8cUV9tdq8tnqtF0AQlIOcpBDcShoE3
+	 KiZXcnDGVgmd+9++pjF+GB8MzykfdzORa2BJebbcSqxUIBWG/aCTW9VDAAx6d0++P1
+	 RS8TJ8IJAVhxwB6Tm42YcdHUN8ICAhMA3c/mOTt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfIZVq4 (ORCPT
+        id S1726362AbfIZVrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
+        Thu, 26 Sep 2019 17:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfIZVqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:46:55 -0400
-Received: from localhost (unknown [104.132.0.81])
+        id S1725793AbfIZVrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:47:48 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A8520835;
-        Thu, 26 Sep 2019 21:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B47920835;
+        Thu, 26 Sep 2019 21:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569534414;
-        bh=YFSTeeZZg2BEdjJrQ0yOpq9LuFuTUYJSINpPZwsXoNA=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=HulqdxyFFzYLCuFdB6S8z4wjmKjtrInzlxyS0r7j/rI3lUQ/NKMufJxWyMb4I1Fe8
-         DQUy1gQBOQjsiQe+082e8TftblxkJ1A6v8FDtwqcgJZ0lmHuu+wnP+voM3dR+z2YWp
-         /+Vcsje0As2K42GFUjvwCmLPw/nZDOAIctfJMo+c=
-Date:   Thu, 26 Sep 2019 14:46:53 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid data corruption by
- forbidding SSR overwrite
-Message-ID: <20190926214653.GA29685@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190816030334.81035-1-yuchao0@huawei.com>
- <20190926203755.GA142676@gmail.com>
+        s=default; t=1569534467;
+        bh=CUtsMY/ddf2XOeF3tW6tq3ghiSZNTVgm3jplb/AVHwE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=k/n+pnRCzo1G659Oh9iStjKnDfg+UEvprDF4XgnVGkQKEbrXuflHppJ1zGUE7V0yL
+         Yh72L6y8M6qIfVF0XLM8UscC80T4NxH/DOvbqDfUNS7vE2sA+/LDhI4D4OeOk4P7uK
+         j4Qaqp6VEkp3DOQ4AXmpyC89WH5QhLEnKNfmwQYQ=
+Date:   Thu, 26 Sep 2019 16:47:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Megha Dey <megha.dey@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jgg@mellanox.com, ashok.raj@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>
+Subject: Re: [RFC V1 7/7] ims: Add the set_desc callback
+Message-ID: <20190926214746.GA197766@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926203755.GA142676@gmail.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <1568338328-22458-8-git-send-email-megha.dey@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/26, Eric Biggers wrote:
-> On Fri, Aug 16, 2019 at 11:03:34AM +0800, Chao Yu wrote:
-> > There is one case can cause data corruption.
-> > 
-> > - write 4k to fileA
-> > - fsync fileA, 4k data is writebacked to lbaA
-> > - write 4k to fileA
-> > - kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet
-> > - write 4k to fileB
-> > - kworker flush 4k to lbaA due to SSR
-> > - SPOR -> dnode with lbaA will be recovered, however lbaA contains fileB's
-> > data
-> > 
-> > One solution is tracking all fsynced file's block history, and disallow
-> > SSR overwrite on newly invalidated block on that file.
-> > 
-> > However, during recovery, no matter the dnode is flushed or fsynced, all
-> > previous dnodes until last fsynced one in node chain can be recovered,
-> > that means we need to record all block change in flushed dnode, which
-> > will cause heavy cost, so let's just use simple fix by forbidding SSR
-> > overwrite directly.
-> > 
-> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> > ---
-> >  fs/f2fs/segment.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index 9d9d9a050d59..69b3b553ee6b 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -2205,9 +2205,11 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
-> >  		if (!f2fs_test_and_set_bit(offset, se->discard_map))
-> >  			sbi->discard_blks--;
-> >  
-> > -		/* don't overwrite by SSR to keep node chain */
-> > -		if (IS_NODESEG(se->type) &&
-> > -				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
-> > +		/*
-> > +		 * SSR should never reuse block which is checkpointed
-> > +		 * or newly invalidated.
-> > +		 */
-> > +		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
-> >  			if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
-> >  				se->ckpt_valid_blocks++;
-> >  		}
-> > -- 
-> 
-> FYI, this commit caused xfstests generic/064 to start failing:
+On Thu, Sep 12, 2019 at 06:32:08PM -0700, Megha Dey wrote:
+> Add the set_desc callback to the ims domain ops.
 
-Yup, I was looking at this.
+Elsewhere you capitalize "IMS" when it's an initialism.
 
+Generally you capitalized "IRQ" and "MSI" in similar situations, but
+there are a couple exceptions (in other commit logs).
+
+> The set_desc callback is used to find a unique hwirq number from a given
+> domain.
 > 
-> $ kvm-xfstests -c f2fs generic/064
-> ...
-> generic/064 3s ... 	[13:36:37][    5.946293] run fstests generic/064 at 2019-09-26 13:36:37
->  [13:36:41]- output mismatch (see /results/f2fs/results-default/generic/064.out.bad)
->     --- tests/generic/064.out	2019-09-18 04:53:46.000000000 -0700
->     +++ /results/f2fs/results-default/generic/064.out.bad	2019-09-26 13:36:41.533018683 -0700
->     @@ -1,2 +1,3 @@
->      QA output created by 064
->      Extent count after inserts is in range
->     +extents mismatched before = 1 after = 50
->     ...
->     (Run 'diff -u /root/xfstests/tests/generic/064.out /results/f2fs/results-default/generic/064.out.bad'  to see the entire diff)
-> Ran: generic/064
-> Failures: generic/064
-> Failed 1 of 1 tests
+> Each mdev can have a maximum of 2048 IMS interrupts.
+
+Maybe you could mention where this limit comes from and whether it's
+related to any #define in these patches?
