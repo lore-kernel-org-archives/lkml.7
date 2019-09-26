@@ -2,58 +2,55 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE1AC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BF9C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B2B21D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3788721D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458218;
-	bh=OEdbE9hKsI+6qjMqLbKoW8XzejdiGlAJC/nag18/T8I=;
+	s=default; t=1569458223;
+	bh=jiv2t760Y1/f5UY+q5In++3xxOIA015laCLoO1cpq2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpUjv58+0mEfLuqbcCuavcrRehKxED15Gk2GArRNIYoeuS7vtaBUaMcJEpluy3VWY
-	 O9Q7+yNJe+v/ZSszIradvzu9bONJsK7me5QrkbC09XHZpm9h/iYyUGLAYEBdsebowm
-	 zrdj0ISzzXkmZqywUIihx/gYnTGPZEnjtGHby3u8=
+	b=RxAgJ8U3cBsIDJi+3wzC0pmLdFVAb8xWQBgngaUpH4KxHpOOOekjkBk+JfX47bsJi
+	 zc+fwYvneSEZtb99zT196WLmygtOYNJo9yfFS29u6o8vi21J3W4DQyHVC79nIhm484
+	 pHdk8RkL1jBDtm9azPznbL7P6v7aNbcDbwChRPKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390988AbfIZAg5 (ORCPT
+        id S2391070AbfIZAhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390923AbfIZAgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:36:54 -0400
+        id S2390965AbfIZAg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:36:57 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE6F222C1;
-        Thu, 26 Sep 2019 00:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A88217F4;
+        Thu, 26 Sep 2019 00:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458213;
-        bh=OEdbE9hKsI+6qjMqLbKoW8XzejdiGlAJC/nag18/T8I=;
+        s=default; t=1569458217;
+        bh=jiv2t760Y1/f5UY+q5In++3xxOIA015laCLoO1cpq2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kiftgRuGlgsLU2h3lZuFPGmzLSKLg4ATnL6rpy8vcZsDTQEnQLPrnYiURnl5b09PN
-         N/zlJWLyreXAoF2MgJSa4F2nbkbh6n+5rj/o9SJZjyTbZ/5spBgk1FfHYKLVGqw6Ch
-         i5uWvHQSvBAwL3IWIuSezOyVg3lljcotBjA/CA88=
+        b=sQFkUGJHOKxALBw4c5b5NIIoGhjyYp2EuXUQsX+uboNT93YDeptVa37/7BjL1VxSM
+         0vquPbMfhT1R46mM/UJI1rclc6z4IZb0sTetkwENSYeJmBkJBcJfTe3P+tSN2U/Kx2
+         18e6JoygaIGNWEU9JuLHtb2yiAqiOTSS5zDylLVk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 65/66] perf build: Add detection of java-11-openjdk-devel package
-Date:   Wed, 25 Sep 2019 21:32:43 -0300
-Message-Id: <20190926003244.13962-66-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 66/66] perf parser: Remove needless include directives
+Date:   Wed, 25 Sep 2019 21:32:44 -0300
+Message-Id: <20190926003244.13962-67-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -64,57 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With Java 11 there is no seperate JRE anymore.
+They go on accumulating there like the debug.h one, that was introduced
+here:
 
-Details:
+  f23610245c1a ("perf list: Add debug support for outputing alias string")
 
-  https://coderanch.com/t/701603/java/JRE-JDK
+But then, when that need is removed via:
 
-Therefore the detection of the JRE needs to be adapted.
+  2073ad3326b7 ("perf tools: Factor out PMU matching in parser")
 
-This change works for s390 and x86.  I have not tested other platforms.
+The thing stays there, so continue the house cleaning spree...
 
-Committer testing:
+list.h not needed, no macros from there are used, and 'struct
+list_head' is in linux/types.h, ditto for util.h, no need for that as
+well.
 
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-zkxr3mf6inun8m5mbnil4u0d@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.y | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a269d78456b6..46f7fba2306c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -924,7 +924,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 65809ad67808..48126ae4cd13 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -11,12 +11,9 @@
+ #include <fnmatch.h>
+ #include <stdio.h>
+ #include <linux/compiler.h>
+-#include <linux/list.h>
+ #include <linux/types.h>
+-#include "util.h"
+ #include "pmu.h"
+ #include "evsel.h"
+-#include "debug.h"
+ #include "parse-events.h"
+ #include "parse-events-bison.h"
+ 
 -- 
 2.21.0
 
