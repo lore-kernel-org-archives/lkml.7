@@ -2,156 +2,81 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B08C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A2C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74899222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58B3222C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfIZIaf (ORCPT
+        id S1729546AbfIZIar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:30:35 -0400
-Received: from regular1.263xmail.com ([211.150.70.201]:60558 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729050AbfIZIac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:30:32 -0400
-Received: from localhost (unknown [192.168.167.130])
-        by regular1.263xmail.com (Postfix) with ESMTP id DE672393;
-        Thu, 26 Sep 2019 16:30:14 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.10.69] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P18367T139820068222720S1569486611945312_;
-        Thu, 26 Sep 2019 16:30:13 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <cb900f1e39dd0f903650b7b2dd7d8341>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Ayan Kumar Halder <Ayan.Halder@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1569398801-92201-1-git-send-email-hjc@rock-chips.com>
- <1569398801-92201-2-git-send-email-hjc@rock-chips.com>
- <CAKMK7uFn7JqqjQPwuEA=SvoCQ5GxB148ZA3zKSTuj7Gareu7Tw@mail.gmail.com>
-From:   "sandy.huang" <hjc@rock-chips.com>
-Message-ID: <48b7491e-5e32-bfe6-c9a3-6024f6e50b1a@rock-chips.com>
-Date:   Thu, 26 Sep 2019 16:30:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 04:30:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729446AbfIZIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 04:30:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C75261000;
+        Thu, 26 Sep 2019 01:30:46 -0700 (PDT)
+Received: from iMac.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B246F3F836;
+        Thu, 26 Sep 2019 01:30:45 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 09:30:39 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        will@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 2/4] arm64: vdso32: Detect binutils support for dmb ishld
+Message-ID: <20190926083039.GC26802@iMac.local>
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926060353.54894-1-vincenzo.frascino@arm.com>
+ <20190926060353.54894-3-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uFn7JqqjQPwuEA=SvoCQ5GxB148ZA3zKSTuj7Gareu7Tw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926060353.54894-3-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 26, 2019 at 07:03:51AM +0100, Vincenzo Frascino wrote:
+> diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
+> index fb60a88b5ed4..3fd8fd6d8fc2 100644
+> --- a/arch/arm64/include/asm/vdso/compat_barrier.h
+> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+> @@ -20,7 +20,7 @@
+>  
+>  #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+>  
+> -#if __LINUX_ARM_ARCH__ >= 8
+> +#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
+>  #define aarch32_smp_mb()	dmb(ish)
+>  #define aarch32_smp_rmb()	dmb(ishld)
+>  #define aarch32_smp_wmb()	dmb(ishst)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 1fba0776ed40..1a3299d901b1 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -55,6 +55,9 @@ endif
+>  VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
+>  VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
+>  
+> +# Check for binutils support for dmb ishld
+> +dmbinstr := $(call as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
 
-在 2019/9/25 下午7:20, Daniel Vetter 写道:
-> On Wed, Sep 25, 2019 at 10:07 AM Sandy Huang <hjc@rock-chips.com> wrote:
->> These new format is supported by some rockchip socs:
->>
->> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
->> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
->> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
->>
->> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> Again, please use the block formats to describe these, plus proper
-> comments as Maarten also asked for.
-> -Daniel
+Is this check for the compat gas or the native one? Looking at
+scripts/Kbuild.include, as-instr uses CC but you'd need a COMPATCC here
+instead.
 
-Hi Daniel and Maarten,
+I may have missed something but I don't think this fixes the issue
+Will's issue since he reported the problem with an old compat binutils.
 
-     The new v2 patches have update to block formats, please help to 
-review, thanks.
-
->
->> ---
->>   drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->>   include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->>   2 files changed, 32 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
->> index c630064..f25fa81 100644
->> --- a/drivers/gpu/drm/drm_fourcc.c
->> +++ b/drivers/gpu/drm/drm_fourcc.c
->> @@ -274,6 +274,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
->>                  { .format = DRM_FORMAT_YUV420_10BIT,    .depth = 0,
->>                    .num_planes = 1, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->>                    .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV12_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->> +                 .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV21_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 2,
->> +                 .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV16_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
->> +                 .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV61_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 2, .vsub = 1,
->> +                 .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV24_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
->> +                 .is_yuv = true },
->> +               { .format = DRM_FORMAT_NV42_10,         .depth = 0,
->> +                 .num_planes = 2, .cpp = { 0, 0, 0 }, .hsub = 1, .vsub = 1,
->> +                 .is_yuv = true },
->>          };
->>
->>          unsigned int i;
->> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
->> index 3feeaa3..0479f47 100644
->> --- a/include/uapi/drm/drm_fourcc.h
->> +++ b/include/uapi/drm/drm_fourcc.h
->> @@ -238,6 +238,20 @@ extern "C" {
->>   #define DRM_FORMAT_NV42                fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
->>
->>   /*
->> + * 2 plane YCbCr 10bit
->> + * index 0 = Y plane, [9:0] Y
->> + * index 1 = Cr:Cb plane, [19:0]
->> + * or
->> + * index 1 = Cb:Cr plane, [19:0]
->> + */
->> +#define DRM_FORMAT_NV12_10     fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV21_10     fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV16_10     fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV61_10     fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
->> +#define DRM_FORMAT_NV24_10     fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
->> +#define DRM_FORMAT_NV42_10     fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
->> +
->> +/*
->>    * 2 plane YCbCr MSB aligned
->>    * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->>    * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
->> --
->> 2.7.4
->>
->>
->>
->
-
-
+-- 
+Catalin
