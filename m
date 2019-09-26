@@ -2,254 +2,130 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C9BC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F3C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB250207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038BD222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iarMhq+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391728AbfIZDtU (ORCPT
+        id S2391760AbfIZD5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 23:49:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46218 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733197AbfIZDtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 23:49:19 -0400
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 349F27FDEC
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:49:19 +0000 (UTC)
-Received: by mail-pl1-f197.google.com with SMTP id f4so666817plo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 20:49:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ShKNQbErac64XK8TSPHgRCKqoTFkkgB8tmVFA50VI9E=;
-        b=FYVhb64Uf5Rac1JMcT4M4hjvGQpgHNtLt/I/Ck8UYneR1tQbqAlm33V7oT7KBsSpQZ
-         p28Yxs7eTaZD98MQsrTLCuNoKhM3O8IRbOmhCJFpdcLghzPF0FoLO7CEiovdsglaltwA
-         K7Jb+cH6+XD9Z3FfeKSGiMy6shrpbACRHjsjlvctZY3eHTcQjrqU/oJMPGberlusU6s5
-         6WSlkPjbfFLTnW4PCxRuP6CNKOHShMuAbs164heiL1v8XgTGkkS/bk96sDQmLRRM5IIt
-         6NXtkfm76QHXl3S2E6ut15Sk6waf5ryk7mCdjjrSepP6pbWxPaDiV8NlTTQ2jRTKnrxK
-         KADg==
-X-Gm-Message-State: APjAAAXuE5EEIS5+yKFPgXZvVA/y9aTQ4aLK2SUax9ARF+bChVTHxd0d
-        tspFtRM7mc+/Ck+FGlWcGVSMTZ48PxPE8VGi57N0n9eRK7sR2oFwi7eJhCq8Lnr9zK/ACMbPyv4
-        VgtSxyHlTlrnu0UNDey2E+3j8
-X-Received: by 2002:a63:df02:: with SMTP id u2mr1326649pgg.62.1569469758379;
-        Wed, 25 Sep 2019 20:49:18 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxs4/hDxEwwNdVu+EpMWqbEMaG9qmJxTI8+9ub9yU1tkFZwOu/oob4U27J3j3Xho1yCL2C8Xw==
-X-Received: by 2002:a63:df02:: with SMTP id u2mr1326630pgg.62.1569469758054;
-        Wed, 25 Sep 2019 20:49:18 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id f74sm576418pfa.34.2019.09.25.20.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 20:49:17 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 11:49:05 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kevin.tian@intel.com, Yi Sun <yi.y.sun@linux.intel.com>,
-        ashok.raj@intel.com, kvm@vger.kernel.org, sanjay.k.kumar@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        yi.y.sun@intel.com
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-Message-ID: <20190926034905.GW28074@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190925052157.GL28074@xz-x1>
- <c9792e0b-bf42-1dbb-f060-0b1a43125f47@linux.intel.com>
+        Wed, 25 Sep 2019 23:57:21 -0400
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:4162
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726207AbfIZD5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 23:57:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MBEwGvOsb0xlGOAxch+x7m+IRtpGnfZoBQVXg2o49V3rshhjbJbey8S8yXut/47KhUOWRMfK94DDc7y4l/GYbfz1Qva/P5Pt1ziKVpwclIKeFfItBQEsFlu0pOkafwaPx6PNBw/IuSnQ2PiME7MAsLirGquD9uQFALCkKyDknPLhcSbZJZ3ak6p+eifa7qwdSqyz7DmluWrYxHriYKBOSpCv+1somCuSFJreaNJNLWsHkTMUVI+7z1bqn4qCZLn5gAm1Vaj/pt/8LFxnYNESkdsDP4WMdGny8wDzGCVfnXMYnKg1YZts9/8F0s2Hcl+fYlaoAsYBfu76lTVxu7HqmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NFtETIWmItbz8sgkDjSwYdwaW7nZaOXUhJA46UX0nYw=;
+ b=DU9MiRJdy2c6qntScnFDMFCb8veqf3Gr8iZexBzBCqXLHbXx2n59GO3ecjZo46jbWQJTPSwt6vSQtWP1B1Id6mQl/+26Q9hxRcaw4iQyXKH993+hhUEf2nKP7HbOvek4IAQpTVbDVr/F8mVwav6IeQWAF1ApJqaWl9mD5U+9jPdxyfXOq2XK0qOHvkyT+ZXBlIBaVchNOqmK3fHxNaRhRC1rZ6H+0Le6lOWvpudAtAmOdUIjz3q1CUUSgL1m1r65sV69XKqvnrybNuQ/8l1oiDJoH93xkQoNzr1xEXaijG33juWG+IWYqVTEs1Vf+RpKR2kCNVXM0WFbEeRZfYQeBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NFtETIWmItbz8sgkDjSwYdwaW7nZaOXUhJA46UX0nYw=;
+ b=iarMhq+c76PXDwhA5OMOii1bNsVBD7m0A2I8v/gDbAb4lnCoMpRh0qdO3f2WaEDL4dKbfleIpjRWlaWR0P/wNdiF8gCCPJAMDbB61rH6g+tKNSHe5w5UsN0AEmB2OAaL/J7u9L+cObJwH1c5A2l8pARuoNEYGbUfe17LltC+BAo=
+Received: from AM6PR04MB6470.eurprd04.prod.outlook.com (20.179.246.160) by
+ AM6PR04MB5847.eurprd04.prod.outlook.com (20.179.2.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.23; Thu, 26 Sep 2019 03:57:17 +0000
+Received: from AM6PR04MB6470.eurprd04.prod.outlook.com
+ ([fe80::85ae:95e1:4532:2cdc]) by AM6PR04MB6470.eurprd04.prod.outlook.com
+ ([fe80::85ae:95e1:4532:2cdc%5]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
+ 03:57:17 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH V5 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
+ bitstream in i.MX8
+Thread-Topic: [PATCH V5 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
+ bitstream in i.MX8
+Thread-Index: AdV0HmLgytY2LH8gSNeymPbPUv29fw==
+Date:   Thu, 26 Sep 2019 03:57:16 +0000
+Message-ID: <AM6PR04MB6470AFE4170063A6F1429C33E3860@AM6PR04MB6470.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cfbbd9ea-8e00-43c8-dd06-08d742359f5b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5847;
+x-ms-traffictypediagnostic: AM6PR04MB5847:
+x-microsoft-antispam-prvs: <AM6PR04MB5847FCC5C07CBC6F185A78AFE3860@AM6PR04MB5847.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(136003)(376002)(39860400002)(199004)(189003)(7736002)(3846002)(305945005)(66556008)(64756008)(66446008)(74316002)(186003)(66476007)(86362001)(14454004)(66946007)(8676002)(486006)(81156014)(71190400001)(55016002)(71200400001)(4326008)(76116006)(229853002)(102836004)(81166006)(9686003)(52536014)(7696005)(478600001)(2906002)(6246003)(33656002)(6436002)(4744005)(66066001)(26005)(6506007)(25786009)(1411001)(316002)(7416002)(476003)(6916009)(54906003)(8936002)(256004)(5660300002)(6116002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5847;H:AM6PR04MB6470.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: m5cnDYf4gGcgD5+R5Voar6Ga3w+HbFLMuUaTk0Fzj2B1n9shEgECVJk5/MZtuFX9VJI4me7PPTI/gKw7cnLbLTNU1jkRbSmjWp2VNMAt84hoJI8xrNkvOBXYA4U3XfQ7eeUKGRlZx5FoyndUMV+673mteWlRQ1HomIxxp2clwqmruvXK2bsArufHE7A2tKynQXWRSKTEHlM6Y16KAGfLP/nIgbSfVWF5LSD01oAbEUdfe8IKEds+LNSfZweU2i4r+Z0kaYVbI36fHw0CPc14PHkJWsghIMutqvZHt+K/1Sn365zNj3LLQPyP1/JQe+FUVSVwcD3Z/Bz/ejQoN2GS0ftvk7rQ02sFdwIyXCxJKsEJWQ6aylCg+ov5fQrvIDw6+nX5SOaHcz+x/DI1qk5L5roLw4L0YzT3HJZpPEjEahs=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c9792e0b-bf42-1dbb-f060-0b1a43125f47@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfbbd9ea-8e00-43c8-dd06-08d742359f5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 03:57:16.9532
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2LHO7HIpoqI9HKouJNSskC4JAfxwdBbNTA9TRqzUnx+uVp74hDe5Naikfn9iMQlFIowf6uSBGl2pD1Ixj90/bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5847
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:35:24AM +0800, Lu Baolu wrote:
+Hi
 
-[...]
+> Just a small concern...
+>=20
+> On Thu, Sep 26, 2019 at 09:29:51AM +0800, Shengjiu Wang wrote:
+> >  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+> > {
+> > +
+> > +     release_pair =3D false;
+> > +     ret =3D snd_soc_set_runtime_hwparams(substream,
+> > + &snd_imx_hardware);
+>=20
+> This set_runtime_hwparams() always returns 0 for now, but if one day it
+> changes and it fails here, kfree() will be still ignored although the sta=
+rtup()
+> gets error-out.
+>=20
+> We could avoid this if we continue to ignore the return value like the
+> current code. Or we may check ret at kfree() also?
 
-> > > @@ -0,0 +1,342 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/**
-> > > + * intel-pgtable.c - Intel IOMMU page table manipulation library
-> > 
-> > Could this be a bit misleading?  Normally I'll use "IOMMU page table"
-> > to refer to the 2nd level page table only, and I'm always
-> > understanding it as "the new IOMMU will understand MMU page table as
-> > the 1st level".  At least mention "IOMMU 1st level page table"?
-> > 
-> 
-> This file is a place holder for all code that manipulating iommu page
-> tables (both first level and second level). Instead of putting
-> everything in intel_iommu.c, let's make the code more structured so that
-> it's easier for reading and maintaining. This is the motivation of this
-> file.
+I like to ignore the return value.
 
-I see.
-
-> 
-> > > + *
-> > > + * Copyright (C) 2019 Intel Corporation
-> > > + *
-> > > + * Author: Lu Baolu <baolu.lu@linux.intel.com>
-> > > + */
-> > > +
-> > > +#define pr_fmt(fmt)     "DMAR: " fmt
-> > > +#include <linux/vmalloc.h>
-> > > +#include <linux/mm.h>
-> > > +#include <linux/sched.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/export.h>
-> > > +#include <linux/intel-iommu.h>
-> > > +#include <asm/cacheflush.h>
-> > > +#include <asm/pgtable.h>
-> > > +#include <asm/pgalloc.h>
-> > > +#include <trace/events/intel_iommu.h>
-> > > +
-> > > +#ifdef CONFIG_X86
-> > > +/*
-> > > + * mmmap: Map a range of IO virtual address to physical addresses.
-> > 
-> > "... to physical addresses using MMU page table"?
-> > 
-> > Might be clearer?
-> 
-> Yes.
-> 
-> > 
-> > > + */
-> > > +#define pgtable_populate(domain, nm)					\
-> > > +do {									\
-> > > +	void *__new = alloc_pgtable_page(domain->nid);			\
-> > > +	if (!__new)							\
-> > > +		return -ENOMEM;						\
-> > > +	smp_wmb();							\
-> > 
-> > Could I ask what's this wmb used for?
-> 
-> Sure. This is answered by a comment in __pte_alloc() in mm/memory.c. Let
-> me post it here.
-> 
->         /*
->          * Ensure all pte setup (eg. pte page lock and page clearing) are
->          * visible before the pte is made visible to other CPUs by being
->          * put into page tables.
->          *
->          * The other side of the story is the pointer chasing in the page
->          * table walking code (when walking the page table without locking;
->          * ie. most of the time). Fortunately, these data accesses consist
->          * of a chain of data-dependent loads, meaning most CPUs (alpha
->          * being the notable exception) will already guarantee loads are
->          * seen in-order. See the alpha page table accessors for the
->          * smp_read_barrier_depends() barriers in page table walking code.
->          */
->         smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
-
-Ok.  I don't understand the rationale much behind but the comment
-seems to make sense...  Could you help to comment above, like "please
-reference to comment in __pte_alloc" above the line?
-
-> 
-> > 
-> > > +	spin_lock(&(domain)->page_table_lock);				\
-> > 
-> > Is this intended to lock here instead of taking the lock during the
-> > whole page table walk?  Is it safe?
-> > 
-> > Taking the example where nm==PTE: when we reach here how do we
-> > guarantee that the PMD page that has this PTE is still valid?
-> 
-> We will always keep the non-leaf pages in the table,
-
-I see.  Though, could I ask why?  It seems to me that the existing 2nd
-level page table does not keep these when unmap, and it's not even use
-locking at all by leveraging cmpxchg()?
-
-> hence we only need
-> a spin lock to serialize multiple tries of populating a entry for pde.
-> As for pte, we can assume there is only single thread which can access
-> it at a time because different mappings will have different iova's.
-
-Ah yes sorry nm will never be pte here... so do you mean the upper
-layer, e.g., the iova allocator will make sure the ranges to be mapped
-will never collapse with each other so setting PTEs do not need lock?
-
-> 
-> > 
-> > > +	if (nm ## _present(*nm)) {					\
-> > > +		free_pgtable_page(__new);				\
-> > > +	} else {							\
-> > > +		set_##nm(nm, __##nm(__pa(__new) | _PAGE_TABLE));	\
-> > 
-> > It seems to me that PV could trap calls to set_pte().  Then these
-> > could also be trapped by e.g. Xen?  Are these traps needed?  Is there
-> > side effect?  I'm totally not familiar with this, but just ask aloud...
-> 
-> Good catch. But I don't think a vIOMMU could get a chance to run in a PV
-> environment. I might miss something?
-
-I don't know... Is there reason to not allow a Xen guest to use 1st
-level mapping?
-
-While on the other side... If the PV interface will never be used,
-then could native_set_##nm() be used directly?
-
-[...]
-
-> > > +static struct page *
-> > > +mmunmap_pte_range(struct dmar_domain *domain, pmd_t *pmd,
-> > > +		  unsigned long addr, unsigned long end,
-> > > +		  struct page *freelist, bool reclaim)
-> > > +{
-> > > +	int i;
-> > > +	unsigned long start;
-> > > +	pte_t *pte, *first_pte;
-> > > +
-> > > +	start = addr;
-> > > +	pte = pte_offset_kernel(pmd, addr);
-> > > +	first_pte = pte;
-> > > +	do {
-> > > +		set_pte(pte, __pte(0));
-> > > +	} while (pte++, addr += PAGE_SIZE, addr != end);
-> > > +
-> > > +	domain_flush_cache(domain, first_pte, (void *)pte - (void *)first_pte);
-> > > +
-> > > +	/* Add page to free list if all entries are empty. */
-> > > +	if (reclaim) {
-> > 
-> > Shouldn't we know whether to reclaim if with (addr, end) specified as
-> > long as they cover the whole range of this PMD?
-> 
-> Current policy is that we don't reclaim any pages until the whole page
-> table will be torn down.
-
-Ah OK.  But I saw that you're passing in relaim==!start_addr.
-Shouldn't that errornously trigger if one wants to unmap the 1st page
-as well even if not the whole address space?
-
-> The gain is that we don't have to use a
-> spinlock when map/unmap a pmd entry anymore.
-
-So this question should also related to above on the locking - have
-you thought about using the same way (IIUC) as the 2nd level page
-table to use cmpxchg()?  AFAIU that does not need any lock?
-
-For me it's perfectly fine to use a lock at least for initial version,
-I just want to know the considerations behind in case I missed
-anything important.
-
-Thanks,
-
--- 
-Peter Xu
+Best regards
+Wang shengjiu
