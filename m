@@ -2,91 +2,96 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489D8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A612BC352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A05206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVtQn4GG"
+	by mail.kernel.org (Postfix) with ESMTP id 860C3206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfIZW4O (ORCPT
+        id S1728627AbfIZW4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 18:56:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36422 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfIZW4O (ORCPT
+        Thu, 26 Sep 2019 18:56:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39096 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfIZW4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 18:56:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f19so267109plr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 15:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=de2iGU47iwZY8X3+AI24sgH5bLJEE7zPqcjn0UcDCCo=;
-        b=AVtQn4GGbjFx7GByAuc6551iBTI4Lg4f5T9CWQJRuTuRcAoBGKA5CECQxEfGZgTAlK
-         LU213dBXJLRq7eZsBVpTYVV994RaQDRoy9YcLTFOTmotGdrLl2jyPCD/yR+I1QJPlD3G
-         aAsXJESByXKGaZ5+pSxnbKWaVY+IY44JDXBDd2X7xb4vD0tY3YBxrZx3nHU1I43jD0JG
-         Oi1dI7kMurI2xAsDt59nfo8UPyTLKXEDPoi59HMKzeY5DSSnZ0LzGtsuAEYKwo0FauHH
-         KyNJ7VR+i+fQzLKvox3wibNogJ/srgHB+ZfoCVPNBzPW51P0ASP891o5MKvQE3biaSEL
-         hsGg==
+        Thu, 26 Sep 2019 18:56:17 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so4177714wml.4;
+        Thu, 26 Sep 2019 15:56:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=de2iGU47iwZY8X3+AI24sgH5bLJEE7zPqcjn0UcDCCo=;
-        b=s4XcumOSm74SZn3MalO7xEXuXH/y7IsuqFMQqlwvCv8Dp55OpygCQDGnKw+haLbG0H
-         elWbLUz5nN3B/vTH6hVxCYrUwtLzUaE+WuyMm0AHZenJTQZTjdIhcrsyLfuTp+wwJR4M
-         jqEmPjEkzzaKft5ebHJLmHWt3VILUy+Ur8hMXxunf14YZCluyFkhExs4jd5ugsSlz5wE
-         APcjyHCUOc7i3dewzLs4rNHznVlvUC+aTPTI4FRhAJKcJiUeUZZvxwvoACa8Trqwq+2o
-         ssz/4qzezROTWw7X/EvY9906kA+F3EX9ggTMjcBDj/DjUL/78LxdhfbxpRd83iUCmHms
-         77xw==
-X-Gm-Message-State: APjAAAVJEQY5UOFkDoJN8LdebCz3KsWsS5f8SV8lra2OaGUElMVBdtNF
-        7jW7+1SCpI0G9Ssme/sH6z8=
-X-Google-Smtp-Source: APXvYqwyAPahM0b+utI1XoHpSn/iDsaS9PktcJWoU4gjQVjz0EG66QGxJe1945lkV3AVqGQvgLRjww==
-X-Received: by 2002:a17:902:8f8c:: with SMTP id z12mr1136958plo.2.1569538573390;
-        Thu, 26 Sep 2019 15:56:13 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id r23sm2897598pjo.3.2019.09.26.15.56.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 15:56:13 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] arm64: defconfig: Enable QCA Bluetooth over UART
-Date:   Thu, 26 Sep 2019 15:56:04 -0700
-Message-Id: <20190926225604.46514-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q3J4HBnNW4Hl+Gjxw0HAbYQSV7ljaMhCOnbd8J0BKfw=;
+        b=OGcVLqNDzgAxc2ptvHjEJc0ZnwDU+dw0zjb3h1aCQBF9EI5cq/LjPDZNYcm8rVYcB3
+         yWUVna7KCPCAomjPQVODfwf2sBswGjY3TYOxR6o2BZ06XNQHTCLYinXTfDrDXwvsVJBW
+         NKQBR/jf7Itslea+zewbR842C8+FDa/rPHIT9dqYDJCjR71WO53XPlZMNUfTyJwkKpVr
+         NzgSobk/sbtPj6Lpwsjp8xAx6AkaVAtHx5B3lLFULed6HdOfoRwCQ6eEKo8Jbn7SUC81
+         xoCTp2AubiWE+YmzLRFgXGxALTme01kpIocxZ2x80dkidGoFp6X5kUjdemN0pTPT67Xt
+         iTzw==
+X-Gm-Message-State: APjAAAV6zLbTVlt/pc6MvSipCKYaXTaoYxJPMTZxthHBBq3mNP+5J12p
+        C0M6K4tFSA7eyjqroyjOzfo=
+X-Google-Smtp-Source: APXvYqxrKsKE3nBWyY+NBDRt5sgGhpX8jpg+uUmLH1ydlfeiF9neM0okf0pfLaVTq7mi5G3PAWSx4w==
+X-Received: by 2002:a1c:a516:: with SMTP id o22mr5117224wme.116.1569538575651;
+        Thu, 26 Sep 2019 15:56:15 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id f17sm668350wru.29.2019.09.26.15.56.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 15:56:14 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>, ath9k-devel@qca.qualcomm.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajkumar Manoharan <rmanohar@qca.qualcomm.com>,
+        "John W . Linville" <linville@tuxdriver.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
+Subject: [PATCH] ath9k_hw: fix uninitialized variable data
+Date:   Fri, 27 Sep 2019 01:56:04 +0300
+Message-Id: <20190926225604.9342-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables Bluetooth on the Lenovo Yoga C630.
+Currently, data variable in ar9003_hw_thermo_cal_apply() could be
+uninitialized if ar9300_otp_read_word() will fail to read the value.
+Initialize data variable with 0 to prevent an undefined behavior. This
+will be enough to handle error case when ar9300_otp_read_word() fails.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Fixes: 80fe43f2bbd5 ("ath9k_hw: Read and configure thermocal for AR9462")
+Cc: Rajkumar Manoharan <rmanohar@qca.qualcomm.com>
+Cc: John W. Linville <linville@tuxdriver.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8e05c39eab08..0134a84481f8 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -169,6 +169,7 @@ CONFIG_BT_HCIBTUSB=m
- CONFIG_BT_HCIUART=m
- CONFIG_BT_HCIUART_LL=y
- CONFIG_BT_HCIUART_BCM=y
-+CONFIG_BT_HCIUART_QCA=y
- CONFIG_CFG80211=m
- CONFIG_MAC80211=m
- CONFIG_MAC80211_LEDS=y
+diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+index 2b29bf4730f6..b4885a700296 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+@@ -4183,7 +4183,7 @@ static void ar9003_hw_thermometer_apply(struct ath_hw *ah)
+ 
+ static void ar9003_hw_thermo_cal_apply(struct ath_hw *ah)
+ {
+-	u32 data, ko, kg;
++	u32 data = 0, ko, kg;
+ 
+ 	if (!AR_SREV_9462_20_OR_LATER(ah))
+ 		return;
 -- 
-2.17.1
+2.21.0
 
