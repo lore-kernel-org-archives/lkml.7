@@ -2,174 +2,123 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4647EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13081222C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6jds7wj"
+	by mail.kernel.org (Postfix) with ESMTP id CB43921D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569511484;
+	bh=C7fd2pMn6+qd65ES1SK+hysUCnbgH9eM/RFTkISjhtE=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=cA0yxwQTGYgz084Fa+t/owBp5cDUvDtjUbZoFluavxjfBHJ5dpkIQNG9MBYCRp2+u
+	 4ec6Ap03tiSIaLbCgE3AKvto+/83SVNSIdrK8THI5Sn2BVxxK1Dl6GIHv8nnIdC/P9
+	 cXCx/5eHYV1/5EVAvIzNrnFyK0XNlTaxjRdqWGw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfIZPYZ (ORCPT
+        id S1727332AbfIZPYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:24:25 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45966 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfIZPYY (ORCPT
+        Thu, 26 Sep 2019 11:24:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59564 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfIZPYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:24:24 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c21so3286268qtj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uRMtahzZaS317ydZu6zP9hU9Uft5Q7Gg/uXverRsTDI=;
-        b=L6jds7wjJ6rGQVFP/NMPnfMT6Qx8UympuyaEL0on40XNkxBuQZdycNp/n6yAZFqGbb
-         Fdx95IQ5Gd/xNnut4GryuuX16Sc46t46Ccdzz3Kf6I1hdJsgJvSsQ9FgnKJ731uc4P8p
-         0SidU4qVada1RM/mdwIVbMzdRhpLB2ZByTscHaPlasqtDwyXgXxTj8U/Oy/McRkANPyB
-         sneS3MPRRLzSTsfHQJAehmjNNTLYJIi/bzrZWm8yPYcC1TE/o8v4QCOYpsUmE5nBQs00
-         8KxW1dOTMTXSCio9/uSOosLewn5y/rBExrsSlYYHEM6igvFalpcsdUJi8LmaFQJDRigt
-         g9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uRMtahzZaS317ydZu6zP9hU9Uft5Q7Gg/uXverRsTDI=;
-        b=gjnp/mSA4bhUbS7bOJD5ds2sxEi4WI8JjZeKPAywnFbWCBpdXfoKnlLQ4mKcoNL3bh
-         ChvMtnBmpKKgFrK8I62LagNHMbqL/S6i83o1kBJkvggpr0sXI1HMGAxJLb3LzJW8URN5
-         FtLr+yigiMmzTmWFihCPwElMZhx/r1mse+TWdeaRmP04IhoI+HQ9XMCpd1JeK7d0xXJV
-         KAmrpZUGVxzy2r6eVJ+5sr/MpoqdQ5H0K4kqxHXs0c0FSjRS3bd1b+SII5fn884Dpy0P
-         Cca6DBbGtumZxdsfb3ngBGTODugA75dh4UPWq16xui/cd//tuMrm9GCgcRJS7Tj9iAly
-         pFkw==
-X-Gm-Message-State: APjAAAXl2SWrHd5oA+q5HABeCEpKcz+2Om8UUCXZ+fl/eJYReJU+Ly1p
-        oHtxQpBQYJki6t8rw8SagLk=
-X-Google-Smtp-Source: APXvYqx7RyptnqymzB0HhHx3k0IoSqRWOdLV4TYDxrMHlQjw+ncN46PfKKuOhdCyKMXK38DL5V8gJg==
-X-Received: by 2002:a0c:9638:: with SMTP id 53mr3202541qvx.13.1569511463902;
-        Thu, 26 Sep 2019 08:24:23 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id i25sm1081901qkk.30.2019.09.26.08.24.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 08:24:22 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DE60240396; Thu, 26 Sep 2019 12:24:19 -0300 (-03)
-Date:   Thu, 26 Sep 2019 12:24:19 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/2] Avoid raising segv using an obvious null dereference
-Message-ID: <20190926152419.GD10129@kernel.org>
-References: <20190925195924.152834-1-irogers@google.com>
- <20190925195924.152834-2-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925195924.152834-2-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 26 Sep 2019 11:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=E727gRyNX9kxA81FhcRZtHXMEwd8teBeba4q7vIju5Y=; b=NSe5s2xVJDCv
+        UTEy2da6R96Nh0QdEnUkmXAPBlkkKkyEUTDmJQxpjKLXxbbiBe9AFovgnKJC+2PG+62ZWNJRlAaZs
+        vPqp5CRt25N/+NrqJX6MaC3fbAREH4x/cDZJwxMrvvgHIeg3dUnL7UuYEZkYg3iZKo6GqTx0/PKST
+        fZna0=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDVcp-0003vC-Ni; Thu, 26 Sep 2019 15:24:11 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 14838D02CFF; Thu, 26 Sep 2019 16:24:10 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()" to the asoc tree
+In-Reply-To: <20190925110624.GR3264@mwanda>
+X-Patchwork-Hint: ignore
+Message-Id: <20190926152410.14838D02CFF@fitzroy.sirena.org.uk>
+Date:   Thu, 26 Sep 2019 16:24:10 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Sep 25, 2019 at 12:59:24PM -0700, Ian Rogers escreveu:
-> An optimized build such as:
-> make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
-> will turn the dereference operation into a ud2 instruction, raising a SIGILL
-> rather than a SIGSEGV. Use raise(..) for correctness and clarity.
-> 
-> Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
-> https://lkml.org/lkml/2019/7/8/1234
+The patch
 
-Added:
+   ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()
 
-Cc: Numfor Mbiziwo-Tiapo <nums@google.com>
+has been applied to the asoc tree at
 
-And:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-And:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Committer testing:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Before:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17092
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]# 
+Thanks,
+Mark
 
-After:
+From 752c938a5c14b8cbf0ed3ffbfa637fb166255c3f Mon Sep 17 00:00:00 2001
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Date: Wed, 25 Sep 2019 14:06:24 +0300
+Subject: [PATCH] ASoC: topology: Fix a signedness bug in
+ soc_tplg_dapm_widget_create()
 
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17909
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
+The "template.id" variable is an enum and in this context GCC will
+treat it as an unsigned int so it can never be less than zero.
 
+Fixes: 8a9782346dcc ("ASoC: topology: Add topology core")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20190925110624.GR3264@mwanda
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- ----------------------------------------------------------------------------
-
-Thanks, applied.
-
-- Arnaldo
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index b8690715abb5..c25939c5611b 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1588,7 +1588,7 @@ static int soc_tplg_dapm_widget_create(struct soc_tplg *tplg,
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/perf-hooks.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-> index dbc27199c65e..dd865e0bea12 100644
-> --- a/tools/perf/tests/perf-hooks.c
-> +++ b/tools/perf/tests/perf-hooks.c
-> @@ -19,12 +19,11 @@ static void sigsegv_handler(int sig __maybe_unused)
->  static void the_hook(void *_hook_flags)
->  {
->  	int *hook_flags = _hook_flags;
-> -	int *p = NULL;
->  
->  	*hook_flags = 1234;
->  
->  	/* Generate a segfault, test perf_hooks__recover */
-> -	*p = 0;
-> +	raise(SIGSEGV);
->  }
->  
->  int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
-> -- 
-> 2.23.0.351.gc4317032e6-goog
-
+ 	/* map user to kernel widget ID */
+ 	template.id = get_widget_id(le32_to_cpu(w->id));
+-	if (template.id < 0)
++	if ((int)template.id < 0)
+ 		return template.id;
+ 
+ 	/* strings are allocated here, but used and freed by the widget */
 -- 
+2.20.1
 
-- Arnaldo
