@@ -2,125 +2,173 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D74C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E19C352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751B1222C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4JJp7qY"
+	by mail.kernel.org (Postfix) with ESMTP id 467C0222CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569518881;
+	bh=+kUKKkoU3NS4CPTGiKMYje27qC3S1qVrJa2ymZOWb1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DSQ5zAmL09/g/j6F5qgVN9phastnPi9XXbibsr1+jW1VnoCIs9Cg9W71Vq+TxDHtd
+	 DecTK0PNDQv+hLT7leWiAUaF4aTDlw1SNn4FmHNn0k6E3iGvLpECeol7WoB7lJIAIP
+	 Um1h0YDbTNf9a4n7n4HR+cARkig+Zc6kAEIwpbhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfIZRZC (ORCPT
+        id S1727706AbfIZR2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:25:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43117 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfIZRZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:25:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v27so1899051pgk.10;
-        Thu, 26 Sep 2019 10:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=t8KSaOsUA0A5+mnKTZ8gR5rlbkOnzjQQsfjJ840XQJk=;
-        b=A4JJp7qYcNE79wFFw4ug9NrWVG1ouENyKepTkUqyu7bQIMdRc6liLU2w3bG5seaQuT
-         LSO+YCCywdnVWigb9qRkIMsvB+XTbIlnWTZxGC8LWCbjCLarTkrN6FqCB9fmu7sJgTGr
-         m6T8uV0jsUJbohPR8HsMHw/N2P3nCr3TybgZBckxRuJ1k43A79nn1eDFiVlz7aqMTFjy
-         QGHIKO6kxObLdhC8hVgxbKPyTPfnq8mdoId5uyeIYf1HFRRLVgaGdeBqc+i/dLyRwwhI
-         YT3HU0j9ZQWpJx2wTuqaBS9qh6rMzAFJXjmyo1MFgHeXpm/gY03qVA7AENSwAefDqTUl
-         cujg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=t8KSaOsUA0A5+mnKTZ8gR5rlbkOnzjQQsfjJ840XQJk=;
-        b=aKRlHlLk76InFVyP7Ghsm6eSmuuBQWnpMnLfnMBgyBS8q7Pie3L0PtSNk2YmOSmxtt
-         Fmm0Kzyn5b4higPZFRZZw7m5Sx9oVsoyeCZWiYo6t8lAu1uCwl5izCtrcNck+Ak+M5t+
-         2xu01PRkHjYVKtLaiMEI7GE/QG1j9ypmUIVv6ENhu+Hfy9futCrQTgk3CyhQdOvQvhBX
-         K+wU18nACPTwSMRx53QAVZM+SeN3EGaujkVdS9+58QHDMQlBTzQ9zWgfzpwScZ+PeK1v
-         6QlDVd4IEJ4lBLKHkC9RvQNrtqnlB1Ont1xnsiVhTWPjwA7aVnhhtonRp1qc2NeA9cM8
-         OMbg==
-X-Gm-Message-State: APjAAAWS8dpCfgvmcmgWIcWnBm9CDXhcE9rYhggmP20DYBDg3MCohcDP
-        q2mAaJMYP4vDdAuXH7gNTsHc5mP07HOptA==
-X-Google-Smtp-Source: APXvYqx4m+E7/H+s5Lc/cis9LXP8X2+1ZKGkWbYibcJmL4EcS/TtoInNtol0fEES4fLZX1bOcPPTKA==
-X-Received: by 2002:a17:90a:77ca:: with SMTP id e10mr4659549pjs.24.1569518701338;
-        Thu, 26 Sep 2019 10:25:01 -0700 (PDT)
-Received: from arch-late ([12.206.46.61])
-        by smtp.gmail.com with ESMTPSA id 127sm4941845pfw.6.2019.09.26.10.24.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 10:25:00 -0700 (PDT)
-References: <20190926155539.GA20744@sausagefarm>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Jeeeun Evans <jeeeunevans@gmail.com>
-Cc:     slongerbeam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: media: imx: Use devm_platform_ioremap_resource().
-In-reply-to: <20190926155539.GA20744@sausagefarm>
-Date:   Thu, 26 Sep 2019 18:24:59 +0100
-Message-ID: <m3wodvgec4.fsf@gmail.com>
+        Thu, 26 Sep 2019 13:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727579AbfIZR17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 13:27:59 -0400
+Received: from localhost (unknown [12.206.46.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CE18222C7;
+        Thu, 26 Sep 2019 17:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569518878;
+        bh=+kUKKkoU3NS4CPTGiKMYje27qC3S1qVrJa2ymZOWb1g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BF+FcB0EzC9lgecWmuufTBcJm3gXe12+5aCwHz3lXh4wvUlPoycec36fWLFn5D7FD
+         gzk9XufsonBHtFISX6/uU0CjFmFc3v0IEVIGc013P0sfJvPjFwWcjsGSRT7i+DLVd2
+         OQSJHBKsVTJweTHoIc68DKf9s/UuxU71XABSzcHI=
+Date:   Thu, 26 Sep 2019 10:26:57 -0700
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers <linux-hackers@sifive.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] dmaengine: sf-pdma: add platform DMA support for
+ HiFive Unleashed A00
+Message-ID: <20190926172657.GO3824@vkoul-mobl>
+References: <20190920090205.19552-1-green.wan@sifive.com>
+ <20190924212011.GG3824@vkoul-mobl>
+ <CAJivOr4qZ7s20cME5=Fdw6G2-2JQGjO2ZT-ar2oHk3aad0R1gg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJivOr4qZ7s20cME5=Fdw6G2-2JQGjO2ZT-ar2oHk3aad0R1gg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeeeun,
-On Thu 26 Sep 2019 at 16:55, Jeeeun Evans wrote:
-> This patch fixes a warning by coccicheck:
-> drivers/staging/media/imx/imx7-mipi-csis.c:973:1-12: WARNING: Use devm_platform_ioremap_resource for state -> regs
->
-> Use devm_platform_ioremap_resource helper which wraps platform_get_resource()
-> and devm_ioremap_resource() together.
->
-> Signed-off-by: Jeeeun Evans <jeeeunevans@gmail.com>
->
+On 26-09-19, 12:18, Green Wan wrote:
+> Hi Vinod,
+> 
+> Thanks for the comments. Check my reply below.
+> 
+> On Wed, Sep 25, 2019 at 5:21 AM Vinod Koul <vkoul@kernel.org> wrote:
+> 
+> > Hi Green,
+> >
+> > On 20-09-19, 17:01, Green Wan wrote:
+> >
+> > Please make sure threading is *not* broken in your patch series. Atm
+> > they are all over place in my mailbox!
+> >
+> > K, I'll check. Just simply git send to the list retrieved from "
+> get_maintainer.pl".
 
-Thanks for the patch.
-LGTM.
+Well I guess you used each patch on git-send, you should pass on the
+whole series so that it threads as well
 
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+To test: you can send to yourself and check if threading is fine or not.
 
----
-Cheers,
-	Rui
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index d0caa09a479e..c5f0662c9106 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -14594,6 +14594,7 @@ F:    drivers/media/mmc/siano/
+> > >  SIFIVE PDMA DRIVER
+> > >  M:   Green Wan <green.wan@sifive.com>
+> > >  S:   Maintained
+> > > +F:   drivers/dma/sf-pdma/
+> > >  F:   Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> >
+> > What is this generated against, only one line?
+> >
+> > against patch v3 1/3. I split the maintainer modification into patch 1/3
+> and 3/3 to make "checkpatch.pl --strict" zero warning for both of them. And
+> to give info more specifically, I can add
 
+Ah, Can you please add these changes in a separate patch at the end
+please
 
->  drivers/staging/media/imx/imx7-mipi-csis.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 73d8354e618c..bf21db38441f 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -947,7 +947,6 @@ static void mipi_csis_debugfs_exit(struct csi_state *state)
->  static int mipi_csis_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct resource *mem_res;
->  	struct csi_state *state;
->  	int ret;
->
-> @@ -969,8 +968,7 @@ static int mipi_csis_probe(struct platform_device *pdev)
->  	mipi_csis_phy_init(state);
->  	mipi_csis_phy_reset(state);
->
-> -	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	state->regs = devm_ioremap_resource(dev, mem_res);
-> +	state->regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(state->regs))
->  		return PTR_ERR(state->regs);
+> > > +                                chan->dma_dev_addr,
+> > > +                                chan->dma_dev_size,
+> > > +                                chan->dma_dir, 0);
+> > > +     chan->dma_dir = DMA_NONE;
+> > > +}
+> > > +
+> > > +static int sf_pdma_slave_config(struct dma_chan *dchan,
+> > > +                             struct dma_slave_config *cfg)
+> > > +{
+> > > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> > > +
+> > > +     memcpy(&chan->cfg, cfg, sizeof(*cfg));
+> > > +     sf_pdma_unprep_slave_dma(chan);
+> >
+> > Why unprep?
+> >
+> 
+> I think the original idea from ./drivers/dma/fsl-edma* is to make sure the
 
+We should fix that too!
+
+> > > +static enum dma_status
+> > > +sf_pdma_tx_status(struct dma_chan *dchan,
+> > > +               dma_cookie_t cookie,
+> > > +               struct dma_tx_state *txstate)
+> > > +{
+> > > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> > > +     enum dma_status status;
+> > > +     unsigned long flags;
+> > > +
+> > > +     spin_lock_irqsave(&chan->lock, flags);
+> > > +     if (chan->xfer_err) {
+> > > +             chan->status = DMA_ERROR;
+> > > +             spin_unlock_irqrestore(&chan->lock, flags);
+> > > +             return chan->status;
+> > > +     }
+> > > +
+> > > +     spin_unlock_irqrestore(&chan->lock, flags);
+> > > +
+> > > +     status = dma_cookie_status(dchan, cookie, txstate);
+> > > +
+> > > +     if (status == DMA_COMPLETE)
+> > > +             return status;
+> > > +
+> > > +     if (!txstate)
+> > > +             return chan->status;
+> >
+> > why not return status? Is that expected to be different than status?
+> >
+> >
+> Depends on the value set by dma_cookie_status(). At the moment, the value
+> of chan->status should be DMA_IN_PROGRESS till changed by
+> sf_pdma_desc_residue() or set to DMA_ERROR by err ISR. The value could be
+> different between status and chan->status.
+
+In case !txstate there is no sf_pdma_desc_residue() so it doesnt make
+sense to me to have return different things here!
+
+-- 
+~Vinod
