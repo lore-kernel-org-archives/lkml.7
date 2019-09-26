@@ -2,96 +2,89 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C876C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048ACC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145C0222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569506096;
-	bh=YkRU8Q9+V7Rbrbz1iGfuuDPjE4DfTIe49qMeZ9ULY7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bON+LeLxeG2s+XKosuoPfsXyCKSxze/STdEtzcxs9m/U8If0P0d62gVDmg+YJK1Gn
-	 UGY/kOsvXuI+sH1a7Z1qcilvpww3Tte4Vz6jUmN5x+VWt1eZ4Vbm9XfqpK01im/wIp
-	 f6hNwX1bx/yOykJZR8SUd5GPU+gLfJyRhQMh5SAM=
+	by mail.kernel.org (Postfix) with ESMTP id C9FB7222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="byj3666j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfIZNyz (ORCPT
+        id S1727064AbfIZNz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:54:55 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34793 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfIZNyz (ORCPT
+        Thu, 26 Sep 2019 09:55:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40305 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbfIZNz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:54:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y135so6682681wmc.1;
-        Thu, 26 Sep 2019 06:54:53 -0700 (PDT)
+        Thu, 26 Sep 2019 09:55:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v38so2103689edm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 06:55:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aOr0iyfBLl80umcRhExqHZHW4urAI30wkAKXPx7sd8s=;
+        b=byj3666jUomIxQfVgejvo9qb9jGyy7ag0vbTbVW71SegiKooHWd3O/zR9mU4jnpKRq
+         bfOavtCnWSSNGyUXeiUwmCDfS6pewUtqXrgAb29RPcOQV44Q+7nTWMvi2Qai5qKFX8gZ
+         0tVLgaeBW3mCWMCnH/z/g0dZEalHgm9Gf+TA5USpCcAJqP9BGnH9Wg2kEkzlJFyhyXHN
+         eR22wGokBq86OaykauTi3oZw/WmqYf7zfUyhxk3Yq8a3rw9cYcQnotYj3MWUlv9EYVB1
+         MhFXn3/H+1CY66b1QwIXAt02H42lnbbT7g4p2yI8zYAXD4+Vzad797Aq01FUSoUyjeLi
+         qbZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5wV+knHWT3pYBu8f1yGbF2JMv7/SsKIGIbzvgHlj+ME=;
-        b=Qgboru+Z2okyd6j3StyrhZZhx+KZC4zLUMc2+kGeCoBL7BT6dr0Qos+lAwGaKqfUzt
-         Ok1JYHDGSIewhmuKL8aSz8YUKm83IS6ttmSMC4eIYqVy+5OwhSe4+7vb0tRI19N7j6IL
-         m4/7vlgmwsVSrYYCABIgteFFmgMjRHtELlwHKPD/fMtcINGlg8aOPpArkzJ56Cf6RJLa
-         eohstDzQI5nugM9F/HImtVn6xLIY7JBDaVOjoY9EcDy3aQK0zJB5YuDHgxYXAxDi+IZC
-         6e0YJe+jMthTe2iuAtrzqTI+efl+n9RNXwrbcvvhTylfCSRdFi2B4Sm3bcor0XYIjfrF
-         yUYw==
-X-Gm-Message-State: APjAAAUdebt8myQDTw7gl1psSJKlVVpmezU5HYzCpFEv46jwAHANLagO
-        exaWPwWQRu/aQ5kSTono8rg=
-X-Google-Smtp-Source: APXvYqxMWSiEBcFYFgkxhkOkbLWb5nMuD3l2ak3ZLUUZEhI7MlrM1L7wlshwHZt+wX2Q+NqzPP5UKg==
-X-Received: by 2002:a7b:cc0b:: with SMTP id f11mr3204892wmh.112.1569506092705;
-        Thu, 26 Sep 2019 06:54:52 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id j1sm6011300wrg.24.2019.09.26.06.54.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 06:54:50 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 15:54:47 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maciej Falkowski <m.falkowski@samsung.com>
-Subject: Re: [PATCH v2] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E)
- audio complex with WM5110 codec to dt-schema
-Message-ID: <20190926135447.GA15983@pi3>
-References: <CGME20190926120221eucas1p1a11b4182b93b408d5d5507dc65c951b4@eucas1p1.samsung.com>
- <20190926120210.8544-1-m.szyprowski@samsung.com>
+        bh=aOr0iyfBLl80umcRhExqHZHW4urAI30wkAKXPx7sd8s=;
+        b=n2rLTodsFLRELLgAuuc8iTQgzX1rWLAEY3lQMZ0aez2Ddr8EA8COdeOc5GTa5zzi4A
+         bNQQreKSAbKYh2vvPDcdyOQBlWw8PT0aSQFjpUF40UhNlUj4mJ9u2KGfs4/pB8c0Oy6E
+         b7npePFYvqLeuk+3VegaLhOWTIxgnzgks2QQYfDxElv/HDEywPrFTW7BNNHhQiT6v3RC
+         gWvRDRd1w1qRSdeKa6pIat4vpyWN6Rz08F8wPqNV/8Q0o6rA5f8GpsU4Yqd8x5lbQctR
+         ke2qnxISdmpqvzDM3pWzH4OihEW92hirXb+Mkt9xtPwG1wq04WLKs8RjqC7AbiT1IlV/
+         BT7w==
+X-Gm-Message-State: APjAAAVSPylm1bjpvNr6aaHO20MgOp84ezJXoJNcz3nmPpLupzhTgOlb
+        eE3+574xFKrkOdFaGgB2eCpWQg==
+X-Google-Smtp-Source: APXvYqwRM3uOue8sdkJXKA0j0BlH3YC2gCanRwb3iFVBEmOi2tgQReY6Xpln4M8dnVP9lPsAWlOk+A==
+X-Received: by 2002:a50:eb93:: with SMTP id y19mr3762407edr.94.1569506125053;
+        Thu, 26 Sep 2019 06:55:25 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id m18sm250017ejq.72.2019.09.26.06.55.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 06:55:24 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 68168101CFB; Thu, 26 Sep 2019 16:55:27 +0300 (+03)
+Date:   Thu, 26 Sep 2019 16:55:27 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/15] mm: Use vm_fault error code directly
+Message-ID: <20190926135527.htzehar7j5uv6nsu@box>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-2-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926120210.8544-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190925005214.27240-2-willy@infradead.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:02:10PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
+On Tue, Sep 24, 2019 at 05:52:00PM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to
-> newer dt-schema format.
+> Use VM_FAULT_OOM instead of indirecting through vmf_error(-ENOMEM).
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - Added type and description and removed number of items from 'model' property.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Thanks for the changes. However still you have non-standard properties
-put in random order. Argument that the order follows example-schema is
-not correct. These are not standard properties.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Best regards,
-Krzysztof
-
+-- 
+ Kirill A. Shutemov
