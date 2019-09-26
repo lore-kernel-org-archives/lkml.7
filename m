@@ -2,283 +2,236 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A026C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE6CC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1956C21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JxD1ijDT"
+	by mail.kernel.org (Postfix) with ESMTP id 95D36222C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569460303;
+	bh=VfbUgy7HR441Vzwxtjp+G0PyKooJ4CSM0JV6dgtmCJI=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=t06I2nyiJYV7yxU8wTUyKB+IaUyOEjE7EFu1LdxK9K+VrwcYN8rHMhM/xD8j4aVhu
+	 s4iX7cJNYjlH3lRqAUX9vxWgjWb6CbkaUHVnng3OUzcOburuEickdrxLnn0Bh0TOkT
+	 HHj3C12KM/Jdp5OCCqfoc4boOp/bwuzGf0/q6hEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfIZBLd (ORCPT
+        id S1729673AbfIZBLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:11:33 -0400
-Received: from mail-eopbgr680130.outbound.protection.outlook.com ([40.107.68.130]:42460
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfIZBLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:11:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gXs5Y6X8Muf9QDYugqPTjcIChuSZMOs4fP2GuvKQjCwk57LdKoGo/4b0V/0uJA9+d+ed4hGciuzFCHlBHVaN8Xzx6kj0DRdKkMPoE5TLrKe7UMBSDEEJbSn16S5GtGOvgCZIqx3jvpB2lppgY6i9WWNlv1m+5I6o3/RV/Ol+z/072iyjnN580HTdr5m8nFynOBScY1L5ZpwpTNzpCy+Mt94zfQEMvujS112Z5X7jcLbRuXctI8L6bBc5MTWajhk4g8E3mgC2kM+RFQCjhy8a6kvSf3M+Q0gl47gaFtMr1RSoqhA0sj96dM96qpyRXGMN5gEFLI9MQjlEmhRY11fxyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kaSt70zK0SQxbnC2gp4oZ7f1ncDlx8JQAZhaoL/VWHI=;
- b=VkOKNsNG0sdT6V0FNxiZVED+wmWU60zSrrTytgHudHZl9Egp16c6+ULcGclF/qJiOVrxLLDewp/UizlIoLMVlIp/VtVrJELka7BDxXU1CEDubux3Gtl3NhQfHWwE5RXq5vhceMa8j+m9yPYYna3ugIiFCXl8KhgVhFNy4yv35hRQLEg1Hofv2gNm2oToEUBhFuE5AHpY/5Lfd6vxk49OIvRpQQi28hBb7TK8zK/4NzpM7OfYREhKxXSrj/HQNsJR7TJtQar5rYyL+J8HoEDGyG+iYiQbE6Tkkef6WU4uG+BUHG8Bm16j9w6ybkK1RZgqkOIjOr0jscpa4OY/dNYbDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kaSt70zK0SQxbnC2gp4oZ7f1ncDlx8JQAZhaoL/VWHI=;
- b=JxD1ijDTa1XQuiyc1pYCVItCE0CMvaWMJHZc7ymSYpjqREFlZum4R9EekZw5hBOz7rw4GvUt1+DAPzTGhUCJjangABLbpJzyLHG3SrU1chysBW7+35EdnAHPnfhL2QV3MVzISo5yWdFHt1yljTul961GRCjrJhwwe6Z56tnRRq8=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB0974.namprd21.prod.outlook.com (52.132.114.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.6; Thu, 26 Sep 2019 01:11:27 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Thu, 26 Sep 2019
- 01:11:27 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "ytht.net@gmail.com" <ytht.net@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "sgarzare@redhat.com" <sgarzare@redhat.com>,
-        "jhansen@vmware.com" <jhansen@vmware.com>
-Subject: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
-Thread-Topic: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
-Thread-Index: AQHVdAdSHQkvUaSfZES8M2hNpnvQKg==
-Date:   Thu, 26 Sep 2019 01:11:27 +0000
-Message-ID: <1569460241-57800-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR08CA0012.namprd08.prod.outlook.com
- (2603:10b6:301:5f::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f6e13ac-ba2a-48c6-f94c-08d7421e74cb
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR2101MB0974:|SN6PR2101MB0974:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR2101MB0974D0D64A0501309E9947C0BF860@SN6PR2101MB0974.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(199004)(189003)(8936002)(66556008)(6436002)(81166006)(110136005)(81156014)(8676002)(2906002)(386003)(66946007)(6486002)(6506007)(476003)(66446008)(2201001)(66476007)(6306002)(10090500001)(52116002)(64756008)(7736002)(43066004)(50226002)(2616005)(4720700003)(22452003)(486006)(316002)(99286004)(14444005)(25786009)(66066001)(36756003)(5660300002)(1511001)(102836004)(86362001)(6116002)(3846002)(6512007)(71200400001)(14454004)(2501003)(966005)(256004)(3450700001)(71190400001)(186003)(26005)(10290500003)(305945005)(7416002)(478600001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0974;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zDxKH2hFQEvMhjrZEF6zg0k78XYP2yRBjwo0c5xeoumDjIO7UQjo3yg+NrxpmhhhUxR3zLZsGsm4ZGF/qz63wNfy4whHhLE2uiQKiX8ggh0fJuq/pjajlYUGk9SZAF9v+DbIEa7ghUMxrLXO0EQioLqVi4nVuxuhzr6BFhhC9qzPSVFq2BvwOz2zM1rmVQIlbFqmHw7Xf/4tNEjoR9UJki6m+2AJ6726FcZphevqkHFlIdIb1cZftH6cmtqWRimebAnF7S9lhKxt8HrY3+jBdkq7E6yWHW2veIgtCTSQybX9QrL0hLzX14hqFeyOY/3Fry3dKPVJBsSPGsk5WEzkahztWO0T7ZfK0tfwoItYhS1Bxaivgm2wTa9ONAeMwS+YBu9ub6nnMhYSrn4fp1qfKpx6HPIyXOQR6xAi7mfCjj7GUVoZvvYGfxMc63n2USBTj20vVBshkLcYrtyvNwBLzQ==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f6e13ac-ba2a-48c6-f94c-08d7421e74cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 01:11:27.5779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pDTK7QoOE/3Eq07vl5g7UEagi9bAe+QSzq43Uw/S5PYwHxGB8nniP05dIHeupm6dTXD990pv9/7oJs/YWKdH0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0974
+        Wed, 25 Sep 2019 21:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729619AbfIZBLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 21:11:42 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4373222BF;
+        Thu, 26 Sep 2019 01:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569460301;
+        bh=VfbUgy7HR441Vzwxtjp+G0PyKooJ4CSM0JV6dgtmCJI=;
+        h=Date:From:To:Subject:From;
+        b=KQSFEKefRqO+zHelNgPBwo9X8pSbB+8a2iLW8ymOJM6xbXihFCOTALAmeFRBAXPtx
+         /Vnlvu4nxak0vvsZRfVAzHHbPKs11zs5wwjQGpqrHTUrviChZsvKYTqHwb6fTt6QA1
+         gFSkjvKPnuIE+cFOE5upH7LYkNgmrJSuG4ozmv/I=
+Date:   Wed, 25 Sep 2019 18:11:40 -0700
+From:   akpm@linux-foundation.org
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2019-09-25-18-10 uploaded
+Message-ID: <20190926011140.kBbRLJHpJ%akpm@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lockdep is unhappy if two locks from the same class are held.
+The mm-of-the-moment snapshot 2019-09-25-18-10 has been uploaded to
 
-Fix the below warning for hyperv and virtio sockets (vmci socket code
-doesn't have the issue) by using lock_sock_nested() when __vsock_release()
-is called recursively:
+   http://www.ozlabs.org/~akpm/mmotm/
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-WARNING: possible recursive locking detected
-5.3.0+ #1 Not tainted
---------------------------------------------
-server/1795 is trying to acquire lock:
-ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_s=
-ock]
+mmotm-readme.txt says
 
-but task is already holding lock:
-ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [v=
-sock]
+README for mm-of-the-moment:
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+http://www.ozlabs.org/~akpm/mmotm/
 
-       CPU0
-       ----
-  lock(sk_lock-AF_VSOCK);
-  lock(sk_lock-AF_VSOCK);
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
 
- *** DEADLOCK ***
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
 
- May be due to missing lock nesting notation
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
 
-2 locks held by server/1795:
- #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_relea=
-se+0x2d/0xa0
- #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0x=
-f0 [vsock]
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
 
-stack backtrace:
-CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
-Call Trace:
- dump_stack+0x67/0x90
- __lock_acquire.cold.67+0xd2/0x20b
- lock_acquire+0xb5/0x1c0
- lock_sock_nested+0x6d/0x90
- hvs_release+0x10/0x120 [hv_sock]
- __vsock_release+0x24/0xf0 [vsock]
- __vsock_release+0xa0/0xf0 [vsock]
- vsock_release+0x12/0x30 [vsock]
- __sock_release+0x37/0xa0
- sock_close+0x14/0x20
- __fput+0xc1/0x250
- task_work_run+0x98/0xc0
- do_exit+0x344/0xc60
- do_group_exit+0x47/0xb0
- get_signal+0x15c/0xc50
- do_signal+0x30/0x720
- exit_to_usermode_loop+0x50/0xa0
- do_syscall_64+0x24e/0x270
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f4184e85f31
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
 
-NOTE: I only tested the code on Hyper-V. I can not test the code for
-virtio socket, as I don't have a KVM host. :-( Sorry.
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
 
-@Stefan, @Stefano: please review & test the patch for virtio socket,
-and let me know if the patch breaks anything. Thanks!
 
-Changes in v2:
-  Avoid the duplication of code in v1: https://lkml.org/lkml/2019/8/19/1361
-  Also fix virtio socket code.
 
- net/vmw_vsock/af_vsock.c                | 19 +++++++++++++++----
- net/vmw_vsock/hyperv_transport.c        |  2 +-
- net/vmw_vsock/virtio_transport_common.c |  2 +-
- 3 files changed, 17 insertions(+), 6 deletions(-)
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index ab47bf3ab66e..dbae4373cbab 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -638,8 +638,10 @@ struct sock *__vsock_create(struct net *net,
- }
- EXPORT_SYMBOL_GPL(__vsock_create);
-=20
--static void __vsock_release(struct sock *sk)
-+static void __vsock_release(struct sock *sk, int level)
- {
-+	WARN_ON(level !=3D 1 && level !=3D 2);
-+
- 	if (sk) {
- 		struct sk_buff *skb;
- 		struct sock *pending;
-@@ -648,9 +650,18 @@ static void __vsock_release(struct sock *sk)
- 		vsk =3D vsock_sk(sk);
- 		pending =3D NULL;	/* Compiler warning. */
-=20
-+		/* The release call is supposed to use lock_sock_nested()
-+		 * rather than lock_sock(), if a sock lock should be acquired.
-+		 */
- 		transport->release(vsk);
-=20
--		lock_sock(sk);
-+		/* When "level" is 2, use the nested version to avoid the
-+		 * warning "possible recursive locking detected".
-+		 */
-+		if (level =3D=3D 1)
-+			lock_sock(sk);
-+		else
-+			lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 		sock_orphan(sk);
- 		sk->sk_shutdown =3D SHUTDOWN_MASK;
-=20
-@@ -659,7 +670,7 @@ static void __vsock_release(struct sock *sk)
-=20
- 		/* Clean up any sockets that never were accepted. */
- 		while ((pending =3D vsock_dequeue_accept(sk)) !=3D NULL) {
--			__vsock_release(pending);
-+			__vsock_release(pending, 2);
- 			sock_put(pending);
- 		}
-=20
-@@ -708,7 +719,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
-=20
- static int vsock_release(struct socket *sock)
- {
--	__vsock_release(sock->sk);
-+	__vsock_release(sock->sk, 1);
- 	sock->sk =3D NULL;
- 	sock->state =3D SS_FREE;
-=20
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index 261521d286d6..c443db7af8d4 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
- 	struct sock *sk =3D sk_vsock(vsk);
- 	bool remove_sock;
-=20
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	remove_sock =3D hvs_close_lock_held(vsk);
- 	release_sock(sk);
- 	if (remove_sock)
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio=
-_transport_common.c
-index 5bb70c692b1e..a666ef8fc54e 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -820,7 +820,7 @@ void virtio_transport_release(struct vsock_sock *vsk)
- 	struct sock *sk =3D &vsk->sk;
- 	bool remove_sock =3D true;
-=20
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	if (sk->sk_type =3D=3D SOCK_STREAM)
- 		remove_sock =3D virtio_transport_close(vsk);
-=20
---=20
-2.19.1
+A git copy of this tree is available at
 
+	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
+
+and use of this tree is similar to
+http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
+
+
+This mmotm tree contains the following patches against 5.3:
+(patches marked "*" will be included in linux-next)
+
+  origin.patch
+* memcg-kmem-do-not-fail-__gfp_nofail-charges.patch
+* linux-coffh-add-include-guard.patch
+* include-proper-prototypes-for-kernel-elfcorec.patch
+* rbtree-sync-up-the-tools-copy-of-the-code-with-the-main-one.patch
+* augmented-rbtree-add-comments-for-rb_declare_callbacks-macro.patch
+* augmented-rbtree-add-new-rb_declare_callbacks_max-macro.patch
+* augmented-rbtree-rework-the-rb_declare_callbacks-macro-definition.patch
+* kernel-doc-core-api-include-stringh-into-core-api.patch
+* writeback-fix-wstringop-truncation-warnings.patch
+* strscpy-reject-buffer-sizes-larger-than-int_max.patch
+* lib-generic-radix-treec-make-2-functions-static-inline.patch
+* lib-extablec-add-missing-prototypes.patch
+* lib-hexdump-make-print_hex_dump_bytes-a-nop-on-debug-builds.patch
+* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
+* checkpatch-improve-spdx-license-checking.patch
+* checkpatchpl-warn-on-invalid-commit-id.patch
+* checkpatch-exclude-sizeof-sub-expressions-from-macro_arg_reuse.patch
+* checkpatch-prefer-__section-over-__attribute__section.patch
+* checkpatch-allow-consecutive-close-braces.patch
+* checkpatch-remove-obsolete-period-from-ambiguous-sha1-query.patch
+* checkpatch-make-git-output-use-language=en_usutf8.patch
+* fs-reiserfs-remove-unnecessary-check-of-bh-in-remove_from_transaction.patch
+* fs-reiserfs-journalc-remove-set-but-not-used-variables.patch
+* fs-reiserfs-streec-remove-set-but-not-used-variables.patch
+* fs-reiserfs-lbalancec-remove-set-but-not-used-variables.patch
+* fs-reiserfs-objectidc-remove-set-but-not-used-variables.patch
+* fs-reiserfs-printsc-remove-set-but-not-used-variables.patch
+* fs-reiserfs-fix_nodec-remove-set-but-not-used-variables.patch
+* fs-reiserfs-do_balanc-remove-set-but-not-used-variables.patch
+* reiserfs-remove-set-but-not-used-variable-in-journalc.patch
+* reiserfs-remove-set-but-not-used-variable-in-do_balanc.patch
+* fat-delete-an-unnecessary-check-before-brelse.patch
+* fork-improve-error-message-for-corrupted-page-tables.patch
+* cpumask-nicer-for_each_cpumask_and-signature.patch
+* kexec-bail-out-upon-sigkill-when-allocating-memory.patch
+* kexec-restore-arch_kexec_kernel_image_probe-declaration.patch
+* uaccess-add-missing-__must_check-attributes.patch
+* compiler-enable-config_optimize_inlining-forcibly.patch
+* kgdb-dont-use-a-notifier-to-enter-kgdb-at-panic-call-directly.patch
+* scripts-gdb-handle-split-debug.patch
+* bug-refactor-away-warn_slowpath_fmt_taint.patch
+* bug-rename-__warn_printf_taint-to-__warn_printf.patch
+* bug-consolidate-warn_slowpath_fmt-usage.patch
+* bug-lift-cut-here-out-of-__warn.patch
+* bug-clean-up-helper-macros-to-remove-__warn_taint.patch
+* bug-consolidate-__warn_flags-usage.patch
+* bug-move-warn_on-cut-here-into-exception-handler.patch
+* ipc-mqueuec-delete-an-unnecessary-check-before-the-macro-call-dev_kfree_skb.patch
+* ipc-mqueue-improve-exception-handling-in-do_mq_notify.patch
+* ipc-sem-convert-to-use-built-in-rcu-list-checking.patch
+* lib-lzo-fix-alignment-bug-in-lzo-rle.patch
+* lib-untag-user-pointers-in-strn_user.patch
+* mm-untag-user-pointers-passed-to-memory-syscalls.patch
+* mm-untag-user-pointers-in-mm-gupc.patch
+* mm-untag-user-pointers-in-get_vaddr_frames.patch
+* fs-namespace-untag-user-pointers-in-copy_mount_options.patch
+* userfaultfd-untag-user-pointers.patch
+* drm-amdgpu-untag-user-pointers.patch
+* drm-radeon-untag-user-pointers-in-radeon_gem_userptr_ioctl.patch
+* media-v4l2-core-untag-user-pointers-in-videobuf_dma_contig_user_get.patch
+* tee-shm-untag-user-pointers-in-tee_shm_register.patch
+* vfio-type1-untag-user-pointers-in-vaddr_get_pfn.patch
+* mm-untag-user-pointers-in-mmap-munmap-mremap-brk.patch
+* mm-introduce-madv_cold.patch
+* mm-change-pageref_reclaim_clean-with-page_refreclaim.patch
+* mm-introduce-madv_pageout.patch
+* mm-factor-out-common-parts-between-madv_cold-and-madv_pageout.patch
+* hexagon-drop-empty-and-unused-free_initrd_mem.patch
+* checkpatch-check-for-nested-unlikely-calls.patch
+* xen-events-remove-unlikely-from-warn-condition.patch
+* fs-remove-unlikely-from-warn_on-condition.patch
+* wimax-i2400m-remove-unlikely-from-warn-condition.patch
+* xfs-remove-unlikely-from-warn_on-condition.patch
+* ib-hfi1-remove-unlikely-from-is_err-condition.patch
+* ntfs-remove-unlikely-from-is_err-conditions.patch
+* mm-treewide-clarify-pgtable_page_ctordtor-naming.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-memremap-drop-unused-section_size-and-section_mask.patch
+* writeback-fix-use-after-free-in-finish_writeback_work.patch
+* mm-fix-wmissing-prototypes-warnings.patch
+* memcg-only-record-foreign-writebacks-with-dirty-pages-when-memcg-is-not-disabled.patch
+* kernel-sysctlc-do-not-override-max_threads-provided-by-userspace.patch
+* ocfs2-clear-zero-in-unaligned-direct-io.patch
+* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
+* fs-ocfs2-fix-possible-null-pointer-dereferences-in-ocfs2_xa_prepare_entry.patch
+* fs-ocfs2-fix-possible-null-pointer-dereferences-in-ocfs2_xa_prepare_entry-fix.patch
+* fs-ocfs2-fix-a-possible-null-pointer-dereference-in-ocfs2_write_end_nolock.patch
+* fs-ocfs2-fix-a-possible-null-pointer-dereference-in-ocfs2_info_scan_inode_alloc.patch
+* ramfs-support-o_tmpfile.patch
+  mm.patch
+* mm-slb-improve-memory-accounting.patch
+* mm-slb-guarantee-natural-alignment-for-kmallocpower-of-two.patch
+* mm-slb-guarantee-natural-alignment-for-kmallocpower-of-two-fix.patch
+* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* mm-hotplug-reorder-memblock_-calls-in-try_remove_memory.patch
+* memory_hotplug-add-a-bounds-check-to-check_hotplug_memory_range.patch
+* mm-add-a-bounds-check-in-devm_memremap_pages.patch
+* mm-oom-avoid-printk-iteration-under-rcu.patch
+* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+* mm-proportional-memorylowmin-reclaim.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
+* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
+* mm-vmscan-remove-unused-lru_pages-argument.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* hung_task-allow-printing-warnings-every-check-interval.patch
+* lib-genallocc-export-symbol-addr_in_gen_pool.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
+* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
+* string-add-stracpy-and-stracpy_pad-mechanisms.patch
+* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
+* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
+* fat-add-nobarrier-to-workaround-the-strange-behavior-of-device.patch
+* aio-simplify-read_events.patch
+* ipc-consolidate-all-xxxctl_down-functions.patch
+  linux-next.patch
+  linux-next-git-rejects.patch
+  diff-sucks.patch
+* pinctrl-fix-pxa2xxc-build-warnings.patch
+* drivers-tty-serial-sh-scic-suppress-warning.patch
+* fix-read-buffer-overflow-in-delta-ipc.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
