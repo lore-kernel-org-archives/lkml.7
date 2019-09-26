@@ -2,123 +2,121 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A89C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A066C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE66B207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC60207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733191AbfIZDgW (ORCPT
+        id S2391523AbfIZDkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 23:36:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38236 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726647AbfIZDgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 23:36:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8642EACC4;
-        Thu, 26 Sep 2019 03:36:19 +0000 (UTC)
-Subject: Re: [PATCH 1/2] perf script python: integrate page reclaim analyze
- script
-From:   Tony Jones <tonyj@suse.de>
-To:     Yafang Shao <laoar.shao@gmail.com>, peterz@infradead.org,
-        acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org,
-        jolsa@redhat.com, mingo@redhat.com
-Cc:     linux-mm@kvack.org, florian.schmidt@nutanix.com,
-        daniel.m.jordan@oracle.com, linux-kernel@vger.kernel.org
-References: <1568817522-8754-1-git-send-email-laoar.shao@gmail.com>
- <1568817522-8754-2-git-send-email-laoar.shao@gmail.com>
- <456c8216-a9f4-6821-e688-744e93df826f@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tonyj@suse.de; prefer-encrypt=mutual; keydata=
- mQGiBEkQmbwRBACDch7wo/RzlNt2HA8jLICsO2w8yOkJ7UTzHYNn3Q83Ro0qev2KokfE3EDw
- il+vam9CDR7jIDmswHqaMe0/O+UnZtO5PlDgylZcrwNwbBzHfm/KGejbi1RBGAoETrvcfwGi
- w83bR/aDnoRXY5Ho1uphQ05/065EMpbJOOBdn9qQ4wCgv2Q6C/QeYDGsxJPRO+20nLu5K00D
- /Rde4OTZ5biM+vb6ObTmgPNeiMrTwGpMokN7audIl7njwvD+lYrlgQjmDzcaPFz29rYWwT7g
- 6t6hcFgjpU1he/v3qxeQlTJoi2+u5Mqj42z//49h6DqNjT859Z/6h5IwKBo/EZC17iBIlS2G
- VXAstNiZASGiaIlONozWJ/GSjUaRA/9wZTV1nXF/+xX+qmc7SvTg1w6jWyjxVumQLoq2SeA4
- 1Sy5X2IATkAGCCjbeoQGnFdbOnHRSJdlTazObgwreqGPlPnIROpr9QESkfxsaCkDiZfpl0xk
- 6X069QMZBEwGAWILHYXL9UqlOjniZaU2BkVA11JEdBhyQorC8T/ji1edc7QaVG9ueSBKb25l
- cyA8dG9ueWpAc3VzZS5kZT6IYAQTEQIAIAUCSRCZvAIbAwYLCQgHAwIEFQIIAwQWAgMBAh4B
- AheAAAoJELFYWyEf4koXGmYAoKCnbv9dhAB2vR6IvSJem1ws4HpfAJ9ZqTKiXcogBGfTPaJR
- GI9QhVUieLkCDQRJEJm8EAgAzr9Zd3v7B10ODtVc7XxbMe3W6o1FdClL9ZIgLv61zhWctafK
- DMu/MUSvxmYFq00pecD/SfX8oxArA02+sQ2E+/Zb4J7NAWIAxCfmy7VE0wDBrZH/hBapIx/L
- gVqYfZ9Rw+a4FXrlk1y8oQCwhvj+kWrm7V7olR0aPOy1NFGNUyTFSMj+pbmxiNOXdCxVUQe3
- UE1k9yA+mILjyaRanwkiCLCjNvRPL88Q017BdhVBWZmz8qhwXN/RrjCcDHsPX5O0ev68MLyu
- sh5mfukuvCqzW1Y3Ql+iwfwEw5lNmQGdoV9csg7JP7saDicSFO2KcZvMbvDMqtPFipdF5UWo
- fZKZ3wADBQf/b5cVNyb5i8QI0G7BPGBNn4VlQX5n66TsPBnrRNOi3MhTTVEBCp8s+jqUjJjX
- EjjA+O4hIm7Qqdsozurw7GlcQ0A06dIzO/1RUglZZMoC0JL43ZQmJ+3+yFrLjWgGH6ev6AOb
- YLH7ZujgAB5n0Hy2ZIChzsKLKbHptFtBvpDKB8updq+GunsY4oN3wGa67h9sHqDvjyp64Czg
- n8G5uGLwx3f/edbECKz5kPUSzChEk3suK742SEP01v4ra5WX88Hn81NjGByQMz9acJLdC7Ff
- LzXvbNa0KgvDaSllYfsJIoGCz3eKVOuTWXOiaEIKuy833+3mr2PulLCyLKysAEddKohJBBgR
- AgAJBQJJEJm8AhsMAAoJELFYWyEf4koXhgQAn1EGATLZPS53At9t+p3S8BkNI9yRAJ9A0OmL
- liv+rwEesYGlGeGNaKHTJw==
-Message-ID: <49489979-0bf1-881c-ebd5-87d0892a7da4@suse.de>
-Date:   Wed, 25 Sep 2019 20:36:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Wed, 25 Sep 2019 23:40:55 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:16169 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733221AbfIZDky (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 23:40:54 -0400
+Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 26 Sep
+ 2019 11:40:36 +0800
+Subject: Re: [PATCH v2 2/3] dt-bindings: reset: add bindings for the Meson-A1
+ SoC Reset Controller
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com>
+ <1569227661-4261-3-git-send-email-xingyu.chen@amlogic.com>
+ <7htv90rnp2.fsf@baylibre.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <5d2af18b-1b0a-0b35-9855-b27bbae3a71b@amlogic.com>
+Date:   Thu, 26 Sep 2019 11:40:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <456c8216-a9f4-6821-e688-744e93df826f@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7htv90rnp2.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.19.63]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 6:56 PM, Tony Jones wrote:
-> On 9/18/19 7:38 AM, Yafang Shao wrote:
->> A new perf script page-reclaim is introduced in this patch. This new script
->> is used to report the page reclaim details. The possible usage of this
->> script is as bellow,
->> - identify latency spike caused by direct reclaim
->> - whehter the latency spike is relevant with pageout
->> - why is page reclaim requested, i.e. whether it is because of memory
->>   fragmentation
->> - page reclaim efficiency
->> etc
->> In the future we may also enhance it to analyze the memcg reclaim.
->>
->> Bellow is how to use this script,
->>     # Record, one of the following
->>     $ perf record -e 'vmscan:mm_vmscan_*' ./workload
->>     $ perf script record page-reclaim
->>
->>     # Report
->>     $ perf script report page-reclaim
->>
->>     # Report per process latency
->>     $ perf script report page-reclaim -- -p
+Hi, Kevin
+Thanks for your review
+
+On 2019/9/26 6:55, Kevin Hilman wrote:
+> Xingyu Chen <xingyu.chen@amlogic.com> writes:
 > 
+>> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
+>> and also slightly update documentation.
+>>
+>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 > 
-> I tested it with global-dhp__pagereclaim-performance from mmtests and got what appears to be reasonable results and the output looks correct and useful.  However I'm not a vm expert so I can't comment further.  Hopefully someone on linux-mm can give more specific feedback.
+> The order here doesn't look right.  As the sender, your sign-off should
+> be last.  Is Jianxin the author or are you?  If Jianxin, there should be
+> a "From:" line at the beginning of the changelog to indicate authorship
+> that's different from the sender.
+I am an author for this patchset, i will reorder Signed-off in next version.
 > 
-> There is one issue with Python3,  see below.  I didn't test with Python2.
-
-Ok, I guess this wasn't actually tested with Python3 as itervalues() is Python2 only.   Any scripts need to work with both Python2.6+ and Python3.
-
-# perf script -i /tmp/perf.out -s page-reclaim.py -- -p
-...
-
-Traceback (most recent call last):
-  File "page-reclaim.py", line 305, in trace_end
-    i.display_proc(),
-  File "page-reclaim.py", line 268, in display_proc
-    print_proc_latency(sorted(self.stat.stats['latency'].itervalues(),
-AttributeError: 'dict' object has no attribute 'itervalues'
-Fatal Python error: problem in Python trace event handler
-
-Use a try/except to handle this.
-
-Thanks
-
-Tony
-
-
-
+>> ---
+>>   .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
+>>   include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
+>>   2 files changed, 60 insertions(+)
+>>   create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> index 00917d8..b3f57d8 100644
+>> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> @@ -16,6 +16,7 @@ properties:
+>>         - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+>>         - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+>>         - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+>> +      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+>>   
+>>     reg:
+>>       maxItems: 1
+>> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>> new file mode 100644
+>> index 00000000..8d76a47
+>> --- /dev/null
+>> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> + *
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
+>> + *
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+>> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+>> +
+>> +/* RESET0 */
+>> +#define RESET_AM2AXI_VAD		1
+> 
+> minor nit: can you use comments/whitespace here to indicate holes?
+> Please see the other amlogic files in this dir for examples.
+I will fix it in next version.
+> 
+> Kevin
+> 
+> .
+> 
