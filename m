@@ -2,121 +2,112 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA49C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D7FC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB130207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F51207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VQIeNfla"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ps5n17nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfIZLhH (ORCPT
+        id S1726225AbfIZLmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:37:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56536 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfIZLhG (ORCPT
+        Thu, 26 Sep 2019 07:42:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53569 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfIZLmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:37:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBXdSp119294;
-        Thu, 26 Sep 2019 11:36:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=2qOrni6IPbt/vQtoX6vU5ylqBJxxMMwA2xbRwedxvDY=;
- b=VQIeNflaAMD33SvSI/od1Ck3sNCfxFghiIWak1p9oHXMCgy1/NYpL3pDmb7ipXio0sfL
- oqFZse3bQFRQdltVLvHavb6VFbZdxSo09ifJJ+/FREu84/P4Vm0afbZXxVbqVK7CxgPf
- 4hTQHG21U2FOwvxF5tXBGYbHIYOuUZ6dKot2dmpBHBWUj6fkRmek/fOKGRAbCQNkyiHW
- nP+e28iOGYRwnMaia2H2RFfHk0fKEMIfgSa6NX+ywwcRjesgJ9/F93pQKoQ+wnyA7qb6
- dcqBE9lopmv/Dd3/+9MOJDLSM6ORrYBLHV+t8429h3+ijeLCiG43TPehRnb06lbqMMWB nA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v5b9u32n8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 11:36:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBX7nM049510;
-        Thu, 26 Sep 2019 11:36:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2v82tn06mt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 11:36:42 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8QBacLd022286;
-        Thu, 26 Sep 2019 11:36:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 04:36:37 -0700
-Date:   Thu, 26 Sep 2019 14:36:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "lars@metafoo.de" <lars@metafoo.de>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH] iio: imu: adis16480: clean up a condition
-Message-ID: <20190926113630.GF27389@kadam>
-References: <20190926081016.GA2332@mwanda>
- <9e40c550310d6f30e6481329e01061beb474bc33.camel@analog.com>
+        Thu, 26 Sep 2019 07:42:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so2369974wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 04:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xonFLYW+K9R2/V+E4nxIJtaZUYsUbdcdHfLF2kKtcoo=;
+        b=Ps5n17nT4qWciZsC9oJ6IGnJHFHbWG4ZlXnBU/vo5CoFtTTcFz1daOUpKD/ipU4JTw
+         ihs76iwMZ80RxUQMFVHFi5rvs5M1rcujs9NFUDyQiF6XVkF7SXmgG5B5WQ8wviB0n/0h
+         viAE+GuDsrSXXAsyoxOa/u6wTXedWKEzGWG5iTpCje/HyXMDQP1QKsdJjeT8SaTNVvM9
+         i5p1PVAP4pUIcDVmmC2qPUG+ZcG/GbmHpma7NTM9SxfdP5B5FUU7xlF/mHrARsTiCPop
+         zVz4CSRj4Q1mP/877rHOBVyN5jMUa4ylMJrwXwyxxRAIiR9nZ+CFHeifrJsIveeE+ygL
+         45Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xonFLYW+K9R2/V+E4nxIJtaZUYsUbdcdHfLF2kKtcoo=;
+        b=KUcaiqKCbb39nKe4LGwf45b/4Y4sX2HPLG2Nf8lmEji8v1sFtGTI7PYAf+VquQk4hT
+         8c3g/OiDS0ArQgmIOABIjBHaaE+pQsdFaRpE/9vhsn8yJrIOg1eoOoo9t6Eis1POmGO6
+         R2x33VYkmsaDruSA5I1RP8q8h4leaRCC+yIWJM1y4X+BiQxxaDtkFfHAhoBik6JqJD6P
+         hZ9K7c91rnXKYEr2UZLYLGv7IfM3urMQhZ9anzvp3PvWR3I2lHegittqxZwnm94kDpnr
+         qISDG76tyaJsXiwkX31oa4ljn9eczqGyGvtLEYKdZulFflilBHx5R0025vRUtHEaRToC
+         P0jQ==
+X-Gm-Message-State: APjAAAVkrUCHB/Wv1JIRhtxHew+A9IGVsTb4uozyMBWYt9a5kN7A9iDI
+        OOGMG52MEYhci+jZFfVZ1aWNVnPbeN8WaRkG
+X-Google-Smtp-Source: APXvYqxnyNJu0dpuhkbD8V2MUn3DG+U46V6RIU4ma0y5/B8D4fyvBCvbpFOmizCk0WSq3Se6YEHEdw==
+X-Received: by 2002:a1c:1981:: with SMTP id 123mr2593496wmz.88.1569498129864;
+        Thu, 26 Sep 2019 04:42:09 -0700 (PDT)
+Received: from [192.168.1.145] ([65.39.69.237])
+        by smtp.gmail.com with ESMTPSA id s12sm5719744wra.82.2019.09.26.04.42.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 04:42:09 -0700 (PDT)
+Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
+ zero
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190926095012.31826-1-colin.king@canonical.com>
+ <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
+ <20190926113329.GE27389@kadam>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <04262621-68fd-a4bb-ab0c-83954c03fbb0@kernel.dk>
+Date:   Thu, 26 Sep 2019 13:42:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e40c550310d6f30e6481329e01061beb474bc33.camel@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260111
+In-Reply-To: <20190926113329.GE27389@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 11:06:39AM +0000, Ardelean, Alexandru wrote:
-> On Thu, 2019-09-26 at 11:10 +0300, Dan Carpenter wrote:
-> > [External]
-> > 
-> > The "t" variable is unsigned so it can't be less than zero.  We really
-> > are just trying to prevent divide by zero bugs so just checking against
-> > zero is sufficient.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >  drivers/iio/imu/adis16480.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-> > index b99d73887c9f..e144e567675d 100644
-> > --- a/drivers/iio/imu/adis16480.c
-> > +++ b/drivers/iio/imu/adis16480.c
-> > @@ -318,7 +318,7 @@ static int adis16480_set_freq(struct iio_dev
-> > *indio_dev, int val, int val2)
-> >  	unsigned int t, reg;
+On 9/26/19 1:33 PM, Dan Carpenter wrote:
+> On Thu, Sep 26, 2019 at 11:56:30AM +0200, Jens Axboe wrote:
+>> On 9/26/19 11:50 AM, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> In the case where sig is NULL the error variable ret is not initialized
+>>> and may contain a garbage value on the final checks to see if ret is
+>>> -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
+>>> ensure the ret does not accidentially contain -ERESTARTSYS before the
+>>> loop.
+>>
+>> Oops, weird it didn't complain. I've folded in this fix, as that commit
+>> isn't upstream yet. Thanks!
 > 
-> I would just change the type of "t" to "int".
-> Especially, since "val" & "val2" are "int".
-> 
+> There is a bug in GCC where at certain optimization levels, instead of
+> complaining, it initializes it to zero.
 
-Yeah, but negatives or high values are basically fine.  We only care
-zero.
+That's awfully nice of it ;-)
 
-regards,
-dan carpenter
+Tried with -O0 and still didn't complain for me.
+
+$ gcc --version
+gcc (Ubuntu 9.1.0-2ubuntu2~18.04) 9.1.0
+
+Tried gcc 5/6/7/8 as well. Might have to go look at what code it's
+generating.
+
+-- 
+Jens Axboe
 
