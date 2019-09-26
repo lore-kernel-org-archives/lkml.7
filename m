@@ -7,76 +7,76 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E3EC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D89DC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F163207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE88207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HAMy8SNW"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="bg2DjcEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfIZKvV (ORCPT
+        id S1726233AbfIZKvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 26 Sep 2019 06:51:21 -0400
-Received: from mail-eopbgr780075.outbound.protection.outlook.com ([40.107.78.75]:31584
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr690080.outbound.protection.outlook.com ([40.107.69.80]:59726
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726114AbfIZKvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:51:20 -0400
+        id S1725802AbfIZKvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:51:19 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GEweOsc8io5+K610gtB/a69Cew/k7sLbhxk5RVfAQIj5MZHQWr6EOr9UzVOPtYc3pCajSHuoYhRKf0s3S54vIklIX8AlCSANO0bp6crXZhpZsMz67wxt1BKD1HIZuAPkjVAo7UgpvBNyN7o4DUWvWRV/sLTGPTSWZDJbdTvFejrTkKY9iUNgZlrRosh2Se1cDcBnF4gnbRJ2GBO0PPbOJ0eWL61FY3rh17xoPKPd7E6iErCVP0AU/px5K4pE5ephW8/+kpKAb9ECYdGc5Bay0MN0FQTDGRKMjNvnB0bJ1jTMr6Xx2oSFQOSv/pll9eYavcMj0kl+39VUkL9BdThVAQ==
+ b=RbrCQVgb0EIdKFLnsqYm7NtH5vm1QEiabD+dyCtE2/DGdzOTAzhxSv2k9kG/cXAjmYGJYfGJNLsUOLAc/CHxVgEWb1/rSJr/ctTkQdnEeqPHiU/lVj5fDygIoKhaZv/cvrspYc3SBEQtx+qIMWAZgvqLDtTKdF6izg17Qs9vwNiniJMMH1ZRZuCPx22hynUaA4UAqxV/Hw3hRqU5LXEa86nysXtPosCBTz4AwcqTyh19dnzqAKBmmJXP0n5DBlP2st247fLgBnPumYiR0IVdSa5G0j1irJZHXUf7YUBKKZMWhZkWFeihcdjz6UckL4RID6nr2Jtx19DeejfK+Ip2Pg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCNe1g/03bHYdTZFujD5+dkbDwnJYvEsIIATWkvPjns=;
- b=NciVEUxPscnc1ve0PRGaSrw18CuOEX/xPKNEmwuIxZdEFcx2b1W+4jcW72CygeHmdqTpJD8t3DUj7hgv4f91EA9ryTCYv6L0gpqQgpE0zVXAqMdqVuYmKRHehb/L3IiVqKZ38VjJlcVOXgVCJZMncHW55SxbqExTdUEDFeqVkv0BUecTegQtytmglepTfjMAIZtneaa03vAAzyW5MhEOdM8RzgV1Biiw6aAmtHU88/06NiQfBy0JVZ6N/MuZ20Cjsxld+qAVqn7eY7fFEeAkjCLpPGimYp18HiMzUidDoF0TvRXJ2pW0QLvBvoW33eNX2LBgmIy+hW6pomTUMH5Zbg==
+ bh=TMfrbu6S8K955U5DEjMZ+MnaMLfH2CSFw21huab/AQM=;
+ b=iHgdtljzzX9zSm1HYGVduOV5oYqU6x7P74GjiZ8x7P9ToaAJelK+sIL+lQlr05mNn78+jn/whDr1pn3xzv6rrAbdplNIbGWATO1BCoEewG3udIgYHhBzOHfXZubcWQrfvSikME8WX/944mRlHYaG5FaTTx6zpsI778A4Tz4VKOmr7is8fNeROSw/KTZ9FsT4wZToJ3T5TUZvEa93Dtn6rHyTdo3xRE+j+muMfs8TkyXUp6noix7oo1KwLcqsugTdlBv8r5dePgCyh9izZcu2V2EDKylzBt+lbR6Gr6gjLc+1nVmEGBwcyDEpSUS5dTZS7ZiMtAbHYFB2DGARp4Us9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
  not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCNe1g/03bHYdTZFujD5+dkbDwnJYvEsIIATWkvPjns=;
- b=HAMy8SNWeqbJYMPA7jIMbCMbuBMg8EsvHbGKXhHPjIpLs1BII9M0jWypKNoOSDNP5N4usprRUcb0Mac3tXzMsTg/P2KrpXk4jzG1H7Gjv7KXe1o+1yzJD6LUO9BbOnmWKdrECI3f310a7qIES80W6amqUxhMTROiS53bWCXeN/c=
-Received: from SN4PR0201CA0011.namprd02.prod.outlook.com
- (2603:10b6:803:2b::21) by BN7PR02MB5169.namprd02.prod.outlook.com
- (2603:10b6:408:2b::20) with Microsoft SMTP Server (version=TLS1_2,
+ bh=TMfrbu6S8K955U5DEjMZ+MnaMLfH2CSFw21huab/AQM=;
+ b=bg2DjcEILZeiSn0myAmJVBJrOF0onVb8ADCj8nkTSk414bKNzvfoOS2C4R3MPED+4/ng5gvbSO9y5LJmrXx1Y14jefjC7OSVAWR9LQ6Ttk9Q3o2KTsdZIkyQAo6rRGni5b+eprHcPUPRgca823kwJyVRi+KiQq40/YFd97A9rlE=
+Received: from MWHPR02CA0050.namprd02.prod.outlook.com (2603:10b6:301:60::39)
+ by SN6PR02MB5328.namprd02.prod.outlook.com (2603:10b6:805:71::26) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Thu, 26 Sep
- 2019 10:51:16 +0000
-Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by SN4PR0201CA0011.outlook.office365.com
- (2603:10b6:803:2b::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.15 via Frontend
+ 2019 10:51:17 +0000
+Received: from BL2NAM02FT029.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by MWHPR02CA0050.outlook.office365.com
+ (2603:10b6:301:60::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2284.23 via Frontend
  Transport; Thu, 26 Sep 2019 10:51:16 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
  header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.25
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT029.mail.protection.outlook.com (10.152.77.100) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.20
  via Frontend Transport; Thu, 26 Sep 2019 10:51:16 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:47501 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iDRMh-0004oI-BU; Thu, 26 Sep 2019 03:51:15 -0700
+        id 1iDRMh-0003yL-E1; Thu, 26 Sep 2019 03:51:15 -0700
 Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iDRMc-0001k5-7A; Thu, 26 Sep 2019 03:51:10 -0700
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x8QAp96n032140;
+        id 1iDRMc-0001k4-9I; Thu, 26 Sep 2019 03:51:10 -0700
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x8QAp9CR032133;
         Thu, 26 Sep 2019 03:51:09 -0700
 Received: from [10.140.184.180] (helo=ubuntu)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radheys@ubuntu>)
-        id 1iDRMa-0001jY-Vv; Thu, 26 Sep 2019 03:51:09 -0700
+        id 1iDRMa-0001jU-UZ; Thu, 26 Sep 2019 03:51:09 -0700
 Received: by ubuntu (Postfix, from userid 13245)
-        id 343B5101108; Thu, 26 Sep 2019 16:21:08 +0530 (IST)
+        id 288DA101104; Thu, 26 Sep 2019 16:21:08 +0530 (IST)
 From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 To:     vkoul@kernel.org, dan.j.williams@intel.com,
         michal.simek@xilinx.com, nick.graumann@gmail.com,
@@ -84,80 +84,69 @@ To:     vkoul@kernel.org, dan.j.williams@intel.com,
         mcgrof@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 3/4] dmaengine: xilinx_dma: use devm_platform_ioremap_resource()
-Date:   Thu, 26 Sep 2019 16:20:59 +0530
-Message-Id: <1569495060-18117-4-git-send-email-radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 1/4] dmaengine: xilinx_dma: Fix 64-bit simple AXIDMA transfer
+Date:   Thu, 26 Sep 2019 16:20:57 +0530
+Message-Id: <1569495060-18117-2-git-send-email-radhey.shyam.pandey@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569495060-18117-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 References: <1569495060-18117-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--7.073-7.0-31-1
-X-imss-scan-details: No--7.073-7.0-31-1;No--7.073-5.0-31-1
+X-TM-AS-Result: No--3.069-7.0-31-1
+X-imss-scan-details: No--3.069-7.0-31-1;No--3.069-5.0-31-1
 X-TM-AS-User-Approved-Sender: No;No
 X-TM-AS-Result-Xfilter: Match text exemption rules:No
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(39860400002)(136003)(189003)(199004)(81156014)(36756003)(70206006)(316002)(4326008)(42186006)(70586007)(103686004)(6666004)(6266002)(356004)(48376002)(336012)(51416003)(47776003)(50466002)(107886003)(2906002)(426003)(76176011)(14444005)(11346002)(446003)(26005)(305945005)(126002)(5660300002)(2616005)(50226002)(106002)(186003)(478600001)(16586007)(8676002)(81166006)(8936002)(486006)(476003)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB5169;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(199004)(189003)(4744005)(426003)(446003)(305945005)(50226002)(48376002)(50466002)(2906002)(478600001)(70206006)(70586007)(5660300002)(36756003)(6666004)(356004)(76176011)(51416003)(126002)(107886003)(81166006)(8676002)(8936002)(2616005)(103686004)(4326008)(486006)(6266002)(11346002)(81156014)(186003)(42186006)(336012)(106002)(26005)(47776003)(16586007)(476003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5328;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3b1360ab-fa4a-4f84-af08-08d7426f74a1
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BN7PR02MB5169;
-X-MS-TrafficTypeDiagnostic: BN7PR02MB5169:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB516999EA82A8F66AFB673429C7860@BN7PR02MB5169.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 4f3b5387-4367-4d5e-d039-08d7426f74a1
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:SN6PR02MB5328;
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5328:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB53284EEE6BFEEC057C44556BC7860@SN6PR02MB5328.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:338;
+X-MS-Oob-TLC-OOBClassifiers: OLM:935;
 X-Forefront-PRVS: 0172F0EF77
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: IW6ZBaV2XGXNdOy9cNAT0aGVi49KW91KQyS0wTZv5EeO1JHeA7DwPuMpspd18pg1Alov0bc8NT64ePq63ijmQlxSt5rMR6xu0dEEoFF4gBTA7gVthgZCzFtFBjghhsXzVFsFZXbpvGTiU6GPhQcJyaIFlYAdrlzD3jQT09wPjOEBzSupyXez6bLzTvs1PMLDLpa30+dtsjarrwNxkJPPb7cU9v7Ko7XXU1bkAT+ZCLyN95hzsJuL5+ZjaC1rQS1sNk8oYa0u56k3JUDRfidZ+d50GnRQ3kdf1C5HrO8WwdQ5vcE6B5mo92EhFWJYGBKWcyWFM/wE0KHHEjDNOIQ/z/gdmuAoHOdnM2rhJGP3gtOnDhJdpvkCL6jiFDAQZYYK4H1TDkmeK898VMmuKj+8xcURB0BFuT4DdyMMgUybVrQ=
+X-Microsoft-Antispam-Message-Info: K5Jd3rIRSs1/2LegWPwEi/OCKdhV7CGtJIm04gAbT/XJatSh8oW64ym5KSM/JLsH7Ge9wTNFzTcUywFInw6gLOd12QOuwkhIPY6kruaFEOrSCtA0YBH8+6XAGEqliLa7tworQI+/jxJckPGjZpIaDwwuvuCduCHDS9NNTa8xnIqFtZrCu/Gx39XX/wb5OfjRK1jKgQj9RKKrQGrxXydifRF0wTZ0lkiVGRaIpUYfNDB8nanOrX/Kv4XqBoh4o2Ti1eihIypkAWIWKIbuL7yiQ5eH3AGx0PrJBZztmIz2Xm4z3QH/q7bwXdAqRC4dg1qmNmndzhMag2bvEPc4VZFAr3jbOrDIzBIDtzj/Ka/QTxkQn6cfKBp1abYzUORmXEpGlusqhYEjMnRyGvTcGYzmoP8EYKCSKjaQQ7T3mJfeW2k=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 10:51:16.0039
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 10:51:16.0047
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b1360ab-fa4a-4f84-af08-08d7426f74a1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f3b5387-4367-4d5e-d039-08d7426f74a1
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5169
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the chain of platform_get_resource() and devm_ioremap_resource()
-with devm_platform_ioremap_resource(). It simplifies the flow and there
-is no functional change.
-
-Fixes below cocinelle warning-
-WARNING: Use devm_platform_ioremap_resource for xdev -> regs
+In AXI DMA simple mode also pass MSB bits of source and destination
+address to xilinx_write function. It fixes simple AXI DMA operation
+mode using 64-bit addressing.
 
 Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c |    4 +---
- 1 files changed, 1 insertions(+), 3 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 5d56f1e..bc9979d 100644
+index e7dc3c4..1fbe025 100644
 --- a/drivers/dma/xilinx/xilinx_dma.c
 +++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2612,7 +2612,6 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct xilinx_dma_device *xdev;
- 	struct device_node *child, *np = pdev->dev.of_node;
--	struct resource *io;
- 	u32 num_frames, addr_width, len_width;
- 	int i, err;
+@@ -1354,7 +1354,8 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
+ 					   node);
+ 		hw = &segment->hw;
  
-@@ -2638,8 +2637,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 		return err;
+-		xilinx_write(chan, XILINX_DMA_REG_SRCDSTADDR, hw->buf_addr);
++		xilinx_write(chan, XILINX_DMA_REG_SRCDSTADDR,
++			     xilinx_prep_dma_addr_t(hw->buf_addr));
  
- 	/* Request and map I/O memory */
--	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	xdev->regs = devm_ioremap_resource(&pdev->dev, io);
-+	xdev->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xdev->regs))
- 		return PTR_ERR(xdev->regs);
- 
+ 		/* Start the transfer */
+ 		dma_ctrl_write(chan, XILINX_DMA_REG_BTT,
 -- 
 1.7.1
 
