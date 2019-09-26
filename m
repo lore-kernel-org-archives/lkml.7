@@ -2,226 +2,168 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED572C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D64C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB40C222C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BPly+uU9"
+	by mail.kernel.org (Postfix) with ESMTP id A82CD2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfIZJ6O (ORCPT
+        id S1726009AbfIZKAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:58:14 -0400
-Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:53670
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726970AbfIZJ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:58:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QAwviciHbdrz2B/nWgsQPUcK6xcK/v/YEqEsvIb4HuRo4SdgKNYb5k88e9WLyMbPMZfJuPU/UyFuSrWtg+5ca6NjHQBEhZYjfws4R0RRUxx2s5vtxitTNSXERGJtiOL7Bhj7GZOcScRXVI6CoiPBnG6m/ROjQ/JjItejUu9utxzwN78rLQd2fIWF+v7GDQAEt/bJzxdSOHwLXIC4dRGkTTveUaicmVq7KEcrC4J1XZjzFb9aKHXwJBFa1SQyei5AZ6Ykf+oTh6il5poJTHhRU1+X5PnapXUgSoaS2wRDDCorl98HNQcrsJUwP90XI+86ei67v587h7SdkcAvigqdWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABe97go+nZCRTI2LKCBRF/WxA3lWz/ryjkHGSZWQAfQ=;
- b=lx9DlK0MSnLx8rDfxZmtoGEJl+MSnl79pKUL7wnGBT8xj8wqJuAQo4ssKkCov6AC0+F1/yMqa2sKVplG/voes1w1HONW2LWZ9A8+YB9moCNUUiViCqWc0PdM+mKT1Knf7q3Nd2Wt4OQG3Nq2SaseHKzZ224EHNgAHDZPPjqmrNZ3T8ESt+IclyjreiwFyMEjHpkNom5oJ8lf9By0ObWq13BjoKLROEmOtTKolL8lidl0T5Y64Pavf2AQ8h4SWZ8T7nS5HWqjPGy661FeFl5Dqu9s2M56oCeikA5Rq/XPCTrQSgpQSHDeSNU8P6U1A4oHr5lbEIgrLY1HCuy9FHBGoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABe97go+nZCRTI2LKCBRF/WxA3lWz/ryjkHGSZWQAfQ=;
- b=BPly+uU99jIVJeKeykRe0uOHnw+jLK348PRn716v9DMfewcudP81A0dmt+IasFYsJ0jy2SmTJXCwhBzl1elzXxvL9Wk7T3ZUDMZKRWatc4uOLetsfk6Nm/DAglB8BsPQP+RcOgOsdzs4DyPOX9UbxiQ19zvV+wo3IvXnHNkil9E=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5404.eurprd04.prod.outlook.com (20.178.107.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15; Thu, 26 Sep 2019 09:58:09 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
- 09:58:09 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Ran Wang <ran.wang_1@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v4,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
-Thread-Topic: [v4,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
-Thread-Index: AQHVdBVe5geLyFI8uEOyK3tYbajH66c9uVxw
-Date:   Thu, 26 Sep 2019 09:58:09 +0000
-Message-ID: <DB7PR04MB4490A0282C3D6173D900B7D98F860@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190926024118.15931-1-biwen.li@nxp.com>
-In-Reply-To: <20190926024118.15931-1-biwen.li@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 305c31e6-d44d-44ba-91cb-08d74268097e
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB5404:|DB7PR04MB5404:
-x-ms-exchange-purlcount: 8
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5404BD0757F44A0E42D5737D8F860@DB7PR04MB5404.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:800;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(53754006)(199004)(189003)(99286004)(8936002)(14454004)(3846002)(66946007)(6116002)(6636002)(256004)(86362001)(55016002)(9686003)(6306002)(6436002)(33656002)(229853002)(25786009)(52536014)(14444005)(66446008)(4326008)(74316002)(2906002)(76116006)(76176011)(305945005)(7736002)(2501003)(66476007)(66556008)(64756008)(110136005)(54906003)(316002)(7696005)(6246003)(5660300002)(66066001)(81156014)(26005)(186003)(476003)(44832011)(6506007)(11346002)(446003)(102836004)(486006)(966005)(8676002)(71200400001)(71190400001)(81166006)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5404;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CB9KgWpshHa9BiKeyjCZHGSsrD3ZrNArNPWjN+NW0DEaJoVmo9mjIQASptDAp4Z5mh7IrBMmULk9V6chnxg5OJ43vtAVMFDf75ATVPAvuj/A2tT5/eQFfbJQGK3LQQTk1Y/SLmq9JZ8IjN+BYE/LYjcRngqnHSzmtnM0ZmfjPgcrPBh30DJuoApE95Y/YF0HMaZsNUjLEgW2kEdJ15LLYYhi6xEsIMXAKjmcU41N3WzjtvIX3w0hjhi0xLP9TGdg0VstUMm0xRgZvGzRWJNR5fpR1LvwZqYzkMCD0dOh54dIihMR0pOMU503OxY5ppTVS165xfPp3rG8rU4pSxidRaZ9xFhwf/p6WB3GnfZ+rT0jxo7wc8Fer+3rZI75nDkkhfUBYrMzcyzY9uQ99I7ap0s8dsVlshgQq0O7iMdGIFs/kuF/u3oq6UzVnsMAtLmSQcZ5Ukgooy1A/ucD4Ne2SQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Sep 2019 06:00:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49840 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfIZKAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:00:21 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iDQZP-0005ym-MF; Thu, 26 Sep 2019 10:00:19 +0000
+To:     Lukasz Majewski <lukma@denx.de>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
+ fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
+ +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
+ LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
+ BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
+ dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
+ uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
+ LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+ zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
+ FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
+ IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
+ CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
+ n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
+ vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
+ nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
+ fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
+ gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
+ 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
+ Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
+ u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
+ Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
+ EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
+ 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
+ v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
+ cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
+ rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
+ 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
+ IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
+ 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
+ 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
+ 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
+ Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
+ t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
+ LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
+ pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
+ KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
+ 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
+ TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
+ WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
+ QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
+ GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: spi: Add call to spi_slave_abort() function when spidev driver is
+ released
+Message-ID: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com>
+Date:   Thu, 26 Sep 2019 11:00:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 305c31e6-d44d-44ba-91cb-08d74268097e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 09:58:09.7767
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZwBfh/a11Ylh4CqA7KaijNTAp8NlBjrZKfqrnlXbMvVjGzZjY0Zr0U4hUsKlN4ggbcWEAPNRF4Vyb89/EeY5JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5404
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-the linux patch depended by RCPM driver,FlexTimer driver and FlexTimer dts,=
- need apply these patches as follows:
+Hi,
 
-1. RCPM driver:
+Static analysis with Coverity has detected an potential dereference of a
+free'd object with commit:
 
-https://patchwork.kernel.org/series/162731/mbox/ (https://patchwork.kernel.=
-org/patch/11105279/)
+commit 9f918a728cf86b2757b6a7025e1f46824bfe3155
+Author: Lukasz Majewski <lukma@denx.de>
+Date:   Wed Sep 25 11:11:42 2019 +0200
 
-2. FlexTimer dts:
+    spi: Add call to spi_slave_abort() function when spidev driver is
+released
 
-https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kernel.=
-org/patchwork/patch/1112493/)
+In spidev_release() in drivers/spi/spidev.c the analysis is as follows:
 
-3. FlexTimer driver:
+600static int spidev_release(struct inode *inode, struct file *filp)
+601{
+602        struct spidev_data      *spidev;
+603
+604        mutex_lock(&device_list_lock);
 
-https://patchwork.ozlabs.org/series/124718/mbox/ (https://patchwork.ozlabs.=
-org/patch/1145999/)
+   1. alias: Assigning: spidev = filp->private_data. Now both point to
+the same storage.
 
-https://patchwork.ozlabs.org/series/126942/mbox/ (https://patchwork.ozlabs.=
-org/patch/1152085/)
+605        spidev = filp->private_data;
+606        filp->private_data = NULL;
+607
+608        /* last close? */
+609        spidev->users--;
 
-4. Adjust drivers/soc/fsl/Makefile:
+   2. Condition !spidev->users, taking true branch.
 
-   remove the line 'obj-y +=3D ftm_alarm.o' in drivers/soc/fsl/Makefile to =
-resolve a compilation error
+610        if (!spidev->users) {
+611                int             dofree;
+612
+613                kfree(spidev->tx_buffer);
+614                spidev->tx_buffer = NULL;
+615
+616                kfree(spidev->rx_buffer);
+617                spidev->rx_buffer = NULL;
+618
+619                spin_lock_irq(&spidev->spi_lock);
 
-> Description:
-> 	- Reading configuration register RCPM_IPPDEXPCR1
-> 	  always return zero
->=20
-> Workaround:
-> 	- Save register RCPM_IPPDEXPCR1's value to
-> 	  register SCFG_SPARECR8.(uboot's psci also
-> 	  need reading value from the register SCFG_SPARECR8
-> 	  to set register RCPM_IPPDEXPCR1)
->=20
-> Impact:
-> 	- FlexTimer module will cannot wakeup system in
-> 	  deep sleep on SoC LS1021A
->=20
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v4:
-> 	- rename property name
-> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
->=20
-> Change in v3:
-> 	- update commit message
-> 	- rename property name
-> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
->=20
-> Change in v2:
-> 	- fix stype problems
->=20
->  drivers/soc/fsl/rcpm.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->=20
-> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
-> 82c0ad5e663e..9a29c482fc2e 100644
-> --- a/drivers/soc/fsl/rcpm.c
-> +++ b/drivers/soc/fsl/rcpm.c
-> @@ -13,6 +13,8 @@
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
->  #include <linux/kernel.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
->=20
->  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
->=20
-> @@ -29,6 +31,9 @@ static int rcpm_pm_prepare(struct device *dev)
->  	struct rcpm		*rcpm;
->  	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
->  	int i, ret, idx;
-> +	struct regmap *scfg_addr_regmap =3D NULL;
-> +	u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-> +	u32 reg_value =3D 0;
->=20
->  	rcpm =3D dev_get_drvdata(dev);
->  	if (!rcpm)
-> @@ -63,6 +68,34 @@ static int rcpm_pm_prepare(struct device *dev)
->  					tmp |=3D value[i + 1];
->  					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
->  				}
-> +				/* Workaround of errata A-008646 on SoC LS1021A:
-> +				 * There is a bug of register ippdexpcr1.
-> +				 * Reading configuration register RCPM_IPPDEXPCR1
-> +				 * always return zero. So save ippdexpcr1's value
-> +				 * to register SCFG_SPARECR8.And the value of
-> +				 * ippdexpcr1 will be read from SCFG_SPARECR8.
-> +				 */
-> +				scfg_addr_regmap =3D
-> syscon_regmap_lookup_by_phandle(np,
-> +
-> "fsl,ippdexpcr1-alt-addr");
-> +				if (scfg_addr_regmap && (1 =3D=3D i)) {
-> +					if (of_property_read_u32_array(dev->of_node,
-> +					    "fsl,ippdexpcr1-alt-addr",
-> +					    reg_offset,
-> +					    1 + sizeof(u64)/sizeof(u32))) {
-> +						scfg_addr_regmap =3D NULL;
-> +						continue;
-> +					}
-> +					/* Read value from register SCFG_SPARECR8 */
-> +					regmap_read(scfg_addr_regmap,
-> +						    (u32)(((u64)(reg_offset[1] << (sizeof(u32) *
-> 8) |
-> +						    reg_offset[2])) & 0xffffffff),
-> +						    &reg_value);
-> +					/* Write value to register SCFG_SPARECR8 */
-> +					regmap_write(scfg_addr_regmap,
-> +						     (u32)(((u64)(reg_offset[1] << (sizeof(u32) *
-> 8) |
-> +						     reg_offset[2])) & 0xffffffff),
-> +						     tmp | reg_value);
-> +				}
->  			}
->  		}
->  	} while (ws =3D wakeup_source_get_next(ws));
-> --
-> 2.17.1
+   3. Condition spidev->spi, taking false branch.
+
+620                if (spidev->spi)
+621                        spidev->speed_hz = spidev->spi->max_speed_hz;
+622
+623                /* ... after we unbound from the underlying device? */
+
+   4. Condition spidev->spi == NULL, taking true branch.
+
+624                dofree = (spidev->spi == NULL);
+625                spin_unlock_irq(&spidev->spi_lock);
+626
+
+   5. Condition dofree, taking true branch.
+
+627                if (dofree)
+
+   6. freed_arg: kfree frees spidev.
+
+628                        kfree(spidev);
+629        }
+630#ifdef CONFIG_SPI_SLAVE
+
+   CID 89726 (#1 of 1): Read from pointer after free (USE_AFTER_FREE)
+7. deref_after_free: Dereferencing freed pointer spidev.
+
+631        spi_slave_abort(spidev->spi);
+632#endif
+633        mutex_unlock(&device_list_lock);
+634
+635        return 0;
+636}
+
+The call to spi_slave_abort() on spidev is reading an earlier kfree'd
+spidev.
+
+Colin
 
