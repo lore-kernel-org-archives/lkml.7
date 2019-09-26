@@ -2,260 +2,106 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E419C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51F8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F4221D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB8321D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBNIEO0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfIZPZA (ORCPT
+        id S1727256AbfIZP07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:25:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2789 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726845AbfIZPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:24:59 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 45931EFB426518DAA836;
-        Thu, 26 Sep 2019 23:24:57 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
- 23:24:48 +0800
-Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER)
- allocation
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-11-maz@kernel.org>
- <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
- <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <14111988-74c9-12c3-1322-1580ff6ba11f@huawei.com>
-Date:   Thu, 26 Sep 2019 23:19:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Thu, 26 Sep 2019 11:26:59 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:36765 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbfIZP07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 11:26:59 -0400
+Received: by mail-lf1-f53.google.com with SMTP id x80so2035447lff.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=s+9lOd9twZ++9lVM8x7eTHgsEZRoyEnG24gVWpP/yDQ=;
+        b=GBNIEO0enx4yByEHHUOb+9DyJwd6a9M3U98jKwV3yi5VNB5AEDlweL9FpWSpxdttyC
+         WpjbPackduphy2sbqMMb3dHi3C0rSJgLTVB002Ru3iElSAUECtck9zrpLji+lJjLFE88
+         qdpM3mEAYDFjiWP7Kg213RCF1drx+jgUtk6RYQohgEx9Sn4IyjkWpsUmN7BA2lP60Yep
+         fTRnYd18NEjcyNFNvJ944CUT5mjnXMOMp3J8EBFn66rDmFS2+vY3oiPpOkd2jUf4zvIU
+         Lix95o0wVTC6IlbjcCeHv00zpUmZEIJVMwWHrvd7Lmgmt+u49m0qnuwzSE28vQhKnmoN
+         F4Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=s+9lOd9twZ++9lVM8x7eTHgsEZRoyEnG24gVWpP/yDQ=;
+        b=sthaoXODEMI+1cjlC8pRV2I+Zj1UqznuKBKg73W021+SPFQbBG4frF/J2IH7dr6zS5
+         k87AeGApjtRFdfBDQGTw/4Sxfjmzk9t3qJT3c39d4nIFS9NO2l6cfF2zCJt4Rurdpo3S
+         WlBHbqTmA8PQcMfKNyYyodSYekJ0O7VtJyg3b+f16DBIZhehivC94aG4mYs/BiU43v9I
+         lg1OvITNZ3BtfDWqE6Pp44AstK0io1MIHYYQKuCNERWv7Z6zWkaDiyHkwNhD7701z0GF
+         7xwQi2MrMC2timVLUQ0n8IC91qa7DHOiIQ0otVT2scv2WPH1t9Xs1y4iEA17iCxzlMD1
+         edpg==
+X-Gm-Message-State: APjAAAWPdPeBN/ZBktYhN5ymv8dFp9YAvmCGKkVEdTj9GS7WPHVpOubJ
+        x9JiKT4WFkn115cEiUzr9qxjcHlT1fiyKa/nYsYaYZpf
+X-Google-Smtp-Source: APXvYqx9KOsCzeRm5K8Du9emxpnNYYsYFechCA8Ys0Wwu4kB+Yf+FNghunoPHy7acNAKBAcTcZx/FSgEjx5+Xa7uTy4=
+X-Received: by 2002:ac2:4c8f:: with SMTP id d15mr2797292lfl.74.1569511616809;
+ Thu, 26 Sep 2019 08:26:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Received: by 2002:ac2:46ca:0:0:0:0:0 with HTTP; Thu, 26 Sep 2019 08:26:55
+ -0700 (PDT)
+From:   "\\0xDynamite" <dreamingforward@gmail.com>
+Date:   Thu, 26 Sep 2019 10:26:55 -0500
+Message-ID: <CAMjeLr-RBsJaU7366wLLkO-pP8h_4E1yOVx0KtjmuxdJ8m-w4w@mail.gmail.com>
+Subject: [OFFTOPIC] New OS
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+After the bloatware that all modern OSs have become. I've been
+developing new computer science to make a new OS.  This OS may be
+provably optimal.  How?
 
-Two more questions below.
+* New CS reveals that architected code reduces code size to 100 log2
+non-architected_LOC.  What is architected code?  Architecture is the
+complementary opposite of software engineering, the focus of most OSs.
+Like properly-architected buildings, a well-engineered building isn't
+necessarily efficient AT ALL for its overall usage.  This puts the
+capstone on the field of software development and creates a new eon of
+computer and data science.
+* Language expressivity is measurable.  Termed Kolmogorov Quotient,
+there is now an equation to measure the utility of languages -- an end
+to the language wars.
+* There is now a unified object architecture (called the GOOP: gospel
+of object-oriented programming), so that OOP can realize it`s goals.
+Along with proper architecture, this allows giants like Office
+applications to be built in 20K instead of 20M.  All objects are apps
+and all apps are objects.  All objects have the same API, creating a
+data ecosystem of reuseable objects throughout the whole OS.
+* Since the internet is now the norm, P2P is built into its design.
+Objects are shared across the network, and each object hold metadata
+that includes their paypal account, allowing them to be paid each time
+the object is instantiated.  Now F/OSS programmers can get paid!
+*  There is no need for a compiler; to be explained later.  The OS
+does it for you using an optimized language design.
 
-On 2019/9/25 22:41, Marc Zyngier wrote:
-> On 25/09/2019 14:04, Zenghui Yu wrote:
->> Hi Marc,
->>
->> Some questions about this patch, mostly to confirm that I would
->> understand things here correctly.
->>
->> On 2019/9/24 2:25, Marc Zyngier wrote:
->>> GICv4.1 defines a new VPE table that is potentially shared between
->>> both the ITSs and the redistributors, following complicated affinity
->>> rules.
->>>
->>> To make things more confusing, the programming of this table at
->>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
->>> for something completely different.
->>>
->>> The code flow is somewhat complexified by the need to respect the
->>> affinities required by the HW, meaning that tables can either be
->>> inherited from a previously discovered ITS or redistributor.
->>>
->>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>> ---
->>
->> [...]
->>
->>> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct its_node *its,
->>>    	return indirect;
->>>    }
->>>    
->>> +static u32 compute_common_aff(u64 val)
->>> +{
->>> +	u32 aff, clpiaff;
->>> +
->>> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
->>> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
->>> +
->>> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
->>> +}
->>> +
->>> +static u32 compute_its_aff(struct its_node *its)
->>> +{
->>> +	u64 val;
->>> +	u32 svpet;
->>> +
->>> +	/*
->>> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
->>> +	 * the resulting affinity. We then use that to see if this match
->>> +	 * our own affinity.
->>> +	 */
->>> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
+The millions of lines of driver code shows that architecture is faulty
+or lacking, probably in hardware.  Processor geometries should be
+figured out, such that tetrahedral GPU cores, for example, can handle
+3d modeling properly.
 
-The spec says, ITS does not share vPE table with Redistributors when
-SVPET==0.  It seems that we miss this rule and simply regard SVPET as
-GICR_TYPER_COMMON_LPI_AFF here.  Am I wrong?
+Full disclaimer, I don't have one line of code yet.  I'm waiting for
+assembly to and my development platform to stabilize.  But once a
+basic prompt is available, objects can be created easily and a whole
+system can emerge with very little effort, much like UNIX did back in
+the day.
 
->>> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
->>> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
->>> +	return compute_common_aff(val);
->>> +}
->>> +
->>> +static struct its_node *find_sibbling_its(struct its_node *cur_its)
->>> +{
->>> +	struct its_node *its;
->>> +	u32 aff;
->>> +
->>> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
->>> +		return NULL;
->>> +
->>> +	aff = compute_its_aff(cur_its);
->>> +
->>> +	list_for_each_entry(its, &its_nodes, entry) {
->>> +		u64 baser;
->>> +
->>> +		if (!is_v4_1(its) || its == cur_its)
->>> +			continue;
->>> +
->>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->>> +			continue;
->>> +
->>> +		if (aff != compute_its_aff(its))
->>> +			continue;
->>> +
->>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->>> +		baser = its->tables[2].val;
->>> +		if (!(baser & GITS_BASER_VALID))
->>> +			continue;
->>> +
->>> +		return its;
->>> +	}
->>> +
->>> +	return NULL;
->>> +}
->>> +
->>>    static void its_free_tables(struct its_node *its)
->>>    {
->>>    	int i;
->>> @@ -2004,6 +2066,15 @@ static int its_alloc_tables(struct its_node *its)
->>>    			break;
->>>    
->>>    		case GITS_BASER_TYPE_VCPU:
->>> +			if (is_v4_1(its)) {
->>> +				struct its_node *sibbling;
->>> +
->>> +				if ((sibbling = find_sibbling_its(its))) {
->>> +					its->tables[2] = sibbling->tables[2];
->>
->> This means thst the vPE table is shared between ITSs which are under the
->> same affinity group?
-> 
-> That's indeed what this is trying to do...
-> 
->> Don't we need to set GITS_BASER (by its_setup_baser()) here to tell this
->> ITS where the vPE table lacates?
-> 
-> Absolutely. This is a bug. I didn't spot it as my model only has a
-> single ITS.
-> 
->>
->>> +					continue;
->>> +				}
->>> +			}
->>> +
->>>    			indirect = its_parse_indirect_baser(its, baser,
->>>    							    psz, &order,
->>>    							    ITS_MAX_VPEID_BITS);
->>> @@ -2025,6 +2096,212 @@ static int its_alloc_tables(struct its_node *its)
->>>    	return 0;
->>>    }
->>>    
->>> +static u64 inherit_vpe_l1_table_from_its(void)
->>> +{
->>> +	struct its_node *its;
->>> +	u64 val;
->>> +	u32 aff;
->>> +
->>> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
->>> +	aff = compute_common_aff(val);
->>> +
->>> +	list_for_each_entry(its, &its_nodes, entry) {
->>> +		u64 baser;
->>> +
->>> +		if (!is_v4_1(its))
->>> +			continue;
->>> +
->>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->>> +			continue;
->>> +
->>> +		if (aff != compute_its_aff(its))
->>> +			continue;
->>> +
->>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->>> +		baser = its->tables[2].val;
->>> +		if (!(baser & GITS_BASER_VALID))
->>> +			continue;
->>> +
->>> +		/* We have a winner! */
->>> +		val  = GICR_VPROPBASER_4_1_VALID;
->>> +		if (baser & GITS_BASER_INDIRECT)
->>> +			val |= GICR_VPROPBASER_4_1_INDIRECT;
->>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
->>> +				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
->>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
->>> +				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
->>
->> I remember the spec says,
->> GITS_BASER2 "points to" the ITS *vPE table*, which provides mappings
->> from the vPEID to target Redistributor and associated vpt address.
->> In GICv4.1 GICR_VPROPBASER "points to" the *vPE Configuration table*,
->> which stores the locations of each vPE's LPI configuration and pending
->> table.
->>
->> And the code here says, if we can find an ITS (which is under the same
->> CommonLPIAff group with this Redistributor) has already been probed and
->> allocated an vPE table, then use this vPE table as this Redist's vPE
->> Configuration table.
->> So I infer that in GICv4.1, *vPE table* and *vPE Configuration table*
->> are actually the same concept?  And this table is shared between ITSs
->> and Redists which are under the same affinity group?
->> Please fix me if I have any misunderstanding.
-> 
-> Indeed. The whole idea is that ITSs and RDs can share a vPE table if
-> they are in the same affinity group (such as a socket, for example).
-> This is what is missing from v4.0 where the ITS knows about vPEs, but
-> doesn't know about residency. With that in place, the HW is able to do a
-> lot more for us.
+Sorry for the post, but I know there's someone out there who can use it.
 
-Thanks for your education!
-
-I really want to know *how* does GICv4.1 ITS know about the vPE
-residency (in hardware level)?
-
-I can understand that Redistributor can easily achieve it by
-VPENDBASER's Valid and vPEID field.  And it's necessary for ITS to
-know the residency so that it can determine whether it's appropriate
-to trigger default doorbell for vPE.  But I have no knowledge about
-how can it be achieved in hardware details.
-
-Thanks in advance for your pointer. :)
-
-
-Zenghui
-
+Marxos
