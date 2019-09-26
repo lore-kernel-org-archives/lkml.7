@@ -2,118 +2,62 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58531C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD5DC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382AB222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8EB2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfIZHxM (ORCPT
+        id S1726863AbfIZHze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:53:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41402 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfIZHxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:53:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2265DAED6;
-        Thu, 26 Sep 2019 07:53:10 +0000 (UTC)
-Date:   Thu, 26 Sep 2019 09:53:07 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] memory_hotplug: Add a bounds check to __add_pages
-Message-ID: <20190926075307.GB17200@linux>
-References: <20190926013406.16133-1-alastair@au1.ibm.com>
- <20190926013406.16133-2-alastair@au1.ibm.com>
+        Thu, 26 Sep 2019 03:55:34 -0400
+Received: from mail.monom.org ([188.138.9.77]:44586 "EHLO mail.monom.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbfIZHzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:55:33 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id CB3D3500587;
+        Thu, 26 Sep 2019 09:55:31 +0200 (CEST)
+Received: from localhost (b9168f76.cgn.dg-w.de [185.22.143.118])
+        by mail.monom.org (Postfix) with ESMTPSA id 6F25B500072;
+        Thu, 26 Sep 2019 09:55:31 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 09:55:30 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Himanshu Madhani <hmadhani@marvell.com>
+Subject: Re: WARN_ON_ONCE in qla2x00_status_cont_entry
+Message-ID: <20190926075530.xzjpa733sw3ykr6g@beryllium.lan>
+References: <20190925123928.kahpjtnikcmox7ug@beryllium.lan>
+ <2e47b106-12d7-908a-857f-3908336f2e1f@acm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926013406.16133-2-alastair@au1.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2e47b106-12d7-908a-857f-3908336f2e1f@acm.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 11:34:05AM +1000, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Wed, Sep 25, 2019 at 06:33:35PM -0700, Bart Van Assche wrote:
+> On 2019-09-25 05:39, Daniel Wagner wrote:
+> > So I after starring on the code I am not sure if the WARN_ON_ONCE is
+> > correct. It assumes that after processing one status continuation,
+> > there is no more work. Though it looks like there is another element
+> > to process. Is it possible that two sense continuation are possible?
 > 
-> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
-> are allocated from firmware. These address ranges may be higher
-> than what older kernels permit, as we increased the maximum
-> permissable address in commit 4ffe713b7587
-> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
-> possible that the addressable range may change again in the
-> future.
-> 
-> In this scenario, we end up with a bogus section returned from
-> __section_nr (see the discussion on the thread "mm: Trigger bug on
-> if a section is not found in __section_nr").
-> 
-> Adding a check here means that we fail early and have an
-> opportunity to handle the error gracefully, rather than rumbling
-> on and potentially accessing an incorrect section.
-> 
-> Further discussion is also on the thread ("powerpc: Perform a bounds
-> check in arch_add_memory")
-> http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> According to the firmware documentation it is possible that multiple
+> status continuations are emitted by the firmware. Do you want to submit
+> a patch or do you prefer that I do this myself?
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
-Just a nit-picking below:
-
-> ---
->  mm/memory_hotplug.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c73f09913165..212804c0f7f5 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
->  	return 0;
->  }
->  
-> +static int check_hotplug_memory_addressable(unsigned long pfn,
-> +					    unsigned long nr_pages)
-> +{
-> +	unsigned long max_addr = ((pfn + nr_pages) << PAGE_SHIFT) - 1;
-
-I would use PFN_PHYS instead:
-
-	unsigned long max_addr = PFN_PHYS(pfn + nr_pages) - 1;
-
-> +
-> +	if (max_addr >> MAX_PHYSMEM_BITS) {
-> +		WARN(1,
-> +		     "Hotplugged memory exceeds maximum addressable address, range=%#lx-%#lx, maximum=%#lx\n",
-> +		     pfn << PAGE_SHIFT, max_addr,
-
-Same here.
-
-> +		     (1ul << (MAX_PHYSMEM_BITS + 1)) - 1);
-
-I would use a local variable to hold this computation.
-
-> +		return -E2BIG;
-> +	}
-> +
-> +	return 0;
-
--- 
-Oscar Salvador
-SUSE L3
+I just send out a patch, which removes the WARN_ON_ONCE. This solves
+the obvious warning but drops the consistency check. Maybe
+qla2x00_status_cont_entry() could return a status and the outer loop
+could check at the end if sp->done() has been called. But I suppose
+this should be done for all parsing functions not just for one.
