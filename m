@@ -2,190 +2,145 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1847EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E55C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BB221D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53B921D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AWRrGdXH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1V+3mtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfIZQYE (ORCPT
+        id S1727485AbfIZQY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 12:24:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45900 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbfIZQYD (ORCPT
+        Thu, 26 Sep 2019 12:24:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36720 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfIZQY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:24:03 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q7so1807466pgi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:24:03 -0700 (PDT)
+        Thu, 26 Sep 2019 12:24:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m18so3264766wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o1tbaMq7T/ukWk3mtjnMcOjC8Q34znuuWkXOuJc+ANU=;
-        b=AWRrGdXHoLy0Riqb0073AS7eedCai2Vnf+L0NuZ5iUtSvW8Ll3ne2bpW8y1u4ICN+X
-         s3VLuNyuv9ndPU4+1ae57GO1aBwlS3nn7m9Jbm3ya9iIhG9cNmSIHrzg0nJlFr1ag9wS
-         uJkGkEdyJqhM045BLt4HcFR8hsI4s2aiZMFJGFgvMa09Yb+2VKIPl1F3lCJjmtvWlMsr
-         vN9VlYiGjx4O8QnB7QbzdIWHyqmry0R4eO2Ucyt+VWxVs1/8blxniD9L9blmDUttJNe4
-         2gtKDqHFrmuH61sDeKi34kA0nIIfxe623LuGsOyH/TuQb9GPQljJNHVR7p5pN3d0Z2QZ
-         rLBQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2nru33jX5uOHTAnOwLDnlw05X11ddri3AYOGkrr2Jgw=;
+        b=V1V+3mtP4Mr4m1w6tfMRbEe9Ot6If7Ve01XI2YG4LZeIr9POGflhogI5MiaFDd+OTC
+         gb8KPbGdy7b/A35QAk4fvXuCzB/GnS3FL9lkD0hlAe6PEzNZx4SpDwynLfg7+NPHmlMt
+         ZN7IRg8XP3Ln2EO9I4oLGYs6OjlH2hDIxZEZZD8f3COYXFxmpjYDstW5vNK3G8sJA2X9
+         ARQ5J8yGrbqaxrI8A5HmRdJDuZqX3dAfsuPBC0V+ws5m5a2ph9pO41VUHFAAv9H/gY3a
+         qVbYreAXZVhNLlQUp2UGxcrvyxqemO0mWdozn0/WEv/124DO4O2TNRv+Rcpr5cYfPZVU
+         EWlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o1tbaMq7T/ukWk3mtjnMcOjC8Q34znuuWkXOuJc+ANU=;
-        b=H4YMsDmajgqoJ8kLZ1RdFZgU7hPv93oQymMFIf+DjiW7j6xdcxAOMX88hzvavl5y+I
-         LrVX4kKcJVd/xiKBSGgDFmWXGot7fCLNYxA3TLGP4hrpubZ81p5R59IoVlNm0BgcFWSb
-         WAIeB4dASmroXOQd1HyYlGbN78WE2zII52CwCERXKlfdnRrcTVyt7Ojl4nM/wBl4MQbp
-         jjY2kdnrhXYziRNB4fpRwwWaqzxny9GCLBJalfsZxIMeghFEAmz6vht262qb/f7iNDE6
-         opTKOvdCANQhpU3a7cLsXPQdmGbhRkbdIyXPUAjx4W0C1i4HpM2ZI23HxJcYO2DJCDUd
-         u9mA==
-X-Gm-Message-State: APjAAAUPeV5yql681rBAuAD09bdGQdZPoQMCcANJXG/tTyHjjfql37UT
-        5QTpkWVG9SP1STMdG9k8omHTk0WZ73TlA/ilgJNF/g==
-X-Google-Smtp-Source: APXvYqyBhJTcbx4Xt1FhYrPpeBs0GWYkzqvVM6fIDAS309M5Y+7Qirq8NKvhlgW2LRzB9wDxw7sc9ZgsUvCOO8QhaXg=
-X-Received: by 2002:a63:d909:: with SMTP id r9mr4150357pgg.381.1569515042255;
- Thu, 26 Sep 2019 09:24:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2nru33jX5uOHTAnOwLDnlw05X11ddri3AYOGkrr2Jgw=;
+        b=R5mNG5ufPERp+/QHXjNbbQjaZeBDITYLdObuRPO22HTyuLpBeRkUxOsUcD8p9ws/IO
+         fkhhEUPCc4HBaxmGnSo2uOOkY6lpbzYKumlBv6OSLc5zCQCK41h1AYFL3f1+s7wadw9p
+         /SNWiG+0JyUUhQg5eHQKMvfg5ezgXAYiFwQMnVddt0352+cE23eCXXKCmFWuD6h9dC+6
+         oRT4f6WsE93IJ1Yjb9crzFn3d2JafviSwf1iQ4S+XmDzaBFyI7pae4txTFxgXtdEite+
+         Pc6Fj6Nw9COPqggm+YXni7q4McGwak93dgn+pc2rVWsuMGJ8p8G4FbT1YPKu2lPs3q2a
+         wbRA==
+X-Gm-Message-State: APjAAAVMWbfU5uOZQ+6KtXVo0uhQQVc8j3sZvpO2Rm9FwmkQyrJ1SBK9
+        f+YEeF8M43KRGNsqhtthCNg=
+X-Google-Smtp-Source: APXvYqwaeWWyc+5+I6rQCqh8o9AxGdr9DXIEJ1q4zyd710j8awNFMljewcJbtzhvMqUo+yVe/31u8Q==
+X-Received: by 2002:a1c:a404:: with SMTP id n4mr3688226wme.41.1569515094418;
+        Thu, 26 Sep 2019 09:24:54 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id t6sm5820701wmf.8.2019.09.26.09.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 09:24:53 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        David Bolvansky <david.bolvansky@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v2] tracing: Fix clang -Wint-in-bool-context warnings in IF_ASSIGN macro
+Date:   Thu, 26 Sep 2019 09:22:59 -0700
+Message-Id: <20190926162258.466321-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190925172915.576755-1-natechancellor@gmail.com>
+References: <20190925172915.576755-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <20190926133805.52348-1-vincenzo.frascino@arm.com> <20190926133805.52348-3-vincenzo.frascino@arm.com>
-In-Reply-To: <20190926133805.52348-3-vincenzo.frascino@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 26 Sep 2019 09:23:51 -0700
-Message-ID: <CAKwvOdmbbwrAvh1f7ctkg-GoqsfXLWFd2VehLVX39N2qM9LJJg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] arm64: vdso32: Detect binutils support for dmb ishld
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 6:38 AM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> As reported by Will Deacon, older versions of binutils that do not
-> support certain types of memory barriers can cause build failure of the
-> vdso32 library.
+After r372664 in clang, the IF_ASSIGN macro causes a couple hundred
+warnings along the lines of:
 
-Do we know which specific version of binutils has this problem?
-Documentation/process/changes.rst lists 2.21+ as the supported
-versions.  If it's older than that, it's unsupported.
+kernel/trace/trace_output.c:1331:2: warning: converting the enum
+constant to a boolean [-Wint-in-bool-context]
+kernel/trace/trace.h:409:3: note: expanded from macro
+'trace_assign_type'
+                IF_ASSIGN(var, ent, struct ftrace_graph_ret_entry,
+                ^
+kernel/trace/trace.h:371:14: note: expanded from macro 'IF_ASSIGN'
+                WARN_ON(id && (entry)->type != id);     \
+                           ^
+264 warnings generated.
 
-I triple checked android's 2.27 seems ok.
+This warning can catch issues with constructs like:
 
-$ cat bar.s
-.text
-.globl foo
-  dmb ish
-  dmb ishld
-  dmb ishst
-$ aarch64-linux-gnu-as bar.s
-$ echo $?
-0
-$ llvm-objdump -d a.out
+    if (state == A || B)
 
-a.out: file format ELF64-aarch64-little
+where the developer really meant:
 
+    if (state == A || state == B)
 
-Disassembly of section .text:
+This is currently the only occurrence of the warning in the kernel
+tree across defconfig, allyesconfig, allmodconfig for arm32, arm64,
+and x86_64. Add the implicit '!= 0' to the WARN_ON statement to fix
+the warnings and find potential issues in the future.
 
-0000000000000000 $x:
-       0: bf 3b 03 d5                  dmb ish
-       4: bf 39 03 d5                  dmb ishld
-       8: bf 3a 03 d5                  dmb ishst
+Link: https://github.com/llvm/llvm-project/commit/28b38c277a2941e9e891b2db30652cfd962f070b
+Link: https://github.com/ClangBuiltLinux/linux/issues/686
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
->
-> Add a compilation time mechanism that detects if binutils supports those
-> instructions and configure the kernel accordingly.
->
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  arch/arm64/Kbuild                            | 6 ++++++
->  arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
->  arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
->  3 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
-> index d6465823b281..75cf8c796d0e 100644
-> --- a/arch/arm64/Kbuild
-> +++ b/arch/arm64/Kbuild
-> @@ -4,3 +4,9 @@ obj-$(CONFIG_NET)       += net/
->  obj-$(CONFIG_KVM)      += kvm/
->  obj-$(CONFIG_XEN)      += xen/
->  obj-$(CONFIG_CRYPTO)   += crypto/
-> +
-> +# as-instr-compat
-> +# Usage: cflags-y += $(call as-instr-compat,instr,option1,option2)
-> +
-> +as-instr-compat = $(call try-run,\
-> +       printf "%b\n" "$(1)" | $(COMPATCC) $(KBUILD_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
-> diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-> index fb60a88b5ed4..3fd8fd6d8fc2 100644
-> --- a/arch/arm64/include/asm/vdso/compat_barrier.h
-> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-> @@ -20,7 +20,7 @@
->
->  #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
->
-> -#if __LINUX_ARM_ARCH__ >= 8
-> +#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
->  #define aarch32_smp_mb()       dmb(ish)
->  #define aarch32_smp_rmb()      dmb(ishld)
->  #define aarch32_smp_wmb()      dmb(ishst)
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-> index 1fba0776ed40..22f0d31ea528 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -17,6 +17,8 @@ cc32-disable-warning = $(call try-run,\
->         $(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
->  cc32-ldoption = $(call try-run,\
->          $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-> +cc32-as-instr = $(call try-run,\
-> +       printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
->
->  # We cannot use the global flags to compile the vDSO files, the main reason
->  # being that the 32-bit compiler may be older than the main (64-bit) compiler
-> @@ -55,6 +57,7 @@ endif
->  VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
->  VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
->
-> +
->  # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
->  # fall back to v7. There is no easy way to check for what architecture the code
->  # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
-> @@ -91,6 +94,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
->  VDSO_AFLAGS := $(VDSO_CAFLAGS)
->  VDSO_AFLAGS += -D__ASSEMBLY__
->
-> +# Check for binutils support for dmb ishld
-> +dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
-> +
-> +VDSO_CFLAGS += $(dmbinstr)
-> +VDSO_AFLAGS += $(dmbinstr)
-> +
->  VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
->  # From arm vDSO Makefile
->  VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
-> --
-> 2.23.0
->
+v1 -> v2:
 
+* Update commit message to give context behind the warning and explain
+  this is currently the only occurrence of this warning in the tree.
+* Add Nick's Reviewed-by tag.
 
+ kernel/trace/trace.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 26b0a08f3c7d..f801d154ff6a 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -365,11 +365,11 @@ static inline struct trace_array *top_trace_array(void)
+ 	__builtin_types_compatible_p(typeof(var), type *)
+ 
+ #undef IF_ASSIGN
+-#define IF_ASSIGN(var, entry, etype, id)		\
+-	if (FTRACE_CMP_TYPE(var, etype)) {		\
+-		var = (typeof(var))(entry);		\
+-		WARN_ON(id && (entry)->type != id);	\
+-		break;					\
++#define IF_ASSIGN(var, entry, etype, id)			\
++	if (FTRACE_CMP_TYPE(var, etype)) {			\
++		var = (typeof(var))(entry);			\
++		WARN_ON(id != 0 && (entry)->type != id);	\
++		break;						\
+ 	}
+ 
+ /* Will cause compile errors if type is not found. */
 -- 
-Thanks,
-~Nick Desaulniers
+2.23.0
+
