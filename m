@@ -2,133 +2,241 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEC6C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDF0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A887B21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0D121A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Cs/A8M/I"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s1J462yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbfIZLHH (ORCPT
+        id S1726037AbfIZLI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:07:07 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:58976 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725843AbfIZLHH (ORCPT
+        Thu, 26 Sep 2019 07:08:29 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45517 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfIZLI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:07:07 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8QB2uEM031383;
-        Thu, 26 Sep 2019 07:06:41 -0400
-Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2056.outbound.protection.outlook.com [104.47.32.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2v6hj96sf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 26 Sep 2019 07:06:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HW0MFpmPzitxxNO3eeOcmbHo47CE/SyGaC7tJoG1wIstcx+7L395XTXVzHpQk4tcBC2yt9hMhx0DVP4W8nDdLue1GgdXLnKx0OUQT3Fozzudf09Jbx1ut0fSpzc9BcEZSyut6P2cJgdZDv8dugYTo7qKIcB0KWS77dhJZs3VObUoZ/0BgbhK+4IYSVDt8K9ctoCyXaAK5W/yu5qVltF3ZdobSlPVzsVIGHEFs10sQgYkE5ofq7+2FSBROwDsc5BEn8+mXjdT9zMFFttVP9/EBs61c+sKp0Nsr6wtUmehCNV7j3TIjXQlEnhUJARvRLcKc8Orae+ziArb7DOtDnTAqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgvt+OiduMGDQr9EgLQ10Zn9ODrDtDyB7iE/Fn7IFY4=;
- b=Hlb+/0AHBeYNr3/FmLeM2LjEZumJqRcwu2eifEpOHowiTA/nk8ZuBZ6yG1GdxJaSvpxiorpja+yD3iT5beEmzkDPTue+tX7CkHZBXAXpauQmwmKYcmmmoIBpmHu6i7dwvn8AOb9AILOKMa5pBgDGCEpO1BdV5H+QhJTOoS9vurNDsDgIz9oA3dHiASv3JGZGXCrt5AgmuHPuabmO/D/chikL0ZAqLU4mJXOwBV/ZqkfLoavn5yGlC9+r7FUxHNe2GHtKkPqyUTqTNBqZGdXqFb0QM0TuKcN5hkP9r78lWVGW2nIOTHj1A6uXacJstE/H5sImPM/8UkPNyTExdOe7XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgvt+OiduMGDQr9EgLQ10Zn9ODrDtDyB7iE/Fn7IFY4=;
- b=Cs/A8M/IyeCc1ON2xWXaul44DHjRkKTG276PeaO1E9SeU7dP7iGVRh4CKplMWhs8+fF7zwj9t5foQx2VSkR3OvWZ8ulf9of2dhYYmiEurg98vtjoKVYLITQX99BcFIsq9bsYUjSFejT7qjcJuT4Z+Wy6UUkVtVGNAW52xuWhXA4=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5207.namprd03.prod.outlook.com (20.180.15.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 26 Sep 2019 11:06:39 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2305.017; Thu, 26 Sep 2019
- 11:06:39 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "lars@metafoo.de" <lars@metafoo.de>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH] iio: imu: adis16480: clean up a condition
-Thread-Topic: [PATCH] iio: imu: adis16480: clean up a condition
-Thread-Index: AQHVdEI+uKReFAaziESjQBeEHo58sqc9zGoA
-Date:   Thu, 26 Sep 2019 11:06:39 +0000
-Message-ID: <9e40c550310d6f30e6481329e01061beb474bc33.camel@analog.com>
-References: <20190926081016.GA2332@mwanda>
-In-Reply-To: <20190926081016.GA2332@mwanda>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53e38fd1-049c-4870-91d2-08d742719b36
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR03MB5207;
-x-ms-traffictypediagnostic: CH2PR03MB5207:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB520770776D5307E6FB36AFD9F9860@CH2PR03MB5207.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(396003)(376002)(39860400002)(189003)(199004)(51914003)(6506007)(25786009)(102836004)(4744005)(26005)(2906002)(66066001)(5660300002)(2501003)(76176011)(6116002)(3846002)(99286004)(6436002)(316002)(54906003)(6486002)(4326008)(110136005)(6246003)(71200400001)(71190400001)(6512007)(14444005)(118296001)(305945005)(7736002)(229853002)(66446008)(64756008)(66556008)(66476007)(256004)(66946007)(2616005)(76116006)(81156014)(446003)(81166006)(8936002)(11346002)(8676002)(14454004)(186003)(486006)(86362001)(476003)(478600001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5207;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PWNY5UQvONMk8rlE7Hahwh8wxUjOfbOJQEBXJXrmRyvUm8U//3vsH3xEwoiSgndZDtGQYX7ubjAWkjHpEkVZ3CoFILhuXlUWWce/P5hMq1tMiwtOTz3WThamSzyLkAz9PmmJDXXMeuKpvm7t2Yc3kn6am+8wVaktGgsQruuROggedYtHgIYfvmZji7vI0vtkR+JBMd6t3AWulWzQB0W86gvBMZh2l1YvNfDH5MZdPKPUpgi35bqWnylyM1skDyjD0c9QWIF9+HXwzpsDvEKlNCLcEvANkki8uXImO++JtQOSrI1LaX61ljWPmvSCPl+5aveEsIQWhknbYRhDY0NqF9UBSHCid/l3nTMqF+3hmo6NmsaI+tlERHB/dNe09RewoNxDGjk2Rk5/ydVcQb9qtzdOjWquiA6fCMq0XGSYGY4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9B89F48AD3F5F0409C89AA520500715D@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 26 Sep 2019 07:08:29 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190926110827euoutp02b0ea268cecd6ff8448ec899d3904de3e~H_GT9BeRR0823808238euoutp02g
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:08:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190926110827euoutp02b0ea268cecd6ff8448ec899d3904de3e~H_GT9BeRR0823808238euoutp02g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569496107;
+        bh=t547sFoMYSh3rF1TJyqouCAdi6aeTm+YjgEN5h8tXSs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=s1J462yctmdFl4NmMXfrhqWWGjOK6jX059vVDGoze3kh3TFlVuVQWbuHxI+UtLDjR
+         EQTinOnfB0xs8oR4GKAaBLFtw/PY2hURWPy3129XTELV5ugnSiLByL8N6PaR7GWtBb
+         bE70iSSyxxQ2gHDqjUsj0221RKd9BdDTk24pkT24=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190926110827eucas1p244095caa51f742344e53a011d2512ddc~H_GTpJ6Q61806418064eucas1p2q;
+        Thu, 26 Sep 2019 11:08:27 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F6.FA.04469.B2C9C8D5; Thu, 26
+        Sep 2019 12:08:27 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190926110826eucas1p2bd8e9944dee1226d7bf8546426e40692~H_GTNi9-p0436404364eucas1p2V;
+        Thu, 26 Sep 2019 11:08:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190926110826eusmtrp159e3a7e876e342621a29906bc74e7a2f~H_GTIBEzc0172501725eusmtrp1E;
+        Thu, 26 Sep 2019 11:08:26 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-b7-5d8c9c2bb451
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id AF.E1.04117.A2C9C8D5; Thu, 26
+        Sep 2019 12:08:26 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190926110826eusmtip2b40f71e4a930d833f910b7d6da772915~H_GSTlzCe2490724907eusmtip2X;
+        Thu, 26 Sep 2019 11:08:25 +0000 (GMT)
+Subject: Re: [alsa-devel] [PATCH v5] dt-bindings: sound: Convert Samsung I2S
+ controller to dt-schema
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <e95b9f26-d667-4ebe-dcfa-264a6053f4ad@samsung.com>
+Date:   Thu, 26 Sep 2019 13:08:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53e38fd1-049c-4870-91d2-08d742719b36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 11:06:39.7525
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e5gWr8vtatepAzJRfFOvnpSxirqGCJ6Tr+KsOamRzi9TKpQHk8sixtolwCY7N+MBF2t1RDuVqK004m8KIT0MzR2I+EpIsZCauufjp7U4O8E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5207
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-26_05:2019-09-25,2019-09-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 adultscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1909260105
+In-Reply-To: <20190925132628.31858-1-m.szyprowski@samsung.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbyyUcRz3e57nnntcnT2O8h3KujKL8qd68Ww1I724F9VaM6W65coTFsfu
+        OYpehCPiMkXJ7VasmtIRl0kUduiqwyFFNWExamFDYlZyHi3vPt/Pn30/3+1L4ZI2gSsVo1Sz
+        KqUiVkqKiNpXC507ffRaub/GAkxvtwljbg6PkMzd1k4BY7VWCZm53myMeVevJ5nb1kaMGdJU
+        kkxF64CQedDXjTGZL1uFQetkVTPppMxwx4Bkz3UDQpmx/Copy6spR7IZ4+Yj5AnRvkg2NiaJ
+        VfkFRoiis+YNeEK7x8Xm3+NEKsqDHGRPAb0HKtqeYjlIREnohwhMDV8JfphFUFowhfhhBkFR
+        Yb/wX8SaacJ5oQxBz1whsgkSegJBn/moDTvR5+B1hgmzYWdaDsW3UoW2AE7XYZC1NLUikHQA
+        XGvLWwmL6UBYGOsQ2DBBe0LZ/eukDW+gj8P0UIuA9zjCm+IRwobtl/1pi40rjXDaBdJnHwl4
+        7AHPJvQr7YD+JIThqqXV2gegoPIbyWMn+G6uWeXdwVKgJfiABoG24bOQH/IRDJpLEO/aCy3m
+        7uUV1PKK7fCk3o+ng6G/+B5uo4F2gP4JR76EA9yoLVqlxZB9RcK7t8FieRHGY1fIHVki8pFU
+        t+Y03ZpzdGvO0f3fW4KIcuTCJnJxUSwXoGQv+HKKOC5RGeV7Nj7OiJafy/LHPF2HfvacMSGa
+        QtL14uawXLlEoEjikuNMCChc6iw+FK6VS8SRiuQUVhV/WpUYy3Im5EYRUhfxJbuhkxI6SqFm
+        z7NsAqv6p2KUvWsqwtvGWIO6bwvKT5P4C3pp+X55pldTfVD7R02x1dOn8Zg5OtvbDtuljAlL
+        qM5x1wcYw6LQW7uI0F/t6q4d+tKFL9bgjY+HuKXJlN3qrTUvvMYrJstc/LWjw+JwMjTkwynj
+        qNJy+H3aJreSprkRZuxHyHxNofxyR1dTdcZgbepBKcFFKwK8cRWn+AsRrwOUWAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xe7pac3piDX60m1pcuXiIyWLqwyds
+        FvOPnGO1OH9+A7vFtysdTBaXd81hs5hxfh+TxYPmdWwWa4/cZbdYev0ik0Xr3iPsDtweGz43
+        sXmsmbeG0WPnrLvsHptWdbJ59G1ZxejxeZNcAFuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6R
+        iaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXkb7jzXMBWfkKw78fcHSwNgn0cXIySEhYCJxvvUQ
+        cxcjF4eQwFJGicVzdgM5HEAJKYn5LUoQNcISf651sYHYQgKvGSXOPi0DsYUF0iROtBxiArFF
+        BGIlXuyezQIyh1lgB5PEjt3X2CGGTmSUaNt2GKyKTcBQovdoHyOIzStgJ/Hz+VlWEJtFQFVi
+        +ZKJYBtEBSIkDu+YBVUjKHFy5hMWEJsTqL7x9z52EJtZQF3iz7xLzBC2uETTl5WsELa8xPa3
+        c5gnMArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2ykV5yYW1yal66XnJ+7iREYp9uO/dyy
+        g7HrXfAhRgEORiUeXonI7lgh1sSy4srcQ4wSHMxKIry+kT2xQrwpiZVVqUX58UWlOanFhxhN
+        gZ6byCwlmpwPTCF5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY
+        q8JkZm6LXZCx8vuuRyfn5u068jiqfNM+9oo7d3+am+kesbR89PF7o7wdv7Oy5K67Dve2dbR8
+        KvG4dSS1J/Lav8tfjsmdP8JYINPpt7DFe7p+4hZ1C1GTzvjwXU1as5UfSjS+sSvZw1l9JKL+
+        9RefVUbzr6/qU62wLF7PGH1L+9phBkMpL9EWJZbijERDLeai4kQAePYsO+kCAAA=
+X-CMS-MailID: 20190926110826eucas1p2bd8e9944dee1226d7bf8546426e40692
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190925132644eucas1p2716a805d184f9bbc4ad7a94cc9cca633
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190925132644eucas1p2716a805d184f9bbc4ad7a94cc9cca633
+References: <CGME20190925132644eucas1p2716a805d184f9bbc4ad7a94cc9cca633@eucas1p2.samsung.com>
+        <20190925132628.31858-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA5LTI2IGF0IDExOjEwICswMzAwLCBEYW4gQ2FycGVudGVyIHdyb3RlOg0K
-PiBbRXh0ZXJuYWxdDQo+IA0KPiBUaGUgInQiIHZhcmlhYmxlIGlzIHVuc2lnbmVkIHNvIGl0IGNh
-bid0IGJlIGxlc3MgdGhhbiB6ZXJvLiAgV2UgcmVhbGx5DQo+IGFyZSBqdXN0IHRyeWluZyB0byBw
-cmV2ZW50IGRpdmlkZSBieSB6ZXJvIGJ1Z3Mgc28ganVzdCBjaGVja2luZyBhZ2FpbnN0DQo+IHpl
-cm8gaXMgc3VmZmljaWVudC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERhbiBDYXJwZW50ZXIgPGRh
-bi5jYXJwZW50ZXJAb3JhY2xlLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2lpby9pbXUvYWRpczE2
-NDgwLmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
-b24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9pbXUvYWRpczE2NDgwLmMgYi9k
-cml2ZXJzL2lpby9pbXUvYWRpczE2NDgwLmMNCj4gaW5kZXggYjk5ZDczODg3YzlmLi5lMTQ0ZTU2
-NzY3NWQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2ltdS9hZGlzMTY0ODAuYw0KPiArKysg
-Yi9kcml2ZXJzL2lpby9pbXUvYWRpczE2NDgwLmMNCj4gQEAgLTMxOCw3ICszMTgsNyBAQCBzdGF0
-aWMgaW50IGFkaXMxNjQ4MF9zZXRfZnJlcShzdHJ1Y3QgaWlvX2Rldg0KPiAqaW5kaW9fZGV2LCBp
-bnQgdmFsLCBpbnQgdmFsMikNCj4gIAl1bnNpZ25lZCBpbnQgdCwgcmVnOw0KDQpJIHdvdWxkIGp1
-c3QgY2hhbmdlIHRoZSB0eXBlIG9mICJ0IiB0byAiaW50Ii4NCkVzcGVjaWFsbHksIHNpbmNlICJ2
-YWwiICYgInZhbDIiIGFyZSAiaW50Ii4NCg0KVGhhbmtzIGZvciB0aGUgY2F0Y2ggOikNCkFsZXgN
-Cg0KPiAgDQo+ICAJdCA9ICB2YWwgKiAxMDAwICsgdmFsMiAvIDEwMDA7DQo+IC0JaWYgKHQgPD0g
-MCkNCj4gKwlpZiAodCA9PSAwKQ0KPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gIA0KPiAgCS8qDQo=
+On 9/25/19 15:26, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+> 
+> Convert Samsung I2S controller to newer dt-schema format.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+
+Thanks Maciej, it looks good to me, I just think it might make sense 
+to improve the comments a little while we are doing such a conversion.
+Please see my comments below.
+
+With those corrections made:
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+>  .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
+>  .../bindings/sound/samsung-i2s.yaml           | 136 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 84 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> @@ -0,0 +1,136 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=9b0307ba8b0d1f39.9b028cf5-9870da798974f201&u=http://devicetree.org/schemas/sound/samsung-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC I2S controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> +
+> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+
+space before "(5.1)" ?
+
+> +      secondary fifo, s/w reset control and internal mux for root clk src.
+
+s/fifo/FIFO ?
+s/clk src/clock source ?
+
+> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+
+space before "(5.1)" ?
+
+> +      playback, stereo channel capture, secondary fifo using internal
+
+s/fifo/FIFO
+
+> +      or external dma, s/w reset control, internal mux for root clk src
+
+s/dma/DMA ?
+s/clk src/clock source ?
+
+> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> +      is to allow transfer of multiple channel audio data on single data line.
+> +
+> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
+
+s/exynos5 i2s/ exynos5 I2S ?
+
+> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+
+s/fifo/FIFO ?
+
+> +      with only external dma and more no.of root clk sampling frequencies.
+
+s/dma/DMA ?
+s/no.of/number of ?
+
+> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+
+s/i2s1/I2S1 ? It would be good to convert all i2s0, i2s1, i2s2 occurrences 
+in comments/descriptions into either upper or lower case for consistency.
+
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: iis
+> +      - items: # for i2s0
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +          - const: i2s_opclk1
+> +      - items: # for i2s1 and i2s2
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +    description: |
+> +      "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources
+> +      of the root clk. i2s0 has internal mux to select the source
+> +      of root clk and i2s1 and i2s2 doesn't have any such mux.
+
+> +  clock-output-names:
+> +    deprecated: true
+> +    oneOf:
+> +      - items: # for i2s0
+> +          - const: i2s_cdclk0
+> +      - items: # for i2s1> +          - const: i2s_cdclk1
+> +      - items: # for i2s2
+> +          - const: i2s_cdclk2
+> +    description: Names of the CDCLK I2S output clocks.
+
+> +  samsung,idma-addr:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Internal DMA register base address of the audio
+> +      sub system(used in secondary sound source).
+
+s/sub system(used/subsystem (used ?
+
+-- 
+Thanks,
+Sylwester
