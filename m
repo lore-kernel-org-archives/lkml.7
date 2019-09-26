@@ -2,133 +2,130 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9AC47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0167C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9C9217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BC2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfIZJ1t (ORCPT
+        id S1727339AbfIZJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:27:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39202 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726548AbfIZJ1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:27:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D865EAC10;
-        Thu, 26 Sep 2019 09:27:46 +0000 (UTC)
-Subject: Re: [PATCH 2/3] mm, debug, kasan: save and dump freeing stack trace
- for kasan
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Qian Cai <cai@lca.pw>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20190925143056.25853-1-vbabka@suse.cz>
- <20190925143056.25853-3-vbabka@suse.cz> <20190926091604.axt7uqmds6sd3bnu@box>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <927156e7-1f1c-2b28-8bc6-12bbf00fb785@suse.cz>
-Date:   Thu, 26 Sep 2019 11:27:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 26 Sep 2019 05:28:04 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:43865 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbfIZJ2D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:28:03 -0400
+Received: from [IPv6:2001:420:44c1:2577:ecda:45b4:8d5:2e68] ([IPv6:2001:420:44c1:2577:ecda:45b4:8d5:2e68])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id DQ3xiCp4k9D4hDQ43i4Jq7; Thu, 26 Sep 2019 11:28:01 +0200
+Subject: Re: [PATCH v3 4/5] media: v4l2-ctrl: Add jpeg enc exif mode control
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
+References: <20190924074303.22713-1-xia.jiang@mediatek.com>
+ <20190924074303.22713-5-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <fe60c5f8-f7d8-38c0-795a-c0337c13bbd5@xs4all.nl>
+Date:   Thu, 26 Sep 2019 11:27:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190926091604.axt7uqmds6sd3bnu@box>
+In-Reply-To: <20190924074303.22713-5-xia.jiang@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAtWdxV9ZS2f3vdFfi7Eu69K4omUcJCIU2QZ8wqSCWIcKzNCXuWnzYBrapQRCTL51N6opoaUJ8ASyCtihHWaYuaRA85rxwtvUguFOFh5YlMsQuG/ZyaF
+ +aw2PaUdmp9AEEAfmz51gYMdeOsBydWmMMjujgCk+NMXvCr5ONuEjJ2Y0FyRcQ/QdOK8mT9bwF3MKBnJt6yFe27l1Ktsw9xKBKEX/wLhZ2Y0G7++FLeUT7Ji
+ nh2Pld/BE9MCXBkXLVt83tYvG6I0jFOcySMJwLGzI8LG3xRg7PbCjAzitm7LR5q/S1KbD3xZYOu7ZXlfZYnUESDiFd+3iW2+6EN5digZnU9/IZzZpVFd+K8n
+ wN74eFJ0/6zZ9aO3QK5Yy6wO7g/honwJyFHgQ8atKAb1sKhvbDOXiLvs9fg1FxUHyO1XvVS44ojoC0dt2HUOEX0B43MVokwui7K0ZVNzvrJo/vHtMGzWCa/+
+ CMNi/2nlVk0rr37ODc5oBkIHI6dm0H8nHwUW7neecY/PaVjFjqffNR6Wpe/v8iruMrNQGAsGdYR6aMLydDbSEN30j9bihESvD6sg4HADNKhCSINzfgBU3M97
+ wMKxzh4ZBHWyfP7LNXh4tl3rted+3ZeR0RTR9tkFCw7w64lR0LrB18y5fvOLQN4MIB7hzUGX/5OnChW/k4hDoACToWdp4iPZH6vwH2poKDLa/cr7ZcHWzd8S
+ KQDSPMlRF/OwFlwITQnxFn/nqqeMeQ6brCjx2m4YduanMRwBj0mQLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 11:16 AM, Kirill A. Shutemov wrote:
-> On Wed, Sep 25, 2019 at 04:30:51PM +0200, Vlastimil Babka wrote:
->> The commit 8974558f49a6 ("mm, page_owner, debug_pagealloc: save and dump
->> freeing stack trace") enhanced page_owner to also store freeing stack trace,
->> when debug_pagealloc is also enabled. KASAN would also like to do this [1] to
->> improve error reports to debug e.g. UAF issues. This patch therefore introduces
->> a helper config option PAGE_OWNER_FREE_STACK, which is enabled when PAGE_OWNER
->> and either of DEBUG_PAGEALLOC or KASAN is enabled. Boot-time, the free stack
->> saving is enabled when booting a KASAN kernel with page_owner=on, or non-KASAN
->> kernel with debug_pagealloc=on and page_owner=on.
+On 9/24/19 9:43 AM, Xia Jiang wrote:
+> Add jpeg enc CID definition for exif mode control.
 > 
-> I would like to have an option to enable free stack for any PAGE_OWNER
-> user at boot-time.
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v3: new add patch for V4L2_CID_JPEG_ENABLE_EXIF
+> ---
+>  Documentation/media/uapi/v4l/ext-ctrls-jpeg.rst | 10 ++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c            |  1 +
+>  include/uapi/linux/v4l2-controls.h              |  2 ++
+>  3 files changed, 13 insertions(+)
 > 
-> Maybe drop CONFIG_PAGE_OWNER_FREE_STACK completely and add
-> page_owner_free=on cmdline option as yet another way to trigger
-> 'static_branch_enable(&page_owner_free_stack)'?
+> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-jpeg.rst b/Documentation/media/uapi/v4l/ext-ctrls-jpeg.rst
+> index 60ce3f949319..d44a539e2eb4 100644
+> --- a/Documentation/media/uapi/v4l/ext-ctrls-jpeg.rst
+> +++ b/Documentation/media/uapi/v4l/ext-ctrls-jpeg.rst
+> @@ -109,5 +109,15 @@ JPEG Control IDs
+>  
+>  
+>  
+> +``V4L2_CID_JPEG_ENABLE_EXIF (integer)``
+> +    ``V4L2_CID_JPEG_ENABLE_EXIF (integer)`` control determines JPEG
+> +    encoder mode. Its value of 0 means JPEG mode, 1 means EXIF mode. If
+> +    EXIF mode is enabled, the JPEG encoder will not write out SOI marker
+> +    (start from 0xffd8) but write out from DQT marker(start from
+> +    0xffdb). Software program can fill the EXIF content above the DQT
+> +    marker to finish one EXIF JPEG.
 
-Well, if you think it's useful, I'm not opposed.
+I'm trying to understand what happens if this is set to 1. It looks like
+the only difference is that the SOI marker (first two bytes) is not present,
+but the compressed image starts directly with the DQT marker, right?
+
+If that's the case, then I think it would make a lot more sense to support
+the V4L2_CID_JPEG_ACTIVE_MARKER control and add the SOI to the active markers.
+
+Regards,
+
+	Hans
+
+> +
+> +
+> +
+>  For more details about JPEG specification, refer to :ref:`itu-t81`,
+>  :ref:`jfif`, :ref:`w3c-jpeg-jfif`.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 371537dd8cd3..c96c10480ebd 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -1025,6 +1025,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
+>  	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
+>  	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
+> +	case V4L2_CID_JPEG_ENABLE_EXIF:		return "Enable Exif";
+>  
+>  	/* Image source controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index a2669b79b294..da619f43de65 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -1022,6 +1022,8 @@ enum v4l2_jpeg_chroma_subsampling {
+>  #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
+>  #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
+>  
+> +#define	V4L2_CID_JPEG_ENABLE_EXIF		(V4L2_CID_JPEG_CLASS_BASE + 5)
+> +
+>  
+>  /* Image source controls */
+>  #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
+> 
+
