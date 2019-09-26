@@ -2,151 +2,263 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70663C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B5C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41715206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569482893;
-	bh=mjIkyI9+kSCHlTha+PwiHwhUHiJ2QWezYdHp7VoR79g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ClmaYbJrjuswOIFXC5O5MfgfhKNfLy+ecI9vmmteVMcDZ8nQMVGxtR/PjNxCHiGkr
-	 /+imDgCsBUd8RMjP+nlDuDXhRwDeZJGfZ9ELLlVVcfA6D5WErrpqjY1Z+OXbF5PHBY
-	 Q27FFTeVA0zV3ThfbziPeSn2rkQmdJNhZrp0TQ1o=
+	by mail.kernel.org (Postfix) with ESMTP id DD16F206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="J3o94sis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfIZH1L (ORCPT
+        id S1729306AbfIZH3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:27:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46954 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbfIZH0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:26:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7BF3AF30;
-        Thu, 26 Sep 2019 07:26:46 +0000 (UTC)
-Date:   Thu, 26 Sep 2019 09:26:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Message-ID: <20190926072645.GA20255@dhcp22.suse.cz>
-References: <20190924143615.19628-1-david@redhat.com>
- <1569337401.5576.217.camel@lca.pw>
- <20190924151147.GB23050@dhcp22.suse.cz>
- <1569351244.5576.219.camel@lca.pw>
- <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
- <1569427262.5576.225.camel@lca.pw>
- <20190925174809.GM23050@dhcp22.suse.cz>
- <1569435659.5576.227.camel@lca.pw>
+        Thu, 26 Sep 2019 03:29:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38927 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfIZH3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:29:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 72so905805lfh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pJTO0N8Sa0OjT2LYEstW960eNH5uDM9/jv6gM9eT9gk=;
+        b=J3o94sis5s/AYYVg7jGtj9MzSdpCVQdRTONoyIFY7CEKI2KIXbaQLLeaIbtvfJL552
+         BlCa507AkXEB5mH6xjWQsszs+kgZnvIo+z97Bra9cKV7k0dStzC8YVZoDqdbuw3GiUMy
+         KE6XQTmLah8yDAhp0YIvXDEIpZO/yR9BX7F94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pJTO0N8Sa0OjT2LYEstW960eNH5uDM9/jv6gM9eT9gk=;
+        b=L83DwhFdIZfDlNE+4iQNphXN3QWLvj0H7AblcuSmZXoSTykJsV65hiRoVCGe/D1WJg
+         ULa2y4nk4My3Zrj5oak5VKJti+WQ60f4xsE2sYMsITdkXd/Xd6F81LYTCWf/OojjD22Z
+         IaUtj5NjClhm0iu1Aj9wc4vXUDisSRQyIGQTg6jpZWnfD7DjMHaKR1VF9o3rN0Xz9KwK
+         xiQuM1tn10QQJ894e3SJ8pUCdwZJaDfAvGG86DFVwqfQvM/VVF7witCVAqR+yr4Ayg+/
+         jYynxsWzOL+c3DhV1BjYNISoNex9m/xJIVg9QkeHzwVYIN0LcfvvrtKd2l71FhI1tbrP
+         rKew==
+X-Gm-Message-State: APjAAAVddZmfz4Fh9nCBxIM0ZmHOfXtQFeBX06yNf1pXmidbVKGK3efB
+        DoCUlTAsO/XLDmC/Ie51mqpbxQ==
+X-Google-Smtp-Source: APXvYqyP569ICpixYUvJYQnR5u2apBlb1tDGok6Cnvn7xn3RTAxSkBeEco+NWAzp56OMmHMILdHM/w==
+X-Received: by 2002:a05:6512:304:: with SMTP id t4mr1276805lfp.15.1569482986729;
+        Thu, 26 Sep 2019 00:29:46 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id b67sm377424ljf.5.2019.09.26.00.29.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 00:29:46 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] string: Add stracpy and stracpy_pad mechanisms
+To:     Stephen Kitt <steve@sk2.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com, Takashi Iwai <tiwai@suse.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        alsa-devel@alsa-project.org
+References: <cover.1563889130.git.joe@perches.com>
+ <ed4611a4a96057bf8076856560bfbf9b5e95d390.1563889130.git.joe@perches.com>
+ <20190925145011.c80c89b56fcee3060cf87773@linux-foundation.org>
+ <c0c2b8f6ac9f257b102b5a1a4b4dc949@sk2.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <8039728c-b41d-123c-e1ed-b35daac68fd3@rasmusvillemoes.dk>
+Date:   Thu, 26 Sep 2019 09:29:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <c0c2b8f6ac9f257b102b5a1a4b4dc949@sk2.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569435659.5576.227.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-09-19 14:20:59, Qian Cai wrote:
-> On Wed, 2019-09-25 at 19:48 +0200, Michal Hocko wrote:
-> > On Wed 25-09-19 12:01:02, Qian Cai wrote:
-> > > On Wed, 2019-09-25 at 09:02 +0200, David Hildenbrand wrote:
-> > > > On 24.09.19 20:54, Qian Cai wrote:
-> > > > > On Tue, 2019-09-24 at 17:11 +0200, Michal Hocko wrote:
-> > > > > > On Tue 24-09-19 11:03:21, Qian Cai wrote:
-> > > > > > [...]
-> > > > > > > While at it, it might be a good time to rethink the whole locking over there, as
-> > > > > > > it right now read files under /sys/kernel/slab/ could trigger a possible
-> > > > > > > deadlock anyway.
-> > > > > > > 
-> > > > > > 
-> > > > > > [...]
-> > > > > > > [  442.452090][ T5224] -> #0 (mem_hotplug_lock.rw_sem){++++}:
-> > > > > > > [  442.459748][ T5224]        validate_chain+0xd10/0x2bcc
-> > > > > > > [  442.464883][ T5224]        __lock_acquire+0x7f4/0xb8c
-> > > > > > > [  442.469930][ T5224]        lock_acquire+0x31c/0x360
-> > > > > > > [  442.474803][ T5224]        get_online_mems+0x54/0x150
-> > > > > > > [  442.479850][ T5224]        show_slab_objects+0x94/0x3a8
-> > > > > > > [  442.485072][ T5224]        total_objects_show+0x28/0x34
-> > > > > > > [  442.490292][ T5224]        slab_attr_show+0x38/0x54
-> > > > > > > [  442.495166][ T5224]        sysfs_kf_seq_show+0x198/0x2d4
-> > > > > > > [  442.500473][ T5224]        kernfs_seq_show+0xa4/0xcc
-> > > > > > > [  442.505433][ T5224]        seq_read+0x30c/0x8a8
-> > > > > > > [  442.509958][ T5224]        kernfs_fop_read+0xa8/0x314
-> > > > > > > [  442.515007][ T5224]        __vfs_read+0x88/0x20c
-> > > > > > > [  442.519620][ T5224]        vfs_read+0xd8/0x10c
-> > > > > > > [  442.524060][ T5224]        ksys_read+0xb0/0x120
-> > > > > > > [  442.528586][ T5224]        __arm64_sys_read+0x54/0x88
-> > > > > > > [  442.533634][ T5224]        el0_svc_handler+0x170/0x240
-> > > > > > > [  442.538768][ T5224]        el0_svc+0x8/0xc
-> > > > > > 
-> > > > > > I believe the lock is not really needed here. We do not deallocated
-> > > > > > pgdat of a hotremoved node nor destroy the slab state because an
-> > > > > > existing slabs would prevent hotremove to continue in the first place.
-> > > > > > 
-> > > > > > There are likely details to be checked of course but the lock just seems
-> > > > > > bogus.
-> > > > > 
-> > > > > Check 03afc0e25f7f ("slab: get_online_mems for
-> > > > > kmem_cache_{create,destroy,shrink}"). It actually talk about the races during
-> > > > > memory as well cpu hotplug, so it might even that cpu_hotplug_lock removal is
-> > > > > problematic?
-> > > > > 
-> > > > 
-> > > > Which removal are you referring to? get_online_mems() does not mess with
-> > > > the cpu hotplug lock (and therefore this patch).
-> > > 
-> > > The one in your patch. I suspect there might be races among the whole NUMA node
-> > > hotplug, kmem_cache_create, and show_slab_objects(). See bfc8c90139eb ("mem-
-> > > hotplug: implement get/put_online_mems")
-> > > 
-> > > "kmem_cache_{create,destroy,shrink} need to get a stable value of cpu/node
-> > > online mask, because they init/destroy/access per-cpu/node kmem_cache parts,
-> > > which can be allocated or destroyed on cpu/mem hotplug."
-> > 
-> > I still have to grasp that code but if the slub allocator really needs
-> > a stable cpu mask then it should be using the explicit cpu hotplug
-> > locking rather than rely on side effect of memory hotplug locking.
-> > 
-> > > Both online_pages() and show_slab_objects() need to get a stable value of
-> > > cpu/node online mask.
-> > 
-> > Could tou be more specific why online_pages need a stable cpu online
-> > mask? I do not think that show_slab_objects is a real problem because a
-> > potential race shouldn't be critical.
+On 26/09/2019 02.01, Stephen Kitt wrote:
+> Le 25/09/2019 23:50, Andrew Morton a Ã©critÂ :
+>> On Tue, 23 Jul 2019 06:51:36 -0700 Joe Perches <joe@perches.com> wrote:
+>>
+>>> Several uses of strlcpy and strscpy have had defects because the
+>>> last argument of each function is misused or typoed.
+>>>
+>>> Add macro mechanisms to avoid this defect.
+>>>
+>>> stracpy (copy a string to a string array) must have a string
+>>> array as the first argument (dest) and uses sizeof(dest) as the
+>>> count of bytes to copy.
+>>>
+>>> These mechanisms verify that the dest argument is an array of
+>>> char or other compatible types like u8 or s8 or equivalent.
+>>>
+>>> A BUILD_BUG is emitted when the type of dest is not compatible.
+>>>
+>>
+>> I'm still reluctant to merge this because we don't have code in -next
+>> which *uses* it.Â  You did have a patch for that against v1, I believe?
+>> Please dust it off and send it along?
 > 
-> build_all_zonelists()
->   __build_all_zonelists()
->     for_each_online_cpu(cpu)
+> Joe had a Coccinelle script to mass-convert strlcpy and strscpy.
+> Here's a different patch which converts some of ALSA's strcpy calls to
+> stracpy:
 
-OK, this is using for_each_online_cpu but why is this a problem? Have
-you checked what the code actually does? Let's say that online_pages is
-racing with cpu hotplug. A new CPU appears/disappears from the online
-mask while we are iterating it, right? Let's start with cpu offlining
-case. We have two choices, either the cpu is still visible and we update
-its local node configuration even though it will disappear shortly which
-is ok because we are not touching any data that disappears (it's all
-per-cpu). Case when the cpu is no longer there is not really
-interesting. For the online case we might miss a cpu but that should be
-tolerateable because that is not any different from triggering the
-online independently of the memory hotplug. So there has to be a hook
-from that code path as well. If there is none then this is buggy
-irrespective of the locking.
+Please don't. At least not for the cases where the source is a string
+literal - that just gives worse code generation (because gcc doesn't
+know anything about strscpy or strlcpy), and while a run-time (silent)
+truncation is better than a run-time buffer overflow, wouldn't it be
+even better with a build time error?
 
-Makes sense?
--- 
-Michal Hocko
-SUSE Labs
+Something like
+
+/** static_strcpy - run-time version of static initialization
+ *
+ * @d: destination array, must be array of char of known size
+ * @s: source, must be a string literal
+ *
+ * This is a simple wrapper for strcpy(d, s), which checks at build-time
+that the strcpy() won't overflow. In most cases (for short strings), gcc
+won't even emit a call to strcpy but rather just do a few immediate
+stores into the destination, e.g.
+
+   0:   c7 07 66 6f 6f 00       movl   $0x6f6f66,(%rdi)
+
+ * for strcpy(d->name, "foo").
+ */
+
+#define static_strcpy(d, s) ({ \
+  static_assert(__same_type(d, char[]), "destination must be char array"); \
+  static_assert(__same_type(s, const char[], "source must be a string
+literal"); \
+  static_assert(sizeof(d) >= sizeof("" s ""), "source does not fit in
+destination"); \
+  strcpy(d, s); \
+})
+
+The "" s "" trick guarantees that s is a string literal - it probably
+doesn't give a very nice error message, but that's why I added the
+redundant type comparison to a const char[] which should hopefully give
+a better clue.
+
+Rasmus
+
+PS: Yes, we already have a fortified strcpy(), but for some reason it
+doesn't catch the common case where we're populating a char[] member of
+some struct. So this
+
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index e78017a3e1bd..3b0c5ae9f49e 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -3420,3 +3420,14 @@ int sscanf(const char *buf, const char *fmt, ...)
+        return i;
+ }
+ EXPORT_SYMBOL(sscanf);
++
++struct s { char name[4]; };
++char buf[4];
++void f3(void)
++{
++       strcpy(buf, "long");
++}
++void f4(struct s *s)
++{
++       strcpy(s->name, "long");
++}
+
+with CONFIG_FORTIFY_SOURCE=y complains about f3(), but f4() is just fine...
+
+PPS: A quick test of static_strcpy():
+
+// ss.c
+#include <errno.h>
+#include <string.h>
+#include <assert.h>
+
+#define __same_type(x, y) __builtin_types_compatible_p(typeof(x), typeof(y))
+
+#define static_strcpy(d, s) ({						\
+  static_assert(__same_type(d, char[]), "destination must be char array"); \
+  static_assert(__same_type(s, const char[]), "source must be a string
+literal"); \
+  static_assert(sizeof(d) >= sizeof("" s ""), "source does not fit in
+destination"); \
+  strcpy(d, s); \
+})
+
+struct s { char name[4]; };
+
+void f0(struct s *s) { static_strcpy(s->name, "foo"); }
+#if 1
+void f1(struct s *s) { static_strcpy(s->name, strerror(EIO)); }
+void f2(struct s *s) { static_strcpy(s->name, "long"); }
+void f3(char *d) { static_strcpy(d, "foo"); }
+void f4(char *d) { static_strcpy(d, strerror(EIO)); }
+#endif
+
+// gcc -Wall -O2 -o ss.o -c ss.c
+In file included from ss.c:3:0:
+ss.c: In function â€˜f1â€™:
+ss.c:9:3: error: static assertion failed: "source must be a string literal"
+   static_assert(__same_type(s, const char[]), "source must be a string
+literal"); \
+   ^
+ss.c:18:24: note: in expansion of macro â€˜static_strcpyâ€™
+ void f1(struct s *s) { static_strcpy(s->name, strerror(EIO)); }
+                        ^~~~~~~~~~~~~
+ss.c:18:47: error: expected â€˜)â€™ before â€˜strerrorâ€™
+ void f1(struct s *s) { static_strcpy(s->name, strerror(EIO)); }
+                                               ^
+ss.c:10:40: note: in definition of macro â€˜static_strcpyâ€™
+   static_assert(sizeof(d) >= sizeof("" s ""), "source does not fit in
+destination"); \
+                                        ^
+In file included from ss.c:3:0:
+ss.c: In function â€˜f2â€™:
+ss.c:10:3: error: static assertion failed: "source does not fit in
+destination"
+   static_assert(sizeof(d) >= sizeof("" s ""), "source does not fit in
+destination"); \
+   ^
+ss.c:19:24: note: in expansion of macro â€˜static_strcpyâ€™
+ void f2(struct s *s) { static_strcpy(s->name, "long"); }
+                        ^~~~~~~~~~~~~
+ss.c: In function â€˜f3â€™:
+ss.c:8:3: error: static assertion failed: "destination must be char array"
+   static_assert(__same_type(d, char[]), "destination must be char
+array"); \
+   ^
+ss.c:20:20: note: in expansion of macro â€˜static_strcpyâ€™
+ void f3(char *d) { static_strcpy(d, "foo"); }
+                    ^~~~~~~~~~~~~
+ss.c: In function â€˜f4â€™:
+ss.c:8:3: error: static assertion failed: "destination must be char array"
+   static_assert(__same_type(d, char[]), "destination must be char
+array"); \
+   ^
+ss.c:21:20: note: in expansion of macro â€˜static_strcpyâ€™
+ void f4(char *d) { static_strcpy(d, strerror(EIO)); }
+                    ^~~~~~~~~~~~~
+ss.c:9:3: error: static assertion failed: "source must be a string literal"
+   static_assert(__same_type(s, const char[]), "source must be a string
+literal"); \
+   ^
+ss.c:21:20: note: in expansion of macro â€˜static_strcpyâ€™
+ void f4(char *d) { static_strcpy(d, strerror(EIO)); }
+                    ^~~~~~~~~~~~~
+ss.c:21:37: error: expected â€˜)â€™ before â€˜strerrorâ€™
+ void f4(char *d) { static_strcpy(d, strerror(EIO)); }
+                                     ^
+ss.c:10:40: note: in definition of macro â€˜static_strcpyâ€™
+   static_assert(sizeof(d) >= sizeof("" s ""), "source does not fit in
+destination"); \
+                                        ^
+
