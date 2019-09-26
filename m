@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC63AC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CFC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9FE222C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CBE222CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458026;
-	bh=vIuleCgUXyBjkxSyzlNnvFLymIcgXelFVVSDsUzdmbI=;
+	s=default; t=1569458029;
+	bh=8COpvKSop04QGbUX2tWofzLcn1BWXIq9NmOn50fqxrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0fgF2EGcF9tVVt/Pm4LH4mivFAMtsn62cPwmGiT/u76S2Me9IUaORfoAM5qvb9p5
-	 2BUdKwndfVGUVTqaFNoOCCpD5mFn1G85HDRXo34mfy7xuHepGsFm0ugjVzclq+V31c
-	 4/R12bfyfHxV8Nu0UxDM/HblGT5iPLlKFsTe/KbA=
+	b=lo0b38nn6VrNoQ0QUEPSUf56fd+bzf1WTK2xgnChDdJ/36AmkeeUFVOM8oSYj2RBt
+	 skGrnXZRV0vNjixi2Kih8Ba4z02uULJTDqchC2Rt+BPxPKLUfsvoG51qHz2oZYoJ2i
+	 uCVpWFWeirFS37muEONMCDoF3qDSukWY+8TSKZPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfIZAdp (ORCPT
+        id S2388158AbfIZAds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfIZAdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:33:42 -0400
+        id S2388121AbfIZAdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:33:46 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 546D2222C1;
-        Thu, 26 Sep 2019 00:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C5F222C4;
+        Thu, 26 Sep 2019 00:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458021;
-        bh=vIuleCgUXyBjkxSyzlNnvFLymIcgXelFVVSDsUzdmbI=;
+        s=default; t=1569458025;
+        bh=8COpvKSop04QGbUX2tWofzLcn1BWXIq9NmOn50fqxrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IL0s1i+uAy8UVRx+cIh12G5JCaKAQ9b3GyuBNSiQQz7XrKf8IC4Kqx5iJNxbE3wYI
-         lN8IgdWUMPYqqjWASXQo35D33JAlve4kjPs5NsXz6rkiGvZtbVgrMB9GtyXBheYrMb
-         efrpavxHLNDHaDB35J7TRSOnIrzr283mNhAkD3Is=
+        b=whOHBShurf3PPJYEtdkCh62Q0R1LFGANNDjSieOJp/LFrBplNOYLUhZTuW0mfClRe
+         bUYACr46WdZ+agsOJjSwVnsl4iMBW5PHD+DImC9iJJmuNPnWai2hdgMlJ98UvnMI5Y
+         pm07VXXLvbDh35jsASnuEs2haEtNPVddmoOK2xJU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-trace-devel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/66] libtraceevent: Man pages fix, changes in event printing APIs
-Date:   Wed, 25 Sep 2019 21:31:48 -0300
-Message-Id: <20190926003244.13962-11-acme@kernel.org>
+Subject: [PATCH 11/66] libtraceevent: Add tep_get_event() in event-parse.h
+Date:   Wed, 25 Sep 2019 21:31:49 -0300
+Message-Id: <20190926003244.13962-12-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -66,10 +66,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-APIs for printing various trace event information were redesigned to be
-more simple. However, the main libtraceevent man page was not updated
-with those changes. The documentation is updated to describe the new
-event print API.
+The tep_get_event() function is an official libtracevent API, described
+in the library man pages. However, it cannot be used by the library users because
+it is not declared in the event-parse.h file, where all libtracevent APIs are.
+The function declaration is added in event-parse.h file.
 
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -77,58 +77,27 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190808113636.13299-3-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190919212541.869643036@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190808113721.13539-1-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190919212542.058025937@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../lib/traceevent/Documentation/libtraceevent.txt  | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ tools/lib/traceevent/event-parse.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent.txt b/tools/lib/traceevent/Documentation/libtraceevent.txt
-index 00519503c8de..d530a7ce8fb2 100644
---- a/tools/lib/traceevent/Documentation/libtraceevent.txt
-+++ b/tools/lib/traceevent/Documentation/libtraceevent.txt
-@@ -26,15 +26,12 @@ Management of tep handler data structure and access of its members:
- 	void *tep_set_long_size*(struct tep_handle pass:[*]_tep_, int _long_size_);
- 	int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
- 	void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
--	bool *tep_is_latency_format*(struct tep_handle pass:[*]_tep_);
--	void *tep_set_latency_format*(struct tep_handle pass:[*]_tep_, int _lat_);
- 	int *tep_get_header_page_size*(struct tep_handle pass:[*]_tep_);
- 	int *tep_get_header_timestamp_size*(struct tep_handle pass:[*]_tep_);
- 	bool *tep_is_old_format*(struct tep_handle pass:[*]_tep_);
- 	int *tep_strerror*(struct tep_handle pass:[*]_tep_, enum tep_errno _errnum_, char pass:[*]_buf_, size_t _buflen_);
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index d438ee44289f..b77837f75a0d 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -441,6 +441,8 @@ int tep_register_print_string(struct tep_handle *tep, const char *fmt,
+ 			      unsigned long long addr);
+ bool tep_is_pid_registered(struct tep_handle *tep, int pid);
  
- Register / unregister APIs:
--	int *tep_register_trace_clock*(struct tep_handle pass:[*]_tep_, const char pass:[*]_trace_clock_);
- 	int *tep_register_function*(struct tep_handle pass:[*]_tep_, char pass:[*]_name_, unsigned long long _addr_, char pass:[*]_mod_);
- 	int *tep_register_event_handler*(struct tep_handle pass:[*]_tep_, int _id_, const char pass:[*]_sys_name_, const char pass:[*]_event_name_, tep_event_handler_func _func_, void pass:[*]_context_);
- 	int *tep_unregister_event_handler*(struct tep_handle pass:[*]tep, int id, const char pass:[*]sys_name, const char pass:[*]event_name, tep_event_handler_func func, void pass:[*]_context_);
-@@ -57,14 +54,7 @@ Event related APIs:
- 	int *tep_get_events_count*(struct tep_handle pass:[*]_tep_);
- 	struct tep_event pass:[*]pass:[*]*tep_list_events*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
- 	struct tep_event pass:[*]pass:[*]*tep_list_events_copy*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
--
--Event printing:
--	void *tep_print_event*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_, bool _use_trace_clock_);
--	void *tep_print_event_data*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_event_info*(struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_print_event_task*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_print_event_time*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]record, bool _use_trace_clock_);
--	void *tep_set_print_raw*(struct tep_handle pass:[*]_tep_, int _print_raw_);
-+	void *tep_print_event*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_, const char pass:[*]_fmt_, _..._);
- 
- Event finding:
- 	struct tep_event pass:[*]*tep_find_event*(struct tep_handle pass:[*]_tep_, int _id_);
-@@ -116,7 +106,6 @@ Filter management:
- 	int *tep_filter_compare*(struct tep_event_filter pass:[*]_filter1_, struct tep_event_filter pass:[*]_filter2_);
- 
- Parsing various data from the records:
--	void *tep_data_latency_format*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_);
- 	int *tep_data_type*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
- 	int *tep_data_pid*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
- 	int *tep_data_preempt_count*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++struct tep_event *tep_get_event(struct tep_handle *tep, int index);
++
+ #define TEP_PRINT_INFO		"INFO"
+ #define TEP_PRINT_INFO_RAW	"INFO_RAW"
+ #define TEP_PRINT_COMM		"COMM"
 -- 
 2.21.0
 
