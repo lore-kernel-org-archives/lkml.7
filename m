@@ -2,160 +2,181 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DCBC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B144C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744A8222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4ED2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfIZKc5 (ORCPT
+        id S1726430AbfIZKdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:32:57 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42249 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfIZKc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:32:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c10so1521406otd.9;
-        Thu, 26 Sep 2019 03:32:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Duz8utOpoc6VMlyYaWVHB4Tg3adc/eRlD/32GNIC7s0=;
-        b=OFNo/O2bthgg0+b0Dtv8you9xaVad2Vut1q62ZQMpDmngRWZnGZ8LbWmaVguP+Cgat
-         z58ePQC8y9qVXQN9VPd6qoLLOF8HMPJtQOI619UZ514u1B/1KPTHj6rdUq9SX1RQQACx
-         MMaOT2M5KiBsrn4VAgNCwcWnwMHInNTavpV+uial7xEIG6suX6XhegnY9G6HnZEc3jPN
-         +zNrpMcEJaC+0GXpJ1Dkn/FeYiVynyBtAuEIxQYOeKnIkg8L8zy+MvrRMi36C2P5WhC3
-         XNOsQC9BAL9lpgjUNfBKSztgG7MyxJ8cQ+5T7s+9dMJWtqJX1m4QRnepSbzKBaIifaSk
-         rGcQ==
-X-Gm-Message-State: APjAAAUX45YOykrfEoMQ8W8s7NWySGMEEbbNLRlVvT/2ypPlF6DYtLI8
-        DUDJJvr5m3FtxtIgaT5qcUbsrGXC49dSae7o9ub5E+0e
-X-Google-Smtp-Source: APXvYqy3txWFOW1H11XB3TMykWXT5VFCVtbTgG3+kKHhRTyVLKOzIpcvggmlKjhEFtHbKq7dTs+8lhQbaC+m2BXszCY=
-X-Received: by 2002:a9d:404d:: with SMTP id o13mr2070947oti.39.1569493976623;
- Thu, 26 Sep 2019 03:32:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com> <20190926121438.655f1f10@jawa>
-In-Reply-To: <20190926121438.655f1f10@jawa>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Sep 2019 12:32:45 +0200
-Message-ID: <CAMuHMdVBrKnA3TJnOEG0G0FVKf7VwQUvLzkmJc7DAX4kvHYWYQ@mail.gmail.com>
-Subject: Re: spi: Add call to spi_slave_abort() function when spidev driver is released
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        Thu, 26 Sep 2019 06:33:00 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41494 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726151AbfIZKc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:32:58 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4E49F23C0CE6DBC92132;
+        Thu, 26 Sep 2019 18:32:56 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
+ 18:32:54 +0800
+Subject: Re: [PATCH 1/2] efi: Add efi_memmap_free() to free EFI memory map
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
+ <CAKv+Gu-dd5=TJ62GtCvZ5iPTRjqjSpPwx-oNQJ2dv9ZBHB0c8Q@mail.gmail.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <b2ab5f36-b747-8671-4c5f-92b603b6be3b@huawei.com>
+Date:   Thu, 26 Sep 2019 18:31:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAKv+Gu-dd5=TJ62GtCvZ5iPTRjqjSpPwx-oNQJ2dv9ZBHB0c8Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
 
-On Thu, Sep 26, 2019 at 12:14 PM Lukasz Majewski <lukma@denx.de> wrote:
-> > Static analysis with Coverity has detected an potential dereference
-> > of a free'd object with commit:
-> >
-> > commit 9f918a728cf86b2757b6a7025e1f46824bfe3155
-> > Author: Lukasz Majewski <lukma@denx.de>
-> > Date:   Wed Sep 25 11:11:42 2019 +0200
-> >
-> >     spi: Add call to spi_slave_abort() function when spidev driver is
-> > released
-> >
-> > In spidev_release() in drivers/spi/spidev.c the analysis is as
-> > follows:
-> >
-> > 600static int spidev_release(struct inode *inode, struct file *filp)
-> > 601{
-> > 602        struct spidev_data      *spidev;
-> > 603
-> > 604        mutex_lock(&device_list_lock);
-> >
-> >    1. alias: Assigning: spidev = filp->private_data. Now both point to
-> > the same storage.
-> >
-> > 605        spidev = filp->private_data;
-> > 606        filp->private_data = NULL;
-> > 607
-> > 608        /* last close? */
-> > 609        spidev->users--;
-> >
-> >    2. Condition !spidev->users, taking true branch.
-> >
-> > 610        if (!spidev->users) {
-> > 611                int             dofree;
-> > 612
-> > 613                kfree(spidev->tx_buffer);
-> > 614                spidev->tx_buffer = NULL;
-> > 615
-> > 616                kfree(spidev->rx_buffer);
-> > 617                spidev->rx_buffer = NULL;
-> > 618
-> > 619                spin_lock_irq(&spidev->spi_lock);
-> >
-> >    3. Condition spidev->spi, taking false branch.
-> >
-> > 620                if (spidev->spi)
-> > 621                        spidev->speed_hz =
-> > spidev->spi->max_speed_hz; 622
-> > 623                /* ... after we unbound from the underlying
-> > device? */
-> >
-> >    4. Condition spidev->spi == NULL, taking true branch.
-> >
-> > 624                dofree = (spidev->spi == NULL);
-> > 625                spin_unlock_irq(&spidev->spi_lock);
-> > 626
-> >
-> >    5. Condition dofree, taking true branch.
-> >
-> > 627                if (dofree)
-> >
-> >    6. freed_arg: kfree frees spidev.
-> >
-> > 628                        kfree(spidev);
-> > 629        }
-> > 630#ifdef CONFIG_SPI_SLAVE
-> >
-> >    CID 89726 (#1 of 1): Read from pointer after free (USE_AFTER_FREE)
-> > 7. deref_after_free: Dereferencing freed pointer spidev.
-> >
-> > 631        spi_slave_abort(spidev->spi);
-> > 632#endif
-> > 633        mutex_unlock(&device_list_lock);
-> > 634
-> > 635        return 0;
-> > 636}
-> >
-> > The call to spi_slave_abort() on spidev is reading an earlier kfree'd
-> > spidev.
->
-> Thanks for spotting this issue - indeed there is a possibility to use
-> spidev after being kfree'd.
 
-Worse, this makes me realize spidev->spi may be a NULL pointer, which
-will be dereferenced by spi_slave_abort(), so caching it before the
-call to kfree() won't work.
+On 2019/9/25 23:29, Ard Biesheuvel wrote:
+> On Wed, 25 Sep 2019 at 11:17, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+>>
+>> In efi_fake_memmap(), the commit 20b1e22d01a4 ("x86/efi: Don't allocate
+>> memmap through memblock after mm_init()") replace memblock_alloc() with
+>> efi_memmap_alloc(), but there is no matching modification of
+>> memblock_free() when early_memremap() fail.
+>>
+>> Fix this by adding efi_memmap_free() to instead of memblock_free().
+>>
+>> Fixes: 20b1e22d01a4 ("x86/efi: Don't allocate memmap through memblock after mm_init()")
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> 
+> What happens if you try to call efi_memmap_free() /after/ slab has
+> become available on an allocation that was created before?
+> 
+I didn't met the failure path in efi_fake_memmap(), just looked at the code and
+found that the memory allocation using efi_memmap_free(), but free memory using
+memblock_free(), I think it's not correct.
 
-> However, Geert (CC'ed) had some questions about placement of this
-> function call, so I will wait with providing fix until he replies.
+Also another series patch "[PATCH 2/2] x86/efi: Fix memory leak for EFI memmap
+reservations", using efi_memmap_free() for fixing the memory leak in the failure
+path.
 
-Seems like this needs more thought...
+thanks.
 
-Gr{oetje,eeting}s,
+>> ---
+>>  drivers/firmware/efi/fake_mem.c |  2 +-
+>>  drivers/firmware/efi/memmap.c   | 34 ++++++++++++++++++++++++++++++++++
+>>  include/linux/efi.h             |  1 +
+>>  3 files changed, 36 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+>> index 9501edc..c2f69f6 100644
+>> --- a/drivers/firmware/efi/fake_mem.c
+>> +++ b/drivers/firmware/efi/fake_mem.c
+>> @@ -65,7 +65,7 @@ void __init efi_fake_memmap(void)
+>>         new_memmap = early_memremap(new_memmap_phy,
+>>                                     efi.memmap.desc_size * new_nr_map);
+>>         if (!new_memmap) {
+>> -               memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
+>> +               efi_memmap_free(new_memmap_phy, new_nr_map);
+>>                 return;
+>>         }
+>>
+>> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+>> index 38b686c..35dc189 100644
+>> --- a/drivers/firmware/efi/memmap.c
+>> +++ b/drivers/firmware/efi/memmap.c
+>> @@ -18,6 +18,11 @@ static phys_addr_t __init __efi_memmap_alloc_early(unsigned long size)
+>>         return memblock_phys_alloc(size, SMP_CACHE_BYTES);
+>>  }
+>>
+>> +static void __init __efi_memmap_free_early(phys_addr_t addr, unsigned long size)
+>> +{
+>> +       memblock_free(addr, size);
+>> +}
+>> +
+>>  static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+>>  {
+>>         unsigned int order = get_order(size);
+>> @@ -29,6 +34,15 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+>>         return PFN_PHYS(page_to_pfn(p));
+>>  }
+>>
+>> +static void __init __efi_memmap_free_late(phys_addr_t addr, unsigned long size)
+>> +{
+>> +       unsigned int order = get_order(size);
+>> +       struct page *p = pfn_to_page(PHYS_PFN(addr));
+>> +
+>> +       if (p)
+>> +               __free_pages(p, order);
+>> +}
+>> +
+>>  /**
+>>   * efi_memmap_alloc - Allocate memory for the EFI memory map
+>>   * @num_entries: Number of entries in the allocated map.
+>> @@ -50,6 +64,26 @@ phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
+>>  }
+>>
+>>  /**
+>> + * efi_memmap_free - Free memory for the EFI memory map
+>> + * @addr: Physical address of the EFI memory map to be freed.
+>> + * @num_entries: Number of the EFI memory map entries.
+>> + *
+>> + * Depending on whether mm_init() has already been invoked or not,
+>> + * either memblock or "normal" page free is used.
+>> + */
+>> +void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries)
+>> +{
+>> +       unsigned long size = num_entries * efi.memmap.desc_size;
+>> +
+>> +       if (slab_is_available()) {
+>> +               __efi_memmap_free_late(addr, size);
+>> +
+>> +               return;
+>> +       }
+>> +       __efi_memmap_free_early(addr, size);
+>> +}
+>> +
+>> +/**
+>>   * __efi_memmap_init - Common code for mapping the EFI memory map
+>>   * @data: EFI memory map data
+>>   * @late: Use early or late mapping function?
+>> diff --git a/include/linux/efi.h b/include/linux/efi.h
+>> index bd38370..8bb741a 100644
+>> --- a/include/linux/efi.h
+>> +++ b/include/linux/efi.h
+>> @@ -1057,6 +1057,7 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+>>  extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
+>>
+>>  extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
+>> +extern void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries);
+>>  extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
+>>  extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
+>>  extern void __init efi_memmap_unmap(void);
+>> --
+>> 1.8.3.1
+>>
+> 
+> .
+> 
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
