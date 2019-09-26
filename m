@@ -2,172 +2,130 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06991C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB54C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD81E222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9E5222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfIZIXH (ORCPT
+        id S1728419AbfIZIZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:23:07 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:50626 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfIZIXG (ORCPT
+        Thu, 26 Sep 2019 04:25:10 -0400
+Received: from lucky1.263xmail.com ([211.157.147.130]:37624 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfIZIZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:23:06 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id E6F8D25AF0D;
-        Thu, 26 Sep 2019 18:23:04 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id ECA80943750; Thu, 26 Sep 2019 10:23:02 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 10:23:02 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: renesas: rcar-sysc: fix memory leak in
- rcar_sysc_pd_init
-Message-ID: <20190926082302.smaruxtgamgwoxad@verge.net.au>
-References: <20190925210354.8845-1-navid.emamdoost@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925210354.8845-1-navid.emamdoost@gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 26 Sep 2019 04:25:09 -0400
+Received: from localhost (unknown [192.168.167.193])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 58F406F948;
+        Thu, 26 Sep 2019 16:25:06 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24701T140118476191488S1569486296531843_;
+        Thu, 26 Sep 2019 16:25:05 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <d8546e140cddddc8a983673ce8310bc9>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: dri-devel@lists.freedesktop.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Sandy Huang <hjc@rock-chips.com>
+To:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     hjc@rock-chips.com, heiko@sntech.de, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+Date:   Thu, 26 Sep 2019 16:24:47 +0800
+Message-Id: <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
+References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ni Navid,
+These new format is supported by some rockchip socs:
 
-thanks for your patch.
+DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
 
-On Wed, Sep 25, 2019 at 04:03:53PM -0500, Navid Emamdoost wrote:
-> In rcar_sysc_pd_init when looping over info->areas errors may happen but
-> the error handling path does not clean up the intermediate allocated
-> memories.
-> 
-> This patch changes the error handling path in major and a little the loop
->  itself. Inside the loop if an error happens the current pd will be
-> released and then it goes to error handling path where it releases any
->  previously allocated domains.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/soc/renesas/rcar-sysc.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
-> index 59b5e6b10272..f9613c1ee0a0 100644
-> --- a/drivers/soc/renesas/rcar-sysc.c
-> +++ b/drivers/soc/renesas/rcar-sysc.c
-> @@ -330,10 +330,10 @@ static int __init rcar_sysc_pd_init(void)
->  {
->  	const struct rcar_sysc_info *info;
->  	const struct of_device_id *match;
-> -	struct rcar_pm_domains *domains;
-> +	struct rcar_pm_domains *domains = NULL;
->  	struct device_node *np;
->  	void __iomem *base;
-> -	unsigned int i;
-> +	unsigned int i, num_areas = 0;
->  	int error;
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+---
+ drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+ include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-Please preserve reverse xmas tree sorting of local variables.
+diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+index c630064..ccd78a3 100644
+--- a/drivers/gpu/drm/drm_fourcc.c
++++ b/drivers/gpu/drm/drm_fourcc.c
+@@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
+ 		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
+ 		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
+ 		  .hsub = 2, .vsub = 2, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 2, .vsub = 2, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 2, .vsub = 2, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 2, .vsub = 1, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 2, .vsub = 1, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 1, .vsub = 1, .is_yuv = true},
++		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
++		  .hsub = 1, .vsub = 1, .is_yuv = true},
+ 		{ .format = DRM_FORMAT_P210,		.depth = 0,
+ 		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
+ 		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index 3feeaa3..08e2221 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -238,6 +238,20 @@ extern "C" {
+ #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+ 
+ /*
++ * 2 plane YCbCr
++ * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
++ * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
++ * or
++ * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
++ */
++#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
++#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
++#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
++#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
++#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
++#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
++
++/*
+  * 2 plane YCbCr MSB aligned
+  * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+  * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+-- 
+2.7.4
 
->  	np = of_find_matching_node_and_match(NULL, rcar_sysc_matches, &match);
-> @@ -382,6 +382,7 @@ static int __init rcar_sysc_pd_init(void)
->  		pd = kzalloc(sizeof(*pd) + strlen(area->name) + 1, GFP_KERNEL);
->  		if (!pd) {
->  			error = -ENOMEM;
-> +			num_areas = i;
->  			goto out_put;
->  		}
->  
-> @@ -393,8 +394,11 @@ static int __init rcar_sysc_pd_init(void)
->  		pd->flags = area->flags;
->  
->  		error = rcar_sysc_pd_setup(pd);
-> -		if (error)
-> +		if (error) {
-> +			kfree(pd);
-> +			num_areas = i;
->  			goto out_put;
-> +		}
->  
->  		domains->domains[area->isr_bit] = &pd->genpd;
->  
-> @@ -406,13 +410,30 @@ static int __init rcar_sysc_pd_init(void)
->  		if (error) {
->  			pr_warn("Failed to add PM subdomain %s to parent %u\n",
->  				area->name, area->parent);
-> +			kfree(pd);
-> +			num_areas = i;
->  			goto out_put;
->  		}
->  	}
->  
->  	error = of_genpd_add_provider_onecell(np, &domains->onecell_data);
-> +	of_node_put(np);
-> +
-> +	return error;
->  
->  out_put:
-> +	if (domains) {
-> +		for (i = 0; i < num_areas; i++) {
-> +			const struct rcar_sysc_area *area = &info->areas[i];
-> +
-> +			if (!area->name) {
-> +				/* Skip NULLified area */
-> +				continue;
-> +			}
-> +			kfree(domains->domains[area->isr_bit]);
 
-This cleanup doesn't feel correct to me.
 
-For one I think the allocated memory is at
-to_rcar_pd(domains->domains[area->isr_bit]);
-
-And for antoher I wonder if it is also necessary to unwind initialisation done
-by rcar_sysc_pd_setup() and pm_genpd_add_subdomain();
-
-I think this leads us to the heart of why such unwinding is not present
-and that is, I suspect, that its reasonably complex and in the event of
-failure the system is very likely unusable. So leaking a bit of memory,
-while unpleasent, doesn't effect the user experience.
-
-> +		}
-> +		kfree(domains);
-> +	}
->  	of_node_put(np);
->  	return error;
-
-I think it would be more in keeping with kernel coding style to add
-some extra labels for different error paths. I also think you can
-utilise the fact that i is already set to the number of allocated areas.
-
-Something like this (completely untested):
-
-out_free_areas:
-	while (--i > 0) {
-		/* Cleanup of 'i' goes here */
-	}
-out_free_domains:
-	kfree(domains);
-out_put:
-	of_node_put(np);
-	return error;
-
->  }
-> -- 
-> 2.17.1
-> 
