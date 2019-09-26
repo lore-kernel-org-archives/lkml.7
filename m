@@ -2,96 +2,73 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A612BC352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E37C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860C3206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48012146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569538826;
+	bh=rekAVS77A29RYibuAXzRrjCxmuNFHOltY8RnRfZqxeo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=yvHRpu2G3SyFBFYkcHJaBfnh2ubBVBlTiVF+e3PczsADadprzCXyvoFI1ZVZ6m2hw
+	 Rs2jfWxaPZI2DVKwX//6+7m7vr9klLCssQgiyjv63j+VhifM8cOAMSlyhieQB2DnYE
+	 b1uZ/UD8v6oFX9FlASrB0oLrmuNLGVQT3SSuEX40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfIZW4S (ORCPT
+        id S1728902AbfIZXA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 18:56:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39096 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfIZW4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 18:56:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v17so4177714wml.4;
-        Thu, 26 Sep 2019 15:56:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q3J4HBnNW4Hl+Gjxw0HAbYQSV7ljaMhCOnbd8J0BKfw=;
-        b=OGcVLqNDzgAxc2ptvHjEJc0ZnwDU+dw0zjb3h1aCQBF9EI5cq/LjPDZNYcm8rVYcB3
-         yWUVna7KCPCAomjPQVODfwf2sBswGjY3TYOxR6o2BZ06XNQHTCLYinXTfDrDXwvsVJBW
-         NKQBR/jf7Itslea+zewbR842C8+FDa/rPHIT9dqYDJCjR71WO53XPlZMNUfTyJwkKpVr
-         NzgSobk/sbtPj6Lpwsjp8xAx6AkaVAtHx5B3lLFULed6HdOfoRwCQ6eEKo8Jbn7SUC81
-         xoCTp2AubiWE+YmzLRFgXGxALTme01kpIocxZ2x80dkidGoFp6X5kUjdemN0pTPT67Xt
-         iTzw==
-X-Gm-Message-State: APjAAAV6zLbTVlt/pc6MvSipCKYaXTaoYxJPMTZxthHBBq3mNP+5J12p
-        C0M6K4tFSA7eyjqroyjOzfo=
-X-Google-Smtp-Source: APXvYqxrKsKE3nBWyY+NBDRt5sgGhpX8jpg+uUmLH1ydlfeiF9neM0okf0pfLaVTq7mi5G3PAWSx4w==
-X-Received: by 2002:a1c:a516:: with SMTP id o22mr5117224wme.116.1569538575651;
-        Thu, 26 Sep 2019 15:56:15 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id f17sm668350wru.29.2019.09.26.15.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 15:56:14 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-Cc:     Denis Efremov <efremov@linux.com>, ath9k-devel@qca.qualcomm.com,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Thu, 26 Sep 2019 19:00:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728705AbfIZXAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 19:00:25 -0400
+Subject: Re: [GIT PULL] perf updates
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569538825;
+        bh=rekAVS77A29RYibuAXzRrjCxmuNFHOltY8RnRfZqxeo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=J5RW93KChy9Go6kkzDtkOO1ZSPaLYmv4wQKs4l0aLDOPcwt/H3vOjla1QQy/r1p3i
+         x8XCtcGotJ5sXiI3JjLSCCR+BeEty8CcwYxA3dibCYJAbyLqT+Qp0cTGsUpRUIqtv9
+         8J1zpAEVTcQkTimgGw8dXC169VdWpQvK09tnjGA8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190926200622.GA127468@gmail.com>
+References: <20190926200622.GA127468@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190926200622.GA127468@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ perf-urgent-for-linus
+X-PR-Tracked-Commit-Id: 26acf400d2dcc72c7e713e1f55db47ad92010cc2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a7b7b772bb4abaa4b2d9df67b50bf7208203da82
+Message-Id: <156953882525.9540.12160176987346575751.pr-tracker-bot@kernel.org>
+Date:   Thu, 26 Sep 2019 23:00:25 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org,
-        Rajkumar Manoharan <rmanohar@qca.qualcomm.com>,
-        "John W . Linville" <linville@tuxdriver.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
-Subject: [PATCH] ath9k_hw: fix uninitialized variable data
-Date:   Fri, 27 Sep 2019 01:56:04 +0300
-Message-Id: <20190926225604.9342-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, data variable in ar9003_hw_thermo_cal_apply() could be
-uninitialized if ar9300_otp_read_word() will fail to read the value.
-Initialize data variable with 0 to prevent an undefined behavior. This
-will be enough to handle error case when ar9300_otp_read_word() fails.
+The pull request you sent on Thu, 26 Sep 2019 22:06:22 +0200:
 
-Fixes: 80fe43f2bbd5 ("ath9k_hw: Read and configure thermocal for AR9462")
-Cc: Rajkumar Manoharan <rmanohar@qca.qualcomm.com>
-Cc: John W. Linville <linville@tuxdriver.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/wireless/ath/ath9k/ar9003_eeprom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
 
-diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-index 2b29bf4730f6..b4885a700296 100644
---- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-+++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
-@@ -4183,7 +4183,7 @@ static void ar9003_hw_thermometer_apply(struct ath_hw *ah)
- 
- static void ar9003_hw_thermo_cal_apply(struct ath_hw *ah)
- {
--	u32 data, ko, kg;
-+	u32 data = 0, ko, kg;
- 
- 	if (!AR_SREV_9462_20_OR_LATER(ah))
- 		return;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a7b7b772bb4abaa4b2d9df67b50bf7208203da82
+
+Thank you!
+
 -- 
-2.21.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
