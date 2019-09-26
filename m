@@ -6,130 +6,135 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC22C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B319C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C398F222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0300B2245A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569525992;
-	bh=/BJ9ccpRGMT8KVzyfHfhCZz6B59M0XyrGGZM87SjFXw=;
+	s=default; t=1569526091;
+	bh=Q3HgT1S8hRne5x66P6TKM4ZffmG6vbM0NvPQTtsTBi8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VjlGgCI3ImZgpSyi/KQsrAF4s/F3uKzyYJxBsgWwWGZp/ZzYhdDNHRMxzTTKk4oeF
-	 AujJFFZGW8BFyi76ODf0j1Jg6JNCDUbJMdoVbcEM4v2hbNk9KoEOxNOvl9Zu2P0PuL
-	 qMOUd6EpYPAP15tf4UQpTjq7mK2Ao8LJy/sDqxTs=
+	b=SUuI4wlIa6IiscOWn94cNwTgfoYZWyxqRy1Vymtfe8vK15uJYGeHjS2/T4f1v7El4
+	 UyyDyXoUliHKf+lAJgCCFs8fXkiIk0waGcg9RpaQQGTz4gd3cO+jFLyQIQ8q0dyn3Z
+	 xBilODJ6YSvu1cZlF7xmkkMTcNjM1dvkzUiHf60Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbfIZT0c (ORCPT
+        id S1728570AbfIZT2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:26:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40168 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfIZT0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:26:30 -0400
-Received: by mail-ot1-f68.google.com with SMTP id y39so151367ota.7;
-        Thu, 26 Sep 2019 12:26:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FWSNDGi3jKauQ9dQ/11vDbIdImhGLJ9T350jR54cptU=;
-        b=Ch3ANC7uT8h8GDEBihiCRnJ9aHuarO0AyAWMnGJeZoCFvqEipeoMFsmg34n9/ahLWt
-         60oLpK6lVu/cQYRUNolJj62FnESDN4upJ8Mlbmh9FfOS+c8McXSCS0Fc1gWZtu+MIOXj
-         Z65r6JPrcAewlqK/wTtU9snIXuImyd04ySYA5ThiIXpPsFhoCeeiG9HEAsDj90aRgZdA
-         Rr1AKzld5BVpxIqoeGeybinAtez2YGAErxRidKEgoRhd/d/zWoXzeOX9Av60kEQbAAdE
-         GmrsRMJ3sMkTq+ZSzqFjzK44TxoVVnuStE0thcy/0I8ZZfa3pYoXDTuzxNdGAuSeIcQZ
-         P5Kw==
-X-Gm-Message-State: APjAAAU8PpL7CZSr6FslgKORdVrBblWICAPINVtsKW/yo5SAtoz7/vwk
-        azipwwy3malggSe1VEyjtGX7ldZG+kxFR5uJpPs=
-X-Google-Smtp-Source: APXvYqzW9DF/vWRb6DCPzhE4K2ZyyzirbhSAsNzpATto9PNZE1oQN6tTcBuhGTR8dBQ4vCwYDV6M2uzCLf9BDAv5XT0=
-X-Received: by 2002:a9d:6a16:: with SMTP id g22mr260324otn.118.1569525989675;
- Thu, 26 Sep 2019 12:26:29 -0700 (PDT)
+        Thu, 26 Sep 2019 15:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727707AbfIZT2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:28:09 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62D8E2245C
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 19:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569526088;
+        bh=Q3HgT1S8hRne5x66P6TKM4ZffmG6vbM0NvPQTtsTBi8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rIfKSl2BwfyIcUbpqBQgqxtP17/hvL3KUUO+cw6Z+SP/zd1Mihq6rV/CWdBoJtJIA
+         mgKNRikoTV8ejS6zgX/5QL06BPuRRGdP0a/Z9hh0XByKU/Q02D+NUVnMm9IeTA8nuE
+         yIF5a9HyQwO6X9+IZEymJpCtjCobxHnIXCFbjIiY=
+Received: by mail-qt1-f176.google.com with SMTP id f7so4294971qtq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:28:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAV3F5CphwNMCJzZ+FqLEt4IP73/MFzUdhui1CiCj7ius3bmSI0W
+        VWZiZErUOIkTIdzar5WF0hXkx8jAhxFp5kEXHA==
+X-Google-Smtp-Source: APXvYqz1Trwf6INqRqIjdxgP2sU3qQFOjF7D+XJ82dz5/HGpBEy1TyXgmXd7PISmFfl2z4F+lPm3NwAot2+vuKrkR98=
+X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr4369110qvu.138.1569526087509;
+ Thu, 26 Sep 2019 12:28:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906174605.GY2680@smile.fi.intel.com> <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
- <CF6A88132359CE47947DB4C6E1709ED53C6481B1@ORSMSX122.amr.corp.intel.com>
- <20190926163528.GH32742@smile.fi.intel.com> <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
- <alpine.DEB.2.20.1909262043380.13592@fox.voss.local>
-In-Reply-To: <alpine.DEB.2.20.1909262043380.13592@fox.voss.local>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 26 Sep 2019 21:26:18 +0200
-Message-ID: <CAJZ5v0g=onKCidHMLNWuYFCuhcQGmtDDp5QSGiHu1jhoDRuhWQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
-To:     Nikolaus Voss <nv@vosn.de>
-Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190925215006.12056-1-robh@kernel.org> <e898c025-32a7-1d2c-3501-c99556f7cdd4@arm.com>
+ <1ae7f42e-bf93-b335-b543-653fae5cf49f@epam.com> <28440326-ed76-b014-c1b8-02125c3214b9@arm.com>
+ <f63f55eb-969e-6364-5781-a227d0c04e4c@epam.com>
+In-Reply-To: <f63f55eb-969e-6364-5781-a227d0c04e4c@epam.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 26 Sep 2019 14:27:56 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKJP3itMOueZD7fGH2b6VNFrTuozW5tWyKN3uBg4gYMzA@mail.gmail.com>
+Message-ID: <CAL_JsqKJP3itMOueZD7fGH2b6VNFrTuozW5tWyKN3uBg4gYMzA@mail.gmail.com>
+Subject: Re: [RFC PATCH] xen/gntdev: Stop abusing DT of_dma_configure API
+To:     Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        Oleksandr Andrushchenko <andr2000@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 8:44 PM Nikolaus Voss <nv@vosn.de> wrote:
+On Thu, Sep 26, 2019 at 6:16 AM Oleksandr Andrushchenko
+<Oleksandr_Andrushchenko@epam.com> wrote:
 >
-> On Thu, 26 Sep 2019, Schmauss, Erik wrote:
-> >> -----Original Message-----
-> >> From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org>
-> >> On Behalf Of Shevchenko, Andriy
-> >> Sent: Thursday, September 26, 2019 9:35 AM
-> >> To: Schmauss, Erik <erik.schmauss@intel.com>
-> >> Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>; Rafael J. Wysocki
-> >> <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>; Len Brown
-> >> <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel
-> >> Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-
-> >> acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org;
-> >> nv@vosn.de
-> >> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+> On 9/26/19 1:46 PM, Robin Murphy wrote:
+> > On 2019-09-26 11:17 am, Oleksandr Andrushchenko wrote:
 > >>
-> >> On Thu, Sep 26, 2019 at 07:09:05PM +0300, Schmauss, Erik wrote:
-> >>>> -----Original Message-----
-> >>>> From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> >>>> Sent: Thursday, September 12, 2019 1:08 AM
-> >>>> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
-> >>>> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
-> >>>> Moore, Robert <robert.moore@intel.com>
-> >>>> Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski
-> >>>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
-> >>>> Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
-> >>>> devel@acpica.org; linux- kernel@vger.kernel.org; nv@vosn.de;
-> >>>> Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> >>>> Subject: [PATCH] ACPICA: make acpi_load_table() return table index
+> >> On 9/26/19 12:49 PM, Julien Grall wrote:
+> >>> Hi Rob,
+> >>>
+> >>>
+> >>> On 9/25/19 10:50 PM, Rob Herring wrote:
+> >>>> As the comment says, this isn't a DT based device. of_dma_configure()
+> >>>> is going to stop allowing a NULL DT node, so this needs to be fixed.
+> >>>
+> >>> And this can't work on arch not selecting CONFIG_OF and can select
+> >>> CONFIG_XEN_GRANT_DMA_ALLOC.
+> >>>
+> >>> We are lucky enough on x86 because, AFAICT, arch_setup_dma_ops is just
+> >>> a nop.
+> >>>
+> >> No luck is needed as [1] does nothing for those platforms not using
+> >> CONFIG_OF
 > >>>>
-> >>> Hi Nikolaus,
+> >>>> Not sure exactly what setup besides arch_setup_dma_ops is needed...
 > >>>
-> >>>> For unloading an ACPI table, it is necessary to provide the index of the table.
-> >>>> The method intended for dynamically loading or hotplug addition of
-> >>>> tables, acpi_load_table(), should provide this information via an
-> >>>> optional pointer to the loaded table index.
+> >>> We probably want to update dma_mask, coherent_dma_mask and
+> >>> dma_pfn_offset.
 > >>>
-> >>> We'll take this patch for ACPICA upstream
+> >>> Also, while look at of_configure_dma, I noticed that we consider the
+> >>> DMA will not be coherent for the grant-table. Oleksandr, do you know
+> >>> why they can't be coherent?
+> >> The main and the only reason to use of_configure_dma is that if we don't
+> >> then we
+> >> are about to stay with dma_dummy_ops [2]. It effectively means that
+> >> operations on dma-bufs
+> >> will end up returning errors, like [3], [4], thus not making it possible
+> >> for Xen PV DRM and DMA
+> >> part of gntdev driver to do what we need (dma-bufs in our use-cases
+> >> allow zero-copying
+> >> while using graphics buffers and many more).
 > >>
-> >> Erik,
-> >>
-> > Hi Andy,
+> >> I didn't find any better way of achieving that, but of_configure_dma...
+> >> If there is any better solution which will not break the existing
+> >> functionality then
+> >> I will definitely change the drivers so we do not abuse DT )
+> >> Before that, please keep in mind that merging this RFC will break Xen PV
+> >> DRM +
+> >> DMA buf support in gntdev...
+> >> Hope we can work out some acceptable solution, so everyone is happy
 > >
-> >> how about to have also counterpart to acpi_load_table() which will do what it's
-> >> done now in acpi_configfs.c via acpi_tb_*() API?
-> >
-> > I should have given more details. We decided to add this extra parameter
-> > in AcpiLoadTable and we're going to create an AcpiUnloadTable function
-> > that will take table index to unload the table (basically the
-> > acpi_tb_unload..). Once we do this, you can use table indices with
-> > AcpiUnloadTable and AcpiLoadTable.
->
-> that's even better news.
->
-> Rafael, shall I prepare anything?
+> > As I mentioned elsewhere, the recent dma-direct rework means that
+> > dma_dummy_ops are now only explicitly installed for the ACPI error
+> > case, so - much as I may dislike it - you should get regular
+> > (direct/SWIOTLB) ops by default again.
+> Ah, my bad, I missed that change. So, if no dummy dma ops are to be used
+> then
+> I believe we can apply both changes, e.g. remove of_dma_configure from
+> both of the drivers.
 
-I don't think so.  I'm expecting to get a proper fix from the upstream
-through the normal process.
+What about the dma masks? I think there's a default setup, but it is
+considered a driver bug to not set its mask. xen_drm_front sets the
+coherent_dma_mask (why only 32-bits though?), but not the dma_mask.
+gntdev is doing neither. I could copy out what of_dma_configure does
+but better for the Xen folks to decide what is needed or not and test
+the change. I'm not setup to test any of this.
 
-Thanks,
-Rafael
+Rob
