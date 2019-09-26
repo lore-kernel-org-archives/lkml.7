@@ -2,95 +2,129 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C42BC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F586C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DB6222BD
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6325222C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569464472;
+	bh=3lLBqhz6ClieGLNRX+mRKaDg6bMy7BU9piFb6LN0NqQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=LOiMVJa3WqqU8dhc++ZHEAQoHr1PM15ddPVO7fFsaUcfxwXt+d7wT6+Ted4zC7kvg
+	 FQXvZddXb72/WpsiQVicyKLhVXd5ZkujE2Y1rg2+ogxUPBPAQHIYh/v9+MYScLmuAL
+	 IYSIyHuDdVabLit6Tc1X25CWx6uzX8gkeAvrb0zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731847AbfIZCND (ORCPT
+        id S2387615AbfIZCVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 22:13:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57100 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727403AbfIZCND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 22:13:03 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7D8DB27A7017405A031A;
-        Thu, 26 Sep 2019 10:13:00 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 26 Sep 2019 10:12:54 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        "Palmer Dabbelt" <palmer@sifive.com>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH] riscv: move flush_icache_range/user_range() after flush_icache_all()
-Date:   Thu, 26 Sep 2019 10:29:38 +0800
-Message-ID: <20190926022938.58568-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 25 Sep 2019 22:21:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40744 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfIZCVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 22:21:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L320D0QhUAIT+YzEW6A7Pc2P9QvHYpiQbdmEOG6nO4s=; b=WLYauWvR0V0Y8A+TN2huRyhD2
+        kFnnaplieWTWm00iU0pV1xSUYXYqLjrY+4IDZJi4ixi9K6Bh9S6JM7JOWqwwxgiz9r2lzh55GzG0b
+        BS7Xk0dwSgS9ZwMgQpHUaT5xMRABitudtN4t+fFoyas7S4mNYK0xtRxadGQNYAY78hjmM=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDJP3-00014v-8H; Thu, 26 Sep 2019 02:21:09 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A567BD01D66; Thu, 26 Sep 2019 03:21:07 +0100 (BST)
+Date:   Wed, 25 Sep 2019 19:21:07 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Sep 25
+Message-ID: <20190926022107.GR2036@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3sP1+uScbtwzRm4f"
+Content-Disposition: inline
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build lkdtm module, which used flush_icache_range(), error occurred,
 
-ERROR: "flush_icache_all" [drivers/misc/lkdtm/lkdtm.ko] undefined!
+--3sP1+uScbtwzRm4f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fix it.
+Hi all,
 
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- arch/riscv/include/asm/cacheflush.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+News: Builds for this week won't appear every day, I will try to
+do some but no guarantees until Stephen returns on the 30th.
+pending-fixes will get more updates than full -next.
 
-diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index 555b20b11dc3..f6ec26589620 100644
---- a/arch/riscv/include/asm/cacheflush.h
-+++ b/arch/riscv/include/asm/cacheflush.h
-@@ -80,13 +80,6 @@ static inline void flush_dcache_page(struct page *page)
- 		clear_bit(PG_dcache_clean, &page->flags);
- }
- 
--/*
-- * RISC-V doesn't have an instruction to flush parts of the instruction cache,
-- * so instead we just flush the whole thing.
-- */
--#define flush_icache_range(start, end) flush_icache_all()
--#define flush_icache_user_range(vma, pg, addr, len) flush_icache_all()
--
- #ifndef CONFIG_SMP
- 
- #define flush_icache_all() local_flush_icache_all()
-@@ -99,6 +92,13 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
- 
- #endif /* CONFIG_SMP */
- 
-+/*
-+ * RISC-V doesn't have an instruction to flush parts of the instruction cache,
-+ * so instead we just flush the whole thing.
-+ */
-+#define flush_icache_range(start, end) flush_icache_all()
-+#define flush_icache_user_range(vma, pg, addr, len) flush_icache_all()
-+
- /*
-  * Bits in sys_riscv_flush_icache()'s flags argument.
-  */
--- 
-2.20.1
+Changes since 20190924:
 
+The risc-v-fixes tree gained a conflict with Linus' tree which I
+fixed up.
+
+Non-merge commits (relative to Linus' tree): 1068
+ 1327 files changed, 30940 insertions(+), 14589 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a defconfig for arm64, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf.
+
+Below is a summary of the state of the merge.
+
+I am currently merging 311 trees (counting Linus' and 77 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--3sP1+uScbtwzRm4f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2MIJIACgkQJNaLcl1U
+h9Bgwwf/UP7wmDwmqrAxul4H+JE0LpqYxvJokIP9iA9FYZNwXMW0cgqeni0lF0QI
+8BUUEajTXDutrRU6Pr2bgMGHVx3acNHpd/hXqqxa4nw2kA+tkV+LEk2JganLqIdp
+H7Gdok9pNiz+W2yUSBEaEcAsmgio1hB1mAjvkBe5/nWkkTtyD7jgCAq/GE0GXZwE
+sJgrCAtWVIhf3ZzFJfcJltcFAwmy56dOmF5x7kWFcSUyxVhpMdPsZj91kh91foR6
+x01S3PEwJmegXqsg5HEjAj0pIyLTeb/ZKlkwGkC/j+mujOupa0xgGc6Sho4PAlpu
+0e8LPJQNffxkIktcPjdoFiCmXjangQ==
+=Ko4Z
+-----END PGP SIGNATURE-----
+
+--3sP1+uScbtwzRm4f--
