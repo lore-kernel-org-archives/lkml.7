@@ -2,114 +2,106 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21923C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A6CC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCAF2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JWVFWKOA"
+	by mail.kernel.org (Postfix) with ESMTP id 9D7342053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfIZLyu (ORCPT
+        id S1726481AbfIZLzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:54:50 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59158 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfIZLyt (ORCPT
+        Thu, 26 Sep 2019 07:55:15 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:51542 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfIZLzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:54:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBskN6031458;
-        Thu, 26 Sep 2019 06:54:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569498886;
-        bh=OsydVYUN2O2b6eBJcTCqsA7EMTGefZ2X59lOa1oxBd8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JWVFWKOABEOJQZA+hDoDKtW2eBlL9PK+SrzKs/HORaeZDem+IoHz/tZKBYVwnNvlh
-         K3Bt/sDaSSOHMq6X1pNOEDgyxsgAM9QTkmBZFNAmO5TNOzIbL2uLbc1NBxEwXIK7+o
-         CYExTM9kHQ8m3O3Kmr6njtXe3vtlZQx3/45XKGzE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBskWa075305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Sep 2019 06:54:46 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:54:38 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:54:46 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBsj2m104424;
-        Thu, 26 Sep 2019 06:54:45 -0500
-Subject: Re: [PATCH v9 08/15] dt: bindings: lp55xx: Be consistent in the
- document with LED
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190925174616.3714-1-dmurphy@ti.com>
- <20190925174616.3714-9-dmurphy@ti.com>
- <e4916f0c-c8e7-924f-e944-4c5388dc0ef8@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <609da7f3-9c6d-ec29-7c5f-38fa9fe01982@ti.com>
-Date:   Thu, 26 Sep 2019 07:00:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 07:55:14 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iDSMU-0000Wn-4M; Thu, 26 Sep 2019 13:55:06 +0200
+Message-ID: <9ece533700be8237699881312a99cc91c6a71d36.camel@sipsolutions.net>
+Subject: Re: [PATCH RFC] cfg80211: add new command for reporting wiphy
+ crashes
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Jouni Malinen <j@w1.fi>,
+        =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hostap@lists.infradead.org,
+        openwrt-devel@lists.openwrt.org
+Date:   Thu, 26 Sep 2019 13:55:04 +0200
+In-Reply-To: <4f6f37e5-802c-4504-3dcb-c4a640d138bd@milecki.pl>
+References: <20190920133708.15313-1-zajec5@gmail.com>
+         <20190920140143.GA30514@w1.fi>
+         <4f6f37e5-802c-4504-3dcb-c4a640d138bd@milecki.pl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <e4916f0c-c8e7-924f-e944-4c5388dc0ef8@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Thu, 2019-09-26 at 13:52 +0200, Rafał Miłecki wrote:
+> 
+> Indeed my main concert is AP mode. I'm afraid that cfg80211 doesn't
+> cache all settings, consider e.g. nl80211_start_ap(). It builds
+> struct cfg80211_ap_settings using info from nl80211 message and
+> passes it to the driver (rdev_start_ap()). Once it's done it
+> caches only a small subset of all setup data.
+> 
+> In other words driver doesn't have enough info to recover interfaces
+> setup.
 
-On 9/25/19 4:31 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/25/19 7:46 PM, Dan Murphy wrote:
->> Update the document to be consistent in case when using LED.
-> s/LED/"LED"/.
+So the driver can cache it, just like mac80211.
 
-ACK
+You can't seriously be suggesting that the driver doesn't *have* enough
+information - everything passed through it :)
 
+> I meant that hardware has been recovered & is operational again (driver
+> can talk to it). I expected user space to reconfigure all interfaces
+> using the same settings that were used on previous run.
+> 
+> If driver were able to recover interfaces setup on its own (with a help
+> of cfg80211) then user space wouldn't need to be involved.
 
->
->> This should be capital throughout the document.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> index 1b66a413fb9d..bfe2805c5534 100644
->> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> @@ -1,4 +1,4 @@
->> -Binding for TI/National Semiconductor LP55xx Led Drivers
->> +Binding for TI/National Semiconductor LP55xx LED Drivers
->>   
->>   Required properties:
->>   - compatible: one of
->> @@ -12,8 +12,8 @@ Required properties:
->>   - clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
->>   
->>   Each child has own specific current settings
->> -- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
->> -- max-cur: Maximun current at each led channel.
->> +- led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
->> +- max-cur: Maximun current at each LED channel.
->>   
->>   Optional properties:
->>   - enable-gpio: GPIO attached to the chip's enable pin
->>
+The driver can do it, mac80211 does. It's just a matter of what the
+driver will do or not.
+
+> First of all I was wondering how to handle interfaces creation. After a
+> firmware crash we have:
+> 1) Interfaces created in Linux
+> 2) No corresponsing interfaces in firmware
+
+> Syncing that (re-creating in-firmware firmwares) may be a bit tricky
+> depending on a driver and hardware.
+
+We do that in mac80211, it works fine. Why would it be tricky?
+
+If something fails, I think we force that interface to go down.
+
+> For some cases it could be easier to
+> delete all interfaces and ask user space to setup wiphy (create required
+> interfaces) again. I'm not sure if that's acceptable though?
+> 
+> If we agree interfaces should stay and driver simply should configure
+> firmware properly, then we need all data as explained earlier. struct
+> cfg80211_ap_settings is not available during runtime. How should we
+> handle that problem?
+
+You can cache it in the driver in whatever format makes sense.
+
+> I was aiming for a brutal force solution: just make user space
+> interfaces need a full setup just at they were just created.
+
+You can still do that btw, just unregister and re-register the wiphy.
+
+johannes
+
