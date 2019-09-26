@@ -2,184 +2,77 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B6AC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55202C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AC4222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:47:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QXaq+H8N"
+	by mail.kernel.org (Postfix) with ESMTP id 2AC96222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfIZJrT (ORCPT
+        id S1729084AbfIZJuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:47:19 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:46779 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbfIZJrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:47:17 -0400
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x8Q9lBbA004362;
-        Thu, 26 Sep 2019 18:47:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x8Q9lBbA004362
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569491232;
-        bh=4I6vObNO+Eec4OPIBIfi7DxQxYeb1r9KDS6T3ha1JhQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QXaq+H8NdpNfz7HoyLS7jiEWMU4kRC+NDd1DuLdZ86FjIQnCPKmEJfOnUdy6zxYzc
-         n9t/x7watAYCvu/nvrMfXobCOs2poNgZoHxJ7uogYSmPnJ6gtjamN1jwGu2uDar15y
-         5uqvx2tkLoZDsnsbJUIypvAK5AQiNRYxsWn486DxYIKjiWw8epcwhp+gnQMm+ezf4H
-         8vsA/LHfHTR5l71eFQVhtVlxtZQWZv4QXQCUdN20ccDcXKqoQm7AMwv9vavXsdvIGW
-         hcbRzh0JogNYSscuJQSKnQIBly7aOAGusb5qdjqypQgi5r9zmGPEx3NH/XzI/+4Fkg
-         87HzqMkhCrcsQ==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id s72so302059vkh.5;
-        Thu, 26 Sep 2019 02:47:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAUAakcCxdrHv72vSnkvbLdsK9on4TQ7JOkWFy211+TYWy3Z9Wrw
-        AA+E4mQXxYC7xwxKrFRXy4hOLWMfVFvuI/3vH9w=
-X-Google-Smtp-Source: APXvYqyALxN3MXOZ9gjh215X6+7cTCv/FnCQfnzXbnxFt7YR6cqPudDCpB6PVPX+wPxhXorK2dDKa50+xtZWQHRAFZg=
-X-Received: by 2002:ac5:cc63:: with SMTP id w3mr1147443vkm.34.1569491230937;
- Thu, 26 Sep 2019 02:47:10 -0700 (PDT)
+        Thu, 26 Sep 2019 05:50:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:43972 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbfIZJuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:50:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9467A1000;
+        Thu, 26 Sep 2019 02:50:03 -0700 (PDT)
+Received: from [10.37.8.90] (unknown [10.37.8.90])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8207A3F67D;
+        Thu, 26 Sep 2019 02:50:01 -0700 (PDT)
+Subject: Re: [RFC PATCH] xen/gntdev: Stop abusing DT of_dma_configure API
+To:     Rob Herring <robh@kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20190925215006.12056-1-robh@kernel.org>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <e898c025-32a7-1d2c-3501-c99556f7cdd4@arm.com>
+Date:   Thu, 26 Sep 2019 10:49:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <CAMuHMdXHqQ4O-guETbi85XiJGQ+4EkPdPZf=o540N4rGJkoK4w@mail.gmail.com>
- <CAK7LNAR1eHPhf0eBNDd8bNVAUhfKrob0EvxHvAQHa8mqPnMbzw@mail.gmail.com> <CAMuHMdV3VWCP35dOMWaSePz5mhzJp_Y5OViVUqTn7Ocdhn81Og@mail.gmail.com>
-In-Reply-To: <CAMuHMdV3VWCP35dOMWaSePz5mhzJp_Y5OViVUqTn7Ocdhn81Og@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 26 Sep 2019 18:46:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS_Ugy=K6UrpVm3hHt3BQnCcCtQuvsWLs3E-JskaiMbOQ@mail.gmail.com>
-Message-ID: <CAK7LNAS_Ugy=K6UrpVm3hHt3BQnCcCtQuvsWLs3E-JskaiMbOQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190925215006.12056-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On Thu, Sep 26, 2019 at 6:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Yamada-san,
->
-> On Thu, Sep 26, 2019 at 11:03 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > On Thu, Sep 26, 2019 at 5:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Fri, Aug 30, 2019 at 5:44 AM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > > Commit 9012d011660e ("compiler: allow all arches to enable
-> > > > CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable
-> > > > this option. A couple of build errors were reported by randconfig,
-> > > > but all of them have been ironed out.
-> > > >
-> > > > Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely
-> > > > (and it will simplify the 'inline' macro in compiler_types.h),
-> > > > this commit changes it to always-on option. Going forward, the
-> > > > compiler will always be allowed to not inline functions marked
-> > > > 'inline'.
-> > > >
-> > > > This is not a problem for x86 since it has been long used by
-> > > > arch/x86/configs/{x86_64,i386}_defconfig.
-> > > >
-> > > > I am keeping the config option just in case any problem crops up for
-> > > > other architectures.
-> > > >
-> > > > The code clean-up will be done after confirming this is solid.
-> > > >
-> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > >
-> > > This breaks compiling drivers/video/fbdev/c2p*, as the functions in
-> > > drivers/video/fbdev/c2p_core.h are no longer inlined, leading to calls
-> > > to the non-existent function c2p_unsupported(), as reported by KISSKB:
-> > >
-> > > On Thu, Sep 26, 2019 at 5:02 AM <noreply@ellerman.id.au> wrote:
-> > > > FAILED linux-next/m68k-defconfig/m68k Thu Sep 26, 12:58
-> > > >
-> > > > http://kisskb.ellerman.id.au/kisskb/buildresult/13973194/
-> > > >
-> > > > Commit:   Add linux-next specific files for 20190925
-> > > >           d47175169c28eedd2cc2ab8c01f38764cb0269cc
-> > > > Compiler: m68k-linux-gcc (GCC) 4.6.3 / GNU ld (GNU Binutils) 2.22
-> > > >
-> > > > Possible errors
-> > > > ---------------
-> > > >
-> > > > c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
-> > > > c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
-> > > > c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
-> > > > c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
-> > > > make[1]: *** [Makefile:1074: vmlinux] Error 1
-> > > > make: *** [Makefile:179: sub-make] Error 2
-> > >
-> > > I managed to reproduce this with gcc version 8.3.0 (Ubuntu
-> > > 8.3.0-6ubuntu1~18.04.1) , and bisected the failure to commit
-> > > 025f072e5823947c ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly") .
-> > >
-> > > Marking the functions __always_inline instead of inline fixes that.
-> > > Shall I send a patch to do that?
-> >
-> >
-> > Yes, please.
->
-> OK, will do.
->
-> > But you do not need to touch _transp() or comp().
-> > Only functions that call c2p_unsupported().
->
-> However, the inlining of these functions is very performance-sensitive too.
-> So perhaps I should mark all of them __always_inline?
+Hi Rob,
 
 
-I want to leave as much compiler's freedom as possible,
-and the optimization criteria depends on CONFIG option.
+On 9/25/19 10:50 PM, Rob Herring wrote:
+> As the comment says, this isn't a DT based device. of_dma_configure()
+> is going to stop allowing a NULL DT node, so this needs to be fixed.
 
-When CONFIG_CC_OPTIMIZE_FOR_SIZE is chosen,
-the optimization should respect the code size over performance,
-and the compiler may prefer not inlining it.
+And this can't work on arch not selecting CONFIG_OF and can select 
+CONFIG_XEN_GRANT_DMA_ALLOC.
 
+We are lucky enough on x86 because, AFAICT, arch_setup_dma_ops is just a 
+nop.
 
-So, the basic idea is, use __always_inline
-only when otherwise the builds would be broken.
+> 
+> Not sure exactly what setup besides arch_setup_dma_ops is needed...
 
+We probably want to update dma_mask, coherent_dma_mask and dma_pfn_offset.
 
-Masahiro Yamada
+Also, while look at of_configure_dma, I noticed that we consider the DMA 
+will not be coherent for the grant-table. Oleksandr, do you know why 
+they can't be coherent?
 
-
-
-
-> > BTW, c2p_unsupported() can be replaced with BUILD_BUG().
-> > This will break the build earlier in case
-> > it cannot be optimized out.
->
-> Right. Will do, too.
->
-> Thanks!
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
-
+Cheers,
 
 -- 
-Best Regards
-Masahiro Yamada
+Julien Grall
