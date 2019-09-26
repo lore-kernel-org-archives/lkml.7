@@ -2,154 +2,192 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43529C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B96C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B07222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE1D222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbfIZNis (ORCPT
+        id S1726959AbfIZNn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:38:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:49948 "EHLO foss.arm.com"
+        Thu, 26 Sep 2019 09:43:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:50178 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfIZNiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:38:46 -0400
+        id S1726216AbfIZNn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 09:43:26 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CC8E1570;
-        Thu, 26 Sep 2019 06:38:46 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F36B33F534;
-        Thu, 26 Sep 2019 06:38:44 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
-        ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de
-Subject: [PATCH v2 1/4] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
-Date:   Thu, 26 Sep 2019 14:38:02 +0100
-Message-Id: <20190926133805.52348-2-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190926133805.52348-1-vincenzo.frascino@arm.com>
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <20190926133805.52348-1-vincenzo.frascino@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2587F142F;
+        Thu, 26 Sep 2019 06:43:26 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 214DF3F534;
+        Thu, 26 Sep 2019 06:43:25 -0700 (PDT)
+Subject: Re: [PATCH v3] drm: Don't free jobs in wait_event_interruptible()
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+References: <20190926123134.4947-1-steven.price@arm.com>
+ <73f058bb-8ba8-611b-e3a0-f6282445179c@amd.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <f045e1d6-5263-58c2-ce28-2cd215067bdb@arm.com>
+Date:   Thu, 26 Sep 2019 14:43:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <73f058bb-8ba8-611b-e3a0-f6282445179c@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by Will Deacon the .config file and the generated
-include/config/auto.conf can end up out of sync after a set of
-commands since CONFIG_CROSS_COMPILE_COMPAT_VDSO is not updated
-correctly.
+On 26/09/2019 14:37, Koenig, Christian wrote:
+> Am 26.09.19 um 14:31 schrieb Steven Price:
+>> drm_sched_cleanup_jobs() attempts to free finished jobs, however because
+>> it is called as the condition of wait_event_interruptible() it must not
+>> sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
+>>
+>> Instead let's rename drm_sched_cleanup_jobs() to
+>> drm_sched_get_cleanup_job() and simply return a job for processing if
+>> there is one. The caller can then call the free_job() callback outside
+>> the wait_event_interruptible() where sleeping is possible before
+>> re-checking and returning to sleep if necessary.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>
+>> Changes from v2:
+>>   * Actually move list_first_entry_or_null() within the lock
+>>
+>>   drivers/gpu/drm/scheduler/sched_main.c | 42 ++++++++++++++------------
+>>   1 file changed, 23 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+>> index 9a0ee74d82dc..e4bd792f2b29 100644
+>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+>>   }
+>>   
+>>   /**
+>> - * drm_sched_cleanup_jobs - destroy finished jobs
+>> + * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
+>>    *
+>>    * @sched: scheduler instance
+>>    *
+>> - * Remove all finished jobs from the mirror list and destroy them.
+>> + * Returns the next finished job from the mirror list (if there is one)
+>> + * ready for it to be destroyed.
+>>    */
+>> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
+>> +static struct drm_sched_job *
+>> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
+>>   {
+>> +	struct drm_sched_job *job = NULL;
+>>   	unsigned long flags;
+>>   
+>>   	/* Don't destroy jobs while the timeout worker is running */
+>>   	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
+>>   	    !cancel_delayed_work(&sched->work_tdr))
+>> -		return;
+>> -
+>> +		return NULL;
+>>   
+>> -	while (!list_empty(&sched->ring_mirror_list)) {
+>> -		struct drm_sched_job *job;
+>> +	spin_lock_irqsave(&sched->job_list_lock, flags);
+>>   
+>> -		job = list_first_entry(&sched->ring_mirror_list,
+>> +	job = list_first_entry_or_null(&sched->ring_mirror_list,
+>>   				       struct drm_sched_job, node);
+>> -		if (!dma_fence_is_signaled(&job->s_fence->finished))
+>> -			break;
+>>   
+>> -		spin_lock_irqsave(&sched->job_list_lock, flags);
+>> +	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+>>   		/* remove job from ring_mirror_list */
+>>   		list_del_init(&job->node);
+>> -		spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>> -
+>> -		sched->ops->free_job(job);
+>> +	} else {
+>> +		job = NULL;
+>> +		/* queue timeout for next job */
+>> +		drm_sched_start_timeout(sched);
+> 
+> Sorry I've only seen this right now: This won't work.
+> 
+> See you always need to start the timeout, or cancel_delayed_work() will 
+> abort the whole thing after returning the first job.
 
-The sequence can be reproduced as follows:
+Good spot!
 
-$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
-[...]
-$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- menuconfig
-[set CONFIG_CROSS_COMPILE_COMPAT_VDSO="arm-linux-gnueabihf-"]
-$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+My logic was that drm_sched_main() would call again and that would
+re-arm the timeout after the job has been completed.
 
-Which results in:
+But looking at this more closely I see that isn't actually going to work
+reliably - if the work has been cancelled the first time then
+cancel_delayed_work() will return false causing an early out and the
+timeout isn't re-armed.
 
-arch/arm64/Makefile:62: CROSS_COMPILE_COMPAT not defined or empty,
-the compat vDSO will not be built
+Is it as simple as moving drm_sched_start_timeout() out of the else case
+and unconditionally re-arming the timeout? I'm worried about races with
+the job that is being returned, although it has already been removed
+from ring_mirror_list so perhaps it's safe to do?
 
-even though the compat vDSO has been built:
+Alternatively the caller could manually re-arm the timeout after
+handling the job free.
 
-$ file arch/arm64/kernel/vdso32/vdso.so
-arch/arm64/kernel/vdso32/vdso.so: ELF 32-bit LSB pie executable, ARM,
-EABI5 version 1 (SYSV), dynamically linked,
-BuildID[sha1]=c67f6c786f2d2d6f86c71f708595594aa25247f6, stripped
+Steve
 
-A similar case that involves changing the configuration parameter multiple
-times can be reconducted to the same family of problems.
-
-The reason behind it comes from the fact that the master Makefile includes
-that architecture Makefile twice, once before the syncconfig and one after.
-Since the synchronization of the files happens only upon syncconfig, the
-architecture Makefile included before this event does not see the change in
-configuration.
-
-As a consequence of this it is not possible to handle the cross compiler
-definitions inside the architecture Makefile.
-
-Address the problem removing CONFIG_CROSS_COMPILE_COMPAT_VDSO and moving
-the detection of the correct compiler into Kconfig via COMPAT_CC_IS_GCC.
-
-As a consequence of this it is not possible anymore to set the compat
-cross compiler from menuconfig but it requires to be exported via
-command line.
-
-E.g.:
-
-$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-CROSS_COMPILE_COMPAT=arm-linux-gnueabihf
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/arm64/Kconfig  |  5 ++++-
- arch/arm64/Makefile | 15 ++-------------
- 2 files changed, 6 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 37c610963eee..13e2d2e16af7 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -110,7 +110,7 @@ config ARM64
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_GETTIMEOFDAY
--	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
-+	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && COMPATCC_IS_GCC)
- 	select HANDLE_DOMAIN_IRQ
- 	select HARDIRQS_SW_RESEND
- 	select HAVE_PCI
-@@ -313,6 +313,9 @@ config KASAN_SHADOW_OFFSET
- 	default 0xeffffff900000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
- 	default 0xffffffffffffffff
- 
-+config COMPATCC_IS_GCC
-+	def_bool $(success,$(CROSS_COMPILE_COMPAT)gcc --version | head -n 1 | grep -q arm)
-+
- source "arch/arm64/Kconfig.platforms"
- 
- menu "Kernel Features"
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 84a3d502c5a5..34f53eb11878 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -54,19 +54,8 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
- endif
- 
- ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
--  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
--
--  ifeq ($(CONFIG_CC_IS_CLANG), y)
--    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
--  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
--    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
--  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
--    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
--  else
--    export CROSS_COMPILE_COMPAT
--    export CONFIG_COMPAT_VDSO := y
--    compat_vdso := -DCONFIG_COMPAT_VDSO=1
--  endif
-+  export CONFIG_COMPAT_VDSO := y
-+  compat_vdso := -DCONFIG_COMPAT_VDSO=1
- endif
- 
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\
--- 
-2.23.0
+> Christian.
+> 
+>>   	}
+>>   
+>> -	/* queue timeout for next job */
+>> -	spin_lock_irqsave(&sched->job_list_lock, flags);
+>> -	drm_sched_start_timeout(sched);
+>>   	spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>>   
+>> +	return job;
+>>   }
+>>   
+>>   /**
+>> @@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
+>>   		struct drm_sched_fence *s_fence;
+>>   		struct drm_sched_job *sched_job;
+>>   		struct dma_fence *fence;
+>> +		struct drm_sched_job *cleanup_job = NULL;
+>>   
+>>   		wait_event_interruptible(sched->wake_up_worker,
+>> -					 (drm_sched_cleanup_jobs(sched),
+>> +					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
+>>   					 (!drm_sched_blocked(sched) &&
+>>   					  (entity = drm_sched_select_entity(sched))) ||
+>> -					 kthread_should_stop()));
+>> +					 kthread_should_stop());
+>> +
+>> +		while (cleanup_job) {
+>> +			sched->ops->free_job(cleanup_job);
+>> +			cleanup_job = drm_sched_get_cleanup_job(sched);
+>> +		}
+>>   
+>>   		if (!entity)
+>>   			continue;
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
