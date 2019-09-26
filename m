@@ -2,134 +2,138 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB458C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25559C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89114207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034A1222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbfIZKoU (ORCPT
+        id S1725988AbfIZKpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:44:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32952 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfIZKoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:44:20 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7C2AC056808
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:44:19 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id m16so854987wmg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:44:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Riw/2Ux9OsHBDm8paJcZzsJiBRoPakD2IyewC8/qlH0=;
-        b=Mco0TBV9DX/7E10CumnZrhfv8bS76zwzIi/K8vk6uaNLhCcGnkDcoK1ckoCFqZSFiD
-         n6edbWmkC+vGpNAi+6YHRt/E8p3ZBFy6aeyXS8jK09JGFSwDL799AFqtqB6owqkpwR0S
-         xX+twSYZRYMCfW0Oufg7DjeT3XpEKQe3epAtpiEdJY1T2q4lk4DaPQfHM0GjpsLSh01/
-         hi4SSZ51bWkOYGKxjacnpBHIoys4ywUuBgz8aYD83jj18zoP02iHd07WcJUujxw/P0oO
-         V8boV7TFGt1CfI7aNpg68+0TQygmEMNLEkL4npry+t/Cc22YvPfqrkPJxdstxOaryozF
-         w+aQ==
-X-Gm-Message-State: APjAAAWfQrNwiPAz6aHH0gK8v0uwSrXdBeK6NSwag4UJnyVJRzEAaXzZ
-        ivzTc8+PutxVN53vrKBTGIa/fvidobeDL6A8rYcDH2LZHT+UBj7VKCdPGkV0JkBek//CoxePCHf
-        sj65nUdj8xt4PzJg6MVFAQUlK
-X-Received: by 2002:adf:f8cf:: with SMTP id f15mr2319309wrq.292.1569494658664;
-        Thu, 26 Sep 2019 03:44:18 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxr5GEjW6ka0m4Lpc1OF+XdjpU3XZQ6+sKdP/4G5PYjuXWwBJlGoNZuBr1r4uMLP1CN0JDCCQ==
-X-Received: by 2002:adf:f8cf:: with SMTP id f15mr2319287wrq.292.1569494658461;
-        Thu, 26 Sep 2019 03:44:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q19sm3835597wra.89.2019.09.26.03.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 03:44:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "arnd\@arndb.de" <arnd@arndb.de>, "bp\@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano\@linaro.org" <daniel.lezcano@linaro.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo\@redhat.com" <mingo@redhat.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: Re: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernation
-In-Reply-To: <1567723581-29088-2-git-send-email-decui@microsoft.com>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com> <1567723581-29088-2-git-send-email-decui@microsoft.com>
-Date:   Thu, 26 Sep 2019 12:44:16 +0200
-Message-ID: <87ef0372wv.fsf@vitty.brq.redhat.com>
+        Thu, 26 Sep 2019 06:45:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58398 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725813AbfIZKo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:44:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4D89AAFA7;
+        Thu, 26 Sep 2019 10:44:56 +0000 (UTC)
+Message-ID: <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Date:   Thu, 26 Sep 2019 12:44:53 +0200
+In-Reply-To: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+         <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+         <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+         <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+         <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+         <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+         <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+         <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-spHfnjbbIi+e7UZn+wYh"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
 
-> This is needed for hibernation, e.g. when we resume the old kernel, we need
-> to disable the "current" kernel's hypercall page and then resume the old
-> kernel's.
->
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  arch/x86/hyperv/hv_init.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 866dfb3..037b0f3 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -20,6 +20,7 @@
->  #include <linux/hyperv.h>
->  #include <linux/slab.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/syscore_ops.h>
->  #include <clocksource/hyperv_timer.h>
->  
->  void *hv_hypercall_pg;
-> @@ -223,6 +224,34 @@ static int __init hv_pci_init(void)
->  	return 1;
->  }
->  
-> +static int hv_suspend(void)
-> +{
-> +	union hv_x64_msr_hypercall_contents hypercall_msr;
-> +
-> +	/* Reset the hypercall page */
-> +	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> +	hypercall_msr.enable = 0;
-> +	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> +
+--=-spHfnjbbIi+e7UZn+wYh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(trying to think out loud, not sure there's a real issue):
+> > > > Robin, have you looked into supporting multiple dma-ranges? It's th=
+e
+> > > > next thing
+> > > > we need for BCM STB's PCIe. I'll have a go at it myself if nothing =
+is in
+> > > > the
+> > > > works already.
+> > >=20
+> > > Multiple dma-ranges as far as configuring inbound windows should work
+> > > already other than the bug when there's any parent translation. But i=
+f
+> > > you mean supporting multiple DMA offsets and masks per device in the
+> > > DMA API, there's nothing in the works yet.
 
-When PV IPIs (or PV TLB flush) are enabled we do the following checks:
+Sorry, I meant supporting multiple DMA offsets[1]. I think I could still ma=
+ke
+it with a single DMA mask though.
 
-	if (!hv_hypercall_pg)
-		return false;
+> > There's also the in-between step of making of_dma_get_range() return a
+> > size based on all the dma-ranges entries rather than only the first one
+> > - otherwise, something like [1] can lead to pretty unworkable default
+> > masks. We implemented that when doing acpi_dma_get_range(), it's just
+> > that the OF counterpart never caught up.
+>=20
+> Right. I suppose we assume any holes in the ranges are addressable by
+> the device but won't get used for other reasons (such as no memory
+> there). However, to be correct, the range of the dma offset plus mask
+> would need to be within the min start and max end addresses. IOW,
+> while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
+> power of 2, the 'correct' thing to do is round down.
 
-or
-        if (!hv_hypercall_pg)
-                goto do_native;
+IIUC I also have this issue on my list. The RPi4 PCIe block has an integrat=
+ion
+bug that only allows DMA to the lower 3GB. With dma-ranges of size 0xc000_0=
+000
+you get a 32bit DMA mask wich is not what you need. So far I faked it in th=
+e
+device-tree but I guess it be better to add an extra check in
+of_dma_configure(), decrease the mask and print some kind of warning statin=
+g
+that DMA addressing is suboptimal.
 
-which will pass as we're not invalidating the pointer. Can we actually
-be sure that the kernel will never try to send an IPI/do TLB flush
-before we resume?
+Regards,
+Nicolas
 
--- 
-Vitaly
+[1] https://lkml.org/lkml/2018/9/19/641
+
+
+--=-spHfnjbbIi+e7UZn+wYh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2MlqUACgkQlfZmHno8
+x/6+gwgAlzKCB9vN8cCZUfRnnPT+EcYA2/s3oFjf1ar+/e5UsMfCNI5W7cJaKzg9
+w0PGZ5VKk5N0wpkGIpUjOYQ9J5PFZwu5bqsce0zWywlRlYCexKvzpQfkplWi0JuI
+cVAt9Sw5mle+ppW+x9T5UlBcHoCByuQDG9ga44Z7O4jrk/lIp7vK2fmSN3hIEcHV
+gUPxojWighnxCu+5COgwa182Ncfo3tTLw39oV8uiLOzxXxVkprxdxQHakXPoyg1o
+WH0OvR09u1lXZAQ1qKtOxHNgKcrNzpr69VBUL/WYvrSqKdg0EI8QRmkByk5cYgrC
+ztco//83y3fCRh8dEph0BSrKU3/vFA==
+=P2KB
+-----END PGP SIGNATURE-----
+
+--=-spHfnjbbIi+e7UZn+wYh--
+
