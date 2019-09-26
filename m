@@ -2,161 +2,96 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D6C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C876C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E962D207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145C0222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569506096;
+	bh=YkRU8Q9+V7Rbrbz1iGfuuDPjE4DfTIe49qMeZ9ULY7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bON+LeLxeG2s+XKosuoPfsXyCKSxze/STdEtzcxs9m/U8If0P0d62gVDmg+YJK1Gn
+	 UGY/kOsvXuI+sH1a7Z1qcilvpww3Tte4Vz6jUmN5x+VWt1eZ4Vbm9XfqpK01im/wIp
+	 f6hNwX1bx/yOykJZR8SUd5GPU+gLfJyRhQMh5SAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfIZNwL (ORCPT
+        id S1727042AbfIZNyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:52:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39470 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfIZNwL (ORCPT
+        Thu, 26 Sep 2019 09:54:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34793 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfIZNyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:52:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s22so2048668otr.6;
-        Thu, 26 Sep 2019 06:52:10 -0700 (PDT)
+        Thu, 26 Sep 2019 09:54:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y135so6682681wmc.1;
+        Thu, 26 Sep 2019 06:54:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/mVhT/fXwK9lB2n80OuetyQRidyOwg4W8y9aVMt/9yY=;
-        b=T31Y4Trtl5YsroOIzGjrknOkrsIRcmIng311J120dwWiTDERgxSiwARc07mnPwFzaz
-         gAxuYyNvqRtLfvxR3u51Qwld0XJLDOsED6xuTzYth9JZVZeht18k0+dMjfvhJiKN0LNT
-         223kCp3EJP0el3Q0BbeyKGKAKWwC7gBd1n89BDWSObh25HLIDD9V9Nia0jaqe8DbuarR
-         q3J6VsOSWQco571Vl+0XywU+0ygNIKbDTVq1MwZoifEuQDFswjaUtNffrFjMF0y5gUrI
-         HG48qa4qgq7A7TV48MSv3me7FWUjojhnyp8QRr/Afd3JOUHszWQcXX1t40PyoI4gBvgk
-         Fa8w==
-X-Gm-Message-State: APjAAAViZE4WhzNRIcs0538qsZV0/xR1aRKI4ecrIIPTsvfaoNWckKjz
-        vpfroFwg50jvUztPzlX+XkTEVS6kp/GTeQAcWAQ=
-X-Google-Smtp-Source: APXvYqzj2GMNN3LlcvftbJA6RAIarnbhjfcDFzrgx89fRtcWh5AzVjkbYRHUi1dlmK5bSvY9OUzTpWiHuaaVhuAp0Jw=
-X-Received: by 2002:a9d:5a06:: with SMTP id v6mr479841oth.250.1569505930027;
- Thu, 26 Sep 2019 06:52:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com>
- <20190926121438.655f1f10@jawa> <CAMuHMdVBrKnA3TJnOEG0G0FVKf7VwQUvLzkmJc7DAX4kvHYWYQ@mail.gmail.com>
- <20190926144342.327a3c66@jawa>
-In-Reply-To: <20190926144342.327a3c66@jawa>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Sep 2019 15:51:58 +0200
-Message-ID: <CAMuHMdXm+vUB4iRTsTq64Kg2KC2p7AA1TwFgjc7FuCeiS9EG=Q@mail.gmail.com>
-Subject: Re: spi: Add call to spi_slave_abort() function when spidev driver is released
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Colin Ian King <colin.king@canonical.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5wV+knHWT3pYBu8f1yGbF2JMv7/SsKIGIbzvgHlj+ME=;
+        b=Qgboru+Z2okyd6j3StyrhZZhx+KZC4zLUMc2+kGeCoBL7BT6dr0Qos+lAwGaKqfUzt
+         Ok1JYHDGSIewhmuKL8aSz8YUKm83IS6ttmSMC4eIYqVy+5OwhSe4+7vb0tRI19N7j6IL
+         m4/7vlgmwsVSrYYCABIgteFFmgMjRHtELlwHKPD/fMtcINGlg8aOPpArkzJ56Cf6RJLa
+         eohstDzQI5nugM9F/HImtVn6xLIY7JBDaVOjoY9EcDy3aQK0zJB5YuDHgxYXAxDi+IZC
+         6e0YJe+jMthTe2iuAtrzqTI+efl+n9RNXwrbcvvhTylfCSRdFi2B4Sm3bcor0XYIjfrF
+         yUYw==
+X-Gm-Message-State: APjAAAUdebt8myQDTw7gl1psSJKlVVpmezU5HYzCpFEv46jwAHANLagO
+        exaWPwWQRu/aQ5kSTono8rg=
+X-Google-Smtp-Source: APXvYqxMWSiEBcFYFgkxhkOkbLWb5nMuD3l2ak3ZLUUZEhI7MlrM1L7wlshwHZt+wX2Q+NqzPP5UKg==
+X-Received: by 2002:a7b:cc0b:: with SMTP id f11mr3204892wmh.112.1569506092705;
+        Thu, 26 Sep 2019 06:54:52 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id j1sm6011300wrg.24.2019.09.26.06.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 06:54:50 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 15:54:47 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH v2] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E)
+ audio complex with WM5110 codec to dt-schema
+Message-ID: <20190926135447.GA15983@pi3>
+References: <CGME20190926120221eucas1p1a11b4182b93b408d5d5507dc65c951b4@eucas1p1.samsung.com>
+ <20190926120210.8544-1-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190926120210.8544-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+On Thu, Sep 26, 2019 at 02:02:10PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+> 
+> Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to
+> newer dt-schema format.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - Added type and description and removed number of items from 'model' property.
 
-On Thu, Sep 26, 2019 at 2:49 PM Lukasz Majewski <lukma@denx.de> wrote:
-> > On Thu, Sep 26, 2019 at 12:14 PM Lukasz Majewski <lukma@denx.de>
-> > wrote:
-> > > > Static analysis with Coverity has detected an potential
-> > > > dereference of a free'd object with commit:
-> > > >
-> > > > commit 9f918a728cf86b2757b6a7025e1f46824bfe3155
-> > > > Author: Lukasz Majewski <lukma@denx.de>
-> > > > Date:   Wed Sep 25 11:11:42 2019 +0200
-> > > >
-> > > >     spi: Add call to spi_slave_abort() function when spidev
-> > > > driver is released
+Thanks for the changes. However still you have non-standard properties
+put in random order. Argument that the order follows example-schema is
+not correct. These are not standard properties.
 
-> > > > The call to spi_slave_abort() on spidev is reading an earlier
-> > > > kfree'd spidev.
-> > >
-> > > Thanks for spotting this issue - indeed there is a possibility to
-> > > use spidev after being kfree'd.
-> >
-> > Worse, this makes me realize spidev->spi may be a NULL pointer, which
-> > will be dereferenced by spi_slave_abort(), so caching it before the
-> > call to kfree() won't work.
->
-> The patch as it is now can be fixed as follows:
->
-> static int spidev_release(struct inode *inode, struct file *filp)
-> {
->         struct spidev_data      *spidev;
->
->         mutex_lock(&device_list_lock);
->         spidev = filp->private_data;
->         filp->private_data = NULL;
->
-> #ifdef CONFIG_SPI_SLAVE
->         if (spidev->spi)
->                 spi_slave_abort(spidev->spi);
-> #endif
->
->         /* last close? */
->         spidev->users--;
->         if (!spidev->users) {
->                 int dofree;
->
->                 /* free buffers */
->
->                 spin_lock_irq(&spidev->spi_lock);
->                 if (spidev->spi)
->                         spidev->speed_hz = spidev->spi->max_speed_hz;
->
->                 /* ... after we unbound from the underlying device? */
->                 //
->                 // [*]
->                 //
->                 dofree = (spidev->spi == NULL);
->                 spin_unlock_irq(&spidev->spi_lock);
->
->                 if (dofree)
->                         kfree(spidev);
->         }
->
->         mutex_unlock(&device_list_lock);
->
->         return 0;
-> }
->
-> The question is if we shall call the spi_slave_abort() when cleaning up
-> spi after releasing last reference, or each time release callback is
-> called ?
+Best regards,
+Krzysztof
 
-TBH, I don't know.  Is it realistic that there are multiple opens?
-
-> > > However, Geert (CC'ed) had some questions about placement of this
-> > > function call, so I will wait with providing fix until he replies.
-> >
-> > Seems like this needs more thought...
->
-> Could you be more specific?
->
-> Do you mean to move the spi_slave_abort() call just before dofree
-> evaluation ? ([*]).
-
-That means the abort is called only for the last user.
-And only if the underlying device still exists.  Which means that if it has
-disappeared (how can that happen? spidev unbind?), the slave was never
-aborted.  Non-spidev slaves can do the abort in their .remove() callbacks
-(at least my two sample slave drivers do).
-So probably we need some explicit slave abort in the unbind case too?
-
-The more I think about it, the more things I see that can go wrong...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
