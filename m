@@ -2,135 +2,197 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D4C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BECC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FE520872
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="V6fllti1"
+	by mail.kernel.org (Postfix) with ESMTP id B020121A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfIZKZ6 (ORCPT
+        id S1726266AbfIZK32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:25:58 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45596 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbfIZKZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:25:58 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h33so1453754edh.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sZySFJLySHqAg+L9VV4WCP/n21XzxDuSfHpOa9dXZmk=;
-        b=V6fllti1rZHNM40XpXtG1W2Ot4VDBW2UHagEWW0u0MoI0rDFExg7qiEEC4Kx0BkJUO
-         N39Zd2scOCpcawHLCt9EgBnxj3aafD0HolLGIy87seuTK4yUMVbDI6o0IMeV8c8kl2q3
-         Wf5SnYx+eKbP+/RCIcXsFXduLye95DPO+JQHh/WCLvCUGlPh8nGmH+sogm+pvP4xBNfx
-         h4JNIqEgrzXC8r7pu68KwoXWKMGCd2MHljTYxWD05iLCWWxyObBk3ZBW/VCrlMrvtx7F
-         z59l19lWm8GhC67PPTck26crrkv0RUiagsUS97uZ2h069vyeKg0ny5eU8/EERwCbbDGs
-         R3hA==
+        Thu, 26 Sep 2019 06:29:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46568 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfIZK31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:29:27 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 90912793ED
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:29:26 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id m14so741222wru.17
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:29:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sZySFJLySHqAg+L9VV4WCP/n21XzxDuSfHpOa9dXZmk=;
-        b=qDL/Fdy195slp9EXpu5A7wlDuDwzLHlwZbw3XoDdrf0Ys84q1WwhNlXBUbLerPiwmx
-         LM3EZy8x5iy515wOS4TCEdkHerVERtCEHr8etPhfZrKKvK5LGPGmV61sY+OFdFlonO9u
-         x041ElIOo/KKYjqxFuE78YzcxkV3u8dfbLVpkiU6/sGsfUhOiN73GsPthE+wZZfL4wRH
-         635FhEO4Vsc0K0+qTs+2BN98pqtV4G3v4r3+dTRPgXhqeog1DSVN0t37fsngnTiZJAoa
-         XGfp0sRjSHWoazpDqmnGsbCeSekz77RwGW43KZnotHSy4u3TWupyst5BhbVjV4THy/x0
-         8jDA==
-X-Gm-Message-State: APjAAAVvW0rAjplx8k2ldGJ431GP8K8SoGwXGmCMkdw61ukqpkD6wGuv
-        DMayzXVHXMYCzZhnRAGHJBRKSw==
-X-Google-Smtp-Source: APXvYqys0ai/BvbbRaO+GKiiNYldqfE2MTNlpzGoSrB2YWZd0rbFIaSycO3c42IMKl9185PoXnzMPg==
-X-Received: by 2002:a50:cfc7:: with SMTP id i7mr2606367edk.89.1569493556435;
-        Thu, 26 Sep 2019 03:25:56 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id ng5sm187555ejb.9.2019.09.26.03.25.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 03:25:55 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7FBCC1004E0; Thu, 26 Sep 2019 13:25:58 +0300 (+03)
-Date:   Thu, 26 Sep 2019 13:25:58 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Jia He <justin.he@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
-Subject: Re: [PATCH v9 3/3] mm: fix double page fault on arm64 if PTE_AF is
- cleared
-Message-ID: <20190926102558.jlessqelf5k3havb@box>
-References: <20190925025922.176362-1-justin.he@arm.com>
- <20190925025922.176362-4-justin.he@arm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BY8HJnI4XVFhCNATjy1RWGMjwAHNDYeseMH3rD1F4Xc=;
+        b=Speu0Om2kKCyRjzkhM3LmCTCQf932Qvv+llI9W9HSog+NHtwN8zw7a/CzYDF4ndiFO
+         iiHh783EKRUli/a0EhJHAVagZv40W5mllzGMMfygK9qnsAMIvFYLpLxeP/v8u/FOAHdX
+         X5K0Pyp+FJBIS76YS31TNLMYwMY5w5NLWs/oT1giAMhVi4zqZLMHYEQOD6dMVioEhHwM
+         t2GsKq6zWVcDuJd1Uc4knqrBaRNjcbLzwRmcuAJokfdBWs9iL6lfvJ1g+rCBtZmz+TNU
+         klj7YA3g0pe0NkVCEeelUtEZamZhjqtz3HuEZxN2809Po93j0h2Ud3WKyHck+WiSNXjQ
+         nnHw==
+X-Gm-Message-State: APjAAAXMPHuEqG5z/rxavJzfC8yhnAha6pHfszXA1P88x4D8hq77nWu5
+        s+XriGgtq3fSU88d3W7BVoSuCTQf4sRTFOl2UCy4CEhyoBKsuQvlLueF1r98u8Bh654b7BzcAma
+        VtDikTcIY9HX1pRZreHw/PSpU
+X-Received: by 2002:a7b:c152:: with SMTP id z18mr2326487wmi.70.1569493765201;
+        Thu, 26 Sep 2019 03:29:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzE5lcwm+xbGXmpzIj2zShy+VtcwYstdlWDIfWOGZs9gThvQMeAx3wCPLig0ZwD1i+BFw7oaw==
+X-Received: by 2002:a7b:c152:: with SMTP id z18mr2326467wmi.70.1569493764888;
+        Thu, 26 Sep 2019 03:29:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id k9sm3285943wrd.7.2019.09.26.03.29.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 03:29:24 -0700 (PDT)
+Subject: Re: [PATCH v3] KVM: X86: Fix userspace set invalid CR4
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
+References: <1568800210-3127-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <851fbe10-289b-c11c-375a-c6daa188ce17@redhat.com>
+Date:   Thu, 26 Sep 2019 12:29:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925025922.176362-4-justin.he@arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1568800210-3127-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:59:22AM +0800, Jia He wrote:
-> When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
-> will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+On 18/09/19 11:50, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> Below call trace is from arm64 do_page_fault for debugging purpose
-> [  110.016195] Call trace:
-> [  110.016826]  do_page_fault+0x5a4/0x690
-> [  110.017812]  do_mem_abort+0x50/0xb0
-> [  110.018726]  el1_da+0x20/0xc4
-> [  110.019492]  __arch_copy_from_user+0x180/0x280
-> [  110.020646]  do_wp_page+0xb0/0x860
-> [  110.021517]  __handle_mm_fault+0x994/0x1338
-> [  110.022606]  handle_mm_fault+0xe8/0x180
-> [  110.023584]  do_page_fault+0x240/0x690
-> [  110.024535]  do_mem_abort+0x50/0xb0
-> [  110.025423]  el0_da+0x20/0x24
+> Reported by syzkaller:
 > 
-> The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
-> [ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
+> 	WARNING: CPU: 0 PID: 6544 at /home/kernel/data/kvm/arch/x86/kvm//vmx/vmx.c:4689 handle_desc+0x37/0x40 [kvm_intel]
+> 	CPU: 0 PID: 6544 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
+> 	RIP: 0010:handle_desc+0x37/0x40 [kvm_intel]
+> 	Call Trace:
+> 	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
+> 	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
+> 	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
+> 	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
+> 	 do_vfs_ioctl+0xa2/0x690
+> 	 ksys_ioctl+0x6d/0x80
+> 	 __x64_sys_ioctl+0x1a/0x20
+> 	 do_syscall_64+0x74/0x720
+> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > 
-> As told by Catalin: "On arm64 without hardware Access Flag, copying from
-> user will fail because the pte is old and cannot be marked young. So we
-> always end up with zeroed page after fork() + CoW for pfn mappings. we
-> don't always have a hardware-managed access flag on arm64."
+> When CR4.UMIP is set, guest should have UMIP cpuid flag. Current
+> kvm set_sregs function doesn't have such check when userspace inputs
+> sregs values. SECONDARY_EXEC_DESC is enabled on writes to CR4.UMIP
+> in vmx_set_cr4 though guest doesn't have UMIP cpuid flag. The testcast
+> triggers handle_desc warning when executing ltr instruction since
+> guest architectural CR4 doesn't set UMIP. This patch fixes it by
+> adding valid CR4 and CPUID combination checking in __set_sregs.
 > 
-> This patch fix it by calling pte_mkyoung. Also, the parameter is
-> changed because vmf should be passed to cow_user_page()
+> syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=138efb99600000
 > 
-> Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
-> in case there can be some obscure use-case.(by Kirill)
+> Reported-by: syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/x86.c | 38 +++++++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 17 deletions(-)
 > 
-> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index f7cfd8e..d23cf0d 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -884,34 +884,42 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_xcr);
+>  
+> -int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+> +static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  {
+> -	unsigned long old_cr4 = kvm_read_cr4(vcpu);
+> -	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
+> -				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
+> -
+>  	if (cr4 & CR4_RESERVED_BITS)
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMEP) && (cr4 & X86_CR4_SMEP))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMAP) && (cr4 & X86_CR4_SMAP))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_FSGSBASE) && (cr4 & X86_CR4_FSGSBASE))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_PKU) && (cr4 & X86_CR4_PKE))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_LA57) && (cr4 & X86_CR4_LA57))
+> -		return 1;
+> +		return -EINVAL;
+>  
+>  	if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) && (cr4 & X86_CR4_UMIP))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+> +{
+> +	unsigned long old_cr4 = kvm_read_cr4(vcpu);
+> +	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
+> +				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
+> +
+> +	if (kvm_valid_cr4(vcpu, cr4))
+>  		return 1;
+>  
+>  	if (is_long_mode(vcpu)) {
+> @@ -8641,10 +8649,6 @@ EXPORT_SYMBOL_GPL(kvm_task_switch);
+>  
+>  static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>  {
+> -	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
+> -			(sregs->cr4 & X86_CR4_OSXSAVE))
+> -		return  -EINVAL;
+> -
+>  	if ((sregs->efer & EFER_LME) && (sregs->cr0 & X86_CR0_PG)) {
+>  		/*
+>  		 * When EFER.LME and CR0.PG are set, the processor is in
+> @@ -8663,7 +8667,7 @@ static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>  			return -EINVAL;
+>  	}
+>  
+> -	return 0;
+> +	return kvm_valid_cr4(vcpu, sregs->cr4);
+>  }
+>  
+>  static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
 > 
-> Signed-off-by: Jia He <justin.he@arm.com>
-> Reported-by: Yibo Cai <Yibo.Cai@arm.com>
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Queued, thanks.
 
--- 
- Kirill A. Shutemov
+Paolo
