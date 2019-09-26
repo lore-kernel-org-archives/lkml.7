@@ -2,130 +2,134 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2164EC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D963EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E9D222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B491C222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfIZIRm (ORCPT
+        id S1727615AbfIZITt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:17:42 -0400
-Received: from lucky1.263xmail.com ([211.157.147.131]:54634 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIZIRl (ORCPT
+        Thu, 26 Sep 2019 04:19:49 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:1722 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726060AbfIZITs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:17:41 -0400
-Received: from localhost (unknown [192.168.167.110])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 6A947681AD;
-        Thu, 26 Sep 2019 16:17:35 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17590T140626737747712S1569485851176425_;
-        Thu, 26 Sep 2019 16:17:35 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <97e35abd95f4711e1957b1e153c0efba>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: dri-devel@lists.freedesktop.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Sandy Huang <hjc@rock-chips.com>
-To:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     hjc@rock-chips.com, heiko@sntech.de, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-Date:   Thu, 26 Sep 2019 16:17:26 +0800
-Message-Id: <1569485848-151295-2-git-send-email-hjc@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569485848-151295-1-git-send-email-hjc@rock-chips.com>
-References: <1569485848-151295-1-git-send-email-hjc@rock-chips.com>
+        Thu, 26 Sep 2019 04:19:48 -0400
+X-IronPort-AV: E=Sophos;i="5.64,551,1559491200"; 
+   d="scan'208";a="76053882"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 26 Sep 2019 16:19:45 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id D50D14CE14F5;
+        Thu, 26 Sep 2019 16:19:48 +0800 (CST)
+Received: from [10.167.226.60] (10.167.226.60) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Thu, 26 Sep 2019 16:19:57 +0800
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
+ "reloc"
+To:     <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
+CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <corbet@lwn.net>
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
+ <20190926060139.GA100481@gmail.com>
+ <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
+ <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+Message-ID: <dff52431-ce54-7c64-b223-36f4491c53b0@cn.fujitsu.com>
+Date:   Thu, 26 Sep 2019 16:20:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.226.60]
+X-yoursite-MailScanner-ID: D50D14CE14F5.AA496
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These new format is supported by some rockchip socs:
+On 9/26/19 3:58 PM, hpa@zytor.com wrote:
+> On September 26, 2019 12:55:51 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
+>> On 9/26/19 2:01 PM, Ingo Molnar wrote:
+>>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
+>>>
+>>>> The fields marked with (reloc) actually are not dedicated for
+>> writing,
+>>>> but communicating info for relocatable kernel with boot loaders. For
+>>>> example:
+>>>>
+>>>>     ============    ============
+>>>>     Field name:     pref_address
+>>>>     Type:           read (reloc)
+>>>>     Offset/size:    0x258/8
+>>>>     Protocol:       2.10+
+>>>>     ============    ============
+>>>>
+>>>>     ============    ========================
+>>>>     Field name:     code32_start
+>>>>     Type:           modify (optional, reloc)
+>>>>     Offset/size:    0x214/4
+>>>>     Protocol:       2.00+
+>>>>     ============    ========================
+>>>>
+>>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+>>>> ---
+>>>> Unless I have incorrect non-native understanding for "fill in", I
+>> think
+>>>> this is inaccurate.
+>>>>
+>>>>  Documentation/x86/boot.rst | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+>>>> index 08a2f100c0e6..a611bf04492d 100644
+>>>> --- a/Documentation/x86/boot.rst
+>>>> +++ b/Documentation/x86/boot.rst
+>>>> @@ -243,7 +243,7 @@ bootloader ("modify").
+>>>>  
+>>>>  All general purpose boot loaders should write the fields marked
+>>>>  (obligatory).  Boot loaders who want to load the kernel at a
+>>>> -nonstandard address should fill in the fields marked (reloc); other
+>>>> +nonstandard address should consult with the fields marked (reloc);
+>> other
+>>>>  boot loaders can ignore those fields.
+>>>>  
+>>>>  The byte order of all fields is littleendian (this is x86, after
+>> all.)
+>>>
+>>> Well, this documentation is written from the point of view of a 
+>>> *bootloader*, not the kernel. So the 'fill in' says that the
+>> bootloader 
+>>> should write those fields - which is correct, right?
+>>>
+>>
+>> Take pref_address or relocatable_kernel for example, they have type:
+>> read (reloc), does boot loader need to write them? I don't see grub
+>> does
+>> this at least.
+> 
+> Read means the boot later reads them.
+> 
 
-DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
-DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
-DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+Sorry I don't know what is going wrong in my mind. For me, if
+pref_address has "read (reloc)", base on the current document, it means
+boot loader will read it and also write it, which is conflicting. And
+the purpose of pref_address should just inform boot loader that kernel
+whats itself to be loaded at certain address, it don't want to be written.
 
-Signed-off-by: Sandy Huang <hjc@rock-chips.com>
----
- drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
- include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
- 2 files changed, 32 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-index c630064..ccd78a3 100644
---- a/drivers/gpu/drm/drm_fourcc.c
-+++ b/drivers/gpu/drm/drm_fourcc.c
-@@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
- 		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
- 		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
- 		  .hsub = 2, .vsub = 2, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 2, .vsub = 2, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 2, .vsub = 2, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 2, .vsub = 1, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 2, .vsub = 1, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 1, .vsub = 1, .is_yuv = true},
-+		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
-+		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-+		  .hsub = 1, .vsub = 1, .is_yuv = true},
- 		{ .format = DRM_FORMAT_P210,		.depth = 0,
- 		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
- 		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
-diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-index 3feeaa3..08e2221 100644
---- a/include/uapi/drm/drm_fourcc.h
-+++ b/include/uapi/drm/drm_fourcc.h
-@@ -238,6 +238,20 @@ extern "C" {
- #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
- 
- /*
-+ * 2 plane YCbCr
-+ * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
-+ * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
-+ * or
-+ * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
-+ */
-+#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
-+#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
-+#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
-+#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
-+
-+/*
-  * 2 plane YCbCr MSB aligned
-  * index 0 = Y plane, [15:0] Y:x [10:6] little endian
-  * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
 -- 
-2.7.4
-
+Sincerely,
+Cao jin
 
 
