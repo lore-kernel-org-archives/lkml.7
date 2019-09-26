@@ -2,154 +2,181 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F909C432C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58E1C4360D
 	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734C9222C2
+	by mail.kernel.org (Postfix) with ESMTP id 9D4B4222C1
 	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1569457999;
-	bh=RgsAanqTifp71PLJSM6G+W1ujaztqtJpBUszycOkJS4=;
+	bh=hMcZV5FiCvCYw5u8wgL3m1i4SBxBtoEscsfcIGuYIUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f49mgyhYRPirbfGO6lUpkz3b42moBqK6jGWvAvm7u/O9NOBzE2IRr+gWChWytSQxF
-	 nXv5YJF3HvDpy3FA5+JMX53TJKgY2P7vvH2ygjWdOd9NM/h8cZt3g7saLqM9TI/r//
-	 8ms4CllMltMs71m3udhay3BrdABtok5psOgMsJ5I=
+	b=v4vChtjVRPOL4fMnzrOl4C+4lMpTlVPQDCyO2ZjcxE2ma6JSzPIaY9Qy6lChZohbZ
+	 tciqIybDSZKfmgnpEVfHfeWbsawuDPBEsHQTerwURPj1kJU5/fxz2FN6GqloT8UJKe
+	 f1k4XRtAUz3oBiodiWeKO0kfxf29l3WrCbzXztJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfIZAdF (ORCPT
+        id S1730318AbfIZAdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfIZAdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:33:05 -0400
+        id S1726984AbfIZAdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:33:11 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EC3D21D7B;
-        Thu, 26 Sep 2019 00:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83F7222C2;
+        Thu, 26 Sep 2019 00:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569457984;
-        bh=RgsAanqTifp71PLJSM6G+W1ujaztqtJpBUszycOkJS4=;
+        s=default; t=1569457990;
+        bh=hMcZV5FiCvCYw5u8wgL3m1i4SBxBtoEscsfcIGuYIUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZoDjmkVz/+hDt/OY7il9w1vGPwia3yekvCrkD0hPXXwk5Se67JoqpYwEGv7N8oU0
-         dfMTNsD1SLoL0tPVExLs6B4sA2NvjG0mq0tI+CtoFNzYwXlE/XXGHw/Z3d3YN+h42o
-         rTbejam7cBhenHyjdzpvGrUR/x/aopZ0GhCK+hgU=
+        b=aInsk+aSiwcJarBV2x3Aka8tfKDufpECSpfdzkPwEl1XDiZ9aufMAJ66uAIIAkAeV
+         re1dX0jiHaMBvtZSSbpL2tP1D30c8meP/Ei46ncl6sfv4btBLJRLZfGzSfu2Hpl6xi
+         npbxc7NXsJ1BXX0tmb668YH/Ewo9sL3bvvA8V8FY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH 02/66] perf record: Move restricted maps check to after a possible fallback to not collect kernel samples
-Date:   Wed, 25 Sep 2019 21:31:40 -0300
-Message-Id: <20190926003244.13962-3-acme@kernel.org>
+        Kim Phillips <kim.phillips@amd.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Janakarajan Natarajan <janakarajan.natarajan@amd.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Luke Mujica <lukemujica@google.com>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 03/66] perf vendor events amd: Add L3 cache events for Family 17h
+Date:   Wed, 25 Sep 2019 21:31:41 -0300
+Message-Id: <20190926003244.13962-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-Before:
+Allow users to symbolically specify L3 events for Family 17h processors
+using the existing AMD Uncore driver.
 
-  [acme@quaco ~]$ perf record -b -e cycles date
-  WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-  check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
+Source of events descriptions are from section 2.1.15.4.1 "L3 Cache PMC
+Events" of the latest Family 17h PPR, available here:
 
-  Samples in kernel functions may not be resolved if a suitable vmlinux
-  file is not found in the buildid cache or in the vmlinux path.
+  https://www.amd.com/system/files/TechDocs/55570-B1_PUB.zip
 
-  Samples in kernel modules won't be resolved at all.
+Opnly BriefDescriptions added, since they show with and without
+the -v and --details flags.
 
-  If some relocation was applied (e.g. kexec) symbols may be misresolved
-  even with a suitable vmlinux or kallsyms file.
+Tested with:
 
-  Mon 23 Sep 2019 11:00:59 AM -03
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.005 MB perf.data (14 samples) ]
-  [acme@quaco ~]$
+ # perf stat -e l3_request_g1.caching_l3_cache_accesses,amd_l3/event=0x01,umask=0x80/,l3_comb_clstr_state.request_miss,amd_l3/event=0x06,umask=0x01/ perf bench mem memcpy -s 4mb -l 100 -f default
+...
+         7,006,831      l3_request_g1.caching_l3_cache_accesses
+         7,006,830      amd_l3/event=0x01,umask=0x80/
+           366,530      l3_comb_clstr_state.request_miss
+           366,568      amd_l3/event=0x06,umask=0x01/
 
-But we did a fallback and exclude_kernel was set, so no need for
-resolving kernel symbols:
-
-  $ perf evlist -v
-  cycles:u: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
-  $
-
-After:
-
-  [acme@quaco ~]$ perf record -b -e cycles date
-  Mon 23 Sep 2019 11:07:18 AM -03
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.007 MB perf.data (16 samples) ]
-  [acme@quaco ~]$ perf evlist -v
-  cycles:u: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
-  [acme@quaco ~]$
-
-No needless warning is emitted.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Janakarajan Natarajan <janakarajan.natarajan@amd.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Luke Mujica <lukemujica@google.com>
+Cc: Martin Liška <mliska@suse.cz>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: https://lkml.kernel.org/n/tip-5yqnr8xcqwhr15xktj2097ac@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20190919204306.12598-1-kim.phillips@amd.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ .../pmu-events/arch/x86/amdfam17h/cache.json  | 42 +++++++++++++++++++
+ tools/perf/pmu-events/jevents.c               |  1 +
+ 2 files changed, 43 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 3f66a49a997f..1e1f97139f16 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -788,6 +788,17 @@ static int record__open(struct record *rec)
- 		pos->supported = true;
- 	}
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json b/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+index fad4af9142cb..6221a840fcea 100644
+--- a/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
++++ b/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+@@ -283,5 +283,47 @@
+     "BriefDescription": "Total cycles spent with one or more fill requests in flight from L2.",
+     "PublicDescription": "Total cycles spent with one or more fill requests in flight from L2.",
+     "UMask": "0x1"
++  },
++  {
++    "EventName": "l3_request_g1.caching_l3_cache_accesses",
++    "EventCode": "0x01",
++    "BriefDescription": "Caching: L3 cache accesses",
++    "UMask": "0x80",
++    "Unit": "L3PMC"
++  },
++  {
++    "EventName": "l3_lookup_state.all_l3_req_typs",
++    "EventCode": "0x04",
++    "BriefDescription": "All L3 Request Types",
++    "UMask": "0xff",
++    "Unit": "L3PMC"
++  },
++  {
++    "EventName": "l3_comb_clstr_state.other_l3_miss_typs",
++    "EventCode": "0x06",
++    "BriefDescription": "Other L3 Miss Request Types",
++    "UMask": "0xfe",
++    "Unit": "L3PMC"
++  },
++  {
++    "EventName": "l3_comb_clstr_state.request_miss",
++    "EventCode": "0x06",
++    "BriefDescription": "L3 cache misses",
++    "UMask": "0x01",
++    "Unit": "L3PMC"
++  },
++  {
++    "EventName": "xi_sys_fill_latency",
++    "EventCode": "0x90",
++    "BriefDescription": "L3 Cache Miss Latency. Total cycles for all transactions divided by 16. Ignores SliceMask and ThreadMask.",
++    "UMask": "0x00",
++    "Unit": "L3PMC"
++  },
++  {
++    "EventName": "xi_ccx_sdp_req1.all_l3_miss_req_typs",
++    "EventCode": "0x9a",
++    "BriefDescription": "All L3 Miss Request Types. Ignores SliceMask and ThreadMask.",
++    "UMask": "0x3f",
++    "Unit": "L3PMC"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index d413761621b0..9e37287da924 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -239,6 +239,7 @@ static struct map {
+ 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
+ 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+ 	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
++	{ "L3PMC", "amd_l3" },
+ 	{}
+ };
  
-+	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(evlist)) {
-+		pr_warning(
-+"WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
-+"check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
-+"Samples in kernel functions may not be resolved if a suitable vmlinux\n"
-+"file is not found in the buildid cache or in the vmlinux path.\n\n"
-+"Samples in kernel modules won't be resolved at all.\n\n"
-+"If some relocation was applied (e.g. kexec) symbols may be misresolved\n"
-+"even with a suitable vmlinux or kallsyms file.\n\n");
-+	}
-+
- 	if (perf_evlist__apply_filters(evlist, &pos)) {
- 		pr_err("failed to set filter \"%s\" on event %s with %d (%s)\n",
- 			pos->filter, perf_evsel__name(pos), errno,
-@@ -2364,16 +2375,6 @@ int cmd_record(int argc, const char **argv)
- 
- 	err = -ENOMEM;
- 
--	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
--		pr_warning(
--"WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
--"check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
--"Samples in kernel functions may not be resolved if a suitable vmlinux\n"
--"file is not found in the buildid cache or in the vmlinux path.\n\n"
--"Samples in kernel modules won't be resolved at all.\n\n"
--"If some relocation was applied (e.g. kexec) symbols may be misresolved\n"
--"even with a suitable vmlinux or kallsyms file.\n\n");
--
- 	if (rec->no_buildid_cache || rec->no_buildid) {
- 		disable_buildid_cache();
- 	} else if (rec->switch_output.enabled) {
 -- 
 2.21.0
 
