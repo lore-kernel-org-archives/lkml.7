@@ -2,147 +2,264 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC3AC352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9DAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73998222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8961A222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptL+t++P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfIZTnY (ORCPT
+        id S1728731AbfIZToX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:43:24 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:36142 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728454AbfIZTnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:43:24 -0400
-X-Greylist: delayed 498 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Sep 2019 15:43:22 EDT
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x8QJYj1f004715;
-        Thu, 26 Sep 2019 22:34:46 +0300
-Date:   Thu, 26 Sep 2019 22:34:45 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-cc:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org
-Subject: Re: [PATCH 3/3] selftests: netfilter: add ipvs tunnel test case
-In-Reply-To: <1569516532-708-4-git-send-email-yanhaishuang@cmss.chinamobile.com>
-Message-ID: <alpine.LFD.2.21.1909262154000.3599@ja.home.ssi.bg>
-References: <1569516532-708-1-git-send-email-yanhaishuang@cmss.chinamobile.com> <1569516532-708-4-git-send-email-yanhaishuang@cmss.chinamobile.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 26 Sep 2019 15:44:23 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41200 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbfIZToX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:44:23 -0400
+Received: by mail-io1-f68.google.com with SMTP id r26so9679958ioh.8;
+        Thu, 26 Sep 2019 12:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7YaOJjbeJ4vHzFNCKN4Rfl7SNbQO++40kW4opqhFvjE=;
+        b=ptL+t++PhjIDsGKfuLy0BchccV5YdocaOsRsXZ/4JqKqUKoQzhFSC1NY4npM9rE3Yl
+         C7Zl9VNtkmAwuniXVUGj4fMyTDLJ9ep+95WejAowbtGq6FHtnA2xpNZVLKkTBrGnzor0
+         0V+gRFuTh35NxWLvtKPNWwtsROhtajgumBlMHA4ZM5svWHQtB83GqJQoIMPvnDLX0Mog
+         7cFhKRgDTuCirRwxX668mKmMZkEuY9LObevYVy1kBjI8F/Gm4TsEt4zLDYd6uSq7cZCt
+         gi9GXWN/AxMMuWydGrQclQzQp/+PcBWPKz+vNmn/hh8LJXIC7WXRfqGKq1Ck+jfEHf1j
+         qu3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7YaOJjbeJ4vHzFNCKN4Rfl7SNbQO++40kW4opqhFvjE=;
+        b=UevvZPYC0oERjnJCZc2pso/1jVu71iwvggUtlT5hqDw9Pz/IyPp9uj1lUdemN5TeQx
+         y3M3EVrGpm7wYXX9sqSzqoZGlBbCfwfSfXwnUv2204z7Whm0RspeKr6mM6EKpVAMqxRp
+         3aOaHdRmnFCnV8luqDV7GV2qnfANPC1RKZ6750iKw8GrC8DBgefZuIj/P7cMt51WaZYM
+         wEG9oDSIwzrcsTO+P3XWxmoOOqMjaGEemfgro9BCoaR4mNfvxXkFyd3aG5SKOhgO+75W
+         GxItr5WbNDroD+0WRPQMDo1DBS1J7zxWPV73pJkzfaJWMI7E/e5WqaReE1SPtxj99Cp3
+         scUw==
+X-Gm-Message-State: APjAAAX+4J9zmiZmpI0kINxseiE+rvneaUiCnTl1wgpRRXGbwOqAbhFl
+        Zw5GKmZjCQSx2r8KpTrGAHM/C+hRNZXlCo8yrvI=
+X-Google-Smtp-Source: APXvYqws94RCz1OEKmJWcCJfFYz8odw3snwroxEbJRlT5VqNIjb8opn290GiegEG8UnQeVF3x/P4koKd12cnxdqwU+Y=
+X-Received: by 2002:a92:3f0a:: with SMTP id m10mr357121ila.158.1569527062022;
+ Thu, 26 Sep 2019 12:44:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190919145114.13006-1-philipp.puschmann@emlix.com>
+ <VI1PR0402MB3600CA068AEBAC63D3CE6A4CFF880@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <ac67f010-1b2c-6996-f542-ab955ca86489@emlix.com> <CAHCN7xL0BKmt8xrhuB4rrvOqkCM5AUJ6YAzbcU8eNDXbzj4fZg@mail.gmail.com>
+ <15be848facd5e80222e5db30c61fe72f82a85713.camel@analog.com>
+In-Reply-To: <15be848facd5e80222e5db30c61fe72f82a85713.camel@analog.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 26 Sep 2019 14:44:10 -0500
+Message-ID: <CAHCN7xK=kxEFiuUEX=q4R3XEyeaAp+HGFCUpYkYUESMhqwMA6A@mail.gmail.com>
+Subject: Re: [EXT] [PATCH v3] serial: imx: adapt rx buffer and dma periods
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "philipp.puschmann@emlix.com" <philipp.puschmann@emlix.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "fugang.duan@nxp.com" <fugang.duan@nxp.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 26, 2019 at 1:37 AM Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> wrote:
+>
+> On Wed, 2019-09-25 at 10:14 -0500, Adam Ford wrote:
+> > [External]
+> >
+> > On Fri, Sep 20, 2019 at 2:06 AM Philipp Puschmann
+> > <philipp.puschmann@emlix.com> wrote:
+> > > Hi Andy,
+> > >
+> > > Am 20.09.19 um 05:42 schrieb Andy Duan:
+> > > > From: Philipp Puschmann <philipp.puschmann@emlix.com> Sent: Thursday,
+> > > > September 19, 2019 10:51 PM
+> > > > > Using only 4 DMA periods for UART RX is very few if we have a high
+> > > > > frequency
+> > > > > of small transfers - like in our case using Bluetooth with many
+> > > > > small packets
+> > > > > via UART - causing many dma transfers but in each only filling a
+> > > > > fraction of a
+> > > > > single buffer. Such a case may lead to the situation that DMA RX
+> > > > > transfer is
+> > > > > triggered but no free buffer is available. When this happens dma
+> > > > > channel ist
+> > > > > stopped - with the patch
+> > > > > "dmaengine: imx-sdma: fix dma freezes" temporarily only - with the
+> > > > > possible
+> > > > > consequences that:
+> >
+> > I have an i.MX6Q with Wl1837MOD on UART 2 with flow control, and I am
+> > getting Bluetooth transfer timeouts.
+> > (see imx6-logicpd-som.dtsi)
+> >
+> > On top of 5.3.1, I have installed:
+> >
+> > dmaengine: imx-sdma: fix buffer ownership
+> > dmaengine: imx-sdma: fix dma freezes
+> > dmaengine: imx-sdma: drop redundant variable
+> > dmaengine: imx-sdma: fix kernel hangs with SLUB slab allocator
+> > serial: imx: adapt rx buffer and dma periods
+> >
+> > and I still get timeouts:
+> >
+> > [   66.632006] Bluetooth: hci0: command 0xff36 tx timeout
+> > [   76.790499] Bluetooth: hci0: command 0x1001 tx timeout
+> > [   87.110488] Bluetooth: hci0: command 0xff36 tx timeout
+> > [   97.270507] Bluetooth: hci0: command 0x1001 tx timeout
+> > [  107.590457] Bluetooth: hci0: command 0xff36 tx timeout
+> > [  117.750477] Bluetooth: hci0: command 0x1001 tx timeout
+> > [  226.390499] Bluetooth: hci0: command 0xfe38 tx timeout
+> > [  231.590735] Bluetooth: hci0: command tx timeout
+> >
+> > I did a bisect and found the start of my problems came from
+> >
+> > 361deb7243d2 ("dmaengine: dmatest: wrap src & dst data into a struct")
+>
+> That commit only touches `drivers/dma/dmatest.c`
+> Are you using that module?
+>
+> It's a "unit-test" module for testing DMAengine drivers.
+> The only way that can break anything [from what I can tell], is if it is
+> being run. It will probably put the DMA into a weird state (it is a test-
+> module after-all), and it may require some DMAs to be reset.
+> I admit it would be nice that the test-module would put the DMA back into a
+> normal-working state, but that effort could be big for some cases.
 
-	Hello,
+I will bisect it again.  I removed the CONFIG_DMATEST from the
+omx_v6_v7_defconfig, and I still got the failure using Kernel 5.3.1,
+so I'll work on this tomorrow and try to narrow it down better with
+and without the test module installed.
 
-On Fri, 27 Sep 2019, Haishuang Yan wrote:
-
-> Test virtual server via ipip tunnel.
-> 
-> Tested:
-> # selftests: netfilter: ipvs.sh
-> # Testing DR mode...
-> # Testing NAT mode...
-> # Testing Tunnel mode...
-> # ipvs.sh: PASS
-> ok 6 selftests: netfilter: ipvs.sh
-> 
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-
-	It is good to have IPVS selftests... This is a good start,
-later we can add IPv6...
-
-> ---
->  tools/testing/selftests/netfilter/ipvs.sh | 33 +++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-> index 40058f9..2012cec 100755
-> --- a/tools/testing/selftests/netfilter/ipvs.sh
-> +++ b/tools/testing/selftests/netfilter/ipvs.sh
-> @@ -167,6 +167,33 @@ test_nat() {
->      test_service
->  }
->  
-> +test_tun() {
-> +    ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
-> +
-> +    ip netns exec ns1 modprobe ipip
-> +    ip netns exec ns1 ip link set tunl0 up
-> +    ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=0
-> +    ip netns exec ns1 sysctl -qw net.ipv4.conf.all.send_redirects=0
-> +    ip netns exec ns1 sysctl -qw net.ipv4.conf.default.send_redirects=0
-> +    ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
-> +    ip netns exec ns1 ipvsadm -a -i -t ${vip_v4}:${port} -r ${rip_v4}:${port}
-> +    ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
-> +
-> +    ip netns exec ns2 modprobe ipip
-> +    ip netns exec ns2 ip link set tunl0 up
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.rp_filter=0
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.lo.arp_ignore=1
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.lo.arp_announce=2
-
-	arp_ignore and arp_announce are not used on "lo". And MAX
-is used, i.e.
-
-# for all interfaces use (suitable for our test setup):
-all.arp_ignore=1
-all.arp_announce=2
-
-# or if above is not desired, for specific LAN interface use
-veth21.arp_ignore=1
-veth21.arp_announce=2
-
-	BTW, the picture has ns2/veth12 while it should be veth21.
-Also, should we check if IPVS module is loaded? Eg. depending
-on present /proc/sys/net/ipv4/vs/ dir ?
-
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.lo.rp_filter=0
-
-	IIRC, lo.rp_filter is never used, packets from "lo" always come
-with attached output route, so source validation is not performed.
-
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.tunl0.rp_filter=0
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.veth21.rp_filter=0
-> +    ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
-> +
-> +    test_service
-> +}
-> +
->  run_tests() {
->  	local errors=
->  
-> @@ -182,6 +209,12 @@ run_tests() {
->  	test_nat
->  	errors=$(( $errors + $? ))
->  
-> +	echo "Testing Tunnel mode..."
-> +	cleanup
-> +	setup
-> +	test_tun
-> +	errors=$(( $errors + $? ))
-> +
->  	return $errors
->  }
->  
-> -- 
-> 1.8.3.1
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+adam
+>
+>
+> >
+> > This happened sometime between v5.0 and v5.1
+> >
+> > Is there a patch I missed somewhere?  Do I need to change my device
+> > tree configuration somehow to allocate the proper DMA memory?
+> >
+> >
+> >
+> > > > > with disabled hw flow control:
+> > > > >   If enough data is incoming on UART port the RX FIFO runs over and
+> > > > >   characters will be lost. What then happens depends on upper
+> > > > > layer.
+> > > > >
+> > > > > with enabled hw flow control:
+> > > > >   If enough data is incoming on UART port the RX FIFO reaches a
+> > > > > level
+> > > > >   where CTS is deasserted and remote device sending the data stops.
+> > > > >   If it fails to stop timely the i.MX' RX FIFO may run over and
+> > > > > data
+> > > > >   get lost. Otherwise it's internal TX buffer may getting filled to
+> > > > >   a point where it runs over and data is again lost. It depends on
+> > > > >   the remote device how this case is handled and if it is
+> > > > > recoverable.
+> > > > >
+> > > > > Obviously we want to avoid having no free buffers available. So we
+> > > > > decrease
+> > > > > the size of the buffers and increase their number and the total
+> > > > > buffer size.
+> > > > >
+> > > > > Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+> > > > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > > > > ---
+> > > > >
+> > > > > Changelog v3:
+> > > > >  - enhance description
+> > > > >
+> > > > > Changelog v2:
+> > > > >  - split this patch from series "Fix UART DMA freezes for iMX6"
+> > > > >  - add Reviewed-by tag
+> > > > >
+> > > > >  drivers/tty/serial/imx.c | 5 ++---
+> > > > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> > > > > index
+> > > > > 87c58f9f6390..51dc19833eab 100644
+> > > > > --- a/drivers/tty/serial/imx.c
+> > > > > +++ b/drivers/tty/serial/imx.c
+> > > > > @@ -1034,8 +1034,6 @@ static void imx_uart_timeout(struct
+> > > > > timer_list *t)
+> > > > >         }
+> > > > >  }
+> > > > >
+> > > > > -#define RX_BUF_SIZE    (PAGE_SIZE)
+> > > > > -
+> > > > >  /*
+> > > > >   * There are two kinds of RX DMA interrupts(such as in the MX6Q):
+> > > > >   *   [1] the RX DMA buffer is full.
+> > > > > @@ -1118,7 +1116,8 @@ static void imx_uart_dma_rx_callback(void
+> > > > > *data)  }
+> > > > >
+> > > > >  /* RX DMA buffer periods */
+> > > > > -#define RX_DMA_PERIODS 4
+> > > > > +#define RX_DMA_PERIODS 16
+> > > > > +#define RX_BUF_SIZE    (PAGE_SIZE / 4)
+> > > > >
+> > > > Why to decrease the DMA RX buffer size here ?
+> > > >
+> > > > The current DMA implementation support DMA cyclic mode, one SDMA BD
+> > > > receive one Bluetooth frame can
+> > > > bring better performance.
+> > > > As you know, for L2CAP, a maximum transmission unit (MTU) associated
+> > > > with the largest Baseband payload
+> > > > is 341 bytes for DH5 packets.
+> > > >
+> > > > So I suggest to increase RX_BUF_SIZE along with RX_DMA_PERIODS to
+> > > > feasible value.
+> > >
+> > > I debugged and developed this patches on a system with a 4.15 kernel.
+> > > When prepared for upstream i have adapted
+> > > some details and missed a important thing here. It should say:
+> > >
+> > > +#define RX_BUF_SIZE    (RX_DMA_PERIODS * PAGE_SIZE / 4)
+> > >
+> > > Yes, i wanted to increase the total buffer size too, even wrote it in
+> > > the description.
+> > > I will prepare a version 4, thanks for the hint.
+> > >
+> > > Just for info: A single RX DMA period aka buffer can be filled with
+> > > mutliple packets in regard of the upper layer, here BT.
+> > >
+> > >
+> > > Regards,
+> > > Philipp
+> > > > Andy
+> > > >
+> > > > >  static int imx_uart_start_rx_dma(struct imx_port *sport)  {
+> > > > > --
+> > > > > 2.23.0
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
