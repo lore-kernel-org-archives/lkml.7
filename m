@@ -2,124 +2,148 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEACC47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9D3C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B1E222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF24217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfIZJ02 (ORCPT
+        id S1726933AbfIZJ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:26:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38810 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725554AbfIZJ01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:26:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2E23AAC10;
-        Thu, 26 Sep 2019 09:26:25 +0000 (UTC)
-Subject: Re: [PATCH 3/3] mm, page_owner: rename flag indicating that page is
- allocated
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Qian Cai <cai@lca.pw>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20190925143056.25853-1-vbabka@suse.cz>
- <20190925143056.25853-4-vbabka@suse.cz> <20190926091855.z3wuhk3mnzx57ljf@box>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f3d5425c-a833-0c14-3d88-3b7fbab47e5d@suse.cz>
-Date:   Thu, 26 Sep 2019 11:26:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 26 Sep 2019 05:26:58 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42137 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfIZJ06 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:26:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i185so1462846oif.9;
+        Thu, 26 Sep 2019 02:26:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=igPjA35ZmLEPbqljRL7Ddj7a9tyDEasITq8WKXbH8wc=;
+        b=sKbFvtjcmh02XM4JWty8zTFcdBXal/tQMJaN4DXaeVUEZXlA+JNWi8IzanA4fDHUMk
+         7mSWb7KvCaXKxc9jJI2OLLqL41YU5xT8vmI0Szozrj5TW9Yo21e6OYS/LuPCXcwhYwuk
+         ZG8KbM+B0SNdh0iv/2Sonw9HrqELVNYjEGX+kXmLY0D+JOOquLPfLjLdDVSj7okFZ3RK
+         r0U3MaHgYnWNdvUvp/Hk+FtwDxY7GrvsBwTlu0OCZ2OWv7j9xEAmzFXxxd6Iw/Mg25Ih
+         CpbI4XEkRPTJ7WY9WYBHscBRdmrv8dYL4DD51NyG6AoI+YhfhNkAM2RQfybhfkyQ4POB
+         5MbQ==
+X-Gm-Message-State: APjAAAXSoul7qYgSLEm1SRcqRHy89CefU0TBRMnVBw+ckokB1Jp5bAmU
+        /Sp8e87RPoiAHKwb50C8Jh+L/IKHwidC50NwphU=
+X-Google-Smtp-Source: APXvYqy8+cqYzKeBWGjpfU1XHjPCrv7DgWaC7Y7xU3SbVDO5QZ1sc73XgPRB0sbTaZ38h856Kh8vet9ANcuwtcDizQY=
+X-Received: by 2002:aca:dad4:: with SMTP id r203mr1908355oig.102.1569490017367;
+ Thu, 26 Sep 2019 02:26:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190926091855.z3wuhk3mnzx57ljf@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
+ <CAMuHMdXHqQ4O-guETbi85XiJGQ+4EkPdPZf=o540N4rGJkoK4w@mail.gmail.com> <CAK7LNAR1eHPhf0eBNDd8bNVAUhfKrob0EvxHvAQHa8mqPnMbzw@mail.gmail.com>
+In-Reply-To: <CAK7LNAR1eHPhf0eBNDd8bNVAUhfKrob0EvxHvAQHa8mqPnMbzw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 26 Sep 2019 11:26:46 +0200
+Message-ID: <CAMuHMdV3VWCP35dOMWaSePz5mhzJp_Y5OViVUqTn7Ocdhn81Og@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 11:18 AM, Kirill A. Shutemov wrote:
-> On Wed, Sep 25, 2019 at 04:30:52PM +0200, Vlastimil Babka wrote:
->> Commit 37389167a281 ("mm, page_owner: keep owner info when freeing the page")
->> has introduced a flag PAGE_EXT_OWNER_ACTIVE to indicate that page is tracked as
->> being allocated.  Kirril suggested naming it PAGE_EXT_OWNER_ALLOCED to make it
-> 		    ^ typo
+Hi Yamada-san,
 
-Ah, sorry.
+On Thu, Sep 26, 2019 at 11:03 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> On Thu, Sep 26, 2019 at 5:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Fri, Aug 30, 2019 at 5:44 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > > Commit 9012d011660e ("compiler: allow all arches to enable
+> > > CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable
+> > > this option. A couple of build errors were reported by randconfig,
+> > > but all of them have been ironed out.
+> > >
+> > > Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely
+> > > (and it will simplify the 'inline' macro in compiler_types.h),
+> > > this commit changes it to always-on option. Going forward, the
+> > > compiler will always be allowed to not inline functions marked
+> > > 'inline'.
+> > >
+> > > This is not a problem for x86 since it has been long used by
+> > > arch/x86/configs/{x86_64,i386}_defconfig.
+> > >
+> > > I am keeping the config option just in case any problem crops up for
+> > > other architectures.
+> > >
+> > > The code clean-up will be done after confirming this is solid.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > This breaks compiling drivers/video/fbdev/c2p*, as the functions in
+> > drivers/video/fbdev/c2p_core.h are no longer inlined, leading to calls
+> > to the non-existent function c2p_unsupported(), as reported by KISSKB:
+> >
+> > On Thu, Sep 26, 2019 at 5:02 AM <noreply@ellerman.id.au> wrote:
+> > > FAILED linux-next/m68k-defconfig/m68k Thu Sep 26, 12:58
+> > >
+> > > http://kisskb.ellerman.id.au/kisskb/buildresult/13973194/
+> > >
+> > > Commit:   Add linux-next specific files for 20190925
+> > >           d47175169c28eedd2cc2ab8c01f38764cb0269cc
+> > > Compiler: m68k-linux-gcc (GCC) 4.6.3 / GNU ld (GNU Binutils) 2.22
+> > >
+> > > Possible errors
+> > > ---------------
+> > >
+> > > c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
+> > > c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
+> > > c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
+> > > c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
+> > > make[1]: *** [Makefile:1074: vmlinux] Error 1
+> > > make: *** [Makefile:179: sub-make] Error 2
+> >
+> > I managed to reproduce this with gcc version 8.3.0 (Ubuntu
+> > 8.3.0-6ubuntu1~18.04.1) , and bisected the failure to commit
+> > 025f072e5823947c ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly") .
+> >
+> > Marking the functions __always_inline instead of inline fixes that.
+> > Shall I send a patch to do that?
+>
+>
+> Yes, please.
 
-> And PAGE_EXT_OWNER_ALLOCED is my typo. I meant PAGE_EXT_OWNER_ALLOCATED :P
+OK, will do.
 
-And I though you intended to make it shorter :)
+> But you do not need to touch _transp() or comp().
+> Only functions that call c2p_unsupported().
 
+However, the inlining of these functions is very performance-sensitive too.
+So perhaps I should mark all of them __always_inline?
+
+> BTW, c2p_unsupported() can be replaced with BUILD_BUG().
+> This will break the build earlier in case
+> it cannot be optimized out.
+
+Right. Will do, too.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
