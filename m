@@ -2,129 +2,240 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FE6C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F79C352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA4321D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AA5222CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eekWS5lE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PaBbwOTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfIZREJ (ORCPT
+        id S1727586AbfIZRLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:04:09 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33526 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfIZREJ (ORCPT
+        Thu, 26 Sep 2019 13:11:04 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34077 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbfIZRLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:04:09 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e18so2768437oii.0;
-        Thu, 26 Sep 2019 10:04:08 -0700 (PDT)
+        Thu, 26 Sep 2019 13:11:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k7so1584430pll.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D+LB+cTP0kzVzafxVlKyUQOuNnEa52qRrfQZbeKZv2U=;
-        b=eekWS5lE0DEQysy5LMYTYo7Y0ZzMtbnZiPmwZTS4naNU+utBj+QKWIesS1sNHebz6W
-         kiPm4JsvCkwRxJ2Qyp+XfYRj48qNx2zCp3yheawU2JYak4QWtngTLpOG/3Lkwu2YhCbF
-         WB3UkEQgqgFLdo8jgBvozlHLJb95vk9wWFd/PX800jxDsF4haTrd4K0kr5wmw2DjObP6
-         fqcSFjSxNFzq160Z4l4LyEXMOtnw3zrnw1PcLcHuCUY+8kWAzksCTIXjgg1eIUWvDR4f
-         VT+CfYzsfVOCnnT/UCNPHvkgRNCyyPP46gerUwmi1lgxfsoIysvW1I6HaX0RTNz+RVP/
-         upRg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y/PHP4OLdI45zIHPb8f9yOnc6gu1H47DcMn0ixy9Yf8=;
+        b=PaBbwOTBVXkwCUFb6hkHfM2jTnsh6F2gQ4gVRZ1ldgfnElSkhjIiNiBhnAlH1Sutvn
+         jbKLybsQEGovmfxORO/UbX39eiDaaSPWUsZx1flJ+8D5CwytzW4pxzC0TxjRv2rK6oga
+         3ilJRbaq7RO5QVS8QglrlisubgfLi66p9HYLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D+LB+cTP0kzVzafxVlKyUQOuNnEa52qRrfQZbeKZv2U=;
-        b=jZrB5wqfUXD57KBhwANtcPN6ZwEkmhFcI8kD1wpN2UhAzK0TfYL7CE9YrZvJb3QZfw
-         gBRVuef8Ol57GVPb++asV3KGbEa3EhPhqR4gr3wY6wl/5QCqCYmFJVFroIpAzcUBvnnn
-         bqfcUkntNFOOli7nFTE6zAy3oquyPAzHceiKtMN1Nhm75pHDbwMoWjw/z0Z+G/cjgGMv
-         DRMBajizBwH52aGjrGtqVDJK5RLAGj4a/8njRBG0zastQgZYGMAzxqL9eZGzWZ8gZ2aQ
-         22lLiQj3dpAgKOFm43cxKIq4NmjNT71CMcMUsr6Pbz7xmh9JSZVBA4wG5uFnzu0eJlN8
-         PzvA==
-X-Gm-Message-State: APjAAAW2QoaOqYJd5azapVZsh0msJhwJ6zCtXWNmcGqRRJhw9KTHhx0u
-        ROLOCmRl9FYRW4Pk+xFGIoQ9sZKm
-X-Google-Smtp-Source: APXvYqywEhZq0Xx3WldtoPkbK7Ztka7DxSjmPgb7/bZ+Y4ZuXoDcNgiezqv9mvFy9PUMLzLL8ENXjQ==
-X-Received: by 2002:aca:c505:: with SMTP id v5mr3284814oif.79.1569517447893;
-        Thu, 26 Sep 2019 10:04:07 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id y16sm803729otg.7.2019.09.26.10.04.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y/PHP4OLdI45zIHPb8f9yOnc6gu1H47DcMn0ixy9Yf8=;
+        b=J44CoujU0Sdof0OeN4oRGzX7UwKC78/ktm3WTKgq3VpPc6OaQDldjKCn4wXl2b6+gZ
+         gZ4Wr6r51N4x0+/AMYZqiJymEKA+0f2Ns+hoLecS8dLzrI/4eMtBLyNS0iwgrsSKvB7o
+         w2v/TrqOUfM6nYCcatPnFPw14YYxv2gnRVhN3GU9h4gldUmpkz27wfV8W5Eh4kTzYk/q
+         BxFBaDfJ2AMZhfTMvJeZIGqhJXuc9y8Ek0hIZt35Cn2+ah+7A2yvbuioduPgWNHYJeMF
+         TRgzVCp6Fq4B5rcDMqwpePGTVueKWigO62andsFh7eknL7AnZA6g2OQYxPJVh09Yxd9Y
+         h/Mw==
+X-Gm-Message-State: APjAAAUP2I6Ztk5Zc0ViE8SlqnIudbjvjsyKcGRU3TPG/Vcu8w+fW721
+        MygrhTLpr3YMnExps8ID2DoRhg==
+X-Google-Smtp-Source: APXvYqxuSq/HWvt5bQoH3kWw9vWoOiWZGtdZkJlHWZR6QXtChqn2FUztl8LioG/WG6g+8FXOf4KYtw==
+X-Received: by 2002:a17:902:aa4a:: with SMTP id c10mr4838234plr.340.1569517863376;
+        Thu, 26 Sep 2019 10:11:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id z20sm2509355pjn.12.2019.09.26.10.11.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 10:04:06 -0700 (PDT)
-Subject: Re: [PATCH v2] staging: rtl8188eu: fix possible null dereference
-To:     Connor Kuehl <connor.kuehl@canonical.com>,
-        gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190926150317.5894-1-connor.kuehl@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <c0601b1f-9366-fbc7-7da8-9b00df94483a@lwfinger.net>
-Date:   Thu, 26 Sep 2019 12:04:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 26 Sep 2019 10:11:02 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 10:11:00 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-tegra-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] devfreq: Rename devfreq_update_status() to
+ devfreq_update_stats() and viceversa
+Message-ID: <20190926171100.GQ133864@google.com>
+References: <20190925184314.30251-1-mka@chromium.org>
+ <3015d1aec68ca2b35a263d61bf13077e@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190926150317.5894-1-connor.kuehl@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3015d1aec68ca2b35a263d61bf13077e@codethink.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 10:03 AM, Connor Kuehl wrote:
-> Inside a nested 'else' block at the beginning of this function is a
-> call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
-> If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
-> the 'else if' where 'psta' is dereferenced, then we will dereference
-> a NULL pointer.
+On Thu, Sep 26, 2019 at 08:21:51AM +0100, Ben Dooks wrote:
+> /
 > 
-> Fix this by checking if 'psta' is not NULL before reading its
-> 'psta->qos_option' data member.
+> On 2019-09-25 19:43, Matthias Kaehlcke wrote:
+> > devfreq has two functions with very similar names,
+> > devfreq_update_status()
+> > and devfreq_update_stats(). _update_status() currently updates
+> > frequency transitions statistics, while _update_stats() retrieves the
+> > device 'status'. The function names are inversed with respect to what
+> > the functions are actually doing, rename devfreq_update_status() to
+> > devfreq_update_stats() and viceversa.
 > 
-> Addresses-Coverity: ("Dereference null return value")
-> 
-> Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-> ---
-> v1 -> v2:
->    - Add the same null check to line 779
-> 
->   drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> index 952f2ab51347..c37591657bac 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-> @@ -776,7 +776,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->   			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
->   			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
->   
-> -			if (psta->qos_option)
-> +			if (psta && psta->qos_option)
->   				qos_option = true;
->   		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
->   			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-> @@ -784,7 +784,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->   			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
->   			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
->   
-> -			if (psta->qos_option)
-> +			if (psta && psta->qos_option)
->   				qos_option = true;
->   		} else {
->   			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
-> 
+> Wouldn't having devfreq_get_stats() be a better name for this if it
+> is retrieving the stats?
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+struct devfreq_dev_status is a bit ambiguous. It contains 'stat' fields
+like 'total_time' and 'busy_time', but also 'current_frequency' which is
+more a 'status'. Given the name of the struct and the name of the hook
+profile->get_dev_status I'm inclined to refer to it as 'status', also to
+disambiguate it from the transition stats.
 
-Thanks,
+That said I'd welcome a name that's easier to differantiate from the other
+devfreq_update_stat* function, like devfreq_update_status() or
+devfreq_refresh_status().
 
-Larry
-
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > We could also rename the current devfreq_update_stats() to
+> > devfreq_refresh_status() to make it easier to distinguish it from
+> > devfreq_update_stats().
+> > ---
+> >  drivers/devfreq/devfreq.c                 | 12 ++++++------
+> >  drivers/devfreq/governor.h                |  4 ++--
+> >  drivers/devfreq/governor_passive.c        |  2 +-
+> >  drivers/devfreq/governor_simpleondemand.c |  2 +-
+> >  drivers/devfreq/tegra30-devfreq.c         |  2 +-
+> >  5 files changed, 11 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > index 446490c9d635..fb4318d59aa9 100644
+> > --- a/drivers/devfreq/devfreq.c
+> > +++ b/drivers/devfreq/devfreq.c
+> > @@ -151,11 +151,11 @@ static int set_freq_table(struct devfreq *devfreq)
+> >  }
+> > 
+> >  /**
+> > - * devfreq_update_status() - Update statistics of devfreq behavior
+> > + * devfreq_update_stats() - Update statistics of devfreq behavior
+> >   * @devfreq:	the devfreq instance
+> >   * @freq:	the update target frequency
+> >   */
+> > -int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+> > +int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
+> >  {
+> >  	int lev, prev_lev, ret = 0;
+> >  	unsigned long cur_time;
+> > @@ -191,7 +191,7 @@ int devfreq_update_status(struct devfreq *devfreq,
+> > unsigned long freq)
+> >  	devfreq->last_stat_updated = cur_time;
+> >  	return ret;
+> >  }
+> > -EXPORT_SYMBOL(devfreq_update_status);
+> > +EXPORT_SYMBOL(devfreq_update_stats);
+> > 
+> >  /**
+> >   * find_devfreq_governor() - find devfreq governor from name
+> > @@ -311,7 +311,7 @@ static int devfreq_set_target(struct devfreq
+> > *devfreq, unsigned long new_freq,
+> >  	freqs.new = new_freq;
+> >  	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> > 
+> > -	if (devfreq_update_status(devfreq, new_freq))
+> > +	if (devfreq_update_stats(devfreq, new_freq))
+> >  		dev_err(&devfreq->dev,
+> >  			"Couldn't update frequency transition information.\n");
+> > 
+> > @@ -450,7 +450,7 @@ void devfreq_monitor_suspend(struct devfreq
+> > *devfreq)
+> >  		return;
+> >  	}
+> > 
+> > -	devfreq_update_status(devfreq, devfreq->previous_freq);
+> > +	devfreq_update_stats(devfreq, devfreq->previous_freq);
+> >  	devfreq->stop_polling = true;
+> >  	mutex_unlock(&devfreq->lock);
+> >  	cancel_delayed_work_sync(&devfreq->work);
+> > @@ -1398,7 +1398,7 @@ static ssize_t trans_stat_show(struct device *dev,
+> >  	unsigned int max_state = devfreq->profile->max_state;
+> > 
+> >  	if (!devfreq->stop_polling &&
+> > -			devfreq_update_status(devfreq, devfreq->previous_freq))
+> > +			devfreq_update_stats(devfreq, devfreq->previous_freq))
+> >  		return 0;
+> >  	if (max_state == 0)
+> >  		return sprintf(buf, "Not Supported.\n");
+> > diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+> > index bbe5ff9fcecf..e11f447be2b5 100644
+> > --- a/drivers/devfreq/governor.h
+> > +++ b/drivers/devfreq/governor.h
+> > @@ -64,9 +64,9 @@ extern void devfreq_interval_update(struct devfreq
+> > *devfreq,
+> >  extern int devfreq_add_governor(struct devfreq_governor *governor);
+> >  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+> > 
+> > -extern int devfreq_update_status(struct devfreq *devfreq, unsigned long
+> > freq);
+> > +extern int devfreq_update_stats(struct devfreq *devfreq, unsigned long
+> > freq);
+> > 
+> > -static inline int devfreq_update_stats(struct devfreq *df)
+> > +static inline int devfreq_update_status(struct devfreq *df)
+> >  {
+> >  	return df->profile->get_dev_status(df->dev.parent, &df->last_status);
+> >  }
+> > diff --git a/drivers/devfreq/governor_passive.c
+> > b/drivers/devfreq/governor_passive.c
+> > index be6eeab9c814..1c746b96d3db 100644
+> > --- a/drivers/devfreq/governor_passive.c
+> > +++ b/drivers/devfreq/governor_passive.c
+> > @@ -110,7 +110,7 @@ static int update_devfreq_passive(struct devfreq
+> > *devfreq, unsigned long freq)
+> >  		goto out;
+> > 
+> >  	if (devfreq->profile->freq_table
+> > -		&& (devfreq_update_status(devfreq, freq)))
+> > +		&& (devfreq_update_stats(devfreq, freq)))
+> >  		dev_err(&devfreq->dev,
+> >  			"Couldn't update frequency transition information.\n");
+> > 
+> > diff --git a/drivers/devfreq/governor_simpleondemand.c
+> > b/drivers/devfreq/governor_simpleondemand.c
+> > index 3d809f228619..2cbf26bdcfd6 100644
+> > --- a/drivers/devfreq/governor_simpleondemand.c
+> > +++ b/drivers/devfreq/governor_simpleondemand.c
+> > @@ -25,7 +25,7 @@ static int devfreq_simple_ondemand_func(struct devfreq
+> > *df,
+> >  	unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
+> >  	struct devfreq_simple_ondemand_data *data = df->data;
+> > 
+> > -	err = devfreq_update_stats(df);
+> > +	err = devfreq_update_status(df);
+> >  	if (err)
+> >  		return err;
+> > 
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c
+> > b/drivers/devfreq/tegra30-devfreq.c
+> > index a6ba75f4106d..536273a811fe 100644
+> > --- a/drivers/devfreq/tegra30-devfreq.c
+> > +++ b/drivers/devfreq/tegra30-devfreq.c
+> > @@ -526,7 +526,7 @@ static int tegra_governor_get_target(struct
+> > devfreq *devfreq,
+> >  	unsigned int i;
+> >  	int err;
+> > 
+> > -	err = devfreq_update_stats(devfreq);
+> > +	err = devfreq_update_status(devfreq);
+> >  	if (err)
+> >  		return err;
