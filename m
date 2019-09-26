@@ -2,143 +2,144 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B04C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B7AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431CB222C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF14F222CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ha5fSblR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XVVCfPIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfIZP3Y (ORCPT
+        id S1727362AbfIZPaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:29:24 -0400
-Received: from mout.web.de ([212.227.15.4]:45227 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfIZP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:29:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569511753;
-        bh=z3a2zT3Fyaevm06leJAon5Y5SGGHkjpRtvTfdrw6efk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Ha5fSblRqiAyG+IN2pdg8zuHlLaeEF8BS1UYHfyO+5HpQFXPOh3YX2iL5j60rEwVm
-         G13PVxLOl9rYQ1j2KZRG5vp5r0AgloRo9PLi870lwNhJDo5EiIVzx/wzdT+UDJpJb6
-         lfzoP9H4PUnDWDjM3Q6rPiTiSSYRGNnm2oxr9a3s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.81.241]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MP047-1iHci61aZL-006PjL; Thu, 26
- Sep 2019 17:29:13 +0200
-Subject: Re: [1/2] net/phy/mdio-mscc-miim: Use
- devm_platform_ioremap_resource() in mscc_miim_probe()
-To:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <189ccfc3-d5a6-79fd-29b8-1f7140e9639a@web.de>
- <506889a6-4148-89f9-302e-4be069595bb4@web.de> <20190920190908.GH3530@lunn.ch>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <121e75c5-4d45-9df2-a471-6997a1fb3218@web.de>
-Date:   Thu, 26 Sep 2019 17:29:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 26 Sep 2019 11:30:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36643 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfIZPaK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 11:30:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so3074929wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bFAacK0EhR9tL7dcOk2a8c9iricrpxhApMfaN2C5N7s=;
+        b=XVVCfPIxAZqZ22Bx/9V4/Go1RYTasCm+AJOhH/F9Yo0dFhM1g4VfPuSLR5w/IQnJZM
+         4LVGFcYz570jzuJyXc909gfLBy6guLdK3itKxTSEhchbHIIzIFsqajnUcgkIsUTe6Xap
+         3bYUSgguZduA6Hxn+GV+VyC9gozXrAYyUVEPZ+fkkLORg6qKbTe4yNXHyvswXGCgX/qk
+         IuCL/sg3I3wq3Zj2guPxS3iFRtodHnEkzi9RNJm0gb4OabL0cxgNmXucTkZ4UVCodZyo
+         H+d6jPrYa2tEQWbsQsyY/oRIzsMK4q8XAPFXjDjdW4NXy6HzLVQVW0fCoZHHyMFP9lYZ
+         LyCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bFAacK0EhR9tL7dcOk2a8c9iricrpxhApMfaN2C5N7s=;
+        b=EDo6JREDne/rCfA6MdP7rTZgCbEHJ7xeXbLKYjTGn5XKSDoEgfRKgjFiypC+rlexUr
+         WlOdUGBkkaUlf7gMT+QdszjP1hhesu4ZoyuT3vVkl1MEjtGt4ZV3Sr8nN0Tvsqgp0RAD
+         K7jZs65RRKxSYg9/f10sphdTDTAN5nkQw3E8u6+PLErDkRGaAd1zbYsswZhT1Czrs4dq
+         feBPP3dfTJerjONVRXZv6sTJTVcpfSjYhjs5quYRoW3LcLucXlc4b5vjED31sp2fTRgl
+         r4hH9ZCfi58k74ATz24AXbYFJrBMk1xr9pMmWKsrTDdTLSLtvRbb1bMEP3lVqVW35sNS
+         TRng==
+X-Gm-Message-State: APjAAAU+FZqyTHXYuoSZ89jAnnKmS+ywhXRBDNJL67edYA2IodYYQ9xB
+        LxZ2O/g4f1Q+urrRAkd85rZymQCIgQesNNVSrHy+1g==
+X-Google-Smtp-Source: APXvYqwd6FHlsVpd/E2Nfy+NyT7gAgDhiSMqnCGiPIpSFfRox2UVCmMxh+98XvIQF5njyIdOSSaJpTYzW47u+NHxSL0=
+X-Received: by 2002:a7b:c451:: with SMTP id l17mr3180348wmi.61.1569511808620;
+ Thu, 26 Sep 2019 08:30:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190920190908.GH3530@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:V8JTcGGBM3baN+wenwNNCBW7Mas/rhq1A0Ja+RzGKVnjPbUQ2Gk
- pgQosy8Cio3nIzTAS1OMsVOyXTyedJNK5Ps93D0eh6A3vHdgpI9fy3GdfwDD+hZBrOhKDkI
- cZ1CQ/ETy/AAURvWKMXvgluUCFoLl9ED6TJWUU4DKCHhnIauXEPn5WCQ3WIyNeFOVQ3qAC1
- 6OmnK1xuW5NXnUf8F9wFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YLztFb1NFno=:olrVmny85Nhik+A+du79xX
- Ch8mzZFFJUEMVanlyslfmlMJEAA/tE0wZxqT5kv0W4NX4UMQxDAHBv30lzEYk6eLGZUk+94W4
- QDe4IZ1luORy0YnGLnC5a+RGiFrWtfWOS13gLbOL+7hsHTwU+/4KX6gX2Xf/uFSnitng2sGct
- Ohqgb2SH0S2JL1CAQMz/rhi/MtDoK5zOGTnsOxbc7J/TtmixPqNJK1isVKObqrFl9/tRRYf0P
- bEaqW7XGqHosbtnPFmJe2WN7vOhnLHzEW8IE6O9cUm4ppp+HQ+Kaeer3VpypL6cTHKRB0YoXu
- iDUq96sKIhSTu2mnQ9QY4Kt+E4aLthtdDsDIQmfWuSmJBIkJiXjUMFbTGD5AoQU6JZLztYOCM
- DRoBm0zo6zA3Y6sv5SnXaabeOllnSM7Ru8yQLOCiYxFvLXDjhSE2tPYEUzqwtKudz3OP+ssPz
- fp2TQkBM1mSjEi3hcSRK0cGxxR7KIVkZo+U/BQBOoHUiG2IDAE+OLPN6g36ToiYOM+4uh6f5u
- oT65OVuI2C/sQkiBAb/1lv8l6BHFG4lnr44QVLZShYXx81+pG60gck2eBPuXqlBitJ43nZBGJ
- 8XW13oCIp6gPnHhmrCGk+Io6QB5C1QxX+NBB56tUCVNowBIJsfar3e67cSw/+4dXIhn/j1eK4
- ZzIw9wL1a21TmgpETq/QKytvZcvNk2RYhYraxc+eO4hEJ2B5ceWq4+UJCT15wYevMpeOG7LFt
- MfoK8y8Wpt7M28yAb4runXY32w/URsb4eEI3KubUO5pz1hozhmfFY/XxzUlH8+LvaTj+xVbXw
- pjlGQqCwwmozaihQKCc8CnDpywqfkSxvX9L49RY9B1/3lC9qAQ7qkJakoUNP9aGwfJZEA73Mp
- Zpi99ZvVA+hDmwRqb9Ai8dY2g2LV7CrQpCFbjJex1Hq0z/c0zyJ59QQNuHGIAk2TpVe7lzBmj
- WsO0KX+IGe1gT14B7h7XFJ5hTqST/BwtqlSrwuxwFurt2ZCo2btUr6y+gQ47ohYvGfTAuC8uy
- 6sur7NfMAd665lU27O+H0arpSfGghBvr/J7mjXjnsPgzxA+plrUH2u4+OOg2ZR1RsRr49XmEA
- TlURyyKr+d8labsVdz34zOgKtwlMdJiqny1jKKNvwIK3gq+TYDZK+TFnHBsdA0nwibPuw7wDa
- LrqEgycSP5IQqBWv7WarzJCHl7JvXOSrMsZp0OZs6VxQCUA1IunkLZwEgC8RZ31wvXbpkVF7Y
- PBIx6XGNl7FTiHesnFChS9Q0i/eT4ECiiIwib4Nc9eYG9QuHYcGImYg9pHGc=
+References: <20190926141234.8271-1-ross.lagerwall@citrix.com>
+In-Reply-To: <20190926141234.8271-1-ross.lagerwall@citrix.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 26 Sep 2019 17:29:57 +0200
+Message-ID: <CAKv+Gu8ok=v6WaKWW1AmhPgf1-n7p=4h8Tkno9YNW6H8p4fg8w@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: Don't require non-blocking EFI callbacks
+To:     Ross Lagerwall <ross.lagerwall@citrix.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sai Praneeth <sai.praneeth.prakhya@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Simplify this function implementation by using a known wrapper function=
-.
-=E2=80=A6
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On Thu, 26 Sep 2019 at 16:12, Ross Lagerwall <ross.lagerwall@citrix.com> wrote:
+>
+> If a backend does not implement non-blocking EFI operations, it implies
+> that the normal operations are non-blocking.
 
-Does this feedback indicate also an agreement for the detail
-if the mapping of internal phy registers would be a required operation?
-(Would such a resource allocation eventually be optional?)
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/net/phy/mdio-mscc-miim.c?id=3Df41def397161053eb0d3ed6861ef65985efbf2=
-93#n145
-https://elixir.bootlin.com/linux/v5.3.1/source/drivers/net/phy/mdio-mscc-m=
-iim.c#L145
+Is that documented anywhere?
 
-Regards,
-Markus
+> Instead of crashing
+> dereferencing a NULL pointer, fallback to the normal operations since it
+> is safe to do so.
+>
+
+I agree that crashing is never the right thing to do, but I wonder
+whether we shouldn't just bail instead. If the provided default
+operation is non-blocking, the platform can populate the function
+pointer with a reference to the default implementation.
+
+
+> Fixes: 5a58bc1b1edc ("efi/x86: Use non-blocking SetVariable() for efi_delete_dummy_variable()")
+> Fixes: ca0e30dcaa53 ("efi: Add nonblocking option to efi_query_variable_store()")
+> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+> ---
+>  arch/x86/platform/efi/quirks.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index 3b9fd679cea9..4167f5e8f3e8 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -106,11 +106,13 @@ early_param("efi_no_storage_paranoia", setup_storage_paranoia);
+>  */
+>  void efi_delete_dummy_variable(void)
+>  {
+> -       efi.set_variable_nonblocking((efi_char16_t *)efi_dummy_name,
+> -                                    &EFI_DUMMY_GUID,
+> -                                    EFI_VARIABLE_NON_VOLATILE |
+> -                                    EFI_VARIABLE_BOOTSERVICE_ACCESS |
+> -                                    EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
+> +       efi_set_variable_t *set_variable = efi.set_variable_nonblocking ?:
+> +                                          efi.set_variable;
+> +
+> +       set_variable((efi_char16_t *)efi_dummy_name, &EFI_DUMMY_GUID,
+> +                    EFI_VARIABLE_NON_VOLATILE |
+> +                    EFI_VARIABLE_BOOTSERVICE_ACCESS |
+> +                    EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
+>  }
+>
+>  /*
+> @@ -127,10 +129,12 @@ query_variable_store_nonblocking(u32 attributes, unsigned long size)
+>  {
+>         efi_status_t status;
+>         u64 storage_size, remaining_size, max_size;
+> +       efi_query_variable_info_t *query_variable_info =
+> +               efi.query_variable_info_nonblocking ?:
+> +               efi.query_variable_info;
+>
+> -       status = efi.query_variable_info_nonblocking(attributes, &storage_size,
+> -                                                    &remaining_size,
+> -                                                    &max_size);
+> +       status = query_variable_info(attributes, &storage_size,
+> +                                    &remaining_size, &max_size);
+>         if (status != EFI_SUCCESS)
+>                 return status;
+>
+> --
+> 2.21.0
+>
