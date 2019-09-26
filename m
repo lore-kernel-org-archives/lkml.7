@@ -2,97 +2,105 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28352C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7115FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3042222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460B4222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eyZNqkD+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ki1vXU2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfIZLcP (ORCPT
+        id S1726173AbfIZLdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:32:15 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57298 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfIZLcJ (ORCPT
+        Thu, 26 Sep 2019 07:33:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58446 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfIZLdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:32:09 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBW1d1026527;
-        Thu, 26 Sep 2019 06:32:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569497521;
-        bh=88Xv9IRV7+oNSxAgr2jq3XB2+SHFQvDvj39xR9Z58mQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eyZNqkD+oH2zsbe88+Ktakn1JXraKUrcBJUMmBPftF8+Ry1V36N0LmBeo8NhyMzsr
-         NsqdZJ9Cbl3tcy85cp1uGVuJ5vkqfLZ4abIP2F+abI4YsOJ0NPn4skrL4ro/kBCybP
-         VFuPC3aepTsuTunrzfK/bKrjRW8jkJwx7chGJ4Pc=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBW1NA032455
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Sep 2019 06:32:01 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:32:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:31:54 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTkE069017;
-        Thu, 26 Sep 2019 06:31:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>
-Subject: [RFC PATCH 21/21] NTB: tool: Enable the NTB/PCIe link on the local or remote side of bridge
-Date:   Thu, 26 Sep 2019 16:59:33 +0530
-Message-ID: <20190926112933.8922-22-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190926112933.8922-1-kishon@ti.com>
-References: <20190926112933.8922-1-kishon@ti.com>
+        Thu, 26 Sep 2019 07:33:47 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBXe8O067365;
+        Thu, 26 Sep 2019 11:33:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=zWXdMe+A/TotuM/50XpV6/Om9WZNyrsPWTih8I2CTNM=;
+ b=ki1vXU2JOb2GaUNwCwsg02FN6HjI4TP7r7IdeK6rPSmXAkQCns/OHNeBIAY8nNWosBJg
+ qHwVXxOoy113lfqGJz45+tgz5uL4bYmVT1E5rD6r7OB8ZKin5j4z3Dk1dvj2Kf92evp9
+ vxAtOplMqnYggY5n6SguunckV2kbImTWGdyQSeY+GWGVoyxT2CMD5Us6FwTwUIr1/WBq
+ fVGnV5OMxYPdOoAFmanYiBfHXmn2wuWdQ+M2QDaA8WIQ7mnSXvy9NK/D4Vjd/gBX8gUB
+ KSXX8mi1D1lBoOewq9Uc6PHc74k/rZFIfWI0CICtYVZyJDglaJ+34xbd2HMZ3ZASbkic +w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v5btqb1ce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 11:33:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBX58o049230;
+        Thu, 26 Sep 2019 11:33:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2v82tn018u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 11:33:40 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8QBXdSI020726;
+        Thu, 26 Sep 2019 11:33:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Sep 2019 04:33:38 -0700
+Date:   Thu, 26 Sep 2019 14:33:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
+ zero
+Message-ID: <20190926113329.GE27389@kadam>
+References: <20190926095012.31826-1-colin.king@canonical.com>
+ <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909260111
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909260111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invoke ntb_link_enable() to enable the NTB/PCIe link on the local
-or remote side of the bridge.
+On Thu, Sep 26, 2019 at 11:56:30AM +0200, Jens Axboe wrote:
+> On 9/26/19 11:50 AM, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > In the case where sig is NULL the error variable ret is not initialized
+> > and may contain a garbage value on the final checks to see if ret is
+> > -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
+> > ensure the ret does not accidentially contain -ERESTARTSYS before the
+> > loop.
+> 
+> Oops, weird it didn't complain. I've folded in this fix, as that commit
+> isn't upstream yet. Thanks!
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/ntb/test/ntb_tool.c | 1 +
- 1 file changed, 1 insertion(+)
+There is a bug in GCC where at certain optimization levels, instead of
+complaining, it initializes it to zero.
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index d592c0ffbd19..04138e6a371b 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -1638,6 +1638,7 @@ static int tool_probe(struct ntb_client *self, struct ntb_dev *ntb)
- 
- 	tool_setup_dbgfs(tc);
- 
-+	ntb_link_enable(ntb, NTB_SPEED_AUTO, NTB_WIDTH_AUTO);
- 	return 0;
- 
- err_clear_mws:
--- 
-2.17.1
+regards,
+dan carpenter
 
