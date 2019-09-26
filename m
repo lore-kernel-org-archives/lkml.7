@@ -2,403 +2,221 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD3AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F142FC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A526D222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569497362;
-	bh=9/Rqb68Hd5zokVs62d+8Q8CmAfS8pQMwz3knVtN56fo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=JT1ltAhQ8DX7NdL3xNKCzs+UVE9uTs0bGaYnaR//cpb/N/usV6YnSnybdsBMWrxAD
-	 0Q5bk8ENiOuc3ke5jbcm9ObLwkqMZCCAVRSRhTR2fE5QNuz6BFgpUbwoSXbjlzFxN8
-	 qNVRTN46G5uxm/KIjSeEpwqnLp5gjIwMkOctXj74=
+	by mail.kernel.org (Postfix) with ESMTP id B8F3C207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uUSatvgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfIZL3V (ORCPT
+        id S1726131AbfIZLap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfIZL3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:29:21 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB2A222BE;
-        Thu, 26 Sep 2019 11:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569497359;
-        bh=9/Rqb68Hd5zokVs62d+8Q8CmAfS8pQMwz3knVtN56fo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=omM//YC5oUdyi9kAcm0qaiytjebiyZl37YKEzcR4YPYTBuy82kW1IkvB94GjDmPSY
-         V96+Zq2YtdLUWwO0+d8kob5UDH+RWLk1PlcKJ9TfMGaZDvCFeBeYTYp4Qv43tVYA7K
-         t4URTuhp06aJYd4fmgoeCitJCLjMB/VuLmUtP3z8=
-Message-ID: <aaee1675b737469187d14286d604b7990f2d5cbc.camel@kernel.org>
-Subject: Re: Lease semantic proposal
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>, Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-mm@kvack.org, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Thu, 26 Sep 2019 07:29:16 -0400
-In-Reply-To: <20190925234602.GB12748@iweiny-DESK2.sc.intel.com>
-References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
-         <20190923222620.GC16973@dread.disaster.area>
-         <20190925234602.GB12748@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 26 Sep 2019 07:30:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50874 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfIZLap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 07:30:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUYVf042269;
+        Thu, 26 Sep 2019 06:30:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569497434;
+        bh=AODQipcO23pd9f37IOWlgE5poXTiPRDoNcx+qXkr20M=;
+        h=From:To:CC:Subject:Date;
+        b=uUSatvgquM3Ai5CHXKoumsLDveqvuPj1C7ArpZR2Q3kdPTzEie3537LXa1wHq1qi0
+         kQdyO4cX0C3haZRWgmfkvig1/lqh7jUE1Hc+hJiCxzI7IRc0enF9/8TbJ1CQj5VMMW
+         mg64SA1ngYHALIxwwzkTt8hLRisj3MN4ApcoO/xA=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBUYPd090803
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 26 Sep 2019 06:30:34 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
+ Sep 2019 06:30:34 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 26 Sep 2019 06:30:26 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTjr069017;
+        Thu, 26 Sep 2019 06:30:30 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <kishon@ti.com>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>
+Subject: [RFC PATCH 00/21] Implement NTB Controller using multiple PCI
+Date:   Thu, 26 Sep 2019 16:59:12 +0530
+Message-ID: <20190926112933.8922-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-25 at 16:46 -0700, Ira Weiny wrote:
-> On Tue, Sep 24, 2019 at 08:26:20AM +1000, Dave Chinner wrote:
-> > On Mon, Sep 23, 2019 at 12:08:53PM -0700, Ira Weiny wrote:
-> > > Since the last RFC patch set[1] much of the discussion of supporting RDMA with
-> > > FS DAX has been around the semantics of the lease mechanism.[2]  Within that
-> > > thread it was suggested I try and write some documentation and/or tests for the
-> > > new mechanism being proposed.  I have created a foundation to test lease
-> > > functionality within xfstests.[3] This should be close to being accepted.
-> > > Before writing additional lease tests, or changing lots of kernel code, this
-> > > email presents documentation for the new proposed "layout lease" semantic.
-> > > 
-> > > At Linux Plumbers[4] just over a week ago, I presented the current state of the
-> > > patch set and the outstanding issues.  Based on the discussion there, well as
-> > > follow up emails, I propose the following addition to the fcntl() man page.
-> > > 
-> > > Thank you,
-> > > Ira
-> > > 
-> > > [1] https://lkml.org/lkml/2019/8/9/1043
-> > > [2] https://lkml.org/lkml/2019/8/9/1062
-> > > [3] https://www.spinics.net/lists/fstests/msg12620.html
-> > > [4] https://linuxplumbersconf.org/event/4/contributions/368/
-> > > 
-> > > 
-> > > <fcntl man page addition>
-> > > Layout Leases
-> > > -------------
-> > > 
-> > > Layout (F_LAYOUT) leases are special leases which can be used to control and/or
-> > > be informed about the manipulation of the underlying layout of a file.
-> > > 
-> > > A layout is defined as the logical file block -> physical file block mapping
-> > > including the file size and sharing of physical blocks among files.  Note that
-> > > the unwritten state of a block is not considered part of file layout.
-> > 
-> > Why even mention "unwritten" state if it's not considered something
-> > that the layout lease treats differently?
-> > 
-> > i.e. Unwritten extents are a filesystem implementation detail that
-> > is not exposed to userspace by anything other than FIEMAP. If they
-> > have no impact on layout lease behaviour, then why raise it as
-> > something the user needs to know about?
-> 
-> This paragraph was intended to define a layout.  So I guess one could say our
-> internal discussion on what defines a "layout" has leaked into the external
-> documentation.  Do you think we should just remove the second sentence or the
-> whole paragraph?
-> 
-> > > **Read layout lease F_RDLCK | F_LAYOUT**
-> > > 
-> > > Read layout leases can be used to be informed of layout changes by the
-> > > system or other users.  This lease is similar to the standard read (F_RDLCK)
-> > > lease in that any attempt to change the _layout_ of the file will be reported to
-> > > the process through the lease break process. 
-> > 
-> > Similar in what way? The standard F_RDLCK lease triggers on open or
-> > truncate - a layout lease does nothing of the sort.
-> 
-> Similar in that attempts to "write" the layout will result in breaking the
-> lease just like attempts to write the file would break the standard F_RDLCK
-> lease.  I'm not stuck on the verbiage though; similar may be the wrong word.
-> 
-> > > But this lease is different
-> > > because the file can be opened for write and data can be read and/or written to
-> > > the file as long as the underlying layout of the file does not change.
-> > 
-> > So a F_RDLCK|F_LAYOUT can be taken on a O_WRONLY fd, unlike a
-> > F_RDLCK which can only be taken on O_RDONLY fd.
-> 
-> That was the idea, yes.
-> 
-> > I think these semantics are sufficiently different to F_RDLCK they
-> > need to be explicitly documented, because I see problems here.
-> 
-> I agree, and I intended this document to indicate how they are different.
-> 
-> Anther option may be to define F_RDLAYOUT and not have F_LAYOUT such that it is
-> clear that this lease is not associated with F_RDLCK at all.  It is different.
-> 
-> > > Therefore, the lease is not broken if the file is simply open for write, but
-> > > _may_ be broken if an operation such as, truncate(), fallocate() or write()
-> > > results in changing the underlying layout.
-> > 
-> > As will mmap(), any number of XFS and ext4 ioctls, etc. 
-> > 
-> > So this really needs to say "_will_ be broken if *any* modification to
-> > the file _might_ need to change the underlying physical layout".
-> 
-> Agreed.  I used the word "may" because a simple write() does not necessarily
-> change the layout of the file.  But I like your verbiage better.  I did wonder
-> if listing operations was a bad idea.  So I'm ok simply leaving that detail
-> out.
-> 
-> > Now, the big question: what happens to a process with a
-> > F_RDLCK|F_LAYOUT lease held does a write that triggers a layout
-> > change? What happens then?
-> 
-> Because F_UNBREAK is not specified, the write() operation is held for lease
-> break time and then the lease is broken if not voluntarily released.  This
-> would be the same pattern as a process holding a F_RDLCK and opening the file
-> O_RDWR.
-> 
-> > Also, have you noticed that XFS will unconditionally break layouts on
-> > write() because it /might/ need to change the layout? i.e. the
-> > BREAK_WRITE case in xfs_file_aio_write_checks()? This is needed for
-> > correctly supporting pNFS layout coherency against local IO. i.e.
-> > local write() breaks layouts held by NFS server to get the
-> > delegation recalled.
-> > 
-> > So by the above definition of F_RDLCK|F_LAYOUT behaviour, a holder
-> > of such a lease doing a write() to that file would trigger a lease
-> > break of their own lease as the filesystem has notified the lease
-> > layer that there is a layout change about to happen. What's expected
-> > to happen here?
-> 
-> That is not ideal but the proposed semantics say a write() may fail in this
-> situation.  So depending on the implementation requirements of the underlying
-> FS the semantics still hold for our current use case.  It would be nice to be
-> able to enhance the implementation in the future such that a write() could work
-> but maybe they can't.  For RDMA the application is probably going to have the
-> region mmap'ed anyway and will not need, nor in fact want to use a write()
-> call.
-> 
-> Also, I think I missed a need to specify that a F_RDLCK|F_LAYOUT needs to have
-> write permission on (or be the owner of) the file for the user to be able to
-> specify F_UNBREAK on it.
-> 
-> > Hence, AFIACT, the above definition of a F_RDLCK|F_LAYOUT lease
-> > doesn't appear to be compatible with the semantics required by
-> > existing users of layout leases.
-> 
-> I disagree.  Other than the addition of F_UNBREAK, I think this is consistent
-> with what is currently implemented.  Also, by exporting all this to user space
-> we can now write tests for it independent of the RDMA pinning.
-> 
-> > > **Write layout lease (F_WRLCK | F_LAYOUT)**
-> > > 
-> > > Write Layout leases can be used to break read layout leases to indicate that
-> > > the process intends to change the underlying layout lease of the file.
-> > 
-> > Any write() can change the layout of the file, and userspace cannot
-> > tell in advance whether that will occur (neither can the
-> > filesystem), so it seems to me that any application that needs to
-> > write data is going to have to use F_WRLCK|F_LAYOUT.
-> 
-> Sure, but the use case of F_WRLCK|F_LAYOUT is that the user is creating the
-> layout.  So using write() to create the file would be ok.
-> 
-> On the surface it seems like using a standard F_WRLCK lease could be used
-> instead of F_WRLCK|F_LAYOUT.  But it actually can't because that does not
-> protect against the internals of the file system changing the lease.  This is
-> where the semantics are exactly exported to user space.
-> 
-> > > A process which has taken a write layout lease has exclusive ownership of the
-> > > file layout and can modify that layout as long as the lease is held.
-> > 
-> > Which further implies single writer semantics and leases are
-> > associated with a single open fd. Single writers are something we
-> > are always trying to avoid in XFS.
-> 
-> The discussion at LPC revealed that we need a way for the user to ensure the
-> file layout is realized prior to any unbreakable lease being taken.  So yes, for
-> some period we will need a single writer.
-> 
-> > > Operations which change the layout are allowed by that process.  But operations
-> > > from other file descriptors which attempt to change the layout will break the
-> > > lease through the standard lease break process.
-> > 
-> > If the F_WRLCK|F_LAYOUT lease is exclusive, who is actually able to
-> > modify the layout?  Are you talking about processes that don't
-> > actually hold leases modifying the layout?
-> 
-> That was the idea, yes.
-> 
-> > i.e. what are the
-> > constraints on "exclusive access" here - is F_WRLCK|F_LAYOUT is
-> > only exclusive when every modification is co-operating and taking
-> > the appropriate layout lease for every access to the file that is
-> > made?
-> 
-> I'm not following but IIUC...  no...  The idea is that if you hold the
-> F_WRLCK|F_LAYOUT lease then any attempt by _other_ processes to change the
-> layout (intentional or otherwise) would result in you getting a SIGIO signal
-> which indicates someone _else_ changed the file.
-> 
-> Then you can atomically downgrade the lock to F_RDLCK|F_LAYOUT|F_UNBREAK or
-> atomically upgrade to F_WRLCK|F_LAYOUT|F_UNBREAK.  Either way you know you have
-> the layout you want and can rely on the pin working.
-> 
-> > If that's the case, what happens when someone fails to get a read
-> > lock and decides "I can break write locks just by using ftruncate()
-> > to the same size without a layout lease". Or fallocate() to
-> > preallocate space that is already allocated. Or many other things I
-> > can think of.
-> 
-> The intended use case for F_WRLCK|F_LAYOUT is that a single process is
-> attempting to set the layout prior to setting F_UNBREAK.  While
-> F_WRLCK|F_LAYOUT can be broken, breaking the lease will not happen without that
-> process knowing about it.
-> 
-> I don't see this being different from the current lease semantics which
-> requires some external coordination amongst process/file users to resolve any
-> races or coordination.
-> 
-> > IOWs, this seems to me like a very fragile sort of construct that is
-> > open to abuse and that will lead to everyone using F_UNBREAK, which
-> > is highly unfriendly to everyone else...
-> 
-> FWIW, my use case does require F_UNBREAK.  All of the semantics presented have
-> a real use case except for F_RDLCK|F_LAYOUT.  However, I think F_RDLCK|F_LAYOUT
-> does have a use case in testing.
-> 
-> Also, I do think that we need to have some check on file ownership for
-> F_UNBREAK.  That needs to be added.
-> 
-> > > The F_LAYOUT flag is used to
-> > > indicate a difference between a regular F_WRLCK and F_WRLCK with F_LAYOUT.  In
-> > > the F_LAYOUT case opens for write do not break the lease.  But some operations,
-> > > if they change the underlying layout, may.
-> > > 
-> > > The distinction between read layout leases and write layout leases is that
-> > > write layout leases can change the layout without breaking the lease within the
-> > > owning process.  This is useful to guarantee a layout prior to specifying the
-> > > unbreakable flag described below.
-> > 
-> > Ok, so now you really are saying that F_RDLCK leases can only be
-> > used on O_RDONLY file descriptors because any modification under a
-> > F_RDLCK|LAYOUT will trigger a layout break.
-> 
-> I don't necessarily agree.  We also have the mmap() case.  What I was really
-> trying to do is define a relaxed lease semantic which allows some shared
-> reading/writing of the file as long as the underlying layout does not change.
-> I am _not_ a file system expert but it seems like that should be possible.
-> 
-> Perhaps we need something more fine grained between BREAK_UNMAP and
-> BREAK_WRITE?
-> 
-> > > **Unbreakable Layout Leases (F_UNBREAK)**
-> > > 
-> > > In order to support pinning of file pages by direct user space users an
-> > > unbreakable flag (F_UNBREAK) can be used to modify the read and write layout
-> > > lease.  When specified, F_UNBREAK indicates that any user attempting to break
-> > > the lease will fail with ETXTBUSY rather than follow the normal breaking
-> > > procedure.
-> > > 
-> > > Both read and write layout leases can have the unbreakable flag (F_UNBREAK)
-> > > specified.  The difference between an unbreakable read layout lease and an
-> > > unbreakable write layout lease are that an unbreakable read layout lease is
-> > > _not_ exclusive. 
-> > 
-> > Oh, this doesn't work at all. Now we get write()s to F_RDLCK leases
-> > that can't break the leases and so all writes, even to processes
-> > that own RDLCK|UNBREAK, will fail with ETXTBSY.
-> 
-> Yes I agree writes()'s to F_RDLCK|F_LAYOUT|F_UNBREAK _may_ fail.  I don't see
-> how this is broken if the file owner is opting into it.  RDMA's can still occur
-> to that file.  mmap'ed areas of the file can still be used (especially in the
-> no-page cache case of FS DAX).
-> 
-> > > This means that once a layout is established on a file,
-> > > multiple unbreakable read layout leases can be taken by multiple processes and
-> > > used to pin the underlying pages of that file.
-> > 
-> > Ok, so what happens when someone now takes a
-> > F_WRLOCK|F_LAYOUT|F_UNBREAK? Is that supposed to break
-> > F_RDLCK|F_LAYOUT|F_UNBREAK, as the wording about F_WRLCK behaviour
-> > implies it should?
-> 
-> Ah no.  F_RDLCK|F_LAYOUT|F_UNBREAK could not be broken.  I'll have to update
-> the text for this.  The idea here is that no one can be changing the layout but
-> multiple readers could be using that layout.  So I'll update the text that a
-> F_WRLCK|F_LAYOUT|F_UNBREAK would fail in this case.
-> 
-> > > Care must therefore be taken to ensure that the layout of the file is as the
-> > > user wants prior to using the unbreakable read layout lease.  A safe mechanism
-> > > to do this would be to take a write layout lease and use fallocate() to set the
-> > > layout of the file.  The layout lease can then be "downgraded" to unbreakable
-> > > read layout as long as no other user broke the write layout lease.
-> > 
-> > What are the semantics of this "downgrade" behaviour you speak of? :)
-> 
-> As I said above it may be a downgrade or an upgrade but the idea is to
-> atomically convert the lease to F_UNBREAK.
-> 
-> > My thoughts are:
-> > 	- RDLCK can only be used for O_RDONLY because write()
-> > 	  requires breaking of leases
-> 
-> Does the file system require write() break the layout lease?  Or is that just
-> the way the file system is currently implemented?  What about mmap()?  I need
-> to have the file open WR to mmap() the file for RDMA.
-> 
-> To be clear I'm intending F_RDLCK|F_LAYOUT to be something new.  As I said
-> above we could use something like F_RDLAYOUT instead?
-> 
-> > 	- WRLCK is open to abuse simply by not using a layout lease
-> > 	  to do a "no change" layout modification
-> 
-> I'm sorry, I don't understand this comment.
-> 
-> > 	- RDLCK|F_UNBREAK is entirely unusable
-> 
-> Well even if write() fails with ETXTBSY this should give us the ability to do
-> RDMA and XDP to these areas from multiple processes.  Furthermore, for FS DAX
-> which bypasses the page cache mmap'ed areas can be written without write() with
-> CPU stores.  Which is how many RDMA applications are likely to write this data.
-> 
-> > 	- WRLCK|F_UNBREAK will be what every application uses
-> > 	  because everything else either doesn't work or is too easy
-> > 	  to abuse.
-> 
-> Maybe.  IMO that is still a step in the right direction as at least 1 process
-> can use this now.  And these semantics allow for a shared unbreakable lease
-> (F_RDLCK|F_LAYOUT|F_UNBREAK) which can be used with some configurations (FS DAX
-> in particular).
-> 
-> Also, I do think we will need something to ensure file ownership for F_UNBREAK.
-> 
-> It sounds like the difficulty here is in potential implementation of allowing
-> write() to not break layouts.  And dealing with writes to mmap'ed page cache
-> pages.  The file system is free to do better later.
-> 
+This series is sent as RFC since this series is dependent on
+[1] (cannot be merged before that series) and to get early review
+comments.
 
-Whatever the semantics, from an API standpoint, I think we should not
-try to multiplex layout behavior on top of F_SETLEASE. Layouts should
-get new fcntl cmd values (maybe F_SETLAYOUT/F_GETLAYOUT) and then you
-wouldn't need to expose the F_LAYOUT flag to userland.
+I'll also split this series into smaller chunk when I post the
+next revision.
 
-The behavior of layouts is different enough from "traditional" leases
-that trying to mash them together like this is only going to cause
-confusion.
+This series is about implementing SW defined NTB using
+multiple endpoint instances. This series has been tested using
+2 endpoint instances in J7 connected to two DRA7 boards.
 
-Note that I'm mainly concerned with the user-facing API with this. The
-kernel internals can still use F_LAYOUT flag, and you can do the
-F_SETLAYOUT -> F_LAYOUT translation at a high level.
+This was presented in Linux Plumbers Conference. The presentation
+can be found @ [2]
+
+This series:
+  *) Add support to define endpoint function using device tree
+  *) Add a specification for implementing NTB controller using
+     multiple endpoint instances.
+  *) Add a NTB endpoint function driver and a NTB host side PCI
+     driver that follows the specification.
+  *) Add support in PCIe endpoint core to support secondary
+     interface.
+  *) Add a device tree overlay file to configure J7 as NTB
+
+The test setup is something like below
+   +-------------+                                   +-------------+
+   |             |                                   |             |
+   |    DRA72    |                                   |    DRA76    |
+   |             |                                   |             |
+   +------^------+                                   +------^------+
+          |                                                 |
+          |                                                 |
++---------|-------------------------------------------------|---------+
+|  +------v------+                                   +------v------+  |
+|  |             |                                   |             |  |
+|  |     EP      |                                   |     EP      |  |
+|  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+|  |             <----------------------------------->             |  |
+|  |             |                                   |             |  |
+|  |             |                                   |             |  |
+|  |             |                 J7                |             |  |
+|  |             |  (Configured using NTB Function)  |             |  |
+|  +-------------+                                   +-------------+  |
++---------------------------------------------------------------------+
+
+Here DRA72 and DRA76 could be replaced with *any* PCI host.
+
+EP side (J7):
+=============
+
+In the kernel:
+        cd /sys/kernel/config/pci_ep/
+        echo 1 > controllers/d800000.pcie-ep/start
+        echo 1 > controllers/d000000.pcie-ep/start
+
+RC side (DRA7):
+===============
+        echo 0000:01:00.0 > /sys/bus/pci/devices/0000\:01\:00.0/driver/unbind
+        echo 0000:01:00.0 > /sys/bus/pci/drivers/ntb_hw_epf/bind
+        modprobe ntb_transport
+        modprobe ntb_netdev
+
+On each of the hosts Ethernet Interface will be created.
+
+Provide an IP address to each of the hosts:
+HOST1 (dra72):
+ifconfig eth2 192.168.1.2 up
+
+HOST2 (dra76):
+ifconfig eth2 192.168.1.1 up
+
+Once this is done standard network utilities like ping or iperf can be
+used.
+
+root@dra7xx-evm:~# iperf -c 192.168.1.2
+------------------------------------------------------------
+Client connecting to 192.168.1.2, TCP port 5001
+TCP window size: 2.50 MByte (default)
+------------------------------------------------------------
+[  3] local 192.168.1.1 port 60814 connected with 192.168.1.2 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec   705 MBytes   591 Mbits/sec
+
+[1] -> http://lore.kernel.org/r/20190604131516.13596-1-kishon@ti.com
+[2] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
+
+Kishon Vijay Abraham I (21):
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Bus
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Device
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF NTB Device
+  Documentation: PCI: Add specification for the *PCI NTB* function
+    device
+  PCI: endpoint: Add API to get reference to EPC from device-tree
+  PCI: endpoint: Add API to create EPF device from device tree
+  PCI: endpoint: Add "pci-epf-bus" driver
+  PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
+    BAR
+  PCI: endpoint: Add helper API to get the 'next' unreserved BAR
+  PCI: endpoint: Make pci_epf_driver ops optional
+  PCI: endpoint: Add helper API to populate header with values from DT
+  PCI: endpoint: Add support to associate secondary EPC with EPF
+  PCI: endpoint: Add pci_epc_ops to map MSI irq
+  PCI: cadence: Implement ->msi_map_irq() ops
+  PCI: endpoint: Remove unused pci_epf_match_device()
+  PCI: endpoint: Fix missing mutex_unlock in error case
+  PCI: endpoint: *_free_bar() to return error codes on failure
+  PCI: endpoint: Add EP function driver to provide NTB functionality
+  PCI: Add TI J721E device to pci ids
+  NTB: Add support for EPF PCI-Express Non-Transparent Bridge
+  NTB: tool: Enable the NTB/PCIe link on the local or remote side of
+    bridge
+
+ Documentation/PCI/endpoint/pci-test-ntb.txt   |  315 +++++
+ .../bindings/pci/endpoint/pci-epf-bus.txt     |   27 +
+ .../bindings/pci/endpoint/pci-epf-ntb.txt     |   31 +
+ .../bindings/pci/endpoint/pci-epf.txt         |   28 +
+ drivers/ntb/hw/Kconfig                        |    1 +
+ drivers/ntb/hw/Makefile                       |    1 +
+ drivers/ntb/hw/epf/Kconfig                    |    5 +
+ drivers/ntb/hw/epf/Makefile                   |    1 +
+ drivers/ntb/hw/epf/ntb_hw_epf.c               |  648 ++++++++++
+ drivers/ntb/test/ntb_tool.c                   |    1 +
+ drivers/pci/controller/pcie-cadence-ep.c      |   59 +
+ drivers/pci/endpoint/Makefile                 |    3 +-
+ drivers/pci/endpoint/functions/Kconfig        |   12 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 1143 +++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-test.c |   12 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |    6 +-
+ drivers/pci/endpoint/pci-epc-core.c           |  221 +++-
+ drivers/pci/endpoint/pci-epf-bus.c            |   54 +
+ drivers/pci/endpoint/pci-epf-core.c           |  133 +-
+ include/linux/pci-epc.h                       |   42 +-
+ include/linux/pci-epf.h                       |   35 +-
+ include/linux/pci_ids.h                       |    1 +
+ 23 files changed, 2715 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+ create mode 100644 drivers/ntb/hw/epf/Kconfig
+ create mode 100644 drivers/ntb/hw/epf/Makefile
+ create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
+ create mode 100644 drivers/pci/endpoint/pci-epf-bus.c
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.17.1
 
