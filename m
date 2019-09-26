@@ -2,100 +2,122 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8597FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB35C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5180C222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569519789;
-	bh=l3u8zwd/je92ZKLnHrcm7WIepO60gLp+qlCHjGnjS24=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Ury4U9P6R3h2ptFAuFHttdJD9f6qhqw39STrncj7V/hC1gtWX6Vj4Fm4Hy/jMWJ0q
-	 OrjBsSFi46mZ4APZYPkgpV98JdrVhMZUJsct1nu5UWcSWy5hjZo5nRwHjxpS/OABEC
-	 NiVRkbCmQrK5Mf8SwkFiI3LgDuaSW52+Fq0ybVQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 9F03B222CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfIZRnI (ORCPT
+        id S1727908AbfIZRr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44268 "EHLO mail.kernel.org"
+        Thu, 26 Sep 2019 13:47:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54146 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfIZRnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:43:08 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6219A222C6;
-        Thu, 26 Sep 2019 17:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569519787;
-        bh=l3u8zwd/je92ZKLnHrcm7WIepO60gLp+qlCHjGnjS24=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Cn5kd0QOr/ovpE3xtPCxHwILI8IbDxOcajP93mQxc7ELlAXHNwPlGfV5070/PHb+v
-         NKivLFKMgeluA/WEQIpbDWequ+ucHyvqnlVsY/E8lKa5zMrkhPxnfQA0brKTg0K8hQ
-         gQUGHyfHOW24j5Tp8Xq78pAO1AeISBW8XaQhHKAA=
-Subject: Re: bug in KBUILD_OUTPUT handling - for relative paths in kselftest
-To:     Tim.Bird@sony.com, linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <ECADFF3FD767C149AD96A924E7EA6EAF977BD214@USCULXMSG01.am.sony.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <1b1e87f8-db1f-f641-45d5-b3e24381d85a@kernel.org>
-Date:   Thu, 26 Sep 2019 11:42:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727794AbfIZRr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 13:47:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 10:47:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,552,1559545200"; 
+   d="scan'208";a="203907123"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Sep 2019 10:47:51 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iDXrp-00027m-Na; Thu, 26 Sep 2019 20:47:49 +0300
+Date:   Thu, 26 Sep 2019 20:47:49 +0300
+From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To:     "Schmauss, Erik" <erik.schmauss@intel.com>
+Cc:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nv@vosn.de" <nv@vosn.de>
+Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+Message-ID: <20190926174749.GI32742@smile.fi.intel.com>
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <CF6A88132359CE47947DB4C6E1709ED53C6481B1@ORSMSX122.amr.corp.intel.com>
+ <20190926163528.GH32742@smile.fi.intel.com>
+ <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF977BD214@USCULXMSG01.am.sony.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 10:11 PM, Tim.Bird@sony.com wrote:
-> I found a bug in kselftest KBUILD_OUTPUT handling.
+On Thu, Sep 26, 2019 at 07:51:00PM +0300, Schmauss, Erik wrote:
+> > -----Original Message-----
+> > From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org>
+> > On Behalf Of Shevchenko, Andriy
+> > Sent: Thursday, September 26, 2019 9:35 AM
+> > To: Schmauss, Erik <erik.schmauss@intel.com>
+> > Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>; Rafael J. Wysocki
+> > <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>; Len Brown
+> > <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel
+> > Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-
+> > acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org;
+> > nv@vosn.de
+> > Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+> > 
+> > On Thu, Sep 26, 2019 at 07:09:05PM +0300, Schmauss, Erik wrote:
+> > > > -----Original Message-----
+> > > > From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> > > > Sent: Thursday, September 12, 2019 1:08 AM
+> > > > To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
+> > > > <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
+> > > > Moore, Robert <robert.moore@intel.com>
+> > > > Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski
+> > > > <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
+> > > > Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
+> > > > devel@acpica.org; linux- kernel@vger.kernel.org; nv@vosn.de;
+> > > > Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> > > > Subject: [PATCH] ACPICA: make acpi_load_table() return table index
+> > > >
+> > > Hi Nikolaus,
+> > >
+> > > > For unloading an ACPI table, it is necessary to provide the index of the table.
+> > > > The method intended for dynamically loading or hotplug addition of
+> > > > tables, acpi_load_table(), should provide this information via an
+> > > > optional pointer to the loaded table index.
+> > >
+> > > We'll take this patch for ACPICA upstream
+> > 
+> > Erik,
+> > 
+> Hi Andy,
 > 
-> The following works:
-> $ cd /home/tbird/work/linux
-> $ export KBUILD_OUTPUT=/home/tbird/work/kbuild
-> $ yes '' | make localmodconfig
-> $ make TARGETS=size kselftest
+> > how about to have also counterpart to acpi_load_table() which will do what it's
+> > done now in acpi_configfs.c via acpi_tb_*() API?
 > 
-> But this doesn't work:
-> $ cd /home/tbird/work/linux
-> $ export KBUILD_OUTPUT=../kbuild
-> $ yes '' | make localmodconfig
-> $ make TARGETS=size kselftest
-> 
-> I see the following:
-> make[1]: Entering directory '/home/tbird/work/kbuild'
->   make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
->   	ARCH=x86 -C ../../.. headers_install
->     INSTALL ../kbuild/kselftest/usr/include
->   gcc -static -ffreestanding -nostartfiles -s    get_size.c  -o ../kbuild/kselftest/size/get_size
->     /usr/bin/ld: cannot open output file ../kbuild/kselftest/size/get_size: No such file or directory
->   collect2: error: ld returned 1 exit status
->     ../lib.mk:138: recipe for target '../kbuild/kselftest/size/get_size' failed
->   make[3]: *** [../kbuild/kselftest/size/get_size] Error 1
->   Makefile:136: recipe for target 'all' failed
->   make[2]: *** [all] Error 2
->   /home/tbird/work/linux/Makefile:1240: recipe for target 'kselftest' failed
->   make[1]: *** [kselftest] Error 2
->   make[1]: Leaving directory '/home/tbird/work/kbuild'
->   Makefile:179: recipe for target 'sub-make' failed
->   make: *** [sub-make] Error 2
-> 
-> This is due to the relative path for KBUILD_OUTPUT being handled incorrectly (I believe)
-> in tools/testing/selftests/Makefile.
-> 
+> I should have given more details. We decided to add this extra parameter in AcpiLoadTable and
+> we're going to create an AcpiUnloadTable function that will take table index to unload the table (basically the acpi_tb_unload..).
+> Once we do this, you can use table indices with AcpiUnloadTable and AcpiLoadTable.
 
-Thanks Tim! I will take a look as part of my work to simplify kselftest
-use-cases.
+Sounds like what we discussed with Nikolaus earlier [1].
+Thanks!
 
-thanks,
--- Shuah
+[1]: https://lore.kernel.org/linux-acpi/20190924120734.GT2680@smile.fi.intel.com/
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
