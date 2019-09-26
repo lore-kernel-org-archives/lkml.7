@@ -2,114 +2,90 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0678CC47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8463C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD4120872
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D4620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Vinczihn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfIZKZp (ORCPT
+        id S1726945AbfIZKZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:25:45 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:7162 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfIZKZo (ORCPT
+        Thu, 26 Sep 2019 06:25:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:53881 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfIZKZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:25:44 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: kuTEBVO5mat0bWcf8a4WUFA2aMY97JikdthveT3f7hfCRrFI6dxZimH9+Ggbq37CCurs4kZuq1
- n20IDb0F/EZESYspkqd53q3qEvfnA2iDUKzmBESHmKbTyy369vzKNx43tB6q/KPjFVPmj+JGlJ
- spItzd1r66BppXGV6cAqYN5fbt6aSuRfSn5zW6IfFEY5gyDjtIfCn+VHiyOR9jawoSZAanr7iv
- TWn6rTz7xRoFsJPu4Zpn1Gw0qhu8hN1F6JKJd3OZTfpuldGHw00QvvQkXHG7xxcdxuLLNpu4eu
- lWQ=
-X-IronPort-AV: E=Sophos;i="5.64,551,1559545200"; 
-   d="scan'208";a="50409875"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Sep 2019 03:25:43 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 26 Sep 2019 03:25:43 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 26 Sep 2019 03:25:41 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] power: reset: at91-poweroff: lookup for proper PMC DT node
-Date:   Thu, 26 Sep 2019 13:25:37 +0300
-Message-ID: <1569493537-7612-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 26 Sep 2019 06:25:48 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x8QAPiZX026387;
+        Thu, 26 Sep 2019 19:25:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x8QAPiZX026387
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569493544;
+        bh=4gNfylHHZtdgndSad6PjJXSwxIOR9alrhtPtj8B7110=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VinczihnWCDBrgvoLP2kh5fTytrGSEoNtQk40bdmi4GDG5IIpShIqMdnNlzt2kiFt
+         2N65b4GeXMV6VQPXgYcU1CIGc8tXfRCQdgtgd2aOkFQa+01xE/x2GQUIUKR/SHNNre
+         NCTiw3vbhHgYaFneTON8+Erl4Q78APXKXU+wGXaM3C6Ja31BIp+qqtkEn4FCTAhNVt
+         hQQZSwgqopq9slaI9tSyg4TSxVwU5jACP3ZwJDUlaeeT357sqWaLKvsLq1c64N4RJ7
+         Mv2TSeZsU6DA2+zpeWPIOuUIDAXJsoetGen8N6y7CzkhW1MCRhr8kQyc6ob7SW1fp5
+         3SdgKiScRbF1g==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id d3so1251842vsr.1;
+        Thu, 26 Sep 2019 03:25:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAVaqQdyOaS/0nwjUNRk77rUoqQ7K1iu+MOtVnQwX9nQmJLJfAOK
+        I9b+qzAXn69XMhHV8VqfR6tJWs5yKQx9Z9fS22M=
+X-Google-Smtp-Source: APXvYqyeIspKm3xk+JKqX7PSS7gDWlcm9BZdyqAWf+X9fC0of2bjx1GwXyPr283EhOahiarlzOo3vv0bAZkcr7AOlSE=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr1750823vsa.54.1569493543459;
+ Thu, 26 Sep 2019 03:25:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190926101312.32218-1-geert@linux-m68k.org>
+In-Reply-To: <20190926101312.32218-1-geert@linux-m68k.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 26 Sep 2019 19:25:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARTk5yE1=WsxdYpEw6EYXMmq8cW5QBEse2WWhTJ0y=iMA@mail.gmail.com>
+Message-ID: <CAK7LNARTk5yE1=WsxdYpEw6EYXMmq8cW5QBEse2WWhTJ0y=iMA@mail.gmail.com>
+Subject: Re: [PATCH -next] fbdev: c2p: Fix link failure on non-inlining
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver has been enabled also for SAM9X60. At the moment the patch which did
-this has been sent to mainline the PMC for SAM9X60 wasn't integrated.
-SAM9X60 has a new PMC compatible (see commit 01e2113de9a5
-("clk: at91: add sam9x60 pmc driver")). Do to this we have to
-look for proper PMC compatible here, in SHDWC driver.
+On Thu, Sep 26, 2019 at 7:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> When the compiler decides not to inline the Chunky-to-Planar core
+> functions, the build fails with:
+>
+>     c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
+>     c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
+>     c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
+>     c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
+>
+> Fix this by marking the functions __always_inline.
+>
+> Reported-by: noreply@ellerman.id.au
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/power/reset/at91-sama5d2_shdwc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/reset/at91-sama5d2_shdwc.c
-index e341cc5c0ea6..1c18f465a245 100644
---- a/drivers/power/reset/at91-sama5d2_shdwc.c
-+++ b/drivers/power/reset/at91-sama5d2_shdwc.c
-@@ -269,6 +269,12 @@ static const struct of_device_id at91_shdwc_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, at91_shdwc_of_match);
- 
-+static const struct of_device_id at91_pmc_ids[] = {
-+	{ .compatible = "atmel,sama5d2-pmc" },
-+	{ .compatible = "microchip,sam9x60-pmc" },
-+	{ /* Sentinel. */ }
-+};
-+
- static int __init at91_shdwc_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -313,7 +319,7 @@ static int __init at91_shdwc_probe(struct platform_device *pdev)
- 
- 	at91_shdwc_dt_configure(pdev);
- 
--	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-pmc");
-+	np = of_find_matching_node(NULL, at91_pmc_ids);
- 	if (!np) {
- 		ret = -ENODEV;
- 		goto clk_disable;
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
