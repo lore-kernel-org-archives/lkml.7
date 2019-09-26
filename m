@@ -2,176 +2,201 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17EC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB254C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92408222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD32222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfIZJlf (ORCPT
+        id S1728950AbfIZJli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:41:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42234 "EHLO mx1.redhat.com"
+        Thu, 26 Sep 2019 05:41:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:43662 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbfIZJle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728278AbfIZJle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Sep 2019 05:41:34 -0400
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 506F6806D0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:41:33 +0000 (UTC)
-Received: by mail-pg1-f200.google.com with SMTP id 135so1054040pgc.23
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:41:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N4oZOlVdiq1iUNu2ipKdKrBjjBpOUecRmSvPVqDDXZc=;
-        b=gPQookwY8xYIIboBl1MVmgM/Vs5CAr52sbiyVFHQohk08xk51FdhlW7YMudnapLSfs
-         fzvwEEODIjftfZMwq3MSm/S9sxrVC4lXJfl11Ae419L8Bvyek560uBcMUaamgJSIgsG5
-         OFgyxCQtNNw7bf31+Y8p5NgRgxC3LiP0SGBwrA6Hln2uWYLdv195HK3QUy30em7fOno5
-         RUL2ZvHCV0WRmOUHY5rCp6XkZ92ia0RBVBaxC2ZAk+ON/zQ9TUBdKMNUolrqN9fc+28j
-         nzCPgCTlO5NGN532o2efkhRwkPBfA1QshohbQGn7ButVXsU47E4yxS9rESXMYycUPjfs
-         zctg==
-X-Gm-Message-State: APjAAAWUVPerc8RVDDTXxPmk63NgDqGqve0pVjdg/cdxJvDIobHCCc42
-        GmVNjKB8bAEOjJhzX2YuwoM3Yhlo0Eri63cQC1oK7384PkXNHqpu3BmtUpW2QDyKHniJ9b0swp+
-        wnour2QDkPhFOYHIqLzN388yV
-X-Received: by 2002:a63:f74a:: with SMTP id f10mr2441657pgk.171.1569490892241;
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B89F1000;
+        Thu, 26 Sep 2019 02:41:33 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 416943F67D;
         Thu, 26 Sep 2019 02:41:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzXg+JR19ww+nQnL8fkRXYx+C2hv4fDrwyyYRZ7ETfndG7uYUVVmTKADTP0SGN/MJh50aMeMQ==
-X-Received: by 2002:a63:f74a:: with SMTP id f10mr2441638pgk.171.1569490892002;
-        Thu, 26 Sep 2019 02:41:32 -0700 (PDT)
-Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p68sm3224982pfp.9.2019.09.26.02.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 02:41:31 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, peterx@redhat.com,
-        Martin Cracauer <cracauer@cons.org>,
-        Matthew Wilcox <willy@infradead.org>, Shaohua Li <shli@fb.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v5 16/16] mm/userfaultfd: Honor FAULT_FLAG_KILLABLE in fault path
-Date:   Thu, 26 Sep 2019 17:39:04 +0800
-Message-Id: <20190926093904.5090-17-peterx@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190926093904.5090-1-peterx@redhat.com>
-References: <20190926093904.5090-1-peterx@redhat.com>
+Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
+To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <20190925151404.23222-1-steven.price@arm.com>
+ <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
+ <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
+ <da04cf92-f4c7-e896-5070-4d2a9be273aa@amd.com>
+ <e160d9ec-5ae3-9003-b38c-3027bce736f4@amd.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <14479a04-d4a2-9c55-7cbf-010d3111fa0b@arm.com>
+Date:   Thu, 26 Sep 2019 10:41:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <e160d9ec-5ae3-9003-b38c-3027bce736f4@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userfaultfd fault path was by default killable even if the caller does
-not have FAULT_FLAG_KILLABLE.  That makes sense before in that when
-with gup we don't have FAULT_FLAG_KILLABLE properly set before.  Now
-after previous patch we've got FAULT_FLAG_KILLABLE applied even for
-gup code so it should also make sense to let userfaultfd to honor the
-FAULT_FLAG_KILLABLE.
+On 25/09/2019 21:09, Grodzovsky, Andrey wrote:
+> 
+> On 9/25/19 12:07 PM, Andrey Grodzovsky wrote:
+>> On 9/25/19 12:00 PM, Steven Price wrote:
+>>
+>>> On 25/09/2019 16:56, Grodzovsky, Andrey wrote:
+>>>> On 9/25/19 11:14 AM, Steven Price wrote:
+>>>>
+>>>>> drm_sched_cleanup_jobs() attempts to free finished jobs, however 
+>>>>> because
+>>>>> it is called as the condition of wait_event_interruptible() it must 
+>>>>> not
+>>>>> sleep. Unfortunately some free callbacks (notably for Panfrost) do 
+>>>>> sleep.
+>>>>>
+>>>>> Instead let's rename drm_sched_cleanup_jobs() to
+>>>>> drm_sched_get_cleanup_job() and simply return a job for processing if
+>>>>> there is one. The caller can then call the free_job() callback outside
+>>>>> the wait_event_interruptible() where sleeping is possible before
+>>>>> re-checking and returning to sleep if necessary.
+>>>>>
+>>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>>> ---
+>>>>>    drivers/gpu/drm/scheduler/sched_main.c | 44 
+>>>>> ++++++++++++++------------
+>>>>>    1 file changed, 24 insertions(+), 20 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c 
+>>>>> b/drivers/gpu/drm/scheduler/sched_main.c
+>>>>> index 9a0ee74d82dc..0ed4aaa4e6d1 100644
+>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>>>>> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct 
+>>>>> dma_fence *f, struct dma_fence_cb *cb)
+>>>>>    }
+>>>>>       /**
+>>>>> - * drm_sched_cleanup_jobs - destroy finished jobs
+>>>>> + * drm_sched_get_cleanup_job - fetch the next finished job to be 
+>>>>> destroyed
+>>>>>     *
+>>>>>     * @sched: scheduler instance
+>>>>>     *
+>>>>> - * Remove all finished jobs from the mirror list and destroy them.
+>>>>> + * Returns the next finished job from the mirror list (if there is 
+>>>>> one)
+>>>>> + * ready for it to be destroyed.
+>>>>>     */
+>>>>> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
+>>>>> +static struct drm_sched_job *
+>>>>> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
+>>>>>    {
+>>>>> +    struct drm_sched_job *job = NULL;
+>>>>>        unsigned long flags;
+>>>>>           /* Don't destroy jobs while the timeout worker is running */
+>>>>>        if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
+>>>>>            !cancel_delayed_work(&sched->work_tdr))
+>>>>> -        return;
+>>>>> -
+>>>>> -
+>>>>> -    while (!list_empty(&sched->ring_mirror_list)) {
+>>>>> -        struct drm_sched_job *job;
+>>>>> +        return NULL;
+>>>>>    -        job = list_first_entry(&sched->ring_mirror_list,
+>>>>> +    job = list_first_entry_or_null(&sched->ring_mirror_list,
+>>>>>                           struct drm_sched_job, node);
+>>>>> -        if (!dma_fence_is_signaled(&job->s_fence->finished))
+>>>>> -            break;
+>>>>>    -        spin_lock_irqsave(&sched->job_list_lock, flags);
+>>>>> +    spin_lock_irqsave(&sched->job_list_lock, flags);
+>>>>> +
+>>>>> +    if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+>>>>>            /* remove job from ring_mirror_list */
+>>>>>            list_del_init(&job->node);
+>>>>> - spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>>>>> -
+>>>>> -        sched->ops->free_job(job);
+>>>>> +    } else {
+>>>>> +        job = NULL;
+>>>>> +        /* queue timeout for next job */
+>>>>> +        drm_sched_start_timeout(sched);
+>>>>>        }
+>>>>>    -    /* queue timeout for next job */
+>>>>> -    spin_lock_irqsave(&sched->job_list_lock, flags);
+>>>>> -    drm_sched_start_timeout(sched);
+>>>>>        spin_unlock_irqrestore(&sched->job_list_lock, flags);
+>>>>>    +    return job;
+>>>>>    }
+>>>>>       /**
+>>>>> @@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
+>>>>>            struct drm_sched_fence *s_fence;
+>>>>>            struct drm_sched_job *sched_job;
+>>>>>            struct dma_fence *fence;
+>>>>> +        struct drm_sched_job *cleanup_job = NULL;
+>>>>> wait_event_interruptible(sched->wake_up_worker,
+>>>>> -                     (drm_sched_cleanup_jobs(sched),
+>>>>> +                     (cleanup_job = 
+>>>>> drm_sched_get_cleanup_job(sched)) ||
+>>>>>                         (!drm_sched_blocked(sched) &&
+>>>>>                          (entity = drm_sched_select_entity(sched))) ||
+>>>>> -                     kthread_should_stop()));
+>>>>> +                     kthread_should_stop());
+>>>>
+>>>> Can't we just call drm_sched_cleanup_jobs right here, remove all the
+>>>> conditions in wait_event_interruptible (make it always true) and after
+>>>> drm_sched_cleanup_jobs is called test for all those conditions and
+>>>> return to sleep if they evaluate to false ? drm_sched_cleanup_jobs is
+>>>> called unconditionally inside wait_event_interruptible anyway... 
+>>>> This is
+>>>> more of a question to Christian.
+>>> Christian may know better than me, but I think those conditions need to
+>>> be in wait_event_interruptible() to avoid race conditions. If we simply
+>>> replace all the conditions with a literal "true" then
+>>> wait_event_interruptible() will never actually sleep.
+>>>
+>>> Steve
+>>
+>> Yes you right, it won't work as I missed that condition is evaluated 
+>> as first step in wait_event_interruptible before it sleeps.
+>>
+>> Andrey
+> 
+> Another idea  - what about still just relocating drm_sched_cleanup_jobs 
+> to after wait_event_interruptible and also call it in drm_sched_fini so  
+> for the case when it will not be called from drm_sched_main due to 
+> conditions not evaluating to true  it eventually be called last time 
+> from drm_sched_fini. I mean - the refactor looks ok to me but the code 
+> becomes  somewhat confusing this way to grasp.
+> 
+> Andrey
 
-Because we're unconditionally setting FAULT_FLAG_KILLABLE in gup code
-right now, this patch should have no functional change.  It also
-cleaned the code a little bit by introducing some helpers.
+That sounds similar to my first stab at this[1]. However Christian
+pointed out that it is necessary to also free jobs even if there isn't a
+new one to be scheduled. Otherwise it ends up with the jobs lying around
+until something kicks it.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- fs/userfaultfd.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+There is also the aspect of queueing the timeout for the next job - this
+is the part that I don't actually understand, but removing it from the
+wait_event_interruptible() invariable seems to cause problems. Hence
+this approach which avoids changing this behaviour. But I welcome input
+from anyone who understands this timeout mechanism!
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 2b3b48e94ae4..8c5863ccbf0e 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -334,6 +334,30 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
- 	return ret;
- }
- 
-+/* Should pair with userfaultfd_signal_pending() */
-+static inline long userfaultfd_get_blocking_state(unsigned int flags)
-+{
-+	if (flags & FAULT_FLAG_INTERRUPTIBLE)
-+		return TASK_INTERRUPTIBLE;
-+
-+	if (flags & FAULT_FLAG_KILLABLE)
-+		return TASK_KILLABLE;
-+
-+	return TASK_UNINTERRUPTIBLE;
-+}
-+
-+/* Should pair with userfaultfd_get_blocking_state() */
-+static inline bool userfaultfd_signal_pending(unsigned int flags)
-+{
-+	if (flags & FAULT_FLAG_INTERRUPTIBLE)
-+		return signal_pending(current);
-+
-+	if (flags & FAULT_FLAG_KILLABLE)
-+		return fatal_signal_pending(current);
-+
-+	return false;
-+}
-+
- /*
-  * The locking rules involved in returning VM_FAULT_RETRY depending on
-  * FAULT_FLAG_ALLOW_RETRY, FAULT_FLAG_RETRY_NOWAIT and
-@@ -355,7 +379,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	struct userfaultfd_ctx *ctx;
- 	struct userfaultfd_wait_queue uwq;
- 	vm_fault_t ret = VM_FAULT_SIGBUS;
--	bool must_wait, return_to_userland;
-+	bool must_wait;
- 	long blocking_state;
- 
- 	/*
-@@ -462,9 +486,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	uwq.ctx = ctx;
- 	uwq.waken = false;
- 
--	return_to_userland = vmf->flags & FAULT_FLAG_INTERRUPTIBLE;
--	blocking_state = return_to_userland ? TASK_INTERRUPTIBLE :
--			 TASK_KILLABLE;
-+	blocking_state = userfaultfd_get_blocking_state(vmf->flags);
- 
- 	spin_lock_irq(&ctx->fault_pending_wqh.lock);
- 	/*
-@@ -490,8 +512,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	up_read(&mm->mmap_sem);
- 
- 	if (likely(must_wait && !READ_ONCE(ctx->released) &&
--		   (return_to_userland ? !signal_pending(current) :
--		    !fatal_signal_pending(current)))) {
-+		   userfaultfd_signal_pending(vmf->flags))) {
- 		wake_up_poll(&ctx->fd_wqh, EPOLLIN);
- 		schedule();
- 		ret |= VM_FAULT_MAJOR;
-@@ -513,8 +534,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 			set_current_state(blocking_state);
- 			if (READ_ONCE(uwq.waken) ||
- 			    READ_ONCE(ctx->released) ||
--			    (return_to_userland ? signal_pending(current) :
--			     fatal_signal_pending(current)))
-+			    userfaultfd_signal_pending(vmf->flags))
- 				break;
- 			schedule();
- 		}
--- 
-2.21.0
+Steve
 
+[1]
+https://lists.freedesktop.org/archives/dri-devel/2019-September/235346.html
