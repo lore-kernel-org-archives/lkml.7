@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A9C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5F1C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3508222C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B096B222CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458089;
-	bh=BgKHlue3ej7r7sBj8nD2uHouEO54tcXhoKnC/ib4uZQ=;
+	s=default; t=1569458095;
+	bh=lMhfzCiB5FtYjaqqt2YfpoxXEmUE/0wDwgDE0Sj3Lps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dp+WHQFA7OmoLXNlLhWEYomayinYHK8CDjza0tm+hiC6fyLV/nR6bO3/yaMZ+Y2dc
-	 eY4OiFCPz4NryGtBrore9E+WF8wdjowql0wAD78B46IKvaTVbaF1PJpFRSJYUs8Fv7
-	 bvBfhhv69PfwjkmKP2nAyVHD58lEt7eN999bGLh8=
+	b=a/y1Cu/Hks16BfOTEIcTOw9IWXsseMJlaxd5XYggJ4TcyUrUs5XAiQfYhcg7lAUIk
+	 ISV65m6lQ/9/4xZRSCkFTX3AOp6jqDghH5MRzrecr3dGQ019ZPuCY4yhBl5Ba3J3cL
+	 BmgJs8qhTsJGQaq/TYne+Je+UhnDMrgTB+Bu05q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388884AbfIZAes (ORCPT
+        id S2388940AbfIZAey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37476 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388841AbfIZAeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:34:46 -0400
+        id S2388841AbfIZAet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:34:49 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE9F222C7;
-        Thu, 26 Sep 2019 00:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B91221D7B;
+        Thu, 26 Sep 2019 00:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458085;
-        bh=BgKHlue3ej7r7sBj8nD2uHouEO54tcXhoKnC/ib4uZQ=;
+        s=default; t=1569458088;
+        bh=lMhfzCiB5FtYjaqqt2YfpoxXEmUE/0wDwgDE0Sj3Lps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VASyHql9ta8404OIzFDzCPgP5aWv4F8ZqIOTd20aQ3sjXWq4u184dLmKGDM96Qc7K
-         f7u+4TFdFiIMNTWEtRr8ukV9zhpFvDDyFXe6mvUy/XGWj6Rd682R62FTmRhnHn+K3a
-         nnn0DligrvLYznCz3i08RYhjOqDMgHpKEt2kub3s=
+        b=OYHrX9YXOoknW192BPZTlh/U3vGAAOUpPpTEhthaXG4nrcn1NAnmraTnTskAZq/V5
+         LuDcN4bqgizqkDlErSX22O+WQbFkN3hgawM+7mZ5k2apZ+EAGPTQ2PbHTrs3y0DkcS
+         /kOiJ36I3Xz3C0wBGP3xv90TpSHszBlu2tjWZoZ8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 29/66] libperf: Add 'overwrite' to 'struct perf_mmap'
-Date:   Wed, 25 Sep 2019 21:32:07 -0300
-Message-Id: <20190926003244.13962-30-acme@kernel.org>
+Subject: [PATCH 30/66] libperf: Add 'event_copy' to 'struct perf_mmap'
+Date:   Wed, 25 Sep 2019 21:32:08 -0300
+Message-Id: <20190926003244.13962-31-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -64,118 +64,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move 'overwrite' from tools/perf's mmap to libperf's perf_mmap struct.
+Move 'event_copy' from tools/perf's mmap to libperf's perf_mmap struct.
 
 Committer notes:
 
-Add stdbool.h as we start using 'bool'.
+Add linux/compiler.h as we need it for '__aligned'.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-17-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-18-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/mmap.h |  2 ++
- tools/perf/util/evlist.c               |  2 +-
- tools/perf/util/mmap.c                 | 12 ++++++------
- tools/perf/util/mmap.h                 |  1 -
- 4 files changed, 9 insertions(+), 8 deletions(-)
+ tools/perf/lib/include/internal/mmap.h | 5 +++++
+ tools/perf/util/mmap.c                 | 4 ++--
+ tools/perf/util/mmap.h                 | 1 -
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/lib/include/internal/mmap.h b/tools/perf/lib/include/internal/mmap.h
-index ebf5b93754fd..47c09f375fb6 100644
+index 47c09f375fb6..10653b6e864e 100644
 --- a/tools/perf/lib/include/internal/mmap.h
 +++ b/tools/perf/lib/include/internal/mmap.h
-@@ -4,6 +4,7 @@
+@@ -2,10 +2,14 @@
+ #ifndef __LIBPERF_INTERNAL_MMAP_H
+ #define __LIBPERF_INTERNAL_MMAP_H
  
++#include <linux/compiler.h>
  #include <linux/refcount.h>
  #include <linux/types.h>
-+#include <stdbool.h>
+ #include <stdbool.h>
  
++/* perf sample has 16 bits size limit */
++#define PERF_SAMPLE_MAX_SIZE (1 << 16)
++
  /**
   * struct perf_mmap - perf's ring buffer mmap details
-@@ -19,6 +20,7 @@ struct perf_mmap {
- 	u64		 prev;
+  *
+@@ -21,6 +25,7 @@ struct perf_mmap {
  	u64		 start;
  	u64		 end;
-+	bool		 overwrite;
+ 	bool		 overwrite;
++	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
  };
  
  #endif /* __LIBPERF_INTERNAL_MMAP_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index d987e0e5d62b..16d47a420bc2 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -709,7 +709,7 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		map[i].core.fd = -1;
--		map[i].overwrite = overwrite;
-+		map[i].core.overwrite = overwrite;
- 		/*
- 		 * When the perf_mmap() call is made we grab one refcount, plus
- 		 * one extra to let perf_mmap__consume() get the last
 diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 6ce70ff005cb..a8850ce2c2ff 100644
+index a8850ce2c2ff..4b8ec8dd79c5 100644
 --- a/tools/perf/util/mmap.c
 +++ b/tools/perf/util/mmap.c
-@@ -93,12 +93,12 @@ union perf_event *perf_mmap__read_event(struct mmap *map)
- 		return NULL;
+@@ -51,7 +51,7 @@ static union perf_event *perf_mmap__read(struct mmap *map,
+ 		if ((*startp & map->core.mask) + size != ((*startp + size) & map->core.mask)) {
+ 			unsigned int offset = *startp;
+ 			unsigned int len = min(sizeof(*event), size), cpy;
+-			void *dst = map->event_copy;
++			void *dst = map->core.event_copy;
  
- 	/* non-overwirte doesn't pause the ringbuffer */
--	if (!map->overwrite)
-+	if (!map->core.overwrite)
- 		map->core.end = perf_mmap__read_head(map);
+ 			do {
+ 				cpy = min(map->core.mask + 1 - (offset & map->core.mask), len);
+@@ -61,7 +61,7 @@ static union perf_event *perf_mmap__read(struct mmap *map,
+ 				len -= cpy;
+ 			} while (len);
  
- 	event = perf_mmap__read(map, &map->core.start, map->core.end);
+-			event = (union perf_event *)map->event_copy;
++			event = (union perf_event *)map->core.event_copy;
+ 		}
  
--	if (!map->overwrite)
-+	if (!map->core.overwrite)
- 		map->core.prev = map->core.start;
- 
- 	return event;
-@@ -124,7 +124,7 @@ void perf_mmap__put(struct mmap *map)
- 
- void perf_mmap__consume(struct mmap *map)
- {
--	if (!map->overwrite) {
-+	if (!map->core.overwrite) {
- 		u64 old = map->core.prev;
- 
- 		perf_mmap__write_tail(map, old);
-@@ -447,15 +447,15 @@ static int __perf_mmap__read_init(struct mmap *md)
- 	unsigned char *data = md->core.base + page_size;
- 	unsigned long size;
- 
--	md->core.start = md->overwrite ? head : old;
--	md->core.end = md->overwrite ? old : head;
-+	md->core.start = md->core.overwrite ? head : old;
-+	md->core.end = md->core.overwrite ? old : head;
- 
- 	if ((md->core.end - md->core.start) < md->flush)
- 		return -EAGAIN;
- 
- 	size = md->core.end - md->core.start;
- 	if (size > (unsigned long)(md->core.mask) + 1) {
--		if (!md->overwrite) {
-+		if (!md->core.overwrite) {
- 			WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
- 
- 			md->core.prev = head;
+ 		*startp += size;
 diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index a3dd53f2bfb8..d3e74c8da51a 100644
+index d3e74c8da51a..75c77fa57121 100644
 --- a/tools/perf/util/mmap.h
 +++ b/tools/perf/util/mmap.h
-@@ -22,7 +22,6 @@ struct aiocb;
-  */
+@@ -23,7 +23,6 @@ struct aiocb;
  struct mmap {
  	struct perf_mmap	core;
--	bool		 overwrite;
  	struct auxtrace_mmap auxtrace_mmap;
- 	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
+-	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
  #ifdef HAVE_AIO_SUPPORT
+ 	struct {
+ 		void		 **data;
 -- 
 2.21.0
 
