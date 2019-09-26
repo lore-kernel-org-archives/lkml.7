@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF2BC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF694C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8290C222C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88534222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458169;
-	bh=Sj4A6FIx26R73d05tBu/6Ut0tmCLcx/BJSYVcvNfRZ4=;
+	s=default; t=1569458172;
+	bh=5Uj3ZnAyESfWapb3p+sSM85AuFAMxui3oyxF/X3AWwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0tkPutJ3900Ul+4Q0SRC29MN5vVB5nDxdLro/SWLDyJtAnGkAa06Yw87SMSpyGro6
-	 OAyl/GYTy16HwJadZ3BEog2JasB5Q+4ouF2LjFkuEljFwXgLwFU8UBogp5UfUx0bKM
-	 QpERKa7D8Rrk3C1A15BSGSycMSrDE4aIT2/73t1g=
+	b=tq64Qh1oO/wmd8UW9gR/QYX/jKrjxXZLU7ss0/5vVvbXZJIhB1XmNHT+k+tvKmC3z
+	 1rHO/aAsbYOhA4GauH1fLH5hZHP8jkO647frHK2FfDJULwVEkYUtQrzG9638zJHOZG
+	 s47Ro3Jg71fQbOFx6lwjORdoMFsEctYW8HW8rYHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbfIZAgI (ORCPT
+        id S2390339AbfIZAgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38770 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390168AbfIZAgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:36:00 -0400
+        id S1725990AbfIZAgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:36:04 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1352B217F4;
-        Thu, 26 Sep 2019 00:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3F6F21D6C;
+        Thu, 26 Sep 2019 00:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458159;
-        bh=Sj4A6FIx26R73d05tBu/6Ut0tmCLcx/BJSYVcvNfRZ4=;
+        s=default; t=1569458162;
+        bh=5Uj3ZnAyESfWapb3p+sSM85AuFAMxui3oyxF/X3AWwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OaLcMT4Ic3H41zJ8rxwDeOqCxbwHK7e0qXKY1lWW0KOF9s/4YSsJJ9XT4v2uzZURt
-         Q5XY+8KX0kzg27861igEvTwwIAtf7XYD/e40zrKJKsMtFFxWKtMTep7QPyLBDbSNTf
-         sNoZrPQoTLERLdvpJG51tLZI9XNHKYAYLXOJtmkY=
+        b=pfpFsD6+LyA9FhjnI0t85d0qgAgJtXL3IaWT1BMqhwoAOdQsCdmPGEKYe/74tPA66
+         uo3nsCgWKvuRBroE79uwQ5y2OzHDhKdu/FIM5waj5gzHyfjtW3gQOhoAVpn8ZQQMFb
+         1n1bHAKLmYuGIgj3gtPffpxh9pzEbZySmQHPK5IQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 50/66] libperf: Merge libperf_set_print() into libperf_init()
-Date:   Wed, 25 Sep 2019 21:32:28 -0300
-Message-Id: <20190926003244.13962-51-acme@kernel.org>
+Subject: [PATCH 51/66] libperf: Add libperf_init() call to the tests
+Date:   Wed, 25 Sep 2019 21:32:29 -0300
+Message-Id: <20190926003244.13962-52-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -64,8 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-The libperf_set_print() function needs to be called in any case so let's
-merge it with libperf_init(), so we have just one init function.
+Add libperf_init() call to the automated tests.
+
+Committer notes:
+
+Added missing stdarg.h and/or stdio.h to places using vfprintf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -75,89 +78,133 @@ Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Link: http://lore.kernel.org/lkml/20190913132355.21634-34-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/core.c              | 8 ++------
- tools/perf/lib/include/perf/core.h | 3 +--
- tools/perf/lib/libperf.map         | 1 -
- tools/perf/perf.c                  | 8 +++++++-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/lib/tests/test-cpumap.c    | 10 ++++++++++
+ tools/perf/lib/tests/test-evlist.c    | 10 ++++++++++
+ tools/perf/lib/tests/test-evsel.c     | 10 ++++++++++
+ tools/perf/lib/tests/test-threadmap.c | 10 ++++++++++
+ 4 files changed, 40 insertions(+)
 
-diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
-index 6689d593c2d1..d0b9ae422b9f 100644
---- a/tools/perf/lib/core.c
-+++ b/tools/perf/lib/core.c
-@@ -17,11 +17,6 @@ static int __base_pr(enum libperf_print_level level, const char *format,
- 
- static libperf_print_fn_t __libperf_pr = __base_pr;
- 
--void libperf_set_print(libperf_print_fn_t fn)
--{
--	__libperf_pr = fn;
--}
--
- __printf(2, 3)
- void libperf_print(enum libperf_print_level level, const char *format, ...)
- {
-@@ -35,7 +30,8 @@ void libperf_print(enum libperf_print_level level, const char *format, ...)
- 	va_end(args);
- }
- 
--void libperf_init(void)
-+void libperf_init(libperf_print_fn_t fn)
- {
- 	page_size = sysconf(_SC_PAGE_SIZE);
-+	__libperf_pr = fn;
- }
-diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
-index ba2f4e76a3e2..cfd70e720c1c 100644
---- a/tools/perf/lib/include/perf/core.h
-+++ b/tools/perf/lib/include/perf/core.h
-@@ -17,7 +17,6 @@ enum libperf_print_level {
- typedef int (*libperf_print_fn_t)(enum libperf_print_level level,
- 				  const char *, va_list ap);
- 
--LIBPERF_API void libperf_set_print(libperf_print_fn_t fn);
--LIBPERF_API void libperf_init(void);
-+LIBPERF_API void libperf_init(libperf_print_fn_t fn);
- 
- #endif /* __LIBPERF_CORE_H */
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 724da66776ef..5eb0150ccdc6 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -1,7 +1,6 @@
- LIBPERF_0.0.1 {
- 	global:
- 		libperf_init;
--		libperf_set_print;
- 		perf_cpu_map__dummy_new;
- 		perf_cpu_map__get;
- 		perf_cpu_map__put;
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index c012ceb64ff9..27f94b0bb874 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -430,6 +430,12 @@ void pthread__unblock_sigwinch(void)
- 	pthread_sigmask(SIG_UNBLOCK, &set, NULL);
- }
+diff --git a/tools/perf/lib/tests/test-cpumap.c b/tools/perf/lib/tests/test-cpumap.c
+index 76a43cfb83a1..aa34c20df07e 100644
+--- a/tools/perf/lib/tests/test-cpumap.c
++++ b/tools/perf/lib/tests/test-cpumap.c
+@@ -1,13 +1,23 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdarg.h>
++#include <stdio.h>
+ #include <perf/cpumap.h>
+ #include <internal/tests.h>
  
 +static int libperf_print(enum libperf_print_level level,
 +			 const char *fmt, va_list ap)
 +{
-+	return eprintf(level, verbose, fmt, ap);
++	return vfprintf(stderr, fmt, ap);
 +}
 +
- int main(int argc, const char **argv)
+ int main(int argc, char **argv)
  {
- 	int err;
-@@ -440,7 +446,7 @@ int main(int argc, const char **argv)
- 	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
- 	pager_init(PERF_PAGER_ENVIRONMENT);
+ 	struct perf_cpu_map *cpus;
  
--	libperf_init();
+ 	__T_START;
+ 
 +	libperf_init(libperf_print);
++
+ 	cpus = perf_cpu_map__dummy_new();
+ 	if (!cpus)
+ 		return -1;
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
+index 4e1407f20ffd..e6b2ab2e2bde 100644
+--- a/tools/perf/lib/tests/test-evlist.c
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -1,4 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdarg.h>
+ #include <linux/perf_event.h>
+ #include <perf/cpumap.h>
+ #include <perf/threadmap.h>
+@@ -6,6 +8,12 @@
+ #include <perf/evsel.h>
+ #include <internal/tests.h>
  
- 	cmd = extract_argv0_path(argv[0]);
- 	if (!cmd)
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ static int test_stat_cpu(void)
+ {
+ 	struct perf_cpu_map *cpus;
+@@ -177,6 +185,8 @@ int main(int argc, char **argv)
+ {
+ 	__T_START;
+ 
++	libperf_init(libperf_print);
++
+ 	test_stat_cpu();
+ 	test_stat_thread();
+ 	test_stat_thread_enable();
+diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
+index 2c648fe5617e..1b6c4285ac2b 100644
+--- a/tools/perf/lib/tests/test-evsel.c
++++ b/tools/perf/lib/tests/test-evsel.c
+@@ -1,10 +1,18 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdarg.h>
++#include <stdio.h>
+ #include <linux/perf_event.h>
+ #include <perf/cpumap.h>
+ #include <perf/threadmap.h>
+ #include <perf/evsel.h>
+ #include <internal/tests.h>
+ 
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ static int test_stat_cpu(void)
+ {
+ 	struct perf_cpu_map *cpus;
+@@ -116,6 +124,8 @@ int main(int argc, char **argv)
+ {
+ 	__T_START;
+ 
++	libperf_init(libperf_print);
++
+ 	test_stat_cpu();
+ 	test_stat_thread();
+ 	test_stat_thread_enable();
+diff --git a/tools/perf/lib/tests/test-threadmap.c b/tools/perf/lib/tests/test-threadmap.c
+index 10a4f4cbbdd5..8c5f47247d9e 100644
+--- a/tools/perf/lib/tests/test-threadmap.c
++++ b/tools/perf/lib/tests/test-threadmap.c
+@@ -1,13 +1,23 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdarg.h>
++#include <stdio.h>
+ #include <perf/threadmap.h>
+ #include <internal/tests.h>
+ 
++static int libperf_print(enum libperf_print_level level,
++			 const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
+ int main(int argc, char **argv)
+ {
+ 	struct perf_thread_map *threads;
+ 
+ 	__T_START;
+ 
++	libperf_init(libperf_print);
++
+ 	threads = perf_thread_map__new_dummy();
+ 	if (!threads)
+ 		return -1;
 -- 
 2.21.0
 
