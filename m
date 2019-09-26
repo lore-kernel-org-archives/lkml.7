@@ -2,145 +2,155 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D0DC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72359C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D213C222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5210E222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391209AbfIZBea (ORCPT
+        id S2391241AbfIZBeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:34:30 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:45848 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388759AbfIZBe3 (ORCPT
+        Wed, 25 Sep 2019 21:34:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388987AbfIZBea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:34:29 -0400
-X-UUID: 02390ec3819943f59fad01eaed510d65-20190926
-X-UUID: 02390ec3819943f59fad01eaed510d65-20190926
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1057313941; Thu, 26 Sep 2019 09:34:20 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 26 Sep
- 2019 09:34:19 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 26 Sep 2019 09:34:17 +0800
-Message-ID: <1569461658.32135.12.camel@mhfsdcap03>
-Subject: Re: [PATCH 4/5] dt-bindings: usb: dwc3: of-simple: add compatible
- for HiSi
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>
-Date:   Thu, 26 Sep 2019 09:34:18 +0800
-In-Reply-To: <20190925234224.95216-5-john.stultz@linaro.org>
-References: <20190925234224.95216-1-john.stultz@linaro.org>
-         <20190925234224.95216-5-john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 25 Sep 2019 21:34:30 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8Q1Vqxa060174
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 21:34:29 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8hm7kxfu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 21:34:29 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 26 Sep 2019 02:34:27 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 26 Sep 2019 02:34:24 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8Q1YOfM62128296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 01:34:24 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1A11AE051;
+        Thu, 26 Sep 2019 01:34:23 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D6A9AE045;
+        Thu, 26 Sep 2019 01:34:23 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Sep 2019 01:34:23 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2A085A0270;
+        Thu, 26 Sep 2019 11:34:22 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] memory_hotplug: Add a bounds check to __add_pages
+Date:   Thu, 26 Sep 2019 11:34:05 +1000
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190926013406.16133-1-alastair@au1.ibm.com>
+References: <20190926013406.16133-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: F93ADA76283739A391119E64EF2F43EF159D1815EA94474BA56A6CF3A64D18CB2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092601-0016-0000-0000-000002B0BE96
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092601-0017-0000-0000-0000331188F9
+Message-Id: <20190926013406.16133-2-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-25_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909260016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-25 at 23:42 +0000, John Stultz wrote:
-> Add necessary compatible flag for HiSi's DWC3 so
-> dwc3-of-simple will probe.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> new file mode 100644
-> index 000000000000..dc31b8a3c006
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> @@ -0,0 +1,52 @@
-> +HiSi SuperSpeed DWC3 USB SoC controller
-> +
-> +Required properties:
-> +- compatible:		should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> +- clocks:		A list of phandle + clock-specifier pairs for the
-> +			clocks listed in clock-names
-> +- clock-names:		Should contain the following:
-> +  "clk_usb3phy_ref"	Phy reference clk
-It's not good idea to apply phy's clock in dwc3's node
+From: Alastair D'Silva <alastair@d-silva.org>
 
-> +  "aclk_usb3otg"	USB3 OTG aclk
-> +
-> +- assigned-clocks:	Should be:
-> +				HI3660_ACLK_GATE_USB3OTG
-> +- assigned-clock-rates: Should be:
-> +				229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
-> +
-> +Optional properties:
-> +- resets:		Phandle to reset control that resets core and wrapper.
-> +
-> +Required child node:
-> +A child node must exist to represent the core DWC3 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc3.txt.
-> +
-> +Example device nodes:
-> +
-> +	usb3: hisi_dwc3 {
-> +		compatible = "hisilicon,hi3660-dwc3";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
-> +
-> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		assigned-clock-rates = <229 000 000>;
-> +		resets = <&crg_rst 0x90 8>,
-> +			 <&crg_rst 0x90 7>,
-> +			 <&crg_rst 0x90 6>,
-> +			 <&crg_rst 0x90 5>;
-> +
-> +		dwc3: dwc3@ff100000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0xff100000 0x0 0x100000>;
-> +			interrupts = <0 159 4>, <0 161 4>;
-> +			phys = <&usb_phy>;
-> +			phy-names = "usb3-phy";
-> +			dr_mode = "otg";
-> +
-> +			...
-> +		};
-> +	};
+On PowerPC, the address ranges allocated to OpenCAPI LPC memory
+are allocated from firmware. These address ranges may be higher
+than what older kernels permit, as we increased the maximum
+permissable address in commit 4ffe713b7587
+("powerpc/mm: Increase the max addressable memory to 2PB"). It is
+possible that the addressable range may change again in the
+future.
 
+In this scenario, we end up with a bogus section returned from
+__section_nr (see the discussion on the thread "mm: Trigger bug on
+if a section is not found in __section_nr").
+
+Adding a check here means that we fail early and have an
+opportunity to handle the error gracefully, rather than rumbling
+on and potentially accessing an incorrect section.
+
+Further discussion is also on the thread ("powerpc: Perform a bounds
+check in arch_add_memory")
+http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
+
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ mm/memory_hotplug.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c73f09913165..212804c0f7f5 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+ 	return 0;
+ }
+ 
++static int check_hotplug_memory_addressable(unsigned long pfn,
++					    unsigned long nr_pages)
++{
++	unsigned long max_addr = ((pfn + nr_pages) << PAGE_SHIFT) - 1;
++
++	if (max_addr >> MAX_PHYSMEM_BITS) {
++		WARN(1,
++		     "Hotplugged memory exceeds maximum addressable address, range=%#lx-%#lx, maximum=%#lx\n",
++		     pfn << PAGE_SHIFT, max_addr,
++		     (1ul << (MAX_PHYSMEM_BITS + 1)) - 1);
++		return -E2BIG;
++	}
++
++	return 0;
++}
++
+ /*
+  * Reasonably generic function for adding memory.  It is
+  * expected that archs that support memory hotplug will
+@@ -291,6 +307,10 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+ 	unsigned long nr, start_sec, end_sec;
+ 	struct vmem_altmap *altmap = restrictions->altmap;
+ 
++	err = check_hotplug_memory_addressable(pfn, nr_pages);
++	if (err)
++		return err;
++
+ 	if (altmap) {
+ 		/*
+ 		 * Validate altmap is within bounds of the total request
+-- 
+2.21.0
 
