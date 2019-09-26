@@ -2,173 +2,260 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AFFC352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7581C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A50D21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5303222CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:31:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Xf8U2RMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfIZQay (ORCPT
+        id S1727523AbfIZQbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 12:30:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:54406 "EHLO foss.arm.com"
+        Thu, 26 Sep 2019 12:31:46 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:49869 "EHLO cmta20.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfIZQay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:30:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70CAA28;
-        Thu, 26 Sep 2019 09:30:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BF313F534;
-        Thu, 26 Sep 2019 09:30:52 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 17:30:49 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20190926163049.GB7827@e121166-lin.cambridge.arm.com>
-References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
- <1568245086-70601-3-git-send-email-decui@microsoft.com>
+        id S1727358AbfIZQbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 12:31:45 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id DWg5iTjjsN5I9DWg6idREM; Thu, 26 Sep 2019 10:31:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1569515503; bh=ruzrGDpCey1oLCTz071JsbgxD25KGWsWXuxA3+QOk60=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=Xf8U2RMft1C414DHJd2LyXhd/OkdpP34jTrj0lzQCJIRMbL0QZ3WiJG+AviBoGpWM
+         HLoVl7nzwQ6/O6x5NWenKeB+iIYADDw+hUqKv9V+/DyHLzxwQgfXybrcm8+h8NzAsB
+         Kta/X1Z521EXipZRBrStg5vbrmdbh5Z6P4NL3r76yS8iWI9YEATlAooxzKJpN1L6/H
+         CnlxJF8uHt5mf6tYE1ZfnSr4nVoP+8/eDorxqx3b+G6jTML/rdKmAYpxYA/WqLWxIG
+         3UYY1Nvp6+W+g/2AerjShxrDowywkMokLNL308pFUsJHXzhpXi5dL/9s7vb+nXx5TT
+         moykco6vWGnHw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=RIbJcmsr_iJzxLSSOg0A:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+ a=RhuyYjO7tlwES4IY:21 a=Ulp3AgbovL3s6zND:21 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Frederic Weisbecker'" <frederic@kernel.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'Chen, Hu'" <hu1.chen@intel.com>,
+        "'Quentin Perret'" <quentin.perret@arm.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+References: WgXvgFd5aBdpLWgY0gWTga
+In-Reply-To: WgXvgFd5aBdpLWgY0gWTga
+Subject: RE: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
+Date:   Thu, 26 Sep 2019 09:31:36 -0700
+Message-ID: <001601d57487$e1029ef0$a307dcd0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568245086-70601-3-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdSRR6W+nknzDAweSJ6DmHc6MWYLQjjLqLuA
+X-CMAE-Envelope: MS4wfKC8LEk+L2v3xXaTPRYMDRNcLYnGna25kYyYfnrrf0QDTcOY6wtCih/1R9Dd2XSxIeuqZ08yW22ccl/gxKQHst648vPX3Xa7Gg25npNJ5muH1XN3XqHi
+ 1mWl3FlLm22i8o3AQOd6k8jE2BFgbFXYh9s/c2ZZp572NFS65c5fb0XH8NNZFiQlHxaYd7jp/1/8Sj/WClawWCtInAGnHvJoEbzMZ5lBzND+I11k6RC0RtnT
+ l66eQXj4fBz7PaLqgGKiXiSrHzZpbOt5iC4orlzxwUDLU0GVCxQqkMReEiWwhPyimGuTe4HYkheJYYlpbjGGNiDyBzNLRqZTi1ef+XVr6eTjgNEi7zOjYa1U
+ /cL7e8+dMdLrbJJPzuEoK8jiIrnT1qCiPqCGm9o1Cve1IEozvwNLF1wPOonqzROWh1cMySdIRaV0yMpHQmXVDbcg9an/mn5bQnAqy3bzpgHZttiNl4a3su6E
+ KdnN4UvUC6Of0Aw4OfM/MuNsxFdfCYRqA4ndjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:38:20PM +0000, Dexuan Cui wrote:
-> Implement the suspend/resume callbacks for hibernation.
-> 
-> hv_pci_suspend() needs to prevent any new work from being queued: a later
-> patch will address this issue.
+All,
 
-I don't see why you have two separate patches, the second one fixing the
-previous (this one). Squash them together and merge them as such, or
-there is something I am missing here.
+Recall the extensive tests and work done between 2018.10.11 and 2019.01.16
+on Rafael's teo governor, versions 1 through 11, noting that versions
+9, 10, and 11 did not contain functional changes.
 
-Lorenzo
+Hi Rafael,
 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 76 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 03fa039..3b77a3a 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1398,6 +1398,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
->  
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  
-> +	/*
-> +	 * Clear the memory enable bit, in case it's already set. This occurs
-> +	 * in the suspend path of hibernation, where the device is suspended,
-> +	 * resumed and suspended again: see hibernation_snapshot() and
-> +	 * hibernation_platform_enter().
-> +	 *
-> +	 * If the memory enable bit is already set, Hyper-V sliently ignores
-> +	 * the below BAR updates, and the related PCI device driver can not
-> +	 * work, because reading from the device register(s) always returns
-> +	 * 0xFFFFFFFF.
-> +	 */
-> +	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> +		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
-> +		command &= ~PCI_COMMAND_MEMORY;
-> +		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
-> +	}
-> +
->  	/* Pick addresses for the BARs. */
->  	do {
->  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2737,6 +2754,63 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	return ret;
->  }
->  
-> +static int hv_pci_suspend(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	int ret;
-> +
-> +	/* XXX: Need to prevent any new work from being queued. */
-> +	flush_workqueue(hbus->wq);
-> +
-> +	ret = hv_pci_bus_exit(hdev, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	vmbus_close(hdev->channel);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hv_pci_resume(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum pci_protocol_version_t version[1];
-> +	int ret;
-> +
-> +	hbus->state = hv_pcibus_init;
-> +
-> +	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> +			 hv_pci_onchannelcallback, hbus);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Only use the version that was in use before hibernation. */
-> +	version[0] = pci_protocol_version;
-> +	ret = hv_pci_protocol_negotiation(hdev, version, 1);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_query_relations(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_enter_d0(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_send_resources_allocated(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	prepopulate_bars(hbus);
-> +
-> +	hbus->state = hv_pcibus_installed;
-> +	return 0;
-> +out:
-> +	vmbus_close(hdev->channel);
-> +	return ret;
-> +}
-> +
->  static const struct hv_vmbus_device_id hv_pci_id_table[] = {
->  	/* PCI Pass-through Class ID */
->  	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
-> @@ -2751,6 +2825,8 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	.id_table	= hv_pci_id_table,
->  	.probe		= hv_pci_probe,
->  	.remove		= hv_pci_remove,
-> +	.suspend	= hv_pci_suspend,
-> +	.resume		= hv_pci_resume,
->  };
->  
->  static void __exit exit_hv_pci_drv(void)
-> -- 
-> 1.8.3.1
-> 
+If the deepest idle state is disabled, the system
+can become somewhat unstable, with anywhere between no problem
+at all, to the occasional temporary jump using a lot more
+power for a few seconds, to a permanent jump using a lot more
+power continuously. I have been unable to isolate the exact
+test load conditions under which this will occur. However,
+temporarily disabling and then enabling other idle states
+seems to make for a somewhat repeatable test. It is important
+to note that the issue occurs with only ever disabling the deepest
+idle state, just not reliably.
+
+I want to know how you want to proceed before I do a bunch of
+regression testing.
+
+On 2018.12.11 03:50 Rafael J. Wysocki wrote:
+
+> v7 -> v8:
+>  * Apply the selection rules to the idle deepest state as well as to
+>    the shallower ones (the deepest idle state was treated differently
+>    before by mistake).
+>  * Subtract 1/2 of the exit latency from the measured idle duration
+>    in teo_update() (instead of subtracting the entire exit latency).
+>    This makes the idle state selection be slightly more performance-
+>   oriented.
+
+I have isolated the issue to a subset of the v7 to v8 changes, however
+it was not the exit latency changes.
+
+The partial revert to V7 changes I made were (on top of 5.3):
+
+diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+index 7d05efd..d2892bb 100644
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -283,9 +283,28 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+                if (idx < 0)
+                        idx = i; /* first enabled state */
+
+-               if (s->target_residency > duration_us)
+-                       break;
++               if (s->target_residency > duration_us) {
++                       /*
++                        * If the "hits" metric of the state matching the sleep
++                        * length is greater than its "misses" metric, that is
++                        * the one to use.
++                        */
++                       if (cpu_data->states[idx].hits > cpu_data->states[idx].misses)
++                               break;
+
++                       /*
++                        * It is more likely that one of the shallower states
++                        * will match the idle duration measured after wakeup,
++                        * so take the one with the maximum "early hits" metric,
++                        * but if that cannot be determined, just use the state
++                        * selected so far.
++                        */
++                       if (max_early_idx >= 0) {
++                               idx = max_early_idx;
++                               duration_us = drv->states[idx].target_residency;
++                       }
++                       break;
++               }
+                if (s->exit_latency > latency_req) {
+                        /*
+                         * If we break out of the loop for latency reasons, use
+@@ -294,7 +313,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+                         * as long as that target residency is low enough.
+                         */
+                        duration_us = drv->states[idx].target_residency;
+-                       goto refine;
++                       break;
+                }
+
+                idx = i;
+@@ -307,21 +326,6 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+                }
+        }
+
+-       /*
+-        * If the "hits" metric of the idle state matching the sleep length is
+-        * greater than its "misses" metric, that is the one to use.  Otherwise,
+-        * it is more likely that one of the shallower states will match the
+-        * idle duration observed after wakeup, so take the one with the maximum
+-        * "early hits" metric, but if that cannot be determined, just use the
+-        * state selected so far.
+-        */
+-       if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+-           max_early_idx >= 0) {
+-               idx = max_early_idx;
+-               duration_us = drv->states[idx].target_residency;
+-       }
+-
+-refine:
+        if (idx < 0) {
+                idx = 0; /* No states enabled. Must use 0. */
+        } else if (idx > 0) {
+
+Test results (note: I use my own monitoring utility, because it feeds my
+graphing/html utility, but have used turbostat here in case others
+want to repeat the test):
+
+Processor: i7-2600K
+Deepest idle state: 4 (C6)
+The system is mostly idle for these tests.
+turbostat command used:
+
+sudo turbostat --Summary --quiet --hide
+IRQ,Avg_MHz,SMI,GFXMHz,TSC_MHz,GFXWatt,CorWatt,CPU%c1,CPU%c7,CoreTmp,GFX%rc6,Pkg%pc2,Pkg%pc3,Pkg%pc6,C1,C1E,,C1%,C1E%,C3%,C6%
+--interval 3
+
+Only because it works so reliably, the test involves disabling all idle states
+deeper than 0, then enabling all idle states shallower than the deepest.
+
+I have attempted to minimize the number of display columns,
+hopefully without hiding useful information.
+
+Kernel 5.3:
+
+Busy%   Bzy_MHz POLL    C3      C6      POLL%   CPU%c3  CPU%c6  PkgTmp  PkgWatt
+0.04    1600    0       0       232     0.00    0.00    99.85   28      3.73
+0.05    1600    0       3       254     0.00    0.00    99.82   28      3.73
+0.04    1600    0       1       264     0.00    0.00    99.82   30      3.73
+61.08   3493    14735   16      258     60.84   0.04    38.57   45      31.00
+100.00  3500    24057   0       0       99.88   0.00    0.00    46      48.73
+100.00  3500    24064   0       0       99.86   0.00    0.00    48      48.87
+100.00  3500    24057   0       0       99.88   0.00    0.00    49      49.07
+100.00  3500    24070   0       0       99.87   0.00    0.00    50      49.21
+100.00  3500    24068   0       0       99.87   0.00    0.00    50      49.29
+100.00  3500    24063   0       0       99.88   0.00    0.00    52      49.42
+100.00  3500    24060   0       0       99.87   0.00    0.00    53      49.58
+100.00  3500    24076   0       0       99.87   0.00    0.00    53      49.70
+100.00  3500    24067   0       0       99.87   0.00    0.00    55      49.77
+28.89   3575    15138   261     0       28.71   59.97   0.00    48      27.93
+10.52   3666    11884   379     0       10.43   75.24   0.00    47      20.72
+10.80   3680    12141   558     0       10.65   75.13   0.00    46      21.11
+11.51   3742    13016   217     0       11.43   74.93   0.00    47      22.48
+10.84   3696    12254   294     0       10.76   74.89   0.00    48      21.26
+10.34   3652    11683   243     0       10.25   74.93   0.00    47      20.36
+10.67   3681    12065   240     0       10.59   74.94   0.00    48      20.96
+10.68   3671    12067   278     0       10.59   74.92   0.00    47      20.85
+10.84   3690    12259   236     0       10.76   74.94   0.00    47      21.24
+11.51   3735    13023   265     0       11.43   74.93   0.00    48      22.43
+
+Notice how once idle state 3 is enabled again (as were states 1 and 2) and  we
+should be at about 5 watts, there is still a ton of time spent in idle state
+0 (POLL).
+
+Kernel 5.3 + above patch:
+
+Busy%   Bzy_MHz POLL    C3      C6      POLL%   CPU%c3  CPU%c6  PkgTmp  PkgWatt
+0.04    1600    0       3       235     0.00    0.00    99.82   26      3.71
+0.04    1600    0       1       252     0.00    0.00    99.79   26      3.71
+0.05    1600    0       3       273     0.00    0.00    99.79   26      3.72
+0.04    1600    0       3       224     0.00    0.00    99.83   26      3.71
+0.05    1600    0       1       252     0.00    0.00    99.81   25      3.71
+0.04    1600    0       1       231     0.00    0.00    99.84   26      3.71
+0.05    1600    0       3       294     0.00    0.00    99.77   28      3.71
+0.04    1600    0       2       259     0.00    0.00    99.81   25      3.70
+69.61   3490    16773   15      326     69.33   0.14    29.98   42      34.41
+100.00  3500    24079   0       0       99.88   0.00    0.00    45      48.27
+100.00  3500    24062   0       0       99.89   0.00    0.00    45      48.41
+100.00  3500    24056   0       0       99.88   0.00    0.00    46      48.52
+100.00  3500    24064   0       0       99.89   0.00    0.00    47      48.63
+27.31   3498    6588    340     0       27.16   72.40   0.00    32      17.13
+0.03    1600    1       230     0       0.00    99.91   0.00    30      5.08
+0.03    1600    2       234     0       0.00    99.90   0.00    31      5.07
+0.03    1600    5       238     0       0.00    99.91   0.00    30      5.07
+0.03    1600    3       230     0       0.00    99.91   0.00    30      5.05
+0.03    1600    3       246     0       0.00    99.91   0.00    29      5.05
+0.03    1600    3       235     0       0.00    99.90   0.00    30      5.04
+
+Notice how once idle state 3 is enabled again (as were states 1 and 2) almost
+all time is spent there, as expected, and the power is the expected 5 watts.
+
+... Doug
+
+
