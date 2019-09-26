@@ -6,128 +6,79 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BD4C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EF8C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A662222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332D3222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391402AbfIZBob (ORCPT
+        id S2391440AbfIZBow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:44:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:33816 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389381AbfIZBob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:44:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 18:44:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,549,1559545200"; 
-   d="scan'208";a="201450212"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 25 Sep 2019 18:44:28 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-To:     "Tian, Kevin" <kevin.tian@intel.com>, Peter Xu <peterx@redhat.com>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190923203102.GB21816@araj-mobl1.jf.intel.com>
- <9cfe6042-f0fb-ea5e-e134-f6f5bb9eb7b0@linux.intel.com>
- <20190925043050.GK28074@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F018@SHSMSX104.ccr.corp.intel.com>
- <20190925052402.GM28074@xz-x1>
- <1713f03c-4d47-34ad-f36d-882645c36389@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <2755a11e-1ed0-6663-2c5b-ed50be717ba7@linux.intel.com>
-Date:   Thu, 26 Sep 2019 09:42:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 25 Sep 2019 21:44:52 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2723 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388922AbfIZBow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 21:44:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 132BA6BCFDA8F17F772B;
+        Thu, 26 Sep 2019 09:44:49 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
+ 09:44:46 +0800
+Subject: Re: [PATCH 24/32] dma-debug: Use pr_warn instead of pr_warning
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
+ <20190920062544.180997-25-wangkefeng.wang@huawei.com>
+ <20190925171304.GA16861@lst.de>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <7439236f-a8c8-df62-a1cd-7b6c45538ad7@huawei.com>
+Date:   Thu, 26 Sep 2019 09:44:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D58F4EA@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190925171304.GA16861@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
 
-On 9/25/19 3:32 PM, Tian, Kevin wrote:
->> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
->> Sent: Wednesday, September 25, 2019 2:52 PM
->>
->> Hi Peter and Kevin,
->>
->> On 9/25/19 1:24 PM, Peter Xu wrote:
->>> On Wed, Sep 25, 2019 at 04:38:31AM +0000, Tian, Kevin wrote:
->>>>> From: Peter Xu [mailto:peterx@redhat.com]
->>>>> Sent: Wednesday, September 25, 2019 12:31 PM
->>>>>
->>>>> On Tue, Sep 24, 2019 at 09:38:53AM +0800, Lu Baolu wrote:
->>>>>>>> intel_mmmap_range(domain, addr, end, phys_addr, prot)
->>>>>>>
->>>>>>> Maybe think of a different name..? mmmap seems a bit weird :-)
->>>>>>
->>>>>> Yes. I don't like it either. I've thought about it and haven't
->>>>>> figured out a satisfied one. Do you have any suggestions?
->>>>>
->>>>> How about at least split the word using "_"?  Like "mm_map", then
->>>>> apply it to all the "mmm*" prefixes.  Otherwise it'll be easily
->>>>> misread as mmap() which is totally irrelevant to this...
->>>>>
->>>>
->>>> what is the point of keeping 'mm' here? replace it with 'iommu'?
->>>
->>> I'm not sure of what Baolu thought, but to me "mm" makes sense itself
->>> to identify this from real IOMMU page tables (because IIUC these will
->>> be MMU page tables).  We can come up with better names, but IMHO
->>> "iommu" can be a bit misleading to let people refer to the 2nd level
->>> page table.
->>
->> "mm" represents a CPU (first level) page table;
->>
->> vs.
->>
->> "io" represents an IOMMU (second level) page table.
->>
-> 
-> IOMMU first level is not equivalent to CPU page table, though you can
-> use the latter as the first level (e.g. in SVA). Especially here you are
-> making IOVA->GPA as the first level, which is not CPU page table.
-> 
-> btw both levels are for "io" i.e. DMA purposes from VT-d p.o.v. They
-> are just hierarchical structures implemented by VT-d, with slightly
-> different format. The specification doesn't limit how you use them for.
-> In a hypothetical case, an IOMMU may implement exactly same CPU-page-
-> table format and support page faults for both levels. Then you can even
-> link the CPU page table to the 2nd level for sure.
+On 2019/9/26 1:13, Christoph Hellwig wrote:
+> On Fri, Sep 20, 2019 at 02:25:36PM +0800, Kefeng Wang wrote:
+>> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
+>> pr_warning"), removing pr_warning so all logging messages use a
+>> consistent <prefix>_warn style. Let's do it.
+> Please just send a script after -rc1 instead of sending all these
+> little patches.
 
-Fair enough. A good conceptual gap fix.
+For all changes,  just git grep -w pr_warning | cut -d ':' -f1 | uniq | sort | xargs sed -i 's/pr_warning/pr_warn/g',
 
-> 
-> Maybe we just name it from VT-d context, e.g. intel_map_first_level_range,
-> Intel_map_second_level_range, and then register them as dmar domain
-> callback as you replied in another mail.
+but I do need check them manually and make some minor improvements, like coalesce format, realign arguments,
 
-Yes. Make sense.
+and remove unnecessary line continuations. thus, send these littles patches.
 
-> 
-> Thanks
-> Kevin
-> 
+Thanks.
 
-Best regards,
-Baolu
+> .
+>
+
