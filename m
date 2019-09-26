@@ -2,54 +2,54 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF7FC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8CAC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4FD222C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0CA222C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458199;
-	bh=l7hVkk55ioRsjqiI+2pYsI5Fo1yfzSoJs+18iwTNJnY=;
+	s=default; t=1569458205;
+	bh=dSYTLI9a2bg9fy8mLt8SIa/dAisD6gBb7UAeoj5auPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAs2pBDbEaQZntJ32X7hpVITcAQ7DQ0oJ2FyMFwAl7dZucabxxSW1ZjaOp2nmAaCW
-	 Wk/f7aIQtcNQiIMpq90nuy+EnB/OXP35GXaZtdItvWFTcE6oIU8Apuu+dC8dHKVkVF
-	 qqPDdufOs5FUWtxWFnuJ4nGPAQsCBvyJ0O3/WVvo=
+	b=uC8D8/unkyaZ88hn76K2LFBPVKlYennNw38Z48QpXWRiwmjq5oZmeXGJiHzMT7SPy
+	 I2hLtjOUEt0qXYeCvSdJybV9HRDJ4QnwZY/p4PcMVs+ZEi3GAExK1d8iYxgmayKt/c
+	 r13aQqngRq11z4yH+tY/Zbr8D2AVqn6RvuE66AxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390710AbfIZAgj (ORCPT
+        id S2390816AbfIZAgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39334 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390637AbfIZAge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:36:34 -0400
+        id S2390684AbfIZAgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:36:37 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A790421D7B;
-        Thu, 26 Sep 2019 00:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40BC21D6C;
+        Thu, 26 Sep 2019 00:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458193;
-        bh=l7hVkk55ioRsjqiI+2pYsI5Fo1yfzSoJs+18iwTNJnY=;
+        s=default; t=1569458196;
+        bh=dSYTLI9a2bg9fy8mLt8SIa/dAisD6gBb7UAeoj5auPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiTZ0yCJPpYuuD9jESm3MLyPtjZ6T4NlT0mAYeAd9/KaMNOBLI4p5Z1SQGaH8jQaD
-         F8WKY4kMn7UgYRPynBcs7JajWe00QgOpLivcggfz6nvzJsE5WKuvPQtmrkhhshZXST
-         VyKXYvSEgf+L8sXkZakh30qVw7JMQ1bvPVvVLoQk=
+        b=Sor2F1JMGR8dnIzoilo6Rcr7gQgUykdHE5TtgeFoLLea9J0SfoGy1mr3nZJkGNdpS
+         nLUpvgqUpMvqMP8k20FgTfSB5iYDZvsS5vHupCHATwRNCutyMRQPVufR2pOxA8U/Jr
+         DpqVgfXgdno2aQ9wTmdngEvNqDWwn0/ReRNdiLWo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 60/66] perf tools: Replace needless mmap.h with what is needed, event.h
-Date:   Wed, 25 Sep 2019 21:32:38 -0300
-Message-Id: <20190926003244.13962-61-acme@kernel.org>
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 61/66] perf stat: Fix free memory access / memory leaks in metrics
+Date:   Wed, 25 Sep 2019 21:32:39 -0300
+Message-Id: <20190926003244.13962-62-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -60,47 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-The perf_sample struct definition and the event_attr_init() are in
-util/event.h, but some places were getting it thru an otherwise needless
-util/mmap.h header, fix it by including util/event.h directly.
+Make sure to not free the name passed in by the caller, but free all the
+allocated ids when parsing expressions.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-p1anwyjdbbvghrkl9dlxv7h5@git.kernel.org
+The loop at the end knows that the first entry shouldn't be freed, so
+make sure the caller name is the first entry.
+
+Fixes
+
+  % perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
+
+  valgrind:
+       1.009943231 ==21527== Invalid read of size 1
+  ==21527==    at 0x483CB74: strcmp (vg_replace_strmem.c:849)
+  ==21527==    by 0x582CF8: collect_all_aliases (stat-display.c:554)
+  ==21527==    by 0x582EB3: collect_data (stat-display.c:577)
+  ==21527==    by 0x583A32: print_counter_aggr (stat-display.c:806)
+  ==21527==    by 0x584FAD: perf_evlist__print_counters (stat-display.c:1200)
+  ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
+  ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
+  ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
+  ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+  ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+  ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+  ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
+  ==21527==  Address 0x12826cd0 is 0 bytes inside a block of size 25 free'd
+  ==21527==    at 0x4839A0C: free (vg_replace_malloc.c:540)
+  ==21527==    by 0x627041: __zfree (zalloc.c:13)
+  ==21527==    by 0x57F66A: generic_metric (stat-shadow.c:814)
+  ==21527==    by 0x580B21: perf_stat__print_shadow_stats (stat-shadow.c:1057)
+  ==21527==    by 0x58418E: print_metric_headers (stat-display.c:943)
+  ==21527==    by 0x5844BC: print_interval (stat-display.c:1004)
+  ==21527==    by 0x584DEB: perf_evlist__print_counters (stat-display.c:1172)
+  ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
+  ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
+  ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
+  ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
+  ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
+  ==21527==  Block was alloc'd at
+  ==21527==    at 0x483880B: malloc (vg_replace_malloc.c:309)
+  ==21527==    by 0x51677DE: strdup (in /usr/lib64/libc-2.29.so)
+  ==21527==    by 0x506457: parse_events_name (parse-events.c:1754)
+  ==21527==    by 0x5550BB: parse_events_parse (parse-events.y:214)
+  ==21527==    by 0x50694D: parse_events__scanner (parse-events.c:1887)
+  ==21527==    by 0x506AEF: parse_events (parse-events.c:1927)
+  ==21527==    by 0x521D8B: metricgroup__parse_groups (metricgroup.c:527)
+  ==21527==    by 0x45156F: parse_metric_groups (builtin-stat.c:721)
+  ==21527==    by 0x6228A9: get_value (parse-options.c:243)
+  ==21527==    by 0x62363F: parse_short_opt (parse-options.c:348)
+  ==21527==    by 0x62363F: parse_options_step (parse-options.c:536)
+  ==21527==    by 0x62363F: parse_options_subcommand (parse-options.c:651)
+  ==21527==    by 0x453C1D: cmd_stat (builtin-stat.c:1718)
+  ==21527==    by 0x4D557D: run_builtin (perf.c:310)
+
+and also a leak report.
+
+Committer testing:
+
+Before:
+
+  # perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
+  #           time      CPU_Utilization
+       1.000470810                      free(): double free detected in tcache 2
+  Aborted (core dumped)
+  #
+
+After:
+
+  # perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
+  #           time      CPU_Utilization
+       1.000494752                  0.1
+       2.001105112                  0.1
+  #
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lore.kernel.org/lkml/20190923233339.25326-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c     | 2 +-
- tools/perf/util/parse-events.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/stat-shadow.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 69d0a1991b29..e830eadfca2a 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -34,7 +34,7 @@
- #include "bpf-event.h"
- #include "block-range.h"
- #include "string2.h"
--#include "util/mmap.h"
-+#include "util/event.h"
- #include "arch/common.h"
- #include <regex.h>
- #include <pthread.h>
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 50737046fa63..b5e2adef49de 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -35,7 +35,7 @@
- #include "util/parse-branch-options.h"
- #include "metricgroup.h"
- #include "util/evsel_config.h"
--#include "util/mmap.h"
-+#include "util/event.h"
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 70c87fdb2a43..2c41d47f6f83 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -738,6 +738,8 @@ static void generic_metric(struct perf_stat_config *config,
+ 	char *n, *pn;
  
- #define MAX_NAME_LEN 100
+ 	expr__ctx_init(&pctx);
++	/* Must be first id entry */
++	expr__add_id(&pctx, name, avg);
+ 	for (i = 0; metric_events[i]; i++) {
+ 		struct saved_value *v;
+ 		struct stats *stats;
+@@ -776,8 +778,6 @@ static void generic_metric(struct perf_stat_config *config,
+ 			expr__add_id(&pctx, n, avg_stats(stats)*scale);
+ 	}
+ 
+-	expr__add_id(&pctx, name, avg);
+-
+ 	if (!metric_events[i]) {
+ 		const char *p = metric_expr;
  
 -- 
 2.21.0
