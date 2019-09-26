@@ -2,129 +2,92 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28229C352AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9540AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03915222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569524625;
-	bh=LBVtsz5z+vpetycpLaD8sjzERUmaTsH1plt+ZCmqirU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=DVUmU7ymUk23x5lzyFX02aQ3sfInqPE0FLD+FqTxGQpuQeicp4RBLDPDJmt1c278/
-	 y1kRL9UuGI9G31/sMe156mgt+F0Tq1ntcMuEMDy/67WT8RMKgRezRNJX7xltYLyVUL
-	 dl2Q/IGr0dvSACXwrOkfnFhTqxSOOKUPhNEo9IRY=
+	by mail.kernel.org (Postfix) with ESMTP id 69EEF217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:04:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tmtc0Nn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfIZTDl (ORCPT
+        id S1728572AbfIZTEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:03:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60424 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZTDk (ORCPT
+        Thu, 26 Sep 2019 15:04:44 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45066 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbfIZTEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:03:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9NMqgUSfB23WIGsbVZdDDU/hZWIHyaCgjXWCN1PPWwc=; b=NfOql3QY+UwgN4oqicuJEQwTY
-        OZvS1dNWGPUpxkUHniNvL93tVaJEpqo9kCdEynP52garrITg6TuZm7rkCi4RtHUsKNk7YG4a/2nZL
-        fTJ+l9bGO76pfy4Efq3F5iC1M9qKyDExpfITnQGxzNIhXxGfJ4EJG99R27kmiBT+JLrWU=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDZ3C-0004Wz-B0; Thu, 26 Sep 2019 19:03:38 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id BC4DCD02DD8; Thu, 26 Sep 2019 20:03:36 +0100 (BST)
-Date:   Thu, 26 Sep 2019 12:03:36 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Tree for Sep 26
-Message-ID: <20190926190336.GH2036@sirena.org.uk>
+        Thu, 26 Sep 2019 15:04:44 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u12so23373pls.12
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=PdYLRPjVhmUjIHCvi4UHiPrAhU+guddA20JI/+5rxjY=;
+        b=Tmtc0Nn81wHG/k62e+8O6WqFzOrbw0joaXuZw8CeRv4NGBJO34uREGUVrM15NlRNd/
+         KXVCm56+bWElYHYeQ0R4kjyNu/FnqC/9+MEKDrqK72lW7/l39xNoG1fS0Zp6CKUdRLsZ
+         gXVsZtp5tT32ZBWw5kC+fU1woWzttqHBQPRNrIgNylvWWDlRDJ6vWAz34kj719Yq98p3
+         vPKRfVpuDaJP14Ay3aL4z0RQGk3C68gzKCjF47xNVleC3oQoXXVewTZOq4iSAuA8BBDy
+         v7MVN7GQVjR3R/y4nGJ8xwBHz5ZnXg5WVCmwB6dZt1h+ke9BhQTtxSVdOqPqRUM8SiAP
+         Pe8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=PdYLRPjVhmUjIHCvi4UHiPrAhU+guddA20JI/+5rxjY=;
+        b=rpBHnt8o1GfmD2mbXMR023ZPlUIFK+ljjFlYeuIzoMXl8MvnANo3+Ckxg9QpdyHuKh
+         2Gyh2OZ/HWEf9BhZTL1g9QQY1HYkgKe7QwJZm+Mr/3OryPBTUlC8kban7Qoicq4HuS8J
+         1sBwGSjvn2UB0lhA3uaUGU9V0+hRMQaoqEthh8SpTl2XA21HDVD5qVSQyAqB8Gq6KtTv
+         qfLLBjpyYfLTyKc3eYyBXjxwGW00/LdqIbP+QPoVubCyrE3FoOmRiC5NxItzANcNJdp6
+         kWl1Vph7XLnS7dDmGA/9EegFcUVIveZEwTsP8J+4HoOUoDTPW6mfuBZVZ4RYXVgJoyzr
+         cZyA==
+X-Gm-Message-State: APjAAAUZhDZvCPNax71/1eA866PRKmL9GeGzq0xyeu4cNEszVoLTtmwN
+        sWdlrGmac7AcckmOlEtV4/j/Qg==
+X-Google-Smtp-Source: APXvYqxEUiBxfJzjbBHftgh1abveLyXbMBtk+9b38TLo3+MinOv2vGYAtVPqpE0JbpSEN4PmoAzjcg==
+X-Received: by 2002:a17:902:a508:: with SMTP id s8mr67402plq.317.1569524683474;
+        Thu, 26 Sep 2019 12:04:43 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id y15sm24796pfp.111.2019.09.26.12.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 12:04:42 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 12:04:42 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        tglx@linutronix.de, Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mm, vmpressure: Fix a signedness bug in
+ vmpressure_register_event()
+In-Reply-To: <20190925110449.GO3264@mwanda>
+Message-ID: <alpine.DEB.2.21.1909261204300.39830@chino.kir.corp.google.com>
+References: <20190925110449.GO3264@mwanda>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="StZ26hC3DS27TACW"
-Content-Disposition: inline
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 25 Sep 2019, Dan Carpenter wrote:
 
---StZ26hC3DS27TACW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> The "mode" and "level" variables are enums and in this context GCC will
+> treat them as unsigned ints so the error handling is never triggered.
+> 
+> I also removed the bogus initializer because it isn't required any more
+> and it's sort of confusing.
+> 
+> Fixes: 3cadfa2b9497 ("mm/vmpressure.c: convert to use match_string() helper")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Hi all,
-
-News: Builds for this week won't appear every day, I will try to
-do some but no guarantees until Stephen returns on the 30th.
-pending-fixes will get more updates than full -next.
-
-Changes since 20190925:
-
-The amlogic tree gained a conflict with Linus' tree which I fixed
-up.
-
-Non-merge commits (relative to Linus' tree): 1063
- 1395 files changed, 30742 insertions(+), 13711 deletions(-)
-
-----------------------------------------------------------------------------
-
-I have created today's linux-next tree at
-git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-are tracking the linux-next tree using git, you should not use "git pull"
-to do so as that will try to merge the new linux-next release with the
-old one.  You should use "git fetch" and checkout or reset to the new
-master.
-
-You can see which trees have been included by looking in the Next/Trees
-file in the source.  There are also quilt-import.log and merge.log
-files in the Next directory.  Between each merge, the tree was built
-with a defconfig for arm64, an allmodconfig for x86_64, a
-multi_v7_defconfig for arm and a native build of tools/perf.
-
-Below is a summary of the state of the merge.
-
-I am currently merging 312 trees (counting Linus' and 77 trees of bug
-fix patches pending for the current merge release).
-
-Stats about the size of the tree over time can be seen at
-http://neuling.org/linux-next-size.html .
-
-Status of my local build tests will be at
-http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-advice about cross compilers/configs that work, we are always open to add
-more builds.
-
-Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-Gortmaker for triage and bug fixes.
-
---StZ26hC3DS27TACW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2NC4cACgkQJNaLcl1U
-h9DsWAgAhG0tKuXiwyO+uiIJHvs3QdDAn9jwTkc5Briz3AU8syfxlIvd3JjjUHyn
-+Ew8wnQYA+G9vw0MVBcOKwYINblaa4tSs931/nlqGm9kHi84NjGEXbAek6+lQkPx
-mXC+NrsGvHIKLcY+Hd87GyoSCOEiH6DNrfRPNf4IXBF9PAN6XQLAFoqu066LpDak
-JFTkpNef+aOchsUu2vjUK9igDu0ca9uCsYNw58oEQD08LpnbLlubeFuaWfzXVFJ3
-huua2yP95KUUVUSp3iAYFG58N2UN0AmV4fhUeLlmlxBMZSkcjPDB4Uwfe8DnFRQB
-1Ohb4/O2NIzh20Jd4+6O3i91ffNR6w==
-=1+k+
------END PGP SIGNATURE-----
-
---StZ26hC3DS27TACW--
+Acked-by: David Rientjes <rientjes@google.com>
