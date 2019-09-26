@@ -2,153 +2,94 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AE4C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611EFC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3DA2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376B42053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pr38dFCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfIZJzM (ORCPT
+        id S1726497AbfIZJ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:55:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:44246 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfIZJzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:55:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A8791000;
-        Thu, 26 Sep 2019 02:55:11 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 121853F67D;
-        Thu, 26 Sep 2019 02:55:09 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH v2] drm: Don't free jobs in wait_event_interruptible()
-Date:   Thu, 26 Sep 2019 10:54:58 +0100
-Message-Id: <20190926095458.50020-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 26 Sep 2019 05:56:36 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:40842 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfIZJ4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:56:35 -0400
+Received: by mail-wr1-f43.google.com with SMTP id l3so1966613wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NlkCdkYLYBl+V4BvoMR13p0f1FLvtBmZG+HZB0KZ5U8=;
+        b=pr38dFChJ7xwA2a6C9o4qVwmjfhPb1k812KgLstdGSVS9FFPygT7/MfveuO33kz9Hz
+         1fzNLsyzPXlda0tm4Bnrd1IXFLsLQSCnZIxOaEdzYSUlR79hiXTol9kvnPwNoGRE3uzV
+         TGDmcp6hQbgRqX/5LpuuasGLu6H4HvnczCHkdGszujGo333A4wxgWCawqm9fcX6TlXcx
+         5BIUCVB2TVUYMridf4NU46JgU8ZXTnoZ6VX7hGX1GdMKa+djmP+2rawMzpNWCVTr3n2L
+         C5G+ET1FbcNCmH8AJVZyiB1BEgVOwaUwrM7rkPIORgnmJr9GyTIiABrQ8AAr79re6/oI
+         bssA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NlkCdkYLYBl+V4BvoMR13p0f1FLvtBmZG+HZB0KZ5U8=;
+        b=AagOb7D3OSJdShdcH38Whi064CVhUL4rTGnWCaPKDnzD+7bei1t+yIVe5NdnsFc3AX
+         +C5tODeZCWK8GmQoLTeH/qpJSY5PtRKDeg8aXIYiNjvwWBXrtnRlwdlyq/+diHmQS9GX
+         1otJZxadQFyJNcP4TFmMXvqWohMH4x9MnWbqeM5RgTtPfPJfwc2+a7ZRse4vrwrGzU9Z
+         NBSG2RhqmLLEvlR9vIiGYbKau5x1qn+7qkqTq3GpGXmbKMVRMKoPrTcn9f4/3x5iZMgR
+         OIvVdfKgW5eR8xvNfHqDD0aeQgw6IUalQWm6uFCg3BS2TbkSI4rLHgevASwk0fPmJhIg
+         A6Xg==
+X-Gm-Message-State: APjAAAXVlrv+Bjs3pWqDFKhwTMV94ATCEilMFwiI4dSkAdVNRnwSkM7a
+        5LzviSLF5qDVl0zU+hKAiEU7JBB11UrcN3ei
+X-Google-Smtp-Source: APXvYqzVa3ZvYbsWCQUozmOJ+3w5ZbZpyvYMC9oEdXrxIBNKEFzLtY0AvOnHWQcLiFYhQZX+3BIu/A==
+X-Received: by 2002:a5d:4251:: with SMTP id s17mr2336613wrr.126.1569491791600;
+        Thu, 26 Sep 2019 02:56:31 -0700 (PDT)
+Received: from [192.168.1.145] ([65.39.69.237])
+        by smtp.gmail.com with ESMTPSA id z12sm2645832wmf.27.2019.09.26.02.56.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 02:56:30 -0700 (PDT)
+Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
+ zero
+To:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190926095012.31826-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
+Date:   Thu, 26 Sep 2019 11:56:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190926095012.31826-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
+On 9/26/19 11:50 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> In the case where sig is NULL the error variable ret is not initialized
+> and may contain a garbage value on the final checks to see if ret is
+> -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
+> ensure the ret does not accidentially contain -ERESTARTSYS before the
+> loop.
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
+Oops, weird it didn't complain. I've folded in this fix, as that commit
+isn't upstream yet. Thanks!
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-
-Changes from v1:
- * Move list_first_entry_or_null() within the lock
-
- drivers/gpu/drm/scheduler/sched_main.c | 44 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 9a0ee74d82dc..0ed4aaa4e6d1 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job = NULL;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
--
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+		return NULL;
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
-+
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		while (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			cleanup_job = drm_sched_get_cleanup_job(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
 -- 
-2.20.1
+Jens Axboe
 
