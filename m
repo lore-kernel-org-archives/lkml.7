@@ -2,184 +2,209 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB266C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291A9C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D37E222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67A4222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHZuGOjU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="L0r1r3pS";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Q7+qZkTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfIZILv (ORCPT
+        id S1729341AbfIZIMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:11:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46371 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfIZILv (ORCPT
+        Thu, 26 Sep 2019 04:12:39 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:59114 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbfIZIMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:11:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o18so1262418wrv.13;
-        Thu, 26 Sep 2019 01:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gDALH1LBbhi9Y7gQ8eErUzmJUJ1kd3iAMb/qez5kxcs=;
-        b=qHZuGOjUmO1mYR7HEbj6/LE7vY302STFSNUPRMSIle9LIa4NJsT1AvcRvP9wjGAjQC
-         7eYlDNs9BfNmIydRTz2VaS6F1QFd798bBLKip+ITNF46bYNJHZEhXnh/YeVayZw5rFPJ
-         58R/bjemDaxuvXFh4ezRM6GlSq9qmH7dNwJ1YSNpBUi7+lYievP0nf2fqeGyWl15IJOJ
-         rltwlaVMeMvIwiB8zraRrCOzH4gRg1ZUMcc60N0+cPJJYbvUuIEH57tL+4AyEvpxpWHU
-         0JTJiLBJgPZcgZESrd/q++1kFQAjZ65bwijxAG5P4uy/bCz8nZ8Jl+5Lx+b2xZxl+Eor
-         w5Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gDALH1LBbhi9Y7gQ8eErUzmJUJ1kd3iAMb/qez5kxcs=;
-        b=H2dM4tFWI3HyqP9RSN2isBNEPYU4lng2h+H95+NkEtprf0YNHcsCNpc6bJ3npbXtEf
-         KQ9439aKIkQTT9Yd0RHsLyrRPKfoS4iA/jMii5I7nTXUKCkqnPTlCGrAH6r+uZPJINFN
-         HZZIV3wxrdlpbTaUhGwq/EZntDDSJrEXWgRAamYQx3w/wGRASBVbMiqq29yIvMuWPoWv
-         GBsMSoXCCqDwRlLKtqD/a8Q+XPeQyiWiOCrcm5K1W0T60nuVTnvonhHZ/F2HRekyksJQ
-         bj5WIsN/a6tKBZyXYbWzaYzZyp4CLOtKYWA2ZskcfP0u39UvkXM6sISXZj//kWDKyZze
-         V6SA==
-X-Gm-Message-State: APjAAAVCveU384Er/hNlMLD9M7LAMBRkrthBHWkn3lFTODaStc7VPUI3
-        EF9KJWIoMbul/43skAZCTqPZ6g+l
-X-Google-Smtp-Source: APXvYqz3V5Vk5x+FIf12+jsNaGJQrfDBLBRpUm7ZB6mLNL8jaZF83U9H7rZqvmU2qPIUaFaKQr8t3A==
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr1681937wrx.58.1569485507938;
-        Thu, 26 Sep 2019 01:11:47 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id x129sm2136914wmg.8.2019.09.26.01.11.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Sep 2019 01:11:47 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 10:11:46 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: fix broken kbd backlight
- on Inspiron 10xx
-Message-ID: <20190926081146.f4f26kun7ekwqsgj@pali>
-References: <20190925082149.yjhmmb64i4h6sddi@pali>
- <156940489220.8635.14349142383780268583@WARFSTATION>
- <CAHp75VfkL3QGXYjeEEqr75SWCKo1SDEqS9q3YEQWYM4iXbUzcg@mail.gmail.com>
+        Thu, 26 Sep 2019 04:12:38 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8Q8BjPo024013;
+        Thu, 26 Sep 2019 01:11:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=xAjC8cEgAP8Za/kG87SWnHZaVYVHLBKJzlxHvZCVTrU=;
+ b=L0r1r3pSxv3HtOwt+yWVAOrFGEYvpZvD8fiqqw981kJBKaUdj9LM8ipXdockWTMgaa5b
+ 1cSWnG0JLanR6c2DvNx29xU7hkUazJmO7V+AclcLDxtgnGHTRYnpzhr/2O6PI5WpVBiS
+ x/VGSdAi+2B/oHWwMb46kqPsobjOWkONcSZuyYd3qUDlhT/CayzO9qdveUAeBjGqtUs3
+ rc1FxtAqTQUeQm9yYIL5pjDH6uz6wlbH8xHRWAml4D7W/RLZp+8Ey/OwWSppoJdmsPVg
+ /fbjFk2T/P96h74czRfZ+3OF/0XN91SaNm/JsMBJ5aiNqAv2mTahbjERKYZhUaGihT6o hg== 
+Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2057.outbound.protection.outlook.com [104.47.40.57])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2v5ge0kj0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Sep 2019 01:11:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dGP9wKdi/l7XVW9AVyf0pWmTqAEZXg9bBIpZriwKxRYJ8Idf5aCTJnn6SI+mHBAQ8HGsh1pMMJVVadhBKVYtoVr+QqHl/qhCZAzwkoQbUvBAxC65RIQToNGh1Br0AP1w/0RHKWjOAwmf5RXozYsAmW+U6hBXSfICZmUHet10pQziWLQDw1xY8pZt2TV9qSfKklGoAdsopexKJttMJ3rYMrX+chbVssrb3xv6Q26k4lkyWlooSvYNQOBvtiuifvKzpLTJXlyYP9yQEUQjiLvYpdLddrfeOs63lBOGd0tSHbnMjl/xFluGWkt5ki7ymkcq/GUBGEGVWTxZj2N7Vc+02A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xAjC8cEgAP8Za/kG87SWnHZaVYVHLBKJzlxHvZCVTrU=;
+ b=M53e2AYiB4SBevEf0r+AKORtslCStMO+ZsRfRmayJ9B0lVYKCHkXl+FFJIwCaEBXTaq41nxmvRaWORCTnmev7hbfswLHGin7NGHxNnbi1E7xNxPC84WNbHRGCjupbQ4Fz4TFT434V4CPImNKWDv01jUM9wyPkyLLPWXRtPeNk44JqF/qXaMqDMZzADQQ7zPb3vXpxDoVrQPbHUjsJ5zy0Vpti8/c0H8X8p7JhHuKVCWxCHhBMXPAAA7aNkvioB5kPoaBrN3fGxsPZyOvwCb6UK/zhAnCUXjShnZdkY92Pi7NinTkCceusS0ib+l+Zs719aEix291FvP1umaFAaZS8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 64.207.220.243) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xAjC8cEgAP8Za/kG87SWnHZaVYVHLBKJzlxHvZCVTrU=;
+ b=Q7+qZkTIyLb4y/4BvDtdbtKChC7Z6GRtFmbx/D8Szq3BGlymQsOfc364HG/UGAi9zd5vt66fEgdWSSKw2KuslUzoCsjZbol/BwZhVIlJwOWAUxFqmTn5fyaXvu5n4Ogw9A0DaIeqGhMG3HP0K9/68ijEyOwwmZW4Sp5Y6+6sR0o=
+Received: from DM5PR07CA0093.namprd07.prod.outlook.com (2603:10b6:4:ae::22) by
+ BYAPR07MB5656.namprd07.prod.outlook.com (2603:10b6:a03:98::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Thu, 26 Sep 2019 08:11:46 +0000
+Received: from DM3NAM05FT006.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e51::202) by DM5PR07CA0093.outlook.office365.com
+ (2603:10b6:4:ae::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20 via Frontend
+ Transport; Thu, 26 Sep 2019 08:11:46 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 64.207.220.243 as permitted sender)
+Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
+ DM3NAM05FT006.mail.protection.outlook.com (10.152.98.111) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.7 via Frontend Transport; Thu, 26 Sep 2019 08:11:45 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id x8Q8BUXB179783
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 01:11:32 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 26 Sep 2019 10:11:30 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 26 Sep 2019 10:11:30 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x8Q8BTx1022311;
+        Thu, 26 Sep 2019 09:11:29 +0100
+Received: (from piotrs@localhost)
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x8Q8BQRA022269;
+        Thu, 26 Sep 2019 09:11:26 +0100
+From:   Piotr Sroka <piotrs@cadence.com>
+CC:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: [v8 0/2] mtd: rawnand: Add Cadence NAND controller driver
+Date:   Thu, 26 Sep 2019 09:08:41 +0100
+Message-ID: <20190926080924.19220-1-piotrs@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VfkL3QGXYjeEEqr75SWCKo1SDEqS9q3YEQWYM4iXbUzcg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(199004)(189003)(36092001)(476003)(81156014)(81166006)(1076003)(54906003)(26005)(16586007)(36756003)(36906005)(8676002)(1671002)(48376002)(316002)(305945005)(2906002)(42186006)(8936002)(50226002)(2616005)(478600001)(87636003)(6666004)(356004)(7416002)(5660300002)(86362001)(47776003)(70206006)(109986005)(70586007)(4326008)(50466002)(51416003)(336012)(426003)(126002)(486006)(186003)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5656;H:wcmailrelayl01.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:ErrorRetry;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 945733ea-bf01-4647-706b-08d742592bf6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328);SRVR:BYAPR07MB5656;
+X-MS-TrafficTypeDiagnostic: BYAPR07MB5656:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB5656A4C6D2E8E3EDFD5C2261DD860@BYAPR07MB5656.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0172F0EF77
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 82TwS3vPah76qyNCnfOyogGoNHMwJ5tlPMtTL+mEJ1INVFrnkznIEVWw67QWvCuhM4DYHV6N9wDeZvowd1kIB6yt1gpRJ5ZIXngv/DtdOuoeSJ5HQ93pZbksLfpxh0pFRsygeioZcjZwfC8r5YGk+osYb17Kl1rQabzowjese/BpXBHZxRudoHouTbK1n56Ix/dswYFkCydHrdW+vUDLKBN21EUUDPubgZXmUq64Bh042qXqyiGFeXY9osBvM2M/PZr5Q04w1kqqXLwe1uNYNwy5xgdXzEpUHiCCjf2ixJfvrRnqGEY4fjtb+pbYw8RcI6aiDY5aU9khBfQDUJg8pERBKJeNJnn4xiywvpByneCeoAD2OXJYVAefad+94SC2O5oPXQ8r9zUU3CbjVLBwM2yWOTslawFT5VAq4+bhRnA=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 08:11:45.1846
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 945733ea-bf01-4647-706b-08d742592bf6
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5656
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-26_03:2019-09-25,2019-09-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1909260080
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 25 September 2019 18:06:40 Andy Shevchenko wrote:
-> On Wed, Sep 25, 2019 at 12:48 PM Pacien TRAN-GIRARD
-> <pacien.trangirard@pacien.net> wrote:
-> >
-> > This patch adds a quirk disabling keyboard backlight support for the
-> > Dell Inspiron 1012 and 1018.
-> >
-> > Those models wrongly report supporting keyboard backlight control
-> > features (through SMBIOS tokens) even though they're not equipped with
-> > a backlit keyboard. This led to broken controls being exposed
-> > through sysfs by this driver which froze the system when used.
-> >
-> 
-> Pali, are you okay with this one?
+Driver for Cadence HPNFC NAND flash controller.
 
-So the real problem is that kbd backlight is not broken, but rather
-laptop is without backlight keyboard? I thought that just API was broken
-and keyboard backlight needs to be configured somehow else (via
-dedicated buttons, etc...).
+HW DMA interface
+Page write and page read operations are executed in Command DMA mode.
+Commands are defined by DMA descriptors.
+In CDMA mode controller own DMA engine is used (Master DMA mode).
+Other operations defined by nand_op_instr are executed in "Generic" mode.
+In that mode data can be transferred only in by Slave DMA interface.
+Slave DMA interface can be connected directly to AXI or to an external
+DMA engine.
 
-If yes, then I guess that check for quirk should be in kbd_init()
-function which do detection if keyboard backlight is present or not.
-And better name for quirk could be "kbd_led_not_present"...
+HW ECC support
+Cadence NAND controller supports HW BCH correction.
+ ECC is transparent from SW point of view. It means that ECC codes
+are calculated and written to flash. In read operation ECC codes 
+are removed from user data and correction is made if necessary.
 
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
-> > Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-> > ---
-> >  drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> > index d27be2836bc2..ffe5abbdadda 100644
-> > --- a/drivers/platform/x86/dell-laptop.c
-> > +++ b/drivers/platform/x86/dell-laptop.c
-> > @@ -33,6 +33,7 @@
-> >
-> >  struct quirk_entry {
-> >         bool touchpad_led;
-> > +       bool kbd_broken_backlight;
-> >         bool kbd_led_levels_off_1;
-> >         bool kbd_missing_ac_tag;
-> >
-> > @@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
-> >         .kbd_led_levels_off_1 = true,
-> >  };
-> >
-> > +static struct quirk_entry quirk_dell_inspiron_1012 = {
-> > +       .kbd_broken_backlight = true,
-> > +};
-> > +
-> >  static struct platform_driver platform_driver = {
-> >         .driver = {
-> >                 .name = "dell-laptop",
-> > @@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
-> >                 },
-> >                 .driver_data = &quirk_dell_latitude_e6410,
-> >         },
-> > +       {
-> > +               .callback = dmi_matched,
-> > +               .ident = "Dell Inspiron 1012",
-> > +               .matches = {
-> > +                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-> > +               },
-> > +               .driver_data = &quirk_dell_inspiron_1012,
-> > +       },
-> > +       {
-> > +               .callback = dmi_matched,
-> > +               .ident = "Dell Inspiron 1018",
-> > +               .matches = {
-> > +                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
-> > +               },
-> > +               .driver_data = &quirk_dell_inspiron_1012,
-> > +       },
-> >         { }
-> >  };
-> >
-> > @@ -2040,6 +2063,9 @@ static int __init kbd_led_init(struct device *dev)
-> >  {
-> >         int ret;
-> >
-> > +       if (quirks && quirks->kbd_broken_backlight)
-> > +               return -ENODEV;
-> > +
-> >         kbd_init();
-> >         if (!kbd_led_present)
-> >                 return -ENODEV;
-> > --
-> > 2.19.2
-> 
-> 
-> 
+Controller data layout with ECC enabled:
+ -------------------------------------------------------------------------
+|Sec 1 | ECC | Sec 2 | ECC ...... | Sec n | OOB (32B) | ECC | unused data |
+ -------------------------------------------------------------------------
+
+Last sector is extended by a out-bound data. Tha maximum size of
+"extra data" is 32 bytes. The oob data are protected by ECC. If we need to 
+read only oob data the whole last sector must be read. It is because 
+oob data are part of last sector. Reading oob function always reads 
+whole sector and writing oob function always writes whole last sector.
+Written data are interleaved with the ECC therefore part of the 
+last sector is located on oob area and the BBM is overwritten.
+
+SKIP BYTES feature
+To protect BBM the "skip byte" HW feature is used. 
+Write page function copies BBM value from first byte of oob data to 
+BBM offset defined by manufacturer. Read page functions always takes 
+BBM from flash manufacturer offset. It causes that for not written 
+pages the proper value of BBM marker is used.
+
+ECC size calculation
+Information about supported ECC steps and ECC strengths are read 
+from controller registers. ECC sector size and ECC strength can be
+configurable. Size of ECC depends on maximum supported sector size 
+it not depends on selected sector size. Therefore there is a separate
+function for calculating ECC size for each of possible 
+sector size/step size.
+
+Piotr Sroka (2):
+  Add new Cadence NAND driver to MTD subsystem
+  Add Cadence NAND controller driver
+
+ .../bindings/mtd/cadence-nand-controller.txt       |   53 +
+ MAINTAINERS                                        |    7 +
+ drivers/mtd/nand/raw/Kconfig                       |    7 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/cadence-nand-controller.c     | 3031 ++++++++++++++++++++
+ 5 files changed, 3099 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ create mode 100644 drivers/mtd/nand/raw/cadence-nand-controller.c
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.15.0
+
