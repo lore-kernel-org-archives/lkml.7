@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57313C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9175CC352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCEE222D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C451222D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2p8CR6C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CyY/fdEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfIZR4j (ORCPT
+        id S1728253AbfIZR4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:56:39 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43411 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbfIZR4g (ORCPT
+        Thu, 26 Sep 2019 13:56:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41943 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728222AbfIZR4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Sep 2019 13:56:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so1941419pgk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:36 -0700 (PDT)
+Received: by mail-pg1-f194.google.com with SMTP id s1so1953556pgv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0o22aj+Q2fPal3OzyLNHtFtEJCV1jKXrih1rnY9ZOvQ=;
-        b=h2p8CR6CTCVG0EcWBzFZk9M7pS5/grZV7SzSB6Fp/b72sOhC+rJHHanRbr647L3D5O
-         3PK+ZsRgr4yUne37ilhSCOXRu+oA9brL1Q3zUBwCc+GNAanTNZBOlRbFkU/6xiHKWXKz
-         z9Lk6mr7quDbn6Iv5uFqVP/gtakRm/cG9s24k=
+        bh=7AxBS2UV+sou48Vy6Kv2h9T7DXggZ06m6xu8Azn3KL4=;
+        b=CyY/fdEzQgm0TyKUDxy3G75sTcbk4Yw8tvueMHwbpgUZtbJ0Xvon+CXNyKvyrH1BQL
+         u5o6uFwm+e/OcHUC7jySe7aCPARo15vlMXuk5vFXe2FB4K6jNA/Eh3EruiLhkgWYgaHg
+         gq6pWp7Ua54wgWact2q/huVGG+j/PtSDlqWQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0o22aj+Q2fPal3OzyLNHtFtEJCV1jKXrih1rnY9ZOvQ=;
-        b=B5+NAsHdBq9EgEI/APKHO1cZDxByw7nvTpk3CedSrsdq+FPlF0FNJhVlY11BokyJ2c
-         WduXpmAEyDjFWPpt6z8CYggy8lHstI4l3O92ZpYevXvJ9lHxD//TyE94tEDXIRqNhXU0
-         lGf9R8F+bTKMsmHXfYf3SLyQMDvrKLV9M0lVpjHXUBZXJ2od1PiDOp77YYdy781T1Ea+
-         m52GoV+VlV5rNlsVNgCAEZoDZyl8bKoLXt8MDWq5ahddcKgPerggXk3R6vJ0BdOAkZcj
-         +ai63r2smYX3kdY4P7a3xqoEPnRF8+HegsKrkkx1JwnjFTK5ADn3to+k2QJLC9WEWKA9
-         dDjQ==
-X-Gm-Message-State: APjAAAVEpdJiuUh+V5aR34CdseqF8eUuldI7jMYiO+fDH4YUh8wvrYFh
-        AcYeLOTdUVMtv9hcJp5d1XQKjA==
-X-Google-Smtp-Source: APXvYqy6S7VpAjQkHoN68ZupzJjzmnjjpPcZsaZVMPIKEdbkFn7g1SNyoioq3hB1BxaJQAQsFZhPUg==
-X-Received: by 2002:a62:7a88:: with SMTP id v130mr5261721pfc.184.1569520595802;
-        Thu, 26 Sep 2019 10:56:35 -0700 (PDT)
+        bh=7AxBS2UV+sou48Vy6Kv2h9T7DXggZ06m6xu8Azn3KL4=;
+        b=YNwAV5btjDkhhLQki0AuGKUPrRTRnw9UdjSjXAgoXYRlMVEmX56GoF1K2l4nB7+2II
+         8hDAi+1QpH6DakIoRlDwLuGgKYTuxXytmGfbm663ZrSvpTde1CVx/AR2lKKRlrbmuw4F
+         qCiIIBEPMiH8oDTJEwXOrFgggnDDLg+rik0JayfgTJg1/lZ/3i2TwSlAtUs9XuCeXN4V
+         3pmgnpM/h9vQ02bleh9cMUBobPHW6zNISkYIrzDpmgYrk0zYDsDNPvpth0wBie3+fn17
+         XPc29KgVGCNGUXL3evOfIOh21fihKVLtbfyy7nPkjac9mhD+GcUaeqN30MiIakWA9gI9
+         trPg==
+X-Gm-Message-State: APjAAAVuOdaqE7jaIMZlO/ect3TGPLtIXRVMtwd3snoUL+3FlJwYCE+E
+        MksqWLGwceg15xmVM4SfgWsw6fSSPI8=
+X-Google-Smtp-Source: APXvYqxknkDJzH/r0j7lYxibttZvFSpKr+f+b+F+1vun52i5pglb7KvJVrIclOAHVzYu0ZWp0UtBWA==
+X-Received: by 2002:a63:5050:: with SMTP id q16mr4553788pgl.451.1569520594732;
+        Thu, 26 Sep 2019 10:56:34 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t68sm6742712pgt.61.2019.09.26.10.56.27
+        by smtp.gmail.com with ESMTPSA id i126sm3220459pfc.29.2019.09.26.10.56.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 26 Sep 2019 10:56:30 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -68,9 +68,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 26/29] x86/mm: Remove redundant &s on addresses
-Date:   Thu, 26 Sep 2019 10:55:59 -0700
-Message-Id: <20190926175602.33098-27-keescook@chromium.org>
+Subject: [PATCH 28/29] x86/mm: Report actual image regions in /proc/iomem
+Date:   Thu, 26 Sep 2019 10:56:01 -0700
+Message-Id: <20190926175602.33098-29-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
 References: <20190926175602.33098-1-keescook@chromium.org>
@@ -79,31 +79,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The &s on addresses are redundant and are better removed to match all
-the other similar functions.
+The resource reservations in made for the kernel image did not reflect
+the gaps between text, rodata, and data. This adds the rodata resource
+and updates the start/end calculations to match the respective calls to
+free_kernel_image_pages().
+
+Before (booted with "nokaslr" for easier comparison):
+
+00100000-bffd9fff : System RAM
+  01000000-01e011d0 : Kernel code
+  01e011d1-025619bf : Kernel data
+  02a95000-035fffff : Kernel bss
+
+After:
+
+00100000-bffd9fff : System RAM
+  01000000-01e011d0 : Kernel code
+  02000000-023d4fff : Kernel rodata
+  02400000-025619ff : Kernel data
+  02a95000-035fffff : Kernel bss
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/mm/init_64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/setup.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 26299e9ce6da..e67ddca8b7a8 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1300,9 +1300,9 @@ void mark_rodata_ro(void)
- {
- 	unsigned long start = PFN_ALIGN(_text);
- 	unsigned long rodata_start = PFN_ALIGN(__start_rodata);
--	unsigned long end = (unsigned long) &__end_rodata_hpage_align;
--	unsigned long text_end = PFN_ALIGN(&_etext);
--	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
-+	unsigned long end = (unsigned long)__end_rodata_hpage_align;
-+	unsigned long text_end = PFN_ALIGN(_etext);
-+	unsigned long rodata_end = PFN_ALIGN(__end_rodata);
- 	unsigned long all_end;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index bbe35bf879f5..0bc71ee3a9c3 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -143,6 +143,13 @@ struct boot_params boot_params;
+ /*
+  * Machine setup..
+  */
++static struct resource rodata_resource = {
++	.name	= "Kernel rodata",
++	.start	= 0,
++	.end	= 0,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
++};
++
+ static struct resource data_resource = {
+ 	.name	= "Kernel data",
+ 	.start	= 0,
+@@ -951,7 +958,9 @@ void __init setup_arch(char **cmdline_p)
  
- 	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
+ 	code_resource.start = __pa_symbol(_text);
+ 	code_resource.end = __pa_symbol(_etext)-1;
+-	data_resource.start = __pa_symbol(_etext);
++	rodata_resource.start = __pa_symbol(__start_rodata);
++	rodata_resource.end = __pa_symbol(__end_rodata)-1;
++	data_resource.start = __pa_symbol(_sdata);
+ 	data_resource.end = __pa_symbol(_edata)-1;
+ 	bss_resource.start = __pa_symbol(__bss_start);
+ 	bss_resource.end = __pa_symbol(__bss_stop)-1;
+@@ -1040,6 +1049,7 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	/* after parse_early_param, so could debug it */
+ 	insert_resource(&iomem_resource, &code_resource);
++	insert_resource(&iomem_resource, &rodata_resource);
+ 	insert_resource(&iomem_resource, &data_resource);
+ 	insert_resource(&iomem_resource, &bss_resource);
+ 
 -- 
 2.17.1
 
