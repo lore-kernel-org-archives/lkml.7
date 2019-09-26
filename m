@@ -2,411 +2,127 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C83C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6F2C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2610221655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8159B2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PQbkR+Gt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mqK/7Ul9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfIZHz6 (ORCPT
+        id S1727722AbfIZH6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:55:58 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34894 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfIZHz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:55:58 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z6so1208973otb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Jxri89au+faOXt57GEFLoPcNzRAcIZRn2sHoUi9FQ/k=;
-        b=PQbkR+GthI8pwoSypT/w6DIKdOLgbgnJ7tQsEdJ72HaKrSVbFeL0L8ph6f05kagmjB
-         Y00WiJYqHWgY1dTweApe8ZNQuMarxY0e/guno4lwD/qb8LPDwqHFfS5TUSXYFwSLe1I3
-         21yTgHrSE+X9ZT+YW2Oy2SR6O4E2fhXrIEM1pg7X3G8jEVPjx+u5ExwWTAuqNU7T2MP9
-         PFtTy/UTEO2A+I0JBDkVHWI46TwjXjeY3Cl8wDaDCp2RBipC03l5/E0BaidCHOxg4hXP
-         XGm6l/el2dluAw8mKB5JhUSNcIyoPsM5QFHWak63tzQ6L3Pnqb+3jzNspdCl9+Gt/be1
-         a+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Jxri89au+faOXt57GEFLoPcNzRAcIZRn2sHoUi9FQ/k=;
-        b=qpZQfT/E60mJ9OsiOEl/0VeXdAP/8EyZnFgtPNTnkEsWu3mv928IdQNnsLsOZHkh9Q
-         zYcfwvlP910A8m1qLNERe/aNC7vLYWS8XtGDlxfhgSriqBr1G++QxAtlv6hP/+uUO3pN
-         TUh0Ou+2evBvwQRd8PQv7X4w1RoEVZYK466PQt3GyPJmpzZBbk8RxhpzeHJAH/G8PbG6
-         Ag4oHXkeTYGCPPmiunJmsrmbMnDsJcDWvHRAo7M7Qot1C0q3zVktO3MVIa28/uTGwgVy
-         BPEImwYkhX5MWbntK+6QmY3OWyfPEoaJKi+P4AxsOwQPlt9yYB27zTQMTAjrbN5G5sdP
-         +E6Q==
-X-Gm-Message-State: APjAAAW62E+40DnRO9ntIhpOCHalbVrTaX/zt7A3aqQPeTYw0p4qQxLz
-        TcmMoKXfEOPY/CEDRQqnERwSkihiTcMd+WScM6UOWw==
-X-Google-Smtp-Source: APXvYqw7KN/Zkr+jVObv8bRfHcDWhfYtBcw9KbIO/kdG1BSZQvjU+8Ch73M9vOyvpjibOHXyL3Iqf3FrWUIp20p3OKo=
-X-Received: by 2002:a9d:821:: with SMTP id 30mr127787oty.194.1569484555557;
- Thu, 26 Sep 2019 00:55:55 -0700 (PDT)
+        Thu, 26 Sep 2019 03:58:52 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36193 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfIZH6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:58:51 -0400
+Received: from [IPv6:2601:646:8600:3281:4da0:b184:256:e0c2] ([IPv6:2601:646:8600:3281:4da0:b184:256:e0c2])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x8Q7wRc53612418
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 26 Sep 2019 00:58:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x8Q7wRc53612418
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019091901; t=1569484710;
+        bh=e69WFYWciy+hazfvzCnromNr0NTIvmpRtmxkPKzWlNg=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=mqK/7Ul9t0I1hRojr5+dOkAiHfWYXvTC5VwS4FinrznzAG7z5yALOXMKypT9RQQrg
+         rviXKrdo6TrlGRoAbMd+cV8/3VjTMq3Lk7L1Fl/OnrCZIWwz+jk1ks28hWlsCLvbdB
+         m2ZeIAjgqJ3kHHH3xIkm14Hh4rEGV9pWy3/+oWpncoB5WfcA7E+ocMcuwPcwRSIZOc
+         ac3Y7iRmQn39t7bp7WKuJ0YIj0Enicv37MNP75SbYorFCNgVcCKJlUymg57/PEZk94
+         uOqtUCGB33DNgF1mh2QKwlTfDXk3rwJj5d2L7gc5XJbu0vAHK4NWX+1UO0wyANDb7E
+         wlws12TZryomg==
+Date:   Thu, 26 Sep 2019 00:58:19 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com> <20190926060139.GA100481@gmail.com> <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
 MIME-Version: 1.0
-References: <20190925203808.14249-1-robh@kernel.org>
-In-Reply-To: <20190925203808.14249-1-robh@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 26 Sep 2019 09:55:44 +0200
-Message-ID: <CAMpxmJUiiEB8Mpv+hxN8s6=h8pfRXpHMva4OR5LkDWLuU5xQzg@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: at24: convert the binding document to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Rosin <peda@axentia.se>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of "reloc"
+To:     Cao jin <caoj.fnst@cn.fujitsu.com>, Ingo Molnar <mingo@kernel.org>
+CC:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, corbet@lwn.net
+From:   hpa@zytor.com
+Message-ID: <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 25 wrz 2019 o 22:38 Rob Herring <robh@kernel.org> napisa=C5=82(a)=
-:
+On September 26, 2019 12:55:51 AM PDT, Cao jin <caoj=2Efnst@cn=2Efujitsu=2E=
+com> wrote:
+>On 9/26/19 2:01 PM, Ingo Molnar wrote:
+>> * Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom> wrote:
+>>=20
+>>> The fields marked with (reloc) actually are not dedicated for
+>writing,
+>>> but communicating info for relocatable kernel with boot loaders=2E For
+>>> example:
+>>>
+>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>>>     Field name:     pref_address
+>>>     Type:           read (reloc)
+>>>     Offset/size:    0x258/8
+>>>     Protocol:       2=2E10+
+>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>>>
+>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>     Field name:     code32_start
+>>>     Type:           modify (optional, reloc)
+>>>     Offset/size:    0x214/4
+>>>     Protocol:       2=2E00+
+>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>
+>>> Signed-off-by: Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom>
+>>> ---
+>>> Unless I have incorrect non-native understanding for "fill in", I
+>think
+>>> this is inaccurate=2E
+>>>
+>>>  Documentation/x86/boot=2Erst | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/x86/boot=2Erst b/Documentation/x86/boot=2Er=
+st
+>>> index 08a2f100c0e6=2E=2Ea611bf04492d 100644
+>>> --- a/Documentation/x86/boot=2Erst
+>>> +++ b/Documentation/x86/boot=2Erst
+>>> @@ -243,7 +243,7 @@ bootloader ("modify")=2E
+>>> =20
+>>>  All general purpose boot loaders should write the fields marked
+>>>  (obligatory)=2E  Boot loaders who want to load the kernel at a
+>>> -nonstandard address should fill in the fields marked (reloc); other
+>>> +nonstandard address should consult with the fields marked (reloc);
+>other
+>>>  boot loaders can ignore those fields=2E
+>>> =20
+>>>  The byte order of all fields is littleendian (this is x86, after
+>all=2E)
+>>=20
+>> Well, this documentation is written from the point of view of a=20
+>> *bootloader*, not the kernel=2E So the 'fill in' says that the
+>bootloader=20
+>> should write those fields - which is correct, right?
+>>=20
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Convert the binding document for at24 EEPROMs from txt to yaml. The
-> compatible property uses a regex pattern to address all the possible
-> combinations of "vendor,model" strings.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> [robh: rework compatible schema, fix missing allOf for $ref, fix errors i=
-n example]
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Here's my reworking of compatible schema and all the other fixes I
-> found. The inner 'oneOf' is probably a little excessive given the number
-> of lines. All it does is ensure both compatible strings have the same
-> part number.
->
+>Take pref_address or relocatable_kernel for example, they have type:
+>read (reloc), does boot loader need to write them? I don't see grub
+>does
+>this at least=2E
 
-Thanks for doing this! Since I'm not well versed in this I can only
-accept it as the right solution. :)
-
-> Getting these errors checking Arm dts files:
->
-> arch/arm/boot/dts/at91-tse850-3.dt.yaml: jc42@18: compatible: ['nxp,se97b=
-', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
-> arch/arm/boot/dts/at91-nattis-2-natte-2.dt.yaml: temp@18: compatible: ['n=
-xp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schema=
-s
-> arch/arm/boot/dts/imx7d-mba7.dt.yaml: temperature-sensor-eeprom@1e: compa=
-tible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the gi=
-ven schemas
-> arch/arm/boot/dts/imx7s-mba7.dt.yaml: temperature-sensor-eeprom@1e: compa=
-tible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the gi=
-ven schemas
->
-
-Interesting. Apparently this chip is a memory sensor with an EEPROM
-compatible with 24c02 built in. The EEPROM and temp sensor are visible
-on different slave addresses. I guess this means the DT is correct.
-The 'nxp,se97b' compatible string however is never mentioned in
-Documentation/devicetree/bindings/hwmon/jc42.txt though. I'm not sure
-what we should do about it. Any advice?
-
-Bart
-
->  .../devicetree/bindings/eeprom/at24.txt       |  90 +---------
->  .../devicetree/bindings/eeprom/at24.yaml      | 154 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 156 insertions(+), 90 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
->
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Document=
-ation/devicetree/bindings/eeprom/at24.txt
-> index 22aead844d0f..c94acbb8cb0c 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-> @@ -1,89 +1 @@
-> -EEPROMs (I2C)
-> -
-> -Required properties:
-> -
-> -  - compatible: Must be a "<manufacturer>,<model>" pair. The following <=
-model>
-> -                values are supported (assuming "atmel" as manufacturer):
-> -
-> -                "atmel,24c00",
-> -                "atmel,24c01",
-> -                "atmel,24cs01",
-> -                "atmel,24c02",
-> -                "atmel,24cs02",
-> -                "atmel,24mac402",
-> -                "atmel,24mac602",
-> -                "atmel,spd",
-> -                "atmel,24c04",
-> -                "atmel,24cs04",
-> -                "atmel,24c08",
-> -                "atmel,24cs08",
-> -                "atmel,24c16",
-> -                "atmel,24cs16",
-> -                "atmel,24c32",
-> -                "atmel,24cs32",
-> -                "atmel,24c64",
-> -                "atmel,24cs64",
-> -                "atmel,24c128",
-> -                "atmel,24c256",
-> -                "atmel,24c512",
-> -                "atmel,24c1024",
-> -                "atmel,24c2048",
-> -
-> -                If <manufacturer> is not "atmel", then a fallback must b=
-e used
-> -                with the same <model> and "atmel" as manufacturer.
-> -
-> -                Example:
-> -                        compatible =3D "microchip,24c128", "atmel,24c128=
-";
-> -
-> -                Supported manufacturers are:
-> -
-> -                "catalyst",
-> -                "microchip",
-> -                "nxp",
-> -                "ramtron",
-> -                "renesas",
-> -                "rohm",
-> -                "st",
-> -
-> -                Some vendors use different model names for chips which a=
-re just
-> -                variants of the above. Known such exceptions are listed =
-below:
-> -
-> -                "nxp,se97b" - the fallback is "atmel,24c02",
-> -                "renesas,r1ex24002" - the fallback is "atmel,24c02"
-> -                "renesas,r1ex24016" - the fallback is "atmel,24c16"
-> -                "renesas,r1ex24128" - the fallback is "atmel,24c128"
-> -                "rohm,br24t01" - the fallback is "atmel,24c01"
-> -
-> -  - reg: The I2C address of the EEPROM.
-> -
-> -Optional properties:
-> -
-> -  - pagesize: The length of the pagesize for writing. Please consult the
-> -              manual of your device, that value varies a lot. A wrong va=
-lue
-> -              may result in data loss! If not specified, a safety value =
-of
-> -              '1' is used which will be very slow.
-> -
-> -  - read-only: This parameterless property disables writes to the eeprom=
-.
-> -
-> -  - size: Total eeprom size in bytes.
-> -
-> -  - no-read-rollover: This parameterless property indicates that the
-> -                      multi-address eeprom does not automatically roll o=
-ver
-> -                      reads to the next slave address. Please consult th=
-e
-> -                      manual of your device.
-> -
-> -  - wp-gpios: GPIO to which the write-protect pin of the chip is connect=
-ed.
-> -
-> -  - address-width: number of address bits (one of 8, 16).
-> -
-> -  - num-addresses: total number of i2c slave addresses this device takes
-> -
-> -Example:
-> -
-> -eeprom@52 {
-> -       compatible =3D "atmel,24c32";
-> -       reg =3D <0x52>;
-> -       pagesize =3D <32>;
-> -       wp-gpios =3D <&gpio1 3 0>;
-> -       num-addresses =3D <8>;
-> -};
-> +This file has been moved to at24.yaml.
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documen=
-tation/devicetree/bindings/eeprom/at24.yaml
-> new file mode 100644
-> index 000000000000..5faa03014cc5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -0,0 +1,154 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +# Copyright 2019 BayLibre SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: I2C EEPROMs compatible with Atmel's AT24
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - allOf:
-> +          - minItems: 1
-> +            maxItems: 2
-> +            items:
-> +              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas=
-|rohm|st),(24(c|cs|mac)[0-9]+|spd)$"
-> +              - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-> +          - oneOf:
-> +              - items:
-> +                  pattern: c00$
-> +              - items:
-> +                  pattern: c01$
-> +              - items:
-> +                  pattern: c02$
-> +              - items:
-> +                  pattern: c04$
-> +              - items:
-> +                  pattern: c08$
-> +              - items:
-> +                  pattern: c16$
-> +              - items:
-> +                  pattern: cs16$
-> +              - items:
-> +                  pattern: c32$
-> +              - items:
-> +                  pattern: cs32$
-> +              - items:
-> +                  pattern: c64$
-> +              - items:
-> +                  pattern: cs64$
-> +              - items:
-> +                  pattern: c128$
-> +              - items:
-> +                  pattern: cs128$
-> +              - items:
-> +                  pattern: c256$
-> +              - items:
-> +                  pattern: cs256$
-> +              - items:
-> +                  pattern: c512$
-> +              - items:
-> +                  pattern: cs512$
-> +              - items:
-> +                  pattern: c1024$
-> +              - items:
-> +                  pattern: cs1024$
-> +              - items:
-> +                  pattern: c2048$
-> +              - items:
-> +                  pattern: cs2048$
-> +              - items:
-> +                  pattern: spd$
-> +      - items:
-> +          - const: rohm,br24t01
-> +          - const: atmel,24c01
-> +      - items:
-> +          - const: nxp,se97b
-> +          - const: atmel,24c02
-> +      - items:
-> +          - const: renesas,r1ex24002
-> +          - const: atmel,24c02
-> +      - items:
-> +          - const: renesas,r1ex24016
-> +          - const: atmel,24c16
-> +      - items:
-> +          - const: renesas,r1ex24128
-> +          - const: atmel,24c128
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  pagesize:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The length of the pagesize for writing. Please consult the
-> +      manual of your device, that value varies a lot. A wrong value
-> +      may result in data loss! If not specified, a safety value of
-> +      '1' is used which will be very slow.
-> +    enum: [ 1, 8, 16, 32, 64, 128, 258 ]
-> +    default: 1
-> +
-> +  read-only:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      This parameterless property disables writes to the eeprom.
-> +
-> +  size:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Total eeprom size in bytes.
-> +
-> +  no-read-rollover:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description:
-> +      This parameterless property indicates that the multi-address
-> +      eeprom does not automatically roll over reads to the next slave
-> +      address. Please consult the manual of your device.
-> +
-> +  wp-gpios:
-> +    description:
-> +      GPIO to which the write-protect pin of the chip is connected.
-> +    maxItems: 1
-> +
-> +  address-width:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Number of address bits (one of 8, 16).
-> +    default: 8
-> +    enum: [ 8, 16 ]
-> +
-> +  num-addresses:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Total number of i2c slave addresses this device takes.
-> +    default: 1
-> +    minimum: 1
-> +    maximum: 8
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      eeprom@52 {
-> +          compatible =3D "microchip,24c32", "atmel,24c32";
-> +          reg =3D <0x52>;
-> +          pagesize =3D <32>;
-> +          wp-gpios =3D <&gpio1 3 0>;
-> +          num-addresses =3D <8>;
-> +      };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a50e97a63bc8..a65e6bcd957b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2687,7 +2687,7 @@ M:        Bartosz Golaszewski <bgolaszewski@baylibr=
-e.com>
->  L:     linux-i2c@vger.kernel.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
->  S:     Maintained
-> -F:     Documentation/devicetree/bindings/eeprom/at24.txt
-> +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
->  F:     drivers/misc/eeprom/at24.c
->
->  ATA OVER ETHERNET (AOE) DRIVER
-> --
-> 2.20.1
->
+Read means the boot later reads them=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
