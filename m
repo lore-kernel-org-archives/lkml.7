@@ -2,88 +2,77 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F048C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0109FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC9C222CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0972222C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f3LI0a1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfIZR3a (ORCPT
+        id S1727770AbfIZR3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:29:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40284 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbfIZR3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:29:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E9997FDFD;
-        Thu, 26 Sep 2019 17:29:30 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1765B60BE2;
-        Thu, 26 Sep 2019 17:29:29 +0000 (UTC)
-Subject: Re: [PATCH] KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if
- !X86_BUG_L1TF
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190826193023.23293-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <6bc37d29-b691-28d6-d4dc-9402fa82093a@redhat.com>
-Date:   Thu, 26 Sep 2019 13:29:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 26 Sep 2019 13:29:55 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:36207 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbfIZR3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 13:29:54 -0400
+Received: by mail-lj1-f169.google.com with SMTP id v24so3043812ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=VFcFYcWwpHL0Oho9HxeoU1oGj1fgSa1sn99Foc5xkas=;
+        b=f3LI0a1rOC9G6H//RKCxQuCNO3ym+yCzFJBKUs4LHy/3NHU5iJ4Gw/otd7ByI/DIzH
+         k9ZwUlZ9s1PRq6uVFrxC7fu7fkbk+lQJLzZ3uZ9Z1MnU5tqAVDQSPgTiyJ9L1PzTAAyI
+         I3qspHGkUpzhMw81L1rmuVpT54jIWdyIjVWNscdw2qlpD9fx11WJF35iRq5AP8Teeea3
+         5SZcG7GM+8OwxMd25K5Y57bbITdGWCdcbJW3NtHyhaz3hHdXOXJZBjNOxnIGh+QmFb+p
+         UU3U61d6bROnqbirNbH8XVwCZoKMoaSqAyQsiL00o5xdKWj38BhtCJTIO1CSRxRPfRnF
+         k4KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=VFcFYcWwpHL0Oho9HxeoU1oGj1fgSa1sn99Foc5xkas=;
+        b=p0h2B2A4psPo2xpkbquwzThlwDFxCp3JWJRHtzmLUEY46xdvGCPSbOLv2w8JScMpFr
+         GV9vPPayPerbEhTLL1wmDVn4IIrZqV83bLvR5B3Y3hnD/avoIpSF585xHXksaWybo75i
+         DoGs5OtbL2qXbm2Gg4p0ia/RaJiCzk7hjbnxYSTXRE4GOSpZEngDbKsgpTZ4wnKqsIDm
+         sJXhTfz/lkX8ftpRC8Fd1BCgnPN6C3b1ePA8PInc1V9w9ORpEof9E21wpRJcpKEu2ePx
+         67a/6w9jIzPVya91oCBAoriFF4aa40QeGNsPwqRwEHm7qq3AOcD5bYfqI2f8WzkdijWf
+         pbWA==
+X-Gm-Message-State: APjAAAWci3YfWroTbMijtKwPxj1iErRfYa8i9apJJ8UUYNrngDmxQ6Cs
+        ISQXQWZkwEvm3EZaNrIV4xSJ9yAXzWGGiqlGNBEXHw==
+X-Google-Smtp-Source: APXvYqxCfkoodIYkCFn1sFSEjjcZZiio6Uoe3BORK8KOACz9tWMOiafi0paC+PE4FqC1HNVbkYaiak/fzpb1FlSp/Q4=
+X-Received: by 2002:a2e:a178:: with SMTP id u24mr3351803ljl.149.1569518992751;
+ Thu, 26 Sep 2019 10:29:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190826193023.23293-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 26 Sep 2019 17:29:30 +0000 (UTC)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 26 Sep 2019 22:59:41 +0530
+Message-ID: <CA+G9fYu0hkS+NdwX38DNTygV1A7eebvjZvWvFUTfL=f3_4m=Dw@mail.gmail.com>
+Subject: perf build failed on linux -next on i386 build
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/19 3:30 PM, Waiman Long wrote:
-> The l1tf_vmx_mitigation is only set to VMENTER_L1D_FLUSH_NOT_REQUIRED
-> when the ARCH_CAPABILITIES MSR indicates that L1D flush is not required.
-> However, if the CPU is not affected by L1TF, l1tf_vmx_mitigation will
-> still be set to VMENTER_L1D_FLUSH_AUTO. This is certainly not the best
-> option for a !X86_BUG_L1TF CPU.
->
-> So force l1tf_vmx_mitigation to VMENTER_L1D_FLUSH_NOT_REQUIRED to make it
-> more explicit in case users are checking the vmentry_l1d_flush parameter.
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 42ed3faa6af8..a00ce3d6bbfd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7896,6 +7896,8 @@ static int __init vmx_init(void)
->  			vmx_exit();
->  			return r;
->  		}
-> +	} else {
-> +		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
->  	}
->  
->  #ifdef CONFIG_KEXEC_CORE
+perf build failed on linux -next on i386 build
 
-Ping. Any comment on that one?
+build error:
+perf-in.o: In function `libunwind__x86_reg_id':
+tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+undefined reference to `pr_err'
+tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+undefined reference to `pr_err'
 
-Cheers,
-Longman
-
+- Naresh
