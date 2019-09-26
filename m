@@ -2,447 +2,187 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB528C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1B8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF8421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DBD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569501757;
+	bh=ATCs9gmxEWO8JXMRcvMbab/iMeSeAaiX73ZBo1CkExE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f/NkPbIb6YC8IphItQpxOE/AyD6h7ttMvl+A8IX36pLGR3OjSUljZrCpsPObR8S5x
+	 pGEBENtH+U73U0YHSLjZesV9PsoGLgB8JekIt2ulgkPJG/DJT6FabTDeE06lwkBqcF
+	 2OeYwMa9zwuHYOwPE0LqJUuUEEcx+NOLpIYNMtO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfIZMlL (ORCPT
+        id S1726720AbfIZMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:41:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56211 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfIZMlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:41:11 -0400
-Received: from [65.39.69.237] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iDT4d-0002OS-0P; Thu, 26 Sep 2019 12:40:43 +0000
-Date:   Thu, 26 Sep 2019 14:40:42 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] lib: introduce copy_struct_from_user() helper
-Message-ID: <20190926124041.3y2xoknaw4nmwnrl@wittgenstein>
-References: <20190925230332.18690-1-cyphar@cyphar.com>
- <20190925230332.18690-2-cyphar@cyphar.com>
+        Thu, 26 Sep 2019 08:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbfIZMmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:42:36 -0400
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2AF21655;
+        Thu, 26 Sep 2019 12:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569501755;
+        bh=ATCs9gmxEWO8JXMRcvMbab/iMeSeAaiX73ZBo1CkExE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AF8G9NhOzIq9cR1iHEOav8ljMppq/CxztN5okPvbm0MeGfMWQS4vtVa9nZb3ArpR0
+         6nVTOp3Dga0kF468UtwaBHrPBjFz8TBi3Ts3fBfXXkR1D+gnbqUOVj2EUpTqmSDrYa
+         Q6dnEEnXVhK4uWDaVZxs78JlTzGP7hQGe50DjeGA=
+Date:   Thu, 26 Sep 2019 14:42:32 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 4/4] task: RCUify the assignment of rq->curr
+Message-ID: <20190926124231.GA25572@lenoir>
+References: <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
+ <87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>
+ <20190920230247.GA6449@lenoir>
+ <87k19vyggy.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925230332.18690-2-cyphar@cyphar.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87k19vyggy.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 01:03:29AM +0200, Aleksa Sarai wrote:
-> A common pattern for syscall extensions is increasing the size of a
-> struct passed from userspace, such that the zero-value of the new fields
-> result in the old kernel behaviour (allowing for a mix of userspace and
-> kernel vintages to operate on one another in most cases).
+On Wed, Sep 25, 2019 at 08:49:17PM -0500, Eric W. Biederman wrote:
+> Frederic Weisbecker <frederic@kernel.org> writes:
 > 
-> While this interface exists for communication in both directions, only
-> one interface is straightforward to have reasonable semantics for
-> (userspace passing a struct to the kernel). For kernel returns to
-> userspace, what the correct semantics are (whether there should be an
-> error if userspace is unaware of a new extension) is very
-> syscall-dependent and thus probably cannot be unified between syscalls
-> (a good example of this problem is [1]).
+> > On Sat, Sep 14, 2019 at 07:35:02AM -0500, Eric W. Biederman wrote:
+> >> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> >> index 69015b7c28da..668262806942 100644
+> >> --- a/kernel/sched/core.c
+> >> +++ b/kernel/sched/core.c
+> >> @@ -3857,7 +3857,11 @@ static void __sched notrace __schedule(bool preempt)
+> >>  
+> >>  	if (likely(prev != next)) {
+> >>  		rq->nr_switches++;
+> >> -		rq->curr = next;
+> >> +		/*
+> >> +		 * RCU users of rcu_dereference(rq->curr) may not see
+> >> +		 * changes to task_struct made by pick_next_task().
+> >> +		 */
+> >> +		RCU_INIT_POINTER(rq->curr, next);
+> >
+> > It would be nice to have more explanations in the comments as to why we
+> > don't use rcu_assign_pointer() here (the very fast-path issue) and why
+> > it is expected to be fine (the rq_lock() + post spinlock barrier) under
+> > which condition. Some short summary of the changelog. Because that line
+> > implies way too many subtleties.
 > 
-> Previously there was no common lib/ function that implemented
-> the necessary extension-checking semantics (and different syscalls
-> implemented them slightly differently or incompletely[2]). Future
-> patches replace common uses of this pattern to make use of
-> copy_struct_from_user().
+> Crucially that line documents the standard rules don't apply,
+> and it documents which guarantees a new user of the code can probably
+> count on.  I say probably because the comment may go stale before I new
+> user of rcu appears.  I have my hopes things are simple enough at that
+> location that if the comment needs to be changed it can be.
+
+At least I can't understand that line without referring to the changelog.
+
 > 
-> Some in-kernel selftests that insure that the handling of alignment and
-> various byte patterns are all handled identically to memchr_inv() usage.
+> If it is not obvious from reading the code that calls
+> "task_rcu_dereference(rq->curr)" now "rcu_dereference(rq->curr)" why we
+> don't need the guarantees from rcu_assign_pointet() my sense is that
+> it should be those locations that document what guarantees they need.
+
+Both sides should probably have comments.
+
 > 
-> [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
->      robustify sched_read_attr() ABI logic and code")
+> Of the several different locations that use this my sense is that they
+> all have different requirements.
 > 
-> [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
->      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
->      always rejects differently-sized struct arguments.
+> - The rcuwait code just needs the lifetime change as it never dereferences
+>   rq->curr.
 > 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
->  include/linux/bitops.h  |   7 +++
->  include/linux/uaccess.h |   4 ++
->  lib/strnlen_user.c      |   8 +--
->  lib/test_user_copy.c    |  59 ++++++++++++++++++---
->  lib/usercopy.c          | 115 ++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 180 insertions(+), 13 deletions(-)
+> - The membarrier code just looks at rq->curr->mm for a moment so it
+>   hardly needs anything.  I suspect we might be able to make the rcu
+>   critical section smaller in that code.
 > 
-> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-> index cf074bce3eb3..a23f4c054768 100644
-> --- a/include/linux/bitops.h
-> +++ b/include/linux/bitops.h
-> @@ -4,6 +4,13 @@
->  #include <asm/types.h>
->  #include <linux/bits.h>
->  
-> +/* Set bits in the first 'n' bytes when loaded from memory */
-> +#ifdef __LITTLE_ENDIAN
-> +#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
-> +#else
-> +#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
-> +#endif
-
-Nti: The style in bitops.h suggestes this should be:
-
-+/* Set bits in the first 'n' bytes when loaded from memory */
-+#ifdef __LITTLE_ENDIAN
-+#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
-+#else
-+#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
-+#endif
-
-Using UL also makes 0xffUL clearer.
-
-> +
->  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
->  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
->  
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 34a038563d97..824569e309e4 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -230,6 +230,10 @@ static inline unsigned long __copy_from_user_inatomic_nocache(void *to,
->  
->  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
->  
-> +extern int is_zeroed_user(const void __user *from, size_t count);
-> +extern int copy_struct_from_user(void *dst, size_t ksize,
-> +				 const void __user *src, size_t usize);
-> +
->  /*
->   * probe_kernel_read(): safely attempt to read from a location
->   * @dst: pointer to the buffer that shall take the data
-> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-> index 7f2db3fe311f..39d588aaa8cd 100644
-> --- a/lib/strnlen_user.c
-> +++ b/lib/strnlen_user.c
-> @@ -2,16 +2,10 @@
->  #include <linux/kernel.h>
->  #include <linux/export.h>
->  #include <linux/uaccess.h>
-> +#include <linux/bitops.h>
->  
->  #include <asm/word-at-a-time.h>
->  
-> -/* Set bits in the first 'n' bytes when loaded from memory */
-> -#ifdef __LITTLE_ENDIAN
-> -#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
-> -#else
-> -#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
-> -#endif
-> -
->  /*
->   * Do a strnlen, return length of string *with* final '\0'.
->   * 'count' is the user-supplied count, while 'max' is the
-> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-> index 67bcd5dfd847..f7cde3845ccc 100644
-> --- a/lib/test_user_copy.c
-> +++ b/lib/test_user_copy.c
-> @@ -31,14 +31,58 @@
->  # define TEST_U64
->  #endif
->  
-> -#define test(condition, msg)		\
-> -({					\
-> -	int cond = (condition);		\
-> -	if (cond)			\
-> -		pr_warn("%s\n", msg);	\
-> -	cond;				\
-> +#define test(condition, msg, ...)					\
-> +({									\
-> +	int cond = (condition);						\
-> +	if (cond)							\
-> +		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
-> +	cond;								\
->  })
->  
-> +static int test_is_zeroed_user(char *kmem, char __user *umem, size_t size)
-> +{
-> +	int ret = 0;
-> +	size_t start, end, i;
-> +	size_t zero_start = size / 4;
-> +	size_t zero_end = size - zero_start;
-> +
-> +	/*
-> +	 * We conduct a series of is_zeroed_user() tests on a block of memory
-> +	 * with the following byte-pattern (trying every possible [start,end]
-> +	 * pair):
-> +	 *
-> +	 *   [ 00 ff 00 ff ... 00 00 00 00 ... ff 00 ff 00 ]
-> +	 *
-> +	 * And we verify that is_zeroed_user() acts identically to memchr_inv().
-> +	 */
-> +
-> +	for (i = 0; i < zero_start; i += 2)
-> +		kmem[i] = 0x00;
-> +	for (i = 1; i < zero_start; i += 2)
-> +		kmem[i] = 0xff;
-> +
-> +	for (i = zero_end; i < size; i += 2)
-> +		kmem[i] = 0xff;
-> +	for (i = zero_end + 1; i < size; i += 2)
-> +		kmem[i] = 0x00;
-> +
-> +	ret |= test(copy_to_user(umem, kmem, size),
-> +		    "legitimate copy_to_user failed");
-> +
-> +	for (start = 0; start <= size; start++) {
-> +		for (end = start; end <= size; end++) {
-> +			int retval = is_zeroed_user(umem + start, end - start);
-> +			int expected = memchr_inv(kmem + start, 0, end - start) == NULL;
-> +
-> +			ret |= test(retval != expected,
-> +				    "is_zeroed_user(=%d) != memchr_inv(=%d) mismatch (start=%lu, end=%lu)",
-> +				    retval, expected, start, end);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int __init test_user_copy_init(void)
->  {
->  	int ret = 0;
-> @@ -106,6 +150,9 @@ static int __init test_user_copy_init(void)
->  #endif
->  #undef test_legit
->  
-> +	/* Test usage of is_zeroed_user(). */
-> +	ret |= test_is_zeroed_user(kmem, usermem, PAGE_SIZE);
-> +
->  	/*
->  	 * Invalid usage: none of these copies should succeed.
->  	 */
-> diff --git a/lib/usercopy.c b/lib/usercopy.c
-> index c2bfbcaeb3dc..f795cf0946ad 100644
-> --- a/lib/usercopy.c
-> +++ b/lib/usercopy.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/uaccess.h>
-> +#include <linux/bitops.h>
->  
->  /* out-of-line parts */
->  
-> @@ -31,3 +32,117 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
->  }
->  EXPORT_SYMBOL(_copy_to_user);
->  #endif
-> +
-> +/**
-> + * is_zeroed_user: check if a userspace buffer is full of zeros
-> + * @from:  Source address, in userspace.
-> + * @size: Size of buffer.
-> + *
-> + * This is effectively shorthand for "memchr_inv(from, 0, size) == NULL" for
-> + * userspace addresses. If there are non-zero bytes present then false is
-> + * returned, otherwise true is returned.
-> + *
-> + * Returns:
-> + *  * -EFAULT: access to userspace failed.
-> + */
-> +int is_zeroed_user(const void __user *from, size_t size)
-
-See my bool vs int comment from yesterday and [1] for a suggestion.
-
-> +{
-> +	unsigned long val;
-> +	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
-> +
-> +	if (unlikely(!size))
-> +		return true;
-> +
-> +	from -= align;
-> +	size += align;
-> +
-> +	if (!user_access_begin(from, size))
-> +		return -EFAULT;
-> +
-> +	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-> +	if (align)
-> +		val &= ~aligned_byte_mask(align);
-> +
-> +	while (size > sizeof(unsigned long)) {
-> +		if (unlikely(val))
-> +			goto done;
-> +
-> +		from += sizeof(unsigned long);
-> +		size -= sizeof(unsigned long);
-> +
-> +		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-> +	}
-> +
-> +	if (size < sizeof(unsigned long))
-> +		val &= aligned_byte_mask(size);
-> +
-> +done:
-> +	user_access_end();
-> +	return (val == 0);
-> +err_fault:
-> +	user_access_end();
-> +	return -EFAULT;
-> +}
-> +EXPORT_SYMBOL(is_zeroed_user);
-
-
-> +
-> +/**
-> + * copy_struct_from_user: copy a struct from userspace
-> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
-> + *         bytes long.
-> + * @ksize: Size of @dst struct.
-> + * @src:   Source address, in userspace.
-> + * @usize: (Alleged) size of @src struct.
-> + *
-> + * Copies a struct from userspace to kernel space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by userspace.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, size);
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then the userspace has passed an old struct to a
-> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
-> + *    are to be zero-filled.
-> + *  * If @usize > @ksize, then the userspace has passed a new struct to an
-> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
-> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -EFAULT: access to userspace failed.
-> + */
-> +int copy_struct_from_user(void *dst, size_t ksize,
-> +			  const void __user *src, size_t usize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = max(ksize, usize) - size;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize) {
-> +		memset(dst + size, 0, rest);
-> +	} else if (usize > ksize) {
-> +		int ret = is_zeroed_user(src + size, rest);
-> +		if (ret <= 0)
-> +			return ret ?: -E2BIG;
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (copy_from_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> -- 
-> 2.23.0
+> - I don't know the code in task_numa_compare() well enough even to make an
+>   educated guess.  Peter asserts (if I read his reply correctly) it is
+>   all just a heuristic so stale values should not matter.
 > 
+>   My reading of the code strongly suggests that we have the ordinary
+>   rcu_assign_pointer() guarantees there.  The few fields that are not
+>   covered by the ordinary guarantees do not appear to be read.  So even
+>   if Peter is wrong RCU_INIT_POINTER appears safe to me.
+> 
+>   I also don't think we will have confusion with people reading the
+>   code and expecting ordinary rcu_dereference semantics().
+> 
+> I can't possibly see putting the above several lines in a meaningful
+> comment where RCU_INIT_POINTER is called.  Especially in a comment
+> that will survive changes to any of those functions.  My experience
+> is comments that try that are almost always overlooked when someone
+> updates the code.
 
-[1]: How about:
+That's ok, it's the nature of comments, they get out of date. But at
+least they provide a link to history so we can rewind to find the initial
+how and why for a tricky line.
 
-/**
- * <sensible documentation>
- * 
- * Returns 1, if the user buffer is zeroed, 0 if it is not, and a
- * negative error code otherwise.
- * 
+I bet nobody wants git blame as a base for their text editors.
+
+> 
+> I barely found all of the comments that depended upon the details of
+> task_rcu_dereference and updated them in my patchset, when I removed
+> the need for task_rcu_dereference.
+> 
+> I don't think it would be wise to put a comment that is a wall of words
+> in the middle of __schedule().  I think it will become inaccurate with
+> time and because it is a lot of words I think it will be ignored.
+> 
+> 
+> As for the __schedule: It is the heart of the scheduler.  It is
+> performance code.  It is clever code.  It is likely to stay that way
+> because it is the scheduler.  There are good technical reasons for the
+> code is the way it is, and anyone changing the scheduler in a
+> responsible manner that includes benchmarking should find those
+> technical reasons quickly enough.
+> 
+> 
+> So I think a quick word to the wise is enough.  Comments are certainly
+> not enough to prevent people being careless and making foolish mistakes.
+
+Well it's not even about preventing anything, it's only about making
+a line of cryptic code understandable for reviewers. No need for thorough
+details, indeed anyone making use of that code or modifying it has to dive
+into the deep guts anyway.
+
+So how about that:
+
+/*
+ * Avoid rcu_dereference() in this very fast path.
+ * Instead rely on full barrier implied by rq_lock() + smp_mb__after_spinlock().
+ * Warning: In-between writes may be missed by readers (eg: pick_next_task())
  */
-int memuser_zero(const void __user *from, size_t size)
-{
-	unsigned long val;
-	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
 
-	if (unlikely(size == 0))
-		return 1;
-
-	from -= align;
-	size += align;
-
-	if (!user_access_begin(from, size))
-		return -EFAULT;
-
-	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-	if (align)
-		val &= ~aligned_byte_mask(align);
-
-	while (size > sizeof(unsigned long)) {
-		if (unlikely(val))
-			goto err_fault;
-
-		from += sizeof(unsigned long);
-		size -= sizeof(unsigned long);
-
-		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
-	}
-
-	if (size < sizeof(unsigned long))
-		val &= aligned_byte_mask(size);
-
-done:
-	user_access_end();
-	return (val == 0);
-err_fault:
-	user_access_end();
-	return -EFAULT;
-}
-
-int copy_struct_from_user(void *dst, size_t ksize,
-			  const void __user *src, size_t usize)
-{
-	size_t size = min(ksize, usize);
-	size_t rest = max(ksize, usize) - size;
-
-	/* Deal with trailing bytes. */
-	if (usize < ksize) {
-		memset(dst + size, 0, rest);
-	} else if ((usize > ksize) {
- 		int ret = memuser_zero(src + size, rest);
-		if (ret < 0) /* we failed to check the user memory somehow */
-			return ret;
-		if (ret == 0) /* some of the memory was non-zero */
-			return -E2BIG;
-	}
-
-	/* Copy the interoperable parts of the struct. */
-	if (copy_from_user(dst, src, size))
-		return -EFAULT;
-	return 0;
-}
+Thanks.
