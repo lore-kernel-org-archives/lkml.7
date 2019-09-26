@@ -6,69 +6,149 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAF9C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AE4C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD52E222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3DA2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfIZJuP (ORCPT
+        id S1726349AbfIZJzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:50:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49450 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfIZJuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:50:15 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iDQPc-0005BW-TY; Thu, 26 Sep 2019 09:50:12 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] io_uring: ensure variable ret is initialized to zero
-Date:   Thu, 26 Sep 2019 10:50:12 +0100
-Message-Id: <20190926095012.31826-1-colin.king@canonical.com>
+        Thu, 26 Sep 2019 05:55:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:44246 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbfIZJzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:55:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A8791000;
+        Thu, 26 Sep 2019 02:55:11 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 121853F67D;
+        Thu, 26 Sep 2019 02:55:09 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v2] drm: Don't free jobs in wait_event_interruptible()
+Date:   Thu, 26 Sep 2019 10:54:58 +0100
+Message-Id: <20190926095458.50020-1-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+drm_sched_cleanup_jobs() attempts to free finished jobs, however because
+it is called as the condition of wait_event_interruptible() it must not
+sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
 
-In the case where sig is NULL the error variable ret is not initialized
-and may contain a garbage value on the final checks to see if ret is
--ERESTARTSYS.  Best to initialize ret to zero before the do loop to
-ensure the ret does not accidentially contain -ERESTARTSYS before the
-loop.
+Instead let's rename drm_sched_cleanup_jobs() to
+drm_sched_get_cleanup_job() and simply return a job for processing if
+there is one. The caller can then call the free_job() callback outside
+the wait_event_interruptible() where sleeping is possible before
+re-checking and returning to sleep if necessary.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: dd671c79e40b ("io_uring: make CQ ring wakeups be more efficient")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7b5710e3a18c..aa8ac557493c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2835,6 +2835,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			return ret;
+Changes from v1:
+ * Move list_first_entry_or_null() within the lock
+
+ drivers/gpu/drm/scheduler/sched_main.c | 44 ++++++++++++++------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+index 9a0ee74d82dc..0ed4aaa4e6d1 100644
+--- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+ }
+ 
+ /**
+- * drm_sched_cleanup_jobs - destroy finished jobs
++ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
+  *
+  * @sched: scheduler instance
+  *
+- * Remove all finished jobs from the mirror list and destroy them.
++ * Returns the next finished job from the mirror list (if there is one)
++ * ready for it to be destroyed.
+  */
+-static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
++static struct drm_sched_job *
++drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
+ {
++	struct drm_sched_job *job = NULL;
+ 	unsigned long flags;
+ 
+ 	/* Don't destroy jobs while the timeout worker is running */
+ 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
+ 	    !cancel_delayed_work(&sched->work_tdr))
+-		return;
+-
+-
+-	while (!list_empty(&sched->ring_mirror_list)) {
+-		struct drm_sched_job *job;
++		return NULL;
+ 
+-		job = list_first_entry(&sched->ring_mirror_list,
++	job = list_first_entry_or_null(&sched->ring_mirror_list,
+ 				       struct drm_sched_job, node);
+-		if (!dma_fence_is_signaled(&job->s_fence->finished))
+-			break;
+ 
+-		spin_lock_irqsave(&sched->job_list_lock, flags);
++	spin_lock_irqsave(&sched->job_list_lock, flags);
++
++	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+ 		/* remove job from ring_mirror_list */
+ 		list_del_init(&job->node);
+-		spin_unlock_irqrestore(&sched->job_list_lock, flags);
+-
+-		sched->ops->free_job(job);
++	} else {
++		job = NULL;
++		/* queue timeout for next job */
++		drm_sched_start_timeout(sched);
  	}
  
-+	ret = 0;
- 	iowq.nr_timeouts = atomic_read(&ctx->cq_timeouts);
- 	do {
- 		prepare_to_wait_exclusive(&ctx->wait, &iowq.wq,
+-	/* queue timeout for next job */
+-	spin_lock_irqsave(&sched->job_list_lock, flags);
+-	drm_sched_start_timeout(sched);
+ 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
+ 
++	return job;
+ }
+ 
+ /**
+@@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
+ 		struct drm_sched_fence *s_fence;
+ 		struct drm_sched_job *sched_job;
+ 		struct dma_fence *fence;
++		struct drm_sched_job *cleanup_job = NULL;
+ 
+ 		wait_event_interruptible(sched->wake_up_worker,
+-					 (drm_sched_cleanup_jobs(sched),
++					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
+ 					 (!drm_sched_blocked(sched) &&
+ 					  (entity = drm_sched_select_entity(sched))) ||
+-					 kthread_should_stop()));
++					 kthread_should_stop());
++
++		while (cleanup_job) {
++			sched->ops->free_job(cleanup_job);
++			cleanup_job = drm_sched_get_cleanup_job(sched);
++		}
+ 
+ 		if (!entity)
+ 			continue;
 -- 
 2.20.1
 
