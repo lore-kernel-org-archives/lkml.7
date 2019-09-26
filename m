@@ -2,112 +2,173 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34457C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AFFC352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C35621D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="y3h5OT0U"
+	by mail.kernel.org (Postfix) with ESMTP id 5A50D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfIZQaC (ORCPT
+        id S1727519AbfIZQay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 12:30:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40747 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfIZQaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:30:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d22so1528496pll.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
-        b=y3h5OT0UmQqXJi0n0rBvqkcTo+13EdxQBhESuHKUhhUdt4HIIcVQewbszw7316Jbj3
-         B26hOzlkXv8XsgeN5pGs7wsfUu35kRVDjdfbd80Cz2QkLIg0M3MsvsJVJdd9QD5RXeiy
-         6UEhQ9sxyZ6zQojKZM8g8YSAiU0HmfS6EeGLmm2G3M5zDUXby8glVotg/+s3ve95UAlT
-         DAQ0U/ntgxEnEPfGxe+68Qz99D7tUdj8cjDtGb+44i81+8OKBcckxrd+3wvZeL0MsCVS
-         GUydrXVlNXeNeT9yD3EB7dKB2lMU1zF3uY6+lKZ9hv2ld2NLoMT31L6wdQwnvoc03z5L
-         JHDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
-        b=bKXw7apWbw/7gT+0dl1tn51FRPkOZENwWBHPnC6E5848M7iAQhAMbCc6o6Ol2FCKx4
-         GuQffLM9frk7kHJhs/ZokloCh5UElPATi0Cn1QDx6HmrlVA5F3MpDm7MFSU1H4nA2G45
-         3/OEkRyo98iD/+MVn5ywdRpiinMfazO0Gay6ihakTTTONbai2LRwtBUtg19u12nJ4ZRn
-         cb5SrkRlqFkmqhOakK2vBLx8npjR2hIFhnsMPHTR/jkiuYj3ewGORSZeT3a142jsCHPS
-         dwHb4D2q7ytpsnaYYr7eCiD49ASHUPlCZZ823D4NdU72At6cMi4u/Fr1L3i9Pf8d7+Pu
-         UWPQ==
-X-Gm-Message-State: APjAAAXKs178zh1vLb3oeO5s+sD/kSTGHE6JSYZPAuU0zxn8beebSqCi
-        S/2FDgpMp7UD/K5S+FKwFQ10wg==
-X-Google-Smtp-Source: APXvYqzWSovEndvhpUlPPG2KWsLiHc/5J0wB0jU8KW7kk3lkOzlRWdHFYbFHIpUg2H8EkpfjsR5P5g==
-X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr4822043plo.152.1569515400373;
-        Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id e127sm3547209pfe.37.2019.09.26.09.29.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 09:29:59 -0700 (PDT)
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        corbet@lwn.net
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Pensando Drivers <drivers@pensando.io>,
-        Steve French <sfrench@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <81dc41d5-606a-7638-1d11-4fe53e9c2a7f@pensando.io>
-Date:   Thu, 26 Sep 2019 09:29:56 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 26 Sep 2019 12:30:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:54406 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfIZQay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 12:30:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70CAA28;
+        Thu, 26 Sep 2019 09:30:53 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BF313F534;
+        Thu, 26 Sep 2019 09:30:52 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 17:30:49 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH 2/4] PCI: hv: Add the support of hibernation
+Message-ID: <20190926163049.GB7827@e121166-lin.cambridge.arm.com>
+References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
+ <1568245086-70601-3-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568245086-70601-3-git-send-email-decui@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 6:01 AM, Mauro Carvalho Chehab wrote:
-> There are a number of documentation files that got moved or
-> renamed. update their references.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Wed, Sep 11, 2019 at 11:38:20PM +0000, Dexuan Cui wrote:
+> Implement the suspend/resume callbacks for hibernation.
+> 
+> hv_pci_suspend() needs to prevent any new work from being queued: a later
+> patch will address this issue.
 
->   drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
+I don't see why you have two separate patches, the second one fixing the
+previous (this one). Squash them together and merge them as such, or
+there is something I am missing here.
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
+Lorenzo
 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 76 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 03fa039..3b77a3a 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1398,6 +1398,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
+>  
+>  	spin_lock_irqsave(&hbus->device_list_lock, flags);
+>  
+> +	/*
+> +	 * Clear the memory enable bit, in case it's already set. This occurs
+> +	 * in the suspend path of hibernation, where the device is suspended,
+> +	 * resumed and suspended again: see hibernation_snapshot() and
+> +	 * hibernation_platform_enter().
+> +	 *
+> +	 * If the memory enable bit is already set, Hyper-V sliently ignores
+> +	 * the below BAR updates, and the related PCI device driver can not
+> +	 * work, because reading from the device register(s) always returns
+> +	 * 0xFFFFFFFF.
+> +	 */
+> +	list_for_each_entry(hpdev, &hbus->children, list_entry) {
+> +		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
+> +		command &= ~PCI_COMMAND_MEMORY;
+> +		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
+> +	}
+> +
+>  	/* Pick addresses for the BARs. */
+>  	do {
+>  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
+> @@ -2737,6 +2754,63 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	return ret;
+>  }
+>  
+> +static int hv_pci_suspend(struct hv_device *hdev)
+> +{
+> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+> +	int ret;
+> +
+> +	/* XXX: Need to prevent any new work from being queued. */
+> +	flush_workqueue(hbus->wq);
+> +
+> +	ret = hv_pci_bus_exit(hdev, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	vmbus_close(hdev->channel);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_pci_resume(struct hv_device *hdev)
+> +{
+> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+> +	enum pci_protocol_version_t version[1];
+> +	int ret;
+> +
+> +	hbus->state = hv_pcibus_init;
+> +
+> +	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> +			 hv_pci_onchannelcallback, hbus);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Only use the version that was in use before hibernation. */
+> +	version[0] = pci_protocol_version;
+> +	ret = hv_pci_protocol_negotiation(hdev, version, 1);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = hv_pci_query_relations(hdev);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = hv_pci_enter_d0(hdev);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = hv_send_resources_allocated(hdev);
+> +	if (ret)
+> +		goto out;
+> +
+> +	prepopulate_bars(hbus);
+> +
+> +	hbus->state = hv_pcibus_installed;
+> +	return 0;
+> +out:
+> +	vmbus_close(hdev->channel);
+> +	return ret;
+> +}
+> +
+>  static const struct hv_vmbus_device_id hv_pci_id_table[] = {
+>  	/* PCI Pass-through Class ID */
+>  	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
+> @@ -2751,6 +2825,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	.id_table	= hv_pci_id_table,
+>  	.probe		= hv_pci_probe,
+>  	.remove		= hv_pci_remove,
+> +	.suspend	= hv_pci_suspend,
+> +	.resume		= hv_pci_resume,
+>  };
+>  
+>  static void __exit exit_hv_pci_drv(void)
+> -- 
+> 1.8.3.1
+> 
