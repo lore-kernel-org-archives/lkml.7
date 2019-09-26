@@ -2,76 +2,148 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ED0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743ACC352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23BF52245D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569534469;
-	bh=CUtsMY/ddf2XOeF3tW6tq3ghiSZNTVgm3jplb/AVHwE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tgXiz3c0UmByU1bRXEuaa1xuel4nTEgUtLc8cUV9tdq8tnqtF0AQlIOcpBDcShoE3
-	 KiZXcnDGVgmd+9++pjF+GB8MzykfdzORa2BJebbcSqxUIBWG/aCTW9VDAAx6d0++P1
-	 RS8TJ8IJAVhxwB6Tm42YcdHUN8ICAhMA3c/mOTt0=
+	by mail.kernel.org (Postfix) with ESMTP id 4846D2245A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRLT+ReD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfIZVrs (ORCPT
+        id S1726620AbfIZVr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfIZVrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:47:48 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B47920835;
-        Thu, 26 Sep 2019 21:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569534467;
-        bh=CUtsMY/ddf2XOeF3tW6tq3ghiSZNTVgm3jplb/AVHwE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=k/n+pnRCzo1G659Oh9iStjKnDfg+UEvprDF4XgnVGkQKEbrXuflHppJ1zGUE7V0yL
-         Yh72L6y8M6qIfVF0XLM8UscC80T4NxH/DOvbqDfUNS7vE2sA+/LDhI4D4OeOk4P7uK
-         j4Qaqp6VEkp3DOQ4AXmpyC89WH5QhLEnKNfmwQYQ=
-Date:   Thu, 26 Sep 2019 16:47:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Megha Dey <megha.dey@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-pci@vger.kernel.org, maz@kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jgg@mellanox.com, ashok.raj@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Sanjay Kumar <sanjay.k.kumar@intel.com>
-Subject: Re: [RFC V1 7/7] ims: Add the set_desc callback
-Message-ID: <20190926214746.GA197766@google.com>
+        Thu, 26 Sep 2019 17:47:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38459 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfIZVr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:47:56 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so270450pfe.5;
+        Thu, 26 Sep 2019 14:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6AGLv4CWuVuelWFvRQBEfZ9A0Ad8T6D5GdQVJKzqPh4=;
+        b=XRLT+ReDlTIRTYrAMObucH4IwHfcTygZSkBOF9wPdZWNgaNHD56Sg79F9VAMZqRi3o
+         aumhv6ZVW3PtuVXQczDN8UWeZUhGrQHyXLel0xpJqnQf2ExR0hbPAIa6hxUlfoMBYfeJ
+         Q+pwoXOWZhynsL0oM/DhRo9gVJN/eZGDaifGA/2fE2cYit9MUx/x/sheRICmHk5vNrrx
+         9uSRJ5H0wA+LJJGFIZhhjpYP9g2rrrmNcrphztjStIwF/mEvFRfJnLPmkeMCRHMqIlya
+         8XHsGxzClik9iSAo+ZMuCqxJoSgddBsJmNlLZhcN1Ht/hmWaP0LKlE6Ji7CdI4DWHwoy
+         GwFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6AGLv4CWuVuelWFvRQBEfZ9A0Ad8T6D5GdQVJKzqPh4=;
+        b=mzto+LCBZu3kgypja8EXxAjoSpu11SZM6FG65NWvJ5b1981wgSrXXXuLACHyY0L0i4
+         tDVnypbr8J7lG0iidNAK/FEuOTCYLrUYxwUt8AJiVmLWc5ZI4iGdu3ezlJzhkWk2nTcj
+         mMnzTR1ngf8Q8l/12mjNpZC5zm29aUPt6rR/99RT5r8/OjnNZn3kxkdv/g/jj4zymWMX
+         papW+Kl5UzpOE3dQkA1r+rK5kxsM5+LWVuvUSAj3n6X9caTL/W+deuhF6CC6iyTeqaJM
+         G+hIvH4Ny6CgeMAYPHD5aQgYyy7pAED0llqTtYkMfWqyUKVGLhlkgDctytqKS+7Cyc3H
+         ZSuA==
+X-Gm-Message-State: APjAAAUFpKNpV19W11ThtPO1POSPCNQjcA3eXzdbzZ1CbRUwA5FSWCfh
+        sntpMrgQYN1qjNglVIz3CeU=
+X-Google-Smtp-Source: APXvYqzGvXHvWOz50sJ2rqxHIoGNO24ksVFby3tHB9I9BJBonAzzipwGngYkWvKtuFbv+qlf3O6JOw==
+X-Received: by 2002:a62:3844:: with SMTP id f65mr108201pfa.142.1569534475392;
+        Thu, 26 Sep 2019 14:47:55 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id g12sm223317pfb.97.2019.09.26.14.47.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 14:47:54 -0700 (PDT)
+Subject: Re: [RT PATCH 1/3] hrtimer: Use READ_ONCE to access timer->base in
+ hrimer_grab_expiry_lock()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maz@kernel.org, rostedt@goodmis.org
+References: <20190821092409.13225-1-julien.grall@arm.com>
+ <20190821092409.13225-2-julien.grall@arm.com>
+ <20190821134437.efc3cs55o7uatrpj@linutronix.de>
+ <alpine.DEB.2.21.1908211549040.2223@nanos.tec.linutronix.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <4352c04c-b424-e73c-1de6-26bab2dc1579@gmail.com>
+Date:   Thu, 26 Sep 2019 14:47:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568338328-22458-8-git-send-email-megha.dey@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1908211549040.2223@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 06:32:08PM -0700, Megha Dey wrote:
-> Add the set_desc callback to the ims domain ops.
 
-Elsewhere you capitalize "IMS" when it's an initialism.
 
-Generally you capitalized "IRQ" and "MSI" in similar situations, but
-there are a couple exceptions (in other commit logs).
-
-> The set_desc callback is used to find a unique hwirq number from a given
-> domain.
+On 8/21/19 6:50 AM, Thomas Gleixner wrote:
+> On Wed, 21 Aug 2019, Sebastian Andrzej Siewior wrote:
 > 
-> Each mdev can have a maximum of 2048 IMS interrupts.
+>> On 2019-08-21 10:24:07 [+0100], Julien Grall wrote:
+>>> The update to timer->base is protected by the base->cpu_base->lock().
+>>> However, hrtimer_grab_expirty_lock() does not access it with the lock.
+>>>
+>>> So it would theorically be possible to have timer->base changed under
+>>> our feet. We need to prevent the compiler to refetch timer->base so the
+>>> check and the access is performed on the same base.
+>>
+>> It is not a problem if the timer's bases changes. We get here because we
+>> want to help the timer to complete its callback.
+>> The base can only change if the timer gets re-armed on another CPU which
+>> means is completed callback. In every case we can cancel the timer on
+>> the next iteration.
+> 
+> It _IS_ a problem when the base changes and the compiler reloads
+> 
+>    CPU0	  	       	   	CPU1
+>    base = timer->base;
+> 
+>    lock(base->....);
+> 				switch base
+> 
+>    reload
+> 	base = timer->base;
+> 
+>    unlock(base->....);
+> 
 
-Maybe you could mention where this limit comes from and whether it's
-related to any #define in these patches?
+It seems we could hit a similar problem in lock_hrtimer_base()
+
+ base = timer->base;
+
+ if (likely(base != &migration_base)) {
+
+     <reload base : could point to &migration_base>
+
+     raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+
+Probably not a big deal, since migration_base-cpu_base->lock can be locked just fine,
+(without lockdep complaining that the lock has not been initialized since we use raw_ variant),
+but this could cause unnecessary false sharing.
+
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 0d4dc241c0fb498036c91a571e65cb00f5d19ba6..fa881c03e0a1a351186a8d8f798dd7471067a951 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -164,7 +164,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
+ 	struct hrtimer_clock_base *base;
+ 
+ 	for (;;) {
+-		base = timer->base;
++		base = READ_ONCE(timer->base);
+ 		if (likely(base != &migration_base)) {
+ 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+ 			if (likely(base == timer->base))
+
+
