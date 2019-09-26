@@ -2,105 +2,123 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CD3C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306DEC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D43222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FDwis0Me"
+	by mail.kernel.org (Postfix) with ESMTP id 1152C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfIZLTb (ORCPT
+        id S1726488AbfIZLUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:19:31 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40019 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfIZLT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:19:29 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f7so2336711qtq.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 04:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=fYPToXR0NbT6CEGxTuAqdgHd5+edDYqh00rkxBfwc+g=;
-        b=FDwis0Men9NI9YQN4z3fTSsiW3WRxGnkwpSNIUznkIm9T9QlUki5GrSyFpzt0k9IxA
-         /wZ/ZBxP8iTaECWgBw33oNZfTxFbQEnW1FtPGpCaSAOCF8pnITk0E5QFliWObZ1CLjdX
-         tpIUvr1OsnhE+cK8rRx+MtEopb0zkDjFOtdIeulag7FO6DO3+GlUV/C6LCNrQ9D4ePfA
-         uiksPXhP+iH+cP9/pg0g4tP0zxRrG5ZNqlUWavoAX4K8s6iCeAuLfMwmx7R8nUoSYGVJ
-         8uCjyWHijpa8ZPr8Ex93VILlJU8A3/jAu3NyWQNi2YPSR2iUhv16hk7CzyXChdGfiQlz
-         qrog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=fYPToXR0NbT6CEGxTuAqdgHd5+edDYqh00rkxBfwc+g=;
-        b=jSVZtuovo0xm8H8Bp0bDOjpsn/nW8VMf7tHw0xDqMdpSfMrV1YsmXvMzsfZrwGRmL6
-         RrfZOCc8ys3lufsdGEPjpJ0dBu/3YLHhQNn/cOYBYgTPtR9rA1aOhObWR1ClgY1JYgsK
-         v06WmaMjnTI3YJcwrcZjLU4uCAEFYyWejsAOIGZIWMTYU+0ChvGQrrxE5DuzOtTzzz6Y
-         IAB/dIbJWVgQRvTofYCxvCyZpRpC+c3p1kBTlXL0mQ4lmRriYGQ4Zmg/Vvtii56rm3xy
-         PG6lvYrXkpAlX0u04WHnvHM4riX7rVqB6puerZpfrVDEgM+xEewrdDBap/MrXcglLJfj
-         j0xQ==
-X-Gm-Message-State: APjAAAXq6pCv4pKV5fG/eDos+U2/fCbdqfzmjk5XTW/7L5IVqEflkkgg
-        kLPRaxj6x59cDClguKtAPCK0epmBO+qbrg==
-X-Google-Smtp-Source: APXvYqwV2ycsL7eT1GE5Ae675yE7aehFn4ca0zlLCKzexIiFu9hFxuG6zLao80D35lhl4n5Uxk+M5g==
-X-Received: by 2002:ac8:41ca:: with SMTP id o10mr3194278qtm.352.1569496768610;
-        Thu, 26 Sep 2019 04:19:28 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 63sm875654qkh.82.2019.09.26.04.19.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 04:19:28 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Date:   Thu, 26 Sep 2019 07:19:27 -0400
-Message-Id: <C8DA5249-2DEB-47D5-937E-5A774B1CB08B@lca.pw>
-References: <20190926072645.GA20255@dhcp22.suse.cz>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Thu, 26 Sep 2019 07:20:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:46496 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbfIZLUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 07:20:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9053B142F;
+        Thu, 26 Sep 2019 04:20:53 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D1D3F67D;
+        Thu, 26 Sep 2019 04:20:50 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
         Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-In-Reply-To: <20190926072645.GA20255@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17A844)
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+ <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+ <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+Date:   Thu, 26 Sep 2019 12:20:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
+>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
+>>>>> next thing
+>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in
+>>>>> the
+>>>>> works already.
+>>>>
+>>>> Multiple dma-ranges as far as configuring inbound windows should work
+>>>> already other than the bug when there's any parent translation. But if
+>>>> you mean supporting multiple DMA offsets and masks per device in the
+>>>> DMA API, there's nothing in the works yet.
+> 
+> Sorry, I meant supporting multiple DMA offsets[1]. I think I could still make
+> it with a single DMA mask though.
 
+The main problem for supporting that case in general is the disgusting 
+carving up of the physical memory map you may have to do to guarantee 
+that a single buffer allocation cannot ever span two windows with 
+different offsets. I don't think we ever reached a conclusion on whether 
+that was even achievable in practice.
 
-> On Sep 26, 2019, at 3:26 AM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> OK, this is using for_each_online_cpu but why is this a problem? Have
-> you checked what the code actually does? Let's say that online_pages is
-> racing with cpu hotplug. A new CPU appears/disappears from the online
-> mask while we are iterating it, right? Let's start with cpu offlining
-> case. We have two choices, either the cpu is still visible and we update
-> its local node configuration even though it will disappear shortly which
-> is ok because we are not touching any data that disappears (it's all
-> per-cpu). Case when the cpu is no longer there is not really
-> interesting. For the online case we might miss a cpu but that should be
-> tolerateable because that is not any different from triggering the
-> online independently of the memory hotplug. So there has to be a hook
-> from that code path as well. If there is none then this is buggy
-> irrespective of the locking.
->=20
-> Makes sense?
+>>> There's also the in-between step of making of_dma_get_range() return a
+>>> size based on all the dma-ranges entries rather than only the first one
+>>> - otherwise, something like [1] can lead to pretty unworkable default
+>>> masks. We implemented that when doing acpi_dma_get_range(), it's just
+>>> that the OF counterpart never caught up.
+>>
+>> Right. I suppose we assume any holes in the ranges are addressable by
+>> the device but won't get used for other reasons (such as no memory
+>> there). However, to be correct, the range of the dma offset plus mask
+>> would need to be within the min start and max end addresses. IOW,
+>> while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
+>> power of 2, the 'correct' thing to do is round down.
+> 
+> IIUC I also have this issue on my list. The RPi4 PCIe block has an integration
+> bug that only allows DMA to the lower 3GB. With dma-ranges of size 0xc000_0000
+> you get a 32bit DMA mask wich is not what you need. So far I faked it in the
+> device-tree but I guess it be better to add an extra check in
+> of_dma_configure(), decrease the mask and print some kind of warning stating
+> that DMA addressing is suboptimal.
 
-This sounds to me requires lots of audits and testing. Also, someone who is m=
-ore
-familiar with CPU hotplug should review this patch. Personally, I am no fun o=
-f
-operating on an incorrect CPU mask to begin with, things could go wrong real=
-ly
-quickly...=
+Yeah, there's just no way for masks to describe that the device can 
+drive all the individual bits, just not in certain combinations :(
+
+The plan I have sketched out there is to merge dma_pfn_offset and 
+bus_dma_mask into a "DMA range" descriptor, so we can then hang one or 
+more of those off a device to properly cope with all these weird 
+interconnects. Conceptually it feels pretty straightforward; I think 
+most of the challenge is in implementing it efficiently. Plus there's 
+the question of whether it could also subsume the dma_mask as well.
+
+Robin.
