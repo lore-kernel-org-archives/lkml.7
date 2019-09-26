@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61184C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9201C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357D121655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA71D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbfIZBXM (ORCPT
+        id S2388245AbfIZBXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:23:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36338 "EHLO
+        Wed, 25 Sep 2019 21:23:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36360 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfIZBXM (ORCPT
+        with ESMTP id S1726707AbfIZBXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:23:12 -0400
+        Wed, 25 Sep 2019 21:23:16 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 2E9E028ED0E
+        with ESMTPSA id 0959E28ED13
 From:   Helen Koike <helen.koike@collabora.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
 Cc:     kernel@collabora.com, mcasas@google.com, zhenyu.z.wang@intel.com,
@@ -34,12 +34,13 @@ Cc:     kernel@collabora.com, mcasas@google.com, zhenyu.z.wang@intel.com,
         enric.balletbo@collabora.com, tina.zhang@intel.com,
         ville.syrjala@linux.intel.com,
         Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v11 1/2] drm/i915: Introduce async plane update to i915
-Date:   Wed, 25 Sep 2019 22:22:42 -0300
-Message-Id: <20190926012243.4893-1-helen.koike@collabora.com>
+Subject: [PATCH v11 2/2] drm/i915: update cursors asynchronously through atomic
+Date:   Wed, 25 Sep 2019 22:22:43 -0300
+Message-Id: <20190926012243.4893-2-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190926012243.4893-1-helen.koike@collabora.com>
+References: <20190926012243.4893-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,227 +49,239 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gustavo Padovan <gustavo.padovan@collabora.com>
 
-Add implementation for async plane update callbacks
+Replace the legacy cursor implementation by the async callbacks
 
 Signed-off-by: Gustavo Padovan <gustavo.padovan@collabora.com>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Tested-by: Tina Zhang <tina.zhang@intel.com>
 
 ---
-Hi,
 
-I ran the following tests and no regressions were found:
-
-./scripts/run-tests.sh -p -s -t ".*plane_cursor_legacy.*" -t
-".*kms_cursor_legacy.*" -r results-`uname -r`-v11 -v
-
-The igt test results can be found at
-https://people.collabora.com/~koike/results-5.3.0-rc3+-v11/html
-
-Thanks
-Helen
-
-Changes in v11:
- - v10 https://patchwork.kernel.org/project/dri-devel/list/?series=147095
- - rebase on drm-intel
- - replace i915_gem_track_fb() by intel_frontbuffer_track()
-
-Changes in v10:
- - v9: https://patchwork.kernel.org/patch/11000561/
- - rebase on drm-tip
- - call i915_sw_fence_init() in the begining of intel_atomic_commit(),
- otherwise drm_atomic_helper_prepare_planes() without initializing the
- fence object, casing errors like:
-ODEBUG: assert_init not available (active state 0) object type: i915_sw_fence hint: 0x0
-
+Changes in v11: None
+Changes in v10: None
 Changes in v9:
- - v8: https://patchwork.kernel.org/patch/10843395/
- - Added tested-by tag
- - submitted to  intel-gfx@lists.freedesktop.org to invoke CI
+ - v8: https://patchwork.kernel.org/patch/10843397/
  - rebased and fixed conflicts on top of drm-tip
 
 Changes in v8:
  - v7: https://lkml.org/lkml/2018/6/8/168
  - v7 was splited in two, one that adds the async callbacks and another
  that updates the cursor.
- - rebase with drm-intel
- - allow async update in all types of planes, not only cursor
- - add watermark checks in async update
- - remove bypass of intel_prepare_plane_fb() in case of async update
- - add missing drm_atomic_helper_cleanup_planes(dev, state) call in
- intel_atomic_commit().
- - use swap() function in async update to set the old_fb in the
- new_state object.
- - use helpers intel_update_plane()/intel_disable_plane()
+ - Update comment in intel_pm.c that was referencing
+ intel_plane_atomic_async_update()
 
-Changes in v7:
-- Rebase on top of drm-intel repository. Hopefully now will play
-  nicely with autobuilders.
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
 
-Changes in v6:
-- Rework the intel_plane_atomic_async_update due driver changed from
-  last time.
-- Removed the mutex_lock/unlock as causes a deadlock.
+ drivers/gpu/drm/i915/display/intel_display.c | 163 +------------------
+ drivers/gpu/drm/i915/intel_pm.c              |   2 +-
+ 2 files changed, 6 insertions(+), 159 deletions(-)
 
-Changes in v5:
-- Call drm_atomic_helper_async_check() from the check hook
-
-Changes in v4:
-- Set correct vma to new state for cleanup
-- Move size checks back to drivers (Ville Syrjälä)
-
-Changes in v3:
-- Move fb setting to core and use new state (Eric Anholt)
-
- .../gpu/drm/i915/display/intel_atomic_plane.c | 71 +++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_display.c  | 20 +++---
- .../drm/i915/display/intel_display_types.h    |  6 ++
- 3 files changed, 89 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index d1fcdf206da4..faa5d74e3ccf 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -365,8 +365,79 @@ void i9xx_update_planes_on_crtc(struct intel_atomic_state *state,
- 	}
- }
- 
-+static int intel_plane_atomic_async_check(struct drm_plane *plane,
-+					  struct drm_plane_state *state)
-+{
-+	struct drm_crtc_state *crtc_state;
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
-+							state->crtc);
-+	if (WARN_ON(!crtc_state))
-+		return -EINVAL;
-+
-+	/*
-+	 * When crtc is inactive or there is a modeset pending,
-+	 * wait for it to complete in the slowpath
-+	 */
-+	if (!crtc_state->active || to_intel_crtc_state(crtc_state)->update_pipe)
-+		return -EINVAL;
-+
-+	/*
-+	 * If any parameters change that may affect watermarks,
-+	 * take the slowpath. Only changing fb or position should be
-+	 * in the fastpath.
-+	 */
-+	if (plane->state->crtc != state->crtc ||
-+	    plane->state->src_w != state->src_w ||
-+	    plane->state->src_h != state->src_h ||
-+	    plane->state->crtc_w != state->crtc_w ||
-+	    plane->state->crtc_h != state->crtc_h ||
-+	    !plane->state->fb != !state->fb)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static void intel_plane_atomic_async_update(struct drm_plane *plane,
-+					    struct drm_plane_state *new_state)
-+{
-+	struct intel_atomic_state *intel_new_state =
-+		to_intel_atomic_state(new_state->state);
-+	struct intel_plane *intel_plane = to_intel_plane(plane);
-+	struct drm_crtc *crtc = plane->state->crtc;
-+	struct intel_crtc_state *new_crtc_state;
-+	struct intel_crtc *intel_crtc;
-+	int i;
-+
-+	for_each_new_intel_crtc_in_state(intel_new_state, intel_crtc,
-+					 new_crtc_state, i)
-+		WARN_ON(new_crtc_state->wm.need_postvbl_update ||
-+			new_crtc_state->update_wm_post);
-+
-+	intel_frontbuffer_track(to_intel_frontbuffer(plane->state->fb),
-+				to_intel_frontbuffer(new_state->fb),
-+				intel_plane->frontbuffer_bit);
-+
-+	plane->state->src_x = new_state->src_x;
-+	plane->state->src_y = new_state->src_y;
-+	plane->state->crtc_x = new_state->crtc_x;
-+	plane->state->crtc_y = new_state->crtc_y;
-+
-+	swap(plane->state->fb, new_state->fb);
-+
-+	if (plane->state->visible)
-+		intel_update_plane(intel_plane,
-+				   to_intel_crtc_state(crtc->state),
-+				   to_intel_plane_state(plane->state));
-+	else
-+		intel_disable_plane(intel_plane,
-+				    to_intel_crtc_state(crtc->state));
-+}
-+
- const struct drm_plane_helper_funcs intel_plane_helper_funcs = {
- 	.prepare_fb = intel_prepare_plane_fb,
- 	.cleanup_fb = intel_cleanup_plane_fb,
- 	.atomic_check = intel_plane_atomic_check,
-+	.atomic_async_check = intel_plane_atomic_async_check,
-+	.atomic_async_update = intel_plane_atomic_async_update,
- };
 diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index b51d1ceb8739..8ee74cda5b45 100644
+index 8ee74cda5b45..11540aae76a9 100644
 --- a/drivers/gpu/drm/i915/display/intel_display.c
 +++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -3158,12 +3158,6 @@ static void intel_plane_disable_noatomic(struct intel_crtc *crtc,
- 	intel_disable_plane(plane, crtc_state);
- }
+@@ -13643,6 +13643,10 @@ static int intel_atomic_check(struct drm_device *dev,
+ 	if (ret)
+ 		goto fail;
  
--static struct intel_frontbuffer *
--to_intel_frontbuffer(struct drm_framebuffer *fb)
--{
--	return fb ? to_intel_framebuffer(fb)->frontbuffer : NULL;
--}
--
- static void
- intel_find_initial_plane_obj(struct intel_crtc *intel_crtc,
- 			     struct intel_initial_plane_config *plane_config)
-@@ -14129,11 +14123,21 @@ static int intel_atomic_commit(struct drm_device *dev,
- 	struct drm_i915_private *dev_priv = to_i915(dev);
- 	int ret = 0;
- 
-+	i915_sw_fence_init(&state->commit_ready,
-+			   intel_atomic_commit_ready);
++	if (_state->legacy_cursor_update)
++		_state->async_update = !drm_atomic_helper_async_check(dev,
++								     _state);
 +
-+	if (_state->async_update) {
-+		ret = drm_atomic_helper_prepare_planes(dev, _state);
-+		if (ret)
-+			return ret;
-+		drm_atomic_helper_async_commit(dev, _state);
-+		drm_atomic_helper_cleanup_planes(dev, _state);
-+		return 0;
-+	}
-+
- 	state->wakeref = intel_runtime_pm_get(&dev_priv->runtime_pm);
+ 	intel_fbc_choose_crtc(dev_priv, state);
+ 	ret = calc_watermark_data(state);
+ 	if (ret)
+@@ -14139,34 +14143,6 @@ static int intel_atomic_commit(struct drm_device *dev,
  
  	drm_atomic_state_get(&state->base);
--	i915_sw_fence_init(&state->commit_ready,
--			   intel_atomic_commit_ready);
  
- 	/*
- 	 * The intel_legacy_cursor_update() fast path takes care
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-index 449abaea619f..00ebe5b99f25 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -1092,6 +1092,12 @@ struct cxsr_latency {
- #define to_intel_plane_state(x) container_of(x, struct intel_plane_state, base)
- #define intel_fb_obj(x) ((x) ? to_intel_bo((x)->obj[0]) : NULL)
+-	/*
+-	 * The intel_legacy_cursor_update() fast path takes care
+-	 * of avoiding the vblank waits for simple cursor
+-	 * movement and flips. For cursor on/off and size changes,
+-	 * we want to perform the vblank waits so that watermark
+-	 * updates happen during the correct frames. Gen9+ have
+-	 * double buffered watermarks and so shouldn't need this.
+-	 *
+-	 * Unset state->legacy_cursor_update before the call to
+-	 * drm_atomic_helper_setup_commit() because otherwise
+-	 * drm_atomic_helper_wait_for_flip_done() is a noop and
+-	 * we get FIFO underruns because we didn't wait
+-	 * for vblank.
+-	 *
+-	 * FIXME doing watermarks and fb cleanup from a vblank worker
+-	 * (assuming we had any) would solve these problems.
+-	 */
+-	if (INTEL_GEN(dev_priv) < 9 && state->base.legacy_cursor_update) {
+-		struct intel_crtc_state *new_crtc_state;
+-		struct intel_crtc *crtc;
+-		int i;
+-
+-		for_each_new_intel_crtc_in_state(state, crtc, new_crtc_state, i)
+-			if (new_crtc_state->wm.need_postvbl_update ||
+-			    new_crtc_state->update_wm_post)
+-				state->base.legacy_cursor_update = false;
+-	}
+-
+ 	ret = intel_atomic_prepare_commit(state);
+ 	if (ret) {
+ 		DRM_DEBUG_ATOMIC("Preparing state failed with %i\n", ret);
+@@ -14658,137 +14634,8 @@ static const struct drm_plane_funcs i8xx_plane_funcs = {
+ 	.format_mod_supported = i8xx_plane_format_mod_supported,
+ };
  
-+static inline struct intel_frontbuffer *
-+to_intel_frontbuffer(struct drm_framebuffer *fb)
-+{
-+	return fb ? to_intel_framebuffer(fb)->frontbuffer : NULL;
-+}
-+
- struct intel_hdmi {
- 	i915_reg_t hdmi_reg;
- 	int ddc_bus;
+-static int
+-intel_legacy_cursor_update(struct drm_plane *plane,
+-			   struct drm_crtc *crtc,
+-			   struct drm_framebuffer *fb,
+-			   int crtc_x, int crtc_y,
+-			   unsigned int crtc_w, unsigned int crtc_h,
+-			   u32 src_x, u32 src_y,
+-			   u32 src_w, u32 src_h,
+-			   struct drm_modeset_acquire_ctx *ctx)
+-{
+-	struct drm_i915_private *dev_priv = to_i915(crtc->dev);
+-	struct drm_plane_state *old_plane_state, *new_plane_state;
+-	struct intel_plane *intel_plane = to_intel_plane(plane);
+-	struct intel_crtc_state *crtc_state =
+-		to_intel_crtc_state(crtc->state);
+-	struct intel_crtc_state *new_crtc_state;
+-	int ret;
+-
+-	/*
+-	 * When crtc is inactive or there is a modeset pending,
+-	 * wait for it to complete in the slowpath
+-	 */
+-	if (!crtc_state->base.active || needs_modeset(crtc_state) ||
+-	    crtc_state->update_pipe)
+-		goto slow;
+-
+-	old_plane_state = plane->state;
+-	/*
+-	 * Don't do an async update if there is an outstanding commit modifying
+-	 * the plane.  This prevents our async update's changes from getting
+-	 * overridden by a previous synchronous update's state.
+-	 */
+-	if (old_plane_state->commit &&
+-	    !try_wait_for_completion(&old_plane_state->commit->hw_done))
+-		goto slow;
+-
+-	/*
+-	 * If any parameters change that may affect watermarks,
+-	 * take the slowpath. Only changing fb or position should be
+-	 * in the fastpath.
+-	 */
+-	if (old_plane_state->crtc != crtc ||
+-	    old_plane_state->src_w != src_w ||
+-	    old_plane_state->src_h != src_h ||
+-	    old_plane_state->crtc_w != crtc_w ||
+-	    old_plane_state->crtc_h != crtc_h ||
+-	    !old_plane_state->fb != !fb)
+-		goto slow;
+-
+-	new_plane_state = intel_plane_duplicate_state(plane);
+-	if (!new_plane_state)
+-		return -ENOMEM;
+-
+-	new_crtc_state = to_intel_crtc_state(intel_crtc_duplicate_state(crtc));
+-	if (!new_crtc_state) {
+-		ret = -ENOMEM;
+-		goto out_free;
+-	}
+-
+-	drm_atomic_set_fb_for_plane(new_plane_state, fb);
+-
+-	new_plane_state->src_x = src_x;
+-	new_plane_state->src_y = src_y;
+-	new_plane_state->src_w = src_w;
+-	new_plane_state->src_h = src_h;
+-	new_plane_state->crtc_x = crtc_x;
+-	new_plane_state->crtc_y = crtc_y;
+-	new_plane_state->crtc_w = crtc_w;
+-	new_plane_state->crtc_h = crtc_h;
+-
+-	ret = intel_plane_atomic_check_with_state(crtc_state, new_crtc_state,
+-						  to_intel_plane_state(old_plane_state),
+-						  to_intel_plane_state(new_plane_state));
+-	if (ret)
+-		goto out_free;
+-
+-	ret = mutex_lock_interruptible(&dev_priv->drm.struct_mutex);
+-	if (ret)
+-		goto out_free;
+-
+-	ret = intel_plane_pin_fb(to_intel_plane_state(new_plane_state));
+-	if (ret)
+-		goto out_unlock;
+-
+-	intel_frontbuffer_flush(to_intel_frontbuffer(fb), ORIGIN_FLIP);
+-	intel_frontbuffer_track(to_intel_frontbuffer(old_plane_state->fb),
+-				to_intel_frontbuffer(fb),
+-				intel_plane->frontbuffer_bit);
+-
+-	/* Swap plane state */
+-	plane->state = new_plane_state;
+-
+-	/*
+-	 * We cannot swap crtc_state as it may be in use by an atomic commit or
+-	 * page flip that's running simultaneously. If we swap crtc_state and
+-	 * destroy the old state, we will cause a use-after-free there.
+-	 *
+-	 * Only update active_planes, which is needed for our internal
+-	 * bookkeeping. Either value will do the right thing when updating
+-	 * planes atomically. If the cursor was part of the atomic update then
+-	 * we would have taken the slowpath.
+-	 */
+-	crtc_state->active_planes = new_crtc_state->active_planes;
+-
+-	if (plane->state->visible)
+-		intel_update_plane(intel_plane, crtc_state,
+-				   to_intel_plane_state(plane->state));
+-	else
+-		intel_disable_plane(intel_plane, crtc_state);
+-
+-	intel_plane_unpin_fb(to_intel_plane_state(old_plane_state));
+-
+-out_unlock:
+-	mutex_unlock(&dev_priv->drm.struct_mutex);
+-out_free:
+-	if (new_crtc_state)
+-		intel_crtc_destroy_state(crtc, &new_crtc_state->base);
+-	if (ret)
+-		intel_plane_destroy_state(plane, new_plane_state);
+-	else
+-		intel_plane_destroy_state(plane, old_plane_state);
+-	return ret;
+-
+-slow:
+-	return drm_atomic_helper_update_plane(plane, crtc, fb,
+-					      crtc_x, crtc_y, crtc_w, crtc_h,
+-					      src_x, src_y, src_w, src_h, ctx);
+-}
+-
+ static const struct drm_plane_funcs intel_cursor_plane_funcs = {
+-	.update_plane = intel_legacy_cursor_update,
++	.update_plane = drm_atomic_helper_update_plane,
+ 	.disable_plane = drm_atomic_helper_disable_plane,
+ 	.destroy = intel_plane_destroy,
+ 	.atomic_duplicate_state = intel_plane_duplicate_state,
+diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+index 75ee027abb80..14fc28a29cd2 100644
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -826,7 +826,7 @@ static bool intel_wm_plane_visible(const struct intel_crtc_state *crtc_state,
+ 	 * can happen faster than the vrefresh rate, and the current
+ 	 * watermark code doesn't handle that correctly. Cursor updates
+ 	 * which set/clear the fb or change the cursor size are going
+-	 * to get throttled by intel_legacy_cursor_update() to work
++	 * to get throttled by intel_plane_atomic_async_update() to work
+ 	 * around this problem with the watermark code.
+ 	 */
+ 	if (plane->id == PLANE_CURSOR)
 -- 
 2.22.0
 
