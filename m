@@ -2,116 +2,225 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC6FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2139C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4533222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF05222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569525576;
-	bh=HtE9YZm2xqRLii2SPx9bVlH25BMCMsFegMBTW5xe8IA=;
+	s=default; t=1569525596;
+	bh=lDV2/khWaCrqwoPtDSkiXURiNo/w2nq/BGLRwKWnt3s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ESzBG6uhmZskKnvqP0ieBp7TjA6VVaLUqayKH/O6sTPWcW29tOBeX4S8k3kBGB9g8
-	 CLAIXg2z8Q2EwZE074O3wxhKBgppLbEFNPwdzRnd9V2HmWkINpJ38KMmmciDyVKxni
-	 7qiRZUga4kgKB0mxHxBAB3YyJ+Gn3mpcG4Bwx8uE=
+	b=SuOSkSAe+ujWvOT7ImePxCfw5V8/ztKNh8ejmIhboKtcnIbN2/uo+sSQ07NmCoaQe
+	 XcoHYb/oRY5bADmN2kzI+IUgcZ8b3x8KiP/QN0uXdeaXua9i+h3GiK6eSUEni2g3kW
+	 DVcr5WceDY3NudRVi7KEzX1wjYkQRwyx+f11FcmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbfIZTTf (ORCPT
+        id S1728664AbfIZTT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:19:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37199 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfIZTTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:19:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l21so73605lje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GiZ5XkiSe0GQ+VPxuAaFzoJ9mvYMh1MShnjH8fQ9hAI=;
-        b=c9mTnqktidPTMYUOmMWXZMF1goG76CXiNifuKVesxB5dObJ0alKuAuZtRHPM7MTsE3
-         PfSbj8B+f1Tckr50tkYnebK6E1998jFhRJ+aDRYwluwmX3Z6mrcbu3NYDRsUsD6t5cuy
-         HEUQ+3kqxJ3QeSCrC5XOLkh1HS3nztUHhL2AQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GiZ5XkiSe0GQ+VPxuAaFzoJ9mvYMh1MShnjH8fQ9hAI=;
-        b=DClAFoYht0Bdb1kuP09gAvpgvFbO5wmTMJiKzrq5hiNTxL5EhksYPlW+5XIM0v+UcY
-         mCr6YpqTw5499LLo+C+KdeZ7PCj9ZC4OsueTOG2IbfUHMw7MqsRSH6jtnVokYt8kJCfA
-         RUzSDeUPs8jx98A/Iov6WWOaqM3dHehcQPb/qsIcbNTj2FHzsXSfkCRrXj50Rh0iE+fy
-         EbkleVay8KJfhD1ZkEE+phI7yNR46KFV8NIpa5MeXQayFRafq89WF/v+QxGNS3Oum2B5
-         toNuBdIXWyFhMI6XDZTEtK4i+ICbWuXoh7KogAwuDry7vN6tHOYocD4WuzxUTzKOv3G+
-         lKcw==
-X-Gm-Message-State: APjAAAWMUY/MG9jD81MBa2M0i3e/NklsWiLrXAfEDm9EQkuiAzMZR7qi
-        2M2EdJXZy/Ox1R8v9k4HjRlMMkWcRvY=
-X-Google-Smtp-Source: APXvYqwaKRirHyzmjzz2ehooLDQ5TaJdB8gcyq8Fq0VVv1MQAwBVC+J+5y/5CVVr6CpDnSvoD4GUkQ==
-X-Received: by 2002:a2e:8558:: with SMTP id u24mr151779ljj.191.1569525572386;
-        Thu, 26 Sep 2019 12:19:32 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id k28sm26452lfj.33.2019.09.26.12.19.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 12:19:31 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id w67so53686lff.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:19:31 -0700 (PDT)
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr90953lfp.61.1569525570797;
- Thu, 26 Sep 2019 12:19:30 -0700 (PDT)
+        Thu, 26 Sep 2019 15:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727707AbfIZTTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:19:55 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E6E9222C3;
+        Thu, 26 Sep 2019 19:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569525594;
+        bh=lDV2/khWaCrqwoPtDSkiXURiNo/w2nq/BGLRwKWnt3s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UqZixSfq2qYAapsIRWiOOX8W8WjKwlDOjiARabmw1Fza88xRWBB5MbLfopnH2Vq0N
+         A9YTz69jPJ95S+FCDm4Tm6I5BwtL6vRXYOSchaFUnt9uyjjUxy2psa+ZNXGwRB6Njp
+         Qp4luf7HPi9E4FDPC+LfqadJhJ6w5eS8I7IBiy9o=
+Received: by mail-qt1-f179.google.com with SMTP id l3so4293219qtr.4;
+        Thu, 26 Sep 2019 12:19:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAXmzRFujkWbs6SkRnz5/U6/sqv20j+pGrTKwRvpebckP7OFjn20
+        FHJtBylOlzbqq+fSvULPNmI5uIaLixK4ct9raA==
+X-Google-Smtp-Source: APXvYqw/LWFeEuod/2bEzvhpoq5Re0c34dJP7Z9CwXq9dlPB6PTnXxBBlMZnG5YvRmYy0v6GNNoQOcxScphRMrO/kYg=
+X-Received: by 2002:ac8:75c7:: with SMTP id z7mr5824094qtq.136.1569525593230;
+ Thu, 26 Sep 2019 12:19:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org> <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
-In-Reply-To: <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Sep 2019 12:19:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
-Message-ID: <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
-Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
+ <20190926125614.10408-1-m.szyprowski@samsung.com> <20190926140315.GA16002@pi3>
+ <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com> <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
+ <f06da64d-58de-1d51-48d4-95a6efd417d0@samsung.com>
+In-Reply-To: <f06da64d-58de-1d51-48d4-95a6efd417d0@samsung.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 26 Sep 2019 14:19:41 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+yWL3ZSnvHbGb4B0zHptQtFXjvOUJe0pNSHmH05GN-PA@mail.gmail.com>
+Message-ID: <CAL_Jsq+yWL3ZSnvHbGb4B0zHptQtFXjvOUJe0pNSHmH05GN-PA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        devicetree@vger.kernel.org,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 5:03 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
+On Thu, Sep 26, 2019 at 11:54 AM Maciej Falkowski
+<m.falkowski@samsung.com> wrote:
 >
-> I wonder if I can get an ack from an mm maintainer to merge this through
-> DRM along with the vmwgfx patches? Andrew? Matthew?
+>
+> On 9/26/19 5:35 PM, Rob Herring wrote:
+> > On Thu, Sep 26, 2019 at 9:47 AM Maciej Falkowski
+> > <m.falkowski@samsung.com> wrote:
+> >>
+> >> On 9/26/19 4:03 PM, Krzysztof Kozlowski wrote:
+> >>> On Thu, Sep 26, 2019 at 02:56:14PM +0200, Marek Szyprowski wrote:
+> >>>> From: Maciej Falkowski <m.falkowski@samsung.com>
+> >>>>
+> >>>> Convert Samsung Image Scaler to newer dt-schema format.
+> >>>>
+> >>>> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> >>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>>> ---
+> >>>> v2:
+> >>>> - Removed quotation marks from string in 'compatible' property
+> >>>> - Added if-then statement for 'clocks' and 'clock-names' property
+> >>>> - Added include directive to example
+> >>>> - Added GIC_SPI macro to example
+> >>>>
+> >>>> Best regards,
+> >>>> Maciej Falkowski
+> >>>> ---
+> >>>>    .../bindings/gpu/samsung-scaler.txt           | 27 -------
+> >>>>    .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
+> >>>>    2 files changed, 71 insertions(+), 27 deletions(-)
+> >>>>    delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >>>>    create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >>>> deleted file mode 100644
+> >>>> index 9c3d98105dfd..000000000000
+> >>>> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >>>> +++ /dev/null
+> >>>> @@ -1,27 +0,0 @@
+> >>>> -* Samsung Exynos Image Scaler
+> >>>> -
+> >>>> -Required properties:
+> >>>> -  - compatible : value should be one of the following:
+> >>>> -    (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+> >>>> -    (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+> >>>> -
+> >>>> -  - reg : Physical base address of the IP registers and length of memory
+> >>>> -      mapped region.
+> >>>> -
+> >>>> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
+> >>>> -             specific to interrupt parent.
+> >>>> -
+> >>>> -  - clocks : Clock specifier for scaler clock, according to generic clock
+> >>>> -         bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+> >>>> -
+> >>>> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+> >>>> -              on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+> >>>> -
+> >>>> -Example:
+> >>>> -    scaler@12800000 {
+> >>>> -            compatible = "samsung,exynos5420-scaler";
+> >>>> -            reg = <0x12800000 0x1294>;
+> >>>> -            interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> -            clocks = <&clock CLK_MSCL0>;
+> >>>> -            clock-names = "mscl";
+> >>>> -    };
+> >>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..af19930d052e
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >>>> @@ -0,0 +1,71 @@
+> >>>> +# SPDX-License-Identifier: GPL-2.0
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: https://protect2.fireeye.com/url?k=1ffa720fd467d028.1ffbf940-9a5a550397b4da2b&u=http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Samsung Exynos SoC Image Scaler
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Inki Dae <inki.dae@samsung.com>
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    enum:
+> >>>> +      - samsung,exynos5420-scaler
+> >>>> +      - samsung,exynos5433-scaler
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  interrupts:
+> >>>> +    maxItems: 1
+> >>>> +
+> >> Hi Krzysztof,
+> > Please work on your quoting. Reply below what you are replying to.
+> >
+> >> By "Midgard" I assume that you referred to
+> >> 'Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml'.
+> >>
+> >> I think that 'clocks' and 'clock-names' properties before if statement
+> >> serve different purpose in this schema.
+> >> It totally has about 10 different compatibles grouped in five pairs.
+> >> Then schema declares for 'clocks' minItems as one and maxItems as two and
+> >> later it overrides this boundaries with if statement for particular
+> >> compatibles.
+> > It's not an override, but an AND. So what's under 'properties' has to
+> > be the looser constraints than what is under an if/then schema.
+> Hi Rob,
+> Thank you for explaining that.
+> >> Well, then clearly, the purpose is to declare boundaries for all of
+> >> pairs and
+> >> not to provide easy-to-find definition for this properties.
+> >>
+> >> In my schema I directly set boundaries per compatible with single
+> >> if-else statement.
+> >> I didn't know what to put before then as if statement is already
+> >> self-explanatory.
+> >>
+> >> Best regards,
+> >> Maciej Falkowski
+> >>
+> >>> I am repeating myself... leave the clocks and clock-names.
+> >>>
+> >>> "I think it is worth to leave the clocks and clock-names here (could be
+> >>> empty or with min/max values for number of items). This makes it easy to
+> >>> find the properties by humans.
+> > I agree.
+> >
+> > Let me put it another way. You need to add an 'additionalProperties:
+> > false' and (I think) to make that work you'll need them listed here.
+> >
+> > Rob
+>
+> So when properties are only defined inside if-then scope,
+> they are labeled as 'additional' as they are not defined inside
+> scope of 'properties'. It is mandatory then to mention 'clock' and
+> 'clock-names' there if 'additionalProperties: false' .
 
-It would have helped to actually point to the patch itself, instead of
-just quoting the commit message.
+Yes, which makes additionalProperties a bit fragile and can't be used
+if we include a common schema. There's a fix for that coming in
+json-schema draft8 called 'unevaluatedProperties'.
 
-Looks like this:
+> However I had not set it intentionally as there are additional
+> properties in some bindings,
+> exactly 'iommu' and 'power-domains' are undocumented.
+> Is it a good way to put them in 'properties' just to be able to forbid
+> additional properties?
 
-     https://lore.kernel.org/lkml/20190926115548.44000-2-thomas_os@shipmail=
-.org/
+Simply put, they should be documented too.
 
-but why is the code in question not just using the regular page
-walkers. The commit log shows no explanation of what's so special
-about this?
-
-Is the only reason the locking magic? Because if that's the reason,
-then afaik we already have a function for that: it's
-__walk_page_range().
-
-Yes, it's static right now, but that's imho not a reason to duplicate
-all the walking (badly).
-
-Is there some other magic reason that isn't documented?
-
-              Linus
+Rob
