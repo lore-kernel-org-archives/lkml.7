@@ -2,149 +2,150 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675FBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1812C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4201D222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569522195;
-	bh=kAnUkT/BMP7a5PTeq6qNCOnmIFLH9OMOuO4IXzD2el0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DzBoKuwQ2N6ws4wCghCVnLZ2mSTMMi1pUURChJAUnoFF+RUQJIsRZUhzyoXoo9cDZ
-	 yxSFFItc+DbUPquJvI8ZoON3UPZdHVie/imEIxdr19SOdg7SoCQytXJ9ZUmlcXVrPX
-	 r7Xt3ISbAn/hs8i7FZZsnElIcr/akmpnyYIZcHRA=
+	by mail.kernel.org (Postfix) with ESMTP id BF29A222C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlp9FZYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfIZSXO (ORCPT
+        id S1728397AbfIZSYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:23:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48904 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfIZSXO (ORCPT
+        Thu, 26 Sep 2019 14:24:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35802 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbfIZSYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:23:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L0EJVcfMhAB6/N4tPdvEVipe4vp4nRtTRv+xppqN8UE=; b=w9q+m6kd3SPFn6y7MTkeNY4Jn
-        iWW/eDfgpO9FfCcmP2UsBb8wauAJzsPNeSDpxUEKoufIMcEq030SrcSQFrYrcK5ECS7Q04Xys9ID+
-        uMTDlFAYizv1XHvFtIotrtW50IjuCS5hxhdMgoza8239aNer1Znhf6Qvu+dSj+POSucwQ=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDYPu-0004Rh-Fu; Thu, 26 Sep 2019 18:23:02 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id E4A53D02DD8; Thu, 26 Sep 2019 19:23:00 +0100 (BST)
-Date:   Thu, 26 Sep 2019 11:23:00 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        Sanju R Mehta <sanju.mehta@amd.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] ASoC: amd: Registering device endpoints using MFD
- framework
-Message-ID: <20190926182300.GD2036@sirena.org.uk>
-References: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OF9salbnfkEgqvaK"
-Content-Disposition: inline
-In-Reply-To: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 26 Sep 2019 14:24:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so3624667wmi.0;
+        Thu, 26 Sep 2019 11:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wFzdQhWIvc4o013rKOjzXnkI0hw4CN3pNRalveb6WiY=;
+        b=mlp9FZYjOcggNH5ah+Qu7XKJxpriLOVjPbYSJUxzDQE8StmLy/n03BoLkT0LvUWjja
+         e5tEkQoSBIZSG+LRNf2ZwwauoeqWgj1ej4+saLQORMZ/cUaMprLri8l9hro+6lK48We2
+         0X27RKQomTIS4EI7rP9ZRw7nbZ+DscF2TqUY3402NDsR3nJPeMC3M4qfEos7bSQ2fQMe
+         kWBPIELUdz2FEmQWBzI7PUxGCMld6sqKBPWf/P7pQ3ybgW0mL3SItSsOMhlNGgBcjEkG
+         dFxwGjUZKZy4cLc8687J0pjtKJCc3j0YNLzVrewtKir/+eC/FtcwTQ14mBa+63qhAkbS
+         jGrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wFzdQhWIvc4o013rKOjzXnkI0hw4CN3pNRalveb6WiY=;
+        b=lJi49zV9u6O2a35dDSJjO+/WNb+MqqNfhRFVNir54o4DsqfII9Za+dsFkwMY3/4o+j
+         fKOIFpZIzw9MXyNJg+llCFlnVr1QsQOGcsnHahNkRu8Il0aCS83bErvtEO2KXmokX7Z7
+         cFJE4k7wGHfuyyJE/TTi8W+SgnE3ahPKaHH77HMIc0pa1ZG/J3QwGkagFs0rlOq/cGBq
+         o4+Fdnimznt/p8Nd6Miu7FBObfJd+HWznZaI9IvMlWXRBBdjnQax0pZwA4rC2I2Tyu0v
+         gaI30CzOok7EtsjzMkn7A48NPyXL1EKGX8H/gyMCDIVMPcNzYj1L2yNTPKzCCJIOuveV
+         A54g==
+X-Gm-Message-State: APjAAAXNckww9Xl36peVe5YQnywWYTQ0f6VVkcs5l5KHBud85qGEkVM0
+        qQ4mIM73C7Q7g0o+1UTGMbM=
+X-Google-Smtp-Source: APXvYqy32luIXUjI1tWlLHkiv6GgGQPfBm9QTxPNQ0lhqDsuVqOaSF3mmVMHuM4QQNFD40ARFyIDag==
+X-Received: by 2002:a7b:c10b:: with SMTP id w11mr3932165wmi.108.1569522238802;
+        Thu, 26 Sep 2019 11:23:58 -0700 (PDT)
+Received: from scw-93ddc8.cloud.online.net ([2001:bc8:4400:2400::302d])
+        by smtp.googlemail.com with ESMTPSA id t13sm4890wra.70.2019.09.26.11.23.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 26 Sep 2019 11:23:57 -0700 (PDT)
+From:   Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+To:     stefanha@redhat.com
+Cc:     davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, matiasevara@gmail.com,
+        sgarzare@redhat.com
+Subject: [PATCH] vsock/virtio: add support for MSG_PEEK
+Date:   Thu, 26 Sep 2019 18:23:34 +0000
+Message-Id: <1569522214-28223-1-git-send-email-matiasevara@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds support for MSG_PEEK. In such a case, packets are not
+removed from the rx_queue and credit updates are not sent.
 
---OF9salbnfkEgqvaK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+---
+ net/vmw_vsock/virtio_transport_common.c | 50 +++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-On Fri, Sep 27, 2019 at 04:37:35AM +0530, Ravulapati Vishnu vardhan rao wrote:
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 94cc0fa..938f2ed 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -264,6 +264,50 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
+ }
+ 
+ static ssize_t
++virtio_transport_stream_do_peek(struct vsock_sock *vsk,
++				struct msghdr *msg,
++				size_t len)
++{
++	struct virtio_vsock_sock *vvs = vsk->trans;
++	struct virtio_vsock_pkt *pkt;
++	size_t bytes, total = 0;
++	int err = -EFAULT;
++
++	spin_lock_bh(&vvs->rx_lock);
++
++	list_for_each_entry(pkt, &vvs->rx_queue, list) {
++		if (total == len)
++			break;
++
++		bytes = len - total;
++		if (bytes > pkt->len - pkt->off)
++			bytes = pkt->len - pkt->off;
++
++		/* sk_lock is held by caller so no one else can dequeue.
++		 * Unlock rx_lock since memcpy_to_msg() may sleep.
++		 */
++		spin_unlock_bh(&vvs->rx_lock);
++
++		err = memcpy_to_msg(msg, pkt->buf + pkt->off, bytes);
++		if (err)
++			goto out;
++
++		spin_lock_bh(&vvs->rx_lock);
++
++		total += bytes;
++	}
++
++	spin_unlock_bh(&vvs->rx_lock);
++
++	return total;
++
++out:
++	if (total)
++		err = total;
++	return err;
++}
++
++static ssize_t
+ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+ 				   struct msghdr *msg,
+ 				   size_t len)
+@@ -330,9 +374,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
+ 				size_t len, int flags)
+ {
+ 	if (flags & MSG_PEEK)
+-		return -EOPNOTSUPP;
+-
+-	return virtio_transport_stream_do_dequeue(vsk, msg, len);
++		return virtio_transport_stream_do_peek(vsk, msg, len);
++	else
++		return virtio_transport_stream_do_dequeue(vsk, msg, len);
+ }
+ EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
+ 
+-- 
+2.7.4
 
-> -#define ACP3x_PHY_BASE_ADDRESS 0x1240000
-> -#define	ACP3x_I2S_MODE	0
-> -#define	ACP3x_REG_START	0x1240000
-> -#define	ACP3x_REG_END	0x1250200
-> -#define I2S_MODE	0x04
-> -#define	BT_TX_THRESHOLD 26
-> -#define	BT_RX_THRESHOLD 25
-> -#define ACP3x_POWER_ON 0x00
-> -#define ACP3x_POWER_ON_IN_PROGRESS 0x01
-> -#define ACP3x_POWER_OFF 0x02
-> -#define ACP3x_POWER_OFF_IN_PROGRESS 0x03
-> +#define ACP3x_DEVS		3
-> +#define ACP3x_PHY_BASE_ADDRESS	0x1240000
-> +#define	ACP3x_I2S_MODE		0
-> +#define	ACP3x_REG_START		0x1240000
-> +#define	ACP3x_REG_END		0x1250200
-
-A large part of this appears to be unrelated indentation changes,
-these should be split out into a separate patch.
-
-> +static struct device *get_mfd_cell_dev(const char *device_name, int r)
-> +{
-> +	char auto_dev_name[25];
-> +	struct device *dev;
-> +
-> +	snprintf(auto_dev_name, sizeof(auto_dev_name),
-> +		 "%s.%d.auto", device_name, r);
-> +	dev = bus_find_device_by_name(&platform_bus_type,
-> +					NULL, auto_dev_name);
-> +	dev_info(dev, "device %s added\n", auto_dev_name);
-
-Remove this log message, it's going to be very noisy.
-
-> +		r = mfd_add_hotplug_devices(adata->parent, adata->cell,	3);
-> +		for (i = 0; i < 3 ; i++)
-> +			dev = get_mfd_cell_dev(adata->cell[i].name, i);
-
-What is this doing?  We never look at the result of this
-get_mfd_cell_dev() and having a function like this suggests that
-there's some abstraction issue here.
-
-> +	kfree(adata->cell);
->  	iounmap(adata->acp3x_base);
-> +	/*ignore device status and return driver probe error*/
-> +	return -ENODEV;
->  release_regions:
-
-This looks broken, as well as discarding error codes (making
-things harder to diagnose) it means we stop unwinding things and
-leave the rest of the resources lying around.
-
---OF9salbnfkEgqvaK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2NAgQACgkQJNaLcl1U
-h9Cxogf+MiHsjaZBRHQqc3W+QzN0VRj5XNbwBnOYX/QIWj9Qxm9xuUqQK/N7Iwsp
-HlvPLHQ1T/PDhEu+zA+EXWKRax2A56I+C/XyhnoqixUdtJolhiNB5Zw3y5MntaSY
-zzDm+bvcfGLhm6pjDjvsqCKoPBqDcFrh6UbB042bcGvRXURvPZZIroogzbckGplD
-fbRU1BcBrX5ra1yA3nQ+S0QHxbw3ZvwCntDbTMzmCPohGqCFznUxw3ixHoBEavv6
-EjMSaar8T0mZbptkpbt0BAlIEug/M13HL7JqRPJ/7iRrU+QYEJqQtdR/RuxfNBsq
-VVzy6HUsacBj2tH67Z+TZ+VOKdKKew==
-=9AzB
------END PGP SIGNATURE-----
-
---OF9salbnfkEgqvaK--
