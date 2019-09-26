@@ -2,202 +2,105 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D3DC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CD3C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A3F222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D43222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SrfXk6WH"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FDwis0Me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfIZLT2 (ORCPT
+        id S1726487AbfIZLTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:19:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49878 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfIZLT1 (ORCPT
+        Thu, 26 Sep 2019 07:19:31 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40019 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfIZLT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:19:27 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBJJCK039733;
-        Thu, 26 Sep 2019 06:19:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569496759;
-        bh=Xv9IdSYQH2Wyjdje4PEB2rgCyL+w8guQKyTJ3UYqNXA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SrfXk6WHqn9jGxprRMidAyY0yH/2yI4Nm1ZT9HEFNvmYTbsB2JKRaZMc2ZxiPHbQs
-         pOFop1bs2vUOjIXSTbGoSdk8nZxEP7ll84apMbfZT7z4PB9JmdXjKuKqxwuL3GZol0
-         EHLXfBV3gdMMi0lqOYeROEBa0ITEvad6E5Wg2JUU=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBJJxc078284
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Sep 2019 06:19:19 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:19:11 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:19:19 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBJAdu013885;
-        Thu, 26 Sep 2019 06:19:17 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 3/3] dmaengine: ti: edma: Add support for handling reserved channels
-Date:   Thu, 26 Sep 2019 14:19:54 +0300
-Message-ID: <20190926111954.9184-4-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190926111954.9184-1-peter.ujfalusi@ti.com>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 26 Sep 2019 07:19:29 -0400
+Received: by mail-qt1-f193.google.com with SMTP id f7so2336711qtq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 04:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=fYPToXR0NbT6CEGxTuAqdgHd5+edDYqh00rkxBfwc+g=;
+        b=FDwis0Men9NI9YQN4z3fTSsiW3WRxGnkwpSNIUznkIm9T9QlUki5GrSyFpzt0k9IxA
+         /wZ/ZBxP8iTaECWgBw33oNZfTxFbQEnW1FtPGpCaSAOCF8pnITk0E5QFliWObZ1CLjdX
+         tpIUvr1OsnhE+cK8rRx+MtEopb0zkDjFOtdIeulag7FO6DO3+GlUV/C6LCNrQ9D4ePfA
+         uiksPXhP+iH+cP9/pg0g4tP0zxRrG5ZNqlUWavoAX4K8s6iCeAuLfMwmx7R8nUoSYGVJ
+         8uCjyWHijpa8ZPr8Ex93VILlJU8A3/jAu3NyWQNi2YPSR2iUhv16hk7CzyXChdGfiQlz
+         qrog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=fYPToXR0NbT6CEGxTuAqdgHd5+edDYqh00rkxBfwc+g=;
+        b=jSVZtuovo0xm8H8Bp0bDOjpsn/nW8VMf7tHw0xDqMdpSfMrV1YsmXvMzsfZrwGRmL6
+         RrfZOCc8ys3lufsdGEPjpJ0dBu/3YLHhQNn/cOYBYgTPtR9rA1aOhObWR1ClgY1JYgsK
+         v06WmaMjnTI3YJcwrcZjLU4uCAEFYyWejsAOIGZIWMTYU+0ChvGQrrxE5DuzOtTzzz6Y
+         IAB/dIbJWVgQRvTofYCxvCyZpRpC+c3p1kBTlXL0mQ4lmRriYGQ4Zmg/Vvtii56rm3xy
+         PG6lvYrXkpAlX0u04WHnvHM4riX7rVqB6puerZpfrVDEgM+xEewrdDBap/MrXcglLJfj
+         j0xQ==
+X-Gm-Message-State: APjAAAXq6pCv4pKV5fG/eDos+U2/fCbdqfzmjk5XTW/7L5IVqEflkkgg
+        kLPRaxj6x59cDClguKtAPCK0epmBO+qbrg==
+X-Google-Smtp-Source: APXvYqwV2ycsL7eT1GE5Ae675yE7aehFn4ca0zlLCKzexIiFu9hFxuG6zLao80D35lhl4n5Uxk+M5g==
+X-Received: by 2002:ac8:41ca:: with SMTP id o10mr3194278qtm.352.1569496768610;
+        Thu, 26 Sep 2019 04:19:28 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 63sm875654qkh.82.2019.09.26.04.19.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 04:19:28 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
+Date:   Thu, 26 Sep 2019 07:19:27 -0400
+Message-Id: <C8DA5249-2DEB-47D5-937E-5A774B1CB08B@lca.pw>
+References: <20190926072645.GA20255@dhcp22.suse.cz>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <20190926072645.GA20255@dhcp22.suse.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+X-Mailer: iPhone Mail (17A844)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like paRAM slots, channels could be used by other cores and in this case
-we need to make sure that the driver do not alter these channels.
 
-Handle the generic dma-channel-mask property to mark channels in a bitmap
-which can not be used by Linux and convert the legacy rsv_chans if it is
-provided by platform_data.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/edma.c | 59 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 6 deletions(-)
+> On Sep 26, 2019, at 3:26 AM, Michal Hocko <mhocko@kernel.org> wrote:
+>=20
+> OK, this is using for_each_online_cpu but why is this a problem? Have
+> you checked what the code actually does? Let's say that online_pages is
+> racing with cpu hotplug. A new CPU appears/disappears from the online
+> mask while we are iterating it, right? Let's start with cpu offlining
+> case. We have two choices, either the cpu is still visible and we update
+> its local node configuration even though it will disappear shortly which
+> is ok because we are not touching any data that disappears (it's all
+> per-cpu). Case when the cpu is no longer there is not really
+> interesting. For the online case we might miss a cpu but that should be
+> tolerateable because that is not any different from triggering the
+> online independently of the memory hotplug. So there has to be a hook
+> from that code path as well. If there is none then this is buggy
+> irrespective of the locking.
+>=20
+> Makes sense?
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ba7c4f07fcd6..03c9c6296006 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -260,6 +260,13 @@ struct edma_cc {
- 	 */
- 	unsigned long *slot_inuse;
- 
-+	/*
-+	 * For tracking reserved channels used by DSP.
-+	 * If the bit is cleared, the channel is allocated to be used by DSP
-+	 * and Linux must not touch it.
-+	 */
-+	unsigned long *channels_mask;
-+
- 	struct dma_device		dma_slave;
- 	struct dma_device		*dma_memcpy;
- 	struct edma_chan		*slave_chans;
-@@ -716,6 +723,12 @@ static int edma_alloc_channel(struct edma_chan *echan,
- 	struct edma_cc *ecc = echan->ecc;
- 	int channel = EDMA_CHAN_SLOT(echan->ch_num);
- 
-+	if (!test_bit(echan->ch_num, ecc->channels_mask)) {
-+		dev_err(ecc->dev, "Channel%d is reserved, can not be used!\n",
-+			echan->ch_num);
-+		return -EINVAL;
-+	}
-+
- 	/* ensure access through shadow region 0 */
- 	edma_or_array2(ecc, EDMA_DRAE, 0, EDMA_REG_ARRAY_INDEX(channel),
- 		       EDMA_CHANNEL_BIT(channel));
-@@ -2250,7 +2263,7 @@ static int edma_probe(struct platform_device *pdev)
- 	struct edma_soc_info	*info = pdev->dev.platform_data;
- 	s8			(*queue_priority_mapping)[2];
- 	int			i, off;
--	const s16		(*rsv_slots)[2];
-+	const s16		(*reserved)[2];
- 	const s16		(*xbar_chans)[2];
- 	int			irq;
- 	char			*irq_name;
-@@ -2331,15 +2344,32 @@ static int edma_probe(struct platform_device *pdev)
- 	if (!ecc->slot_inuse)
- 		return -ENOMEM;
- 
-+	ecc->channels_mask = devm_kcalloc(dev,
-+					   BITS_TO_LONGS(ecc->num_channels),
-+					   sizeof(unsigned long), GFP_KERNEL);
-+	if (!ecc->channels_mask)
-+		return -ENOMEM;
-+
-+	/* Mark all channels available initially */
-+	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-+
- 	ecc->default_queue = info->default_queue;
- 
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
--		rsv_slots = info->rsv->rsv_slots;
--		if (rsv_slots) {
--			for (i = 0; rsv_slots[i][0] != -1; i++)
--				bitmap_set(ecc->slot_inuse, rsv_slots[i][0],
--					   rsv_slots[i][1]);
-+		reserved = info->rsv->rsv_slots;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_set(ecc->slot_inuse, reserved[i][0],
-+					   reserved[i][1]);
-+		}
-+
-+		/* Clear channels not usable for Linux */
-+		reserved = info->rsv->rsv_chans;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_clear(ecc->channels_mask, reserved[i][0],
-+					     reserved[i][1]);
- 		}
- 	}
- 
-@@ -2399,6 +2429,7 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	if (!ecc->legacy_mode) {
- 		int lowest_priority = 0;
-+		unsigned int array_max;
- 		struct of_phandle_args tc_args;
- 
- 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
-@@ -2420,6 +2451,18 @@ static int edma_probe(struct platform_device *pdev)
- 				info->default_queue = i;
- 			}
- 		}
-+
-+		/* See if we have optional dma-channel-mask array */
-+		array_max = DIV_ROUND_UP(ecc->num_channels, BITS_PER_TYPE(u32));
-+		ret = of_property_read_variable_u32_array(node,
-+						"dma-channel-mask",
-+						(u32 *)ecc->channels_mask,
-+						1, array_max);
-+		if (ret > 0 && ret != array_max)
-+			dev_warn(dev, "dma-channel-mask is not complete.\n");
-+		else if (ret == -EOVERFLOW || ret == -ENODATA)
-+			dev_warn(dev,
-+				 "dma-channel-mask is out of range or empty\n");
- 	}
- 
- 	/* Event queue priority mapping */
-@@ -2437,6 +2480,10 @@ static int edma_probe(struct platform_device *pdev)
- 	edma_dma_init(ecc, legacy_mode);
- 
- 	for (i = 0; i < ecc->num_channels; i++) {
-+		/* Do not touch reserved channels */
-+		if (!test_bit(i, ecc->channels_mask))
-+			continue;
-+
- 		/* Assign all channels to the default queue */
- 		edma_assign_channel_eventq(&ecc->slave_chans[i],
- 					   info->default_queue);
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+This sounds to me requires lots of audits and testing. Also, someone who is m=
+ore
+familiar with CPU hotplug should review this patch. Personally, I am no fun o=
+f
+operating on an incorrect CPU mask to begin with, things could go wrong real=
+ly
+quickly...=
