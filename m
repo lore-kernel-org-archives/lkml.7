@@ -2,75 +2,213 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1103BC4360D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFBBC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC02D222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569464976;
-	bh=gKfGul5rMc5lOK9jOOGta+8Tyf25lv4J5Sze6uJLb4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vmlpnTv+1fDcHdjLAXD/huAPXqNxxh8QHHijKiR9GwjJp+z3FrNXbSVNwlybvLr+I
-	 yOH4zFXoCXaTdlf4JaihEoNlweVtD/+KoxfZi9ax2zUGrlAJp3UVEUXHftyd+5FBUd
-	 uhHbGJzpiNTgwLJkCFBzvPQ4MFfvcWaCY/NVbsXY=
+	by mail.kernel.org (Postfix) with ESMTP id 3FDB021A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389663AbfIZC3g (ORCPT
+        id S2389934AbfIZCgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 22:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41528 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 22:36:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49836 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733043AbfIZC3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 22:29:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727880AbfIZCgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 22:36:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCCD222BE;
-        Thu, 26 Sep 2019 02:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569464975;
-        bh=gKfGul5rMc5lOK9jOOGta+8Tyf25lv4J5Sze6uJLb4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kjL4U/3R454A4GBihq/7Flb3hrZ6dLUyxf14e/UsJsxdOqZchVXFs1VBmYqVOit1D
-         cB5brovsFqiTYCseK6y5fLJby/JBCFrMrF0wpZ96MqkwuuxOuqs9tnpFaGZcKkNg3v
-         lKKlpSbGuKpy9pXg02rxVOM7Qv0e3oFOIOhsKMVU=
-Date:   Wed, 25 Sep 2019 21:29:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        linux-scsi@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
-Message-ID: <20190926022933.GB238374@google.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-19-efremov@linux.com>
- <yq1wody4eml.fsf@oracle.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8B94018C892C;
+        Thu, 26 Sep 2019 02:36:11 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D4CC5D6A7;
+        Thu, 26 Sep 2019 02:36:10 +0000 (UTC)
+Date:   Wed, 25 Sep 2019 20:36:09 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     kwankhede@nvidia.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, yi.y.sun@intel.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        yan.y.zhao@intel.com, shaopeng.he@intel.com, chenbo.xia@intel.com,
+        jun.j.tian@intel.com
+Subject: Re: [PATCH v2 02/13] vfio_pci: refine user config reference in
+ vfio-pci module
+Message-ID: <20190925203609.770a706c@x1.home>
+In-Reply-To: <1567670370-4484-3-git-send-email-yi.l.liu@intel.com>
+References: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
+        <1567670370-4484-3-git-send-email-yi.l.liu@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1wody4eml.fsf@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 26 Sep 2019 02:36:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:22:42PM -0400, Martin K. Petersen wrote:
-> 
-> Denis,
-> 
-> > Replace the magic constant (6) with define PCI_STD_NUM_BARS
-> > representing the number of PCI BARs.
-> 
-> Applied to 5.4/scsi-fixes. Thanks!
+On Thu,  5 Sep 2019 15:59:19 +0800
+Liu Yi L <yi.l.liu@intel.com> wrote:
 
-I think this depends on a previous patch that actually adds the
-PCI_STD_NUM_BARS definition.  It will probably be easier if I apply
-the whole series via the PCI tree.
+> This patch adds three fields in struct vfio_pci_device to pass the user
+> configs of vfio-pci module to some functions which could be common in
+> future usage.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         | 24 +++++++++++++++---------
+>  drivers/vfio/pci/vfio_pci_private.h |  9 +++++++--
+>  2 files changed, 22 insertions(+), 11 deletions(-)
 
-Bjorn
+A subtle behavioral difference here is that disable_idle_d3 and
+nointxmask are runtime modifiable parameters, if the value is changed
+in sysfs the device will adopt the new behavior on its next
+transition.  After this patch, each device operates in the mode defined
+at the time it was probed.  Should we maybe refresh the value at key
+points, like the user opening or releasing the device so that it tracks
+the module parameter?  I think we could defend not changing the
+behavior of a device while it's in use by a user.  Otherwise we might
+want to make the module parameter read-only to avoid the
+inconsistency.
+
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 38271df..fed2687 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -69,7 +69,8 @@ static unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
+>  	unsigned char max_busnr;
+>  	unsigned int decodes;
+>  
+> -	if (single_vga || !vfio_vga_disabled() || pci_is_root_bus(pdev->bus))
+> +	if (single_vga || !vfio_vga_disabled(vdev) ||
+> +		pci_is_root_bus(pdev->bus))
+>  		return VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
+>  		       VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM;
+>  
+> @@ -273,7 +274,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	if (!vdev->pci_saved_state)
+>  		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
+>  
+> -	if (likely(!nointxmask)) {
+> +	if (likely(!vdev->nointxmask)) {
+>  		if (vfio_pci_nointx(pdev)) {
+>  			pci_info(pdev, "Masking broken INTx support\n");
+>  			vdev->nointx = true;
+> @@ -310,7 +311,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	} else
+>  		vdev->msix_bar = 0xFF;
+>  
+> -	if (!vfio_vga_disabled() && vfio_pci_is_vga(pdev))
+> +	if (!vfio_vga_disabled(vdev) && vfio_pci_is_vga(pdev))
+>  		vdev->has_vga = true;
+>  
+>  
+> @@ -436,7 +437,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+>  
+>  	vfio_pci_try_bus_reset(vdev);
+>  
+> -	if (!disable_idle_d3)
+> +	if (!vdev->disable_idle_d3)
+>  		vfio_pci_set_power_state(vdev, PCI_D3hot);
+>  }
+>  
+> @@ -1304,6 +1305,11 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	spin_lock_init(&vdev->irqlock);
+>  	mutex_init(&vdev->ioeventfds_lock);
+>  	INIT_LIST_HEAD(&vdev->ioeventfds_list);
+> +	vdev->nointxmask = nointxmask;
+> +#ifdef CONFIG_VFIO_PCI_VGA
+> +	vdev->disable_vga = disable_vga;
+> +#endif
+> +	vdev->disable_idle_d3 = disable_idle_d3;
+>  
+>  	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
+>  	if (ret) {
+> @@ -1328,7 +1334,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	vfio_pci_probe_power_state(vdev);
+>  
+> -	if (!disable_idle_d3) {
+> +	if (!vdev->disable_idle_d3) {
+>  		/*
+>  		 * pci-core sets the device power state to an unknown value at
+>  		 * bootup and after being removed from a driver.  The only
+> @@ -1359,7 +1365,7 @@ static void vfio_pci_remove(struct pci_dev *pdev)
+>  	kfree(vdev->region);
+>  	mutex_destroy(&vdev->ioeventfds_lock);
+>  
+> -	if (!disable_idle_d3)
+> +	if (!vdev->disable_idle_d3)
+>  		vfio_pci_set_power_state(vdev, PCI_D0);
+>  
+>  	kfree(vdev->pm_save);
+> @@ -1594,7 +1600,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
+>  		if (!ret) {
+>  			tmp->needs_reset = false;
+>  
+> -			if (tmp != vdev && !disable_idle_d3)
+> +			if (tmp != vdev && !tmp->disable_idle_d3)
+>  				vfio_pci_set_power_state(tmp, PCI_D3hot);
+>  		}
+>  
+> @@ -1610,7 +1616,7 @@ static void __exit vfio_pci_cleanup(void)
+>  	vfio_pci_uninit_perm_bits();
+>  }
+>  
+> -static void __init vfio_pci_fill_ids(void)
+> +static void __init vfio_pci_fill_ids(char *ids)
+>  {
+>  	char *p, *id;
+>  	int rc;
+> @@ -1665,7 +1671,7 @@ static int __init vfio_pci_init(void)
+>  	if (ret)
+>  		goto out_driver;
+>  
+> -	vfio_pci_fill_ids();
+> +	vfio_pci_fill_ids(&ids[0]);
+
+Or just 'ids'.  Thanks,
+
+Alex
+
+>  
+>  	return 0;
+>  
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index f12d92c..68521d2 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -122,6 +122,11 @@ struct vfio_pci_device {
+>  	struct list_head	dummy_resources_list;
+>  	struct mutex		ioeventfds_lock;
+>  	struct list_head	ioeventfds_list;
+> +	bool			nointxmask;
+> +#ifdef CONFIG_VFIO_PCI_VGA
+> +	bool			disable_vga;
+> +#endif
+> +	bool			disable_idle_d3;
+>  };
+>  
+>  #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
+> @@ -135,10 +140,10 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+>  	return (pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA;
+>  }
+>  
+> -static inline bool vfio_vga_disabled(void)
+> +static inline bool vfio_vga_disabled(struct vfio_pci_device *vdev)
+>  {
+>  #ifdef CONFIG_VFIO_PCI_VGA
+> -	return disable_vga;
+> +	return vdev->disable_vga;
+>  #else
+>  	return true;
+>  #endif
+
