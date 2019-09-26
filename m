@@ -2,133 +2,115 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E907C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9567AC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36DE21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7375921A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbfIZLKs (ORCPT
+        id S1725977AbfIZLM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:10:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47284 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfIZLKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:10:47 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 920F68073E; Thu, 26 Sep 2019 13:10:29 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 13:10:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Tony Lindgren <tony@atomide.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH v9 01/15] leds: multicolor: Add sysfs interface definition
-Message-ID: <20190926111043.GA9310@amd>
-References: <20190925174616.3714-1-dmurphy@ti.com>
- <20190925174616.3714-2-dmurphy@ti.com>
+        Thu, 26 Sep 2019 07:12:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55558 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfIZLM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 07:12:29 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 099E4155E0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:12:29 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id f63so883907wma.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 04:12:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UPVi3tI8CEMemOHf/10he6CY8X+DfeIz3MO+IJsehU0=;
+        b=jNrvTA8rrWkf+u82f2nAWumDhMh6lmg91/xYy/kTV7bpyA3bwA1Q0QHyxsqKAPRAT6
+         9Fx4gEsz5+JOANKrVx5QxhZBiHNjQsz00qJcLAsuqse5C75A7lgik9ZhF96WhB2hPiVU
+         tBuduJLZiBjogap0GNYArLnL2AYfFx4UsN3i2c3LXD/0Xp52IzssqTapJxqKBceABDmV
+         nykFMShdSawCzwWSP8S8Ua/IYLVmgJbdJ8yZptaehGzcfRhqMv7L5rASym13xzGSv8Br
+         teZz8Kpf4W+wvpUn5hPVBz/5eVnK8KucGmde4Jtr4lTJBLGYwG+BLCILZTtzJQ3+kH7o
+         umYw==
+X-Gm-Message-State: APjAAAU084XJk+SoL7lwVeCcR41ArwzebqQkSRm75jHX4B7e/QVnzgCZ
+        3DmCL7okxBM6G3I4UNSaRY5Q3RpAa3iDtkRKRiHIGPWwYtyzfz+IQpSkfFF5LSQTsTYNIYTJRHB
+        DzsnL0o2lpa6YPgu4IM6qLm7B
+X-Received: by 2002:a7b:cd08:: with SMTP id f8mr2301015wmj.87.1569496347645;
+        Thu, 26 Sep 2019 04:12:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwYAIxJxco55ohaG5xtpGpLhZETW7NdZfp6F+5aWwyURr6YjlwB8rYcUNivGMCuXE7oSiCKkw==
+X-Received: by 2002:a7b:cd08:: with SMTP id f8mr2300996wmj.87.1569496347377;
+        Thu, 26 Sep 2019 04:12:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id r18sm1705421wme.48.2019.09.26.04.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 04:12:26 -0700 (PDT)
+Subject: Re: [PATCH 2/2] KVM: x86: Expose CLZERO and XSAVEERPTR to the guest
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+References: <20190925213721.21245-1-bigeasy@linutronix.de>
+ <20190925213721.21245-3-bigeasy@linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dedea670-ca42-738e-a5ab-bdf87646fc5f@redhat.com>
+Date:   Thu, 26 Sep 2019 13:12:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Content-Disposition: inline
-In-Reply-To: <20190925174616.3714-2-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190925213721.21245-3-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25/09/19 23:37, Sebastian Andrzej Siewior wrote:
+> I was surprised to see that the guest reported `fxsave_leak' while the
+> host did not. After digging deeper I noticed that the bits are simply
+> masked out during enumeration.
+> The XSAVEERPTR feature is actually a bug fix on AMD which means the
+> kernel can disable a workaround.
+> While here, I've seen that CLZERO is also masked out. This opcode is
+> unprivilged so exposing it to the guest should not make any difference.
+> 
+> Pass CLZERO and XSAVEERPTR to the guest if available on the host.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/x86/kvm/cpuid.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 22c2720cd948e..0ae9194d0f4d2 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -473,6 +473,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>  
+>  	/* cpuid 0x80000008.ebx */
+>  	const u32 kvm_cpuid_8000_0008_ebx_x86_features =
+> +		F(CLZERO) | F(XSAVEERPTR) |
+>  		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+>  		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
+>  
+> 
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied (on top of Jim's CLZERO patch, so removing the CLZERO reference
+in the commit message).
 
-Hi!
-
-> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation=
-/leds/leds-class-multicolor.rst
-> new file mode 100644
-> index 000000000000..87a1588d7619
-> --- /dev/null
-> +++ b/Documentation/leds/leds-class-multicolor.rst
-> @@ -0,0 +1,96 @@
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Multi Color LED handling under Linux
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Description
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +The multi color class groups monochrome LEDs and allows controlling two
-> +aspects of the final combined color: hue and lightness. The former is
-> +controlled via <color>_intensity files and the latter is controlled
-> +via brightness file.
-> +
-> +For more details on hue and lightness notions please refer to
-> +https://en.wikipedia.org/wiki/CIECAM02.
-> +
-> +Note that intensity files only cache the written value and the actual
-> +change of hardware state occurs upon writing brightness file. This
-> +allows for changing many factors of the perceived color in a virtually
-> +unnoticeable way for the human observer.
-
-So unlike previous versions, userspace will need to write 4 files
-instead of one in the common case.
-
-> +Directory Layout Example
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
-> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
-> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
-> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
-> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
-> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
-
-Permissions are way off here.
-
-> +A user first writes the color LED brightness file with the brightness le=
-vel that
-> +is necessary to achieve a blueish violet output from the RGB LED group.
-> +
-> +echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
-> +echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
-> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
-
-No, you can't tell what kind of color this will result in.
-
-Will you be on ELCE/OSS in Lyon?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2MnLMACgkQMOfwapXb+vILagCeOf78G3cZfahKAYIBij0zbt7n
-2pwAoLQrjSBz+1Qdgi/kjANengzMfcM2
-=mTZW
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
+Paolo
