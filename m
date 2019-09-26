@@ -2,126 +2,156 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8134AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E80C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5287D22459
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569530280;
-	bh=tl77Fa8o20Wcg+cK5PotYO32YWsmNhCUsbBLzQpNIyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FyGXhO7fwqCo0Yis4dh9aXX51H6mTwkFENrQIIl4+i034YnpajtjzTVxIFB/ofxnk
-	 Hj0HL2d2agYjjeJChdb9QD4K2aEPVlPD3eyLgxsyX3FW8lQiOGkFXnJyrgbPFp+IIw
-	 q1s3Ek7QrmNgI3p8EqbRCxR9ekj2jt/LUGJkzpIY=
+	by mail.kernel.org (Postfix) with ESMTP id 68C37222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5spxzCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfIZUh7 (ORCPT
+        id S1728852AbfIZUm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfIZUh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:37:59 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5A1222C3;
-        Thu, 26 Sep 2019 20:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569530278;
-        bh=tl77Fa8o20Wcg+cK5PotYO32YWsmNhCUsbBLzQpNIyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+rOV8/bubTG9L7PMtt35j56ED88jy7zgGX/fqzv7qF2xmJ5r0qe7dD6cPQRqwPi2
-         bP5xugJnHMkk7AOz8pEKIPoMj5hizkC5qhXpSRBsylY19uJPkyIxQMuxRfNaDCs8TF
-         +DTKKw0wnva0tZl3wwfA8D8sD+Io/ep9TzwGXA5g=
-Date:   Thu, 26 Sep 2019 13:37:56 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid data corruption by
- forbidding SSR overwrite
-Message-ID: <20190926203755.GA142676@gmail.com>
-Mail-Followup-To: Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20190816030334.81035-1-yuchao0@huawei.com>
+        Thu, 26 Sep 2019 16:42:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42283 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbfIZUm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 16:42:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n14so262150wrw.9;
+        Thu, 26 Sep 2019 13:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v7VtkEEG2LAz9vVB8MM5QKckRl92FYJ98jBUqUE9BwA=;
+        b=u5spxzCLQa36RysMhpR/QTwiffH9apHOymwGEfBlshrnSYnVSdLYQTuKSRlBahGMTW
+         kljWooiuX6R0VxnZ0cUGreGtbkLL9qX/hR9bgMaaO6BjvUQ2aXWDK1tGQ9rfNxbwiSSq
+         fFKbhVrD0RlruSVqYVz4o7GMqXxhsRmZSh5NM7ExWQGIb1vFcF9k/a6uJppHVwmJvoAI
+         DxBgnAhlPvJgoCw4QX6sBYfSFqmbXaqFKW0euCCzG5haAewy1g588lLp/JBDHpxMifyq
+         hpWz6Qe4YXpxYViS+EpdOMW0DgRg2lSQ2sQAGcNWsWwEIQD/GGh4NnFfY4+bvjmZdkId
+         VAPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v7VtkEEG2LAz9vVB8MM5QKckRl92FYJ98jBUqUE9BwA=;
+        b=ub8Q4e+gZZdS9Nb6S/YJKur5BZAIO11nucv7TYsw/TAi8u7Tis42rYwKFKqMXrz92a
+         rT3O5eybi4b0wacHVAc+ZE+rBPOMXXM/kMTNn46qY7XlAjzYwNQdoha+/IhyKgaWS5id
+         2y/edRJd2qZFjmfkjoIDJJCSXuD0W+XFn4600+F3Jw4pAwsZq9ScMq/CjrBK2xRyEfjB
+         ZoYtnchxbnmwdP8TnnVSAqZoBs1FXLOP/qrAaNBbYr1tdOqTF8jK08RLvWopXR7tCMOK
+         347i6wZePfwJM4gYAEsnnun7TD+fv9p2zn24eKCtq0tE060JmnxvG3CZp1HRICpj4Xby
+         jYzg==
+X-Gm-Message-State: APjAAAUuljqjaiGOTiPGguWGVUrisM0Ymuf4TvtPjpVTlLIsg+55EgXj
+        ROHA1APvgZpDQMIam0f3Vmk=
+X-Google-Smtp-Source: APXvYqx3sIDOdlofsaPVb8yY8fHJlIBsTAzoi31CxPZQoIgTKNLCuIpHCtrMLYLGQD0LcwEvLq25Nw==
+X-Received: by 2002:a5d:6306:: with SMTP id i6mr243312wru.323.1569530546588;
+        Thu, 26 Sep 2019 13:42:26 -0700 (PDT)
+Received: from pc ([5.158.153.52])
+        by smtp.gmail.com with ESMTPSA id r2sm5722658wma.1.2019.09.26.13.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 13:42:25 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 22:42:17 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Florian Weimer <fweimer@redhat.com>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: [PATCH v5 0/1] random: getrandom(2): warn on large CRNG waits,
+ introduce new flags
+Message-ID: <20190926204217.GA1366@pc>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816030334.81035-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:03:34AM +0800, Chao Yu wrote:
-> There is one case can cause data corruption.
-> 
-> - write 4k to fileA
-> - fsync fileA, 4k data is writebacked to lbaA
-> - write 4k to fileA
-> - kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet
-> - write 4k to fileB
-> - kworker flush 4k to lbaA due to SSR
-> - SPOR -> dnode with lbaA will be recovered, however lbaA contains fileB's
-> data
-> 
-> One solution is tracking all fsynced file's block history, and disallow
-> SSR overwrite on newly invalidated block on that file.
-> 
-> However, during recovery, no matter the dnode is flushed or fsynced, all
-> previous dnodes until last fsynced one in node chain can be recovered,
-> that means we need to record all block change in flushed dnode, which
-> will cause heavy cost, so let's just use simple fix by forbidding SSR
-> overwrite directly.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/segment.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 9d9d9a050d59..69b3b553ee6b 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -2205,9 +2205,11 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
->  		if (!f2fs_test_and_set_bit(offset, se->discard_map))
->  			sbi->discard_blks--;
->  
-> -		/* don't overwrite by SSR to keep node chain */
-> -		if (IS_NODESEG(se->type) &&
-> -				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
-> +		/*
-> +		 * SSR should never reuse block which is checkpointed
-> +		 * or newly invalidated.
-> +		 */
-> +		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
->  			if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
->  				se->ckpt_valid_blocks++;
->  		}
-> -- 
+Summary / Changelog-v5:
 
-FYI, this commit caused xfstests generic/064 to start failing:
+  - Add the new flags GRND_INSECURE and GRND_SECURE_UNBOUNDED_INITIAL_WAIT
+    to getrandom(2), instead of introducing a new getrandom2(2) system
+    call, which nobody liked.
 
-$ kvm-xfstests -c f2fs generic/064
-...
-generic/064 3s ... 	[13:36:37][    5.946293] run fstests generic/064 at 2019-09-26 13:36:37
- [13:36:41]- output mismatch (see /results/f2fs/results-default/generic/064.out.bad)
-    --- tests/generic/064.out	2019-09-18 04:53:46.000000000 -0700
-    +++ /results/f2fs/results-default/generic/064.out.bad	2019-09-26 13:36:41.533018683 -0700
-    @@ -1,2 +1,3 @@
-     QA output created by 064
-     Extent count after inserts is in range
-    +extents mismatched before = 1 after = 50
-    ...
-    (Run 'diff -u /root/xfstests/tests/generic/064.out /results/f2fs/results-default/generic/064.out.bad'  to see the entire diff)
-Ran: generic/064
-Failures: generic/064
-Failed 1 of 1 tests
+  - Fix a bug discovered through testing where "int ret =
+    wait_event_interruptible_timeout(waitq, true, MAX_SCHEDULE_TIMEOUT)"
+    returns failure (-1) due to implicit LONG_MAX => int truncation
+
+  - WARN if a process is stuck on getrandom(,,flags=0) for more than 30
+    seconds ... defconfig and bootparam configurable
+
+  - Add documentation for "random.getrandom_wait_threshold" kernel param
+
+  - Extra comments @ include/uapi/linux/random.h and random.c::getrandom.
+    Explicit recommendations to *exclusively* use the new flags.
+
+  - GRND_INSECURE never issue any warning, even if CRNG is not inited.
+    Similarly for GRND_SECURE_UNBOUNDED_INITIAL_WAIT, no matter how
+    big the unbounded wait is.
+
+In a reply to the V4 patch, Linus posted a related patch [*] with the
+following additions:
+
+  - Drop the original random.c behavior of having each /dev/urandom
+    "CRNG not inited" warning also _reset_ the crng_init_cnt entropy.
+
+    This is not included in this patch, as IMHO this can be done as a
+    separate patch on top.
+
+ - Limit GRND_RANDOM max count/buflen to 32MB instead of 2GB.  This
+   is very sane obviously, and can be done in a separate patch on
+   top.
+
+   This V5 patch just tries to be as conservative as possible.
+
+ - GRND_WAIT_ENTROPY and GRND_EXCPLICIT: AFAIK these were primarily
+   added so that getrandom(,,flags=0) can be changed to return
+   weaker non-blocking crypto from non-inited CRG in a possible
+   future.
+
+   I hope we don't have to resort to that extreme measure.. Hopefully
+   the WARN() on this patch will be enough in nudging distributions to
+   enable more hwrng sources (RDRAND, etc.) .. and also for the
+   user-space developres badly pointed at (hi GDM and Qt) to fix their
+   code.
+
+[*] https://lkml.kernel.org/r/CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com
+
+Ahmed S. Darwish (1):
+  random: getrandom(2): warn on large CRNG waits, introduce new flags
+
+ .../admin-guide/kernel-parameters.txt         |   7 ++
+ drivers/char/Kconfig                          |  60 ++++++++++-
+ drivers/char/random.c                         | 102 +++++++++++++++---
+ include/uapi/linux/random.h                   |  27 ++++-
+ 4 files changed, 177 insertions(+), 19 deletions(-)
+
+--
+2.23.0
