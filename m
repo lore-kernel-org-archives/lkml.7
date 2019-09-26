@@ -2,108 +2,92 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4B7C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD84C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8813E21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8U76DKj"
+	by mail.kernel.org (Postfix) with ESMTP id 9C56E21A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfIZSKl (ORCPT
+        id S1728324AbfIZSMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:10:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32864 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfIZSKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:10:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y127so2427564lfc.0;
-        Thu, 26 Sep 2019 11:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=58oAE4FBJrvRDbJC9Z0EK/F0sTVW2LhvzqkiBlcRcx8=;
-        b=u8U76DKjRJoT8QCsQV+FPzbekduPDZgnFTln6B26fZz44ZHloyZi9UTQ0fHPQUj/Ue
-         ohQAL9LYNvJaf7453XeiAM2FJbop88jKCf7o4tTUYe2yccfTc2+6mLxb6QikGQt/jHOx
-         9GdlqiqxFAI3tBWFd9kdukJQqgF8PUShBKEwSisgbyB8SdQjWryFQRL57AmkIaqgrSgn
-         etD/9GT0+9mPKJnvRPH7WEN1rdlakfS3UtkwBlMd/EvqPvkPP2H+16kM5sRfByZ7dOUU
-         q4+z87r+y6FWA0Ovm8HpizSQlw48AtbvE00/5s8valSjwbplHbhOlTBTdH3+PVQ6kkXK
-         ZfsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=58oAE4FBJrvRDbJC9Z0EK/F0sTVW2LhvzqkiBlcRcx8=;
-        b=aU1TrFPUv/Iee1lqtL9lnBAdzymsBbdIzSa4Kb0TxEj2AjYrlJIHBYi1g7tzsnGcR4
-         XbdpJXyUSAMIjxZddx4kXeb65tzl2aI5ok1HbMDPU8GLNRbmnV2gJV40SvDXmpfU8k3x
-         u6ZVZzjzeZoKuOWMA3KDi8uV6J1RY8RkCxZB026n/eitnXFpmNDpx9ERaRmOkFd0dDME
-         tVbsqkDPNXolLfT61QwiMvpxFVgMUP1RQm+vgsndwqSu8+rEIxbj2s7rCANGUfJBsfDB
-         52nVtL1/Quiqey+2VWZsMX07gTIsgcxZC05vP2xK1cm74BocWT7awIZ9eesQjx4Y3hDo
-         F+oQ==
-X-Gm-Message-State: APjAAAUQcB6lGUzeugOsGdg9W/xr+kdWq8V6pDAL7XbQCK7fgXjHfCPe
-        mRcURXMgJIjCwKHMmYVraWG2WCH0CBONcgplhno=
-X-Google-Smtp-Source: APXvYqzubaCnRVu7ayU2jYF8LqYdVO+Sza2X45C+oWz4ZSoRko77F0nvAR95UPKZWe40qIwNje8/fb835ElINZntf1I=
-X-Received: by 2002:a19:f11c:: with SMTP id p28mr2982279lfh.44.1569521438172;
- Thu, 26 Sep 2019 11:10:38 -0700 (PDT)
+        Thu, 26 Sep 2019 14:12:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49888 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbfIZSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 14:12:03 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 05E9510C0954;
+        Thu, 26 Sep 2019 18:12:03 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C72271001B05;
+        Thu, 26 Sep 2019 18:12:01 +0000 (UTC)
+Subject: Re: [PATCH] ipc/sem: Fix race between to-be-woken task and waker
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, manfred@colorfullife.com
+References: <20190920155402.28996-1-longman@redhat.com>
+ <20190926093410.GJ4553@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <d16e4d82-8c5a-0663-8c00-32f4750f8a21@redhat.com>
+Date:   Thu, 26 Sep 2019 14:12:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1556169264-31683-1-git-send-email-Anson.Huang@nxp.com>
- <1556169264-31683-2-git-send-email-Anson.Huang@nxp.com> <155623699177.15276.12577395377027956830@swboyd.mtv.corp.google.com>
- <DB3PR0402MB39165F69F8B684D323C683B1F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916F96CD6F3E874204E6972F5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916F96CD6F3E874204E6972F5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 26 Sep 2019 15:10:48 -0300
-Message-ID: <CAOMZO5AweYkXXuBqvw+T_fOttKpbOnekKq5CA2-3a_ag1DwnWg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clk: imx: disable i.mx7ulp composite clock during initialization
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190926093410.GJ4553@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 26 Sep 2019 18:12:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
-
-On Mon, Aug 5, 2019 at 11:25 PM Anson Huang <anson.huang@nxp.com> wrote:
+On 9/26/19 5:34 AM, Peter Zijlstra wrote:
+> On Fri, Sep 20, 2019 at 11:54:02AM -0400, Waiman Long wrote:
+>> While looking at a customr bug report about potential missed wakeup in
+>> the system V semaphore code, I spot a potential problem.  The fact that
+>> semaphore waiter stays in TASK_RUNNING state while checking queue status
+>> may lead to missed wakeup if a spurious wakeup happens in the right
+>> moment as try_to_wake_up() will do nothing if the task state isn't right.
+>>
+>> To eliminate this possibility, the task state is now reset to
+>> TASK_INTERRUPTIBLE immediately after wakeup before checking the queue
+>> status. This should eliminate the race condition on the interaction
+>> between the queue status and the task state and fix the potential missed
+>> wakeup problem.
+> Bah, this code always makes my head hurt.
 >
-> Hi, Stephen
->         I think we should resume this thread, without this patch, mainlin=
-e kernel boot up will cause mmc timeout all the time. If it is NOT good to =
-disabling those peripheral devices' clock in i.MX7ULP's clock driver, then =
-we have to change the core framework to disable clock explicitly if the CLK=
-_SET_RATE_GATE/CLK_SET_PARENT_GATE is present, most likely it will impact o=
-ther platforms I think, so the most safe way is just to do it inside our i.=
-MX7ULP composite clock driver. What do you think?
+> Yes, AFAICT the pattern it uses has been broken since 0a2b9d4c7967,
+> since that removed doing the actual wakeup from under the sem_lock(),
+> which is what it relies on.
 
-Just tested your patch against 5.3 and mmc card can be detected with it.
+After having a second look at the code again, I probably misread the
+code the first time around. In the sleeping path, there is a check of
+queue.status and setting of task state both under the sem lock in the
+sleeping path. So as long as setting of queue status is under lock, they
+should synchronize properly.
 
-Please note that I had to manually add:
-#include <linux/io.h>
+It looks like queue status setting is under lock, but I can't use
+lockdep to confirm that as the locking can be done by either the array
+lock or in one of the spinlocks in the array. Are you aware of a way of
+doing that?
 
-so that it can build.
+Anyway, I do think we need to add some comment to clarify the situation
+to avoid future confusion.
 
-I agree we need to come to a solution for this.
+Cheers,
+Longman
 
-Stephen, please let us know your thoughts.
-
-Thanks
