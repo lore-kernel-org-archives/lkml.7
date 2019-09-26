@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE18C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D0EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D23222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B15222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="OPi2IgVO"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="LAkLoWrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfIZLSy (ORCPT
+        id S1726366AbfIZLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:18:54 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:29728 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfIZLSm (ORCPT
+        Thu, 26 Sep 2019 07:19:02 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:27048 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbfIZLSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:18:42 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8QBI6OF003191;
-        Thu, 26 Sep 2019 07:18:39 -0400
-Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2054.outbound.protection.outlook.com [104.47.32.54])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2v6hjwya00-1
+        Thu, 26 Sep 2019 07:18:33 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8QBIVNk029004;
+        Thu, 26 Sep 2019 07:18:31 -0400
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2058.outbound.protection.outlook.com [104.47.32.58])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2v6hku7eed-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 26 Sep 2019 07:18:39 -0400
+        Thu, 26 Sep 2019 07:18:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O/6XBdaBgiXp5yeHxrDC+yYrP2NmoTsC0REMQzAnnc0lFe9UnEHjBuclJ8nY18dM0f6DBi+XTifoQFigyjP/z1zC/cajOpsLsmgtBywIMM3QCfnQDhfoHtfjARiS0X+M2wOrWFf/aZwtX9nseHG/dBTlzpuNJ8A34UXwtduniyTf2QK10rsHUDOxP39/dynw5T3Gtzdf2o/By7Vh7XB1TZwUbXSIo6PMDKIKerXp5r5akGVWGVj42FvkFGw9YSVlnEYrDOpV/HyW6EMn3rlc9BN1MwFFHYTFHq3e1S1l2ojJWvRxm+KKM8WJKnk+zu1A56+YOErNZhOPysG+HZfWkA==
+ b=k5EJZAJs1eqDGh/JgUX8H5/VE189kc4apNVEpEi1Wi11NuNofORqaFI7dCnhqS/Qu1FKt6tMslrEi7iGipEu7YuQVjmgvd7ph7rR9cot0BdsDWcGpgtkTbdrwZchN19nY1XRap3UFNwWvN2i3AnZbkmumKuI71PhLAtWfYEXq4KULoIM+BO/j0SqrVBkXlVym1EWqPuu1KoMde0ThVL1AionXjrlPDZkYKEOrMFAcr+oXKmZ+kytD+LIFqT6td06WBsVTSs51iAPOVoWqhDKtPKWSFgx1NPELJOBQfN1oG1yiEbUcEUZMv74PlkN5ZZPTJWlsqnNRpMmXhVQd6CE/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AcdIUVCOGcoLSqT2gBklcnjlTHvaC4giJBZ5+DJTuTE=;
- b=OMeaZ47uep3NK+InlpKqISLZsxWQWjngIEo/eSTVSk5Zkjyq0RMCSg9JbZDBf9X+0dKvCKzKA7VVufPFfZhcoJ5UV+RuiZM5oastUmqJVLDqU2QsbSKnWut5UBofKVSAdxS3tvl/zHiqk0rs1YTbXTClGKkk/p8QQig0QNpY1jrxLM+Jbi2sRZbwnFZlNAgKamq6eUtlxQklDDwPxQE2b6e+cL6KNNxHO9hYO2Ts+vb0PCHl0joYg4yCR+L8Z04S1oR2erL6cOc9yB1EMbobMhZ5sWTWj4cCUwMFM6A5uJCHkHzQp0o0LjgZAc+TcX/k5Jf9S9FGNwLXizC3id6nFA==
+ bh=8iszD8jf9mRIgGriZqGy80dWCPf23Q8n6vEzqGK4a98=;
+ b=lVCxFKgyfj5D5avl8qN7L88awNX2MKu8dONT12a1JUpv1cmVUQPW0UwQz3+EHJXJOmXXTfF03nVbTRkCe4zeqr5sV9pzR3dPa+gpzgZBbWhr+LD8pJmmOoXTr2gdhVyvWb41s41FvjxKwgxJYhunWhrRWCbWoG61sStJ8WfQ/2lFKy2Gl5ygsRnq+4R9i1/Qu2czF0YjlMCtOnb0XBDZkJlrlbwnE0ARf9Tl+92ctlCxnb2B6hAm7p50PDJCqhj22Sby8dbgxKGa/e5qhqSijoI8xIgEe+LSJ8vQE77Lvv5Aw/ydBKa6dF9WFRj4TFLvgKIUbHutla0ReHlJbM/NoA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
  dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
@@ -44,39 +44,39 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AcdIUVCOGcoLSqT2gBklcnjlTHvaC4giJBZ5+DJTuTE=;
- b=OPi2IgVONMmSMNHJ/nJKB+YSD9/4kv9lHGWFGWF2601RrUbQTiXQcnPyNrNaZih6UF6flKg+Lxvzr1Iy7707MmoMZif8/lOJ9v+MX64fEQo5uRE6AnYw+5doRY2ZgWTxgOog+Zf08/q2oz1obE63pyItWKskVYXvpprCrlMSlag=
-Received: from BN3PR03CA0063.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::23) by CY4PR03MB3159.namprd03.prod.outlook.com
- (2603:10b6:910:56::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Thu, 26 Sep
- 2019 11:18:37 +0000
-Received: from SN1NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::206) by BN3PR03CA0063.outlook.office365.com
- (2a01:111:e400:7a4d::23) with Microsoft SMTP Server (version=TLS1_2,
+ bh=8iszD8jf9mRIgGriZqGy80dWCPf23Q8n6vEzqGK4a98=;
+ b=LAkLoWrM/bb9AtokFv5CeCP7208DNW6TVpk8cPNVJeFJczBlBl4se6nsR0FkgPrgAYxWKcpFypfjBhbnXU29jwVSqqWsj6Zdp/QiJI/VJZ3M0vJ+4llythvYKGgUWwP8Vl+/mxkSETxyLZIjZSegAKHrvmJAdixPqfzL6mH6to4=
+Received: from CY4PR03CA0020.namprd03.prod.outlook.com (2603:10b6:903:33::30)
+ by DM6PR03MB3755.namprd03.prod.outlook.com (2603:10b6:5:50::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.26; Thu, 26 Sep
+ 2019 11:18:29 +0000
+Received: from BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by CY4PR03CA0020.outlook.office365.com
+ (2603:10b6:903:33::30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.15 via Frontend
- Transport; Thu, 26 Sep 2019 11:18:36 +0000
+ Transport; Thu, 26 Sep 2019 11:18:29 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.55 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
 Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT022.mail.protection.outlook.com (10.152.72.148) with Microsoft SMTP
+ BL2NAM02FT055.mail.protection.outlook.com (10.152.77.126) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.25
- via Frontend Transport; Thu, 26 Sep 2019 11:18:36 +0000
+ via Frontend Transport; Thu, 26 Sep 2019 11:18:29 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x8QBIUnC004192
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x8QBINSM004159
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 26 Sep 2019 04:18:30 -0700
+        Thu, 26 Sep 2019 04:18:23 -0700
 Received: from saturn.ad.analog.com (10.48.65.123) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 26 Sep 2019 07:18:35 -0400
+ 14.3.408.0; Thu, 26 Sep 2019 07:18:28 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 08/10] iio: imu: adis16400: rework locks using ADIS library's state lock
-Date:   Thu, 26 Sep 2019 14:18:10 +0300
-Message-ID: <20190926111812.15957-9-alexandru.ardelean@analog.com>
+Subject: [PATCH 03/10] iio: imu: adis[16480]: group RW into a single lock in adis_enable_irq()
+Date:   Thu, 26 Sep 2019 14:18:05 +0300
+Message-ID: <20190926111812.15957-4-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190926111812.15957-1-alexandru.ardelean@analog.com>
 References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
@@ -86,228 +86,107 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(39860400002)(396003)(189003)(199004)(106002)(6666004)(305945005)(86362001)(2616005)(26005)(11346002)(478600001)(50466002)(126002)(8676002)(486006)(316002)(110136005)(8936002)(50226002)(446003)(5660300002)(476003)(7636002)(44832011)(1076003)(51416003)(246002)(356004)(54906003)(186003)(70206006)(48376002)(4326008)(336012)(426003)(70586007)(14444005)(2870700001)(7696005)(107886003)(47776003)(36756003)(76176011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3159;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(136003)(376002)(189003)(199004)(50226002)(6666004)(106002)(107886003)(26005)(7696005)(2906002)(486006)(478600001)(2616005)(47776003)(14444005)(186003)(86362001)(316002)(126002)(336012)(48376002)(476003)(50466002)(2870700001)(44832011)(426003)(51416003)(5660300002)(246002)(11346002)(1076003)(305945005)(54906003)(8676002)(76176011)(36756003)(446003)(70206006)(8936002)(70586007)(110136005)(7636002)(4326008)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3755;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ac10fd9e-3df6-42ae-9525-08d742734650
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:CY4PR03MB3159;
-X-MS-TrafficTypeDiagnostic: CY4PR03MB3159:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB3159E69B875021E32B54E380F9860@CY4PR03MB3159.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: 45cab940-850a-4eb7-fb56-08d742734204
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM6PR03MB3755;
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3755:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB375571CEBD63367793CFD579F9860@DM6PR03MB3755.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
 X-Forefront-PRVS: 0172F0EF77
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 02q08vM9uc/1+UZLWqrq3RFs9ZhgnVdN7J6no9iJdIWtZB3CVy2N92c+daT+T5dlhT4+rz0EzZteUY/xfHgyOD26gic/aB23WXoAheiZmU++X+kOBoqnWA9cPALDV4ZMPPg5X4TFbyDcX3unSgGtr+CM61JlJWeS9Dyx+kfGn9jfbQTDsCmt4go3nZW6lJlMuNiAo3zsBM5G6WmcAhg1GHM6W2Dt+0QweRh1IqKb6dZ0A7odnaNTn0+4tuKp6ZTtvTry4GZG9zqTrUsqvRI0Dc7gCr4/GbEEl4RxmUWK9u7qXW19V9uG8ETidp9wy0B6ugZyWzpiyeRHQAl71W8ZDW0daiLFo5ZOoBdcPj1K4JWvZChXhdTe52KI6lVLK6m2/tdixE8avviJ23VDrhUWCpHaUIwc9fa87VgmLZBf4Ro=
+X-Microsoft-Antispam-Message-Info: pavBEz371f9bEZ+mzT3HgUxhsDuErnOf2ez3KOBfmLZ3A8wkyxSaXfZ+Uh/g8lUtIfjtogbZfk3XKZzf0QgwR3iuK/e8gN+eZqXAMVUlFCO7WwuT/SOw0wDZdm8MPiLRiB0N6pNlAXCb+IFUEFTZ7Lb7EWueXLTVd7DK6TtlwZvUGZJqimLina3DCF3SaVuTF2DjoHtERWbkhZTi29GwXYoL6BR9xXoo7b+IHvF+xjNo//tibwHDOHAbV9IwQDkGbDgY3k4QkyBskBJl5FU+C0M6fI4e9R5bJpx6O6D7KC5DTy+aqccP97vRTZjTfVdVBzi7HTNzYCrUT+n6V6+lAQ9pATGM9ari2yoxvgqYjKlPTyf3NxdZlWra0yiKmHf31LfOR3gvYY5BYNIQ1P20sKgRB9EIOd8M0PkK9II/eQw=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 11:18:36.3542
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 11:18:29.2049
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac10fd9e-3df6-42ae-9525-08d742734650
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45cab940-850a-4eb7-fb56-08d742734204
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3159
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3755
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
  definitions=2019-09-26_05:2019-09-25,2019-09-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0
- malwarescore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909260108
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 spamscore=0 mlxlogscore=702 mlxscore=0 impostorscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909260108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change removes the use of indio_dev's mlock in favor using the state
-lock from the ADIS library.
+The adis_enable_irq() does a read & a write. This change keeps a lock for
+the duration of both operations vs for each op.
 
-The set_freq() & get_freq() hooks are unlocked, so they require specific
-locking. That is because in some cases the get_freq() hook is used in
-combination with adis16400_set_filter().
-
-In cases where only one read/write is done, the functions that hold the
-state lock are used.
+The change is also needed in adis16480, since that has it's own
+implementation for adis_enable_irq().
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/iio/imu/adis16400.c | 51 ++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 26 deletions(-)
+ drivers/iio/imu/adis.c      | 17 +++++++++++------
+ drivers/iio/imu/adis16480.c |  4 ++--
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iio/imu/adis16400.c b/drivers/iio/imu/adis16400.c
-index 0575ff706bd4..e042a2aabf6b 100644
---- a/drivers/iio/imu/adis16400.c
-+++ b/drivers/iio/imu/adis16400.c
-@@ -162,6 +162,7 @@ struct adis16400_chip_info {
- 	unsigned int accel_scale_micro;
- 	int temp_scale_nano;
- 	int temp_offset;
-+	/* set_freq() & get_freq() need to avoid using ADIS lib's state lock */
- 	int (*set_freq)(struct adis16400_state *st, unsigned int freq);
- 	int (*get_freq)(struct adis16400_state *st);
- };
-@@ -326,7 +327,7 @@ static int adis16334_get_freq(struct adis16400_state *st)
- 	int ret;
- 	uint16_t t;
+diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+index 4f3be011c898..dc30f70d36f3 100644
+--- a/drivers/iio/imu/adis.c
++++ b/drivers/iio/imu/adis.c
+@@ -250,12 +250,16 @@ int adis_enable_irq(struct adis *adis, bool enable)
+ 	int ret = 0;
+ 	uint16_t msc;
  
--	ret = adis_read_reg_16(&st->adis, ADIS16400_SMPL_PRD, &t);
-+	ret = __adis_read_reg_16(&st->adis, ADIS16400_SMPL_PRD, &t);
- 	if (ret < 0)
- 		return ret;
+-	if (adis->data->enable_irq)
+-		return adis->data->enable_irq(adis, enable);
++	mutex_lock(&adis->state_lock);
++
++	if (adis->data->enable_irq) {
++		ret = adis->data->enable_irq(adis, enable);
++		goto out_unlock;
++	}
  
-@@ -350,7 +351,7 @@ static int adis16334_set_freq(struct adis16400_state *st, unsigned int freq)
- 	t <<= ADIS16334_RATE_DIV_SHIFT;
- 	t |= ADIS16334_RATE_INT_CLK;
+-	ret = adis_read_reg_16(adis, adis->data->msc_ctrl_reg, &msc);
++	ret = __adis_read_reg_16(adis, adis->data->msc_ctrl_reg, &msc);
+ 	if (ret)
+-		goto error_ret;
++		goto out_unlock;
  
--	return adis_write_reg_16(&st->adis, ADIS16400_SMPL_PRD, t);
-+	return __adis_write_reg_16(&st->adis, ADIS16400_SMPL_PRD, t);
- }
- 
- static int adis16400_get_freq(struct adis16400_state *st)
-@@ -358,7 +359,7 @@ static int adis16400_get_freq(struct adis16400_state *st)
- 	int sps, ret;
- 	uint16_t t;
- 
--	ret = adis_read_reg_16(&st->adis, ADIS16400_SMPL_PRD, &t);
-+	ret = __adis_read_reg_16(&st->adis, ADIS16400_SMPL_PRD, &t);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -390,7 +391,7 @@ static int adis16400_set_freq(struct adis16400_state *st, unsigned int freq)
+ 	msc |= ADIS_MSC_CTRL_DATA_RDY_POL_HIGH;
+ 	msc &= ~ADIS_MSC_CTRL_DATA_RDY_DIO2;
+@@ -264,9 +268,10 @@ int adis_enable_irq(struct adis *adis, bool enable)
  	else
- 		st->adis.spi->max_speed_hz = ADIS16400_SPI_FAST;
+ 		msc &= ~ADIS_MSC_CTRL_DATA_RDY_EN;
  
--	return adis_write_reg_8(&st->adis, ADIS16400_SMPL_PRD, val);
-+	return __adis_write_reg_8(&st->adis, ADIS16400_SMPL_PRD, val);
- }
+-	ret = adis_write_reg_16(adis, adis->data->msc_ctrl_reg, msc);
++	ret = __adis_write_reg_16(adis, adis->data->msc_ctrl_reg, msc);
  
- static const unsigned int adis16400_3db_divisors[] = {
-@@ -404,7 +405,7 @@ static const unsigned int adis16400_3db_divisors[] = {
- 	[7] = 200, /* Not a valid setting */
- };
- 
--static int adis16400_set_filter(struct iio_dev *indio_dev, int sps, int val)
-+static int __adis16400_set_filter(struct iio_dev *indio_dev, int sps, int val)
- {
- 	struct adis16400_state *st = iio_priv(indio_dev);
- 	uint16_t val16;
-@@ -415,11 +416,11 @@ static int adis16400_set_filter(struct iio_dev *indio_dev, int sps, int val)
- 			break;
- 	}
- 
--	ret = adis_read_reg_16(&st->adis, ADIS16400_SENS_AVG, &val16);
-+	ret = __adis_read_reg_16(&st->adis, ADIS16400_SENS_AVG, &val16);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = adis_write_reg_16(&st->adis, ADIS16400_SENS_AVG,
-+	ret = __adis_write_reg_16(&st->adis, ADIS16400_SENS_AVG,
- 					 (val16 & ~0x07) | i);
+-error_ret:
++out_unlock:
++	mutex_unlock(&adis->state_lock);
  	return ret;
  }
-@@ -507,32 +508,31 @@ static int adis16400_write_raw(struct iio_dev *indio_dev,
- 	struct iio_chan_spec const *chan, int val, int val2, long info)
- {
- 	struct adis16400_state *st = iio_priv(indio_dev);
-+	struct mutex *slock = &st->adis.state_lock;
- 	int ret, sps;
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_CALIBBIAS:
--		mutex_lock(&indio_dev->mlock);
- 		ret = adis_write_reg_16(&st->adis,
- 				adis16400_addresses[chan->scan_index], val);
--		mutex_unlock(&indio_dev->mlock);
- 		return ret;
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
- 		/*
- 		 * Need to cache values so we can update if the frequency
- 		 * changes.
- 		 */
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(slock);
- 		st->filt_int = val;
- 		/* Work out update to current value */
- 		sps = st->variant->get_freq(st);
- 		if (sps < 0) {
--			mutex_unlock(&indio_dev->mlock);
-+			mutex_unlock(slock);
- 			return sps;
- 		}
- 
--		ret = adis16400_set_filter(indio_dev, sps,
-+		ret = __adis16400_set_filter(indio_dev, sps,
- 			val * 1000 + val2 / 1000);
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(slock);
- 		return ret;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		sps = val * 1000 + val2 / 1000;
-@@ -540,9 +540,9 @@ static int adis16400_write_raw(struct iio_dev *indio_dev,
- 		if (sps <= 0)
- 			return -EINVAL;
- 
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(slock);
- 		ret = st->variant->set_freq(st, sps);
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(slock);
- 		return ret;
- 	default:
- 		return -EINVAL;
-@@ -553,6 +553,7 @@ static int adis16400_read_raw(struct iio_dev *indio_dev,
- 	struct iio_chan_spec const *chan, int *val, int *val2, long info)
- {
- 	struct adis16400_state *st = iio_priv(indio_dev);
-+	struct mutex *slock = &st->adis.state_lock;
- 	int16_t val16;
+ EXPORT_SYMBOL(adis_enable_irq);
+diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+index b99d73887c9f..dc13d8a33612 100644
+--- a/drivers/iio/imu/adis16480.c
++++ b/drivers/iio/imu/adis16480.c
+@@ -936,14 +936,14 @@ static int adis16480_enable_irq(struct adis *adis, bool enable)
+ 	uint16_t val;
  	int ret;
  
-@@ -596,10 +597,8 @@ static int adis16400_read_raw(struct iio_dev *indio_dev,
- 			return -EINVAL;
- 		}
- 	case IIO_CHAN_INFO_CALIBBIAS:
--		mutex_lock(&indio_dev->mlock);
- 		ret = adis_read_reg_16(&st->adis,
- 				adis16400_addresses[chan->scan_index], &val16);
--		mutex_unlock(&indio_dev->mlock);
- 		if (ret)
- 			return ret;
- 		val16 = sign_extend32(val16, 11);
-@@ -610,27 +609,27 @@ static int adis16400_read_raw(struct iio_dev *indio_dev,
- 		*val = st->variant->temp_offset;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(slock);
- 		/* Need both the number of taps and the sampling frequency */
--		ret = adis_read_reg_16(&st->adis,
-+		ret = __adis_read_reg_16(&st->adis,
- 						ADIS16400_SENS_AVG,
- 						&val16);
- 		if (ret < 0) {
--			mutex_unlock(&indio_dev->mlock);
-+			mutex_unlock(slock);
- 			return ret;
- 		}
- 		ret = st->variant->get_freq(st);
--		if (ret >= 0) {
--			ret /= adis16400_3db_divisors[val16 & 0x07];
--			*val = ret / 1000;
--			*val2 = (ret % 1000) * 1000;
--		}
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(slock);
- 		if (ret < 0)
- 			return ret;
-+		ret /= adis16400_3db_divisors[val16 & 0x07];
-+		*val = ret / 1000;
-+		*val2 = (ret % 1000) * 1000;
- 		return IIO_VAL_INT_PLUS_MICRO;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
-+		mutex_lock(slock);
- 		ret = st->variant->get_freq(st);
-+		mutex_unlock(slock);
- 		if (ret < 0)
- 			return ret;
- 		*val = ret / 1000;
+-	ret = adis_read_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, &val);
++	ret = __adis_read_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, &val);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	val &= ~ADIS16480_DRDY_EN_MSK;
+ 	val |= ADIS16480_DRDY_EN(enable);
+ 
+-	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
++	return __adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
+ }
+ 
+ static int adis16480_initial_setup(struct iio_dev *indio_dev)
 -- 
 2.20.1
 
