@@ -2,125 +2,103 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545BAC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE9CC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E67E20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F6B222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BgHKnk2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfIZJGf (ORCPT
+        id S1730106AbfIZJHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:06:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32988 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729018AbfIZJGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:06:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2BE23AB7D;
-        Thu, 26 Sep 2019 09:06:33 +0000 (UTC)
-Message-ID: <fcdf6f6325d8afbd6c0b91c782b8ef89ba3dc1d0.camel@suse.de>
-Subject: Re: [RFC PATCH] xen/gntdev: Stop abusing DT of_dma_configure API
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Date:   Thu, 26 Sep 2019 11:06:31 +0200
-In-Reply-To: <20190925215006.12056-1-robh@kernel.org>
-References: <20190925215006.12056-1-robh@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-VZLu1lyfilRACxdtIeDn"
-User-Agent: Evolution 3.32.4 
+        Thu, 26 Sep 2019 05:07:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33194 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbfIZJHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:07:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T6V6sHrSOqc/+UxTCdyudq0YVOaWNkuCBPZFUY0n27I=; b=BgHKnk2vgdUwt+yhXHlGCcsjP
+        WK1sr0QG/j8kkdNDc8VLtgKtd0D2pUEqo+NBXzQKHsyc4AvbsI1zGCPuoE4cG9A7zIyMc6/MzRInU
+        uVsmsR1b746rjHsQ2cwRIdmOxlkyD4sHP61LexMMYLPN86L8vm+2YbELkbJZr01XMxmz53SP969jp
+        Aq2q8+MqqX3ZQepkJUFdBzKYB+wV986kA1457En35eQQdUwiiTZCobuDkWHkS1QGKY3o8q5yGiKl9
+        rCpvAat06QhNHwdZQhvMB976R4uqvhgCSiw4BqgCNNmDQjCCB+WD6HjfeQFtFCeXvlLkZNk97ZA/R
+        6ALfUnX/Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDPiv-00039o-SN; Thu, 26 Sep 2019 09:06:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8A0F302A71;
+        Thu, 26 Sep 2019 11:05:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2F69720138CC0; Thu, 26 Sep 2019 11:05:59 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 11:05:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190926090559.GA4581@hirez.programming.kicks-ass.net>
+References: <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <20190925104040.GD4553@hirez.programming.kicks-ass.net>
+ <20190925132544.GL23050@dhcp22.suse.cz>
+ <20190925163154.GF4553@hirez.programming.kicks-ass.net>
+ <20190925214526.GA4643@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925214526.GA4643@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 25, 2019 at 11:45:26PM +0200, Peter Zijlstra wrote:
+> [    7.149889] [Firmware Bug]: device: 'pci0000:7f': no node assigned on NUMA capable HW
+> [    7.882888] [Firmware Bug]: device: 'pci0000:ff': no node assigned on NUMA capable HW
 
---=-VZLu1lyfilRACxdtIeDn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Going by the limited number of intel numa boxes I have, it looks like:
 
-On Wed, 2019-09-25 at 16:50 -0500, Rob Herring wrote:
-> As the comment says, this isn't a DT based device. of_dma_configure()
-> is going to stop allowing a NULL DT node, so this needs to be fixed.
->=20
-> Not sure exactly what setup besides arch_setup_dma_ops is needed...
->=20
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Julien Grall <julien.grall@arm.com>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+  socket = (~busid) >> (8-n)
 
-Just so it isn't forgotten, the same applies here:
+where 'n' is the number of bits required to encode the largest socket
+id, ie 1 for 2-socket and 2 for 4 socket.
 
-diff --git a/drivers/gpu/drm/xen/xen_drm_front.c
-b/drivers/gpu/drm/xen/xen_drm_front.c
-index ba1828acd8c9..de316a891f39 100644
---- a/drivers/gpu/drm/xen/xen_drm_front.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front.c
-@@ -11,7 +11,6 @@
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
--#include <linux/of_device.h>
-=20
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_drv.h>
-@@ -718,19 +717,7 @@ static int xen_drv_probe(struct xenbus_device *xb_dev,
-        struct device *dev =3D &xb_dev->dev;
-        int ret;
-=20
--       /*
--        * The device is not spawn from a device tree, so arch_setup_dma_op=
-s
--        * is not called, thus leaving the device with dummy DMA ops.
--        * This makes the device return error on PRIME buffer import, which
--        * is not correct: to fix this call of_dma_configure() with a NULL
--        * node to set default DMA ops.
--        */
-        dev->coherent_dma_mask =3D DMA_BIT_MASK(32);
--       ret =3D of_dma_configure(dev, NULL, true);
--       if (ret < 0) {
--               DRM_ERROR("Cannot setup DMA ops, ret %d", ret);
--               return ret;
--       }
-=20
-        front_info =3D devm_kzalloc(&xb_dev->dev,
-                                  sizeof(*front_info), GFP_KERNEL);
-
-
---=-VZLu1lyfilRACxdtIeDn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2Mf5cACgkQlfZmHno8
-x/4SfAf+NsGqU0loPiWDCjo41LSGYYLj1TAtCnYEFJhWysp82mV30XSwqhdPMdEd
-ydFDB1TmNDhAazi+do8Sh47UzN+UQ2e4U3a5zZ949lNlPNG5bOueY+SQ+S39PFfy
-G+NP0lHrXfisWnLmslIn9y6Eqi5Ik4Bjb2DqNZLiAoyzYDlwvDMoAI66J54GT84H
-c7TGaeDzTpP4mHxW1BbJxk66gtEIvvURo62SOZuaohC4SICm6f26g+iz6CG8Bjdw
-+jRf9eff00d4MOwD28lJPMrHcDS80W1nZHcdTEijMB3bK0QWBkSr1g9Mki2jzukA
-5DGyncDkT9wSqIzxCXx77+RPs3rLuA==
-=7yuB
------END PGP SIGNATURE-----
-
---=-VZLu1lyfilRACxdtIeDn--
-
+For 8 socket systems we start using pci domains, and things get more
+'interesting' :/
