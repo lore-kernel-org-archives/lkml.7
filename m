@@ -2,156 +2,294 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365ABC624AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E08C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5782053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61259208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFUC245u"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FMsYPRxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfIZMAo (ORCPT
+        id S1726318AbfIZMBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:00:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36317 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfIZMAn (ORCPT
+        Thu, 26 Sep 2019 08:01:18 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38103 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfIZMBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:00:43 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x80so1495880lff.3;
-        Thu, 26 Sep 2019 05:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7XWikGZouALuaXU8QmpV5uGjR79Qy2+P6Xqtc8grImI=;
-        b=sFUC245uUPv8Jm5DxG0weHF5VxJhXxBTLmRx3nXHvoxzSuhNd29acmLw6qDZAyxufI
-         SSKZ8dbk/lqXeqsCsUY4LUnUV77oL7v/d0VSQr8atsQ2ikUOq0O+NnnMdSNzirB0eaip
-         5xgv/+2DjGZF9XxDIVQd8GOsn7/Ic/G4PQ6uSmqAW7HFXFOP1/dX3H3tqTFy+x7OVvHq
-         8KlDu/O+pKmVIYh1K15y5Ifbi83Y1l/vT+UiwKUMMZ8j12sOJj+H4d7z576rUZbuPW5l
-         YQzZvoXuxxus7Mh7/mVq7uKBeQtW3eeMOR/NL2PxViqOSHkR9SgWwrBO/1WVoIR7FuEk
-         Bg+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7XWikGZouALuaXU8QmpV5uGjR79Qy2+P6Xqtc8grImI=;
-        b=MddKTboGiGNU1cYx4YqBF2JLexif9XvTzUG+oWNVkvqfyaqzM7paV7iNVdWcxz+Pxu
-         ooHGnSqReZwMJKsh0Rl5Y6L5jcCse8XRMOe/JiE69nI6tfmJsqFeS7D/FCR5B9li5slX
-         YZP3CrWnON4RMLLj47Rf1ioTKTWSkGJ5s9OTguUPsoiAp9IKYBC6rFCUdJkvvu+Lu+mc
-         wxqeOt3zsF/hDpKyC1y/MR28CPZ280kfAZ/F+LuLf5DnOOxGW4cUHoXPbg/H79uPvvnv
-         vpPLRpypWQI0uk2uDfnbByg7pktO+sOh4p3zQyFxNInPGi7Ue+70YaH8OUrnlY7+RIy5
-         adlg==
-X-Gm-Message-State: APjAAAU5X9MKxUgE3qt9DHzyRTFOlQJsG7KqubrJn+Ddq7tTq/QsFnsh
-        eqgparPEj66CoFQB1tIHKjk=
-X-Google-Smtp-Source: APXvYqydhbk75lEKQ+0ee3AlhEdA+ZAXZR7K2+v7lAdPiWV4nE2zXFJ8N+zIgKY7bBCLDWVGIZybdg==
-X-Received: by 2002:a19:2c1:: with SMTP id 184mr1989422lfc.100.1569499241445;
-        Thu, 26 Sep 2019 05:00:41 -0700 (PDT)
-Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id f5sm486379lfh.52.2019.09.26.05.00.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 05:00:40 -0700 (PDT)
-Subject: Re: [PATCH RFC] cfg80211: add new command for reporting wiphy crashes
-To:     Johannes Berg <johannes@sipsolutions.net>, Jouni Malinen <j@w1.fi>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hostap@lists.infradead.org,
-        openwrt-devel@lists.openwrt.org
-References: <20190920133708.15313-1-zajec5@gmail.com>
- <20190920140143.GA30514@w1.fi>
- <4f6f37e5-802c-4504-3dcb-c4a640d138bd@milecki.pl>
- <9ece533700be8237699881312a99cc91c6a71d36.camel@sipsolutions.net>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Message-ID: <09503390-91f0-3789-496a-6e9891156c5e@gmail.com>
-Date:   Thu, 26 Sep 2019 14:00:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
-MIME-Version: 1.0
-In-Reply-To: <9ece533700be8237699881312a99cc91c6a71d36.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 26 Sep 2019 08:01:18 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190926120116euoutp0205d47e23f9b7351fde889886a5237810~H_0bSLDHb0833308333euoutp02d
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:01:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190926120116euoutp0205d47e23f9b7351fde889886a5237810~H_0bSLDHb0833308333euoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569499276;
+        bh=9LJuqhkdt4DdylyxkRQhnaMr9vldbmxF+QJ+uVvM74s=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=FMsYPRxsIEHEVoPHBso64oCl/M6hq1/3WbPMR+z9qUXHSX7PzHoEsuaL3MHgfuAyx
+         L/9T+bWZKoDzot1k3duH3yzyrSQUe8G4G9wv+N81DJsplMAF/QFwBvBcw+t6snl5pG
+         z6JdpT/6HVrHS7PtDft83MrZBNw2WduL+M71/uJY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190926120116eucas1p2bca9b4a5ec904a86d063490aecaca02f~H_0a5zr3a2847228472eucas1p2u;
+        Thu, 26 Sep 2019 12:01:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 51.B2.04469.C88AC8D5; Thu, 26
+        Sep 2019 13:01:16 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190926120115eucas1p20280a4e50c826d43bea7bfe5d670aebe~H_0afpe9U2921029210eucas1p26;
+        Thu, 26 Sep 2019 12:01:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190926120115eusmtrp1f2411ae4d07f8f80aceaf302c7ae762c~H_0afri760184101841eusmtrp1R;
+        Thu, 26 Sep 2019 12:01:15 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-1f-5d8ca88cbcf2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 76.51.04166.B88AC8D5; Thu, 26
+        Sep 2019 13:01:15 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190926120115eusmtip1e57df697420b160508f68a254fbb4efc~H_0Z4PDWO2539325393eusmtip1F;
+        Thu, 26 Sep 2019 12:01:15 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] dt-bindings: sound: Convert Samsung Exynos Odroid XU3/XU4
+ audio complex to dt-schema
+Date:   Thu, 26 Sep 2019 14:01:11 +0200
+Message-Id: <20190926120111.8478-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduznOd2eFT2xBhuP8FpcuXiIyWLqwyds
+        FvOPnGO1OH9+A7vFtysdTBaXd81hs5hxfh+TxYPmdWwWa4/cZbdYev0ik0Xr3iPsFofftLM6
+        8Hhs+NzE5rFm3hpGj52z7rJ7bFrVyebRt2UVo8fnTXIBbFFcNimpOZllqUX6dglcGc/WXGct
+        mK9fceDPUdYGxkcqXYycHBICJhIzLt9h72Lk4hASWMEo0bj8HSOE84VR4vj+N1CZz4wS5z80
+        McK0HD6zlhUisZxR4ui6L+xwLeua14NVsQkYSnS97WIDsUUE6iTOnjkCNpdZ4AiTRPP930wg
+        CWGBdInv/3aBNbAIqEpcv9ENZvMK2EjMmz6fFWKdvMTqDQeYIexmdom120wgbBeJw1cfskDY
+        whKvjm9hh7BlJE5P7mEBWQZUzyjx8Nxadginh1HictMMqCesJQ4fvwi0gQPoJE2J9bv0IcKO
+        Ek+fNbOBhCUE+CRuvBUECTMDmZO2TWeGCPNKdLQJQVSrScw6vg5u7cELl6DO9JBYMek4mC0k
+        ECtx4NlB5gmMcrMQdi1gZFzFKJ5aWpybnlpsmJdarlecmFtcmpeul5yfu4kRmEpO/zv+aQfj
+        10tJhxgFOBiVeHgPhHXHCrEmlhVX5h5ilOBgVhLh9Y3siRXiTUmsrEotyo8vKs1JLT7EKM3B
+        oiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAKDO35u7vrPDgHNG+qkNnJOQ3LXqkEfLg7/H6
+        npOOO1oMrr261tyQ9kin1MPKJFThSdqz1Q71GZEXYmbOlM9/8Ek869fWy41zr+iqG9kJTt/K
+        E/Zf7KHzqd+TW3ZqFZzIU1nvVT5xacI7tWip3Yk3Q2eq5l58F5bT2tV0J3qd4ZeILf8vHvin
+        rcRSnJFoqMVcVJwIAC+BY4MhAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsVy+t/xu7rdK3piDfa1mlhcuXiIyWLqwyds
+        FvOPnGO1OH9+A7vFtysdTBaXd81hs5hxfh+TxYPmdWwWa4/cZbdYev0ik0Xr3iPsFofftLM6
+        8Hhs+NzE5rFm3hpGj52z7rJ7bFrVyebRt2UVo8fnTXIBbFF6NkX5pSWpChn5xSW2StGGFkZ6
+        hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6Gc/WXGctmK9fceDPUdYGxkcqXYycHBIC
+        JhKHz6xl7WLk4hASWMooMWPXZyaIhIzEyWkNrBC2sMSfa11sEEWfGCXmrz3DDJJgEzCU6HoL
+        kRARaGKUOLZ5JguIwyxwiknixtUpjCBVwgKpEsuaToONYhFQlbh+oxsszitgIzFv+nyoFfIS
+        qzccYJ7AyLOAkWEVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYBBvO/Zz8w7GSxuDDzEKcDAq
+        8fAeCOuOFWJNLCuuzD3EKMHBrCTC6xvZEyvEm5JYWZValB9fVJqTWnyI0RRo+URmKdHkfGCE
+        5ZXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYPTeW7LreEMbQ+Qt
+        ZiuH/zLlN5IUP2xS859vZTi/ZvprNelFh+yfVOm+iVwY/6LZZ5NOwYYZh19fzNU/8rslNVgu
+        V0BLPPAc+6Qd59p+3V2w58jhOzMezmOMce34G3tg/xa3+TOkRHQmBwa3uRy6EC1Ul9A8zcpc
+        f2Kc7MVl9vZ5eRxrH5/5e1SJpTgj0VCLuag4EQBWNB4zeAIAAA==
+X-CMS-MailID: 20190926120115eucas1p20280a4e50c826d43bea7bfe5d670aebe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190926120115eucas1p20280a4e50c826d43bea7bfe5d670aebe
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190926120115eucas1p20280a4e50c826d43bea7bfe5d670aebe
+References: <CGME20190926120115eucas1p20280a4e50c826d43bea7bfe5d670aebe@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.09.2019 13:55, Johannes Berg wrote:
-> On Thu, 2019-09-26 at 13:52 +0200, Rafał Miłecki wrote:
->>
->> Indeed my main concert is AP mode. I'm afraid that cfg80211 doesn't
->> cache all settings, consider e.g. nl80211_start_ap(). It builds
->> struct cfg80211_ap_settings using info from nl80211 message and
->> passes it to the driver (rdev_start_ap()). Once it's done it
->> caches only a small subset of all setup data.
->>
->> In other words driver doesn't have enough info to recover interfaces
->> setup.
-> 
-> So the driver can cache it, just like mac80211.
-> 
-> You can't seriously be suggesting that the driver doesn't *have* enough
-> information - everything passed through it :)
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-Precisely: it doesn't store (cache) enough info.
+Convert Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+to newer dt-schema format.
+
+'clocks' property is unneeded in the bindings and is left undefined in 'properties'.
+
+'samsung,audio-widgets' and 'samsung,audio-routing' are optional from driver
+perspective and they are set as unrequired.
+
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ .../bindings/sound/samsung,odroid.txt         | 54 -----------
+ .../bindings/sound/samsung,odroid.yaml        | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 54 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+deleted file mode 100644
+index e9da2200e173..000000000000
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ /dev/null
+@@ -1,54 +0,0 @@
+-Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+-
+-Required properties:
+-
+- - compatible - "hardkernel,odroid-xu3-audio" - for Odroid XU3 board,
+-		"hardkernel,odroid-xu4-audio" - for Odroid XU4 board (deprecated),
+-		"samsung,odroid-xu3-audio" - for Odroid XU3 board (deprecated),
+-		"samsung,odroid-xu4-audio" - for Odroid XU4 board (deprecated)
+- - model - the user-visible name of this sound complex
+- - clocks - should contain entries matching clock names in the clock-names
+-    property
+- - samsung,audio-widgets - this property specifies off-codec audio elements
+-   like headphones or speakers, for details see widgets.txt
+- - samsung,audio-routing - a list of the connections between audio
+-   components;  each entry is a pair of strings, the first being the
+-   connection's sink, the second being the connection's source;
+-   valid names for sources and sinks are the MAX98090's pins (as
+-   documented in its binding), and the jacks on the board
+-
+-   For Odroid X2:
+-     "Headphone Jack", "Mic Jack", "DMIC"
+-
+-   For Odroid U3, XU3:
+-     "Headphone Jack", "Speakers"
+-
+-   For Odroid XU4:
+-     no entries
+-
+-Required sub-nodes:
+-
+- - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
+-    controller
+- - 'codec' subnode with a 'sound-dai' property containing list of phandles
+-    to the CODEC nodes, first entry must be corresponding to the MAX98090
+-    CODEC and the second entry must be the phandle of the HDMI IP block node
+-
+-Example:
+-
+-sound {
+-	compatible = "hardkernel,odroid-xu3-audio";
+-	model = "Odroid-XU3";
+-	samsung,audio-routing =
+-		"Headphone Jack", "HPL",
+-		"Headphone Jack", "HPR",
+-		"IN1", "Mic Jack",
+-		"Mic Jack", "MICBIAS";
+-
+-	cpu {
+-		sound-dai = <&i2s0 0>;
+-	};
+-	codec {
+-		sound-dai = <&hdmi>, <&max98090>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.yaml b/Documentation/devicetree/bindings/sound/samsung,odroid.yaml
+new file mode 100644
+index 000000000000..db6d3ea3180e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,odroid.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: hardkernel,odroid-xu3-audio
++
++      - const: hardkernel,odroid-xu4-audio
++        deprecated: true
++
++      - const: samsung,odroid-xu3-audio
++        deprecated: true
++
++      - const: samsung,odroid-xu4-audio
++        deprecated: true
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The user-visible name of this sound complex.
++
++  cpu:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: phandles to the I2S controllers
++
++  codec:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: |
++          List of phandles to the CODEC nodes,
++          first entry must be corresponding to the MAX98090 CODEC and
++          the second entry must be the phandle of the HDMI IP block node.
++
++  samsung,audio-widgets:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      This property specifies off-codec audio elements
++      like headphones or speakers, for details see widgets.txt
++
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio
++      components;  each entry is a pair of strings, the first being the
++      connection's sink, the second being the connection's source;
++      valid names for sources and sinks are the MAX98090's pins (as
++      documented in its binding), and the jacks on the board.
++      For Odroid X2: "Headphone Jack", "Mic Jack", "DMIC"
++      For Odroid U3, XU3: "Headphone Jack", "Speakers"
++      For Odroid XU4: no entries
++
++required:
++  - compatible
++  - model
++  - cpu
++  - codec
++
++examples:
++  - |
++    sound {
++        compatible = "hardkernel,odroid-xu3-audio";
++        model = "Odroid-XU3";
++        samsung,audio-routing =
++                "Headphone Jack", "HPL",
++                "Headphone Jack", "HPR",
++                "IN1", "Mic Jack",
++                "Mic Jack", "MICBIAS";
++
++        cpu {
++            sound-dai = <&i2s0 0>;
++        };
++
++        codec {
++            sound-dai = <&hdmi>, <&max98090>;
++        };
++    };
++
+-- 
+2.17.1
 
 
->> I meant that hardware has been recovered & is operational again (driver
->> can talk to it). I expected user space to reconfigure all interfaces
->> using the same settings that were used on previous run.
->>
->> If driver were able to recover interfaces setup on its own (with a help
->> of cfg80211) then user space wouldn't need to be involved.
-> 
-> The driver can do it, mac80211 does. It's just a matter of what the
-> driver will do or not.
-> 
->> First of all I was wondering how to handle interfaces creation. After a
->> firmware crash we have:
->> 1) Interfaces created in Linux
->> 2) No corresponsing interfaces in firmware
-> 
->> Syncing that (re-creating in-firmware firmwares) may be a bit tricky
->> depending on a driver and hardware.
-> 
-> We do that in mac80211, it works fine. Why would it be tricky?
 
-In brcmfmac on .add_virtual_intf() we:
-1) Send request to the FullMAC firmware
-2) Wait for a reply
-3) On success we create interface
-4) We wake up .add_virtual_intf() handler
-
-I'll need to find a way to skip step 3 in recovery path since interface
-on host side already exists.
-
-
-> If something fails, I think we force that interface to go down.
-> 
->> For some cases it could be easier to
->> delete all interfaces and ask user space to setup wiphy (create required
->> interfaces) again. I'm not sure if that's acceptable though?
->>
->> If we agree interfaces should stay and driver simply should configure
->> firmware properly, then we need all data as explained earlier. struct
->> cfg80211_ap_settings is not available during runtime. How should we
->> handle that problem?
-> 
-> You can cache it in the driver in whatever format makes sense.
-> 
->> I was aiming for a brutal force solution: just make user space
->> interfaces need a full setup just at they were just created.
-> 
-> You can still do that btw, just unregister and re-register the wiphy.
-
-OK, so basically I need to work on caching setup data. Should I try
-doing that at my selected driver level (brcmfmac)? Or should I focus on
-generic solution (cfg80211) and consider offloading mac80211 if
-possible?
