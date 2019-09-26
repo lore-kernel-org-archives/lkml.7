@@ -2,162 +2,141 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2403C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E689C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9602B2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE2B222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JHx+KGK9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="I3LkGRaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfIZLzc (ORCPT
+        id S1726563AbfIZL4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:55:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54916 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfIZLzb (ORCPT
+        Thu, 26 Sep 2019 07:56:06 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:50062 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfIZL4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:55:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBtIeS021284;
-        Thu, 26 Sep 2019 06:55:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569498918;
-        bh=NKFr6hD35gJTr3EyHv50PbXW9p7fYtL6VKuWvp+Wvv4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JHx+KGK9LpH3ziO+qu9fLQhYNsFynBYsNhja7nOsldF0S9VW/RJi3qFhRscRyrm0z
-         KW+3OXDoI6B6AUmz2kbFiuQ42p+BBL7Zg20IJLXXTnHQdQphfMKv/tSpR8UGHoPcn/
-         E6HDFwoq5LUuM1isYRZNGdatTVbTWjH/WHft+OMo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBtId8040293;
-        Thu, 26 Sep 2019 06:55:18 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
- Sep 2019 06:55:10 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 26 Sep 2019 06:55:10 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBtHBN001844;
-        Thu, 26 Sep 2019 06:55:17 -0500
-Subject: Re: [PATCH v9 09/15] dt: bindings: lp55xx: Update binding for
- Multicolor Framework
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-References: <20190925174616.3714-1-dmurphy@ti.com>
- <20190925174616.3714-10-dmurphy@ti.com>
- <ef02eafd-d1d9-da3f-4f52-cd159c7960d9@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <073d1dc0-d181-59f2-6e0f-e5461e4a2b9e@ti.com>
-Date:   Thu, 26 Sep 2019 07:00:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 07:56:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id A8D263F715;
+        Thu, 26 Sep 2019 13:56:02 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="I3LkGRaL";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WDsAyHNrQ3C6; Thu, 26 Sep 2019 13:56:01 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B2F303F6F6;
+        Thu, 26 Sep 2019 13:55:56 +0200 (CEST)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id DD602360311;
+        Thu, 26 Sep 2019 13:55:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1569498956; bh=sSyG1uzep6Io+55nV8hhwYEwrrW+pXAnmhIE4329T4s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I3LkGRaLhcuaKFJs3wQ/Ifyy+mgUG1d6eQUd1f+JgFOlmoZowj1oHWzReXYhiT/yJ
+         XrUHyb8jp+8t+/vNHwz95vUyUN6OHFyVLz3Pt8O8idMK6yK7NAngaupy2kxaTPvSUe
+         Xw0vxEj9DkrNdum02gtR69pWj4ig+4RiOv9eAO04=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2 0/5] Emulated coherent graphics memory take 2
+Date:   Thu, 26 Sep 2019 13:55:43 +0200
+Message-Id: <20190926115548.44000-1-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <ef02eafd-d1d9-da3f-4f52-cd159c7960d9@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+From: Thomas Hellström <thellstrom@vmware.com>
 
-On 9/25/19 4:34 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/25/19 7:46 PM, Dan Murphy wrote:
->> Update the DT binding to include the properties to use the
->> multicolor framework for the devices that use the LP55xx
->> framework.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> CC: Tony Lindgren <tony@atomide.com>
->> CC: "Benoît Cousson" <bcousson@baylibre.com>
->> CC: Linus Walleij <linus.walleij@linaro.org>
->> CC: Shawn Guo <shawnguo@kernel.org>
->> CC: Sascha Hauer <s.hauer@pengutronix.de>
->> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
->> CC: Fabio Estevam <festevam@gmail.com>
->> CC: NXP Linux Team <linux-imx@nxp.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lp55xx.txt  | 99 +++++++++++++++++++
->>   1 file changed, 99 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> index bfe2805c5534..c120d2bde3bd 100644
->> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> @@ -1,6 +1,8 @@
->>   Binding for TI/National Semiconductor LP55xx LED Drivers
->>   
->>   Required properties:
->> +- #address-cells: 1
->> +- #size-cells: 0
->>   - compatible: one of
->>   	national,lp5521
->>   	national,lp5523
->> @@ -14,6 +16,18 @@ Required properties:
->>   Each child has own specific current settings
->>   - led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
->>   - max-cur: Maximun current at each LED channel.
->> +- reg: Output channel for the LED.  This is zero based channel identifier and
->> +	the data sheet is a one based channel identifier.
->> +	reg value to output to LED output number
->> +	D1 = reg value is 0
->> +	D2 = reg value is 1
->> +	D3 = reg value is 2
->> +	D4 = reg value is 3
->> +	D5 = reg value is 4
->> +	D6 = reg value is 5
->> +	D7 = reg value is 6
->> +	D8 = reg value is 7
->> +	D9 = reg value is 8
->>   
->>   Optional properties:
->>   - enable-gpio: GPIO attached to the chip's enable pin
->> @@ -35,23 +49,28 @@ example 1) LP5521
->>   on channel 0.
->>   
->>   lp5521@32 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->>   	compatible = "national,lp5521";
->>   	reg = <0x32>;
->>   	label = "lp5521_pri";
->>   	clock-mode = /bits/ 8 <2>;
->>   
->>   	chan0 {
-> s/chan0/chan@0/
->
-> The same applies to the remaining occurrences in this file and to
-> the other patches from the patch set as already pointed out.
+Graphics APIs like OpenGL 4.4 and Vulkan require the graphics driver
+to provide coherent graphics memory, meaning that the GPU sees any
+content written to the coherent memory on the next GPU operation that
+touches that memory, and the CPU sees any content written by the GPU
+to that memory immediately after any fence object trailing the GPU
+operation has signaled.
 
-Ack.  I have made the same change across all the DT patches in this series
+Paravirtual drivers that otherwise require explicit synchronization
+needs to do this by hooking up dirty tracking to pagefault handlers
+and buffer object validation.
 
-Dan
+The mm patch page walk interface has been reworked to be similar to the
+reworked page-walk code (mm/pagewalk.c). There have been two other solutions
+to consider:
+1) Using the page-walk code. That is currently not possible since it requires
+the mmap-sem to be held for the struct vm_area_struct vm_flags and for huge
+page splitting. The pagewalk code in this patchset can't hold the mmap sems
+since it will lead to locking inversion. We have an established locking order
+mmap_sem -> dma_reservation -> i_mmap_lock, whereas holding the mmap_sem in
+this case would require dma_reservation -> i_mmap_lock -> mmap_sem.
+Instead it uses an operation mode similar to unmap_mapping_range() where the
+i_mmap_lock is held.
+2) Using apply_to_page_range(). The primary use of this code is to fill
+page tables. The operation modes are IMO sufficiently different to motivate
+re-implementing the page-walk.
 
+The code has been tested and exercised by a tailored version of mesa
+where we disable all explicit synchronization and assume graphics memory
+is coherent. The performance loss varies of course; a typical number is
+around 5%.
 
->> +		reg = <0>;
->>   		led-cur = /bits/ 8 <0x2f>;
->>   		max-cur = /bits/ 8 <0x5f>;
->>   		linux,default-trigger = "heartbeat";
->>   	};
->>
+I would like to merge this code through the DRM tree, so an ack to include
+the new mm helpers in that merge would be greatly appreciated.
+
+Changes since RFC:
+- Merge conflict changes moved to the correct patch. Fixes intra-patchset
+  compile errors.
+- Be more aggressive when turning ttm vm code into helpers. This makes sure
+  we can use a const qualifier on the vmwgfx vm_ops.
+- Reinstate a lost comment an fix an error path that was broken when turning
+  the ttm vm code into helpers.
+- Remove explicit type-casts of struct vm_area_struct::vm_private_data
+- Clarify the locking inversion that makes us not being able to use the mm
+  pagewalk code.
+
+Changes since v1:
+- Removed the vmwgfx maintainer entry for as_dirty_helpers.c, updated
+  commit message accordingly
+- Removed the TTM patches from the series as they are merged separately
+  through DRM.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Christoph Hellwig <hch@infradead.org>
