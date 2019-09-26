@@ -2,53 +2,106 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11184C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C419EC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EB8222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECA5222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfIZGwq (ORCPT
+        id S1726887AbfIZGxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 02:52:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53024 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfIZGwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 02:52:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 801E8ABB3;
-        Thu, 26 Sep 2019 06:52:44 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        "Palmer Dabbelt" <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH] riscv: move flush_icache_range/user_range() after flush_icache_all()
-References: <20190926022938.58568-1-wangkefeng.wang@huawei.com>
-X-Yow:  It's the RINSE CYCLE!!  They've ALL IGNORED the RINSE CYCLE!!
-Date:   Thu, 26 Sep 2019 08:52:43 +0200
-In-Reply-To: <20190926022938.58568-1-wangkefeng.wang@huawei.com> (Kefeng
-        Wang's message of "Thu, 26 Sep 2019 10:29:38 +0800")
-Message-ID: <mvm8sqb4khw.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 26 Sep 2019 02:53:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45602 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfIZGxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 02:53:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 41so1029087oti.12;
+        Wed, 25 Sep 2019 23:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jOxmQIZ9/nLS57z58IjKt3I6bKDLebiKnN6qX7jkqHc=;
+        b=NHyTmteGd1pOma+rnrJpF4x23lgF7T0pp/aa2zj8i3xsvy5L1IPaaRLn8LJBKjB6sl
+         IGTMyCeeWuSx+dMQIudqy+i+4QH/H1+C6/WvplP+LFs5r2ETOXr07dDtW3/l8iGjpcAJ
+         H0YsIg7yBRTVdV1C8uS+xRCrIgyyB7ch9u14k0BDg54RUGwevs5RU2f7jReLX8/HkCx2
+         slO/Ymk15jdW+sXTgm+nE1HZWgZEVip2mN8oFt9+ZUZjlCq7tmpXam8yEBAwqhgLP+Wd
+         odkl0cHgWfkQAzOb3otwxWxzDw/om1XypJpTzdc6lJRMxtKAvOGDW0oe6xDr8JxJJe2K
+         jyzw==
+X-Gm-Message-State: APjAAAXndRJRP1Teyy6v10LNIMN9KrIqhze43H2DD2kMgqOscgqzbDW7
+        736tSxe2ImWILTjB6rkh9Hj5TS9OxQSnH7jvdFg=
+X-Google-Smtp-Source: APXvYqz4B9s0pUnTWBlenHYZ2HUvHIJ7WCCZdPwKOAQo8kuhjVGmumoyv3hTO1gsl54RLbdlDK2z87u4iSoM+iwf6Cs=
+X-Received: by 2002:a9d:5a06:: with SMTP id v6mr1471154oth.250.1569480780295;
+ Wed, 25 Sep 2019 23:53:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190924110547.14770-1-lukma@denx.de> <20190924110547.14770-2-lukma@denx.de>
+In-Reply-To: <20190924110547.14770-2-lukma@denx.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 26 Sep 2019 08:52:48 +0200
+Message-ID: <CAMuHMdXseZppE74D8XW=5ZWNNNLXZFLTSiqqe_qoZ8C1rAFQSg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] spi: Add call to spi_slave_abort() function when
+ spidev driver is released
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-https://lore.kernel.org/linux-riscv/mvm7e9spggv.fsf@suse.de/
+Hi Lukasz,
 
-Andreas.
+On Thu, Sep 26, 2019 at 3:33 AM Lukasz Majewski <lukma@denx.de> wrote:
+> This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
+> in the slave mode (like NXP's dspi driver for Vybrid SoC).
+>
+> When SPI HW works in this mode - the master is responsible for providing
+> CS and CLK signals. However, when some fault happens - like for example
+> distortion on SPI lines - the SPI Linux driver needs a chance to recover
+> from this abnormal situation and prepare itself for next (correct)
+> transmission.
+>
+> This change doesn't pose any threat on drivers working in master mode as
+> spi_slave_abort() function checks if SPI slave mode is supported.
+>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+
+Thanks for your patch!
+
+Yesterday I saw this appear on spi/for-next, but I couldn't find the
+email in my mbox.  Today it has arrived. Looks like gmail had some troubles
+("Delivered after 138401 seconds", ugh).
+
+> --- a/drivers/spi/spidev.c
+> +++ b/drivers/spi/spidev.c
+> @@ -627,6 +627,7 @@ static int spidev_release(struct inode *inode, struct file *filp)
+>                 if (dofree)
+>                         kfree(spidev);
+>         }
+> +       spi_slave_abort(spidev->spi);
+
+Looks good to me.  Just wondering if this should be done for the last user only,
+i.e. in the "if" block above, like resetting speed_hz?
+
+>         mutex_unlock(&device_list_lock);
+>
+>         return 0;
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
