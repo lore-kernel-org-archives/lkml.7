@@ -2,47 +2,40 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF9AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DB0222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80184222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfIZVnK (ORCPT
+        id S1726597AbfIZVnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:43:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:8270 "EHLO mga07.intel.com"
+        Thu, 26 Sep 2019 17:43:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:60738 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfIZVnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:43:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 14:43:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,553,1559545200"; 
-   d="scan'208";a="192958528"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 26 Sep 2019 14:43:03 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>
-Subject: [PATCH 1/2] KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
-Date:   Thu, 26 Sep 2019 14:43:01 -0700
-Message-Id: <20190926214302.21990-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190926214302.21990-1-sean.j.christopherson@intel.com>
-References: <20190926214302.21990-1-sean.j.christopherson@intel.com>
+        id S1725909AbfIZVnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:43:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F21AA337;
+        Thu, 26 Sep 2019 14:43:54 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D28023F739;
+        Thu, 26 Sep 2019 14:43:53 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
+        ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
+        tglx@linutronix.de
+Subject: [PATCH v3 0/5]arm64: vdso32: Address various issues
+Date:   Thu, 26 Sep 2019 22:43:37 +0100
+Message-Id: <20190926214342.34608-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,80 +43,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
-isntead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
-is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
-refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
-VM-Exit occurs without actually entering L2, e.g. if the nested run
-is squashed because L2 is being put into HLT.
+Hi Will,
 
-In an ideal world where EPT *requires* unrestricted guest (and vice
-versa), VMX could handle CR3 similar to how it handles RSP and RIP,
-e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
-the unrestricted guest silliness complicates the dirty tracking logic
-to the point that explicitly handling vmcs02.GUEST_CR3 during nested
-VM-Enter is a simpler overall implementation.
+this patch series is meant to address the various compilation issues you
+reported about arm64 vdso32.
 
-Cc: stable@vger.kernel.org
-Reported-by: Reto Buerki <reet@codelabs.ch>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Please let me know if there is still something missing.
+
+Thanks,
+Vincenzo
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+
 ---
- arch/x86/kvm/vmx/nested.c | 8 ++++++++
- arch/x86/kvm/vmx/vmx.c    | 9 ++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 41abc62c9a8a..971a24134081 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2418,6 +2418,14 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 				entry_failure_code))
- 		return -EINVAL;
- 
-+	/*
-+	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to vmcs12
-+	 * on nested VM-Exit, which can occur without actually running L2, e.g.
-+	 * if L2 is entering HLT state, and thus without hitting vmx_set_cr3().
-+	 */
-+	if (enable_ept)
-+		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
-+
- 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are set. */
- 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
- 	    is_pae_paging(vcpu)) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d4575ffb3cec..b530950a9c2b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2985,6 +2985,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- {
- 	struct kvm *kvm = vcpu->kvm;
- 	unsigned long guest_cr3;
-+	bool skip_cr3 = false;
- 	u64 eptp;
- 
- 	guest_cr3 = cr3;
-@@ -3000,15 +3001,17 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
- 		}
- 
--		if (enable_unrestricted_guest || is_paging(vcpu) ||
--		    is_guest_mode(vcpu))
-+		if (is_guest_mode(vcpu))
-+			skip_cr3 = true;
-+		else if (enable_unrestricted_guest || is_paging(vcpu))
- 			guest_cr3 = kvm_read_cr3(vcpu);
- 		else
- 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
- 		ept_load_pdptrs(vcpu);
- 	}
- 
--	vmcs_writel(GUEST_CR3, guest_cr3);
-+	if (!skip_cr3)
-+		vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+v3:
+   - Exposed COMPATCC
+   - Addressed Review Comments
+
+v2:
+   - Fixed binutils detection
+   - Addressed review comments
+
+Vincenzo Frascino (5):
+  arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+  arm64: vdso32: Detect binutils support for dmb ishld
+  arm64: vdso32: Fix compilation warning
+  arm64: Remove gettimeofday.S
+  arm64: vdso32: Remove jump label config option in Makefile
+
+ arch/arm64/Kconfig                           |  5 ++++-
+ arch/arm64/Makefile                          | 18 +++++-------------
+ arch/arm64/include/asm/memory.h              |  3 +++
+ arch/arm64/include/asm/vdso/compat_barrier.h |  2 +-
+ arch/arm64/kernel/vdso/gettimeofday.S        |  0
+ arch/arm64/kernel/vdso32/Makefile            | 14 +++++++++-----
+ 6 files changed, 22 insertions(+), 20 deletions(-)
+ delete mode 100644 arch/arm64/kernel/vdso/gettimeofday.S
+
 -- 
-2.22.0
+2.23.0
 
