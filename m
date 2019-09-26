@@ -2,110 +2,99 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C4C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2EC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C2D222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F302222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X+6L0T5y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="URbFQq7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbfIZIM4 (ORCPT
+        id S1728892AbfIZIOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:12:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56624 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729394AbfIZIMy (ORCPT
+        Thu, 26 Sep 2019 04:14:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33936 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfIZIOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:12:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8Q8938N143494;
-        Thu, 26 Sep 2019 08:12:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=nHvD6qHssEaWW5ffwT7IOeDd0XSJWsWGV8kA52kIHrk=;
- b=X+6L0T5yKArXU+XgMIh6S/Ef5GWy0+GxT9A+BIZF0CWZgR9PVFxu4ahv1rSVai5ikMRt
- pC5WYg6XkvW3+LnayJUdDtlVt6nfmKmSNoUypBMT8G0eeGkGMWFBSnIkYzM0Q8JeedKd
- FyCv2+GQ4zM6TLAVzORNllrpSiErDoOwp4e5tev0pcCd3jj9YNH0GQoMfH5B1dBzYEOt
- DzQr7bjHr7S/svIjg+wBJGg+FIl8FT05FEFw6Z/BREF78worz1oO7COlwZJWhOo1xKaR
- CANjezhPQqAVhBhxImZOYQnd2N0M2biUIFZWlv1XKVys8KcLOLTWpIKbezYYTUybmMBD Gg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v5b9u20m6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 08:12:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8Q88pAd052677;
-        Thu, 26 Sep 2019 08:10:33 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2v7vp0rcaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 08:10:33 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8Q8AQhI020500;
-        Thu, 26 Sep 2019 08:10:26 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 01:10:25 -0700
-Date:   Thu, 26 Sep 2019 11:10:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] iio: imu: adis16480: clean up a condition
-Message-ID: <20190926081016.GA2332@mwanda>
+        Thu, 26 Sep 2019 04:14:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qNXe1DLOYq+LbjBhS7qEU55tuee2E34vS3LvdrTMFfk=; b=URbFQq7Q6H62SX2gi4xc3zxRT
+        DvGAdonmQPJkhuQJkcPKu8Tq9ElDbFv5oKaF7BJFHZR9Bf7xvbPicryV+XuarU9l4DB8H9Ty6CY2A
+        JDWFR3FvLGCvVUtO6YHwBcx44A36QDbuNNsg3ieot1EXUZps0Z62BVR6PTuaWS4C1jUhZMfj+c2Uw
+        MLAM/ZUPwqSjoicTtvqCeps5mhIRAfX4lqJxpiJ6gMlrY7silK63xescQ9lkGwy+z26WkZWkRoh5w
+        GVUqzTazYaf+Kk4MIl9T3J/1av+yI4ncyMVCLc/dO4D2KiR8tdMJnXSv1b01XqrVe5WlzjdbFZr+L
+        zhbDFdREg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDOua-0003l8-N8; Thu, 26 Sep 2019 08:14:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 93D7B302A71;
+        Thu, 26 Sep 2019 10:13:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BF10520138CCF; Thu, 26 Sep 2019 10:14:00 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 10:14:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rik van Riel <riel@redhat.com>
+Subject: Re: [PATCH] sched/vtime: Fix guest/system mis-accounting on task
+ switch
+Message-ID: <20190926081400.GH4553@hirez.programming.kicks-ass.net>
+References: <20190925214242.21873-1-frederic@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <20190925214242.21873-1-frederic@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "t" variable is unsigned so it can't be less than zero.  We really
-are just trying to prevent divide by zero bugs so just checking against
-zero is sufficient.
+On Wed, Sep 25, 2019 at 11:42:42PM +0200, Frederic Weisbecker wrote:
+> vtime_account_system() assumes that the target task to account cputime
+> to is always the current task. This is most often true indeed except on
+> task switch where we call:
+> 
+> 	vtime_common_task_switch(prev)
+> 		vtime_account_system(prev)
+> 
+> Here prev is the scheduling-out task where we account the cputime to. It
+> doesn't match current that is already the scheduling-in task at this
+> stage of the context switch.
+> 
+> So we end up checking the wrong task flags to determine if we are
+> accounting guest or system time to the previous task.
+> 
+> As a result the wrong task is used to check if the target is running in
+> guest mode. We may then spuriously account or leak either system or
+> guest time on task switch.
+> 
+> Fix this assumption and also turn vtime_guest_enter/exit() to use the
+> task passed in parameter as well to avoid future similar issues.
+> 
+> Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rik van Riel <riel@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/iio/imu/adis16480.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index b99d73887c9f..e144e567675d 100644
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -318,7 +318,7 @@ static int adis16480_set_freq(struct iio_dev *indio_dev, int val, int val2)
- 	unsigned int t, reg;
- 
- 	t =  val * 1000 + val2 / 1000;
--	if (t <= 0)
-+	if (t == 0)
- 		return -EINVAL;
- 
- 	/*
--- 
-2.20.1
-
+Thanks!
