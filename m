@@ -2,129 +2,274 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98411C352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C4C352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8F8207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QOUNhFqA"
+	by mail.kernel.org (Postfix) with ESMTP id CC387207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfIZM0f (ORCPT
+        id S1726181AbfIZM0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 26 Sep 2019 08:26:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38755 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfIZM0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from inva021.nxp.com ([92.121.34.21]:38354 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfIZM0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Sep 2019 08:26:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so1833227wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 05:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p32y5pL62PU7Yf9iy/plIVHUc6YiHXgm7LNnsJBfWag=;
-        b=QOUNhFqApk0JZioGtQSmqcw6DrLAybbq5zyIfy4vZUVbIk0srAk//b2mD0SDPpM8uJ
-         891LzBY3eRJHYK4y5wWOZeWbZqRs20mepTSFNoIae3EMzwh4/3LdP/SEcrGfU6sAQb/8
-         0L5o4W5RCKH/MeSm2qXQXeKbS6FjhFCheOaLlXJkI3KPTYzsagKWNhqO0Y/9VnQDIGOu
-         8X+NXogpXrd2GPzJWHPCdqHKrug9a73PnieO6i8eo/Z66MaWiwCwvxuj0bZQq2R1J0Ag
-         8OJF4cvEQGNIbJyh06yT4xAWUQMM/rej6F3HP8azXufHyMzuY7mbvOGC3E+3IP/FKxkb
-         QoVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p32y5pL62PU7Yf9iy/plIVHUc6YiHXgm7LNnsJBfWag=;
-        b=Y3iqHYM/ufdUe65Hn6fY24bDrzACKjSPDOR6Xz7YewWoxEwaZT+V2cFCwkuSXe47y7
-         3ilzRyfOKAo/wCAXM6S1r/dHYFm7Le5v5OED21Hn32Y8EZ0f7Dmk5p+5AtclYrJbk4hu
-         q/S5eGxhYjFbT3hNkwM1zdmfTiFnXSoQysrXbf9aCK8A2L6d+5G8RIfAx3rSZtAGxQ94
-         tTG+vN94KKKy5+ymHMOczpOVQ9IFqdeWAYsLVMlNjbyBoJbK20+h5wv2q/mBHPG0B7t3
-         WuS0sB34mCHeN0opQHjBb/24dk1zAJNRRq66TUfjZCvQBrpgJq9/5ho0V/Rlr/qPA/+g
-         QLgw==
-X-Gm-Message-State: APjAAAUMo179BzbzNyfnfo8IzCo4wE1hFQ1OagiKfSVT8z68iooX5Dkl
-        yert02dpNhvvT1pS+fNQ6gLVfGmofCS9Ng2W
-X-Google-Smtp-Source: APXvYqzBATD7joVjL92vZMpqjqZNavOQPERuLrMeZb/ll/M9FujdM09hbbVOjMLwThqwb9vquE5C1g==
-X-Received: by 2002:a05:6000:108c:: with SMTP id y12mr1628248wrw.238.1569500792496;
-        Thu, 26 Sep 2019 05:26:32 -0700 (PDT)
-Received: from [192.168.1.145] ([65.39.69.237])
-        by smtp.gmail.com with ESMTPSA id e17sm1932014wma.15.2019.09.26.05.26.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 05:26:31 -0700 (PDT)
-Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
- zero
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190926095012.31826-1-colin.king@canonical.com>
- <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
- <20190926113329.GE27389@kadam>
- <04262621-68fd-a4bb-ab0c-83954c03fbb0@kernel.dk>
- <2de0eb45-3abc-3ccd-f3d3-346d899ba50d@rasmusvillemoes.dk>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b9754557-38a5-052b-f42d-6ba9d7acfed2@kernel.dk>
-Date:   Thu, 26 Sep 2019 14:26:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <2de0eb45-3abc-3ccd-f3d3-346d899ba50d@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A1F020057A;
+        Thu, 26 Sep 2019 14:26:32 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BA9C200565;
+        Thu, 26 Sep 2019 14:26:32 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 06B77205E3;
+        Thu, 26 Sep 2019 14:26:31 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v2] crypto: caam - use mapped_{src,dst}_nents for descriptor
+Date:   Thu, 26 Sep 2019 15:26:29 +0300
+Message-Id: <1569500789-7443-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 2:14 PM, Rasmus Villemoes wrote:
-> On 26/09/2019 13.42, Jens Axboe wrote:
->> On 9/26/19 1:33 PM, Dan Carpenter wrote:
->>> On Thu, Sep 26, 2019 at 11:56:30AM +0200, Jens Axboe wrote:
->>>> On 9/26/19 11:50 AM, Colin King wrote:
->>>>> From: Colin Ian King <colin.king@canonical.com>
->>>>>
->>>>> In the case where sig is NULL the error variable ret is not initialized
->>>>> and may contain a garbage value on the final checks to see if ret is
->>>>> -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
->>>>> ensure the ret does not accidentially contain -ERESTARTSYS before the
->>>>> loop.
->>>>
->>>> Oops, weird it didn't complain. I've folded in this fix, as that commit
->>>> isn't upstream yet. Thanks!
->>>
->>> There is a bug in GCC where at certain optimization levels, instead of
->>> complaining, it initializes it to zero.
->>
->> That's awfully nice of it ;-)
->>
->> Tried with -O0 and still didn't complain for me.
->>
->> $ gcc --version
->> gcc (Ubuntu 9.1.0-2ubuntu2~18.04) 9.1.0
->>
->> Tried gcc 5/6/7/8 as well. Might have to go look at what code it's
->> generating.
->>
-> 
-> I think it's essentially the same as
-> https://lore.kernel.org/lkml/CAHk-=whP-9yPAWuJDwA6+rQ-9owuYZgmrMA9AqO3EGJVefe8vg@mail.gmail.com/
-> (thread "tmpfs: fix uninitialized return value in shmem_link").
+The mapped_{src,dst}_nents _returned_ from the dma_map_sg
+call (which could be less than src/dst_nents) have to be
+used to generate the job descriptors.
 
-I think you're right, it's the same pattern. If I kill the:
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+Changes since v1:
+- updated, with mapped_{src,dst}_nents, the set_rsa_pub_pdb, set_rsa_priv_f{1,2,3}_pdb functions.
+---
+ drivers/crypto/caam/caampkc.c | 72 +++++++++++++++++++++++--------------------
+ drivers/crypto/caam/caampkc.h |  8 +++--
+ 2 files changed, 45 insertions(+), 35 deletions(-)
 
-if (ret)
-	return ret;
-
-inside the if (sig) branch, then gcc does show the warning as it should.
-
+diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
+index 83f96d4..6619c51 100644
+--- a/drivers/crypto/caam/caampkc.c
++++ b/drivers/crypto/caam/caampkc.c
+@@ -252,9 +252,9 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+ 		       GFP_KERNEL : GFP_ATOMIC;
+ 	int sg_flags = (flags == GFP_ATOMIC) ? SG_MITER_ATOMIC : 0;
+-	int sgc;
+ 	int sec4_sg_index, sec4_sg_len = 0, sec4_sg_bytes;
+ 	int src_nents, dst_nents;
++	int mapped_src_nents, mapped_dst_nents;
+ 	unsigned int diff_size = 0;
+ 	int lzeros;
+ 
+@@ -285,13 +285,27 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 				     req_ctx->fixup_src_len);
+ 	dst_nents = sg_nents_for_len(req->dst, req->dst_len);
+ 
+-	if (!diff_size && src_nents == 1)
++	mapped_src_nents = dma_map_sg(dev, req_ctx->fixup_src, src_nents,
++				      DMA_TO_DEVICE);
++	if (unlikely(!mapped_src_nents)) {
++		dev_err(dev, "unable to map source\n");
++		return ERR_PTR(-ENOMEM);
++	}
++	mapped_dst_nents = dma_map_sg(dev, req->dst, dst_nents,
++				      DMA_FROM_DEVICE);
++	if (unlikely(!mapped_dst_nents)) {
++		dev_err(dev, "unable to map destination\n");
++		goto src_fail;
++	}
++
++	if (!diff_size && mapped_src_nents == 1)
+ 		sec4_sg_len = 0; /* no need for an input hw s/g table */
+ 	else
+-		sec4_sg_len = src_nents + !!diff_size;
++		sec4_sg_len = mapped_src_nents + !!diff_size;
+ 	sec4_sg_index = sec4_sg_len;
+-	if (dst_nents > 1)
+-		sec4_sg_len += pad_sg_nents(dst_nents);
++
++	if (mapped_dst_nents > 1)
++		sec4_sg_len += pad_sg_nents(mapped_dst_nents);
+ 	else
+ 		sec4_sg_len = pad_sg_nents(sec4_sg_len);
+ 
+@@ -301,19 +315,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	edesc = kzalloc(sizeof(*edesc) + desclen + sec4_sg_bytes,
+ 			GFP_DMA | flags);
+ 	if (!edesc)
+-		return ERR_PTR(-ENOMEM);
+-
+-	sgc = dma_map_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
+-	if (unlikely(!sgc)) {
+-		dev_err(dev, "unable to map source\n");
+-		goto src_fail;
+-	}
+-
+-	sgc = dma_map_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
+-	if (unlikely(!sgc)) {
+-		dev_err(dev, "unable to map destination\n");
+ 		goto dst_fail;
+-	}
+ 
+ 	edesc->sec4_sg = (void *)edesc + sizeof(*edesc) + desclen;
+ 	if (diff_size)
+@@ -324,7 +326,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 		sg_to_sec4_sg_last(req_ctx->fixup_src, req_ctx->fixup_src_len,
+ 				   edesc->sec4_sg + !!diff_size, 0);
+ 
+-	if (dst_nents > 1)
++	if (mapped_dst_nents > 1)
+ 		sg_to_sec4_sg_last(req->dst, req->dst_len,
+ 				   edesc->sec4_sg + sec4_sg_index, 0);
+ 
+@@ -335,6 +337,9 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	if (!sec4_sg_bytes)
+ 		return edesc;
+ 
++	edesc->mapped_src_nents = mapped_src_nents;
++	edesc->mapped_dst_nents = mapped_dst_nents;
++
+ 	edesc->sec4_sg_dma = dma_map_single(dev, edesc->sec4_sg,
+ 					    sec4_sg_bytes, DMA_TO_DEVICE);
+ 	if (dma_mapping_error(dev, edesc->sec4_sg_dma)) {
+@@ -351,11 +356,11 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	return edesc;
+ 
+ sec4_sg_fail:
+-	dma_unmap_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
++	kfree(edesc);
+ dst_fail:
+-	dma_unmap_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
++	dma_unmap_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
+ src_fail:
+-	kfree(edesc);
++	dma_unmap_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ 
+@@ -383,15 +388,15 @@ static int set_rsa_pub_pdb(struct akcipher_request *req,
+ 		return -ENOMEM;
+ 	}
+ 
+-	if (edesc->src_nents > 1) {
++	if (edesc->mapped_src_nents > 1) {
+ 		pdb->sgf |= RSA_PDB_SGF_F;
+ 		pdb->f_dma = edesc->sec4_sg_dma;
+-		sec4_sg_index += edesc->src_nents;
++		sec4_sg_index += edesc->mapped_src_nents;
+ 	} else {
+ 		pdb->f_dma = sg_dma_address(req_ctx->fixup_src);
+ 	}
+ 
+-	if (edesc->dst_nents > 1) {
++	if (edesc->mapped_dst_nents > 1) {
+ 		pdb->sgf |= RSA_PDB_SGF_G;
+ 		pdb->g_dma = edesc->sec4_sg_dma +
+ 			     sec4_sg_index * sizeof(struct sec4_sg_entry);
+@@ -428,17 +433,18 @@ static int set_rsa_priv_f1_pdb(struct akcipher_request *req,
+ 		return -ENOMEM;
+ 	}
+ 
+-	if (edesc->src_nents > 1) {
++	if (edesc->mapped_src_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_G;
+ 		pdb->g_dma = edesc->sec4_sg_dma;
+-		sec4_sg_index += edesc->src_nents;
++		sec4_sg_index += edesc->mapped_src_nents;
++
+ 	} else {
+ 		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+ 
+ 		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
+ 	}
+ 
+-	if (edesc->dst_nents > 1) {
++	if (edesc->mapped_dst_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_F;
+ 		pdb->f_dma = edesc->sec4_sg_dma +
+ 			     sec4_sg_index * sizeof(struct sec4_sg_entry);
+@@ -493,17 +499,17 @@ static int set_rsa_priv_f2_pdb(struct akcipher_request *req,
+ 		goto unmap_tmp1;
+ 	}
+ 
+-	if (edesc->src_nents > 1) {
++	if (edesc->mapped_src_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_G;
+ 		pdb->g_dma = edesc->sec4_sg_dma;
+-		sec4_sg_index += edesc->src_nents;
++		sec4_sg_index += edesc->mapped_src_nents;
+ 	} else {
+ 		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+ 
+ 		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
+ 	}
+ 
+-	if (edesc->dst_nents > 1) {
++	if (edesc->mapped_dst_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_F;
+ 		pdb->f_dma = edesc->sec4_sg_dma +
+ 			     sec4_sg_index * sizeof(struct sec4_sg_entry);
+@@ -582,17 +588,17 @@ static int set_rsa_priv_f3_pdb(struct akcipher_request *req,
+ 		goto unmap_tmp1;
+ 	}
+ 
+-	if (edesc->src_nents > 1) {
++	if (edesc->mapped_src_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_G;
+ 		pdb->g_dma = edesc->sec4_sg_dma;
+-		sec4_sg_index += edesc->src_nents;
++		sec4_sg_index += edesc->mapped_src_nents;
+ 	} else {
+ 		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+ 
+ 		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
+ 	}
+ 
+-	if (edesc->dst_nents > 1) {
++	if (edesc->mapped_dst_nents > 1) {
+ 		pdb->sgf |= RSA_PRIV_PDB_SGF_F;
+ 		pdb->f_dma = edesc->sec4_sg_dma +
+ 			     sec4_sg_index * sizeof(struct sec4_sg_entry);
+diff --git a/drivers/crypto/caam/caampkc.h b/drivers/crypto/caam/caampkc.h
+index 2c488c9..c68fb4c 100644
+--- a/drivers/crypto/caam/caampkc.h
++++ b/drivers/crypto/caam/caampkc.h
+@@ -112,8 +112,10 @@ struct caam_rsa_req_ctx {
+ 
+ /**
+  * rsa_edesc - s/w-extended rsa descriptor
+- * @src_nents     : number of segments in input scatterlist
+- * @dst_nents     : number of segments in output scatterlist
++ * @src_nents     : number of segments in input s/w scatterlist
++ * @dst_nents     : number of segments in output s/w scatterlist
++ * @mapped_src_nents: number of segments in input h/w link table
++ * @mapped_dst_nents: number of segments in output h/w link table
+  * @sec4_sg_bytes : length of h/w link table
+  * @sec4_sg_dma   : dma address of h/w link table
+  * @sec4_sg       : pointer to h/w link table
+@@ -123,6 +125,8 @@ struct caam_rsa_req_ctx {
+ struct rsa_edesc {
+ 	int src_nents;
+ 	int dst_nents;
++	int mapped_src_nents;
++	int mapped_dst_nents;
+ 	int sec4_sg_bytes;
+ 	dma_addr_t sec4_sg_dma;
+ 	struct sec4_sg_entry *sec4_sg;
 -- 
-Jens Axboe
+2.1.0
 
