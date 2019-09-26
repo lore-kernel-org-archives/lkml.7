@@ -2,105 +2,149 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AFEC352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675FBC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F36222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4201D222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569522115;
-	bh=AXXrhWbwsofC1rmf8TbGYx+/8aqKnOhwDk1OD2n0Btc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HGASaJDmQgo1c14XQ8nE3U8Wl7dPXeSshGl1xOOKKDD4PFwK8lHOnf7fUlNHWmTfJ
-	 HdKkVjwrdqDvNoc0pHc7Z/xv/rf0nLP1cGSBJ5kv/zH3im6T58rZMcntEzab1Zv9jE
-	 Mq/yN70ojKMeHI49fuYBw2l81FbpzHeoN644OZ4w=
+	s=default; t=1569522195;
+	bh=kAnUkT/BMP7a5PTeq6qNCOnmIFLH9OMOuO4IXzD2el0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DzBoKuwQ2N6ws4wCghCVnLZ2mSTMMi1pUURChJAUnoFF+RUQJIsRZUhzyoXoo9cDZ
+	 yxSFFItc+DbUPquJvI8ZoON3UPZdHVie/imEIxdr19SOdg7SoCQytXJ9ZUmlcXVrPX
+	 r7Xt3ISbAn/hs8i7FZZsnElIcr/akmpnyYIZcHRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfIZSVy (ORCPT
+        id S1728342AbfIZSXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:21:54 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35556 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfIZSVy (ORCPT
+        Thu, 26 Sep 2019 14:23:14 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48904 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfIZSXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:21:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w6so2450537lfl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rrcu3G8Duy/FeUjbYtKJnhs5/UkfjjDxGs8XQQZjFoU=;
-        b=gzGIbnTBRa0MWz7TFhp8ocJz4Lh2yp/shAcSeubrA6fuXKkzxeQIMSMNUPYdBFXJYn
-         /j0pV7SWgvNqO2g+oiezYX4Vi4visN26kdNsSZ+7eBfZXMOInvLGEWdmfAdWBQVuPnk5
-         706kND9Z6EULVBwuXFq61uGYcokd+0OZjjggU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rrcu3G8Duy/FeUjbYtKJnhs5/UkfjjDxGs8XQQZjFoU=;
-        b=rfUUzcx4Ls4+aW4nLeW2jQTqtvpuv/gwpM1sCaINbLbH+0QYfNHxs8eqfNahxyTnWi
-         0O7Vt3Lt/OTooCSzQClWN0XcFTzflbDKhgSkm1mKCWaSBHgavXSPAZTjxQ+wl4Ot3USz
-         mdGpQz++RJILOiDIc2pCh4XAlHSj7RF8z5HzhvigYLyZrCN4tfw5Lwhu21Z6/Z5okiH7
-         HLLaqmmsPztqIyD2QvK7pTf0d5lzG85HL2WDRN7BDDNXyII85yLSolPlus68ifpK4BVE
-         kpxAHeE7VwGDYSP0IrySFtdbgE05CLkmJjBpPi4Sm/k8jWvWWxJtUNbsTBcL5jduhfYg
-         efsQ==
-X-Gm-Message-State: APjAAAWkcmMcJuCjpXP9UYHdi3dGCBnp/P5hj36wcciEFzvhKSvi6wNS
-        KHuR7iFR78L6rb39Q5N8wodFN9NE9zs=
-X-Google-Smtp-Source: APXvYqx1vnJRbF/otQNwVXPw/weDm3oPzVdHKKOlnbevrDMaoeOLkDtbqnT0idiYRTcJc7Q+Mwq2+w==
-X-Received: by 2002:ac2:44d2:: with SMTP id d18mr3196302lfm.67.1569522111844;
-        Thu, 26 Sep 2019 11:21:51 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id s7sm704457ljs.16.2019.09.26.11.21.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 11:21:50 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id d17so2424519lfa.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:21:49 -0700 (PDT)
-X-Received: by 2002:a19:2489:: with SMTP id k131mr3025988lfk.52.1569522109593;
- Thu, 26 Sep 2019 11:21:49 -0700 (PDT)
+        Thu, 26 Sep 2019 14:23:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L0EJVcfMhAB6/N4tPdvEVipe4vp4nRtTRv+xppqN8UE=; b=w9q+m6kd3SPFn6y7MTkeNY4Jn
+        iWW/eDfgpO9FfCcmP2UsBb8wauAJzsPNeSDpxUEKoufIMcEq030SrcSQFrYrcK5ECS7Q04Xys9ID+
+        uMTDlFAYizv1XHvFtIotrtW50IjuCS5hxhdMgoza8239aNer1Znhf6Qvu+dSj+POSucwQ=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDYPu-0004Rh-Fu; Thu, 26 Sep 2019 18:23:02 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id E4A53D02DD8; Thu, 26 Sep 2019 19:23:00 +0100 (BST)
+Date:   Thu, 26 Sep 2019 11:23:00 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        Sanju R Mehta <sanju.mehta@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5] ASoC: amd: Registering device endpoints using MFD
+ framework
+Message-ID: <20190926182300.GD2036@sirena.org.uk>
+References: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-References: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
- <CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com>
- <CAHk-=wh_CHD9fQOyF6D2q3hVdAhFOmR8vNzcq5ZPcxKW3Nc+2Q@mail.gmail.com>
- <alpine.LRH.2.21.1909231633400.54130@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
- <CAHk-=wh4cuHsE8jFHO7XVatdXa=M2f4RHL3VwnSkAf5UNHUJ-Q@mail.gmail.com> <CAJ-EccMy=tNPp3=PQZxLT7eovojoAdpfQmqhAyv7XO3GwPQBMg@mail.gmail.com>
-In-Reply-To: <CAJ-EccMy=tNPp3=PQZxLT7eovojoAdpfQmqhAyv7XO3GwPQBMg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Sep 2019 11:21:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjH25fp_9oMMi+1GxUR1h+WyXQRvW+GuNVq7vC9Kaad2g@mail.gmail.com>
-Message-ID: <CAHk-=wjH25fp_9oMMi+1GxUR1h+WyXQRvW+GuNVq7vC9Kaad2g@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.4
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     James Morris <jamorris@linuxonhyperv.com>,
-        Jann Horn <jannh@google.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OF9salbnfkEgqvaK"
+Content-Disposition: inline
+In-Reply-To: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:31 PM Micah Morton <mortonm@chromium.org> wrote:
->
->                The best way I know of ensuring this is
-> for me to personally run the SafeSetID selftest (in
-> tools/testing/selftests/safesetid/) every release, regardless of
-> whether we make any changes to SafeSetID itself. Does this sound
-> sufficient or are there more formal guidelines/processes here that I'm
-> not aware of?
 
-I think that would help, but I wopuld also hope that somebody actually
-runs Chromium / Chrome OS with a modern kernel.
+--OF9salbnfkEgqvaK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Even if *standard* device installs don't end up having recent kernels,
-I would assume there are people who are testing development setups?
+On Fri, Sep 27, 2019 at 04:37:35AM +0530, Ravulapati Vishnu vardhan rao wrote:
 
-              Linus
+> -#define ACP3x_PHY_BASE_ADDRESS 0x1240000
+> -#define	ACP3x_I2S_MODE	0
+> -#define	ACP3x_REG_START	0x1240000
+> -#define	ACP3x_REG_END	0x1250200
+> -#define I2S_MODE	0x04
+> -#define	BT_TX_THRESHOLD 26
+> -#define	BT_RX_THRESHOLD 25
+> -#define ACP3x_POWER_ON 0x00
+> -#define ACP3x_POWER_ON_IN_PROGRESS 0x01
+> -#define ACP3x_POWER_OFF 0x02
+> -#define ACP3x_POWER_OFF_IN_PROGRESS 0x03
+> +#define ACP3x_DEVS		3
+> +#define ACP3x_PHY_BASE_ADDRESS	0x1240000
+> +#define	ACP3x_I2S_MODE		0
+> +#define	ACP3x_REG_START		0x1240000
+> +#define	ACP3x_REG_END		0x1250200
+
+A large part of this appears to be unrelated indentation changes,
+these should be split out into a separate patch.
+
+> +static struct device *get_mfd_cell_dev(const char *device_name, int r)
+> +{
+> +	char auto_dev_name[25];
+> +	struct device *dev;
+> +
+> +	snprintf(auto_dev_name, sizeof(auto_dev_name),
+> +		 "%s.%d.auto", device_name, r);
+> +	dev = bus_find_device_by_name(&platform_bus_type,
+> +					NULL, auto_dev_name);
+> +	dev_info(dev, "device %s added\n", auto_dev_name);
+
+Remove this log message, it's going to be very noisy.
+
+> +		r = mfd_add_hotplug_devices(adata->parent, adata->cell,	3);
+> +		for (i = 0; i < 3 ; i++)
+> +			dev = get_mfd_cell_dev(adata->cell[i].name, i);
+
+What is this doing?  We never look at the result of this
+get_mfd_cell_dev() and having a function like this suggests that
+there's some abstraction issue here.
+
+> +	kfree(adata->cell);
+>  	iounmap(adata->acp3x_base);
+> +	/*ignore device status and return driver probe error*/
+> +	return -ENODEV;
+>  release_regions:
+
+This looks broken, as well as discarding error codes (making
+things harder to diagnose) it means we stop unwinding things and
+leave the rest of the resources lying around.
+
+--OF9salbnfkEgqvaK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2NAgQACgkQJNaLcl1U
+h9Cxogf+MiHsjaZBRHQqc3W+QzN0VRj5XNbwBnOYX/QIWj9Qxm9xuUqQK/N7Iwsp
+HlvPLHQ1T/PDhEu+zA+EXWKRax2A56I+C/XyhnoqixUdtJolhiNB5Zw3y5MntaSY
+zzDm+bvcfGLhm6pjDjvsqCKoPBqDcFrh6UbB042bcGvRXURvPZZIroogzbckGplD
+fbRU1BcBrX5ra1yA3nQ+S0QHxbw3ZvwCntDbTMzmCPohGqCFznUxw3ixHoBEavv6
+EjMSaar8T0mZbptkpbt0BAlIEug/M13HL7JqRPJ/7iRrU+QYEJqQtdR/RuxfNBsq
+VVzy6HUsacBj2tH67Z+TZ+VOKdKKew==
+=9AzB
+-----END PGP SIGNATURE-----
+
+--OF9salbnfkEgqvaK--
