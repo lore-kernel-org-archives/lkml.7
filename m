@@ -2,123 +2,260 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E419C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB43921D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569511484;
-	bh=C7fd2pMn6+qd65ES1SK+hysUCnbgH9eM/RFTkISjhtE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cA0yxwQTGYgz084Fa+t/owBp5cDUvDtjUbZoFluavxjfBHJ5dpkIQNG9MBYCRp2+u
-	 4ec6Ap03tiSIaLbCgE3AKvto+/83SVNSIdrK8THI5Sn2BVxxK1Dl6GIHv8nnIdC/P9
-	 cXCx/5eHYV1/5EVAvIzNrnFyK0XNlTaxjRdqWGw0=
+	by mail.kernel.org (Postfix) with ESMTP id E4F4221D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfIZPYo (ORCPT
+        id S1727345AbfIZPZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:24:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59564 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfIZPYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:24:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=E727gRyNX9kxA81FhcRZtHXMEwd8teBeba4q7vIju5Y=; b=NSe5s2xVJDCv
-        UTEy2da6R96Nh0QdEnUkmXAPBlkkKkyEUTDmJQxpjKLXxbbiBe9AFovgnKJC+2PG+62ZWNJRlAaZs
-        vPqp5CRt25N/+NrqJX6MaC3fbAREH4x/cDZJwxMrvvgHIeg3dUnL7UuYEZkYg3iZKo6GqTx0/PKST
-        fZna0=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDVcp-0003vC-Ni; Thu, 26 Sep 2019 15:24:11 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 14838D02CFF; Thu, 26 Sep 2019 16:24:10 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()" to the asoc tree
-In-Reply-To: <20190925110624.GR3264@mwanda>
-X-Patchwork-Hint: ignore
-Message-Id: <20190926152410.14838D02CFF@fitzroy.sirena.org.uk>
-Date:   Thu, 26 Sep 2019 16:24:10 +0100 (BST)
+        Thu, 26 Sep 2019 11:25:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2789 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726845AbfIZPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 11:24:59 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 45931EFB426518DAA836;
+        Thu, 26 Sep 2019 23:24:57 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
+ 23:24:48 +0800
+Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER)
+ allocation
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-11-maz@kernel.org>
+ <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
+ <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <14111988-74c9-12c3-1322-1580ff6ba11f@huawei.com>
+Date:   Thu, 26 Sep 2019 23:19:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
+MIME-Version: 1.0
+In-Reply-To: <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Marc,
 
-   ASoC: topology: Fix a signedness bug in soc_tplg_dapm_widget_create()
+Two more questions below.
 
-has been applied to the asoc tree at
+On 2019/9/25 22:41, Marc Zyngier wrote:
+> On 25/09/2019 14:04, Zenghui Yu wrote:
+>> Hi Marc,
+>>
+>> Some questions about this patch, mostly to confirm that I would
+>> understand things here correctly.
+>>
+>> On 2019/9/24 2:25, Marc Zyngier wrote:
+>>> GICv4.1 defines a new VPE table that is potentially shared between
+>>> both the ITSs and the redistributors, following complicated affinity
+>>> rules.
+>>>
+>>> To make things more confusing, the programming of this table at
+>>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
+>>> for something completely different.
+>>>
+>>> The code flow is somewhat complexified by the need to respect the
+>>> affinities required by the HW, meaning that tables can either be
+>>> inherited from a previously discovered ITS or redistributor.
+>>>
+>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>> ---
+>>
+>> [...]
+>>
+>>> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct its_node *its,
+>>>    	return indirect;
+>>>    }
+>>>    
+>>> +static u32 compute_common_aff(u64 val)
+>>> +{
+>>> +	u32 aff, clpiaff;
+>>> +
+>>> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
+>>> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
+>>> +
+>>> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
+>>> +}
+>>> +
+>>> +static u32 compute_its_aff(struct its_node *its)
+>>> +{
+>>> +	u64 val;
+>>> +	u32 svpet;
+>>> +
+>>> +	/*
+>>> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
+>>> +	 * the resulting affinity. We then use that to see if this match
+>>> +	 * our own affinity.
+>>> +	 */
+>>> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+The spec says, ITS does not share vPE table with Redistributors when
+SVPET==0.  It seems that we miss this rule and simply regard SVPET as
+GICR_TYPER_COMMON_LPI_AFF here.  Am I wrong?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>>> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
+>>> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
+>>> +	return compute_common_aff(val);
+>>> +}
+>>> +
+>>> +static struct its_node *find_sibbling_its(struct its_node *cur_its)
+>>> +{
+>>> +	struct its_node *its;
+>>> +	u32 aff;
+>>> +
+>>> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
+>>> +		return NULL;
+>>> +
+>>> +	aff = compute_its_aff(cur_its);
+>>> +
+>>> +	list_for_each_entry(its, &its_nodes, entry) {
+>>> +		u64 baser;
+>>> +
+>>> +		if (!is_v4_1(its) || its == cur_its)
+>>> +			continue;
+>>> +
+>>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
+>>> +			continue;
+>>> +
+>>> +		if (aff != compute_its_aff(its))
+>>> +			continue;
+>>> +
+>>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
+>>> +		baser = its->tables[2].val;
+>>> +		if (!(baser & GITS_BASER_VALID))
+>>> +			continue;
+>>> +
+>>> +		return its;
+>>> +	}
+>>> +
+>>> +	return NULL;
+>>> +}
+>>> +
+>>>    static void its_free_tables(struct its_node *its)
+>>>    {
+>>>    	int i;
+>>> @@ -2004,6 +2066,15 @@ static int its_alloc_tables(struct its_node *its)
+>>>    			break;
+>>>    
+>>>    		case GITS_BASER_TYPE_VCPU:
+>>> +			if (is_v4_1(its)) {
+>>> +				struct its_node *sibbling;
+>>> +
+>>> +				if ((sibbling = find_sibbling_its(its))) {
+>>> +					its->tables[2] = sibbling->tables[2];
+>>
+>> This means thst the vPE table is shared between ITSs which are under the
+>> same affinity group?
+> 
+> That's indeed what this is trying to do...
+> 
+>> Don't we need to set GITS_BASER (by its_setup_baser()) here to tell this
+>> ITS where the vPE table lacates?
+> 
+> Absolutely. This is a bug. I didn't spot it as my model only has a
+> single ITS.
+> 
+>>
+>>> +					continue;
+>>> +				}
+>>> +			}
+>>> +
+>>>    			indirect = its_parse_indirect_baser(its, baser,
+>>>    							    psz, &order,
+>>>    							    ITS_MAX_VPEID_BITS);
+>>> @@ -2025,6 +2096,212 @@ static int its_alloc_tables(struct its_node *its)
+>>>    	return 0;
+>>>    }
+>>>    
+>>> +static u64 inherit_vpe_l1_table_from_its(void)
+>>> +{
+>>> +	struct its_node *its;
+>>> +	u64 val;
+>>> +	u32 aff;
+>>> +
+>>> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+>>> +	aff = compute_common_aff(val);
+>>> +
+>>> +	list_for_each_entry(its, &its_nodes, entry) {
+>>> +		u64 baser;
+>>> +
+>>> +		if (!is_v4_1(its))
+>>> +			continue;
+>>> +
+>>> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
+>>> +			continue;
+>>> +
+>>> +		if (aff != compute_its_aff(its))
+>>> +			continue;
+>>> +
+>>> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
+>>> +		baser = its->tables[2].val;
+>>> +		if (!(baser & GITS_BASER_VALID))
+>>> +			continue;
+>>> +
+>>> +		/* We have a winner! */
+>>> +		val  = GICR_VPROPBASER_4_1_VALID;
+>>> +		if (baser & GITS_BASER_INDIRECT)
+>>> +			val |= GICR_VPROPBASER_4_1_INDIRECT;
+>>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
+>>> +				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
+>>> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
+>>> +				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
+>>
+>> I remember the spec says,
+>> GITS_BASER2 "points to" the ITS *vPE table*, which provides mappings
+>> from the vPEID to target Redistributor and associated vpt address.
+>> In GICv4.1 GICR_VPROPBASER "points to" the *vPE Configuration table*,
+>> which stores the locations of each vPE's LPI configuration and pending
+>> table.
+>>
+>> And the code here says, if we can find an ITS (which is under the same
+>> CommonLPIAff group with this Redistributor) has already been probed and
+>> allocated an vPE table, then use this vPE table as this Redist's vPE
+>> Configuration table.
+>> So I infer that in GICv4.1, *vPE table* and *vPE Configuration table*
+>> are actually the same concept?  And this table is shared between ITSs
+>> and Redists which are under the same affinity group?
+>> Please fix me if I have any misunderstanding.
+> 
+> Indeed. The whole idea is that ITSs and RDs can share a vPE table if
+> they are in the same affinity group (such as a socket, for example).
+> This is what is missing from v4.0 where the ITS knows about vPEs, but
+> doesn't know about residency. With that in place, the HW is able to do a
+> lot more for us.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Thanks for your education!
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I really want to know *how* does GICv4.1 ITS know about the vPE
+residency (in hardware level)?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I can understand that Redistributor can easily achieve it by
+VPENDBASER's Valid and vPEID field.  And it's necessary for ITS to
+know the residency so that it can determine whether it's appropriate
+to trigger default doorbell for vPE.  But I have no knowledge about
+how can it be achieved in hardware details.
 
-Thanks,
-Mark
+Thanks in advance for your pointer. :)
 
-From 752c938a5c14b8cbf0ed3ffbfa637fb166255c3f Mon Sep 17 00:00:00 2001
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Date: Wed, 25 Sep 2019 14:06:24 +0300
-Subject: [PATCH] ASoC: topology: Fix a signedness bug in
- soc_tplg_dapm_widget_create()
 
-The "template.id" variable is an enum and in this context GCC will
-treat it as an unsigned int so it can never be less than zero.
-
-Fixes: 8a9782346dcc ("ASoC: topology: Add topology core")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20190925110624.GR3264@mwanda
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index b8690715abb5..c25939c5611b 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1588,7 +1588,7 @@ static int soc_tplg_dapm_widget_create(struct soc_tplg *tplg,
- 
- 	/* map user to kernel widget ID */
- 	template.id = get_widget_id(le32_to_cpu(w->id));
--	if (template.id < 0)
-+	if ((int)template.id < 0)
- 		return template.id;
- 
- 	/* strings are allocated here, but used and freed by the widget */
--- 
-2.20.1
+Zenghui
 
