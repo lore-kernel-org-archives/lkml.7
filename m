@@ -2,112 +2,95 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC92DC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7534DC43630
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A023E206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa4noR+q"
+	by mail.kernel.org (Postfix) with ESMTP id 449F7222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbfIZAHA (ORCPT
+        id S2387745AbfIZAOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:07:00 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43381 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387632AbfIZAHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:07:00 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t84so506914oih.10;
-        Wed, 25 Sep 2019 17:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z4X9jDl/gogPQ/X6hgep747Xt9DUFKrCuAetppUGPN4=;
-        b=Sa4noR+qX70kJICtZoLObZ4fIzvQCb6HEw6UMjkZSPdTmrcTGqB9h1m97ultMmGkmO
-         toqdNZTI7IEuIStvMY8e9ztuiflfhejBO8q9MYHDFbD8Aa9FV9AiNc6vs6KNqBR6CUZW
-         /5N6whQdgYkAHsAJXTYly5WvnUFGKI+HgVQTi01vLhy3E6E8ekc0cRXT3+jT7dra8hsk
-         o0aGHUnii605Vt8Z4zaHZs47nKMiB5RFkpw/nM6FpT42KL70EViWjZw8S1qYYi0xaxCf
-         oUPwS3+Jkf/sd3zrb8yMu2N3GFjbDgVdJPlojxGEl72/aHeSi2G+fWoCoOQzeWEM9YgZ
-         ezYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z4X9jDl/gogPQ/X6hgep747Xt9DUFKrCuAetppUGPN4=;
-        b=dlOyjx/1ez++kIgUMArwM08iYSBz1KeN9IZvjsEHJG3jXG80sNvy3OC2EUpy/nqdmq
-         hfeJS6H1yc6k044NijCqVuRdtUSYNw01hMjsqOI4kQRg6Qc6Xw5sF09LdWGzMEtduomW
-         VhtA7qJYnZkAq4GjpwRPdj69QQPtRBVPN3hW8dCgmaYrS6wU9JiI8xkq5BmwYt/PmhBr
-         ZTI6mkDVyI4yfijHoZmnwkzEtjhzcKWMogtm5GhKbVIEqAdLAGB1vAP+YPopfVWSIfi3
-         xnEoS1jaQeCz/ab/khHgXnfR9jcl0dn8YWdGbPrRkyTZ+JiRDzY3lMvqcAiIoxy749xh
-         7Rag==
-X-Gm-Message-State: APjAAAUUJZIIGUk0LMaWa/tWsAsGwaIsa5aryTl2+fxWedMXVnJyc5CP
-        nVSvmzAYMpnORhYypgHfMYDAu4j4
-X-Google-Smtp-Source: APXvYqwGZsQ2HLY28D+3a3L5fHSQpp6Yt59KkPvnFaLe/DHbgYXzecmnpExSVTmeRIymcv1UaJwAJA==
-X-Received: by 2002:aca:af11:: with SMTP id y17mr545931oie.76.1569456419205;
-        Wed, 25 Sep 2019 17:06:59 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id e61sm117171ote.24.2019.09.25.17.06.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2019 17:06:58 -0700 (PDT)
-Subject: Re: [PATCH] rtlwifi: Remove excessive check in _rtl_ps_inactive_ps()
-To:     Denis Efremov <efremov@linux.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190925205858.30216-1-efremov@linux.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <bf0e64a5-5072-9706-98d2-cc226ad70380@lwfinger.net>
-Date:   Wed, 25 Sep 2019 19:06:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 25 Sep 2019 20:14:45 -0400
+Received: from gentwo.org ([3.19.106.255]:49630 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733141AbfIZAOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:14:45 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 17D1D3EEC6; Thu, 26 Sep 2019 00:14:44 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 150213E86C;
+        Thu, 26 Sep 2019 00:14:44 +0000 (UTC)
+Date:   Thu, 26 Sep 2019 00:14:44 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     David Sterba <dsterba@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+In-Reply-To: <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
+Message-ID: <alpine.DEB.2.21.1909260005060.1508@www.lameter.com>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz> <20190923171710.GN2751@twin.jikos.cz> <alpine.DEB.2.21.1909242048020.17661@www.lameter.com>
+ <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190925205858.30216-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/19 3:58 PM, Denis Efremov wrote:
-> There is no need to check "rtlhal->interface == INTF_PCI" twice in
-> _rtl_ps_inactive_ps(). The nested check is always true. Thus, the
-> expression can be simplified.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->   drivers/net/wireless/realtek/rtlwifi/ps.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
-> index 70f04c2f5b17..6a8127539ea7 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/ps.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
-> @@ -161,8 +161,7 @@ static void _rtl_ps_inactive_ps(struct ieee80211_hw *hw)
->   	if (ppsc->inactive_pwrstate == ERFON &&
->   	    rtlhal->interface == INTF_PCI) {
->   		if ((ppsc->reg_rfps_level & RT_RF_OFF_LEVL_ASPM) &&
-> -		    RT_IN_PS_LEVEL(ppsc, RT_PS_LEVEL_ASPM) &&
-> -		    rtlhal->interface == INTF_PCI) {
-> +		    RT_IN_PS_LEVEL(ppsc, RT_PS_LEVEL_ASPM)) {
->   			rtlpriv->intf_ops->disable_aspm(hw);
->   			RT_CLEAR_PS_LEVEL(ppsc, RT_PS_LEVEL_ASPM);
->   		}
-> 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+On Tue, 24 Sep 2019, Andrew Morton wrote:
 
-Thanks,
+> I agree it's a bit regrettable to do this but it does appear that the
+> change will make the kernel overall a better place given the reality of
+> kernel development.
 
-Larry
+No it wont.
 
+- It will only work for special cases like the kmalloc array
+without extras like metadata at the end of objects.
+
+- It will be an inconsistency in the alignments provided by the allocator.
+
+- It will cause us in the future to constantly consider these exceptional
+alignments in the maintenance of the allocators.
+
+- These alignments are only needed in exceptional cases but with the patch
+we will provide the alignment by default even if the allocating subsystem
+does not need it.
+
+- We have mechanisms to detect alignment problems using debug kernels and
+debug options that have been available for years. These were not used for
+testing in these cases it seems before the patches hit mainline. Once in
+mainly someone ran a debug kernel and found the issue.
+
+> Given this, have you reviewed the patch for overall implementation
+> correctness?
+
+Yes, the patch is fine.
+
+> I'm wondering if we can avoid at least some of the patch's overhead if
+> slab debugging is disabled - the allocators are already returning
+> suitably aligned memory, so why add the new code in that case?
+
+As far as I know this patch is not needed given that we have had the
+standards for alignments for a long time now.
+
+Why would the allocators provide specially aligned memory just based on
+the size of an object? This is weird and unexpected behavior.
