@@ -2,210 +2,248 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A11C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C878CC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40780222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F58222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ysn18o/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfIZMzc (ORCPT
+        id S1726833AbfIZM4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:55:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41222 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfIZMzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:55:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62B8B10C0929;
-        Thu, 26 Sep 2019 12:55:16 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DA29E60933;
-        Thu, 26 Sep 2019 12:55:15 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 4/7] intel-speed-select: Add configuration for CascadeLake-N
-Date:   Thu, 26 Sep 2019 08:54:58 -0400
-Message-Id: <20190926125501.1616-5-prarit@redhat.com>
-In-Reply-To: <20190926125501.1616-1-prarit@redhat.com>
-References: <20190926125501.1616-1-prarit@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 26 Sep 2019 12:55:16 +0000 (UTC)
+        Thu, 26 Sep 2019 08:56:22 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58623 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfIZM4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:56:22 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190926125620euoutp02773475247c17d99a958b2d5c3d79148a~H-kgK874g0588705887euoutp02S
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:56:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190926125620euoutp02773475247c17d99a958b2d5c3d79148a~H-kgK874g0588705887euoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569502580;
+        bh=2qQDxqYPHhCVF57kJMr4/wROezjZFSeNjBWmnGfCzE4=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Ysn18o/NKgSQWz5nZnHoey2tB3+H37fdZ9XMu6Hu8GkkgBOTAICpi0bPt8bkKzaIE
+         ZkVwyTpkr/W56FWtYOCS5VHh5cAMHH0ZREwSGr1tbqLT6KHlKwBpSSMqgQ0B+YtY5v
+         JXg5hoQvz/NPAcvzuABZMmxbCvHW83+vwJyyI+84=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190926125620eucas1p29b39ec3cfd0a15952e064f6643dba2d3~H-kf3K8vG1380113801eucas1p28;
+        Thu, 26 Sep 2019 12:56:20 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 03.0A.04374.475BC8D5; Thu, 26
+        Sep 2019 13:56:20 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be~H-kfkPKTa2227022270eucas1p2X;
+        Thu, 26 Sep 2019 12:56:19 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190926125619eusmtrp108d0625b63966590fcef45b2fd324cf6~H-kfkFhCI0264802648eusmtrp1s;
+        Thu, 26 Sep 2019 12:56:19 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-6b-5d8cb574fb0d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 53.A8.04166.375BC8D5; Thu, 26
+        Sep 2019 13:56:19 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190926125619eusmtip2a47b589aeba0c6fa54c368a75966592a~H-kfAr7cm1774917749eusmtip2L;
+        Thu, 26 Sep 2019 12:56:19 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
+ dt-schema
+Date:   Thu, 26 Sep 2019 14:56:14 +0200
+Message-Id: <20190926125614.10408-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSe0hTURzu7D52HV25TsGDidKgICHNCrqQRmbEMgSDoFwsW/OmopuyO18J
+        YYqla9lQTJlmBmYyHw2z5QYOnaMRhku3yqChhVOxTMFXRmpu1+y/73k++HEIRLiJhhFZSjWj
+        UspyRLgANb1Zdx5Wv9JKj7wd49NP7CMY7V5ZwOmaCR1KO51GPu2yNOF0g9PKoyfLu3G6y+7h
+        088+jfLoin47/7RA3NncCcQ9hipcPHHfwRNX9xqAeKknIgWTCOLSmZysAkYVc+q6IHPiRyuW
+        VxdRNDhLl4LpUA0gCEgdh0MfzmiAgBBS7QA+cpTzObIMYH+dCXBkCcA7LgdPAwL8jTb3Ux5n
+        PAewtckCdivfW7y4L4VTsVAzr8F9RghVBqDbPOd/GKEWARx82exPBVMX4bMWL+bDKHUA6qaH
+        /Jik4mGtx7qzFwk7jAOIrwypGRwuPXTinHEWvm5sxjgcDOccvXwOh8PhWi3KFcoB/DrSxeeI
+        FkBXWQPgUifhkGMU8x0BoQ7BF5YYTk6AHd/WMO42gXB8PsgnI9uwxlSPcDIJK+8KufRBqHd0
+        784Ovh/biYhhneWSTxZSUmgqW8F1IEL/f6oFAAMIZfJZRQbDHlMyhdGsTMHmKzOi5bmKHrD9
+        K4Y3HSt9wPrnhg1QBBDtJRsMWqkQkxWwxQobgAQiCiGTU7clMl1WfItR5aap8nMY1gb2Eago
+        lCzZM3lVSGXI1Ew2w+Qxqn8ujwgIKwVof1yJsHfq9upqUHx7o46nffyz81fV4sLWRmMbNtaa
+        NBItP3pt3Jq9fCI5od5sVxvbJbMVennxRuTHVC8wi7fSo7xxnpTEL+ue8O5Cidu2PPU7/EFl
+        2jm9O6nImnsz0XjlvPnCmisgNXBGu19OklLJgP6e3Pn5suVdvKa6T4SymbLYKETFyv4CCpMY
+        FhEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsVy+t/xe7rFW3tiDc4fNrSYf+Qcq8WVr+/Z
+        LCbdn8Bicf78BnaLy7vmsFnMOL+PyeJB8zo2i7VH7rJbLL1+kcmide8RdgcujzXz1jB6bFrV
+        yeZxv/s4k0ffllWMHp83yQWwRunZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
+        6dvZpKTmZJalFunbJehl3H+zhLVgqlzFwRcWDYzPxLsYOTkkBEwkll1ZyNTFyMUhJLCUUWL5
+        jH2sEAkZiZPTGqBsYYk/17rYIIo+MUpMe3+aBSTBJmAo0fUWIiEi0MYo8fnxFWYQh1ngC6PE
+        5r8/2EGqhAX8JZpX3wMbxSKgKjHh2WEwm1fAVmLy3X1MECvkJVZvOMA8gZFnASPDKkaR1NLi
+        3PTcYkO94sTc4tK8dL3k/NxNjMAg3Xbs5+YdjJc2Bh9iFOBgVOLh/bCmJ1aINbGsuDL3EKME
+        B7OSCK9vJFCINyWxsiq1KD++qDQntfgQoynQ8onMUqLJ+cAIyiuJNzQ1NLewNDQ3Njc2s1AS
+        5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwBgjuuLWFHO32WIiHRrO5gqdfus+3yxoChO6/eJb
+        uu+eXy/2LVyowrBvcpogs1XLTUuNfPmDBn1T9l115LPRPV5cIFFm6Gf5K/nAytj9/q/PHXJ9
+        n1Yx6VmiMs8r5gV3U5Pip9bPnyNbuvBfYV1ZocbWvWUzRRPYVoRcuhQRLvu4iiXs9kq72Uos
+        xRmJhlrMRcWJAOCT+6JoAgAA
+X-CMS-MailID: 20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be
+References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a 'dummy' pkg_dev struct for use by CascadeLake-N processors.  This
-struct will be used in later patches to implement info and status calls
-for CascadeLake-N SST-BF.
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Convert Samsung Image Scaler to newer dt-schema format.
+
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 98 ++++++++++++++++++-
- .../x86/intel-speed-select/isst-display.c     |  2 -
- tools/power/x86/intel-speed-select/isst.h     |  2 +
- 3 files changed, 99 insertions(+), 3 deletions(-)
+v2:
+- Removed quotation marks from string in 'compatible' property
+- Added if-then statement for 'clocks' and 'clock-names' property
+- Added include directive to example
+- Added GIC_SPI macro to example
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index ae8e3b5153ad..33f328d971d3 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -735,6 +735,94 @@ _get_tdp_level("get-config-current_level", levels, current_level,
- 	       "Current TDP Level");
- _get_tdp_level("get-lock-status", levels, locked, "TDP lock status");
- 
-+struct isst_pkg_ctdp cn_pkg_dev;
-+
-+static int cn_get_base_ratio(void)
-+{
-+	FILE *fp;
-+	char *begin, *end, *line;
-+	char number[5];
-+	float value = 0;
-+	size_t n;
-+
-+	fp = fopen("/proc/cpuinfo", "r");
-+	if (!fp)
-+		err(-1, "cannot open /proc/cpuinfo\n");
-+
-+	while (getline(&line, &n, fp) > 0) {
-+		if (strstr(line, "model name")) {
-+			/* this is true for CascadeLake-N */
-+			begin = strstr(line, "@ ") + 2;
-+			end = strstr(line, "GHz");
-+			strncpy(number, begin, end - begin);
-+			value = atof(number) * 10;
-+			break;
-+		}
-+	}
-+	free(line);
-+	fclose(fp);
-+
-+	return (int)(value);
-+}
-+
-+static void cascadelaken_config(void)
-+{
-+	int i;
-+	unsigned long cpu_bf;
-+	struct isst_pkg_ctdp_level_info *ctdp_level;
-+	struct isst_pbf_info *pbf_info;
-+
-+	ctdp_level = &cn_pkg_dev.ctdp_level[0];
-+	pbf_info = &ctdp_level->pbf_info;
-+
-+	/* find the frequency base ratio */
-+	ctdp_level->tdp_ratio = cn_get_base_ratio();
-+	if (ctdp_level->tdp_ratio == 0)
-+		err(-1, "cn base ratio is zero\n");
-+
-+	/* find the high and low priority frequencies */
-+	pbf_info->p1_high = 0;
-+	pbf_info->p1_low = ~0;
-+	for (i = 0; i < topo_max_cpus; i++) {
-+		cpu_bf = parse_int_file(1,
-+			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
-+					i);
-+		if (cpu_bf > pbf_info->p1_high)
-+			pbf_info->p1_high = cpu_bf;
-+		if (cpu_bf < pbf_info->p1_low)
-+			pbf_info->p1_low = cpu_bf;
-+	}
-+
-+	if (pbf_info->p1_high == ~0UL)
-+		err(-1, "maximum base frequency not set\n");
-+
-+	if (pbf_info->p1_low == 0)
-+		err(-1, "minimum base frequency not set\n");
-+
-+	/* convert frequencies back to ratios */
-+	pbf_info->p1_high = pbf_info->p1_high / DISP_FREQ_MULTIPLIER;
-+	pbf_info->p1_low = pbf_info->p1_low / DISP_FREQ_MULTIPLIER;
-+
-+	/* create high priority cpu mask */
-+	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
-+	for (i = 0; i < topo_max_cpus; i++) {
-+		cpu_bf = parse_int_file(1,
-+			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
-+					i);
-+		cpu_bf = cpu_bf / DISP_FREQ_MULTIPLIER;
-+		if (cpu_bf == pbf_info->p1_high)
-+			CPU_SET_S(i, pbf_info->core_cpumask_size,
-+				  pbf_info->core_cpumask);
-+	}
-+
-+	/* extra ctdp & pbf struct parameters */
-+	ctdp_level->processed = 1;
-+	ctdp_level->pbf_support = 1; /* PBF is always supported and enabled */
-+	ctdp_level->pbf_enabled = 1;
-+	ctdp_level->fact_support = 0; /* FACT is never supported */
-+	ctdp_level->fact_enabled = 0;
-+}
-+
- static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
- 				     void *arg3, void *arg4)
- {
-@@ -1546,7 +1634,10 @@ void process_command(int argc, char **argv,
- 		}
- 	}
- 
--	create_cpu_map();
-+	if (cpu_model != 0x55)
-+		create_cpu_map();
-+	else
-+		cascadelaken_config();
- 
- 	i = 0;
- 	while (cmds[i].feature) {
-@@ -1562,6 +1653,11 @@ void process_command(int argc, char **argv,
- 
- 	if (!matched)
- 		fprintf(stderr, "Invalid command\n");
-+
-+	if (cpu_model != 0x55) {
-+		/* this was allocated in cascadelaken_config() */
-+		free_cpu_set(cn_pkg_dev.ctdp_level[0].pbf_info.core_cpumask);
-+	}
- }
- 
- static void usage(void)
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 40346d534f78..1caa7ae25245 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -6,8 +6,6 @@
- 
- #include "isst.h"
- 
--#define DISP_FREQ_MULTIPLIER 100
+Best regards,
+Maciej Falkowski
+---
+ .../bindings/gpu/samsung-scaler.txt           | 27 -------
+ .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+deleted file mode 100644
+index 9c3d98105dfd..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* Samsung Exynos Image Scaler
 -
- static void printcpulist(int str_len, char *str, int mask_size,
- 			 cpu_set_t *cpu_mask)
- {
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index d280b27d600d..0dcae17b3945 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -69,6 +69,8 @@
- #define PM_CLOS_OFFSET				0x08
- #define PQR_ASSOC_OFFSET			0x20
- 
-+#define DISP_FREQ_MULTIPLIER 100
+-Required properties:
+-  - compatible : value should be one of the following:
+-	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+-	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for scaler interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for scaler clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+-		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+-
+-Example:
+-	scaler@12800000 {
+-		compatible = "samsung,exynos5420-scaler";
+-		reg = <0x12800000 0x1294>;
+-		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clock CLK_MSCL0>;
+-		clock-names = "mscl";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+new file mode 100644
+index 000000000000..af19930d052e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- struct isst_clos_config {
- 	int pkg_id;
- 	int die_id;
++title: Samsung Exynos SoC Image Scaler
++
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
++
++properties:
++  compatible:
++    enum:
++      - samsung,exynos5420-scaler
++      - samsung,exynos5433-scaler
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: samsung,exynos5420-scaler
++then:
++  properties:
++    clocks:
++      items:
++        - description: mscl clock
++
++    clock-names:
++      items:
++        - const: mscl
++else:
++  properties:
++    clocks:
++      items:
++        - description: mscl clock
++        - description: aclk clock
++        - description: aclk_xiu clock
++
++    clock-names:
++      items:
++        - const: pclk
++        - const: aclk
++        - const: aclk_xiu
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/exynos5420.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scaler@12800000 {
++        compatible = "samsung,exynos5420-scaler";
++        reg = <0x12800000 0x1294>;
++        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clock CLK_MSCL0>;
++        clock-names = "mscl";
++    };
++
 -- 
-2.21.0
+2.17.1
+
+
 
