@@ -2,150 +2,93 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6F0C352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B098C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A1921D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="NP0w8y1R"
+	by mail.kernel.org (Postfix) with ESMTP id D82B8222CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfIZOT6 (ORCPT
+        id S1727143AbfIZOVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:19:58 -0400
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:15098 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfIZOT5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:19:57 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Sep 2019 10:19:57 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1569507596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mQvPFse3w+s0uK80XprrGzqDEhnYGYER/mAVNdleSwU=;
-  b=NP0w8y1RwnBWpHQHdNYQgJkXoSTNc/tomzbWtZIi03hsMgGmGCwnPQ9r
-   R0hvEiWyjFJ1vyq/b/lWVMATaWJjpmR3mVxqWCvXm/XcZlmNePUQyUO9l
-   HBPfReIKvH4EfYMXv0/Z3vqcJcBFyH/1KZEYs2XjolamkBvQagjyxhQtr
-   M=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=ross.lagerwall@citrix.com; spf=Pass smtp.mailfrom=ross.lagerwall@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  ross.lagerwall@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="ross.lagerwall@citrix.com";
-  x-sender="ross.lagerwall@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  ross.lagerwall@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="ross.lagerwall@citrix.com";
-  x-sender="ross.lagerwall@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="ross.lagerwall@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: BOnG5Zh9TXKxTyxuCF9+N0ix41AG3MFkVpivV34zKTew6GEZ2P35uyjvI6SCbFrPM0qBOL/qOU
- 1BoA0yFYh11nK/aWWRECc8giHOnn1OgAX/89CeXiO307uSkVaf8vwZVY2J366IpTRnwiuCF/pj
- rowQsT2G4d2+Lbyjchk4v5ajpI8Ytl4/aSFyrQCp3B7WVe8H3FEc0Ki8Ku22yMyQJgxut5iTkm
- 9QMmdtoKyjOzs+WsrtfqisqLBKwRbAuWvCPqw7w9AhGv+VT562xloKGvpE2/s9g7Nu9WnbwxFq
- HbA=
-X-SBRS: 2.7
-X-MesageID: 6396973
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.64,552,1559534400"; 
-   d="scan'208";a="6396973"
-From:   Ross Lagerwall <ross.lagerwall@citrix.com>
-To:     <linux-efi@vger.kernel.org>
-CC:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>
-Subject: [PATCH] x86/efi: Don't require non-blocking EFI callbacks
-Date:   Thu, 26 Sep 2019 15:12:34 +0100
-Message-ID: <20190926141234.8271-1-ross.lagerwall@citrix.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 26 Sep 2019 10:21:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44312 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfIZOVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 10:21:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63B3410CC207;
+        Thu, 26 Sep 2019 14:21:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1A1360C44;
+        Thu, 26 Sep 2019 14:21:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] jffs2: Fix mounting under new mount API
+From:   David Howells <dhowells@redhat.com>
+To:     dwmw2@infradead.org, richard@nod.at
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-mtd@lists.infradead.org,
+        dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 26 Sep 2019 15:21:18 +0100
+Message-ID: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Thu, 26 Sep 2019 14:21:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a backend does not implement non-blocking EFI operations, it implies
-that the normal operations are non-blocking. Instead of crashing
-dereferencing a NULL pointer, fallback to the normal operations since it
-is safe to do so.
+The mounting of jffs2 is broken due to the changes from the new mount API
+because it specifies a "source" operation, but then doesn't actually
+process it.  But because it specified it, it doesn't return -ENOPARAM and
+the caller doesn't process it either and the source gets lost.
 
-Fixes: 5a58bc1b1edc ("efi/x86: Use non-blocking SetVariable() for efi_delete_dummy_variable()")
-Fixes: ca0e30dcaa53 ("efi: Add nonblocking option to efi_query_variable_store()")
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Fix this by simply removing the source parameter from jffs2 and letting the
+VFS deal with it in the default manner.
+
+To test it, enable CONFIG_MTD_MTDRAM and allow the default size and erase
+block size parameters, then try and mount the /dev/mtdblock<N> file that
+that creates as jffs2.  No need to initialise it.
+
+Fixes: ec10a24f10c8 ("vfs: Convert jffs2 to use the new mount API")
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: David Woodhouse <dwmw2@infradead.org>
+cc: Richard Weinberger <richard@nod.at>
+cc: linux-mtd@lists.infradead.org
 ---
- arch/x86/platform/efi/quirks.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 3b9fd679cea9..4167f5e8f3e8 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -106,11 +106,13 @@ early_param("efi_no_storage_paranoia", setup_storage_paranoia);
- */
- void efi_delete_dummy_variable(void)
- {
--	efi.set_variable_nonblocking((efi_char16_t *)efi_dummy_name,
--				     &EFI_DUMMY_GUID,
--				     EFI_VARIABLE_NON_VOLATILE |
--				     EFI_VARIABLE_BOOTSERVICE_ACCESS |
--				     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
-+	efi_set_variable_t *set_variable = efi.set_variable_nonblocking ?:
-+					   efi.set_variable;
-+
-+	set_variable((efi_char16_t *)efi_dummy_name, &EFI_DUMMY_GUID,
-+		     EFI_VARIABLE_NON_VOLATILE |
-+		     EFI_VARIABLE_BOOTSERVICE_ACCESS |
-+		     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
- }
+ fs/jffs2/super.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index cbe70637c117..0e6406c4f362 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -163,13 +163,11 @@ static const struct export_operations jffs2_export_ops = {
+  * Opt_rp_size: size of reserved pool in KiB
+  */
+ enum {
+-	Opt_source,
+ 	Opt_override_compr,
+ 	Opt_rp_size,
+ };
  
- /*
-@@ -127,10 +129,12 @@ query_variable_store_nonblocking(u32 attributes, unsigned long size)
- {
- 	efi_status_t status;
- 	u64 storage_size, remaining_size, max_size;
-+	efi_query_variable_info_t *query_variable_info =
-+		efi.query_variable_info_nonblocking ?:
-+		efi.query_variable_info;
- 
--	status = efi.query_variable_info_nonblocking(attributes, &storage_size,
--						     &remaining_size,
--						     &max_size);
-+	status = query_variable_info(attributes, &storage_size,
-+				     &remaining_size, &max_size);
- 	if (status != EFI_SUCCESS)
- 		return status;
- 
--- 
-2.21.0
+ static const struct fs_parameter_spec jffs2_param_specs[] = {
+-	fsparam_string	("source",	Opt_source),
+ 	fsparam_enum	("compr",	Opt_override_compr),
+ 	fsparam_u32	("rp_size",	Opt_rp_size),
+ 	{}
 
