@@ -3,191 +3,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E3BC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21782C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18649217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0775217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfIZKNz (ORCPT
+        id S1726706AbfIZKOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:13:55 -0400
-Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:49200 "EHLO
-        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZKNy (ORCPT
+        Thu, 26 Sep 2019 06:14:50 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:39560 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZKOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:13:54 -0400
-Received: from ydin.reaktio.net (reaktio.net [85.76.255.15])
-        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id 9E0B330074;
-        Thu, 26 Sep 2019 13:13:50 +0300 (EEST)
-Received: by ydin.reaktio.net (Postfix, from userid 1001)
-        id DD00636C0F6; Thu, 26 Sep 2019 13:13:48 +0300 (EEST)
-Date:   Thu, 26 Sep 2019 13:13:47 +0300
-From:   Pasi =?iso-8859-1?Q?K=E4rkk=E4inen?= <pasik@iki.fi>
-To:     "Spassov, Stanislav" <stanspas@amazon.de>
-Cc:     Chao Gao <chao.gao@intel.com>, "jgross@suse.com" <jgross@suse.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        Thu, 26 Sep 2019 06:14:49 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46f9lT5NQ4z1rGRZ;
+        Thu, 26 Sep 2019 12:14:45 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46f9lT4q9Mz1qqkT;
+        Thu, 26 Sep 2019 12:14:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id zmy4OmtRTKzy; Thu, 26 Sep 2019 12:14:44 +0200 (CEST)
+X-Auth-Info: BM3VhxhFj1lMlfukQ1+SR5/+hPqY5KoiiWFeZ+N4+d4=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 26 Sep 2019 12:14:44 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 12:14:38 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "jbeulich@suse.com" <jbeulich@suse.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>
-Subject: Re: [Xen-devel] [PATCH] xen: xen-pciback: Reset MSI-X state when
- exposing a device
-Message-ID: <20190926101347.GD28704@reaktio.net>
-References: <1543976357-1053-1-git-send-email-chao.gao@intel.com>
- <2c0ad3bf96551ea6e96e812229507221b76876c6.camel@amazon.de>
- <20190913152818.GA688@gao-cwp>
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: spi: Add call to spi_slave_abort() function when spidev driver
+ is released
+Message-ID: <20190926121438.655f1f10@jawa>
+In-Reply-To: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com>
+References: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190913152818.GA688@gao-cwp>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/X=HjYTciBWNPBESkWNyLgtO"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Stanislav,
+--Sig_/X=HjYTciBWNPBESkWNyLgtO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 13, 2019 at 11:28:20PM +0800, Chao Gao wrote:
-> On Fri, Sep 13, 2019 at 10:02:24AM +0000, Spassov, Stanislav wrote:
-> >On Thu, Dec 13, 2018 at 07:54, Chao Gao wrote:
-> >>On Thu, Dec 13, 2018 at 12:54:52AM -0700, Jan Beulich wrote:
-> >>>>>> On 13.12.18 at 04:46, <chao.gao@intel.com> wrote:
-> >>>> On Wed, Dec 12, 2018 at 08:21:39AM -0700, Jan Beulich wrote:
-> >>>>>>>> On 12.12.18 at 16:18, <chao.gao@intel.com> wrote:
-> >>>>>> On Wed, Dec 12, 2018 at 01:51:01AM -0700, Jan Beulich wrote:
-> >>>>>>>>>> On 12.12.18 at 08:06, <chao.gao@intel.com> wrote:
-> >>>>>>>> On Wed, Dec 05, 2018 at 09:01:33AM -0500, Boris Ostrovsky wrote:
-> >>>>>>>>>On 12/5/18 4:32 AM, Roger Pau Monné wrote:
-> >>>>>>>>>> On Wed, Dec 05, 2018 at 10:19:17AM +0800, Chao Gao wrote:
-> >>>>>>>>>>> I find some pass-thru devices don't work any more across guest reboot.
-> >>>>>>>>>>> Assigning it to another guest also meets the same issue. And the only
-> >>>>>>>>>>> way to make it work again is un-binding and binding it to pciback.
-> >>>>>>>>>>> Someone reported this issue one year ago [1]. More detail also can be
-> >>>>>>>>>>> found in [2].
-> >>>>>>>>>>>
-> >>>>>>>>>>> The root-cause is Xen's internal MSI-X state isn't reset properly
-> >>>>>>>>>>> during reboot or re-assignment. In the above case, Xen set maskall bit
-> >>>>>>>>>>> to mask all MSI interrupts after it detected a potential security
-> >>>>>>>>>>> issue. Even after device reset, Xen didn't reset its internal maskall
-> >>>>>>>>>>> bit. As a result, maskall bit would be set again in next write to
-> >>>>>>>>>>> MSI-X message control register.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Given that PHYSDEVOPS_prepare_msix() also triggers Xen resetting MSI-X
-> >>>>>>>>>>> internal state of a device, we employ it to fix this issue rather than
-> >>>>>>>>>>> introducing another dedicated sub-hypercall.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Note that PHYSDEVOPS_release_msix() will fail if the mapping between
-> >>>>>>>>>>> the device's msix and pirq has been created. This limitation prevents
-> >>>>>>>>>>> us calling this function when detaching a device from a guest during
-> >>>>>>>>>>> guest shutdown. Thus it is called right before calling
-> >>>>>>>>>>> PHYSDEVOPS_prepare_msix().
-> >>>>>>>>>> s/PHYSDEVOPS/PHYSDEVOP/ (no final S). And then I would also drop the
-> >>>>>>>>>> () at the end of the hypercall name since it's not a function.
-> >>>>>>>>>>
-> >>>>>>>>>> I'm also wondering why the release can't be done when the device is
-> >>>>>>>>>> detached from the guest (or the guest has been shut down). This makes
-> >>>>>>>>>> me worry about the raciness of the attach/detach procedure: if there's
-> >>>>>>>>>> a state where pciback assumes the device has been detached from the
-> >>>>>>>>>> guest, but there are still pirqs bound, an attempt to attach to
-> >>>>>>>>>> another guest in such state will fail.
-> >>>>>>>>>
-> >>>>>>>>>I wonder whether this additional reset functionality could be done out
-> >>>>>>>>>of xen_pcibk_xenbus_remove(). We first do a (best effort) device reset
-> >>>>>>>>>and then do the extra things that are not properly done there.
-> >>>>>>>> 
-> >>>>>>>> No. It cannot be done in xen_pcibk_xenbus_remove() without modifying
-> >>>>>>>> the handler of PHYSDEVOP_release_msix. To do a successful Xen internal
-> >>>>>>>> MSI-X state reset, PHYSDEVOP_{release, prepare}_msix should be finished
-> >>>>>>>> without error. But ATM, xen expects that no msi is bound to pirq when
-> >>>>>>>> doing PHYSDEVOP_release_msix. Otherwise it fails with error code -EBUSY.
-> >>>>>>>> However, the expectation isn't guaranteed in xen_pcibk_xenbus_remove().
-> >>>>>>>> In some cases, if qemu fails to unmap MSIs, MSIs are unmapped by Xen
-> >>>>>>>> at last minute, which happens after device reset in 
-> >>>>>>>> xen_pcibk_xenbus_remove().
-> >>>>>>>
-> >>>>>>>But that may need taking care of: I don't think it is a good idea to have
-> >>>>>>>anything left from the prior owning domain when the device gets reset.
-> >>>>>>>I.e. left over IRQ bindings should perhaps be forcibly cleared before
-> >>>>>>>invoking the reset;
-> >>>>>> 
-> >>>>>> Agree. How about pciback to track the established IRQ bindings? Then
-> >>>>>> pciback can clear irq binding before invoking the reset.
-> >>>>>
-> >>>>>How would pciback even know of those mappings, when it's qemu
-> >>>>>who establishes (and manages) them?
-> >>>> 
-> >>>> I meant to expose some interfaces from pciback. And pciback serves
-> >>>> as the proxy of IRQ (un)binding APIs.
-> >>>
-> >>>If at all possible we should avoid having to change more parties (qemu,
-> >>>libxc, kernel, hypervisor) than really necessary. Remember that such
-> >>>a bug fix may want backporting, and making sure affected people have
-> >>>all relevant components updated is increasingly difficult with their
-> >>>number growing.
-> >>>
-> >>>>>>>in fact I'd expect this to happen in the course of
-> >>>>>>>domain destruction, and I'd expect the device reset to come after the
-> >>>>>>>domain was cleaned up. Perhaps simply an ordering issue in the tool
-> >>>>>>>stack?
-> >>>>>> 
-> >>>>>> I don't think reversing the sequences of device reset and domain
-> >>>>>> destruction would be simple. Furthermore, during device hot-unplug,
-> >>>>>> device reset is done when the owner is alive. So if we use domain
-> >>>>>> destruction to enforce all irq binding cleared, in theory, it won't be
-> >>>>>> applicable to hot-unplug case (if qemu's hot-unplug logic is
-> >>>>>> compromised).
-> >>>>>
-> >>>>>Even in the hot-unplug case the tool stack could issue unbind
-> >>>>>requests, behind the back of the possibly compromised qemu,
-> >>>>>once neither the guest nor qemu have access to the device
-> >>>>>anymore.
-> >>>> 
-> >>>> But currently, tool stack doesn't know the remaining IRQ bindings.
-> >>>> If tool stack can maintaine IRQ binding information of a pass-thru
-> >>>> device (stored in Xenstore?), we can come up with a clean solution
-> >>>> without modifying linux kernel and Xen.
-> >>>
-> >>>If there's no way for the tool stack to either find out the bindings
-> >>>or "blindly" issue unbind requests (accepting them to fail), then a
-> >>>"wildcard" unbind operation may want adding. Or, perhaps even
-> >>>better, XEN_DOMCTL_deassign_device could unbind anything left
-> >>>in place for the specified device.
-> >>
-> >>Good idea. I will take this advice.
-> >>
-> >>Thanks
-> >>Chao
-> >
-> >I am having the same issue, and cannot find a fix in either xen-pciback or the Xen codebase.
-> >Was a solution ever pushed as a result of this thread?
-> >
-> 
-> I submitted patches [1] to Xen community. But I didn't get it merged.
-> We made a change in device driver to disable MSI-X during guest OS
-> shutdown to mitigate the issue. But when guest or qemu was crashed, we
-> encountered this issue again. I have no plan to get back to these
-> patches. But if you want to fix the issue completely along what the
-> patches below did, please go ahead.
-> 
-> [1]: https://lists.xenproject.org/archives/html/xen-devel/2019-01/msg01227.html
-> 
-> Thanks
-> Chao
-> 
+Hi Colin,
 
-Stanislav: Are you able to continue the work with these patches, to get them merged? 
+> Hi,
+>=20
+> Static analysis with Coverity has detected an potential dereference
+> of a free'd object with commit:
+>=20
+> commit 9f918a728cf86b2757b6a7025e1f46824bfe3155
+> Author: Lukasz Majewski <lukma@denx.de>
+> Date:   Wed Sep 25 11:11:42 2019 +0200
+>=20
+>     spi: Add call to spi_slave_abort() function when spidev driver is
+> released
+>=20
+> In spidev_release() in drivers/spi/spidev.c the analysis is as
+> follows:
+>=20
+> 600static int spidev_release(struct inode *inode, struct file *filp)
+> 601{
+> 602        struct spidev_data      *spidev;
+> 603
+> 604        mutex_lock(&device_list_lock);
+>=20
+>    1. alias: Assigning: spidev =3D filp->private_data. Now both point to
+> the same storage.
+>=20
+> 605        spidev =3D filp->private_data;
+> 606        filp->private_data =3D NULL;
+> 607
+> 608        /* last close? */
+> 609        spidev->users--;
+>=20
+>    2. Condition !spidev->users, taking true branch.
+>=20
+> 610        if (!spidev->users) {
+> 611                int             dofree;
+> 612
+> 613                kfree(spidev->tx_buffer);
+> 614                spidev->tx_buffer =3D NULL;
+> 615
+> 616                kfree(spidev->rx_buffer);
+> 617                spidev->rx_buffer =3D NULL;
+> 618
+> 619                spin_lock_irq(&spidev->spi_lock);
+>=20
+>    3. Condition spidev->spi, taking false branch.
+>=20
+> 620                if (spidev->spi)
+> 621                        spidev->speed_hz =3D
+> spidev->spi->max_speed_hz; 622
+> 623                /* ... after we unbound from the underlying
+> device? */
+>=20
+>    4. Condition spidev->spi =3D=3D NULL, taking true branch.
+>=20
+> 624                dofree =3D (spidev->spi =3D=3D NULL);
+> 625                spin_unlock_irq(&spidev->spi_lock);
+> 626
+>=20
+>    5. Condition dofree, taking true branch.
+>=20
+> 627                if (dofree)
+>=20
+>    6. freed_arg: kfree frees spidev.
+>=20
+> 628                        kfree(spidev);
+> 629        }
+> 630#ifdef CONFIG_SPI_SLAVE
+>=20
+>    CID 89726 (#1 of 1): Read from pointer after free (USE_AFTER_FREE)
+> 7. deref_after_free: Dereferencing freed pointer spidev.
+>=20
+> 631        spi_slave_abort(spidev->spi);
+> 632#endif
+> 633        mutex_unlock(&device_list_lock);
+> 634
+> 635        return 0;
+> 636}
+>=20
+> The call to spi_slave_abort() on spidev is reading an earlier kfree'd
+> spidev.
+
+Thanks for spotting this issue - indeed there is a possibility to use
+spidev after being kfree'd.=20
+
+However, Geert (CC'ed) had some questions about placement of this
+function call, so I will wait with providing fix until he replies.
+
+>=20
+> Colin
+>=20
 
 
-Thanks,
+Best regards,
 
--- Pasi
+Lukasz Majewski
 
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/X=HjYTciBWNPBESkWNyLgtO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2Mj44ACgkQAR8vZIA0
+zr2RVAf/RsM6loK8yXKEEfi1JBemrB194ucZYBOo+tmulnC7ev/KXq/BD8yWMjoj
+9UqkU8imI1AWUtOs87oti6OV0vxW818mEG/jEahTnpOgOOj7K7yhWZfGQvCHQtTs
+iFm5gubARdK+68E9iPd7TNA1q/fYwg5WRl9PyDFJL9jliTLfi3XK5NyTENbQ3buW
+qEEj2M6VOoj+AONMMwoRJX9t/xOzkMW+Mxv/SD7ulJPF9M8ABTPxsQ8wyJsDMKvx
+kZJry+6sl7jbHHPYrVFW6snT+RXhsg++NsWJy4dUq7TMc9baaFyvnDTZD0Owok6v
+KJKLNCjZp1bH8WkrnHyo9yfSVH8Czg==
+=8gl2
+-----END PGP SIGNATURE-----
+
+--Sig_/X=HjYTciBWNPBESkWNyLgtO--
