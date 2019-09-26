@@ -2,223 +2,268 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AD0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97DFC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95704208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569489408;
-	bh=ilA+y4O1M/gMXREu86nRwRqJO5tcBAaEoE6amVY68e0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aZlRs+U4DBdTjuUxL2HkRFOzy8792v3M23GeEcFiAdF34Gbuk3Bhxbm9p7yTGa1lD
-	 xQS4zHDUSFt3eh7SM4O594RLnYYejZ7MMSgYNpQqF6Nad9PbI+zNQTs3+sYenEW4re
-	 8m/G4xJFLPm1sFIuy0wY5z6kDVTWeIZl/fZzZZ18=
+	by mail.kernel.org (Postfix) with ESMTP id B60592146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfIZJQs (ORCPT
+        id S1730334AbfIZJRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbfIZJQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:16:47 -0400
-Received: from localhost.localdomain (unknown [115.205.68.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2173207FF;
-        Thu, 26 Sep 2019 09:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569489406;
-        bh=ilA+y4O1M/gMXREu86nRwRqJO5tcBAaEoE6amVY68e0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lskIgPGL21kyfsq0qY+dWq1rcIGHT4tm8IAu60K+kEN79HUZoTrWPeC/9tng9++7S
-         iSbMZTouFEypmzLk/VnibTNHGDfprwbw62mjcHL0kImXX1+QQmfY6/r4h77WAZ83sr
-         ygeWp0Zjxi0mPaf6/l1K5622nlAve3SkRWMz3lKk=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH] csky: Bugfix add zero_fp fixup perf backtrace panic
-Date:   Thu, 26 Sep 2019 17:16:39 +0800
-Message-Id: <1569489399-7026-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 26 Sep 2019 05:17:09 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:13802 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730255AbfIZJRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:17:08 -0400
+Received: from [10.18.29.226] (10.18.29.226) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 26 Sep
+ 2019 17:17:06 +0800
+Subject: Re: [PATCH 2/3] soc: amlogic: Add support for Secure power domains
+ controller
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568895064-4116-3-git-send-email-jianxin.pan@amlogic.com>
+ <7hh850t2wy.fsf@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <3859c748-01f0-4dbd-05d6-20fff31edf11@amlogic.com>
+Date:   Thu, 26 Sep 2019 17:17:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <7hh850t2wy.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.226]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+Hi Kevin,
 
-We need set fp zero to let backtrace know the end. The patch fixup perf
-callchain panic problem, because backtrace didn't know what is the end
-of fp.
+Thanks for your review. Please see my comments below.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Reported-by: Mao Han <han_mao@c-sky.com>
----
- arch/csky/kernel/entry.S   | 50 +++++++++++++++++++++++++++-------------------
- arch/csky/kernel/process.c |  2 +-
- 2 files changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index a7e84cc..564dab2 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -17,6 +17,12 @@
- #define PTE_INDX_SHIFT  10
- #define _PGDIR_SHIFT    22
- 
-+.macro	zero_fp
-+#ifdef CONFIG_STACKTRACE
-+	movi	r8, 0
-+#endif
-+.endm
-+
- .macro tlbop_begin name, val0, val1, val2
- ENTRY(csky_\name)
- 	mtcr    a3, ss2
-@@ -96,6 +102,7 @@ ENTRY(csky_\name)
- 	SAVE_ALL 0
- .endm
- .macro tlbop_end is_write
-+	zero_fp
- 	RD_MEH	a2
- 	psrset  ee, ie
- 	mov     a0, sp
-@@ -120,6 +127,7 @@ tlbop_end 1
- 
- ENTRY(csky_systemcall)
- 	SAVE_ALL TRAP0_SIZE
-+	zero_fp
- 
- 	psrset  ee, ie
- 
-@@ -136,9 +144,9 @@ ENTRY(csky_systemcall)
- 	mov     r9, sp
- 	bmaski  r10, THREAD_SHIFT
- 	andn    r9, r10
--	ldw     r8, (r9, TINFO_FLAGS)
--	ANDI_R3	r8, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
--	cmpnei	r8, 0
-+	ldw     r12, (r9, TINFO_FLAGS)
-+	ANDI_R3	r12, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
-+	cmpnei	r12, 0
- 	bt      csky_syscall_trace
- #if defined(__CSKYABIV2__)
- 	subi    sp, 8
-@@ -180,7 +188,7 @@ csky_syscall_trace:
- 
- ENTRY(ret_from_kernel_thread)
- 	jbsr	schedule_tail
--	mov	a0, r8
-+	mov	a0, r10
- 	jsr	r9
- 	jbsr	ret_from_exception
- 
-@@ -189,9 +197,9 @@ ENTRY(ret_from_fork)
- 	mov	r9, sp
- 	bmaski	r10, THREAD_SHIFT
- 	andn	r9, r10
--	ldw	r8, (r9, TINFO_FLAGS)
--	ANDI_R3	r8, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
--	cmpnei	r8, 0
-+	ldw	r12, (r9, TINFO_FLAGS)
-+	ANDI_R3	r12, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
-+	cmpnei	r12, 0
- 	bf	ret_from_exception
- 	mov	a0, sp			/* sp = pt_regs pointer */
- 	jbsr	syscall_trace_exit
-@@ -209,9 +217,9 @@ ret_from_exception:
- 	bmaski	r10, THREAD_SHIFT
- 	andn	r9, r10
- 
--	ldw	r8, (r9, TINFO_FLAGS)
--	andi	r8, (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED)
--	cmpnei	r8, 0
-+	ldw	r12, (r9, TINFO_FLAGS)
-+	andi	r12, (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED)
-+	cmpnei	r12, 0
- 	bt	exit_work
- 1:
- 	RESTORE_ALL
-@@ -220,11 +228,11 @@ exit_work:
- 	lrw	syscallid, ret_from_exception
- 	mov	lr, syscallid
- 
--	btsti	r8, TIF_NEED_RESCHED
-+	btsti	r12, TIF_NEED_RESCHED
- 	bt	work_resched
- 
- 	mov	a0, sp
--	mov	a1, r8
-+	mov	a1, r12
- 	jmpi	do_notify_resume
- 
- work_resched:
-@@ -232,6 +240,7 @@ work_resched:
- 
- ENTRY(csky_trap)
- 	SAVE_ALL 0
-+	zero_fp
- 	psrset	ee
- 	mov	a0, sp                 /* Push Stack pointer arg */
- 	jbsr	trap_c                 /* Call C-level trap handler */
-@@ -265,6 +274,7 @@ ENTRY(csky_get_tls)
- 
- ENTRY(csky_irq)
- 	SAVE_ALL 0
-+	zero_fp
- 	psrset	ee
- 
- #ifdef CONFIG_PREEMPT
-@@ -276,21 +286,21 @@ ENTRY(csky_irq)
- 	 * Get task_struct->stack.preempt_count for current,
- 	 * and increase 1.
- 	 */
--	ldw	r8, (r9, TINFO_PREEMPT)
--	addi	r8, 1
--	stw	r8, (r9, TINFO_PREEMPT)
-+	ldw	r12, (r9, TINFO_PREEMPT)
-+	addi	r12, 1
-+	stw	r12, (r9, TINFO_PREEMPT)
- #endif
- 
- 	mov	a0, sp
- 	jbsr	csky_do_IRQ
- 
- #ifdef CONFIG_PREEMPT
--	subi	r8, 1
--	stw	r8, (r9, TINFO_PREEMPT)
--	cmpnei	r8, 0
-+	subi	r12, 1
-+	stw	r12, (r9, TINFO_PREEMPT)
-+	cmpnei	r12, 0
- 	bt	2f
--	ldw	r8, (r9, TINFO_FLAGS)
--	btsti	r8, TIF_NEED_RESCHED
-+	ldw	r12, (r9, TINFO_FLAGS)
-+	btsti	r12, TIF_NEED_RESCHED
- 	bf	2f
- 1:
- 	jbsr	preempt_schedule_irq	/* irq en/disable is done inside */
-diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
-index e555740..f320d92 100644
---- a/arch/csky/kernel/process.c
-+++ b/arch/csky/kernel/process.c
-@@ -55,7 +55,7 @@ int copy_thread(unsigned long clone_flags,
- 	if (unlikely(p->flags & PF_KTHREAD)) {
- 		memset(childregs, 0, sizeof(struct pt_regs));
- 		childstack->r15 = (unsigned long) ret_from_kernel_thread;
--		childstack->r8 = kthread_arg;
-+		childstack->r10 = kthread_arg;
- 		childstack->r9 = usp;
- 		childregs->sr = mfcr("psr");
- 	} else {
--- 
-2.7.4
+On 2019/9/26 6:41, Kevin Hilman wrote:
+> Hi Jianxin,
+> 
+> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+> 
+>> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
+>> control registers are in secure domain, and should be accessed by smc.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+> 
+> Thanks for the new power domain driver.
+> 
+>> ---
+>>  drivers/soc/amlogic/Kconfig             |  13 +++
+>>  drivers/soc/amlogic/Makefile            |   1 +
+>>  drivers/soc/amlogic/meson-secure-pwrc.c | 182 ++++++++++++++++++++++++++++++++
+>>  3 files changed, 196 insertions(+)
+>>  create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+>>
+>> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+>> index bc2c912..6cb06e7 100644
+>> --- a/drivers/soc/amlogic/Kconfig
+>> +++ b/drivers/soc/amlogic/Kconfig
+>> @@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
+>>  	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
+>>  	  Generic Power Domains.
+>>  
+>> +config MESON_SECURE_PM_DOMAINS
+>> +	bool "Amlogic Meson Secure Power Domains driver"
+>> +	depends on ARCH_MESON || COMPILE_TEST
+>> +	depends on PM && OF
+>> +	depends on HAVE_ARM_SMCCC
+>> +	default ARCH_MESON
+>> +	select PM_GENERIC_DOMAINS
+>> +	select PM_GENERIC_DOMAINS_OF
+>> +	help
+>> +	  Support for the power controller on Amlogic A1/C1 series.
+>> +	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
+>> +	  Power Domains.
+>> +
+>>  config MESON_MX_SOCINFO
+>>  	bool "Amlogic Meson MX SoC Information driver"
+>>  	depends on ARCH_MESON || COMPILE_TEST
+>> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+>> index de79d044..7b8c5d3 100644
+>> --- a/drivers/soc/amlogic/Makefile
+>> +++ b/drivers/soc/amlogic/Makefile
+>> @@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+>>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+>>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
+>>  obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
+>> +obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
+>> diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
+>> new file mode 100644
+>> index 00000000..00c7232
+>> --- /dev/null
+>> +++ b/drivers/soc/amlogic/meson-secure-pwrc.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+[...]
+>> +
+>> +static bool pwrc_secure_get_power(struct meson_secure_pwrc_domain *pwrc_domain)
+>> +{
+>> +	struct arm_smccc_res res;
+>> +
+>> +	arm_smccc_smc(SMC_PWRC_GET, pwrc_domain->index, 0,
+>> +		      0, 0, 0, 0, 0, &res);
+>> +
+>> +	return res.a0 & 0x1;
+> 
+> Please use a #define with a readable name for this mask.
+> The return type of this smc is bool. I will remove 0x1 mask in next version. 
+
+Another question about smc:
+In this driver, no share memory is needed, and I use arm_smccc_smc() directly.
+Should I add secure-monitor = <&sm> in dtb and use meson_sm_call() from sm driver instead? 
+>> +}
+> 
+> What does the return value for this function mean?  Does true mean
+> "powered off" or "powered on">
+The return vaule for SMC_PWRC_GET :
+0 -> power on
+1 -> power off> See the rename I just did on the ee-pwrc driver:
+> https://lore.kernel.org/linux-amlogic/20190925213528.21515-2-khilman@kernel.org/
+> I will follow and rename to _is_off() in the next verson.
+>> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
+>> +{
+>> +	struct arm_smccc_res res;
+>> +	struct meson_secure_pwrc_domain *pwrc_domain =
+[...]
+>> +
+>> +#define SEC_PD(__name, __flag)			\
+>> +{						\
+>> +	.name = #__name,			\
+>> +	.index = PWRC_##__name##_ID,		\
+>> +	.get_power = pwrc_secure_get_power,	\
+>> +	.flags = __flag,			\
+>> +}
+>> +
+>> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
+>> +	SEC_PD(DSPA,	0),
+>> +	SEC_PD(DSPB,	0),
+>> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
+> 
+> This flag should only be used for domains where there are no linux
+> drivers.
+> 
+> Rather than using this flag, you need to add a 'power-domain' property
+> to the uart driver in DT, and then update the meson_uart driver to use
+> the runtime PM API so that the domain is enabled whenever the UART is in
+> use.
+PM_UART Power domain is shared by uart, msr, jtag and cec.
+Uart should keep working in BL31, after kernel suspend and before kernel resume.
+> 
+>> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+PM_DMC is used for DDR PHY ana/dig and DMC. 
+There is no linux drver for them, and it should be always on. 
+
+I will add comments for all these always on domains.
+>> +	SEC_PD(I2C,	0),
+>> +	SEC_PD(PSRAM,	0),
+>> +	SEC_PD(ACODEC,	0),
+>> +	SEC_PD(AUDIO,	0),
+>> +	SEC_PD(OTP,	0),
+>> +	SEC_PD(DMA,	0),
+>> +	SEC_PD(SD_EMMC,	0),
+>> +	SEC_PD(RAMA,	0),
+>> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+In A1, SRAMB is used for bl31 ATF. 
+>> +	SEC_PD(IR,	0),
+>> +	SEC_PD(SPICC,	0),
+>> +	SEC_PD(SPIFC,	0),
+>> +	SEC_PD(USB,	0),
+>> +	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+PD_NIC is used for NIC400, and should keep on.
+>> +	SEC_PD(PDMIN,	0),
+>> +	SEC_PD(RSA,	0),
+>> +};
+>> +
+>> +static int meson_secure_pwrc_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct meson_secure_pwrc_domain_data *match;
+>> +	struct meson_secure_pwrc *pwrc;
+>> +	int i;
+[...]
+>> +
+>> +	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
+>> +}
+>> +
+>> +static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
+>> +	.domains = a1_pwrc_domains,
+>> +	.count = ARRAY_SIZE(a1_pwrc_domains),
+>> +};
+>> +
+>> +static const struct of_device_id meson_secure_pwrc_match_table[] = {
+>> +	{
+>> +		.compatible = "amlogic,meson-a1-pwrc",
+>> +		.data = &meson_secure_a1_pwrc_data,
+>> +	},
+>> +	{ }
+> 
+> as mentioned by Martin, please add the sentinel string here.  Helps for
+> readability.
+> 
+OK, I will fix it. Thank you.
+>> +};
+>> +
+>> +static struct platform_driver meson_secure_pwrc_driver = {
+>> +	.probe = meson_secure_pwrc_probe,
+>> +	.driver = {
+>> +		.name		= "meson_secure_pwrc",
+>> +		.of_match_table	= meson_secure_pwrc_match_table,
+>> +	},
+>> +};
+>> +
+>> +static int meson_secure_pwrc_init(void)
+>> +{
+>> +	return platform_driver_register(&meson_secure_pwrc_driver);
+>> +}
+>> +arch_initcall_sync(meson_secure_pwrc_init);
+> 
+> Please use builtin_platform_driver() or explain in detail why the
+> initcall is needed.
+> 
+OK, I will use builtin_platform_driver instead.
+> Thanks,
+> 
+> Kevin
+> 
+> .
+> 
 
