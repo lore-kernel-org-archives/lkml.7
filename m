@@ -2,144 +2,104 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DC8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E25C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2155422466
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EA621D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UgV7Uh+B"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FbHWJ5e5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfIZSel (ORCPT
+        id S1728443AbfIZSfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:34:41 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42122 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZSel (ORCPT
+        Thu, 26 Sep 2019 14:35:46 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33640 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZSfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:34:41 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so2969930oif.9;
-        Thu, 26 Sep 2019 11:34:40 -0700 (PDT)
+        Thu, 26 Sep 2019 14:35:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d22so19318pls.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NGmse8tCqZQZ4pc5Rd9nycCZrtTO2C0KKH3W2gH74ZQ=;
-        b=UgV7Uh+BjMLCWW04clvdJpCdRfDq+LPqUWtOYblF8YWz4YKYeXATM5GBrymb/Sk+uQ
-         S81PNoDJWIh2MnYlFgrJJyqp4nJIPSEnWcQcU9diyD7BzDBQk15Xq03a2s9hdNP2x0Gv
-         LycDh6FqujeKrx/3oAaZ1qrF9pDZklAuacpqB1EbUABmeQEyCF3XqGsYD7ya6ukjJAek
-         DEZHtXpSpDRBRERpBikNPBMDwlpHgQgE9z6uGXS/Ge9WNOrjEdT4a86+wC0dfksXnAB5
-         6wACcrdJIdl5YFIKME8vJ7Blt1qGTY/vzSMBgtbkwKLvPS3zxgplPCWYOS0jKRSfbq/p
-         diGw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=xqyqmD5GX/EEp8qGv/ybZ9xAmuKvDeLoKv9DsbBuMDQ=;
+        b=FbHWJ5e5GIn3c1An34lHOdYR7yZRnSFsMnQi3h80AoihggomZpR25cz7mxjCx42Or8
+         eUF6sWFjzNuuViK2yG6aT8RozYVsPq1XwCWIp+OadGljJ2mxZ849LYucfERKahMPSki2
+         UyMlL1FTSiWHcwxXKqnGN61u/ED5ahvd6lRZg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NGmse8tCqZQZ4pc5Rd9nycCZrtTO2C0KKH3W2gH74ZQ=;
-        b=bqsppv18mbOx6v6HCdH5jZMSKonigt/iB2p+lvyZ7edfUAM9fEEAXcL41SIvcHrcQy
-         ZOewdHbPXOehHO1MPWsT3AkQx6CQ7n+Ir3wIwOAgmU2Df218FbuT+hiqj10tbgm9lvVM
-         WfkHuSgIEGVfTuZOSe+V5LAMeD9hi0HMavbKvGcLt0WBppBqgM7dslv0rmjSjJk0gcvn
-         oDlTNMAJk0oJZo4f2kLThxjmnCWDmd9z/Ya5t+0RLVv16vyLXQthARAjn1mDtQVUR+Qs
-         ZpjYdCP6oeW3qDTNX/XDzY1BsmA4IJDKHdXAJ/dZ/6OzVnAmSFjLVnXQDKENQm9nP8wT
-         dTsQ==
-X-Gm-Message-State: APjAAAXEOkGvc1fKag8Ksp0J8v4GZJ2p1nVHOA5Low2rgZuPzdplfNza
-        7FAk/5j5savrn3MS6GFuzc4RBuFWcwfLZcU9Wgnt2g==
-X-Google-Smtp-Source: APXvYqxuPwoB6TKSeyJqIwODjZis0k+ZmHBg9WFAB8/8pKYdueaEYWwk2+HM7MX9vjrMpv/LByMTiav/h+fuf+x5A5g=
-X-Received: by 2002:aca:4d08:: with SMTP id a8mr3946038oib.39.1569522879867;
- Thu, 26 Sep 2019 11:34:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=xqyqmD5GX/EEp8qGv/ybZ9xAmuKvDeLoKv9DsbBuMDQ=;
+        b=YHphZ9B0kTvQ7kThaE50LTT95hm+h9mtLt7LcEClo+kWSePEziLS7faFeokWiPmpmk
+         sCul7xr8rY2SFoWzxW8XELd4RMBfO94ZR7nUS60rGprBBkc3zQm8fGdOxLeCdug3RTzy
+         XXPgpRgZQPc/OYjwWAlKooZkLtSb8vRMvhj3hfUk/dQQaDNVvDJK25z8XCTV90Xlr2yJ
+         ErlivHwzZOJ6K+qIc1fM34WH2oWV4/j0RyEyYvxS1NG6qy+H4c6PyRzUvOyJwlb5gg0Q
+         OXochwI3AgI7XNbsTtF4OPj9L8zXyd9jFE1xYIssI3UJhSq1cJyPhZpikjnHAW6Yf261
+         kjoQ==
+X-Gm-Message-State: APjAAAUBLrV8dUQzrzB5qK85BsxJtdP5TXWOhmXn+VLvXhm25FEiYdl0
+        hL5267XE4hqVvQvluB58ekKCTw==
+X-Google-Smtp-Source: APXvYqwg6m3BLvFxJRQOjKOmPMDmY2I9UbM16EXi1rUxDfNO7km1QdaPhu01Vn6BiwuFEch+qNb2GQ==
+X-Received: by 2002:a17:902:6b05:: with SMTP id o5mr5394481plk.33.1569522943629;
+        Thu, 26 Sep 2019 11:35:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q13sm3180814pjq.0.2019.09.26.11.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 11:35:42 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 11:35:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [GIT PULL] usercopy fix for v5.4-rc1
+Message-ID: <201909261131.65DA27B@keescook>
 MIME-Version: 1.0
-References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
- <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com> <CAFBinCA0NaCJEDfNEg+LRfW3wxfNFGbXmGS+z7D5792TsupVAA@mail.gmail.com>
- <7h7e5wt2m1.fsf@baylibre.com>
-In-Reply-To: <7h7e5wt2m1.fsf@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 26 Sep 2019 20:34:28 +0200
-Message-ID: <CAFBinCAv=_3vWSanQg1S5EXBVzdgTu2Ub3Hyad_ajF3v6PcbGQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+Hi Linus,
 
-On Thu, Sep 26, 2019 at 12:47 AM Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->
-> > Hi Jerome,
-> >
-> > On Mon, Sep 23, 2019 at 11:29 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >>
-> >> On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
-> >>
-> >> > So far the HHI clock controller has been providing the XTAL clock on
-> >> > Amlogic Meson8/Meson8b/Meson8m2 SoCs.
-> >> > This is not correct because the XTAL is actually a crystal on the
-> >> > boards and the SoC has a dedicated input for it.
-> >> >
-> >> > This updates the dt-bindings of the HHI clock controller and defines
-> >> > a fixed-clock in meson.dtsi (along with switching everything over to
-> >> > use this clock).
-> >> > The clock driver needs three updates to use this:
-> >> > - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
-> >> >   the explicit reference to CLKID_XTAL while at the same time making
-> >> >   the code much easier (thanks to Neil for providing this new method
-> >> >   as part of the G12A CPU clock bringup!)
-> >> > - patch #3 ensures that the clock driver doesn't rely on it's internal
-> >> >   XTAL clock while not losing support for older .dtbs that don't have
-> >> >   the XTAL clock input yet
-> >> > - with patch #4 the clock controller's own XTAL clock is not registered
-> >> >   anymore when a clock input is provided via OF
-> >> >
-> >> > This series is a functional no-op. It's main goal is to better represent
-> >> > how the actual hardware looks like.
-> >>
-> >> I'm a bit unsure about this series.
-> >>
-> >> On one hand, I totally agree with you ... having the xtal in DT is the
-> >> right way to do it ... when done from the start
-> > yep
-> >
-> >> On the other hand, things have been this way for years, they are working
-> >> and going for xtal in DT does not solve any pending issue. Doing this
-> >> means adding complexity in the driver to support both methods. It is
-> >> also quite a significant change in DT :/
-> > my two main motivations were:
-> > - keeping the 32-bit SoCs as similar as possible to the 64-bit ones in
-> > terms of "how are the [clock] drivers implemented"
-> > - with the DDR clock controller the .dts looked weird: &ddr_clkc took
-> > CLKID_XTAL from &clkc as input and &clkc took DDR_CLKID_DDR_PLL as
-> > input from &ddr_clkc
-> >
-> > RE complexity in the driver to support both:
-> > I still have a cleanup of the meson8b.c init code on my TODO-list
-> > because we're still supporting .dtbs without parent syscon
-> > my plan is to drop that code-path along with the newly added fallback
-> > for "skip CLKID_XTAL" (assuming this is accepted) together for v5.6 or
-> > v5.7
->
-> TBH, I'm big(ish) "functional no-op" changes like this are not things I
-> get super exicted about, especially for SoCs that have been working well
-> for awhile, and are do not have a large (upstream) userbase.
->
-> OTOH, since Martin is doing most of the heavy lifting for keeping this
-> platform working upstream, I'm happy to take the changes, as long as
-> Martin is willing to deal with any fallout.
-I agree: it has to work and if it doesn't then I will have to fix it so it is
-so I will be taking care of any fallout
+Please pull this usercopy fix for v5.4-rc1. Randy found a corner case
+(HIGHMEM, DEBUG_VIRTUAL, >512MB RAM) with hardened usercopy that went
+unnoticed since v4.8. This adds HIGHMEM awareness to hardened usercopy,
+and has been living in -next for a bit more than a week now.
 
+Thanks!
 
-Martin
+-Kees
+
+The following changes since commit 4d856f72c10ecb060868ed10ff1b1453943fc6c8:
+
+  Linux 5.3 (2019-09-15 14:19:32 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/usercopy-v5.4-rc1
+
+for you to fetch changes up to 314eed30ede02fa925990f535652254b5bad6b65:
+
+  usercopy: Avoid HIGHMEM pfn warning (2019-09-17 15:20:17 -0700)
+
+----------------------------------------------------------------
+Fix hardened usercopy under CONFIG_DEBUG_VIRTUAL
+
+----------------------------------------------------------------
+Kees Cook (1):
+      usercopy: Avoid HIGHMEM pfn warning
+
+ mm/usercopy.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+-- 
+Kees Cook
