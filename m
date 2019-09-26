@@ -8,64 +8,66 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C427C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80363C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A447222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55271222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMZOZA7s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3LIBBZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfIZTZg (ORCPT
+        id S1728636AbfIZTZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:25:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34505 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbfIZTZg (ORCPT
+        Thu, 26 Sep 2019 15:25:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39277 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbfIZTZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:25:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r22so76595lfm.1;
-        Thu, 26 Sep 2019 12:25:33 -0700 (PDT)
+        Thu, 26 Sep 2019 15:25:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 72so59229lfh.6;
+        Thu, 26 Sep 2019 12:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qKuN23lQstyoD1te2Tv+YFrDd//LmXbVG2f+T74e3Ic=;
-        b=WMZOZA7szPUfdmcF9DIkfxQLlDQqv1j9nCsVKyhs9p3/UqYkMqFgvFPlaEMpMhPBiQ
-         TdTfItz8I4hCfs2ZNa640VPXettCk+1gJBaiWSwSWzuyKzMcNZ6A67hTZsKUvYXZsKGq
-         Zj/mgROUaUJ39l96IERYB31yaqH9VkRJcn8tPRoWrpr+JCgPwDyjMprF+qtah2KCtZSz
-         SK9uoAO+xLUhPYzK1Yh9ad0AT5OnWAcTzYbF2KRaEuEw52Wc2rNtuYmK+I9Qhhz40c2p
-         6h8UoQXWJKl+oB5NbcKcaB1RumKXlt7LQ7rIsOIbDZIvcnvwRUICChQxpDOeKAmxjKSx
-         ItCQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0kXG5yDieCzAILD8cRkpsMGSlnoUT5rFe6gbk7OKPRU=;
+        b=P3LIBBZ/lW82t3QCarXGEBEV+PWZOP+3Qlu4QflVZqswGdCfLW+G+CUlubMOZlYQ4c
+         nTRLLgS2WB0kJbnoCtEKOBZWXKluuBoTkeLFDD51ZLF/93LXuTknTD+6d1f1AxQSFGr3
+         nWTx49C/zOxVl2I3/YA+N8wjxsb65q9QLBugc8jYRiOXw1Gz3e3CU69ASnWFUj02rEWt
+         4Co3z4FVhkzQISA8bzfhz44OMK0YN5LchNpO2deoU/90IYgt8z6wUUfVv+NYds3XdGR/
+         CdjbFFuuisDs7Zwj1jpDbhJlbb0nRzaKnVAUsLq072Hn5/tckhY/FloulQHcPnlC6Qlt
+         6zBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qKuN23lQstyoD1te2Tv+YFrDd//LmXbVG2f+T74e3Ic=;
-        b=jhSDVyDmC0PGm36Dg5GJBN0rnjcMLwP0swKKOxz1F+uiAqdFeR9NkodciSxIvbU+76
-         pFr16SPAhqfC4WewDan0C2BE6V2YNSOqo3V504ksV1Mn3TpjtoXtvpKFVOd+KteGQUu2
-         IZwWMVthLsYy1NlGPG1eVgn8NTiJP8I7lt+xmwQi3OlCdJ0arR8ooZCcuctB7SzXPn4n
-         B0+7ZcC0gMgF24HoL11AYsXTB03rkByyGjuVEv5VSmSjVj4D0KGhYIj0PCtre9WHtt56
-         4L9bXo3GcARp4emxXnPsPjEtJsBm5D7xoyNiF2KeQogjmQnZ0PcDQ26jOYIWv5kVpc3w
-         vp8g==
-X-Gm-Message-State: APjAAAXnT0laP8Vqva0vkKfqF4L1B8K9z8hT+KyS2ucIiF9/fXknN1pX
-        Dm6ET7wbJPZBwSzJLaaR7oGPoztf
-X-Google-Smtp-Source: APXvYqwb1G9oJA0tIuTHLun5+/SLSN97iOCQkmFWTj3AGx79VOzMWtwAFQqAr4i+aUw14dSVOp2vYw==
-X-Received: by 2002:a05:6512:251:: with SMTP id b17mr114698lfo.35.1569525933062;
-        Thu, 26 Sep 2019 12:25:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0kXG5yDieCzAILD8cRkpsMGSlnoUT5rFe6gbk7OKPRU=;
+        b=SYZfksQlgPFFEpH5Spcpc3LxA15rbqFw0oRd8gEA9OqFVhUVq3H6Tpgldg4aH1nhf2
+         00ysJUXVyMZRyVh4wu6lGjEW4GasZIpbtjMNIy+AvCf08EaK5aavwX+RBgPPLBkuVmsC
+         vuo2Y+6048h08syCR2pr+Jg931ilpBqLfDLpjpTZu/69/M9fPAaNESejyLt85wUfRHN/
+         xFNzf2yVHZqj1wgJZIJuwrrtZuM2PwV9+p/CFidYb3zsbr3p+sJWUXMlcwIHgsdRs8E5
+         FKR32GfWZ4pqJJg6BITWINTLXB/fKqyUjxzndQqIqA2dQkEI9y9yWTeu1FVLcVgYstLK
+         OlVA==
+X-Gm-Message-State: APjAAAUJAy5Uxj9hanvh1nKNly5xv3LsR053o8BVJc2bfMqr/8o0GAlZ
+        leYev0ZsnaSukvSDliqUT98=
+X-Google-Smtp-Source: APXvYqzYbJ+v6GyybIl3sa2JHnlUOsgcwZtvaKA7TQLwkTgfEF/yFZ/lvrJ/VqdKf57e/98s32V1mw==
+X-Received: by 2002:a05:6512:4dd:: with SMTP id w29mr131874lfq.2.1569525938947;
+        Thu, 26 Sep 2019 12:25:38 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-32-67.pppoe.spdop.ru. [94.29.32.67])
-        by smtp.gmail.com with ESMTPSA id 202sm13888ljf.75.2019.09.26.12.25.31
+        by smtp.gmail.com with ESMTPSA id 202sm13888ljf.75.2019.09.26.12.25.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 12:25:32 -0700 (PDT)
+        Thu, 26 Sep 2019 12:25:38 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] soc/tegra: pmc: Query PCLK clock rate at probe time
-Date:   Thu, 26 Sep 2019 22:17:54 +0300
-Message-Id: <20190926191755.27131-1-digetx@gmail.com>
+Subject: [PATCH v5 2/2] soc/tegra: pmc: Remove unnecessary memory barrier
+Date:   Thu, 26 Sep 2019 22:17:55 +0300
+Message-Id: <20190926191755.27131-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190926191755.27131-1-digetx@gmail.com>
+References: <20190926191755.27131-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,180 +75,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to get a lockup if kernel decides to enter LP2 cpuidle
-from some clk-notifier, in that case CCF's "prepare" mutex is kept locked
-and thus clk_get_rate(pclk) blocks on the same mutex with interrupts being
-disabled, hanging machine.
+The removed barrier isn't needed because writes/reads are strictly ordered
+and even if PMC had separate ports for writes, it wouldn't matter since
+the hardware logic takes into effect after triggering CPU's power-gating
+and at that point all CPU accesses are guaranteed to be completed. That
+barrier was copied from the old arch/ code during transition to the soc/
+PMC driver and even that the code structure was different back then, the
+barrier didn't have a real useful purpose from the start. Lastly, the
+tegra_pmc_writel() naturally inserts wmb() because it uses writel(),
+and thus this change doesn't actually make any difference in terms of
+interacting with hardware. Hence let's remove the barrier to clean up
+code a tad.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
 
 Changelog:
 
-v5: Clk notifier now takes powergates_lock to avoid potential racing with
-    tegra_io_pad_*().
+v5: Extended the commit's message.
 
-    The original fallback to 100MHz when clk_get_rate() fails is preserved
-    now.
+v4: No changes.
 
-v4: Added clk-notifier to track PCLK rate-changes, which may become useful
-    in the future. That's done in response to v3 review comment from Peter
-    De Schrijver.
+v3: No changes.
 
-    Now properly handling case where clk pointer is intentionally NULL on
-    the driver's probe.
+v2: New patch that was added after Jon's Hunter pointing that it's better
+    not to change the barrier's placement in the code. In fact the barrier
+    is not needed at all.
 
-v3: Changed commit's message because I actually recalled what was the
-    initial reason for the patch, since the problem reoccurred once again.
-
-v2: Addressed review comments that were made by Jon Hunter to v1 by
-    not moving the memory barrier, replacing one missed clk_get_rate()
-    with pmc->rate, handling possible clk_get_rate() error on probe and
-    slightly adjusting the commits message.
-
- drivers/soc/tegra/pmc.c | 71 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 56 insertions(+), 15 deletions(-)
+ drivers/soc/tegra/pmc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 9f9c1c677cf4..ee39ded6bc7b 100644
+index ee39ded6bc7b..f75708a935ac 100644
 --- a/drivers/soc/tegra/pmc.c
 +++ b/drivers/soc/tegra/pmc.c
-@@ -309,6 +309,7 @@ static const char * const tegra210_reset_sources[] = {
-  * @pctl_dev: pin controller exposed by the PMC
-  * @domain: IRQ domain provided by the PMC
-  * @irq: chip implementation for the IRQ domain
-+ * @clk_nb: pclk clock changes handler
-  */
- struct tegra_pmc {
- 	struct device *dev;
-@@ -344,6 +345,8 @@ struct tegra_pmc {
+@@ -1463,8 +1463,6 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+ 	do_div(ticks, USEC_PER_SEC);
+ 	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
  
- 	struct irq_domain *domain;
- 	struct irq_chip irq;
-+
-+	struct notifier_block clk_nb;
- };
- 
- static struct tegra_pmc *pmc = &(struct tegra_pmc) {
-@@ -1192,7 +1195,7 @@ static int tegra_io_pad_prepare(struct tegra_pmc *pmc, enum tegra_io_pad id,
- 		return err;
- 
- 	if (pmc->clk) {
--		rate = clk_get_rate(pmc->clk);
-+		rate = pmc->rate;
- 		if (!rate) {
- 			dev_err(pmc->dev, "failed to get clock rate\n");
- 			return -ENODEV;
-@@ -1433,6 +1436,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
- void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
- {
- 	unsigned long long rate = 0;
-+	u64 ticks;
- 	u32 value;
- 
- 	switch (mode) {
-@@ -1441,7 +1445,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
- 		break;
- 
- 	case TEGRA_SUSPEND_LP2:
--		rate = clk_get_rate(pmc->clk);
-+		rate = pmc->rate;
- 		break;
- 
- 	default:
-@@ -1451,21 +1455,15 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
- 	if (WARN_ON_ONCE(rate == 0))
- 		rate = 100000000;
- 
--	if (rate != pmc->rate) {
--		u64 ticks;
+-	wmb();
 -
--		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
--		do_div(ticks, USEC_PER_SEC);
--		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
--
--		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
--		do_div(ticks, USEC_PER_SEC);
--		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
-+	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
-+	do_div(ticks, USEC_PER_SEC);
-+	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
- 
--		wmb();
-+	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
-+	do_div(ticks, USEC_PER_SEC);
-+	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
- 
--		pmc->rate = rate;
--	}
-+	wmb();
- 
  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
-@@ -2019,6 +2017,30 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
- 	return 0;
- }
- 
-+static int tegra_pmc_clk_notify_cb(struct notifier_block *nb,
-+				   unsigned long action, void *ptr)
-+{
-+	struct tegra_pmc *pmc = container_of(nb, struct tegra_pmc, clk_nb);
-+	struct clk_notifier_data *data = ptr;
-+
-+	switch (action) {
-+	case PRE_RATE_CHANGE:
-+		mutex_lock(&pmc->powergates_lock);
-+		break;
-+	case POST_RATE_CHANGE:
-+		pmc->rate = data->new_rate;
-+		/* fall through */
-+	case ABORT_RATE_CHANGE:
-+		mutex_unlock(&pmc->powergates_lock);
-+		break;
-+	default:
-+		WARN_ON_ONCE(1);
-+		return notifier_from_errno(-EINVAL);
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
- static int tegra_pmc_probe(struct platform_device *pdev)
- {
- 	void __iomem *base;
-@@ -2082,6 +2104,23 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 		pmc->clk = NULL;
- 	}
- 
-+	/*
-+	 * PCLK clock rate can't be retrieved using CLK API because it
-+	 * causes lockup if CPU enters LP2 idle state from some other
-+	 * CLK notifier, hence we're caching the rate's value locally.
-+	 */
-+	if (pmc->clk) {
-+		pmc->clk_nb.notifier_call = tegra_pmc_clk_notify_cb;
-+		err = clk_notifier_register(pmc->clk, &pmc->clk_nb);
-+		if (err) {
-+			dev_err(&pdev->dev,
-+				"failed to register clk notifier\n");
-+			return err;
-+		}
-+
-+		pmc->rate = clk_get_rate(pmc->clk);
-+	}
-+
- 	pmc->dev = &pdev->dev;
- 
- 	tegra_pmc_init(pmc);
-@@ -2133,6 +2172,8 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- cleanup_sysfs:
- 	device_remove_file(&pdev->dev, &dev_attr_reset_reason);
- 	device_remove_file(&pdev->dev, &dev_attr_reset_level);
-+	clk_notifier_unregister(pmc->clk, &pmc->clk_nb);
-+
- 	return err;
- }
- 
+ 	value |= PMC_CNTRL_CPU_PWRREQ_OE;
 -- 
 2.23.0
 
