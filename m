@@ -2,236 +2,112 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFC7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE161C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57FD222C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9374222CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569513730;
+	bh=pLb8aNBNJnYhkQZMJEcK+pAhyHWfRv4gC8XSAJ97+2U=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=MlAsQvDqJ+yqiCEBDfBga9u/PuTtFXlA1aA3by07ZqJ8nfwnm4NyLrYrXe6yswsdc
+	 i3Oc0PMHZdANqSkJv+Ob3/gTQ6tRWUy2uApu9xYFueXOz5nrZCgeXCRut6x+NRqSd8
+	 BtnO0+ZncMXwHYq7ewUbpfMxG7a+eRa9divkxuDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfIZP77 (ORCPT
+        id S1727409AbfIZQCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:59:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:53714 "EHLO foss.arm.com"
+        Thu, 26 Sep 2019 12:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbfIZP76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:59:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7AB428;
-        Thu, 26 Sep 2019 08:59:57 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70FA43F534;
-        Thu, 26 Sep 2019 08:59:56 -0700 (PDT)
-Subject: Re: [PATCH v4] drm: Don't free jobs in wait_event_interruptible()
-To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <20190926141630.14258-1-steven.price@arm.com>
- <b457a269-4aa9-7e3b-283e-b4920455e396@amd.com>
- <48214f02-e853-015f-55cc-397c7b06cb5d@arm.com>
- <b4713fe7-80d4-4706-206e-f4786a70e70b@amd.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <d13b3648-c7a5-1ef9-20c4-c327b15f1e4a@arm.com>
-Date:   Thu, 26 Sep 2019 16:59:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726029AbfIZQCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 12:02:09 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5744021D6C;
+        Thu, 26 Sep 2019 16:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569513728;
+        bh=pLb8aNBNJnYhkQZMJEcK+pAhyHWfRv4gC8XSAJ97+2U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rZ2tDLAcwPwvxLZP0G+NGGlClvuf9/yRWzE+MkIBER3OQKlflqMO/F9YA/gHX2UPD
+         98Wj8IeGgbS5d9tHCVf2RAY99kp2OuhCB/Vjik/Nk/FrXPQodL+bYrn1n4HeOm11ee
+         +aXsvOifRkU8BdembYzhIk+aOoA+JzrYp5nGojc8=
+Date:   Thu, 26 Sep 2019 09:02:07 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.4-rc1
+Message-ID: <20190926160206.GB9916@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <b4713fe7-80d4-4706-206e-f4786a70e70b@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/09/2019 16:48, Grodzovsky, Andrey wrote:
-> 
-> On 9/26/19 11:23 AM, Steven Price wrote:
->> On 26/09/2019 16:14, Grodzovsky, Andrey wrote:
->>> On 9/26/19 10:16 AM, Steven Price wrote:
->>>> drm_sched_cleanup_jobs() attempts to free finished jobs, however because
->>>> it is called as the condition of wait_event_interruptible() it must not
->>>> sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
->>>>
->>>> Instead let's rename drm_sched_cleanup_jobs() to
->>>> drm_sched_get_cleanup_job() and simply return a job for processing if
->>>> there is one. The caller can then call the free_job() callback outside
->>>> the wait_event_interruptible() where sleeping is possible before
->>>> re-checking and returning to sleep if necessary.
->>>>
->>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>> ---
->>>> Changes from v3:
->>>>    * drm_sched_main() re-arms the timeout for the next job after calling
->>>>      free_job()
->>>>
->>>>    drivers/gpu/drm/scheduler/sched_main.c | 45 +++++++++++++++-----------
->>>>    1 file changed, 26 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
->>>> index 9a0ee74d82dc..148468447ba9 100644
->>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
->>>>    }
->>>>    
->>>>    /**
->>>> - * drm_sched_cleanup_jobs - destroy finished jobs
->>>> + * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
->>>>     *
->>>>     * @sched: scheduler instance
->>>>     *
->>>> - * Remove all finished jobs from the mirror list and destroy them.
->>>> + * Returns the next finished job from the mirror list (if there is one)
->>>> + * ready for it to be destroyed.
->>>>     */
->>>> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
->>>> +static struct drm_sched_job *
->>>> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
->>>>    {
->>>> +	struct drm_sched_job *job = NULL;
->>>>    	unsigned long flags;
->>>>    
->>>>    	/* Don't destroy jobs while the timeout worker is running */
->>>>    	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
->>>>    	    !cancel_delayed_work(&sched->work_tdr))
->>>> -		return;
->>>> -
->>>> +		return NULL;
->>>>    
->>>> -	while (!list_empty(&sched->ring_mirror_list)) {
->>>> -		struct drm_sched_job *job;
->>>> +	spin_lock_irqsave(&sched->job_list_lock, flags);
->>>>    
->>>> -		job = list_first_entry(&sched->ring_mirror_list,
->>>> +	job = list_first_entry_or_null(&sched->ring_mirror_list,
->>>>    				       struct drm_sched_job, node);
->>>> -		if (!dma_fence_is_signaled(&job->s_fence->finished))
->>>> -			break;
->>>>    
->>>> -		spin_lock_irqsave(&sched->job_list_lock, flags);
->>>> +	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
->>>>    		/* remove job from ring_mirror_list */
->>>>    		list_del_init(&job->node);
->>>> -		spin_unlock_irqrestore(&sched->job_list_lock, flags);
->>>> -
->>>> -		sched->ops->free_job(job);
->>>> +	} else {
->>>> +		job = NULL;
->>>> +		/* queue timeout for next job */
->>>> +		drm_sched_start_timeout(sched);
->>>>    	}
->>>>    
->>>> -	/* queue timeout for next job */
->>>> -	spin_lock_irqsave(&sched->job_list_lock, flags);
->>>> -	drm_sched_start_timeout(sched);
->>>>    	spin_unlock_irqrestore(&sched->job_list_lock, flags);
->>>>    
->>>> +	return job;
->>>>    }
->>>>    
->>>>    /**
->>>> @@ -698,12 +696,21 @@ static int drm_sched_main(void *param)
->>>>    		struct drm_sched_fence *s_fence;
->>>>    		struct drm_sched_job *sched_job;
->>>>    		struct dma_fence *fence;
->>>> +		struct drm_sched_job *cleanup_job = NULL;
->>>>    
->>>>    		wait_event_interruptible(sched->wake_up_worker,
->>>> -					 (drm_sched_cleanup_jobs(sched),
->>>> +					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
->>>>    					 (!drm_sched_blocked(sched) &&
->>>>    					  (entity = drm_sched_select_entity(sched))) ||
->>>> -					 kthread_should_stop()));
->>>> +					 kthread_should_stop());
->>>> +
->>>> +		while (cleanup_job) {
->>>> +			sched->ops->free_job(cleanup_job);
->>>> +			/* queue timeout for next job */
->>>> +			drm_sched_start_timeout(sched);
->>>> +
->>>> +			cleanup_job = drm_sched_get_cleanup_job(sched);
->>>> +		}
->>>
->>> Why drm_sched_start_timeout is called both here and inside
->>> drm_sched_get_cleanup_job ? And also why call it multiple times in the
->>> loop instead of only once after the loop is done  ?
->> Christian pointed out to be that the first thing
->> drm_sched_get_cleanup_job does is call cancel_delayed_work(), and if
->> that returns false then it bails out with a NULL return. So to actually
->> get another job (if one exists) the timeout has to be restarted.
-> 
-> 
-> For this case where timeout work already in progress note that 
-> drm_sched_job_timedout restarts the timeout in it's end so it should be 
-> ok to restart the timeout unconditionally inside 
-> drm_sched_get_cleanup_job as it was done before.
+Hi Linus,
 
-I may have misinterpreted Christian[1], but I interpreted the below as
-meaning that he'd prefer the caller (drm_sched_main()) to handle the
-drm_sched_start_timeout() in this case:
+Please pull this second set of changes for 5.4-rc1.  There are a couple
+of bug fixes and some small code cleanups that came in recently.
 
-On 26/09/2019 14:50, Koenig, Christian wrote:
->> Alternatively the caller could manually re-arm the timeout after
->> handling the job free.
-> 
-> I don't see anything that could go wrong immediately, but that is 
-> probably the cleaner approach.
+It has survived a couple of days of xfstests runs and merges cleanly
+with this morning's master.  Please let me know if anything strange
+happens.
 
-[1]
-https://lore.kernel.org/lkml/d9b23ef8-f784-0bce-c34a-fa02002db1ea@amd.com/
+--D
 
-I wasn't entirely sure if it was safe to leave the timeout running while
-the job free was going on which would be the case if
-drm_sched_get_cleanup_job() re-armed unconditionally.
+The following changes since commit 14e15f1bcd738dc13dd7c1e78e4800e8bc577980:
 
->>
->> It's also necessary to restart the timeout in the case where the return
->> is NULL which is handled in the function itself.
->>
->> TBH I'm not sure whether this while loop is worth it - it may be better
->> to replace it with simply:
->>
->> 	if (cleanup_job) {
->> 		sched->ops->free_job(cleanup_job);
->> 		/* queue timeout for next job */
->> 		drm_sched_start_timeout(sched);
->> 	}
->>
->> The outer loop would then handle the next call to
->> drm_sched_get_cleanup_job() as necessary.
-> 
-> 
-> What outer loop ?
+  xfs: push the grant head when the log head moves forward (2019-09-05 21:36:13 -0700)
 
-There's a loop round the code in drm_sched_main():
+are available in the Git repository at:
 
-	while (!kthread_should_stop()) {
-		[...]
-		wait_event_interruptible(...)
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.4-merge-8
 
-		while (cleanup_job) {...}
+for you to fetch changes up to 88d32d3983e72f2a7de72a49b701e2529c48e9c1:
 
-		if (!entity)
-			continue;
+  xfs: avoid unused to_mp() function warning (2019-09-24 09:40:19 -0700)
 
-		[...]
-	}
+----------------------------------------------------------------
+Changes since last update:
+- Minor code cleanups.
+- Fix a superblock logging error.
+- Ensure that collapse range converts the data fork to extents format
+  when necessary.
+- Revert the ALLOC_USERDATA cleanup because it caused subtle
+  behavior regressions.
 
-So after handling the cleanup_job case, the outer loop will loop back
-round to the wait_event_interruptible() call. One other concern is
-whether it's possible for the thread to be signalled to stop before the
-clean up has been completed. The while loop I added ensures that all
-jobs are actually cleaned up before kthread_should_stop() is checked.
+----------------------------------------------------------------
+Aliasgar Surti (1):
+      xfs: removed unneeded variable
 
-Steve
+Austin Kim (1):
+      xfs: avoid unused to_mp() function warning
+
+Brian Foster (1):
+      xfs: convert inode to extent format after extent merge due to shift
+
+Darrick J. Wong (1):
+      xfs: revert 1baa2800e62d ("xfs: remove the unused XFS_ALLOC_USERDATA flag")
+
+Eric Sandeen (1):
+      xfs: log proper length of superblock
+
+ fs/xfs/libxfs/xfs_alloc.h |  7 ++++---
+ fs/xfs/libxfs/xfs_bmap.c  | 13 +++++++++++--
+ fs/xfs/libxfs/xfs_sb.c    |  2 +-
+ fs/xfs/scrub/alloc.c      |  3 +--
+ fs/xfs/xfs_sysfs.c        | 13 -------------
+ 5 files changed, 17 insertions(+), 21 deletions(-)
