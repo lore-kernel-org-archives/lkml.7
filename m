@@ -2,58 +2,102 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AABC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A86C352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03810222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFF3222CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCMurnVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfIZSQn (ORCPT
+        id S1728314AbfIZSSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:16:43 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45922 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbfIZSQn (ORCPT
+        Thu, 26 Sep 2019 14:18:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33431 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZSSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:16:43 -0400
-Received: from 15.248.197.178.dynamic.dsl-lte-bonding.zhbmb00p-msn.res.cust.swisscom.ch ([178.197.248.15] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iDYJk-0004En-H2; Thu, 26 Sep 2019 20:16:40 +0200
-Date:   Thu, 26 Sep 2019 20:16:40 +0200
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpf: clean up indentation issue
-Message-ID: <20190926181640.GB6818@pc-63.home>
-References: <20190925093835.19515-1-colin.king@canonical.com>
+        Thu, 26 Sep 2019 14:18:22 -0400
+Received: by mail-io1-f68.google.com with SMTP id z19so9155686ior.0;
+        Thu, 26 Sep 2019 11:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=caQQyk5Nth7oWQS7p+KzbKUxKlbGvdkOvbZrIWu+D1g=;
+        b=kCMurnVuQgPabhvBFbb0cwBdjq7tvZe01oZL+AK8c8ka20Qn5hLBg2eyWjGaud3nOp
+         NlFQfEanoYPaMD4GkWj/kMssNrA01cjsQgxDSnTL/ybzFyYIggZzCmjwo1/GuU9adoPk
+         d4YIcbC0hITemwVFh4UhCkUug+6pdv0B9Y83YaVfqdd2YYM/X91DsbHxLMgrMohK34DL
+         cO/oOPUEBENc1Ir3bcM+uz+x/pb/F+e8ndq2LBy5PZnbkrYTHVi7GkDDKayT8q98zDBz
+         5oL5Xq941joK5FkRuOIgvJCC2fEOaaxyt+wfrlRKbf/YfLslmkgpV4MM4DJQVQ+4S4Vr
+         EE3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=caQQyk5Nth7oWQS7p+KzbKUxKlbGvdkOvbZrIWu+D1g=;
+        b=TLjw0uicnAYyveA7CrpEWBO1+ki8XCvnG/k0bavsSEUBjCbljtAgcWk9cCQRljEAMW
+         b0tVtR4Q5ovKW2R9GiR8qbqa5X6lZqiQvEjrYTl4dLKb+UBbeHrqJ529WiQtCXf9kvK3
+         plV1+34WbK1zgQnmOuaQxJ0Qqd9J+1EH4S+7EfRwSHCVSZr7WLSJclwtrXUi5pYBJJGk
+         0JTL8MZA9DY8QvtxCC9SGCgsLCcMhwWQrkehjXsXBMSDzsmuzUxJ7YYwBWNfE6AyWBOy
+         MaUzPXq0SSSwFEvO226Kaq3wMXRZd6rRV8qI3kQZvveoUGjGVi8iFXFuU8oFhJayMphT
+         9zjg==
+X-Gm-Message-State: APjAAAWTlhtHgCf1W2AO0wp27GP/STVhihSiAMgfZsjgYCAwIK5aPDF8
+        GyNU6Z4UaBw3btk5O3oaZmaKDf+w0TuehTg7XS0=
+X-Google-Smtp-Source: APXvYqwc0+MhoO9yDmk0carpuCXEWo9qT6lmamCGwfymR3NJQrEpbBS4fos0r6gj8M+8TerYJzNd2maCddE0Yi18FBs=
+X-Received: by 2002:a02:cd2d:: with SMTP id h13mr4469381jaq.19.1569521901051;
+ Thu, 26 Sep 2019 11:18:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925093835.19515-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25584/Thu Sep 26 10:24:31 2019)
+References: <20190912091019.5334-1-srinivas.kandagatla@linaro.org>
+ <5d7fe5d1.1c69fb81.eca3b.1121@mx.google.com> <CAOCk7NoNX7+fxCYNOCMVCv1_-X3ZbaHwFjzWjMp6VKL6ZoroLA@mail.gmail.com>
+ <5d8cfc13.1c69fb81.73236.ab28@mx.google.com>
+In-Reply-To: <5d8cfc13.1c69fb81.73236.ab28@mx.google.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 26 Sep 2019 12:18:10 -0600
+Message-ID: <CAOCk7NrK1XKC=TW8H1QWyiAP86dueZB4gK5S-eg4pifr6vfxXQ@mail.gmail.com>
+Subject: Re: [PATCH] soc: qcom: socinfo: add missing soc_id sysfs entry
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:38:35AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a statement that is indented one level too deeply,
-> remove the extraneous tab.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Thu, Sep 26, 2019 at 11:57 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Jeffrey Hugo (2019-09-24 20:54:41)
+> > On Mon, Sep 16, 2019 at 3:44 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Srinivas Kandagatla (2019-09-12 02:10:19)
+> > > > looks like SoC ID is not exported to sysfs for some reason.
+> > > > This patch adds it!
+> > > >
+> > > > This is mostly used by userspace libraries like SNPE.
+> > >
+> > > What is SNPE?
+> >
+> > Snapdragon Neural Processing Engine.  Pronounced "snap-e".  Its
+> > basically the framework someone goes through to run a neural network
+> > on a Qualcomm mobile SoC.  SNPE can utilize various hardware resources
+> > such as the applications CPU, GPU, and dedicated compute resources
+> > such as a NSP, if available.  Its been around for over a year, and
+> > much more information can be found by just doing a simple search since
+> > SNPE is pretty much a unique search term currently.
+>
+> I wouldn't mind if it was still spelled out instead of just as an
+> acronym. Who knows, a few years from now it may not be a unique acronym
+> and then taking the extra few seconds to write it out once would have
+> saved future effort.
+>
 
-Applied.
+Fair point.
