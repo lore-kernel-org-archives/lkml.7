@@ -2,184 +2,96 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BF4C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9168C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBD421E6F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="jbTHAY6s"
+	by mail.kernel.org (Postfix) with ESMTP id 91F76222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730918AbfIZELl (ORCPT
+        id S1732570AbfIZEVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 00:11:41 -0400
-Received: from mail-eopbgr790139.outbound.protection.outlook.com ([40.107.79.139]:33135
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbfIZELl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 00:11:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dPYesCpXDpLIWXQrfuRb3PJDWdt5mPEmA6tMKcx/UBCLuYTeQmsAl+VQt37FCEibKMPma8ix0uqg5DKJXo/LTRXXg216dIAuNAPhS4unwovmM5k1hJFjeiS4K30G9Fd9NqYCdg2KJj4xVPC2ntCOaTY2u/F39fohj1vTyvAl7Z3f/De2IfZe2wNITGuIp0egt99ebk8wjoDzatC26eWWP1dHszWnLIYKxTGm9nhYWeTA6BRY1Wp7YaVyUpfHMRdhMiu8eCnhNkn4OkqsaFG+dt/cCvblMD1X+w5Zc+g6WQqO2EQTlzq15x3l4bPXJ6NSz3PwBVkYBkg+ybqAcTJI8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvpJ6id9zB/KD0XmD5ps4l00iClVATBKSqq0A06xrio=;
- b=JIvy0YJS6+LZSyA/S6GRy5VrDvRjI2xf6iQ/SBxHG8lD7r000f0THl10qjwj5syRl1nCgjEo8tWRPOcZ/TyMJk0NNwaU8R0DqEWqTIqXc3wMQ+5YNBJnRkVUW6QxlPqw0swwBfuG1aJIV0mvX9seyx1RzprnmMvJIg4+EfPOLkZkT6xsasKtlnuKKpKHPKon29zSPPaxn5qRIB+K6NITeBqHzcfJFPZccrIvjvrYAhZYX/IAf8fdYfxxEN3yj/qZye21AXaVmzYOpN6jwg6jl8JWfpoGXVni6GMiVqp5mXNKC+PfWjza3KrXDMZ/BOiMKd+/+PRYFBlyrvMIf/kuhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 160.33.194.231) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvpJ6id9zB/KD0XmD5ps4l00iClVATBKSqq0A06xrio=;
- b=jbTHAY6se9J5JwKp/sXdo7rRAs4CR36ZsmF8q6uBYJIs8oG02/Kq/x5D5Q8U2jwdBYbQcvd6i1Sk8drtYGPS9CYXHPLkL37nvWovDyHmRiyd98sETLNUsd5wga+zMb1SZVdGO3G2fRVa+CNictYaiDbare2MhbZAVR64Wr+Ud+o=
-Received: from BN6PR13CA0049.namprd13.prod.outlook.com (2603:10b6:404:11::11)
- by BN6PR1301MB2050.namprd13.prod.outlook.com (2603:10b6:405:33::34) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.12; Thu, 26 Sep
- 2019 04:11:37 +0000
-Received: from BL2NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by BN6PR13CA0049.outlook.office365.com
- (2603:10b6:404:11::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.11 via Frontend
- Transport; Thu, 26 Sep 2019 04:11:37 +0000
-Authentication-Results: spf=pass (sender IP is 160.33.194.231)
- smtp.mailfrom=sony.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 160.33.194.231 as permitted sender) receiver=protection.outlook.com;
- client-ip=160.33.194.231; helo=usculsndmail04v.am.sony.com;
-Received: from usculsndmail04v.am.sony.com (160.33.194.231) by
- BL2NAM02FT022.mail.protection.outlook.com (10.152.77.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.25 via Frontend Transport; Thu, 26 Sep 2019 04:11:37 +0000
-Received: from usculsndmail11v.am.sony.com (usculsndmail11v.am.sony.com [146.215.230.102])
-        by usculsndmail04v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x8Q4BbuB020540;
-        Thu, 26 Sep 2019 04:11:37 GMT
-Received: from USCULXHUB08V.am.sony.com (usculxhub08v.am.sony.com [146.215.231.169])
-        by usculsndmail11v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x8Q4BaHC001154;
-        Thu, 26 Sep 2019 04:11:37 GMT
-Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
- USCULXHUB08V.am.sony.com ([146.215.231.169]) with mapi id 14.03.0439.000;
- Thu, 26 Sep 2019 00:11:36 -0400
-From:   <Tim.Bird@sony.com>
-To:     <linux-kselftest@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: bug in KBUILD_OUTPUT handling - for relative paths in kselftest
-Thread-Topic: bug in KBUILD_OUTPUT handling - for relative paths in kselftest
-Thread-Index: AdV0IGedtC8X/5q0RqG/+mkdxaV+Bw==
-Date:   Thu, 26 Sep 2019 04:11:28 +0000
-Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977BD214@USCULXMSG01.am.sony.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [146.215.231.6]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Sep 2019 00:21:11 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:16673 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728648AbfIZEVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 00:21:11 -0400
+X-IronPort-AV: E=Sophos;i="5.64,550,1559491200"; 
+   d="scan'208";a="76043412"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 26 Sep 2019 12:21:08 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 1D8DD4CE14EA;
+        Thu, 26 Sep 2019 12:21:11 +0800 (CST)
+Received: from TSAO.g08.fujitsu.local (10.167.226.60) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Thu, 26 Sep 2019 12:21:19 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <corbet@lwn.net>
+Subject: [RFC PATCH] x86/doc/boot_protocol: Correct the description of "reloc"
+Date:   Thu, 26 Sep 2019 12:21:16 +0800
+Message-ID: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:160.33.194.231;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(376002)(39860400002)(199004)(189003)(8936002)(8746002)(2351001)(246002)(23726003)(2876002)(450100002)(55846006)(8676002)(356004)(2906002)(6916009)(126002)(305945005)(186003)(86362001)(426003)(26005)(50466002)(70206006)(47776003)(7736002)(6666004)(102836004)(66066001)(486006)(336012)(478600001)(106002)(476003)(70586007)(3846002)(4326008)(55016002)(7696005)(46406003)(37786003)(5660300002)(6116002)(316002)(33656002)(97756001)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB2050;H:usculsndmail04v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail04.sonyusa.com,mail.sonyusa.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 557af67c-d141-47cc-b283-08d74237a054
-X-MS-TrafficTypeDiagnostic: BN6PR1301MB2050:
-X-Microsoft-Antispam-PRVS: <BN6PR1301MB20501F1E0B8B41F07B29ED52FD860@BN6PR1301MB2050.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0172F0EF77
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bNkYKbGvIdDFXdwION8bbHjPohTxy6/i5ZjFc9MFtyjDyQPQDKNabpUKQWjU+PhWKsNquEs2eSsJBCt73GszTYQJyz4gT2NnqaP0rTKr/HmgL3AiNrDrynpjIzRnwot0BXjrODxmkk8csh72GIgfNpzCPpvOmWgCFHwSfx+moAwOlT5IEu732qbRSOlUFGHBy91W5oVRimFWuaZip7zVO9aN6mSgTClXpg8m0xPKT02pBYr9i29dT9e6tweJYhn0KfNL/Abo8MfVEj3lXiYi2HLzL38RnuHVDxD6DkRRToPXWnfjEeKsT4cqlDzchFfqt4AadwsL/Z6ujfNsVr1I5BghaiU8YnEsP7MYpg/NQtp0DgdLp/LZRtQ976JC+elQ/QHMpyOve/42V45nQAMYjXBqt15ZuCYFRCeni9pt5Ho=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 04:11:37.6624
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 557af67c-d141-47cc-b283-08d74237a054
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.231];Helo=[usculsndmail04v.am.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB2050
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.167.226.60]
+X-yoursite-MailScanner-ID: 1D8DD4CE14EA.AB26D
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I found a bug in kselftest KBUILD_OUTPUT handling.
+The fields marked with (reloc) actually are not dedicated for writing,
+but communicating info for relocatable kernel with boot loaders. For
+example:
 
-The following works:
-$ cd /home/tbird/work/linux
-$ export KBUILD_OUTPUT=3D/home/tbird/work/kbuild
-$ yes '' | make localmodconfig
-$ make TARGETS=3Dsize kselftest
+    ============    ============
+    Field name:     pref_address
+    Type:           read (reloc)
+    Offset/size:    0x258/8
+    Protocol:       2.10+
+    ============    ============
 
-But this doesn't work:
-$ cd /home/tbird/work/linux
-$ export KBUILD_OUTPUT=3D../kbuild
-$ yes '' | make localmodconfig
-$ make TARGETS=3Dsize kselftest
+    ============    ========================
+    Field name:     code32_start
+    Type:           modify (optional, reloc)
+    Offset/size:    0x214/4
+    Protocol:       2.00+
+    ============    ========================
 
-I see the following:
-make[1]: Entering directory '/home/tbird/work/kbuild'
- make --no-builtin-rules INSTALL_HDR_PATH=3D$BUILD/usr \
- 	ARCH=3Dx86 -C ../../.. headers_install
-   INSTALL ../kbuild/kselftest/usr/include
- gcc -static -ffreestanding -nostartfiles -s    get_size.c  -o ../kbuild/ks=
-elftest/size/get_size
-   /usr/bin/ld: cannot open output file ../kbuild/kselftest/size/get_size: =
-No such file or directory
- collect2: error: ld returned 1 exit status
-   ../lib.mk:138: recipe for target '../kbuild/kselftest/size/get_size' fai=
-led
- make[3]: *** [../kbuild/kselftest/size/get_size] Error 1
- Makefile:136: recipe for target 'all' failed
- make[2]: *** [all] Error 2
- /home/tbird/work/linux/Makefile:1240: recipe for target 'kselftest' failed
- make[1]: *** [kselftest] Error 2
- make[1]: Leaving directory '/home/tbird/work/kbuild'
- Makefile:179: recipe for target 'sub-make' failed
- make: *** [sub-make] Error 2
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+Unless I have incorrect non-native understanding for "fill in", I think
+this is inaccurate.
 
-This is due to the relative path for KBUILD_OUTPUT being handled incorrectl=
-y (I believe)
-in tools/testing/selftests/Makefile.
+ Documentation/x86/boot.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are these lines in the Makefile, which are responsible for creating t=
-he output
-directory:
-    BUILD_TARGET=3D$$BUILD/$$TARGET
-    mkdir $$BUILD_TARGET -p
+diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+index 08a2f100c0e6..a611bf04492d 100644
+--- a/Documentation/x86/boot.rst
++++ b/Documentation/x86/boot.rst
+@@ -243,7 +243,7 @@ bootloader ("modify").
+ 
+ All general purpose boot loaders should write the fields marked
+ (obligatory).  Boot loaders who want to load the kernel at a
+-nonstandard address should fill in the fields marked (reloc); other
++nonstandard address should consult with the fields marked (reloc); other
+ boot loaders can ignore those fields.
+ 
+ The byte order of all fields is littleendian (this is x86, after all.)
+-- 
+2.21.0
 
-But these are executed from working directory tools/testing/selftests,
-so the 'size' directory gets created at tools/testing/kbuild/kselftest/size=
-,
-instead of /home/tbird/work/kbuild/kselftest/size.
 
-I can add some code to the Makefile to change the assignment of the
-variable BUILD, so that if it is a relative path it is relative to $(top_sr=
-cdir)
-instead of the current directory.   But I wanted to check and make sure tha=
-t
-I'm not  breaking anyone else's workflow.
-
-I'm not sure what the expectation would be for someone who did this:
- $ export KBUILD_OUTPUT=3D../kbuild ; make  -C tools/testing/selftests run_=
-tests
-
-But I assume if someone is running the kernel's 'make' from the top-level
-kernel source directory, and they have a relative KBUILD_OUTPUT directory,
-then they want that output directory to be relative to the top-level direct=
-ory
-and not somewhere else.
-
-Should I just code up something for review?
-
-I use relative KBUILD_OUTPUT paths for a number of my kernel build scripts,
-and right now these are incompatible with kselftests.
-
-Thanks,
- -- Tim
 
