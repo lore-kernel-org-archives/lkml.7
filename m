@@ -2,122 +2,199 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54981C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74FBC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD46222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE98217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="I1dWrzw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbfIZJO3 (ORCPT
+        id S1730262AbfIZJPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:14:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44212 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbfIZJO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:14:28 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 726DF85540;
-        Thu, 26 Sep 2019 09:14:28 +0000 (UTC)
-Received: from [10.36.117.220] (ovpn-117-220.ams2.redhat.com [10.36.117.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB9161001B09;
-        Thu, 26 Sep 2019 09:14:26 +0000 (UTC)
-Subject: Re: [PATCH v4 4/8] mm/memory_hotplug: Poison memmap in
- remove_pfn_range_from_zone()
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20190830091428.18399-1-david@redhat.com>
- <20190830091428.18399-5-david@redhat.com> <87zhiro21t.fsf@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <33aa0a97-8264-c3f5-ee4d-c7dc64cdb6aa@redhat.com>
-Date:   Thu, 26 Sep 2019 11:14:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87zhiro21t.fsf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 26 Sep 2019 05:15:52 -0400
+Received: from mail-eopbgr130048.outbound.protection.outlook.com ([40.107.13.48]:26117
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727791AbfIZJPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:15:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=duC4lA7avR8C4KdHHDTwywKyby8FtJtAbvZ0ykXwp40Tq+kjh1gYJD7mUo3H9Mx5toszZoad6IwVCGeGjSgCvIYsWznRnt6p2QP3ixegc+s01+HXKQrChn7zErofZMAdEsgST5EGKJtvgqzfmVAxIw/0IialU+wld7E54K9j+3hkQLraNRm1+0mcBJL3k3YsE4Ikd3cHSO8wT6h/8YJQ+XsqwX6vwQEkV3aeY9qD/lNt9JjIDnfRN6lHGspMMQOABmiVyW1ReK9Bep8Jo3AQSVjZKmlDUiBwE/oj/QquHBxV/dlr7MS2189U87KhotpCM8puC4OfIA+uHGVCjDzGZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B5WFrf02fOK2GbKZyow8uYygsBvHbh/Xx71EcqcALJo=;
+ b=A4ZxtXkwo4iclfk67x0s7pIYdbRBGYhhjbAV5IzfPoPk10EXButaQmLlr1v387BU6eXMHr0twdCTjlCE7qvuL8wOMvzPLTub/MYpHHkF5K3QwF6cQ7igvKFQYcQfNgSAe2p/G49mBpYL0fZtVlOYapHRMOiYZ/n4CRBWmBENvP9fQnpKoVcunp44lPzP1QfkW24+gKy452KK+REDrZ7hUOqKI1/GO97w9Ypwu3Xc1IQvoi2qTdVsLX//ej9lrtfoyq5gEUPZrw0bXbbGQg2FUue8BW3paWZ0v+5bS1LDqFZP6Ip4ydcHeUMJyuB6LeMKEUbNejt1woRvIy76JdaTzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B5WFrf02fOK2GbKZyow8uYygsBvHbh/Xx71EcqcALJo=;
+ b=I1dWrzw0+djnyUChyVHvVEhzAV7tWJJCoO8Qq99RDztpNvrXu+6Zd1Va6Bwaa0Q/KgzmLWKPXhoVjq0lBvKo4okjaDn7Fjz+t8+HMRCbC8+/qJGRor99MltuZYjPSFrIMjwRzRvpSOwof7MFnyxnydmq1s6R2W8OBzA1DTCBw/4=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB3972.eurprd04.prod.outlook.com (52.134.124.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.25; Thu, 26 Sep 2019 09:15:48 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6ca2:ec08:2b37:8ab8]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6ca2:ec08:2b37:8ab8%6]) with mapi id 15.20.2284.028; Thu, 26 Sep 2019
+ 09:15:48 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Andre Przywara <andre.przywara@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Thread-Topic: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Thread-Index: AQHVc0Y291KPBxEKYUuzX6RMzv1Tyac8oU2AgAENj5A=
+Date:   Thu, 26 Sep 2019 09:15:48 +0000
+Message-ID: <AM0PR04MB4481EA21FAC45DCCF295A71F88860@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+        <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
+ <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+In-Reply-To: <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 26 Sep 2019 09:14:28 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dfd87df5-a82c-4ecf-089a-08d742621ea3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB3972;
+x-ms-traffictypediagnostic: AM0PR04MB3972:|AM0PR04MB3972:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB3972D8604B7B9B6F3574897D88860@AM0PR04MB3972.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(51914003)(189003)(199004)(478600001)(54906003)(316002)(52536014)(5660300002)(256004)(86362001)(64756008)(476003)(71190400001)(71200400001)(66476007)(66946007)(66556008)(15650500001)(446003)(66066001)(11346002)(66446008)(44832011)(2906002)(486006)(3846002)(6116002)(6506007)(76176011)(14454004)(102836004)(81166006)(8676002)(8936002)(81156014)(25786009)(76116006)(33656002)(26005)(229853002)(7736002)(99286004)(7696005)(186003)(6436002)(55016002)(9686003)(6246003)(305945005)(4326008)(6916009)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB3972;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AQDe3lv8Px8MESWNrH8Oz2TMK4GjIs9gqKIAKyCjhnn/qphE5la7PqMoRTTcUt4tIXzfVYib/DDBAH5Nq6pABaxQxSQyjFdmpAmBeKeHP5UAU3ej5EkicXtyLyb+Qmwz5tYwwvXzsuXhT3pC/N5ryrrFt+YDL9coXWEwtTx2Eba4FOYZf0w+wqXhb++K7lMYk+9GYRwZqUUmZ6G5r4P3LRXmGPUsaVyGBFV7Y+Wv/iSbBz+UKiQALzuS1TJafZrhaAVrUe8KzaVJUZ4t/2vAnGLKyR85eNtrvu+ZUej1S+Wlp9qugaxOilZCiV6hOg3V56LFnoFRuuMFIrqioFQXwDMTh+RgbfPzRtxW3a2NC9zhfypzAqS8/NAPDPoB60cNbCnEgL+36sz9uNH/fOVW7njz/s7b8YUJiMYCX1MuX70=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfd87df5-a82c-4ecf-089a-08d742621ea3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 09:15:48.3464
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tyy3T4LMMcRLAMFSxwRQgmyxTCnnBDYICj61KcudQUzjdVq7mwxSRKiYslUbmeZDQlYGVTqsVyOjahSuRZXbfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3972
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.09.19 11:10, Aneesh Kumar K.V wrote:
-> David Hildenbrand <david@redhat.com> writes:
->  @@ -134,11 +134,12 @@ void memunmap_pages(struct dev_pagemap *pgmap)
->   
->>  	mem_hotplug_begin();
->> +	remove_pfn_range_from_zone(page_zone(pfn_to_page(pfn)), pfn,
->> +				   PHYS_PFN(resource_size(res)));
-> 
-> That should be part of PATCH 3?
+Hi Andre,
 
-I thought about that but moved it to #4, because it easily gets lost in
-the already-big-enough-patch and is a NOP for ZONE_DEVICE before this
-change.
+> Subject: Re: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the
+> ARM SMC/HVC mailbox
+>=20
+[...]
+> > + supported  identifier are passed from consumers, or listed in the
+> > + the arm,func-id
+>=20
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 		This is now obsolete.
+>=20
+> The rest looks good to me, thanks for the changes!
+>=20
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-Thanks!
+Thanks, I'll wait to see whether Rob and Jassi has some comments or not.
 
--- 
+Then post out v10 to address your comments.
 
 Thanks,
+Peng.
 
-David / dhildenb
+>=20
+> Cheers,
+> Andre.
+>=20
+> > +  property as described below. The firmware can return one value in
+> > + the first SMC result register, it is expected to be an error value,
+> > + which shall be propagated to the mailbox client.
+> > +
+> > +  Any core which supports the SMC or HVC instruction can be used, as
+> > + long  as a firmware component running in EL3 or EL2 is handling these
+> calls.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description:
+> > +          For implementations using ARM SMC instruction.
+> > +        const: arm,smc-mbox
+> > +
+> > +      - description:
+> > +          For implementations using ARM HVC instruction.
+> > +        const: arm,hvc-mbox
+> > +
+> > +  "#mbox-cells":
+> > +    const: 0
+> > +
+> > +  arm,func-id:
+> > +    description: |
+> > +      An single 32-bit value specifying the function ID used by the
+> mailbox.
+> > +      The function ID follows the ARM SMC calling convention standard.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#mbox-cells"
+> > +  - arm,func-id
+> > +
+> > +examples:
+> > +  - |
+> > +    sram@93f000 {
+> > +      compatible =3D "mmio-sram";
+> > +      reg =3D <0x0 0x93f000 0x0 0x1000>;
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <1>;
+> > +      ranges =3D <0x0 0x93f000 0x1000>;
+> > +
+> > +      cpu_scp_lpri: scp-shmem@0 {
+> > +        compatible =3D "arm,scmi-shmem";
+> > +        reg =3D <0x0 0x200>;
+> > +      };
+> > +    };
+> > +
+> > +    smc_tx_mbox: tx_mbox {
+> > +      #mbox-cells =3D <0>;
+> > +      compatible =3D "arm,smc-mbox";
+> > +      arm,func-id =3D <0xc20000fe>;
+> > +    };
+> > +
+> > +    firmware {
+> > +      scmi {
+> > +        compatible =3D "arm,scmi";
+> > +        mboxes =3D <&smc_tx_mbox>;
+> > +        mbox-names =3D "tx";
+> > +        shmem =3D <&cpu_scp_lpri>;
+> > +      };
+> > +    };
+> > +
+> > +...
+
