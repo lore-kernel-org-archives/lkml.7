@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C574EC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6E2C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1456222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67402222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfIZJke (ORCPT
+        id S1728398AbfIZJkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:40:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21664 "EHLO mx1.redhat.com"
+        Thu, 26 Sep 2019 05:40:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45276 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfIZJke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:40:34 -0400
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+        id S1727347AbfIZJkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:40:43 -0400
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 07BEE7FDCA
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:40:34 +0000 (UTC)
-Received: by mail-pg1-f197.google.com with SMTP id f11so1076327pgn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:40:34 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 467F8C04AC69
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:40:42 +0000 (UTC)
+Received: by mail-pf1-f197.google.com with SMTP id p2so1373631pff.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:40:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Zs0icSpFo5EckbI9NuVzMV23UUzKD43r4J1NyJ/klic=;
-        b=JeBGu35grj4LtR9oy8ZhQKqcSengUy4OSsBPZl9RNXsemFdY4hy54mxC9d6XgkDDBG
-         C/zp0J3pTE1vWiSVn1WyBU9dhB9sI/5/cCmcGfg3bC8V6Q8R/HDye3zywsf5UWhUvb8k
-         /O7eGgT6Y6xLy5eG30bh9ElK94hTIpKsrsiQG+XGKdXUovnDeJ+cjUFnw9hbEtLGbhqR
-         hkLhJZs8iqC1wFyXyXKOu7dDJxVFre3iRRG0/bvx8JSKVuZHW7DyyAWeVIG79+jDFNTN
-         iwTbIkRmem7Z8rICq7ZQUuo/jSgcu180F8Vht0IP2/VZSAXiWd66ddhHtFKMOK+kgJx/
-         OP+w==
-X-Gm-Message-State: APjAAAXhtqy/7UlASns58zBQC2yCoYVUxjO+vEQ/r+Fg5JNmMD08yJsj
-        i4DbETUJgdWE01RnnJQi5vBGoBiidJH7K/4ICi9IExKRRnCfnk3ZZbP5RV4jCop3Dc4WECcOIA4
-        lcem6NaUVEtUPoULrMhp9Yv/8
-X-Received: by 2002:a17:902:8488:: with SMTP id c8mr2742257plo.164.1569490833530;
-        Thu, 26 Sep 2019 02:40:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy78qElHwxU+VN7yYhyu4WKCD5RFszqHAErQMKeM6BohEAgdvKCeLfzyvCTuMFSeTddGiEejA==
-X-Received: by 2002:a17:902:8488:: with SMTP id c8mr2742227plo.164.1569490833256;
-        Thu, 26 Sep 2019 02:40:33 -0700 (PDT)
+        bh=mt5SnWXXSk9uI7dmB8jKwFtY/VxQIE33S8hNcu1UngY=;
+        b=nyzH6nj5e4VgOluXix4Q6MwiKLyCWdiVsa6GgycZvVf7QqZxvq2MmAYVEMrxrdmuHg
+         kapOw11woacZzBKjZntQ5ab2tqG2Nvq6K8u7BSLj4dbFNPsKESwV42hnBbMZm7Ng08OF
+         /H2c6mdT43EXabgxxBB6GYlxoQjirn3CFgYyvxBygx+eO+N/W/q+2k/0E20y+vJ+WJ+M
+         zI6HGdUgjzAvWaWkiD8iJz1llJIQzLFJK3GTcACimMOpV4FhFmMNkiqH7L5V4jC3XDJC
+         9sTxwHi9EtmYaw4kY2yiVgmKYGGS41WtMqbh6ZjTVUwC2P4H5Pl3tGke28Od+NrjgK4L
+         2b1A==
+X-Gm-Message-State: APjAAAUOVKUvP4/L8TUb+0iCbX9ScH5ak6lvIqLqS8ZHkC3dJgCH6+xF
+        ImjPypkOEl8mBnAO1o+8olDnn4zaFp8Yrn4Ivs+yaT3mF+RwKUyP2XhTjI9y49No1ZU3hsI0mDR
+        l10xRdp0jef2sHUJaqoRuHtV1
+X-Received: by 2002:a17:902:7615:: with SMTP id k21mr3125713pll.116.1569490841821;
+        Thu, 26 Sep 2019 02:40:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy8FZvMzCaS6tP09HihPyaGx7bD6hMWJf1hsxnBDZsjGhkkZymRtSV9xjgZdU3TLT4rGPDI4Q==
+X-Received: by 2002:a17:902:7615:: with SMTP id k21mr3125689pll.116.1569490841636;
+        Thu, 26 Sep 2019 02:40:41 -0700 (PDT)
 Received: from xz-x1.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p68sm3224982pfp.9.2019.09.26.02.40.25
+        by smtp.gmail.com with ESMTPSA id p68sm3224982pfp.9.2019.09.26.02.40.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 02:40:32 -0700 (PDT)
+        Thu, 26 Sep 2019 02:40:40 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -68,9 +68,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v5 09/16] mm: Return faster for non-fatal signals in user mode faults
-Date:   Thu, 26 Sep 2019 17:38:57 +0800
-Message-Id: <20190926093904.5090-10-peterx@redhat.com>
+Subject: [PATCH v5 10/16] userfaultfd: Don't retake mmap_sem to emulate NOPAGE
+Date:   Thu, 26 Sep 2019 17:38:58 +0800
+Message-Id: <20190926093904.5090-11-peterx@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926093904.5090-1-peterx@redhat.com>
 References: <20190926093904.5090-1-peterx@redhat.com>
@@ -81,42 +81,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idea comes from the upstream discussion between Linus and Andrea:
+This patch removes the risk path in handle_userfault() then we will be
+sure that the callers of handle_mm_fault() will know that the VMAs
+might have changed.  Meanwhile with previous patch we don't lose
+responsiveness as well since the core mm code now can handle the
+nonfatal userspace signals even if we return VM_FAULT_RETRY.
 
-  https://lore.kernel.org/lkml/20171102193644.GB22686@redhat.com/
-
-A summary to the issue: there was a special path in handle_userfault()
-in the past that we'll return a VM_FAULT_NOPAGE when we detected
-non-fatal signals when waiting for userfault handling.  We did that by
-reacquiring the mmap_sem before returning.  However that brings a risk
-in that the vmas might have changed when we retake the mmap_sem and
-even we could be holding an invalid vma structure.
-
-This patch is a preparation of removing that special path by allowing
-the page fault to return even faster if we were interrupted by a
-non-fatal signal during a user-mode page fault handling routine.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Jerome Glisse <jglisse@redhat.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- include/linux/sched/signal.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/userfaultfd.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 46429192733b..031af0a6505a 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -387,7 +387,8 @@ static inline bool fault_signal_pending(unsigned int fault_flags,
- 					struct pt_regs *regs)
- {
- 	return unlikely((fault_flags & VM_FAULT_RETRY) &&
--			fatal_signal_pending(current));
-+			(fatal_signal_pending(current) ||
-+			 (user_mode(regs) && signal_pending(current))));
- }
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index fe6d804a38dc..d8777146bae7 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -524,30 +524,6 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
  
- /*
+ 	__set_current_state(TASK_RUNNING);
+ 
+-	if (return_to_userland) {
+-		if (signal_pending(current) &&
+-		    !fatal_signal_pending(current)) {
+-			/*
+-			 * If we got a SIGSTOP or SIGCONT and this is
+-			 * a normal userland page fault, just let
+-			 * userland return so the signal will be
+-			 * handled and gdb debugging works.  The page
+-			 * fault code immediately after we return from
+-			 * this function is going to release the
+-			 * mmap_sem and it's not depending on it
+-			 * (unlike gup would if we were not to return
+-			 * VM_FAULT_RETRY).
+-			 *
+-			 * If a fatal signal is pending we still take
+-			 * the streamlined VM_FAULT_RETRY failure path
+-			 * and there's no need to retake the mmap_sem
+-			 * in such case.
+-			 */
+-			down_read(&mm->mmap_sem);
+-			ret = VM_FAULT_NOPAGE;
+-		}
+-	}
+-
+ 	/*
+ 	 * Here we race with the list_del; list_add in
+ 	 * userfaultfd_ctx_read(), however because we don't ever run
 -- 
 2.21.0
 
