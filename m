@@ -6,97 +6,129 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47912C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857BBC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E78207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6316920835
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfIZWwT (ORCPT
+        id S1728934AbfIZWwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 18:52:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38980 "EHLO mx1.redhat.com"
+        Thu, 26 Sep 2019 18:52:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50692 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbfIZWwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 18:52:18 -0400
+        id S1728564AbfIZWwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 18:52:20 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E80010C0931;
-        Thu, 26 Sep 2019 22:52:18 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id BC6FF796ED;
+        Thu, 26 Sep 2019 22:52:19 +0000 (UTC)
 Received: from malachite.bss.redhat.com (dhcp-10-20-1-34.bss.redhat.com [10.20.1.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 366CD600C1;
-        Thu, 26 Sep 2019 22:52:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C54DA600C1;
+        Thu, 26 Sep 2019 22:52:18 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     amd-gfx@lists.freedesktop.org
 Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
         <ville.syrjala@linux.intel.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] drm/amdgpu/dm/mst: Report possible_crtcs incorrectly, for now
-Date:   Thu, 26 Sep 2019 18:51:07 -0400
-Message-Id: <20190926225122.31455-6-lyude@redhat.com>
+Subject: [PATCH 6/6] drm/encoder: WARN() when adding/removing encoders after device registration
+Date:   Thu, 26 Sep 2019 18:51:08 -0400
+Message-Id: <20190926225122.31455-7-lyude@redhat.com>
 In-Reply-To: <20190926225122.31455-1-lyude@redhat.com>
 References: <20190926225122.31455-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 26 Sep 2019 22:52:18 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 26 Sep 2019 22:52:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit is seperate from the previous one to make it easier to
-revert in the future. Basically, there's multiple userspace applications
-that interpret possible_crtcs very wrong:
+Turns out that we don't actually check this anywhere, and additionally
+actually forget to even mention this in our documentation.
 
-https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
-https://gitlab.gnome.org/GNOME/mutter/issues/759
-
-While work is ongoing to fix these issues in userspace, we need to
-report ->possible_crtcs incorrectly for now in order to avoid
-introducing a regression in in userspace. Once these issues get fixed,
-this commit should be reverted.
+Since we've had one driver making this mistake already, let's clarify
+this by mentioning this limitation in the kernel docs. Additionally, for
+drivers not using the legacy ->load/->unload() hooks (which make it
+impossible to create all encoders before registration): print a big
+warning when drm_encoder_init() is called after device registration, or
+when drm_encoder_cleanup() is called before device unregistration.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/drm_encoder.c | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index b404f1ae6df7..fe8ac801d7a5 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4807,6 +4807,17 @@ static int amdgpu_dm_crtc_init(struct amdgpu_display_manager *dm,
- 	if (!acrtc->mst_encoder)
- 		goto fail;
+diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
+index 80d88a55302e..5c5e40aafa4e 100644
+--- a/drivers/gpu/drm/drm_encoder.c
++++ b/drivers/gpu/drm/drm_encoder.c
+@@ -99,9 +99,12 @@ void drm_encoder_unregister_all(struct drm_device *dev)
+  * @encoder_type: user visible type of the encoder
+  * @name: printf style format string for the encoder name, or NULL for default name
+  *
+- * Initialises a preallocated encoder. Encoder should be subclassed as part of
+- * driver encoder objects. At driver unload time drm_encoder_cleanup() should be
+- * called from the driver's &drm_encoder_funcs.destroy hook.
++ * Initialises a preallocated encoder. The encoder should be subclassed as
++ * part of driver encoder objects. This function may not be called after the
++ * device is registered with drm_dev_register().
++ *
++ * At driver unload time drm_encoder_cleanup() must be called from the
++ * driver's &drm_encoder_funcs.destroy hook.
+  *
+  * Returns:
+  * Zero on success, error code on failure.
+@@ -117,6 +120,14 @@ int drm_encoder_init(struct drm_device *dev,
+ 	if (WARN_ON(dev->mode_config.num_encoder >= 32))
+ 		return -EINVAL;
  
 +	/*
-+	 * FIXME: This is a hack to workaround the following issues:
-+	 *
-+	 * https://gitlab.gnome.org/GNOME/mutter/issues/759
-+	 * https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
-+	 *
-+	 * One these issues are closed, this should be removed
++	 * Encoders should never be added after device registration, with the
++	 * exception of drivers using the legacy load/unload callbacks where
++	 * it's impossible to create encoders beforehand. Such drivers should
++	 * convert to using drm_dev_register() and friends.
 +	 */
-+	acrtc->mst_encoder->base.possible_crtcs =
-+		amdgpu_dm_get_encoder_crtc_mask(dm->adev);
++	WARN_ON(dev->registered && !dev->driver->load);
 +
- 	return 0;
+ 	ret = drm_mode_object_add(dev, &encoder->base, DRM_MODE_OBJECT_ENCODER);
+ 	if (ret)
+ 		return ret;
+@@ -155,16 +166,22 @@ EXPORT_SYMBOL(drm_encoder_init);
+  * drm_encoder_cleanup - cleans up an initialised encoder
+  * @encoder: encoder to cleanup
+  *
+- * Cleans up the encoder but doesn't free the object.
++ * Cleans up the encoder but doesn't free the object. This function may not be
++ * called until the respective &struct drm_device has been unregistered from
++ * userspace using drm_dev_unregister().
+  */
+ void drm_encoder_cleanup(struct drm_encoder *encoder)
+ {
+ 	struct drm_device *dev = encoder->dev;
  
- fail:
+-	/* Note that the encoder_list is considered to be static; should we
+-	 * remove the drm_encoder at runtime we would have to decrement all
+-	 * the indices on the drm_encoder after us in the encoder_list.
++	/*
++	 * Encoders should never be removed after device registration, with
++	 * the exception of drivers using the legacy load/unload callbacks
++	 * where it's impossible to remove encoders until after
++	 * deregistration. Such drivers should convert to using
++	 * drm_dev_register() and friends.
+ 	 */
++	WARN_ON(dev->registered && !dev->driver->unload);
+ 
+ 	if (encoder->bridge) {
+ 		struct drm_bridge *bridge = encoder->bridge;
 -- 
 2.21.0
 
