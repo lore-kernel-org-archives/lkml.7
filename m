@@ -2,130 +2,92 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142A3C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBF9206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="s2EQCyMv"
+	by mail.kernel.org (Postfix) with ESMTP id D7764206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392521AbfIZGdJ (ORCPT
+        id S2392919AbfIZGeN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 02:33:09 -0400
-Received: from mail-eopbgr720046.outbound.protection.outlook.com ([40.107.72.46]:43318
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390250AbfIZGdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 02:33:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dgOm/tlSf1If+XCxQUDMX/QL4Ms1qatJe0+5vDd4GfzLmqrsBHqcGbwPE0hjDtLX5LnyAJxvBfb4cCuVEMffbLP+9kLJmxkrmBJXRcXy6Y2oJMQtpFpADznRWm4am9HRfsMEn87CmAO+34cQy72e0lD/wEh02uMaG06He4v/xDKP4uZ1l+jswSneoxKMpkp1yvmrvAuD640dhEtzpADbxKjXKRjZbxNFfgpY4slgDIdOm7vOZ4izL6bpyHQKcGeZ7lGr9NA75DRbgf2bOOUNJj7utusS71LPSVxfTqpjaul/IMlGxxEvQWb8Ujk/6Q0z2k2SCUb6hVHquYHYpCYmTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3kwKeXhgxZs5FZbWCsbVbjtmX2L2pIgVI9jtlvZwCE=;
- b=G3Y0PaaFE8sX0xBnmJskfk5knhTGvkuMVVR9I4vd4y6dS5TKVIeo8qCMLLPRu+w6O6xmVoJL8hauMSvXyGzjsA9oECSOLt9VKj2mhlWr3eJFnAOZ1Mj1noE1J3xl818z+p5oXHKqdM6jbW+1guts+klofnUlM7mEhNGPZjqsg4z0gZhx4PbYY2hY/iPYevDoQamBuVnth5aptbAr8gB4BLDREvNjX7ZYj/5KDbzo+j49tHzVwncR7nWcq71TnlGVWeXz0sJPoSdsQX6qNvr2GDIhVMc7FJLy/ejvqu+bubHdXSNLQtndDtuJdyv3sHfxmxvthKD0v6zYWXxHjWbSNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3kwKeXhgxZs5FZbWCsbVbjtmX2L2pIgVI9jtlvZwCE=;
- b=s2EQCyMvaHP4XXXXn6W2v4FvlSlViVWO8+O6ibmrMBcO+REbC33KGm3INf9pz8fd+rTWWbqWQnvqyvx0JXTbsuEEBZVOzZ11pMNU5Rgx/AJQT5GCfid+WuriAVEKYeymGB8psNca8DtZRAgKdTzMKtkO1clKrWesIvrAwrnymRU=
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB2895.namprd12.prod.outlook.com (20.179.82.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 26 Sep 2019 06:33:05 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::ec02:b95d:560a:ad36]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::ec02:b95d:560a:ad36%7]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
- 06:33:05 +0000
-From:   Sanjay R Mehta <sanmehta@amd.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>
-CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "Kumar, Rajesh" <Rajesh1.Kumar@amd.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 4/4] dmaengine: Add debugfs entries for PTDMA information
-Thread-Topic: [PATCH 4/4] dmaengine: Add debugfs entries for PTDMA information
-Thread-Index: AQHVcqpMx6HFMYask0qZb2sW/KwVyac6eDWAgAMK6AA=
-Date:   Thu, 26 Sep 2019 06:33:05 +0000
-Message-ID: <0b3db0a6-304d-05de-76c4-108dce4664f4@amd.com>
-References: <1569310357-29271-1-git-send-email-Sanju.Mehta@amd.com>
- <20190924080503.GA564935@kroah.com>
-In-Reply-To: <20190924080503.GA564935@kroah.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR0101CA0035.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:d::21) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.157.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfddd106-2f0c-4c5b-fc0b-08d7424b638b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR12MB2895;
-x-ms-traffictypediagnostic: MN2PR12MB2895:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB2895706A21A53E84BDDBA0B3E5860@MN2PR12MB2895.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:635;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(136003)(376002)(346002)(199004)(189003)(305945005)(66476007)(6116002)(81156014)(81166006)(8676002)(66556008)(66446008)(8936002)(5660300002)(316002)(66946007)(64756008)(110136005)(54906003)(2906002)(52116002)(4744005)(25786009)(3846002)(6512007)(26005)(6436002)(76176011)(6246003)(4326008)(102836004)(386003)(6506007)(53546011)(2501003)(31696002)(66066001)(6486002)(486006)(476003)(446003)(2616005)(11346002)(31686004)(229853002)(71200400001)(186003)(7416002)(256004)(6636002)(99286004)(478600001)(36756003)(71190400001)(14454004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2895;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ukpa6jhpkLBw5D4zMCZaSckyCD+ZA4s2IwmmWPnakk9DAozRkmHw7X6iAsRVkCn8N9chYUMQawj09eF+cfSvRsSwTWT57eqwdfIQKNUHjnkHt+/60C7sABbCVODpae+d5/3EyzAnhbbMSM7O+JrISKJJ2TsUJ/jYyBLdVE8OHw4k7q0rqcFuk+nsNW0Jq4grbYq/HlGRwiXmjwvJsv/GIxN2SqYHugAUX8Wk1rM7/VROKNEgeiHkMRNySQO9m8zMqoC5VKel5uyocu6y6dH/T8Tx+Gma/rTGT+9kWC/iKsLuMRJDF34vkhwVpOJwwnnhnyt3RSRY5+N/gdjff0Z9U8PT3wD6eRyABtb1bsUIlJFy7fXBJm5GxSiUPh5DqoLfhIqXyWtWhSfM+XpFqoiyf5OYLXhRiBzhcnCZ67yhgTs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <410768B264060E4DA9BF74336DA49B31@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfddd106-2f0c-4c5b-fc0b-08d7424b638b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 06:33:05.8642
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rkSwrq8jobEDJDzNIiJbm1/sv8jQlDaa6CU9FZIJsNTQNA2e+flJhCoEOEIErHjzEj/cj5FBKa0HpTJq6bC9eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2895
+        Thu, 26 Sep 2019 02:34:13 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:47666 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388934AbfIZGeM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 02:34:12 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 622AECECD9;
+        Thu, 26 Sep 2019 08:43:04 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCHv2] Bluetooth: trivial: tidy up printk message output from
+ btrtl.
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190909184446.9049-1-rsalvaterra@gmail.com>
+Date:   Thu, 26 Sep 2019 08:34:10 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rui <rui@arrandale.lan>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C9B9ED17-F82B-4F25-996E-C1880AC49E1B@holtmann.org>
+References: <20190909184446.9049-1-rsalvaterra@gmail.com>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA5LzI0LzIwMTkgMTozNSBQTSwgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmcgd3JvdGU6
-DQo+IFtDQVVUSU9OOiBFeHRlcm5hbCBFbWFpbF0NCj4NCj4gT24gVHVlLCBTZXAgMjQsIDIwMTkg
-YXQgMDc6MzM6MDJBTSArMDAwMCwgTWVodGEsIFNhbmp1IHdyb3RlOg0KPj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgZmlsZV9vcGVyYXRpb25zIHB0X2RlYnVnZnNfaW5mb19vcHMgPSB7DQo+PiArICAg
-ICAub3duZXIgPSBUSElTX01PRFVMRSwNCj4+ICsgICAgIC5vcGVuID0gc2ltcGxlX29wZW4sDQo+
-PiArICAgICAucmVhZCA9IHB0ZG1hX2RlYnVnZnNfaW5mb19yZWFkLA0KPj4gKyAgICAgLndyaXRl
-ID0gTlVMTCwNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZmlsZV9vcGVy
-YXRpb25zIHB0X2RlYnVnZnNfcXVldWVfb3BzID0gew0KPj4gKyAgICAgLm93bmVyID0gVEhJU19N
-T0RVTEUsDQo+PiArICAgICAub3BlbiA9IHNpbXBsZV9vcGVuLA0KPj4gKyAgICAgLnJlYWQgPSBw
-dGRtYV9kZWJ1Z2ZzX3F1ZXVlX3JlYWQsDQo+PiArICAgICAud3JpdGUgPSBwdGRtYV9kZWJ1Z2Zz
-X3F1ZXVlX3dyaXRlLA0KPj4gK307DQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxl
-X29wZXJhdGlvbnMgcHRfZGVidWdmc19zdGF0c19vcHMgPSB7DQo+PiArICAgICAub3duZXIgPSBU
-SElTX01PRFVMRSwNCj4+ICsgICAgIC5vcGVuID0gc2ltcGxlX29wZW4sDQo+PiArICAgICAucmVh
-ZCA9IHB0ZG1hX2RlYnVnZnNfc3RhdHNfcmVhZCwNCj4+ICsgICAgIC53cml0ZSA9IHB0ZG1hX2Rl
-YnVnZnNfc3RhdHNfd3JpdGUsDQo+PiArfTsNCj4gQ2FuIHlvdSB1c2UgREVGSU5FX1NJTVBMRV9B
-VFRSSUJVVEUoKSBoZXJlIGludGVhZCBvZiB0aGVzZT8NCk9rYXkgR3JlZywgbm90ZWQuIFRoaXMg
-d2lsbCBiZSByZXNvbHZlZCBpbiBuZXh0IHNldCBvZiBwYXRjaGVzLg0KPg0KPiB0aGFua3MsDQo+
-DQo+IGdyZWcgay1oDQo=
+Hi Rui,
+
+> v2: also remove new line from hci_h5.c
+> 
+> The rtl_dev_* calls in the Realtek USB Bluetooth driver add unnecessary
+> device prefixes and new lines at the end of most messages, which make the
+> dmesg output look like this:
+> 
+> [    5.667121] sd 0:0:0:0: [sda] Attached SCSI disk
+> [    5.736869] Bluetooth: hci0: RTL: rtl: examining hci_ver=06 hci_rev=000a lmp_ver=06 lmp_subver=8821
+> 
+> [    5.737853] Bluetooth: hci0: RTL: rom_version status=0 version=1
+> 
+> [    5.737857] Bluetooth: hci0: RTL: rtl: loading rtl_bt/rtl8821a_fw.bin
+> 
+> [    5.737946] Bluetooth: hci0: RTL: rtl: loading rtl_bt/rtl8821a_config.bin
+> 
+> [    5.737965] bluetooth hci0: Direct firmware load for rtl_bt/rtl8821a_config.bin failed with error -2
+> [    5.737972] Bluetooth: hci0: RTL: cfg_sz -2, total sz 17428
+> 
+> [    5.997375] ata2: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+> 
+> Clean this up by removing extraneous new lines and redundant device prefixes,
+> with the following result:
+> 
+> [    5.667008] sd 0:0:0:0: [sda] Attached SCSI disk
+> [    5.716945] Bluetooth: hci0: rtl: examining hci_ver=06 hci_rev=000a lmp_ver=06 lmp_subver=8821
+> [    5.718745] Bluetooth: hci0: rtl: rom_version status=0 version=1
+> [    5.718749] Bluetooth: hci0: rtl: loading rtl_bt/rtl8821a_fw.bin
+> [    5.718830] Bluetooth: hci0: rtl: loading rtl_bt/rtl8821a_config.bin
+> [    5.718849] bluetooth hci0: Direct firmware load for rtl_bt/rtl8821a_config.bin failed with error -2
+> [    5.718858] Bluetooth: hci0: rtl: cfg_sz -2, total sz 17428
+> [    5.997400] ata2: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+> 
+> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+> ---
+> drivers/bluetooth/btrtl.c  | 62 +++++++++++++++++++-------------------
+> drivers/bluetooth/btrtl.h  |  8 ++---
+> drivers/bluetooth/hci_h5.c |  2 +-
+> 3 files changed, 36 insertions(+), 36 deletions(-)
+
+I have some similar patch in my tree. Can you check what is still missing and send a new version. Thanks.
+
+Regards
+
+Marcel
+
