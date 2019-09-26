@@ -2,197 +2,304 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BECC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53202C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B020121A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF2F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jGKB7/Bs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfIZK32 (ORCPT
+        id S1726494AbfIZK3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:29:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46568 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfIZK31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:29:27 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 90912793ED
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:29:26 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id m14so741222wru.17
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:29:26 -0700 (PDT)
+        Thu, 26 Sep 2019 06:29:43 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28773 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725787AbfIZK3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:29:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569493781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4oywSfuMp7J3ZB2f2owykN0tPRscErPawez4SzM22Ns=;
+        b=jGKB7/BsVrDga4dlSolLZZ8dMMKcM3fFGBNaRWEEoUcGAVKxIvlleMzt+mMyFGkWsPx6Ba
+        kKvqM6r4v2UNI4lTYsvQgHXFwVmPU+kvefswaZwnxl9dIUg8d4lrr7XHgGAvCDXmRvCnPa
+        KPubikpQilpBygsXbGAfh8+2TkYsJzA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-OUUqLTxmPu6eSG1TGVSgPw-1; Thu, 26 Sep 2019 06:29:40 -0400
+Received: by mail-qt1-f198.google.com with SMTP id f15so1857418qth.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:29:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BY8HJnI4XVFhCNATjy1RWGMjwAHNDYeseMH3rD1F4Xc=;
-        b=Speu0Om2kKCyRjzkhM3LmCTCQf932Qvv+llI9W9HSog+NHtwN8zw7a/CzYDF4ndiFO
-         iiHh783EKRUli/a0EhJHAVagZv40W5mllzGMMfygK9qnsAMIvFYLpLxeP/v8u/FOAHdX
-         X5K0Pyp+FJBIS76YS31TNLMYwMY5w5NLWs/oT1giAMhVi4zqZLMHYEQOD6dMVioEhHwM
-         t2GsKq6zWVcDuJd1Uc4knqrBaRNjcbLzwRmcuAJokfdBWs9iL6lfvJ1g+rCBtZmz+TNU
-         klj7YA3g0pe0NkVCEeelUtEZamZhjqtz3HuEZxN2809Po93j0h2Ud3WKyHck+WiSNXjQ
-         nnHw==
-X-Gm-Message-State: APjAAAXMPHuEqG5z/rxavJzfC8yhnAha6pHfszXA1P88x4D8hq77nWu5
-        s+XriGgtq3fSU88d3W7BVoSuCTQf4sRTFOl2UCy4CEhyoBKsuQvlLueF1r98u8Bh654b7BzcAma
-        VtDikTcIY9HX1pRZreHw/PSpU
-X-Received: by 2002:a7b:c152:: with SMTP id z18mr2326487wmi.70.1569493765201;
-        Thu, 26 Sep 2019 03:29:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzE5lcwm+xbGXmpzIj2zShy+VtcwYstdlWDIfWOGZs9gThvQMeAx3wCPLig0ZwD1i+BFw7oaw==
-X-Received: by 2002:a7b:c152:: with SMTP id z18mr2326467wmi.70.1569493764888;
-        Thu, 26 Sep 2019 03:29:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
-        by smtp.gmail.com with ESMTPSA id k9sm3285943wrd.7.2019.09.26.03.29.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 03:29:24 -0700 (PDT)
-Subject: Re: [PATCH v3] KVM: X86: Fix userspace set invalid CR4
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
-References: <1568800210-3127-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <851fbe10-289b-c11c-375a-c6daa188ce17@redhat.com>
-Date:   Thu, 26 Sep 2019 12:29:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=moofdL//faBtrlG0QLSwcgJuXbtQtXBYxvEroylMNe4=;
+        b=NBlFSepXQ3kRScdW69Hatk7P6k+RxzDEmvPr4IPnq6NQgVNqau+C7a91E+95FXNxL/
+         GvA71vB+/LMlmBcDZRa23sGYpk2xZCcuHuUkyEgvUhl8pgqHsvbR1eeYe6przod3brMM
+         7Pe7Ed7ar6e/P5rvt8U4QFQXdhKoqRods9us1Xid9ez9PmQlUS0wlftMzYSvb4NKqShc
+         dpYS7A1jCRjtc8IKc8QaXY8QpE3InwWeEhdO19A+aj4Nhr4fRws1ECL7ZT08hpu6aWDK
+         6x3Q6UQnsLzORcxKcDEhfMH1UyMdeErDpHlcUFy2Ru5n48Mv+9zjLfKTIMf+gYfnkLid
+         DhPw==
+X-Gm-Message-State: APjAAAVKH/gYEs1MVUc9juuwAGAlPiNfGIlzbCTklm6B2ivZTzAeYIZP
+        lqk8ldSdcbwQZLL6s6X1DYLLjA+Zup+MuNrqHFub+oAVesqFc99K+gcEpPGxICYQmpXLC7fcUoS
+        9qdCjX7lgd968E5NSvD0QLkHeXYB/zXuJ92K94xue
+X-Received: by 2002:ac8:3059:: with SMTP id g25mr3075843qte.154.1569493779596;
+        Thu, 26 Sep 2019 03:29:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzsScPkvBToNaCgQHFMqKC2sezTDhPUdJKx5v4PFh8OGV4vbajMH4T7PPcAVVGnW8bn0drX9dfPHM+HPwomTzc=
+X-Received: by 2002:ac8:3059:: with SMTP id g25mr3075822qte.154.1569493779304;
+ Thu, 26 Sep 2019 03:29:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1568800210-3127-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190925094326.41693-1-vicamo.yang@canonical.com> <20190925094326.41693-2-vicamo.yang@canonical.com>
+In-Reply-To: <20190925094326.41693-2-vicamo.yang@canonical.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 26 Sep 2019 12:29:27 +0200
+Message-ID: <CAO-hwJJsJPQxBLTPpHnvERiCtkWUfbwB-5ZcJFTcXu-c07GuNg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] HID: i2c-hid: allow delay after SET_POWER
+To:     You-Sheng Yang <vicamo.yang@canonical.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hui Wang <hui.wang@canonical.com>, Julian Sax <jsbc@gmx.de>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+X-MC-Unique: OUUqLTxmPu6eSG1TGVSgPw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/19 11:50, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Reported by syzkaller:
-> 
-> 	WARNING: CPU: 0 PID: 6544 at /home/kernel/data/kvm/arch/x86/kvm//vmx/vmx.c:4689 handle_desc+0x37/0x40 [kvm_intel]
-> 	CPU: 0 PID: 6544 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
-> 	RIP: 0010:handle_desc+0x37/0x40 [kvm_intel]
-> 	Call Trace:
-> 	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
-> 	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
-> 	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
-> 	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
-> 	 do_vfs_ioctl+0xa2/0x690
-> 	 ksys_ioctl+0x6d/0x80
-> 	 __x64_sys_ioctl+0x1a/0x20
-> 	 do_syscall_64+0x74/0x720
-> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> When CR4.UMIP is set, guest should have UMIP cpuid flag. Current
-> kvm set_sregs function doesn't have such check when userspace inputs
-> sregs values. SECONDARY_EXEC_DESC is enabled on writes to CR4.UMIP
-> in vmx_set_cr4 though guest doesn't have UMIP cpuid flag. The testcast
-> triggers handle_desc warning when executing ltr instruction since
-> guest architectural CR4 doesn't set UMIP. This patch fixes it by
-> adding valid CR4 and CPUID combination checking in __set_sregs.
-> 
-> syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=138efb99600000
-> 
-> Reported-by: syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Hi,
+
+
+On Wed, Sep 25, 2019 at 11:43 AM You-Sheng Yang
+<vicamo.yang@canonical.com> wrote:
+>
+> According to HID over I2C specification v1.0 section 7.2.8, a device is
+> allowed to take at most 1 second to make the transition to the specified
+> power state. On some touchpad devices implements Microsoft Precision
+> Touchpad, it may fail to execute following set PTP mode command without
+> the delay and leaves the device in an unsupported Mouse mode.
+>
+> This change adds a post-setpower-delay-ms device property that allows
+> specifying the delay after a SET_POWER command is issued.
+
+I must confess I have at least 2 problems with your series:
+- this patch is quite hard to review. There are unrelated changes and
+it should be split in at least 2 (I'll detail this in the code review
+below)
+- you are basically adding a new quirk when Windows doesn't need it.
+
+So before we merge this, I'd like to actually know if Windows is doing
+the same and if we could not mimic what Windows is doing to prevent
+further similar quirks in the future.
+
+
+>
+> References: https://bugzilla.kernel.org/show_bug.cgi?id=3D204991
+> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
 > ---
->  arch/x86/kvm/x86.c | 38 +++++++++++++++++++++-----------------
->  1 file changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f7cfd8e..d23cf0d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -884,34 +884,42 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_xcr);
->  
-> -int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> +static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  {
-> -	unsigned long old_cr4 = kvm_read_cr4(vcpu);
-> -	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
-> -				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
-> -
->  	if (cr4 & CR4_RESERVED_BITS)
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMEP) && (cr4 & X86_CR4_SMEP))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMAP) && (cr4 & X86_CR4_SMAP))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_FSGSBASE) && (cr4 & X86_CR4_FSGSBASE))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_PKU) && (cr4 & X86_CR4_PKE))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_LA57) && (cr4 & X86_CR4_LA57))
-> -		return 1;
-> +		return -EINVAL;
->  
->  	if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) && (cr4 & X86_CR4_UMIP))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> +{
-> +	unsigned long old_cr4 = kvm_read_cr4(vcpu);
-> +	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
-> +				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
-> +
-> +	if (kvm_valid_cr4(vcpu, cr4))
->  		return 1;
->  
->  	if (is_long_mode(vcpu)) {
-> @@ -8641,10 +8649,6 @@ EXPORT_SYMBOL_GPL(kvm_task_switch);
->  
->  static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
->  {
-> -	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
-> -			(sregs->cr4 & X86_CR4_OSXSAVE))
-> -		return  -EINVAL;
-> -
->  	if ((sregs->efer & EFER_LME) && (sregs->cr0 & X86_CR0_PG)) {
->  		/*
->  		 * When EFER.LME and CR0.PG are set, the processor is in
-> @@ -8663,7 +8667,7 @@ static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
->  			return -EINVAL;
->  	}
->  
-> -	return 0;
-> +	return kvm_valid_cr4(vcpu, sregs->cr4);
->  }
->  
->  static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
-> 
+>  .../bindings/input/hid-over-i2c.txt           |  2 +
+>  drivers/hid/i2c-hid/i2c-hid-core.c            | 46 +++++++++++--------
+>  include/linux/platform_data/i2c-hid.h         |  3 ++
+>  3 files changed, 32 insertions(+), 19 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/D=
+ocumentation/devicetree/bindings/input/hid-over-i2c.txt
+> index c76bafaf98d2f..d82faae335da0 100644
+> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> @@ -32,6 +32,8 @@ device-specific compatible properties, which should be =
+used in addition to the
+>  - vdd-supply: phandle of the regulator that provides the supply voltage.
+>  - post-power-on-delay-ms: time required by the device after enabling its=
+ regulators
 
-Queued, thanks.
+Why are you removing those 2 properties?
 
-Paolo
+>    or powering it on, before it is ready for communication.
+> +- post-setpower-delay-ms: time required by the device after a SET_POWER =
+command
+> +  before it finished the state transition.
+
+couple of issues:
+- the name might not be the best. It is similar to the
+post-power-on-delay while having a complete different impact. (note: I
+don't have a better name at hand)
+- checkpatch complains that device tree changes should be in a
+separate patch, and I tend to agree.
+
+>
+>  Example:
+>
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c=
+-hid-core.c
+> index 2a7c6e33bb1c4..a5bc2786dc440 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -168,6 +168,7 @@ static const struct i2c_hid_quirks {
+>         __u16 idVendor;
+>         __u16 idProduct;
+>         __u32 quirks;
+> +       __u32 post_setpower_delay_ms;
+>  } i2c_hid_quirks[] =3D {
+>         { USB_VENDOR_ID_WEIDA, HID_ANY_ID,
+>                 I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
+> @@ -189,21 +190,20 @@ static const struct i2c_hid_quirks {
+>   * i2c_hid_lookup_quirk: return any quirks associated with a I2C HID dev=
+ice
+>   * @idVendor: the 16-bit vendor ID
+>   * @idProduct: the 16-bit product ID
+> - *
+> - * Returns: a u32 quirks value.
+>   */
+> -static u32 i2c_hid_lookup_quirk(const u16 idVendor, const u16 idProduct)
+> +static void i2c_hid_set_quirk(struct i2c_hid *ihid,
+> +               const u16 idVendor, const u16 idProduct)
+>  {
+> -       u32 quirks =3D 0;
+>         int n;
+>
+>         for (n =3D 0; i2c_hid_quirks[n].idVendor; n++)
+>                 if (i2c_hid_quirks[n].idVendor =3D=3D idVendor &&
+>                     (i2c_hid_quirks[n].idProduct =3D=3D (__u16)HID_ANY_ID=
+ ||
+> -                    i2c_hid_quirks[n].idProduct =3D=3D idProduct))
+> -                       quirks =3D i2c_hid_quirks[n].quirks;
+> -
+> -       return quirks;
+> +                    i2c_hid_quirks[n].idProduct =3D=3D idProduct)) {
+> +                       ihid->quirks =3D i2c_hid_quirks[n].quirks;
+> +                       ihid->pdata.post_setpower_delay_ms =3D
+> +                               i2c_hid_quirks[n].post_setpower_delay_ms;
+> +               }
+
+Why are you changing the signature of i2c_hid_set_quirk? If this is
+really a good thing to do, it should go in a separate patch.
+
+>  }
+>
+>  static int __i2c_hid_command(struct i2c_client *client,
+> @@ -431,8 +431,22 @@ static int i2c_hid_set_power(struct i2c_client *clie=
+nt, int power_state)
+>             power_state =3D=3D I2C_HID_PWR_SLEEP)
+>                 ihid->sleep_delay =3D jiffies + msecs_to_jiffies(20);
+>
+> -       if (ret)
+> +       if (ret) {
+>                 dev_err(&client->dev, "failed to change power setting.\n"=
+);
+> +               goto set_pwr_exit;
+> +       }
+> +
+> +       /*
+> +        * The HID over I2C specification states that if a DEVICE needs t=
+ime
+> +        * after the PWR_ON request, it should utilise CLOCK stretching.
+> +        * However, it has been observered that the Windows driver provid=
+es a
+> +        * 1ms sleep between the PWR_ON and RESET requests and that some =
+devices
+> +        * rely on this.
+> +        */
+> +       if (ihid->pdata.post_setpower_delay_ms)
+> +               msleep(ihid->pdata.post_setpower_delay_ms);
+> +       else
+> +               usleep_range(1000, 5000);
+
+Moving up this part needs definitively to be in a separate patch as
+well, with a good explanation on why.
+
+Cheers,
+Benjamin
+
+>
+>  set_pwr_exit:
+>         return ret;
+> @@ -456,15 +470,6 @@ static int i2c_hid_hwreset(struct i2c_client *client=
+)
+>         if (ret)
+>                 goto out_unlock;
+>
+> -       /*
+> -        * The HID over I2C specification states that if a DEVICE needs t=
+ime
+> -        * after the PWR_ON request, it should utilise CLOCK stretching.
+> -        * However, it has been observered that the Windows driver provid=
+es a
+> -        * 1ms sleep between the PWR_ON and RESET requests and that some =
+devices
+> -        * rely on this.
+> -        */
+> -       usleep_range(1000, 5000);
+> -
+>         i2c_hid_dbg(ihid, "resetting...\n");
+>
+>         ret =3D i2c_hid_command(client, &hid_reset_cmd, NULL, 0);
+> @@ -1023,6 +1028,9 @@ static void i2c_hid_fwnode_probe(struct i2c_client =
+*client,
+>         if (!device_property_read_u32(&client->dev, "post-power-on-delay-=
+ms",
+>                                       &val))
+>                 pdata->post_power_delay_ms =3D val;
+> +       if (!device_property_read_u32(&client->dev, "post-setpower-delay-=
+ms",
+> +                                     &val))
+> +               pdata->post_setpower_delay_ms =3D val;
+>  }
+>
+>  static int i2c_hid_probe(struct i2c_client *client,
+> @@ -1145,7 +1153,7 @@ static int i2c_hid_probe(struct i2c_client *client,
+>                  client->name, hid->vendor, hid->product);
+>         strlcpy(hid->phys, dev_name(&client->dev), sizeof(hid->phys));
+>
+> -       ihid->quirks =3D i2c_hid_lookup_quirk(hid->vendor, hid->product);
+> +       i2c_hid_set_quirk(ihid, hid->vendor, hid->product);
+>
+>         ret =3D hid_add_device(hid);
+>         if (ret) {
+> diff --git a/include/linux/platform_data/i2c-hid.h b/include/linux/platfo=
+rm_data/i2c-hid.h
+> index c628bb5e10610..71682f2ad8a53 100644
+> --- a/include/linux/platform_data/i2c-hid.h
+> +++ b/include/linux/platform_data/i2c-hid.h
+> @@ -20,6 +20,8 @@
+>   * @hid_descriptor_address: i2c register where the HID descriptor is sto=
+red.
+>   * @supplies: regulators for powering on the device.
+>   * @post_power_delay_ms: delay after powering on before device is usable=
+.
+> + * @post_setpower_delay_ms: delay after SET_POWER command before device
+> + *                          completes state transition.
+>   *
+>   * Note that it is the responsibility of the platform driver (or the acp=
+i 5.0
+>   * driver, or the flattened device tree) to setup the irq related to the=
+ gpio in
+> @@ -36,6 +38,7 @@ struct i2c_hid_platform_data {
+>         u16 hid_descriptor_address;
+>         struct regulator_bulk_data supplies[2];
+>         int post_power_delay_ms;
+> +       int post_setpower_delay_ms;
+>  };
+>
+>  #endif /* __LINUX_I2C_HID_H */
+> --
+> 2.23.0
+>
+
