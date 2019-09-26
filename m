@@ -2,99 +2,272 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B67C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADE4C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE3B222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F209222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RYxrHJEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389525AbfIZBbF (ORCPT
+        id S2389800AbfIZBbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:31:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2783 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726770AbfIZBbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:31:05 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C6A933775E447C566545;
-        Thu, 26 Sep 2019 09:31:00 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
- 09:30:58 +0800
-Subject: Re: [PATCH 07/32] x86: Use pr_warn instead of pr_warning
-To:     Joe Perches <joe@perches.com>, Robert Richter <rric@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20190920062544.180997-8-wangkefeng.wang@huawei.com>
- <20190920092850.26usohzmatmqrlor@rric.localdomain>
- <7a517b43-7e86-79ba-5954-dd746c309c87@huawei.com>
- <0f291158f7d788c001212bcbb13843fbff571eeb.camel@perches.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <fb21e729-822c-dca6-f867-267c41c94635@huawei.com>
-Date:   Thu, 26 Sep 2019 09:30:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 25 Sep 2019 21:31:33 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:32106 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389536AbfIZBbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 21:31:33 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190926013130epoutp03bbe354815bcc4212e992d3651643f98c~H2Oka9Qfj2977029770epoutp037
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 01:31:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190926013130epoutp03bbe354815bcc4212e992d3651643f98c~H2Oka9Qfj2977029770epoutp037
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569461490;
+        bh=H7dIy4NLJ0Vtiyy8JGjYV3SoJNF1jlpXFN42Cx87qDc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=RYxrHJEfxavRVL74TZhStzp1M3v/kexRPRSkVkrwVdcc3Rli0TRLydxnMlzWTggMu
+         APil17qJ3Sj+XDeku/SiEyIC8X8jyTEhLWhkqsZDHG56cyHIncbauk6cGbdL0e87Yb
+         MuuVq8blmNZkztmkX5h0/3q9dBSwwvvy3gpwOVH0=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190926013130epcas1p434480b7b054308c3daa91f68e59e0203~H2Oj9hRqA1545815458epcas1p4j;
+        Thu, 26 Sep 2019 01:31:30 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 46dy7g5MxVzMqYkc; Thu, 26 Sep
+        2019 01:31:27 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B2.05.04068.AE41C8D5; Thu, 26 Sep 2019 10:31:22 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190926013122epcas1p1dcdbefd63f655e8082d138064c09e9dd~H2OcdAG4O2486724867epcas1p1B;
+        Thu, 26 Sep 2019 01:31:22 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190926013122epsmtrp1664d228cded2bcb996429c2f343c14fe~H2OccJ9l43098130981epsmtrp18;
+        Thu, 26 Sep 2019 01:31:22 +0000 (GMT)
+X-AuditID: b6c32a39-f5fff70000000fe4-35-5d8c14ea9a2b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        02.41.04081.AE41C8D5; Thu, 26 Sep 2019 10:31:22 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190926013122epsmtip1910ffa9271d525d0209975049806c252~H2OcPcUkN2250222502epsmtip1B;
+        Thu, 26 Sep 2019 01:31:22 +0000 (GMT)
+Subject: Re: [PATCH 1/2] devfreq: Rename devfreq_update_status() to
+ devfreq_update_stats() and viceversa
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <3fb18474-b31e-bc7e-8b6a-660904a19443@samsung.com>
+Date:   Thu, 26 Sep 2019 10:36:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <0f291158f7d788c001212bcbb13843fbff571eeb.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190925184314.30251-1-mka@chromium.org>
 Content-Language: en-US
-X-Originating-IP: [10.133.217.137]
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMJsWRmVeSWpSXmKPExsWy7bCmge4rkZ5Yg9uL1CzOLjvIZtEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i0sHFjBZfN7wmNHiduMKNot9HQ+YLH7umsfiwO0xu+Ei
+        i8fOWXfZPVr23WL36G1+x+bxft9VNo++LasYPT5vkgtgj8q2yUhNTEktUkjNS85PycxLt1Xy
+        Do53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAE6UkmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCR
+        X1xiq5RakJJTYFmgV5yYW1yal66XnJ9rZWhgYGQKVJiQnfH7zGzmggV6Fc9bzjA1MB5X62Lk
+        4JAQMJGY98S6i5GLQ0hgB6NEx/+PTF2MnEDOJ0aJe689IRLfGCUWzZ3CDpIAaWjb+pUZIrGX
+        UeLuktnsEM57RombE5sYQaqEBbIkWrZOAUuICMxlkui5NxXMYRZoZpS4tHou2BI2AS2J/S9u
+        sIHY/AKKEld/PGYEOYpXwE6i4ZUASJhFQFXiUv9EsNWiAhESnx4cZgWxeQUEJU7OfMICYnMK
+        mEl83XsUbAyzgLjErSfzmSBseYnmrbPBTpUQWMYucb5tOdQPLhK/pi1kgrCFJV4d3wIVl5J4
+        2d8GZVdLrDx5hA2iuYNRYsv+C6wQCWOJ/UsnM4EcyiygKbF+lz5EWFFi5++5jBCL+STefe1h
+        hQQwr0RHmxBEibLE5Qd3odZKSixu72SbwKg0C8k7s5C8MAvJC7MQli1gZFnFKJZaUJybnlps
+        WGCKHNubGMEJWMtyB+Oxcz6HGAU4GJV4eCUiu2OFWBPLiitzDzFKcDArifDOkumKFeJNSays
+        Si3Kjy8qzUktPsRoCgzticxSosn5wOyQVxJvaGpkbGxsYWJoZmpoqCTO65HeECskkJ5Ykpqd
+        mlqQWgTTx8TBKdXAuMX4eaDcgnmVG/Lkn6nw+QU9fio0+/HJtQp/fseuyZ3CzuZxL8e9W9nu
+        euCVkNz+3YrT1pfpnZm8/rj+9B8zODgEt622++cS+FQySFzpwUOji9Ip3pue3L6sprWjfQLz
+        vFonvqL3Ub6aVxrPrxVwjbdfb2L50ddR93TEM7GWinc8XydK//s2TYmlOCPRUIu5qDgRAI8D
+        kX7WAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsWy7bCSnO4rkZ5Yg/69PBZnlx1ks2iZtYjF
+        4mzTG3aLy7vmsFl87j3CaNH5ZRabxaUDC5gsPm94zGhxu3EFm8W+jgdMFj93zWNx4PaY3XCR
+        xWPnrLvsHi37brF79Da/Y/N4v+8qm0ffllWMHp83yQWwR3HZpKTmZJalFunbJXBl/D4zm7lg
+        gV7F85YzTA2Mx9W6GDk5JARMJNq2fmXuYuTiEBLYzSjRMr+ZFSIhKTHt4lGgBAeQLSxx+HAx
+        RM1bRomljw4wg9QIC2RJtGydwg6SEBGYzyRxad0jVhCHWaCZUWJJ338WiJZORomHy/+CtbAJ
+        aEnsf3GDDcTmF1CUuPrjMSPICl4BO4mGVwIgYRYBVYlL/RPZQWxRgQiJwztmMYLYvAKCEidn
+        PmEBsTkFzCS+7j0KNoZZQF3iz7xLzBC2uMStJ/OZIGx5ieats5knMArPQtI+C0nLLCQts5C0
+        LGBkWcUomVpQnJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERyNWpo7GC8viT/EKMDBqMTDeyCs
+        O1aINbGsuDL3EKMEB7OSCO8sma5YId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxP845FCgmkJ5ak
+        ZqemFqQWwWSZODilGhgX2ihvOSba8TUy0feUIUfqbFGOoxHeS0689l2mmfJI6qvDxUVfHZlD
+        Wa0D0k95lP1avVRFWy1O8IWX9u5L13dcNCsROVP1pnIPd+CfIiXxJ69yJ21J01mt81vsxeOL
+        V3ffY7lZus75xueHJxV4Xx+uXu+gqz7vxU7bkPfVs4sDb2g8mxGsN6dXiaU4I9FQi7moOBEA
+        z35ZUMICAAA=
+X-CMS-MailID: 20190926013122epcas1p1dcdbefd63f655e8082d138064c09e9dd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190925184505epcas2p3f8f4395f37df4b1fe33309393e8af4df
+References: <CGME20190925184505epcas2p3f8f4395f37df4b1fe33309393e8af4df@epcas2p3.samsung.com>
+        <20190925184314.30251-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2019/9/20 23:28, Joe Perches wrote:
-> On Fri, 2019-09-20 at 19:57 +0800, Kefeng Wang wrote:
->> On 2019/9/20 17:28, Robert Richter wrote:
->>> On 20.09.19 14:25:19, Kefeng Wang wrote:
->>>> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
->>>> pr_warning"), removing pr_warning so all logging messages use a
->>>> consistent <prefix>_warn style. Let's do it.
-> []
->>>> diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-> []
->>>> @@ -665,7 +664,7 @@ static __init int init_amd_gatt(struct agp_kern_info *info)
->>>>  
->>>>   nommu:
->>>>  	/* Should not happen anymore */
->>>> -	pr_warning("PCI-DMA: More than 4GB of RAM and no IOMMU\n"
->>>> +	pr_warn("PCI-DMA: More than 4GB of RAM and no IOMMU\n"
->>>>  	       "falling back to iommu=soft.\n");
->>> This indentation should be fixed too, while at it.
->> Will update later, thanks.
-> trivia:
->
-> likely better as a single line output:
->
-> 	pr_warn("PCI-DMA: More than 4GB of RAM and no IOMMU - falling back to iommu=soft\n");
+I'm not sure that it is necessary. I think that it depends on
+personal opinions. There are no correct answer perfectly.
+Also, after this changes, there are no any beneficial.
+It touch the history rather than behavior improvement.
 
-ok, will resend all patches after rc1 with this change and other comment fixes, thanks.
+On 19. 9. 26. 오전 3:43, Matthias Kaehlcke wrote:
+> devfreq has two functions with very similar names, devfreq_update_status()
+> and devfreq_update_stats(). _update_status() currently updates
+> frequency transitions statistics, while _update_stats() retrieves the
+> device 'status'. The function names are inversed with respect to what
+> the functions are actually doing, rename devfreq_update_status() to
+> devfreq_update_stats() and viceversa.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> We could also rename the current devfreq_update_stats() to
+> devfreq_refresh_status() to make it easier to distinguish it from
+> devfreq_update_stats().
+> ---
+>  drivers/devfreq/devfreq.c                 | 12 ++++++------
+>  drivers/devfreq/governor.h                |  4 ++--
+>  drivers/devfreq/governor_passive.c        |  2 +-
+>  drivers/devfreq/governor_simpleondemand.c |  2 +-
+>  drivers/devfreq/tegra30-devfreq.c         |  2 +-
+>  5 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 446490c9d635..fb4318d59aa9 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -151,11 +151,11 @@ static int set_freq_table(struct devfreq *devfreq)
+>  }
+>  
+>  /**
+> - * devfreq_update_status() - Update statistics of devfreq behavior
+> + * devfreq_update_stats() - Update statistics of devfreq behavior
+>   * @devfreq:	the devfreq instance
+>   * @freq:	the update target frequency
+>   */
+> -int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+> +int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
+>  {
+>  	int lev, prev_lev, ret = 0;
+>  	unsigned long cur_time;
+> @@ -191,7 +191,7 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>  	devfreq->last_stat_updated = cur_time;
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(devfreq_update_status);
+> +EXPORT_SYMBOL(devfreq_update_stats);
+>  
+>  /**
+>   * find_devfreq_governor() - find devfreq governor from name
+> @@ -311,7 +311,7 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>  	freqs.new = new_freq;
+>  	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>  
+> -	if (devfreq_update_status(devfreq, new_freq))
+> +	if (devfreq_update_stats(devfreq, new_freq))
+>  		dev_err(&devfreq->dev,
+>  			"Couldn't update frequency transition information.\n");
+>  
+> @@ -450,7 +450,7 @@ void devfreq_monitor_suspend(struct devfreq *devfreq)
+>  		return;
+>  	}
+>  
+> -	devfreq_update_status(devfreq, devfreq->previous_freq);
+> +	devfreq_update_stats(devfreq, devfreq->previous_freq);
+>  	devfreq->stop_polling = true;
+>  	mutex_unlock(&devfreq->lock);
+>  	cancel_delayed_work_sync(&devfreq->work);
+> @@ -1398,7 +1398,7 @@ static ssize_t trans_stat_show(struct device *dev,
+>  	unsigned int max_state = devfreq->profile->max_state;
+>  
+>  	if (!devfreq->stop_polling &&
+> -			devfreq_update_status(devfreq, devfreq->previous_freq))
+> +			devfreq_update_stats(devfreq, devfreq->previous_freq))
+>  		return 0;
+>  	if (max_state == 0)
+>  		return sprintf(buf, "Not Supported.\n");
+> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+> index bbe5ff9fcecf..e11f447be2b5 100644
+> --- a/drivers/devfreq/governor.h
+> +++ b/drivers/devfreq/governor.h
+> @@ -64,9 +64,9 @@ extern void devfreq_interval_update(struct devfreq *devfreq,
+>  extern int devfreq_add_governor(struct devfreq_governor *governor);
+>  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+>  
+> -extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+> +extern int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq);
+>  
+> -static inline int devfreq_update_stats(struct devfreq *df)
+> +static inline int devfreq_update_status(struct devfreq *df)
+>  {
+>  	return df->profile->get_dev_status(df->dev.parent, &df->last_status);
+>  }
+> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> index be6eeab9c814..1c746b96d3db 100644
+> --- a/drivers/devfreq/governor_passive.c
+> +++ b/drivers/devfreq/governor_passive.c
+> @@ -110,7 +110,7 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>  		goto out;
+>  
+>  	if (devfreq->profile->freq_table
+> -		&& (devfreq_update_status(devfreq, freq)))
+> +		&& (devfreq_update_stats(devfreq, freq)))
+>  		dev_err(&devfreq->dev,
+>  			"Couldn't update frequency transition information.\n");
+>  
+> diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
+> index 3d809f228619..2cbf26bdcfd6 100644
+> --- a/drivers/devfreq/governor_simpleondemand.c
+> +++ b/drivers/devfreq/governor_simpleondemand.c
+> @@ -25,7 +25,7 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+>  	unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
+>  	struct devfreq_simple_ondemand_data *data = df->data;
+>  
+> -	err = devfreq_update_stats(df);
+> +	err = devfreq_update_status(df);
+>  	if (err)
+>  		return err;
+>  
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index a6ba75f4106d..536273a811fe 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -526,7 +526,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
+>  	unsigned int i;
+>  	int err;
+>  
+> -	err = devfreq_update_stats(devfreq);
+> +	err = devfreq_update_status(devfreq);
+>  	if (err)
+>  		return err;
+>  
+> 
 
->
->
->
-> .
->
 
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
