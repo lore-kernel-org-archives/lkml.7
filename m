@@ -1,126 +1,74 @@
 Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7865C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BECC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB41222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A70D22459
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ieu5+M+A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhFm551Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfIZTpI (ORCPT
+        id S1727846AbfIZT60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:45:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33732 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfIZTpI (ORCPT
+        Thu, 26 Sep 2019 15:58:26 -0400
+Received: from mail-yw1-f48.google.com ([209.85.161.48]:38262 "EHLO
+        mail-yw1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbfIZT60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:45:08 -0400
-Received: by mail-io1-f65.google.com with SMTP id z19so9824473ior.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:45:08 -0700 (PDT)
+        Thu, 26 Sep 2019 15:58:26 -0400
+Received: by mail-yw1-f48.google.com with SMTP id s6so125596ywe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EwN6HUAXw1lkc+wDBGR97AJtjcSWR0LM+4YKhabgOzg=;
-        b=Ieu5+M+AXUxsKK2faofNRw7KtrK9oTeCkIx0W+4oBVRAtqNin4Y/C4iPwDXgZB/ZLS
-         ltXcTuZhMFfoIJm0TVG+l/csAEpus4Y4Xm8Tn1NNvWxZnLUFimdXU7DEK+dvy+XRwTyg
-         TupBpx7HHp6APHUl+Lapfxsog+WA7KZ8UJsAM=
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=YyliMHGG5rAVG/6KnCo18E73UZJckVpzMI6irjvW1cc=;
+        b=EhFm551QCGIVL288tfEzmv8Z8VFkUfyi7NwDIAcXZYnZFQSCAupNIfzwk3sCImAIu7
+         pMqEJiQr8LLVdmVTzyCfxqPRknhab7FQXBn/YcnOcexWEU/Y5lGqM69own/+s7hfsGBG
+         biIVn7xn2o71jdBquV/hE7dmfunp0m17Gc5VwxOxMLu+9G56A+RkBlZRnk8UpZSVbDB/
+         1Zc5WPRQoxv91gvKNrm0Q8uNDLNw1C5e5HzsGziGxsBAUyMUxfbgaI0HPHrVokgsnotO
+         zgqcA+1iR1igT3pZWDuHu79YHjNXyccQ2L1pqVSA1GtKk+hfLkC0oUsxSnmGBgf9ps26
+         vqBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EwN6HUAXw1lkc+wDBGR97AJtjcSWR0LM+4YKhabgOzg=;
-        b=hVphecBTZT4Fg4izg72IPTBrQziPHqxtv0yM8iVs4Hnot8PsIIkf5206b4kFj+S+A2
-         KE8sK/wNQQxRYiuTrz0Dcvd7X6bA8G4VibVDpF+wwigzPTtoIV28KkXtdkKiEIRYW3H5
-         v5KfFgfMhfoeQPJINuhDKs3lBLF+t4Mbr1oXlANqNSXA1FD43aoh2wfLZTl5nR9iFNec
-         /FrvWg2kxgBm4MMd0yOfD5CIE99lHZ7H5PVFe/rz0JP6CFG2ONhixBLhvR4f93PpbPRU
-         KfJscNwOzFPN/Q4Bo9SiqqrJxyDNpu7jTEcS3/Pn28HbQsyKPsVBKxeVIYTVaW5mPHys
-         D11g==
-X-Gm-Message-State: APjAAAWFXEYlqofHrltnzK6bK4GH4L7XRXgRyBdjZhExBzAtgxK5XBbW
-        rq+JTzi8nbxW1zJFqgykAmdBQJ8/bYA=
-X-Google-Smtp-Source: APXvYqz+1RwpT+8p6FpIkSAMwjUBcAlDBTNl8/9uD9R/4fE1+aqpmUu4RbVu5xpsNJkjXCG6Nh+BpQ==
-X-Received: by 2002:a6b:5006:: with SMTP id e6mr4891668iob.275.1569527107543;
-        Thu, 26 Sep 2019 12:45:07 -0700 (PDT)
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com. [209.85.166.52])
-        by smtp.gmail.com with ESMTPSA id y23sm1362193iob.28.2019.09.26.12.45.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 12:45:06 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id q10so9798003iop.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:45:05 -0700 (PDT)
-X-Received: by 2002:a92:865d:: with SMTP id g90mr394857ild.168.1569527105596;
- Thu, 26 Sep 2019 12:45:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=YyliMHGG5rAVG/6KnCo18E73UZJckVpzMI6irjvW1cc=;
+        b=ryRcrk6jPRCobPwkSMyXJRb/o0zTX/qdaHN0QryXpxQyxZgbU7SXk3F+wf7LoRrgiq
+         flRLRnRZR7k4p7S05PUw3BlU0OXCKk8gHIIEModG8B8IEBrvy6tOGkxL1w5G7qbJpc2+
+         w7mc+685fxYqPpzOGg+dxMp8MOy9cj0Mi9GmSXoIMWWWjicqS1Z6at9GPi/BUoGOoM5K
+         p0sn27znfRWQQVx4vzI5OHwgJG+9B9exKn9EwqzBfmlcnPGs92Qnz6itpf8tcsorLFs4
+         SfII1lHsHGwLUqL7Xc5i5Bbhab3llwhtodjU5R6EqzhWmKPacNJmP49GGqarL9MwBPTM
+         0YGg==
+X-Gm-Message-State: APjAAAVwIMf96NwE/b2f3VjwdpsmmBtRhQvUf4EoVlkfTOWqF2nAf4aP
+        2faiaOWD6mZr8GFyCbDRm7no8wNcKHLpeaAormUpHVHW
+X-Google-Smtp-Source: APXvYqziR2V+wD0Lsq9Q7MxDyIQHZCwNAeFQ+JcoAZf6PcPwS+YrMV0OkPOuwZEUQ6EVZ0v61pDjeXSkI9bsgXnoQII=
+X-Received: by 2002:a0d:d9d3:: with SMTP id b202mr133589ywe.63.1569527904060;
+ Thu, 26 Sep 2019 12:58:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190917154021.14693-1-m.felsch@pengutronix.de>
- <20190917154021.14693-2-m.felsch@pengutronix.de> <CAD=FV=W7M8mwQqnPyU9vsK5VAdqqJdQdyxcoe9FRRGTY8zjnFw@mail.gmail.com>
- <20190923181431.GU2036@sirena.org.uk> <CAD=FV=WVGj8xzKFFxsjpeuqtVzSvv22cHmWBRJtTbH00eC=E9w@mail.gmail.com>
- <20190923184907.GY2036@sirena.org.uk> <CAD=FV=VkaXDn034EFnJWYvWwyLgvq7ajfgMRm9mbhQeRKmPDRQ@mail.gmail.com>
- <20190924182758.GC2036@sirena.org.uk>
-In-Reply-To: <20190924182758.GC2036@sirena.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Sep 2019 12:44:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
-Message-ID: <CAD=FV=WZSy6nHjsY2pvjcoR4iy64b35OPGEb3EPSSc5vpeTTuA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] regulator: core: fix boot-on regulators use_count usage
-To:     Mark Brown <broonie@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ckeepax@opensource.cirrus.com, LKML <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
+From:   =?UTF-8?B?5oWV5Yas5Lqu?= <mudongliangabcd@gmail.com>
+Date:   Thu, 26 Sep 2019 15:57:58 -0400
+Message-ID: <CAD-N9QWFisTLhw4afMZDdhAkLcb32MAWdvXKJ=YZwKroxhFt0g@mail.gmail.com>
+Subject: Summary of Crash/Panic Behaviors in Linux Kernel
+To:     linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dear all,
 
-On Tue, Sep 24, 2019 at 11:28 AM Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Sep 23, 2019 at 03:40:09PM -0700, Doug Anderson wrote:
-> > On Mon, Sep 23, 2019 at 11:49 AM Mark Brown <broonie@kernel.org> wrote:
-> > > On Mon, Sep 23, 2019 at 11:36:11AM -0700, Doug Anderson wrote:
->
-> > > > 1. Would it be valid to say that it's always incorrect to set this
-> > > > property if there is a way to read the status back from the regulator?
->
-> > > As originally intended, yes.  I'm now not 100% sure that it won't
-> > > break any existing systems though :/
->
-> > Should I change the bindings doc to say that?
->
-> Sure.
+Is there any summary of crash/panic behaviors in the Linux Kernel? For
+example, GPF (general protection fault), Kernel BUG (BUG_ON).
 
-Sent ("regulator: Document "regulator-boot-on" binding more thoroughly").
+--
+My best regards to you.
 
-https://lore.kernel.org/r/20190926124115.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid
-
-
-> > > It should be possible to do a regulator_disable() though I'm not
-> > > sure anyone actually uses that.  The pattern for a regular
-> > > consumer should be the normal enable/disable pair to handle
-> > > shared usage, only an exclusive consumer should be able to use
-> > > just a straight disable.
->
-> > Ah, I see, I wasn't aware of the "exclusive" special case!  Marco: is
-> > this working for you?  I wonder if we need to match
-> > "regulator->enable_count" to "rdev->use_count" at the end of
-> > _regulator_get() in the exclusive case...
->
-> Yes, I think that case has been missed when adding the enable
-> counts - I've never actually had a system myself that made any
-> use of this stuff.  It probably needs an audit of the users to
-> make sure nobody's relying on the current behaviour though I
-> can't think how they would.
-
-Marco: I'm going to assume you'll tackle this since I don't actually
-have any use cases that need this.
-
--Doug
+     No System Is Safe!
+     Dongliang Mu
