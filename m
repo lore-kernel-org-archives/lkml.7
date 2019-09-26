@@ -2,243 +2,145 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AA1C352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A57DC352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B1521D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2034221D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xa8wAxdI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ntcP0jtG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lidc6vmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfIZOd1 (ORCPT
+        id S1727196AbfIZOhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:33:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54574 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfIZOd0 (ORCPT
+        Thu, 26 Sep 2019 10:37:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56366 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfIZOhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:33:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0B15860BF9; Thu, 26 Sep 2019 14:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569508405;
-        bh=fOpT9JZFuSEtZdGC6HncrAYtN9PjpbcvId6OJQD6nYU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Xa8wAxdIyxYios5HF9laFu8pMfqsojsq4WYnTnI8K43vfME/m+Z+5KRpYbxIaJ6Cc
-         9naBtpMJ97z1UXHPl0ribCLIKPFnsM4GOHIGrq5fO4SSqCxkjbV2qq65fyt6Nlzfzp
-         2/Se2lU376MxQwNANWa0F//qCGUEIpDkrjvnspuw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B8A0A609F3;
-        Thu, 26 Sep 2019 14:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569508401;
-        bh=fOpT9JZFuSEtZdGC6HncrAYtN9PjpbcvId6OJQD6nYU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ntcP0jtGbWkQtaoZKW3vi2xqISw73RTDHwYbc38MGJfAP9Xh/yHr+9p1lYysoppBf
-         GIxcZXEyDa2/rkgXQOvW4k1j/6P5hsqryhtnJ332wlaaljHspAHrjyXBjd+G5YKde9
-         qsDQeqULU1nfPzgE0fTiwVaCbFiOLmHVF/GUXoUs=
+        Thu, 26 Sep 2019 10:37:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QEY801046697;
+        Thu, 26 Sep 2019 14:37:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Tmwprk0lmnBQUvHH6rcVvYGRhpZqa3f3F/w8fDa9Ts8=;
+ b=lidc6vmdhRiA2mGaRp9GVXrqJAFJszgZoL+ZlLLe1Hxo6rELzrQ0HyQ53Duc6rXuLApd
+ epfILGWVDMuZNrHPGaTmVzFkvWHNMlwJtxnU+HBjNOyzFGF8wYRZ61RTgEtwQCPK+WWJ
+ gkIhY401XKGCPIe32P20+V1ZAoIzgVoNjDxRbfgJ5cIl7RCTBPki+sUebhL5tHhq+ciB
+ 4qmBiHh9jDgFz7Qp7oYTWKwHFdIQyOFCQd9oDM6HEbjEBYmyYs4584V89hMK6Gee0Xn1
+ owuMeiC+18w0lZSjMvVci4i0YpIjkSE8QbSKt3lQxaKNpt8pEohYNXxcTdDWQwNDsV4Q 6g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v5btqc8m7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 14:37:17 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QETAA8157716;
+        Thu, 26 Sep 2019 14:37:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2v8rvtcjys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 14:37:16 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8QEbGIm006943;
+        Thu, 26 Sep 2019 14:37:16 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Sep 2019 07:37:15 -0700
+Date:   Thu, 26 Sep 2019 07:37:14 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Max Reitz <mreitz@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brian Foster <bfoster@redhat.com>
+Subject: Re: [PATCH] xfs: Fix tail rounding in xfs_alloc_file_space()
+Message-ID: <20190926143704.GA9916@magnolia>
+References: <20190926142238.26973-1-mreitz@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 26 Sep 2019 07:33:21 -0700
-From:   mnalajal@codeaurora.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] base: soc: Export soc_device_to_device API
-In-Reply-To: <20190924045005.GB2700@kroah.com>
-References: <20190919213203.GA395325@kroah.com>
- <20190919215300.GC1418@minitux> <20190919215836.GA426988@kroah.com>
- <20190919221456.GA63675@minitux> <20190919222525.GA445429@kroah.com>
- <20190919224017.GB63675@minitux> <20190919224514.GA447028@kroah.com>
- <20190920033651.GC63675@minitux> <20190920061006.GC473898@kroah.com>
- <5d9d1f3d11b1e4173990d4c5ac547193@codeaurora.org>
- <20190924045005.GB2700@kroah.com>
-Message-ID: <c2ea4365915e4a0fbb3e199cbdb9e1df@codeaurora.org>
-X-Sender: mnalajal@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926142238.26973-1-mreitz@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909260134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909260135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-23 21:50, Greg KH wrote:
-> On Mon, Sep 23, 2019 at 02:35:33PM -0700, mnalajal@codeaurora.org 
-> wrote:
->> On 2019-09-19 23:10, Greg KH wrote:
->> > On Thu, Sep 19, 2019 at 08:36:51PM -0700, Bjorn Andersson wrote:
->> > > On Thu 19 Sep 15:45 PDT 2019, Greg KH wrote:
->> > >
->> > > > On Thu, Sep 19, 2019 at 03:40:17PM -0700, Bjorn Andersson wrote:
->> > > > > On Thu 19 Sep 15:25 PDT 2019, Greg KH wrote:
->> > > > >
->> > > > > > On Thu, Sep 19, 2019 at 03:14:56PM -0700, Bjorn Andersson wrote:
->> > > > > > > On Thu 19 Sep 14:58 PDT 2019, Greg KH wrote:
->> > > > > > >
->> > > > > > > > On Thu, Sep 19, 2019 at 02:53:00PM -0700, Bjorn Andersson wrote:
->> > > > > > > > > On Thu 19 Sep 14:32 PDT 2019, Greg KH wrote:
->> > > > > > > > >
->> > > > > > > > > > On Thu, Sep 19, 2019 at 02:13:44PM -0700, Murali Nalajala wrote:
->> > > > > > > > > > > If the soc drivers want to add custom sysfs entries it needs to
->> > > > > > > > > > > access "dev" field in "struct soc_device". This can be achieved
->> > > > > > > > > > > by "soc_device_to_device" API. Soc drivers which are built as a
->> > > > > > > > > > > module they need above API to be exported. Otherwise one can
->> > > > > > > > > > > observe compilation issues.
->> > > > > > > > > > >
->> > > > > > > > > > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
->> > > > > > > > > > > ---
->> > > > > > > > > > >  drivers/base/soc.c | 1 +
->> > > > > > > > > > >  1 file changed, 1 insertion(+)
->> > > > > > > > > > >
->> > > > > > > > > > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
->> > > > > > > > > > > index 7c0c5ca..4ad52f6 100644
->> > > > > > > > > > > --- a/drivers/base/soc.c
->> > > > > > > > > > > +++ b/drivers/base/soc.c
->> > > > > > > > > > > @@ -41,6 +41,7 @@ struct device *soc_device_to_device(struct soc_device *soc_dev)
->> > > > > > > > > > >  {
->> > > > > > > > > > >  	return &soc_dev->dev;
->> > > > > > > > > > >  }
->> > > > > > > > > > > +EXPORT_SYMBOL_GPL(soc_device_to_device);
->> > > > > > > > > > >
->> > > > > > > > > > >  static umode_t soc_attribute_mode(struct kobject *kobj,
->> > > > > > > > > > >  				struct attribute *attr,
->> > > > > > > > > >
->> > > > > > > > > > What in-kernel driver needs this?
->> > > > > > > > > >
->> > > > > > > > >
->> > > > > > > > > Half of the drivers interacting with the soc driver calls this API,
->> > > > > > > > > several of these I see no reason for being builtin (e.g.
->> > > > > > > > > ux500 andversatile). So I think this patch makes sense to allow us to
->> > > > > > > > > build these as modules.
->> > > > > > > > >
->> > > > > > > > > > Is linux-next breaking without this?
->> > > > > > > > > >
->> > > > > > > > >
->> > > > > > > > > No, we postponed the addition of any sysfs attributes in the Qualcomm
->> > > > > > > > > socinfo driver.
->> > > > > > > > >
->> > > > > > > > > > We don't export things unless we have a user of the export.
->> > > > > > > > > >
->> > > > > > > > > > Also, adding "custom" sysfs attributes is almost always not the correct
->> > > > > > > > > > thing to do at all.  The driver should be doing it, by setting up the
->> > > > > > > > > > attribute group properly so that the driver core can do it automatically
->> > > > > > > > > > for it.
->> > > > > > > > > >
->> > > > > > > > > > No driver should be doing individual add/remove of sysfs files.  If it
->> > > > > > > > > > does so, it is almost guaranteed to be doing it incorrectly and racing
->> > > > > > > > > > userspace.
->> > > > > > > > > >
->> > > > > > > > >
->> > > > > > > > > The problem here is that the attributes are expected to be attached to
->> > > > > > > > > the soc driver, which is separate from the platform-specific drivers. So
->> > > > > > > > > there's no way to do platform specific attributes the right way.
->> > > > > > > > >
->> > > > > > > > > > And yes, there's loads of in-kernel examples of doing this wrong, I've
->> > > > > > > > > > been working on fixing that up, look at the patches now in Linus's tree
->> > > > > > > > > > for platform and USB drivers that do this as examples of how to do it
->> > > > > > > > > > right.
->> > > > > > > > > >
->> > > > > > > > >
->> > > > > > > > > Agreed, this patch should not be used as an approval for any crazy
->> > > > > > > > > attributes; but it's necessary in order to extend the soc device's
->> > > > > > > > > attributes, per the current design.
->> > > > > > > >
->> > > > > > > > Wait, no, let's not let the "current design" remain if it is broken!
->> > > > > > > >
->> > > > > > > > Why can't the soc driver handle the attributes properly so that the
->> > > > > > > > individual driver doesn't have to do the create/remove?
->> > > > > > > >
->> > > > > > >
->> > > > > > > The custom attributes that these drivers want to add to the common ones
->> > > > > > > are known in advance, so I presume we could have them passed into
->> > > > > > > soc_device_register() and registered together with the common
->> > > > > > > attributes...
->> > > > > > >
->> > > > > > > It sounds like it's worth a prototype.
->> > > > > >
->> > > > > > Do you have an in-kernel example I can look at to get an idea of what is
->> > > > > > needed here?
->> > > > > >
->> > > > >
->> > > > > realview_soc_probe(), in drivers/soc/versatile/soc-realview.c,
->> > > > > implements the current mechanism of acquiring the soc's struct device
->> > > > > and then issuing a few device_create_file calls on that.
->> > > >
->> > > > That looks to be a trivial driver to fix up.  Look at 6d03c140db2e
->> > > > ("USB: phy: fsl-usb: convert platform driver to use dev_groups") as an
->> > > > example of how to do this.
->> > > >
->> > >
->> > > The difference between the two cases is that in the fsl-usb case it's
->> > > attributes of the device itself, while in the soc case the
->> > > realview-soc
->> > > driver (or the others doing this) calls soc_device_register() to
->> > > register a new (dangling) soc device, which it then adds its
->> > > attributes
->> > > onto.
->> >
->> > That sounds really really odd.  Why can't the soc device do the creation
->> > "automatically" when the device is registered?  The soc core should
->> > handle this for the soc "drivers", that's what it is there for.
->> >
->> Clients are registering to soc framework using 
->> "soce_device_register()"
->> with "soc_device_attribute". This attribute structure does not have 
->> all
->> the sysfs fields what client are interested. Hence clients are 
->> handling
->> their required sysfs fields in their drivers.
->> https://elixir.bootlin.com/linux/v5.3/source/drivers/base/soc.c#L114
+On Thu, Sep 26, 2019 at 04:22:38PM +0200, Max Reitz wrote:
+> To ensure that all blocks touched by the range [offset, offset + count)
+> are allocated, we need to calculate the block count from the difference
+> of the range end (rounded up) and the range start (rounded down).
 > 
-> Then you should fix that :)
-If i understand, you are asking me to address additional sysfs entries 
-from the client side using "default attribute" groups.
-I saw your patches about "dev_groups" usage which might be part of 
-5.4-rc1.
-If i go with above approach, i end up seeing the soc information at two 
-different sysfs paths i.e.
-Is this my understanding correct?
+> Before this patch, we just round up the byte count, which may lead to
+> unaligned ranges not being fully allocated:
+> 
+> $ touch test_file
+> $ block_size=$(stat -fc '%S' test_file)
+> $ fallocate -o $((block_size / 2)) -l $block_size test_file
+> $ xfs_bmap test_file
+> test_file:
+>         0: [0..7]: 1396264..1396271
+>         1: [8..15]: hole
+> 
+> There should not be a hole there.  Instead, the first two blocks should
+> be fully allocated.
+> 
+> With this patch applied, the result is something like this:
+> 
+> $ touch test_file
+> $ block_size=$(stat -fc '%S' test_file)
+> $ fallocate -o $((block_size / 2)) -l $block_size test_file
+> $ xfs_bmap test_file
+> test_file:
+>         0: [0..15]: 11024..11039
 
-1. /sys/devices/soc0/*
-2. /sys/bus/platform/drivers/msm-socinfo/*
+Code looks ok; by any chance do you have an xfstest we could add to the
+regresion test suite?
 
-Couple of things which i can think of addressing this issue is:
-1. Modify the soc framework APIs to pass the client side sysfs 
-attributes. This will ensure all the soc information fall under 
-/sys/devices/soc0/*
-2. Modify "struct soc_device_attribute" and add more entries. So that we 
-do not need to change any soc framework.
-Problem here is others might have a different requirement which will not 
-be full fill if i do this.
+--D
 
+> Signed-off-by: Max Reitz <mreitz@redhat.com>
+> ---
+>  fs/xfs/xfs_bmap_util.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
->> > > We can't use dev_groups, because the soc_device (soc.c) isn't
->> > > actually a
->> > > driver and the list of attributes is a combination of things from
->> > > soc.c
->> > > and e.g. soc-realview.c.
->> > >
->> > > But if we pass a struct attribute_group into soc_device_register() and
->> > > then have that register both groups using dev.groups, this should be
->> > > much cleaner at least.
->> >
->> > Don't you have a structure you can store these in as well?
->> At present client is populating entries one-by-one
->> https://android.googlesource.com/kernel/msm/+/android-7.1.0_r0.2/drivers/soc/qcom/socinfo.c#1254
+> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+> index 0910cb75b65d..4f443703065e 100644
+> --- a/fs/xfs/xfs_bmap_util.c
+> +++ b/fs/xfs/xfs_bmap_util.c
+> @@ -864,6 +864,7 @@ xfs_alloc_file_space(
+>  	xfs_filblks_t		allocatesize_fsb;
+>  	xfs_extlen_t		extsz, temp;
+>  	xfs_fileoff_t		startoffset_fsb;
+> +	xfs_fileoff_t		endoffset_fsb;
+>  	int			nimaps;
+>  	int			quota_flag;
+>  	int			rt;
+> @@ -891,7 +892,8 @@ xfs_alloc_file_space(
+>  	imapp = &imaps[0];
+>  	nimaps = 1;
+>  	startoffset_fsb	= XFS_B_TO_FSBT(mp, offset);
+> -	allocatesize_fsb = XFS_B_TO_FSB(mp, count);
+> +	endoffset_fsb = XFS_B_TO_FSB(mp, offset + count);
+> +	allocatesize_fsb = endoffset_fsb - startoffset_fsb;
+>  
+>  	/*
+>  	 * Allocate file space until done or until there is an error
+> -- 
+> 2.23.0
 > 
-> And that is known to be broken and racy and will cause problems with
-> userspace.  This should be fixed...
-I saw your explanation here about race 
-http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
-> 
-> thanks,
-> 
-> greg k-h
