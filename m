@@ -2,122 +2,112 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18546C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF11C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E24222CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23C2222CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfoxsbTO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yg3+62ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfIZSAY (ORCPT
+        id S1728061AbfIZSFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:00:24 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39306 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZSAX (ORCPT
+        Thu, 26 Sep 2019 14:05:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34477 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbfIZSFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:00:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v17so3522914wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:00:22 -0700 (PDT)
+        Thu, 26 Sep 2019 14:05:22 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k7so1640149pll.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 11:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yt1IsVUKjYQaKm/AvxEUk4/OIGKh6xPQUX0IWIVIWz4=;
-        b=MfoxsbTOd7CE7lu/tBKmqAxmmPLffab11eVdUuD21vTZLiwGkFoZJVPvU5/SXB9D0w
-         o+zEzQLqEHOXW4XmzDuAhdH0zRo/w3D5238gENnU8fsuSSkMZzROM/VF5V5qDdjIVUgq
-         fWBsfP2YfN3Egm/Mnfnn79mWLWmqYf4TYsGfcF4Dz1hWtkNntmjB5avWTiMONI1fM/iv
-         LjuxW0T2SbpHPZYgD+YQt1WtMqI8POPoEWAmahoRVx+vROUfgt5UhaxIH1TxLPc/AMdo
-         pNngM+DHGIuESDAW6dBuUAIh9vb9aIOwZohQZ3FaHNLn5VuL3pElt1lwiae3QJ6AVZpf
-         FF7A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=oto3YJoz+uDS7YkHckkDLPsuLHSJE59Ic1Zvlvk3JIM=;
+        b=Yg3+62araTz65OUjSMd7uRtDTc4qLv27ScfzOQEBsjmErC4baR+vactZeQ8EDHTDl3
+         4m6/i6nTkUszRwcGPx+4rzXQZxnWhhz2/IpIkxEyLfsUcTwCPuJ3shP5kaVVlXFxeae6
+         oJjvZwVhpbm6kHMwMmWob89Fc5KJC8pyBS2O0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yt1IsVUKjYQaKm/AvxEUk4/OIGKh6xPQUX0IWIVIWz4=;
-        b=mhK39uxYqMiqkzBi5UIU5Oqbn3IjGUpbA8emz2W52p1ITCT+2PxG3alTMqmhTthG87
-         IFRgS/XanoTg1S7YR7mqvp3hKs7pLzm+RdrvLSlbMbsTWnZxekt1C+CGdu166QDBb+UR
-         nvTamIOUSruU+k0UCKXY0U4T0muN2xuTJP6PLhX/Wo3MPwYusZ4b1QpV510xPjv9mRVW
-         d5+wvMg7EAVhuwnxwGzmLzomTly5l2qOV7VLSPNq3nmRoL9leZLucd4WGhG3zogqQQ9C
-         nQtYm9cvDAyb1l7mIjqs4CnOk4NmKjyz1x4A4jGd5olrD+3hxeGGP5F67unipeWxsOaC
-         L1TQ==
-X-Gm-Message-State: APjAAAWs8e5aWzeb+wj+Jgg+yDWxg5fxA4tCXuctVd+Kh+x6H4d6qXdp
-        P/np2OMJ1eTmsbHpf7cyCDkh4Okf
-X-Google-Smtp-Source: APXvYqy98BN/fP0M1TwKem39Ec84DDIrutllK92T6sDfFbkX94gmpqbHy+NL9lOY4PqnHLoCLA1TKg==
-X-Received: by 2002:a1c:c5c3:: with SMTP id v186mr3959754wmf.125.1569520822037;
-        Thu, 26 Sep 2019 11:00:22 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id p7sm4458308wma.34.2019.09.26.11.00.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=oto3YJoz+uDS7YkHckkDLPsuLHSJE59Ic1Zvlvk3JIM=;
+        b=GaztO6rsylK+g60LWMNIqv+CdAvUd2Ym41TbK6j9paadMXZOKDR7TgDMejq169+BdR
+         mbvG5BH7um4FYJtfOhrWpxVIT6ZytgPJvPEX5zBkQuoCEGEyIMXxlm2zUw3T+dUWyEVx
+         2liZ+9C0Atg+l9sJYSbOM4Bz5eS56NQIotBpv/2l85slVGnGTDS3ejl2SKKeM4ASQa+K
+         cB0iD+OKv4FqSgy+qUat5boxku3Dy90KkRhtBacbebPtMISkGD/EQ8fNVy/1oZUUn6Dz
+         zBxaY3idF7KSpJJq3sWV0hg0VNsJd/AV8R3riqgrf/IsA22m7ZsnpttRyndCxRQREiy6
+         DdFw==
+X-Gm-Message-State: APjAAAXTfy/ZVc16b7NEYerEkZh90UCpnYk4dA+aeiPhd0LzLzobSiiA
+        0FeDKKunQWoKEEYabmpMOG1lVw==
+X-Google-Smtp-Source: APXvYqyRIx3xRHb+mNaLLP0zVX1hp9OZQXgJDPhnQfQ+Lb8Ihhv0yx8B8A03PaGE2C0DjuqCQpfKMg==
+X-Received: by 2002:a17:902:be0c:: with SMTP id r12mr5340803pls.190.1569521121688;
+        Thu, 26 Sep 2019 11:05:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k15sm3366000pfa.65.2019.09.26.11.05.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 11:00:21 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: remove unused function write_cam_from_cache
-Date:   Thu, 26 Sep 2019 19:59:33 +0200
-Message-Id: <20190926175933.44967-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 26 Sep 2019 11:05:20 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 23/29] parisc: Move EXCEPTION_TABLE to RO_DATA segment
+Date:   Thu, 26 Sep 2019 10:55:56 -0700
+Message-Id: <20190926175602.33098-24-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
+References: <20190926175602.33098-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function write_cam_from_cache in rtw_wlan_util.c is never used,
-so remove it.
+The EXCEPTION_TABLE is read-only, so collapse it into RO_DATA.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_wlan_util.c   | 13 -------------
- drivers/staging/rtl8723bs/include/rtw_mlme_ext.h |  1 -
- 2 files changed, 14 deletions(-)
+ arch/parisc/kernel/vmlinux.lds.S | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-index 5ab98f3e722e..3933e8637e57 100644
---- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
-@@ -606,19 +606,6 @@ inline void clear_cam_entry(struct adapter *adapter, u8 id)
- 	clear_cam_cache(adapter, id);
- }
+diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlinux.lds.S
+index 12b3d7d5e9e4..1dc2f71e62b1 100644
+--- a/arch/parisc/kernel/vmlinux.lds.S
++++ b/arch/parisc/kernel/vmlinux.lds.S
+@@ -19,6 +19,7 @@
+ 				*(.data..vm0.pte)
  
--inline void write_cam_from_cache(struct adapter *adapter, u8 id)
--{
--	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
--	struct cam_ctl_t *cam_ctl = &dvobj->cam_ctl;
--	struct cam_entry_cache cache;
--
--	spin_lock_bh(&cam_ctl->lock);
--	memcpy(&cache, &dvobj->cam_cache[id], sizeof(struct cam_entry_cache));
--	spin_unlock_bh(&cam_ctl->lock);
--
--	_write_cam(adapter, id, cache.ctrl, cache.mac, cache.key);
--}
--
- void write_cam_cache(struct adapter *adapter, u8 id, u16 ctrl, u8 *mac, u8 *key)
- {
- 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
-diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-index fd3cf955c9f8..73e8ec09b6e1 100644
---- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-@@ -576,7 +576,6 @@ void read_cam(struct adapter *padapter , u8 entry, u8 *get_key);
- /* modify HW only */
- void _write_cam(struct adapter *padapter, u8 entry, u16 ctrl, u8 *mac, u8 *key);
- void _clear_cam_entry(struct adapter *padapter, u8 entry);
--void write_cam_from_cache(struct adapter *adapter, u8 id);
+ #define CC_USING_PATCHABLE_FUNCTION_ENTRY
++#define RO_DATA_EXCEPTION_TABLE_ALIGN	8
  
- /* modify both HW and cache */
- void write_cam(struct adapter *padapter, u8 id, u16 ctrl, u8 *mac, u8 *key);
+ #include <asm-generic/vmlinux.lds.h>
+ 
+@@ -129,9 +130,6 @@ SECTIONS
+ 
+ 	RO_DATA(8)
+ 
+-	/* RO because of BUILDTIME_EXTABLE_SORT */
+-	EXCEPTION_TABLE(8)
+-
+ 	/* unwind info */
+ 	.PARISC.unwind : {
+ 		__start___unwind = .;
 -- 
-2.23.0
+2.17.1
 
