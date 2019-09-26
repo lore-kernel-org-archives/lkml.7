@@ -2,250 +2,272 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA97C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB28DC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7165207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9461E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="fktm5wD+"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="NbQ+nskE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfIZKyC (ORCPT
+        id S1726983AbfIZKyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:54:02 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:3998 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbfIZKw1 (ORCPT
+        Thu, 26 Sep 2019 06:54:41 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:16202 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfIZKyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:52:27 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8QAqK8u018025;
-        Thu, 26 Sep 2019 06:52:20 -0400
-Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2056.outbound.protection.outlook.com [104.47.49.56])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2v6hkcq42j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 26 Sep 2019 06:52:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f5uUbUH2lplTyKi4fff4mZSP/fInkilfDjx7kdQRDO+6Z+9nzPo/iL/IyhUVFAj4M28sPNfqohH8ISAAG/hbGfs/MwbezyYBZd7g6QEEUQis+yQLS9Xed/5qmbni/eZfk56W3ovFBlaKlsP9wRBgJ/ldFUppzJoXpwVcNJs08gettUacU54qrBXAX41Fq8xlSH+t0gLIgYEc5OEshnu5G8EOUdY/fgF2j9PlZ2uqTBaFXm2mZKCDCVlP/9jmdvjFbZ2aDkgg2gVwOsHFTKKu3b7lHLgplkLmGjNiipa7nPuuuRnKpOeWiWBFGeEdxkSMVHzhlmnd8AM+Sj9YqJiC/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESeHHXBfFrG988glXvaIvhiPmUc6BnNdkc+lsz3piTo=;
- b=UnbQFKsCJHyZ/B91BHq+K2LpR5oCd1k0uiB00hFhajBqG5Zry5npY18NxPhXJkaip72KWeKiKpokc7ynJ2FUspMw8KrLF1AcGPUVR1I4J7xX5K8/Vepjrgy+NDCA+repJ7ElhNDJvkMhUFc43LTOxbIyHIyICl2WU687Xo39afUqbXnsCI65oX93jR+PU/ndd9TJj8QXidmcspn1+HUNq43ek6kb4OJgph3NR9Kdn4OO8r+Z7WiPUuKcqRmOSGpMSeixhALgHdACvteCZCTjauhu6Ip95HhJbVMQ8NAY9oxdk3oi480smhhzuhZlb2tcVhR3L9wSfp5Qwh5gLg6wkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Thu, 26 Sep 2019 06:54:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESeHHXBfFrG988glXvaIvhiPmUc6BnNdkc+lsz3piTo=;
- b=fktm5wD+UKwEVefxVl/w+1UZzNnnRvPZAAJDmtdAh8QFaga8O0Mofv8m0MPL3GNpkJbiu7f5pd1JJCZ4jhNhIW93j4iBqOf3DxDm/okeGN43W9oGo6uvRCtE7Y2DviJ9dT9FsxUc1p8PKeTC0OGTeDgP0WadeQ0yYdUdf7Tx+OQ=
-Received: from BN6PR03CA0079.namprd03.prod.outlook.com (2603:10b6:405:6f::17)
- by BN8PR03MB4708.namprd03.prod.outlook.com (2603:10b6:408:6d::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.20; Thu, 26 Sep
- 2019 10:52:14 +0000
-Received: from SN1NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::203) by BN6PR03CA0079.outlook.office365.com
- (2603:10b6:405:6f::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.17 via Frontend
- Transport; Thu, 26 Sep 2019 10:52:14 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT022.mail.protection.outlook.com (10.152.72.148) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.25
- via Frontend Transport; Thu, 26 Sep 2019 10:52:14 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8QAqD6s014763
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 26 Sep 2019 03:52:13 -0700
-Received: from saturn.ad.analog.com (10.48.65.123) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 26 Sep 2019 06:52:13 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>
-CC:     <jic23@kernel.org>, <broonie@kernel.org>, <f.fainelli@gmail.com>,
-        <linus.walleij@linaro.org>, <orsonzhai@gmail.com>,
-        <baolin.wang@linaro.org>, <zhang.lyra@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 02/19] spi: introduce spi_delay struct as "value + unit" &  spi_delay_exec()
-Date:   Thu, 26 Sep 2019 13:51:30 +0300
-Message-ID: <20190926105147.7839-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190926105147.7839-1-alexandru.ardelean@analog.com>
-References: <20190926105147.7839-1-alexandru.ardelean@analog.com>
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1569495280; x=1601031280;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=RAGa9anMcKR06whqzmzVsJj2bBFMs07llUH7/vc+2Ls=;
+  b=NbQ+nskEzy1wThVa8FVG3THzKg0T4PZcfa93D2G9qzMG50uUzSkMFd2L
+   5Jy9UlI2CYpzHKpTEc37snd+zSRRI2MSEqbvEm0+A3Jz0solEHnM0bWmm
+   35B3sTbaW32TTGIAo3JAn0XoEFh0qfU5029qPCqJvQL4VFgHSth5uPRCA
+   0=;
+X-IronPort-AV: E=Sophos;i="5.64,551,1559520000"; 
+   d="scan'208";a="787545755"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 26 Sep 2019 10:54:38 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 8FB82A2945;
+        Thu, 26 Sep 2019 10:54:36 +0000 (UTC)
+Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 26 Sep 2019 10:54:35 +0000
+Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
+ EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 26 Sep 2019 10:54:33 +0000
+Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
+ EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1367.000;
+ Thu, 26 Sep 2019 10:54:32 +0000
+From:   "Spassov, Stanislav" <stanspas@amazon.de>
+To:     "pasik@iki.fi" <pasik@iki.fi>
+CC:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "chao.gao@intel.com" <chao.gao@intel.com>,
+        "jbeulich@suse.com" <jbeulich@suse.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [Xen-devel] [PATCH] xen: xen-pciback: Reset MSI-X state when
+ exposing a device
+Thread-Topic: [Xen-devel] [PATCH] xen: xen-pciback: Reset MSI-X state when
+ exposing a device
+Thread-Index: AQHVahhAHUCnM9/kUkG3Q7Ogt5hZ16cpYHyAgABbEgCAFBZsgIAAC2KA
+Date:   Thu, 26 Sep 2019 10:54:32 +0000
+Message-ID: <61e676872931e2c69137bf73f46af64ff74f2fd0.camel@amazon.de>
+References: <1543976357-1053-1-git-send-email-chao.gao@intel.com>
+         <2c0ad3bf96551ea6e96e812229507221b76876c6.camel@amazon.de>
+         <20190913152818.GA688@gao-cwp> <20190926101347.GD28704@reaktio.net>
+In-Reply-To: <20190926101347.GD28704@reaktio.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.196]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A3E1ABA359C94C4BB778D38FD1DEEBAF@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39860400002)(376002)(199004)(189003)(2870700001)(246002)(476003)(51416003)(7416002)(14444005)(107886003)(11346002)(126002)(486006)(336012)(54906003)(426003)(110136005)(7636002)(305945005)(8936002)(50226002)(50466002)(7696005)(106002)(8676002)(446003)(4326008)(2616005)(186003)(47776003)(316002)(2906002)(26005)(5660300002)(478600001)(86362001)(70206006)(44832011)(1076003)(6666004)(356004)(48376002)(76176011)(2201001)(70586007)(36756003)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4708;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7a26c2ea-a270-4637-f7f1-08d7426f975f
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BN8PR03MB4708;
-X-MS-TrafficTypeDiagnostic: BN8PR03MB4708:
-X-Microsoft-Antispam-PRVS: <BN8PR03MB4708CFBC2EF6D2F1D077EF76F9860@BN8PR03MB4708.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0172F0EF77
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: Vk8BOIpZ8upk4WghlPYBlqIKReD/m6fkX0WLyTwMRB+G/1HqVM5ORg80Y6W2Er5GJwWkC/9ezV03TupxXGAOS8BbbOk3TzQqPa4WY9lgp5m6U3RvoY7WG6WAU3qFbfaif3meB+fME7EAPiXcaRfr3Zb6AUdgRLwPq9zUbcyC9vDMh6yH3AhJcSpnHk2Lfm2n15KN7b4xPLl8wMn770kSwjg2xbVFL1hi7myl5xgya8BEq9rFMzJaLiYEgl9iRTsK2GOmquy7KqEkr1iDx71akPmlEUMeM1N1EZmNiPCP1v6+12t74XKe+9ml/EneypcQ/9gvGCm1vbNXInAH8sXbAl7L9BA+Q6h8m+V5MkLeNUl8A0n/yJSyTTsaHxkLc3bQx0MbFNpUc7efe02OGlRCawo1bvakTucwX1OSfZIdilo=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 10:52:14.3365
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a26c2ea-a270-4637-f7f1-08d7426f975f
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4708
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-26_05:2019-09-25,2019-09-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 spamscore=0 malwarescore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909260103
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are plenty of delays that have been introduced in SPI core. Most of
-them are in micro-seconds, some need to be in nano-seconds, and some in
-clock-cycles.
-
-For some of these delays (related to transfers & CS timing) it may make
-sense to have a `spi_delay` struct that abstracts these a bit.
-
-The important element of these delays [for unification] seems to be the
-`unit` of the delay.
-It looks like micro-seconds is good enough for most people, but every-once
-in a while, some delays seem to require other units of measurement.
-
-This change adds the `spi_delay` struct & a `spi_delay_exec()` function
-that processes a `spi_delay` object/struct to execute the delay.
-It's a copy of the `cs_change_delay` mechanism, but without the default
-for 10 uS.
-
-The clock-cycle delay unit is a bit special, as it needs to be bound to an
-`spi_transfer` object to execute.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/spi/spi.c       | 51 +++++++++++++++++++++++++++++++++++++++++
- include/linux/spi/spi.h | 18 ++++++++++++---
- 2 files changed, 66 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index c90e02e6d62f..1883de8ffa82 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1106,6 +1106,57 @@ static void _spi_transfer_delay_ns(u32 ns)
- 	}
- }
- 
-+static int _spi_delay_to_ns(struct spi_delay *_delay, struct spi_transfer *xfer)
-+{
-+	u32 delay = _delay->value;
-+	u32 unit = _delay->unit;
-+	u32 hz;
-+
-+	if (!delay)
-+		return 0;
-+
-+	switch (unit) {
-+	case SPI_DELAY_UNIT_USECS:
-+		delay *= 1000;
-+		break;
-+	case SPI_DELAY_UNIT_NSECS: /* nothing to do here */
-+		break;
-+	case SPI_DELAY_UNIT_SCK:
-+		/* clock cycles need to be obtained from spi_transfer */
-+		if (!xfer)
-+			return -EINVAL;
-+		/* if there is no effective speed know, then approximate
-+		 * by underestimating with half the requested hz
-+		 */
-+		hz = xfer->effective_speed_hz ?: xfer->speed_hz / 2;
-+		if (!hz)
-+			return -EINVAL;
-+		delay *= DIV_ROUND_UP(1000000000, hz);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return delay;
-+}
-+
-+int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer)
-+{
-+	int delay;
-+
-+	if (!_delay)
-+		return -EINVAL;
-+
-+	delay = _spi_delay_to_ns(_delay, xfer);
-+	if (delay < 0)
-+		return delay;
-+
-+	_spi_transfer_delay_ns(delay);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(spi_delay_exec);
-+
- static void _spi_transfer_cs_change_delay(struct spi_message *msg,
- 					  struct spi_transfer *xfer)
- {
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index af4f265d0f67..c18cfa7cda35 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -89,6 +89,21 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
- #define SPI_STATISTICS_INCREMENT_FIELD(stats, field)	\
- 	SPI_STATISTICS_ADD_TO_FIELD(stats, field, 1)
- 
-+/**
-+ * struct spi_delay - SPI delay information
-+ * @value: Value for the delay
-+ * @unit: Unit for the delay
-+ */
-+struct spi_delay {
-+#define SPI_DELAY_UNIT_USECS	0
-+#define SPI_DELAY_UNIT_NSECS	1
-+#define SPI_DELAY_UNIT_SCK	2
-+	u16	value;
-+	u8	unit;
-+};
-+
-+extern int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer);
-+
- /**
-  * struct spi_device - Controller side proxy for an SPI slave device
-  * @dev: Driver model representation of the device.
-@@ -834,9 +849,6 @@ struct spi_transfer {
- 	u16		delay_usecs;
- 	u16		cs_change_delay;
- 	u8		cs_change_delay_unit;
--#define SPI_DELAY_UNIT_USECS	0
--#define SPI_DELAY_UNIT_NSECS	1
--#define SPI_DELAY_UNIT_SCK	2
- 	u32		speed_hz;
- 	u16		word_delay;
- 
--- 
-2.20.1
+SGVsbG8gUGFzaSwNCg0KVW5mb3J0dW5hdGVseSwgSSBhbSBub3QgYWJsZSB0byBjb250aW51ZSB0
+aGUgd29yayBvbiB0aGUgWGVuIHBhdGNoZXMgaW4NCnRoZSBmb3Jlc2VlYWJsZSBmdXR1cmUuDQoN
+CkZvciB3aGF0IGl0J3Mgd29ydGg6IHRoZSB4ZW4tcGNpYmFjayB3b3JrYXJvdW5kIGZyb20gdGhp
+cyB0aHJlYWQgc29sdmVzDQpteSBjdXJyZW50IGlzc3VlIGFzIGNvbmZpcm1lZCBieSBpbnRlcm5h
+bCB0ZXN0aW5nLg0KDQotLSBTdGFuaXNsYXYNCg0KKGFwb2xvZ2llcyBmb3IgdWdseSBmb290ZXIg
+aW5qZWN0ZWQgYmVsb3cgYnkgY29tcGFueSBTTVRQIHNlcnZlcg0KZHVlIHRvIGxvY2FsIGxhd3Mp
+DQoNCk9uIFRodSwgMjAxOS0wOS0yNiBhdCAxMzoxMyArMDMwMCwgUGFzaSBLw6Rya2vDpGluZW4g
+d3JvdGU6DQo+IEhlbGxvIFN0YW5pc2xhdiwNCj4gDQo+IE9uIEZyaSwgU2VwIDEzLCAyMDE5IGF0
+IDExOjI4OjIwUE0gKzA4MDAsIENoYW8gR2FvIHdyb3RlOg0KPiA+IE9uIEZyaSwgU2VwIDEzLCAy
+MDE5IGF0IDEwOjAyOjI0QU0gKzAwMDAsIFNwYXNzb3YsIFN0YW5pc2xhdiB3cm90ZToNCj4gPiA+
+IE9uIFRodSwgRGVjIDEzLCAyMDE4IGF0IDA3OjU0LCBDaGFvIEdhbyB3cm90ZToNCj4gPiA+ID4g
+T24gVGh1LCBEZWMgMTMsIDIwMTggYXQgMTI6NTQ6NTJBTSAtMDcwMCwgSmFuIEJldWxpY2ggd3Jv
+dGU6DQo+ID4gPiA+ID4gPiA+ID4gT24gMTMuMTIuMTggYXQgMDQ6NDYsIDxjaGFvLmdhb0BpbnRl
+bC5jb20+IHdyb3RlOg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBPbiBXZWQsIERlYyAxMiwg
+MjAxOCBhdCAwODoyMTozOUFNIC0wNzAwLCBKYW4gQmV1bGljaA0KPiA+ID4gPiA+ID4gd3JvdGU6
+DQo+ID4gPiA+ID4gPiA+ID4gPiA+IE9uIDEyLjEyLjE4IGF0IDE2OjE4LCA8Y2hhby5nYW9AaW50
+ZWwuY29tPiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiBPbiBXZWQs
+IERlYyAxMiwgMjAxOCBhdCAwMTo1MTowMUFNIC0wNzAwLCBKYW4gQmV1bGljaA0KPiA+ID4gPiA+
+ID4gPiA+IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gT24gMTIuMTIuMTggYXQgMDg6
+MDYsIDxjaGFvLmdhb0BpbnRlbC5jb20+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiB3cm90ZToN
+Cj4gPiA+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gPiA+IE9uIFdlZCwgRGVjIDA1
+LCAyMDE4IGF0IDA5OjAxOjMzQU0gLTA1MDAsIEJvcmlzDQo+ID4gPiA+ID4gPiA+ID4gPiA+IE9z
+dHJvdnNreSB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBPbiAxMi81LzE4IDQ6MzIgQU0s
+IFJvZ2VyIFBhdSBNb25uw6kgd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBPbiBXZWQs
+IERlYyAwNSwgMjAxOCBhdCAxMDoxOToxN0FNICswODAwLCBDaGFvDQo+ID4gPiA+ID4gPiA+ID4g
+PiA+ID4gPiBHYW8gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IEkgZmluZCBzb21l
+IHBhc3MtdGhydSBkZXZpY2VzIGRvbid0IHdvcmsgYW55DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
+PiA+IG1vcmUgYWNyb3NzIGd1ZXN0IHJlYm9vdC4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
+QXNzaWduaW5nIGl0IHRvIGFub3RoZXIgZ3Vlc3QgYWxzbyBtZWV0cyB0aGUNCj4gPiA+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gc2FtZSBpc3N1ZS4gQW5kIHRoZSBvbmx5DQo+ID4gPiA+ID4gPiA+ID4g
+PiA+ID4gPiA+IHdheSB0byBtYWtlIGl0IHdvcmsgYWdhaW4gaXMgdW4tYmluZGluZyBhbmQNCj4g
+PiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gYmluZGluZyBpdCB0byBwY2liYWNrLg0KPiA+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiBTb21lb25lIHJlcG9ydGVkIHRoaXMgaXNzdWUgb25lIHllYXIgYWdv
+IFsxXS4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gTW9yZSBkZXRhaWwgYWxzbyBjYW4gYmUN
+Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gZm91bmQgaW4gWzJdLg0KPiA+ID4gPiA+ID4gPiA+
+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gVGhlIHJvb3QtY2F1c2UgaXMg
+WGVuJ3MgaW50ZXJuYWwgTVNJLVggc3RhdGUNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gaXNu
+J3QgcmVzZXQgcHJvcGVybHkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gZHVyaW5nIHJlYm9v
+dCBvciByZS1hc3NpZ25tZW50LiBJbiB0aGUgYWJvdmUNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
+ID4gY2FzZSwgWGVuIHNldCBtYXNrYWxsIGJpdA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiB0
+byBtYXNrIGFsbCBNU0kgaW50ZXJydXB0cyBhZnRlciBpdCBkZXRlY3RlZA0KPiA+ID4gPiA+ID4g
+PiA+ID4gPiA+ID4gPiBhIHBvdGVudGlhbCBzZWN1cml0eQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+
+ID4gPiBpc3N1ZS4gRXZlbiBhZnRlciBkZXZpY2UgcmVzZXQsIFhlbiBkaWRuJ3QNCj4gPiA+ID4g
+PiA+ID4gPiA+ID4gPiA+ID4gcmVzZXQgaXRzIGludGVybmFsIG1hc2thbGwNCj4gPiA+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gYml0LiBBcyBhIHJlc3VsdCwgbWFza2FsbCBiaXQgd291bGQgYmUgc2V0
+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGFnYWluIGluIG5leHQgd3JpdGUgdG8NCj4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiA+ID4gTVNJLVggbWVzc2FnZSBjb250cm9sIHJlZ2lzdGVyLg0KPiA+
+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gR2l2ZW4g
+dGhhdCBQSFlTREVWT1BTX3ByZXBhcmVfbXNpeCgpIGFsc28NCj4gPiA+ID4gPiA+ID4gPiA+ID4g
+PiA+ID4gdHJpZ2dlcnMgWGVuIHJlc2V0dGluZyBNU0ktWA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+
+ID4gPiBpbnRlcm5hbCBzdGF0ZSBvZiBhIGRldmljZSwgd2UgZW1wbG95IGl0IHRvDQo+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiA+IGZpeCB0aGlzIGlzc3VlIHJhdGhlciB0aGFuDQo+ID4gPiA+ID4g
+PiA+ID4gPiA+ID4gPiA+IGludHJvZHVjaW5nIGFub3RoZXIgZGVkaWNhdGVkIHN1Yi1oeXBlcmNh
+bGwuDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
+PiBOb3RlIHRoYXQgUEhZU0RFVk9QU19yZWxlYXNlX21zaXgoKSB3aWxsIGZhaWwNCj4gPiA+ID4g
+PiA+ID4gPiA+ID4gPiA+ID4gaWYgdGhlIG1hcHBpbmcgYmV0d2Vlbg0KPiA+ID4gPiA+ID4gPiA+
+ID4gPiA+ID4gPiB0aGUgZGV2aWNlJ3MgbXNpeCBhbmQgcGlycSBoYXMgYmVlbiBjcmVhdGVkLg0K
+PiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBUaGlzIGxpbWl0YXRpb24gcHJldmVudHMNCj4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiA+ID4gdXMgY2FsbGluZyB0aGlzIGZ1bmN0aW9uIHdoZW4gZGV0YWNo
+aW5nIGENCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gZGV2aWNlIGZyb20gYSBndWVzdCBkdXJp
+bmcNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gZ3Vlc3Qgc2h1dGRvd24uIFRodXMgaXQgaXMg
+Y2FsbGVkIHJpZ2h0DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGJlZm9yZSBjYWxsaW5nDQo+
+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IFBIWVNERVZPUFNfcHJlcGFyZV9tc2l4KCkuDQo+ID4g
+PiA+ID4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IHMvUEhZU0RFVk9Q
+Uy9QSFlTREVWT1AvIChubyBmaW5hbCBTKS4gQW5kIHRoZW4NCj4gPiA+ID4gPiA+ID4gPiA+ID4g
+PiA+IEkgd291bGQgYWxzbyBkcm9wIHRoZQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKCkgYXQg
+dGhlIGVuZCBvZiB0aGUgaHlwZXJjYWxsIG5hbWUgc2luY2UgaXQncw0KPiA+ID4gPiA+ID4gPiA+
+ID4gPiA+ID4gbm90IGEgZnVuY3Rpb24uDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiA+IEknbSBhbHNvIHdvbmRlcmluZyB3aHkgdGhlIHJlbGVhc2UgY2Fu
+J3QgYmUNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGRvbmUgd2hlbiB0aGUgZGV2aWNlIGlzDQo+
+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBkZXRhY2hlZCBmcm9tIHRoZSBndWVzdCAob3IgdGhlIGd1
+ZXN0IGhhcyBiZWVuDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBzaHV0IGRvd24pLiBUaGlzIG1h
+a2VzDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBtZSB3b3JyeSBhYm91dCB0aGUgcmFjaW5lc3Mg
+b2YgdGhlDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBhdHRhY2gvZGV0YWNoIHByb2NlZHVyZTog
+aWYgdGhlcmUncw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gYSBzdGF0ZSB3aGVyZSBwY2liYWNr
+IGFzc3VtZXMgdGhlIGRldmljZSBoYXMNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGJlZW4gZGV0
+YWNoZWQgZnJvbSB0aGUNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGd1ZXN0LCBidXQgdGhlcmUg
+YXJlIHN0aWxsIHBpcnFzIGJvdW5kLCBhbg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gYXR0ZW1w
+dCB0byBhdHRhY2ggdG8NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGFub3RoZXIgZ3Vlc3QgaW4g
+c3VjaCBzdGF0ZSB3aWxsIGZhaWwuDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
+PiA+ID4gPiA+ID4gSSB3b25kZXIgd2hldGhlciB0aGlzIGFkZGl0aW9uYWwgcmVzZXQNCj4gPiA+
+ID4gPiA+ID4gPiA+ID4gPiBmdW5jdGlvbmFsaXR5IGNvdWxkIGJlIGRvbmUgb3V0DQo+ID4gPiA+
+ID4gPiA+ID4gPiA+ID4gb2YgeGVuX3BjaWJrX3hlbmJ1c19yZW1vdmUoKS4gV2UgZmlyc3QgZG8g
+YSAoYmVzdA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+IGVmZm9ydCkgZGV2aWNlIHJlc2V0DQo+ID4g
+PiA+ID4gPiA+ID4gPiA+ID4gYW5kIHRoZW4gZG8gdGhlIGV4dHJhIHRoaW5ncyB0aGF0IGFyZSBu
+b3QNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBwcm9wZXJseSBkb25lIHRoZXJlLg0KPiA+ID4gPiA+
+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiA+ID4gTm8uIEl0IGNhbm5vdCBiZSBkb25lIGlu
+IHhlbl9wY2lia194ZW5idXNfcmVtb3ZlKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gd2l0aG91dCBt
+b2RpZnlpbmcNCj4gPiA+ID4gPiA+ID4gPiA+ID4gdGhlIGhhbmRsZXIgb2YgUEhZU0RFVk9QX3Jl
+bGVhc2VfbXNpeC4gVG8gZG8gYQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiBzdWNjZXNzZnVsIFhlbiBp
+bnRlcm5hbA0KPiA+ID4gPiA+ID4gPiA+ID4gPiBNU0ktWCBzdGF0ZSByZXNldCwgUEhZU0RFVk9Q
+X3tyZWxlYXNlLA0KPiA+ID4gPiA+ID4gPiA+ID4gPiBwcmVwYXJlfV9tc2l4IHNob3VsZCBiZSBm
+aW5pc2hlZA0KPiA+ID4gPiA+ID4gPiA+ID4gPiB3aXRob3V0IGVycm9yLiBCdXQgQVRNLCB4ZW4g
+ZXhwZWN0cyB0aGF0IG5vIG1zaSBpcw0KPiA+ID4gPiA+ID4gPiA+ID4gPiBib3VuZCB0byBwaXJx
+IHdoZW4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gZG9pbmcgUEhZU0RFVk9QX3JlbGVhc2VfbXNpeC4g
+T3RoZXJ3aXNlIGl0IGZhaWxzDQo+ID4gPiA+ID4gPiA+ID4gPiA+IHdpdGggZXJyb3IgY29kZSAt
+RUJVU1kuDQo+ID4gPiA+ID4gPiA+ID4gPiA+IEhvd2V2ZXIsIHRoZSBleHBlY3RhdGlvbiBpc24n
+dCBndWFyYW50ZWVkIGluDQo+ID4gPiA+ID4gPiA+ID4gPiA+IHhlbl9wY2lia194ZW5idXNfcmVt
+b3ZlKCkuDQo+ID4gPiA+ID4gPiA+ID4gPiA+IEluIHNvbWUgY2FzZXMsIGlmIHFlbXUgZmFpbHMg
+dG8gdW5tYXAgTVNJcywgTVNJcw0KPiA+ID4gPiA+ID4gPiA+ID4gPiBhcmUgdW5tYXBwZWQgYnkg
+WGVuDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGF0IGxhc3QgbWludXRlLCB3aGljaCBoYXBwZW5zIGFm
+dGVyIGRldmljZSByZXNldA0KPiA+ID4gPiA+ID4gPiA+ID4gPiBpbiANCj4gPiA+ID4gPiA+ID4g
+PiA+ID4geGVuX3BjaWJrX3hlbmJ1c19yZW1vdmUoKS4NCj4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+ID4gPiA+ID4gQnV0IHRoYXQgbWF5IG5lZWQgdGFraW5nIGNhcmUgb2Y6IEkgZG9uJ3Qg
+dGhpbmsgaXQgaXMNCj4gPiA+ID4gPiA+ID4gPiA+IGEgZ29vZCBpZGVhIHRvIGhhdmUNCj4gPiA+
+ID4gPiA+ID4gPiA+IGFueXRoaW5nIGxlZnQgZnJvbSB0aGUgcHJpb3Igb3duaW5nIGRvbWFpbiB3
+aGVuIHRoZQ0KPiA+ID4gPiA+ID4gPiA+ID4gZGV2aWNlIGdldHMgcmVzZXQuDQo+ID4gPiA+ID4g
+PiA+ID4gPiBJLmUuIGxlZnQgb3ZlciBJUlEgYmluZGluZ3Mgc2hvdWxkIHBlcmhhcHMgYmUNCj4g
+PiA+ID4gPiA+ID4gPiA+IGZvcmNpYmx5IGNsZWFyZWQgYmVmb3JlDQo+ID4gPiA+ID4gPiA+ID4g
+PiBpbnZva2luZyB0aGUgcmVzZXQ7DQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4g
+QWdyZWUuIEhvdyBhYm91dCBwY2liYWNrIHRvIHRyYWNrIHRoZSBlc3RhYmxpc2hlZCBJUlENCj4g
+PiA+ID4gPiA+ID4gPiBiaW5kaW5ncz8gVGhlbg0KPiA+ID4gPiA+ID4gPiA+IHBjaWJhY2sgY2Fu
+IGNsZWFyIGlycSBiaW5kaW5nIGJlZm9yZSBpbnZva2luZyB0aGUNCj4gPiA+ID4gPiA+ID4gPiBy
+ZXNldC4NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IEhvdyB3b3VsZCBwY2liYWNrIGV2
+ZW4ga25vdyBvZiB0aG9zZSBtYXBwaW5ncywgd2hlbiBpdCdzDQo+ID4gPiA+ID4gPiA+IHFlbXUN
+Cj4gPiA+ID4gPiA+ID4gd2hvIGVzdGFibGlzaGVzIChhbmQgbWFuYWdlcykgdGhlbT8NCj4gPiA+
+ID4gPiA+IA0KPiA+ID4gPiA+ID4gSSBtZWFudCB0byBleHBvc2Ugc29tZSBpbnRlcmZhY2VzIGZy
+b20gcGNpYmFjay4gQW5kIHBjaWJhY2sNCj4gPiA+ID4gPiA+IHNlcnZlcw0KPiA+ID4gPiA+ID4g
+YXMgdGhlIHByb3h5IG9mIElSUSAodW4pYmluZGluZyBBUElzLg0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+IElmIGF0IGFsbCBwb3NzaWJsZSB3ZSBzaG91bGQgYXZvaWQgaGF2aW5nIHRvIGNoYW5nZSBt
+b3JlDQo+ID4gPiA+ID4gcGFydGllcyAocWVtdSwNCj4gPiA+ID4gPiBsaWJ4Yywga2VybmVsLCBo
+eXBlcnZpc29yKSB0aGFuIHJlYWxseSBuZWNlc3NhcnkuIFJlbWVtYmVyDQo+ID4gPiA+ID4gdGhh
+dCBzdWNoDQo+ID4gPiA+ID4gYSBidWcgZml4IG1heSB3YW50IGJhY2twb3J0aW5nLCBhbmQgbWFr
+aW5nIHN1cmUgYWZmZWN0ZWQNCj4gPiA+ID4gPiBwZW9wbGUgaGF2ZQ0KPiA+ID4gPiA+IGFsbCBy
+ZWxldmFudCBjb21wb25lbnRzIHVwZGF0ZWQgaXMgaW5jcmVhc2luZ2x5IGRpZmZpY3VsdA0KPiA+
+ID4gPiA+IHdpdGggdGhlaXINCj4gPiA+ID4gPiBudW1iZXIgZ3Jvd2luZy4NCj4gPiA+ID4gPiAN
+Cj4gPiA+ID4gPiA+ID4gPiA+IGluIGZhY3QgSSdkIGV4cGVjdCB0aGlzIHRvIGhhcHBlbiBpbiB0
+aGUgY291cnNlIG9mDQo+ID4gPiA+ID4gPiA+ID4gPiBkb21haW4gZGVzdHJ1Y3Rpb24sIGFuZCBJ
+J2QgZXhwZWN0IHRoZSBkZXZpY2UgcmVzZXQNCj4gPiA+ID4gPiA+ID4gPiA+IHRvIGNvbWUgYWZ0
+ZXIgdGhlDQo+ID4gPiA+ID4gPiA+ID4gPiBkb21haW4gd2FzIGNsZWFuZWQgdXAuIFBlcmhhcHMg
+c2ltcGx5IGFuIG9yZGVyaW5nDQo+ID4gPiA+ID4gPiA+ID4gPiBpc3N1ZSBpbiB0aGUgdG9vbA0K
+PiA+ID4gPiA+ID4gPiA+ID4gc3RhY2s/DQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+
+ID4gSSBkb24ndCB0aGluayByZXZlcnNpbmcgdGhlIHNlcXVlbmNlcyBvZiBkZXZpY2UgcmVzZXQN
+Cj4gPiA+ID4gPiA+ID4gPiBhbmQgZG9tYWluDQo+ID4gPiA+ID4gPiA+ID4gZGVzdHJ1Y3Rpb24g
+d291bGQgYmUgc2ltcGxlLiBGdXJ0aGVybW9yZSwgZHVyaW5nIGRldmljZQ0KPiA+ID4gPiA+ID4g
+PiA+IGhvdC11bnBsdWcsDQo+ID4gPiA+ID4gPiA+ID4gZGV2aWNlIHJlc2V0IGlzIGRvbmUgd2hl
+biB0aGUgb3duZXIgaXMgYWxpdmUuIFNvIGlmIHdlDQo+ID4gPiA+ID4gPiA+ID4gdXNlIGRvbWFp
+bg0KPiA+ID4gPiA+ID4gPiA+IGRlc3RydWN0aW9uIHRvIGVuZm9yY2UgYWxsIGlycSBiaW5kaW5n
+IGNsZWFyZWQsIGluDQo+ID4gPiA+ID4gPiA+ID4gdGhlb3J5LCBpdCB3b24ndCBiZQ0KPiA+ID4g
+PiA+ID4gPiA+IGFwcGxpY2FibGUgdG8gaG90LXVucGx1ZyBjYXNlIChpZiBxZW11J3MgaG90LXVu
+cGx1Zw0KPiA+ID4gPiA+ID4gPiA+IGxvZ2ljIGlzDQo+ID4gPiA+ID4gPiA+ID4gY29tcHJvbWlz
+ZWQpLg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gRXZlbiBpbiB0aGUgaG90LXVucGx1
+ZyBjYXNlIHRoZSB0b29sIHN0YWNrIGNvdWxkIGlzc3VlDQo+ID4gPiA+ID4gPiA+IHVuYmluZA0K
+PiA+ID4gPiA+ID4gPiByZXF1ZXN0cywgYmVoaW5kIHRoZSBiYWNrIG9mIHRoZSBwb3NzaWJseSBj
+b21wcm9taXNlZA0KPiA+ID4gPiA+ID4gPiBxZW11LA0KPiA+ID4gPiA+ID4gPiBvbmNlIG5laXRo
+ZXIgdGhlIGd1ZXN0IG5vciBxZW11IGhhdmUgYWNjZXNzIHRvIHRoZSBkZXZpY2UNCj4gPiA+ID4g
+PiA+ID4gYW55bW9yZS4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gQnV0IGN1cnJlbnRseSwg
+dG9vbCBzdGFjayBkb2Vzbid0IGtub3cgdGhlIHJlbWFpbmluZyBJUlENCj4gPiA+ID4gPiA+IGJp
+bmRpbmdzLg0KPiA+ID4gPiA+ID4gSWYgdG9vbCBzdGFjayBjYW4gbWFpbnRhaW5lIElSUSBiaW5k
+aW5nIGluZm9ybWF0aW9uIG9mIGENCj4gPiA+ID4gPiA+IHBhc3MtdGhydQ0KPiA+ID4gPiA+ID4g
+ZGV2aWNlIChzdG9yZWQgaW4gWGVuc3RvcmU/KSwgd2UgY2FuIGNvbWUgdXAgd2l0aCBhIGNsZWFu
+DQo+ID4gPiA+ID4gPiBzb2x1dGlvbg0KPiA+ID4gPiA+ID4gd2l0aG91dCBtb2RpZnlpbmcgbGlu
+dXgga2VybmVsIGFuZCBYZW4uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYgdGhlcmUncyBubyB3
+YXkgZm9yIHRoZSB0b29sIHN0YWNrIHRvIGVpdGhlciBmaW5kIG91dCB0aGUNCj4gPiA+ID4gPiBi
+aW5kaW5ncw0KPiA+ID4gPiA+IG9yICJibGluZGx5IiBpc3N1ZSB1bmJpbmQgcmVxdWVzdHMgKGFj
+Y2VwdGluZyB0aGVtIHRvIGZhaWwpLA0KPiA+ID4gPiA+IHRoZW4gYQ0KPiA+ID4gPiA+ICJ3aWxk
+Y2FyZCIgdW5iaW5kIG9wZXJhdGlvbiBtYXkgd2FudCBhZGRpbmcuIE9yLCBwZXJoYXBzIGV2ZW4N
+Cj4gPiA+ID4gPiBiZXR0ZXIsIFhFTl9ET01DVExfZGVhc3NpZ25fZGV2aWNlIGNvdWxkIHVuYmlu
+ZCBhbnl0aGluZyBsZWZ0DQo+ID4gPiA+ID4gaW4gcGxhY2UgZm9yIHRoZSBzcGVjaWZpZWQgZGV2
+aWNlLg0KPiA+ID4gPiANCj4gPiA+ID4gR29vZCBpZGVhLiBJIHdpbGwgdGFrZSB0aGlzIGFkdmlj
+ZS4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoYW5rcw0KPiA+ID4gPiBDaGFvDQo+ID4gPiANCj4gPiA+
+IEkgYW0gaGF2aW5nIHRoZSBzYW1lIGlzc3VlLCBhbmQgY2Fubm90IGZpbmQgYSBmaXggaW4gZWl0
+aGVyIHhlbi0NCj4gPiA+IHBjaWJhY2sgb3IgdGhlIFhlbiBjb2RlYmFzZS4NCj4gPiA+IFdhcyBh
+IHNvbHV0aW9uIGV2ZXIgcHVzaGVkIGFzIGEgcmVzdWx0IG9mIHRoaXMgdGhyZWFkPw0KPiA+ID4g
+DQo+ID4gDQo+ID4gSSBzdWJtaXR0ZWQgcGF0Y2hlcyBbMV0gdG8gWGVuIGNvbW11bml0eS4gQnV0
+IEkgZGlkbid0IGdldCBpdA0KPiA+IG1lcmdlZC4NCj4gPiBXZSBtYWRlIGEgY2hhbmdlIGluIGRl
+dmljZSBkcml2ZXIgdG8gZGlzYWJsZSBNU0ktWCBkdXJpbmcgZ3Vlc3QgT1MNCj4gPiBzaHV0ZG93
+biB0byBtaXRpZ2F0ZSB0aGUgaXNzdWUuIEJ1dCB3aGVuIGd1ZXN0IG9yIHFlbXUgd2FzIGNyYXNo
+ZWQsDQo+ID4gd2UNCj4gPiBlbmNvdW50ZXJlZCB0aGlzIGlzc3VlIGFnYWluLiBJIGhhdmUgbm8g
+cGxhbiB0byBnZXQgYmFjayB0byB0aGVzZQ0KPiA+IHBhdGNoZXMuIEJ1dCBpZiB5b3Ugd2FudCB0
+byBmaXggdGhlIGlzc3VlIGNvbXBsZXRlbHkgYWxvbmcgd2hhdCB0aGUNCj4gPiBwYXRjaGVzIGJl
+bG93IGRpZCwgcGxlYXNlIGdvIGFoZWFkLg0KPiA+IA0KPiA+IFsxXTogDQo+ID4gaHR0cHM6Ly9s
+aXN0cy54ZW5wcm9qZWN0Lm9yZy9hcmNoaXZlcy9odG1sL3hlbi1kZXZlbC8yMDE5LTAxL21zZzAx
+MjI3Lmh0bWwNCj4gPiANCj4gPiBUaGFua3MNCj4gPiBDaGFvDQo+ID4gDQo+IA0KPiBTdGFuaXNs
+YXY6IEFyZSB5b3UgYWJsZSB0byBjb250aW51ZSB0aGUgd29yayB3aXRoIHRoZXNlIHBhdGNoZXMs
+IHRvDQo+IGdldCB0aGVtIG1lcmdlZD8gDQo+IA0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0gUGFz
+aQ0KPiANCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5z
+dHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVn
+ZXIsIFJhbGYgSGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1
+cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5
+CgoK
 
