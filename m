@@ -2,138 +2,105 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA84C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A172C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0000020673
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81A3222C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gandi.net header.i=@gandi.net header.b="XavZhSVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbfIZKGE (ORCPT
+        id S1726375AbfIZKJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:06:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35243 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfIZKGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:06:03 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDQet-0004yT-DP; Thu, 26 Sep 2019 12:05:59 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDQes-000329-OD; Thu, 26 Sep 2019 12:05:58 +0200
-Date:   Thu, 26 Sep 2019 12:05:58 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Message-ID: <20190926100558.egils3ds37m3s5wo@pengutronix.de>
-References: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
- <20190926075914.i7tsd3cbpitrqe4q@pengutronix.de>
- <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Thu, 26 Sep 2019 06:09:06 -0400
+Received: from mail12.gandi.net ([217.70.182.73]:54803 "EHLO gandi.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbfIZKJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:09:05 -0400
+X-Greylist: delayed 612 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Sep 2019 06:09:04 EDT
+Received: from khany.gandi.net (unknown [IPv6:2001:4b98:beef:a:1c24:7b6c:715d:6eec])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by gandi.net (Postfix) with ESMTPSA id DC3821603CC;
+        Thu, 26 Sep 2019 09:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gandi.net; s=20190808;
+        t=1569491931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dTGHc4DsskK8sSXcRmGy4kEft1Z/kZC4Ol5LmTKdjlM=;
+        b=XavZhSVyA2aNFWlLLsW2aWtp3Qi+ZvEIB3edDUw3bsdqdZWigjRgICinTIgwqVTCKUBlVF
+        78MI7N6BAiIemMxMr77iHacnqczvPl3aQq7A9EWrAroVHAYWB/qPPCF+1fgQoBlDOSqIVk
+        3dESRW7FZZO9EhEequSHY/MUX5gyPztI+ySXGxoanMB1dOqLHtXWCk62QxmUNdcugXhvVq
+        BrJh/TgzUDazmcAM3pT0KtdNz3oskWtb1MV4yMvnFhXCn3Yp8zYpADT01HRsdmE1KAq7eH
+        CziudHweoD+vCZRRyEM03drsF1I5JhIQ5m8yqd1/Do4Og9QyoFwznX6ttKbhBw==
+Received: by khany.gandi.net (Postfix, from userid 1000)
+        id 59355DC0480; Thu, 26 Sep 2019 09:58:25 +0000 (GMT)
+Date:   Thu, 26 Sep 2019 09:58:25 +0000
+From:   Arthur Gautier <baloo@gandi.net>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86: uaccess: fix regression in unsafe_get_user
+Message-ID: <20190926095825.zkdpya55yjusvv4g@khany>
+References: <20190215235901.23541-1-baloo@gandi.net>
+ <CAG48ez2tYizTKncevLF=AMQ2nm3D=SqGHH5bM5f-U0fhQ1nL9Q@mail.gmail.com>
+ <alpine.DEB.2.21.1902161358160.1683@nanos.tec.linutronix.de>
+ <4F2693EA-1553-4F09-9475-781305540DBC@amacapital.net>
+ <20190216234702.GP2217@ZenIV.linux.org.uk>
+ <20190217034121.bs3q3sgevexmdt3d@khany>
+ <20190217042201.GU2217@ZenIV.linux.org.uk>
+ <alpine.DEB.2.21.1902181347500.1549@nanos.tec.linutronix.de>
+ <CALCETrXyard2OXmOafiLks3YuyO=ObbjDXB6NJo_08rL4M6azw@mail.gmail.com>
+ <20190218215150.xklqbfckwmbtdm3t@khany>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:11:00 up 131 days, 14:29, 85 users,  load average: 0.24, 0.16,
- 0.14
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190218215150.xklqbfckwmbtdm3t@khany>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
-
-On 19-09-26 08:03, Anson Huang wrote:
-> Hi, Marco
+On Mon, Feb 18, 2019 at 09:51:50PM +0000, Arthur Gautier wrote:
+> On Mon, Feb 18, 2019 at 11:15:44AM -0800, Andy Lutomirski wrote:
+> > This seems like it's just papering over the underlying problem: with
+> > Jann's new checks in place, strncpy_from_user() is simply buggy.  Does
+> > the patch below look decent?  It's only compile-tested, but it's
+> > conceptually straightforward.  I was hoping I could get rid of the
+> > check-maximum-address stuff, but it's needed for architectures where
+> > the user range is adjacent to the kernel range (i.e. not x86_64).
 > 
-> > On 19-09-25 18:07, Anson Huang wrote:
-> > > The SCU firmware does NOT always have return value stored in message
-> > > header's function element even the API has response data, those
-> > > special APIs are defined as void function in SCU firmware, so they
-> > > should be treated as return success always.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > 	- This patch is based on the patch of
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
-> > >
-> > hwork.kernel.org%2Fpatch%2F11129553%2F&amp;data=02%7C01%7Canson.
-> > huang%
-> > >
-> > 40nxp.com%7C1f4108cc25eb4618f43c08d742576fa3%7C686ea1d3bc2b4c6fa
-> > 92cd99
-> > >
-> > c5c301635%7C0%7C0%7C637050815608963707&amp;sdata=BZBg4cOR2rP%2
-> > BRBNn15i
-> > > Qq3%2FXBYwhuCLkgYzFRbfEgVU%3D&amp;reserved=0
-> > > ---
-> > >  drivers/firmware/imx/imx-scu.c | 34
-> > > ++++++++++++++++++++++++++++++++--
-> > >  1 file changed, 32 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/imx/imx-scu.c
-> > > b/drivers/firmware/imx/imx-scu.c index 869be7a..ced5b12 100644
-> > > --- a/drivers/firmware/imx/imx-scu.c
-> > > +++ b/drivers/firmware/imx/imx-scu.c
-> > > @@ -78,6 +78,11 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] =
-> > {
-> > >  	-EIO,	 /* IMX_SC_ERR_FAIL */
-> > >  };
-> > >
-> > > +static const struct imx_sc_rpc_msg whitelist[] = {
-> > > +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
-> > IMX_SC_MISC_FUNC_UNIQUE_ID },
-> > > +	{ .svc = IMX_SC_RPC_SVC_MISC, .func =
-> > > +IMX_SC_MISC_FUNC_GET_BUTTON_STATUS }, };
-> > 
-> > Is this going to be extended in the near future? I see some upcoming
-> > problems here if someone uses a different scu-fw<->kernel combination as
-> > nxp would suggest.
+> I'm unable to trigger the BUG I had with my initramfs with this patch
+> applied. Thanks!
 > 
-> Could be, but I checked the current APIs, ONLY these 2 will be used in Linux kernel, so
-> I ONLY add these 2 APIs for now.
 
-Okay.
+Hello All,
 
-> However, after rethink, maybe we should add another imx_sc_rpc API for those special
-> APIs? To avoid checking it for all the APIs called which may impact some performance.
-> Still under discussion, if you have better idea, please advise, thanks!
+Just a followup on this issue, I'm still able to reproduce the original
+issue with:
+    truncate -s 8388313 a
+    SECONDFILENAME=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    truncate -s 10 $SECONDFILENAME
+    echo "a\n$SECONDFILENAME" | cpio -o --format=newc | lz4 -l > initrd.img.lz4
 
-Adding a special api shouldn't be the right fix. Imagine if someone (not
-a nxp-developer) wants to add a new driver. How could he be expected to
-know which api he should use. The better abbroach would be to fix the
-scu-fw instead of adding quirks..
+I think Andy submitted a patch Feb 25 2019, but I was not copied on it
+(I believe it was sent to x86@kernel.org) and I don't know which fate it
+had.
 
-Regards,
-  Marco
+Any chance we could have a look again?
 
+Thanks a lot!
 
-> 
-> Anson
+-- 
+\o/ Arthur
+ G  Gandi.net
