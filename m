@@ -2,123 +2,77 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA829C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE7F22459
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569529036;
-	bh=mfNVnBwlsatz6LffX8lCPkx1EChz+zrZfI36b2TAWOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c0ru41GU52GtM+C9loeytTbws5iWHSE+7lNC1jSK9cDsE3LGCmxBuIZCg49t6B5y2
-	 oZLI7oOaX43SspvFZji+MBxxOOpn57V93QZs0oqrtIQvvJk+hL7lAVZjmJLhVnxYIg
-	 UTsgWpCZldEeKwjgTvgGvpbXraCUZwj+KN7KFf64=
+	by mail.kernel.org (Postfix) with ESMTP id 0066F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfIZURP (ORCPT
+        id S1728786AbfIZURv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:17:15 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33224 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfIZURP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:17:15 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a22so253093ljd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7RbCDRjRAvWcIi7QkdCjwk6XzzWsIsN9TecD9WwksU0=;
-        b=aB5pA3SyZ5HaFLWIhKIPBd/X2uy1rvQJqJjWNTqTRvRCwfYAHVwoGVtpWvbJi2/gvM
-         4lACq7gPi2ifoD1gBfDLo2nCP7EvRcJXd25QAJYSNV2Hv0abkMJ3RTdFJkKbYrWUIHZ0
-         HfDtd6wvPm9AKCezZy9cGdX9Q1c6mc+eBmIyA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7RbCDRjRAvWcIi7QkdCjwk6XzzWsIsN9TecD9WwksU0=;
-        b=cuyXWIzDJ6Cj8s3Fm4V/nQtqoFVEbaNKEiiWyDZdM7ILSSb/IPrGUWnj6rvI2U2ilS
-         80S7G7oX0VO/erYK4Iut+YmdIRovPySfAhItBjT0vmcILVD+aNTpGAUj3/i7kp49CEyr
-         jx37LXQE0DN2FPryRQkq2EStgm8huBY3xFpk8SHRhaE50hv9tsWe5gP2sB/GDaAYuE8B
-         6YgZpxhDfTvzEUk5RmBq4tQ4xbF9nLZTB8v/zgBoimMWZzXBE6EugOTKOaHoYh8LQp0z
-         WNqcGe9WD1PhhKQI5WpdWckIYsskliNYbExHGXiXt+7sRYQICAEyARArRWpQzdWcLcJr
-         b/ig==
-X-Gm-Message-State: APjAAAWKWdUTJ05truzosSG6tSw+bU+wIElh6IaJNLt4qV7VOejM0XqK
-        yj4gQ4+/b82bo6EVJQDY/6p2DWt8R/c=
-X-Google-Smtp-Source: APXvYqzRw7t2nLWzI5pF9hKf1mG8CmSFY/oyR6FY9/pbWMrL1oYrGM6siw3WdeRT8E3LRs07Gh9X2A==
-X-Received: by 2002:a2e:a313:: with SMTP id l19mr283726lje.205.1569529033207;
-        Thu, 26 Sep 2019 13:17:13 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id x30sm39495ljd.39.2019.09.26.13.17.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 13:17:12 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id b20so227599ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:17:12 -0700 (PDT)
-X-Received: by 2002:a2e:8789:: with SMTP id n9mr344627lji.52.1569529031736;
- Thu, 26 Sep 2019 13:17:11 -0700 (PDT)
+        Thu, 26 Sep 2019 16:17:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:59030 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfIZURu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 16:17:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 405EF142F;
+        Thu, 26 Sep 2019 13:17:50 -0700 (PDT)
+Received: from [172.23.27.158] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E485D3F67D;
+        Thu, 26 Sep 2019 13:17:45 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] arm64: vdso32: Detect binutils support for dmb
+ ishld
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190926133805.52348-1-vincenzo.frascino@arm.com>
+ <20190926133805.52348-3-vincenzo.frascino@arm.com>
+ <20190926142642.GF9689@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <88d1b318-5c20-b3f4-6c24-60917c673f91@arm.com>
+Date:   Thu, 26 Sep 2019 21:19:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org> <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
- <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com> <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
-In-Reply-To: <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Sep 2019 13:16:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
-Message-ID: <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
-Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190926142642.GF9689@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 1:09 PM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> That said, if people are OK with me modifying the assert in
-> pud_trans_huge_lock() and make __walk_page_range non-static, it should
-> probably be possible to make it work, yes.
+On 9/26/19 3:26 PM, Catalin Marinas wrote:
+> On Thu, Sep 26, 2019 at 02:38:03PM +0100, Vincenzo Frascino wrote:
+>> diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
+>> index d6465823b281..75cf8c796d0e 100644
+>> --- a/arch/arm64/Kbuild
+>> +++ b/arch/arm64/Kbuild
+>> @@ -4,3 +4,9 @@ obj-$(CONFIG_NET)	+= net/
+>>  obj-$(CONFIG_KVM)	+= kvm/
+>>  obj-$(CONFIG_XEN)	+= xen/
+>>  obj-$(CONFIG_CRYPTO)	+= crypto/
+>> +
+>> +# as-instr-compat
+>> +# Usage: cflags-y += $(call as-instr-compat,instr,option1,option2)
+>> +
+>> +as-instr-compat = $(call try-run,\
+>> +	printf "%b\n" "$(1)" | $(COMPATCC) $(KBUILD_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
+> 
+> This doesn't seem to be used anywhere. Was it meant to be replaced by
+> cc32-as-instr?
+> 
 
-I don't think you need to modify that assert at all.
+Forgot to squash a stash here. Will fix in v3. This is not used anymore was just
+an experiment.
 
-That thing only exists when there's a "pud_entry" op in the walker,
-and then you absolutely need to have that mmap_lock.
-
-As far as I can tell, you fundamentally only ever work on a pte level
-in your address space walker already and actually have a WARN_ON() on
-the pud_huge thing, so no pud entry can possibly apply.
-
-So no, the assert in pud_trans_huge_lock() does not seem to be a
-reason not to just use the existing page table walkers.
-
-And once you get rid of the walking, what is left? Just the "iterate
-over the inode mappings" part. Which could just be done in
-mm/pagewalk.c, and then you don't even need to remove the static.
-
-So making it be just another walking in pagewalk.c would seem to be
-the simplest model.
-
-Call it "walk_page_mapping()". And talk extensively about how the
-locking differs a lot from the usual "walk_page_vma()" things.
-
-The then actual "apply" functions (what a horrid name) could be in the
-users. They shouldn't be mixed in with the walking functions anyway.
-They are callbacks, not walkers.
-
-             Linus
+-- 
+Regards,
+Vincenzo
