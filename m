@@ -3,88 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048ACC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020EFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FB7222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9E1222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="byj3666j"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="pGcjRe0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfIZNz1 (ORCPT
+        id S1727018AbfIZOCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:55:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40305 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfIZNz0 (ORCPT
+        Thu, 26 Sep 2019 10:02:13 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37756 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfIZOCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:55:26 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v38so2103689edm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 06:55:25 -0700 (PDT)
+        Thu, 26 Sep 2019 10:02:12 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r4so2150023edy.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 07:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=aOr0iyfBLl80umcRhExqHZHW4urAI30wkAKXPx7sd8s=;
-        b=byj3666jUomIxQfVgejvo9qb9jGyy7ag0vbTbVW71SegiKooHWd3O/zR9mU4jnpKRq
-         bfOavtCnWSSNGyUXeiUwmCDfS6pewUtqXrgAb29RPcOQV44Q+7nTWMvi2Qai5qKFX8gZ
-         0tVLgaeBW3mCWMCnH/z/g0dZEalHgm9Gf+TA5USpCcAJqP9BGnH9Wg2kEkzlJFyhyXHN
-         eR22wGokBq86OaykauTi3oZw/WmqYf7zfUyhxk3Yq8a3rw9cYcQnotYj3MWUlv9EYVB1
-         MhFXn3/H+1CY66b1QwIXAt02H42lnbbT7g4p2yI8zYAXD4+Vzad797Aq01FUSoUyjeLi
-         qbZA==
+        bh=HqMZowksWDEmK1Fr1I/qjh+3Z9WA+7ouwIOIARruFCo=;
+        b=pGcjRe0CqEgRPI2GwJCc8ude/A8nS4wWSYKUibc51HceIeslgsZiabkoPgLplPtHJm
+         GaMZ/xDBVWd7tfnuNdqCz27Da9mzZAcGnRsNVPEQEQNorBp2qk3W1TduAH+8Vdlw7iVs
+         oOdf+pH+iYoUgVS1bueqJMeUZx2Q/3PZ0XSGx0I87FlVutpkSKbtd3XdGiCevUeP5Fsa
+         icDiWoBt5TaJqGrWIHqKCvrldW73H93QwPr+BKFyN3tXXrQvxXxZ9aLPw3WHaHs47xUG
+         lTNC3JCtpjjO4JCQKpua6uhx4ckq+sSEdM7iFj7hoOcR3ArceZx5Bp1wBlMHDiKvXeIK
+         BU+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aOr0iyfBLl80umcRhExqHZHW4urAI30wkAKXPx7sd8s=;
-        b=n2rLTodsFLRELLgAuuc8iTQgzX1rWLAEY3lQMZ0aez2Ddr8EA8COdeOc5GTa5zzi4A
-         bNQQreKSAbKYh2vvPDcdyOQBlWw8PT0aSQFjpUF40UhNlUj4mJ9u2KGfs4/pB8c0Oy6E
-         b7npePFYvqLeuk+3VegaLhOWTIxgnzgks2QQYfDxElv/HDEywPrFTW7BNNHhQiT6v3RC
-         gWvRDRd1w1qRSdeKa6pIat4vpyWN6Rz08F8wPqNV/8Q0o6rA5f8GpsU4Yqd8x5lbQctR
-         ke2qnxISdmpqvzDM3pWzH4OihEW92hirXb+Mkt9xtPwG1wq04WLKs8RjqC7AbiT1IlV/
-         BT7w==
-X-Gm-Message-State: APjAAAVSPylm1bjpvNr6aaHO20MgOp84ezJXoJNcz3nmPpLupzhTgOlb
-        eE3+574xFKrkOdFaGgB2eCpWQg==
-X-Google-Smtp-Source: APXvYqwRM3uOue8sdkJXKA0j0BlH3YC2gCanRwb3iFVBEmOi2tgQReY6Xpln4M8dnVP9lPsAWlOk+A==
-X-Received: by 2002:a50:eb93:: with SMTP id y19mr3762407edr.94.1569506125053;
-        Thu, 26 Sep 2019 06:55:25 -0700 (PDT)
+        bh=HqMZowksWDEmK1Fr1I/qjh+3Z9WA+7ouwIOIARruFCo=;
+        b=K75YKKDju/0tpTIBN0cSbjgXyTK9LN/D7sMKjxiXJg29liWrOQs1lxU8O7b9aIduWK
+         kYBOw7oBNzMQQOaTgjok++koIlT3NWzPJ+/endzt0WgrdpHlWG0x8uBjmVCdUCwuHJxQ
+         c6UwlVjNwGJVbEib1Iem7DmIFtuwL2rm2XpJV6ZMpTUq9KxT43HPvraIcZ/mXwqQ8gnl
+         fCCewsxJ7q1o3h0YItSOXgCxN72vQEJPe30TCIWj5dB5ITA/jU+06LLpmTvzkghfpiEf
+         /LqUJRayikddwhzhs8gLQrq6vublVe93QkAPwMEn2lU3dp3l8DPmNe8UlQkI+pXoD/ZJ
+         A05Q==
+X-Gm-Message-State: APjAAAUa4gWvynF/ZReNonrTSaIfCR7lSGZ6XyywIGNO7EeUXCHP5H0F
+        BvpgM6sDfZK7w0XMr7l8cynE54qD/R4gBA==
+X-Google-Smtp-Source: APXvYqxn1DAthLI1mxQooX7Y1Hqazoc6Inpuq0kb1jILQIzkrHHBgKYpH3qDtqldGu+gk9Qi+FqGIQ==
+X-Received: by 2002:a17:906:1e57:: with SMTP id i23mr3272680ejj.204.1569506529181;
+        Thu, 26 Sep 2019 07:02:09 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id m18sm250017ejq.72.2019.09.26.06.55.24
+        by smtp.gmail.com with ESMTPSA id j10sm499205ede.59.2019.09.26.07.02.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 06:55:24 -0700 (PDT)
+        Thu, 26 Sep 2019 07:02:08 -0700 (PDT)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 68168101CFB; Thu, 26 Sep 2019 16:55:27 +0300 (+03)
-Date:   Thu, 26 Sep 2019 16:55:27 +0300
+        id 71CC1101CFB; Thu, 26 Sep 2019 17:02:11 +0300 (+03)
+Date:   Thu, 26 Sep 2019 17:02:11 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] mm: Use vm_fault error code directly
-Message-ID: <20190926135527.htzehar7j5uv6nsu@box>
+Subject: Re: [PATCH 03/15] mm: Add file_offset_of_ helpers
+Message-ID: <20190926140211.rm4b6yn2i5rlyvop@box>
 References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-2-willy@infradead.org>
+ <20190925005214.27240-4-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925005214.27240-2-willy@infradead.org>
+In-Reply-To: <20190925005214.27240-4-willy@infradead.org>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:00PM -0700, Matthew Wilcox wrote:
+On Tue, Sep 24, 2019 at 05:52:02PM -0700, Matthew Wilcox wrote:
 > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Use VM_FAULT_OOM instead of indirecting through vmf_error(-ENOMEM).
+> The page_offset function is badly named for people reading the functions
+> which call it.  The natural meaning of a function with this name would
+> be 'offset within a page', not 'page offset in bytes within a file'.
+> Dave Chinner suggests file_offset_of_page() as a replacement function
+> name and I'm also adding file_offset_of_next_page() as a helper for the
+> large page work.  Also add kernel-doc for these functions so they show
+> up in the kernel API book.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> page_offset() is retained as a compatibility define for now.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+This should be trivial for coccinelle, right?
+
+> ---
+>  drivers/net/ethernet/ibm/ibmveth.c |  2 --
+>  include/linux/pagemap.h            | 25 ++++++++++++++++++++++---
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+> index c5be4ebd8437..bf98aeaf9a45 100644
+> --- a/drivers/net/ethernet/ibm/ibmveth.c
+> +++ b/drivers/net/ethernet/ibm/ibmveth.c
+> @@ -978,8 +978,6 @@ static int ibmveth_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> -#define page_offset(v) ((unsigned long)(v) & ((1 << 12) - 1))
+> -
+>  static int ibmveth_send(struct ibmveth_adapter *adapter,
+>  			union ibmveth_buf_desc *descs, unsigned long mss)
+>  {
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 750770a2c685..103205494ea0 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -428,14 +428,33 @@ static inline pgoff_t page_to_pgoff(struct page *page)
+>  	return page_to_index(page);
+>  }
+>  
+> -/*
+> - * Return byte-offset into filesystem object for page.
+> +/**
+> + * file_offset_of_page - File offset of this page.
+> + * @page: Page cache page.
+> + *
+> + * Context: Any context.
+> + * Return: The offset of the first byte of this page.
+>   */
+> -static inline loff_t page_offset(struct page *page)
+> +static inline loff_t file_offset_of_page(struct page *page)
+>  {
+>  	return ((loff_t)page->index) << PAGE_SHIFT;
+>  }
+>  
+> +/* Legacy; please convert callers */
+> +#define page_offset(page)	file_offset_of_page(page)
+> +
+> +/**
+> + * file_offset_of_next_page - File offset of the next page.
+> + * @page: Page cache page.
+> + *
+> + * Context: Any context.
+> + * Return: The offset of the first byte after this page.
+> + */
+> +static inline loff_t file_offset_of_next_page(struct page *page)
+> +{
+> +	return ((loff_t)page->index + compound_nr(page)) << PAGE_SHIFT;
+
+Wouldn't it be more readable as
+
+	return file_offset_of_page(page) + page_size(page);
+
+?
+
+> +}
+> +
+>  static inline loff_t page_file_offset(struct page *page)
+>  {
+>  	return ((loff_t)page_index(page)) << PAGE_SHIFT;
+> -- 
+> 2.23.0
+> 
+> 
 
 -- 
  Kirill A. Shutemov
