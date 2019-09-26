@@ -2,268 +2,124 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9E9C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C2CC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D2B2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74755222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 06:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="p8d+RChP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aL7r3QzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392637AbfIZGDn (ORCPT
+        id S2392697AbfIZGEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 02:03:43 -0400
-Received: from mail-eopbgr710040.outbound.protection.outlook.com ([40.107.71.40]:14149
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387550AbfIZGDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 02:03:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EIr/w8NNsN09WGpgTt+5SSFYBGpEUVvBDXXU4GKVeWspCd3wEoNM1pWZS0KzJ0vpLSrp8NrEAUv99zY/JuVFUpL6NK3zPzWjArHyq0E6JQdqSWcGCx79oaaCkwiknZ+mOnR4STCVeecPtMi97xdo8mrnvRhOt7u2HgzXfDZfx7kiQN95o2R8xeWEqL8jh+CnGUgXWKTJSbBpQVXNRrdqyNPPTHVaoUkB7jjlhNoQd0NvGid9TQkXFXNm2tfBatpoLn9RH8S/dBq0xMghIqsKT0lo619V10tqv1rWOjPasdLtG/hNV+JMrZ/IHiiwRw0ZgYCmvLfddqWp+CcEFBrH6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pwXrvOmDVmVyq64hMbhAF0PuJaQpuzxzcUF+0Dlr9E8=;
- b=dJ2iUhogewgqIFmzA8PUHGKW8jpT8m7Hr8fNq44Al/G6bo6527MR+7lo0x1YT+On05xI4t8kNRV2yozenL7PMuVF0hjHfHI4FQxA/Pe5ZRiqdPhu1l4LMnYQPqYO0zghZkNVLjas2y80w2eYfH9Zx2NEbIu6pfFTZDoFg9rRACOj2sr3qNb895HZ5yRdd13Zz+VvuzGLdwlYcwpXcjeDxMG1Yl1yp9jD9jjFaqmhK5mXG/YmBU2Qyhch/rrZCCyMNi+kJVFPKTNx8jKuNchgqYGrMmIjvD+Q0+8ZG+wtaQHaF2lrU7bPyjCxM4+9EokLqKr7P31Skc4Vb3WMJx5d0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.linux-foundation.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pwXrvOmDVmVyq64hMbhAF0PuJaQpuzxzcUF+0Dlr9E8=;
- b=p8d+RChPlOd9HtXOWI9cdKZbEVPZ0TsBLndpa49sci97T3nZUl78GZcSboY1Ye0OkglX3vsq3yhLam5zjTgEt4QAsfynklGdYu37JQBQXgHszmmccIMsmrMm1yxwdu1YkSE0FIc/M43BBUwiyhSwM3977K+ePcmvSnarB96+bVM=
-Received: from BYAPR02CA0063.namprd02.prod.outlook.com (2603:10b6:a03:54::40)
- by BYAPR02MB5253.namprd02.prod.outlook.com (2603:10b6:a03:61::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.26; Thu, 26 Sep
- 2019 06:03:19 +0000
-Received: from CY1NAM02FT061.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::201) by BYAPR02CA0063.outlook.office365.com
- (2603:10b6:a03:54::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.15 via Frontend
- Transport; Thu, 26 Sep 2019 06:03:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.linux-foundation.org; dkim=none (message not
- signed) header.d=none;lists.linux-foundation.org; dmarc=bestguesspass
- action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT061.mail.protection.outlook.com (10.152.75.30) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.25
- via Frontend Transport; Thu, 26 Sep 2019 06:03:19 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <dylan.yip@xilinx.com>)
-        id 1iDMs2-0006pm-Kl; Wed, 25 Sep 2019 23:03:18 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <dylan.yip@xilinx.com>)
-        id 1iDMrx-0005Jp-IA; Wed, 25 Sep 2019 23:03:13 -0700
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x8Q6393F025367;
-        Wed, 25 Sep 2019 23:03:10 -0700
-Received: from [172.19.2.242] (helo=xsjmadhurki50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <dylan.yip@xilinx.com>)
-        id 1iDMrt-0005JK-TZ; Wed, 25 Sep 2019 23:03:09 -0700
-From:   Dylan Yip <dylan.yip@xilinx.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, satishna@xilinx.com
-Cc:     Dylan Yip <dylan.yip@xilinx.com>
-Subject: [LINUX PATCH] dma-mapping: Control memset operation using gfp flags
-Date:   Wed, 25 Sep 2019 23:03:08 -0700
-Message-Id: <1569477788-28290-1-git-send-email-dylan.yip@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(199004)(189003)(70586007)(70206006)(107886003)(336012)(426003)(14444005)(36756003)(186003)(7696005)(26005)(478600001)(356004)(4326008)(51416003)(9786002)(106002)(47776003)(50226002)(81156014)(8676002)(6636002)(81166006)(16586007)(316002)(50466002)(5660300002)(486006)(44832011)(48376002)(2616005)(476003)(36386004)(305945005)(126002)(8936002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5253;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Thu, 26 Sep 2019 02:04:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54393 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387550AbfIZGEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 02:04:12 -0400
+Received: from [IPv6:2601:646:8600:3281:4da0:b184:256:e0c2] ([IPv6:2601:646:8600:3281:4da0:b184:256:e0c2])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x8Q63n1Z3585601
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Wed, 25 Sep 2019 23:03:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x8Q63n1Z3585601
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019091901; t=1569477831;
+        bh=WmyJwmANGw5Ag0RkHdGwa7GGgV/A2jhJ22eHat+o3wA=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=aL7r3QzPml5eV/hTWvLbqKrRUGLElsBDuMP03qv9IG2kmS3s2BnSanr7SwUa03L3A
+         PKBfLu9GQVu9pAoZtLp7w4Nvyqoe2yd3RVgOP5nj9gmPfUIstUDA1uZovz5of/OXhS
+         ROEwIjJB4iY5rO/fNgABpwN7Leg1h2ecRFQub7D39HjQpzu5S5oeJtuucokGq4HHOJ
+         Ee+rVvPbtST1sl4KCZOpIDqk8+WQzVLt62Qcatuil3lc4AnlwHk05A7bOc4PzLjP3P
+         afLGihU8PlcHdT01JN4rC6ODh+BnVc2uiKaRDlyd/cUH4+ki2CnXxM6S8Ik4q6nsHl
+         giumcmASmy+tg==
+Date:   Wed, 25 Sep 2019 23:03:41 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190926060139.GA100481@gmail.com>
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com> <20190926060139.GA100481@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 62e1ad14-0e18-4c28-5f8e-08d742473ad9
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BYAPR02MB5253;
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5253:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5253367D158C926526222DD0B0860@BYAPR02MB5253.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0172F0EF77
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: aBZE7xdA9CLBU7xfXE2Gk5sJv25xjVAWscQzRhOM59+5yTIQN9/dDl34IEOuiAel8vdrUe/w7n+RQd+Id7l8BIfjI9wTeULbsYubTzxYthagmAvwQsAqxJwD8UMgaw7vLN5+qaUT7+beWeu1WwH8Y3U7dZK9V3QGuJMMue/anfaoOF92JAQq9+O9138E4/r0xfa3MfNUh9Qi0RWqh15UFK44id+P3khKWaUNBi7PhqggeooN6Igem2Ch1TpQGu2U7zaWoK/LjYE+kNSh0Si1LUf7qc33WTwcu3GQV0leB3S1iDL8aVFpZtuRZnnYRi1srhxP4NdIdzUJCd5uALXv3b7mZrN8wvGKz6ZCgszNPjzbodynDjzCDDAWA0DdfCqhl/Mp9iabSgRvSU9P1X+o9TlQewzZSUqXezP3GkSaopM=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2019 06:03:19.1267
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62e1ad14-0e18-4c28-5f8e-08d742473ad9
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5253
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of "reloc"
+To:     Ingo Molnar <mingo@kernel.org>, Cao jin <caoj.fnst@cn.fujitsu.com>
+CC:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, corbet@lwn.net
+From:   hpa@zytor.com
+Message-ID: <2964C8CC-D6BD-4601-AA3D-5BE7AE8FB769@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of 4k video buffer, the allocation from a reserved memory is
-taking a long time, ~500ms. This is root caused to the memset()
-operations on the allocated memory which is consuming more cpu cycles.
-Due to this delay, we see that initial frames are being dropped.
+On September 25, 2019 11:01:39 PM PDT, Ingo Molnar <mingo@kernel=2Eorg> wro=
+te:
+>* Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom> wrote:
+>
+>> The fields marked with (reloc) actually are not dedicated for
+>writing,
+>> but communicating info for relocatable kernel with boot loaders=2E For
+>> example:
+>>=20
+>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>>     Field name:     pref_address
+>>     Type:           read (reloc)
+>>     Offset/size:    0x258/8
+>>     Protocol:       2=2E10+
+>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>>=20
+>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>     Field name:     code32_start
+>>     Type:           modify (optional, reloc)
+>>     Offset/size:    0x214/4
+>>     Protocol:       2=2E00+
+>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>> Signed-off-by: Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom>
+>> ---
+>> Unless I have incorrect non-native understanding for "fill in", I
+>think
+>> this is inaccurate=2E
+>>=20
+>>  Documentation/x86/boot=2Erst | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/Documentation/x86/boot=2Erst b/Documentation/x86/boot=2Ers=
+t
+>> index 08a2f100c0e6=2E=2Ea611bf04492d 100644
+>> --- a/Documentation/x86/boot=2Erst
+>> +++ b/Documentation/x86/boot=2Erst
+>> @@ -243,7 +243,7 @@ bootloader ("modify")=2E
+>> =20
+>>  All general purpose boot loaders should write the fields marked
+>>  (obligatory)=2E  Boot loaders who want to load the kernel at a
+>> -nonstandard address should fill in the fields marked (reloc); other
+>> +nonstandard address should consult with the fields marked (reloc);
+>other
+>>  boot loaders can ignore those fields=2E
+>> =20
+>>  The byte order of all fields is littleendian (this is x86, after
+>all=2E)
+>
+>Well, this documentation is written from the point of view of a=20
+>*bootloader*, not the kernel=2E So the 'fill in' says that the bootloader
+>
+>should write those fields - which is correct, right?
+>
+>Thanks,
+>
+>	Ingo
 
-To fix this, we have wrapped the default memset, done when allocating
-coherent memory, under the __GFP_ZERO flag. So, we only clear
-allocated memory if __GFP_ZERO flag is enabled. We believe this
-should be safe as the video decoder always writes before reading.
-This optimizes decoder initialization as we do not set the __GFP_ZERO
-flag when allocating memory for decoder. With this optimization, we
-don't see initial frame drops and decoder initialization time is
-~100ms.
-
-This patch adds plumbing through dma_alloc functions to pass gfp flag
-set by user to __dma_alloc_from_coherent(). Here gfp flag is checked
-for __GFP_ZERO. If present, we memset the buffer to 0 otherwise we
-skip memset.
-
-Signed-off-by: Dylan Yip <dylan.yip@xilinx.com>
----
- arch/arm/mm/dma-mapping-nommu.c |  2 +-
- include/linux/dma-mapping.h     | 11 +++++++----
- kernel/dma/coherent.c           | 15 +++++++++------
- kernel/dma/mapping.c            |  2 +-
- 4 files changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
-index 52b8255..242b2c3 100644
---- a/arch/arm/mm/dma-mapping-nommu.c
-+++ b/arch/arm/mm/dma-mapping-nommu.c
-@@ -35,7 +35,7 @@ static void *arm_nommu_dma_alloc(struct device *dev, size_t size,
- 				 unsigned long attrs)
- 
- {
--	void *ret = dma_alloc_from_global_coherent(size, dma_handle);
-+	void *ret = dma_alloc_from_global_coherent(size, dma_handle, gfp);
- 
- 	/*
- 	 * dma_alloc_from_global_coherent() may fail because:
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index f7d1eea..b715c9f 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -160,24 +160,27 @@ static inline int is_device_dma_capable(struct device *dev)
-  * Don't use them in device drivers.
-  */
- int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
--				       dma_addr_t *dma_handle, void **ret);
-+				       dma_addr_t *dma_handle, void **ret,
-+				       gfp_t flag);
- int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr);
- 
- int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
- 			    void *cpu_addr, size_t size, int *ret);
- 
--void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle);
-+void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle,
-+				     gfp_t flag);
- int dma_release_from_global_coherent(int order, void *vaddr);
- int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
- 				  size_t size, int *ret);
- 
- #else
--#define dma_alloc_from_dev_coherent(dev, size, handle, ret) (0)
-+#define dma_alloc_from_dev_coherent(dev, size, handle, ret, flag) (0)
- #define dma_release_from_dev_coherent(dev, order, vaddr) (0)
- #define dma_mmap_from_dev_coherent(dev, vma, vaddr, order, ret) (0)
- 
- static inline void *dma_alloc_from_global_coherent(ssize_t size,
--						   dma_addr_t *dma_handle)
-+						   dma_addr_t *dma_handle,
-+						   gfp_t flag)
- {
- 	return NULL;
- }
-diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-index 29fd659..d85fab5 100644
---- a/kernel/dma/coherent.c
-+++ b/kernel/dma/coherent.c
-@@ -136,7 +136,7 @@ void dma_release_declared_memory(struct device *dev)
- EXPORT_SYMBOL(dma_release_declared_memory);
- 
- static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
--		ssize_t size, dma_addr_t *dma_handle)
-+		ssize_t size, dma_addr_t *dma_handle, gfp_t gfp_flag)
- {
- 	int order = get_order(size);
- 	unsigned long flags;
-@@ -158,7 +158,8 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
- 	*dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
- 	ret = mem->virt_base + (pageno << PAGE_SHIFT);
- 	spin_unlock_irqrestore(&mem->spinlock, flags);
--	memset(ret, 0, size);
-+	if (gfp_flag & __GFP_ZERO)
-+		memset(ret, 0, size);
- 	return ret;
- err:
- 	spin_unlock_irqrestore(&mem->spinlock, flags);
-@@ -172,6 +173,7 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
-  * @dma_handle:	This will be filled with the correct dma handle
-  * @ret:	This pointer will be filled with the virtual address
-  *		to allocated area.
-+ * @flag:      gfp flag set by user
-  *
-  * This function should be only called from per-arch dma_alloc_coherent()
-  * to support allocation from per-device coherent memory pools.
-@@ -180,24 +182,25 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
-  * generic memory areas, or !0 if dma_alloc_coherent should return @ret.
-  */
- int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
--		dma_addr_t *dma_handle, void **ret)
-+		dma_addr_t *dma_handle, void **ret, gfp_t flag)
- {
- 	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
- 
- 	if (!mem)
- 		return 0;
- 
--	*ret = __dma_alloc_from_coherent(mem, size, dma_handle);
-+	*ret = __dma_alloc_from_coherent(mem, size, dma_handle, flag);
- 	return 1;
- }
- 
--void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle)
-+void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle,
-+				     gfp_t flag)
- {
- 	if (!dma_coherent_default_memory)
- 		return NULL;
- 
- 	return __dma_alloc_from_coherent(dma_coherent_default_memory, size,
--			dma_handle);
-+			dma_handle, flag);
- }
- 
- static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index b0038ca..bfea1d2 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -272,7 +272,7 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 
- 	WARN_ON_ONCE(!dev->coherent_dma_mask);
- 
--	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr))
-+	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr, flag))
- 		return cpu_addr;
- 
- 	/* let the implementation decide on the zone to allocate from: */
--- 
-2.7.4
-
+This is correct=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
