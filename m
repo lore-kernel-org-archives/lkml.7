@@ -2,138 +2,169 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FAFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C5FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D69F222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70F9217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Jk//6vmB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mum4Fr6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfIZSwt (ORCPT
+        id S1728546AbfIZTDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:52:49 -0400
-Received: from mout.web.de ([212.227.15.14]:41591 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfIZSwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:52:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569523960;
-        bh=xN+p/5OCq7JFB361Iwj0Dzg56oldc5duC5WCMkjPXx4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Jk//6vmBJf6eYadvCVXaG7vXQh45AvVi5AVcwgmhJ20nPUk3VBf+6MMk+FQ/cEMwd
-         /boVamxLKmbuOnZzrn8QA0boKV7CnlhuNEOkwZB3gPjQT45xIpArFFEy+Tnli5zXON
-         xFnr3rhEoiGkeBcCphawlNPjGJnYFnmdE5bUDNl0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.81.241]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MPHFI-1iHyiu1qcK-004S5G; Thu, 26
- Sep 2019 20:52:40 +0200
-Subject: Re: [1/2] net/phy/mdio-mscc-miim: Use
- devm_platform_ioremap_resource() in mscc_miim_probe()
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <189ccfc3-d5a6-79fd-29b8-1f7140e9639a@web.de>
- <506889a6-4148-89f9-302e-4be069595bb4@web.de> <20190920190908.GH3530@lunn.ch>
- <121e75c5-4d45-9df2-a471-6997a1fb3218@web.de>
- <20190926161825.GB6825@piout.net>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <0a1f4dbf-4cc6-8530-a38e-31c3369e6db6@web.de>
-Date:   Thu, 26 Sep 2019 20:52:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 26 Sep 2019 15:03:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45718 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfIZTDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:03:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y72so30633pfb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 12:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=zq1OSYqXH0ZMOnbEBvZSWUC9RaDrbFy9EOSYIIfRujM=;
+        b=Mum4Fr6NVjeSKG/DxUfxMiZXklbhuyr1gw2WVg+O/ZIjhh0E8JKygPPSOP3pFlkqab
+         kfxjIOHo0Sv9doFiPsu+NDxXddWKKNPHIn6U8xOX2w9NwnGQ20L0WztKOQaX0wT0qJlm
+         U+1+F4M/p0BVN9ekWz6cal45avjJUKuQDjldl2CdngZOFC3a2GO1FHTsoXNpYp6f8C3E
+         SF8TRotC8a3FjWTAbLWogJeBNhq5SCc6ZKIrAZJu2+rBS3MP+U91mHXcalDcUtLHqcre
+         1ldxZdgFqW7UlqYVpbV4wKLhuqoZg6L3sCtupOjdGnZ1g4B9LPzQEJ83/iiO1CefHnS2
+         +87Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=zq1OSYqXH0ZMOnbEBvZSWUC9RaDrbFy9EOSYIIfRujM=;
+        b=VLGVvElwUKRl4+gjMJ8sxJLDMaEu1cEV/Awp4puexkOmcxNaqQvwuDAHXnwGD2Zfu1
+         8hPQFW4WSbHZ9vEIb1uv9IvgzQeULgkDIqdW3c/9M9cAvnYIMCmd0jKh08HHOtjd9nnK
+         jXTSFTyn9n22FsftM2bOoTNjMwx9oPK/NywNN8VYVqawV5w/UtbfxcXEKp+gBEK51nfY
+         yPzvJQxUHWxM8PgX+9x+RCjc0hPe+4kf7rZB9yAgB8k/8NDhMfxoebtqMcOhK+ZuzfP3
+         c8dGLMl4NzPo3rq4XVxAjaJlWBWwydLBP6/oxOhEpWrDYXNvGRWOmzxPgMOoUyr42VFb
+         oMzQ==
+X-Gm-Message-State: APjAAAX2HAbkQ3UYI9sZiUHjr1W9QInSxn4XPUxa7bVu8J9Ccja25Xr1
+        Ks52DnfnWp8O+qe+CZQXqfSTWQ==
+X-Google-Smtp-Source: APXvYqybth+jhEWHhwFrFaUJu5dJ/QGrG4exga56c7ex7CZpTkJLsciZXrDNOmRhiIx6qybE7U0tjw==
+X-Received: by 2002:a63:7153:: with SMTP id b19mr4931454pgn.10.1569524619541;
+        Thu, 26 Sep 2019 12:03:39 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id t68sm6836764pgt.61.2019.09.26.12.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 12:03:38 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 12:03:37 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
+ hugepages
+In-Reply-To: <20190925070817.GH23050@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <20190904205522.GA9871@redhat.com> <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com> <20190909193020.GD2063@dhcp22.suse.cz> <20190925070817.GH23050@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190926161825.GB6825@piout.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FW7oPWJvZiXJxSXbN8g5Z+LIu5czpM2Hablpz5u2piawnl6iGA9
- 2ZLuyWev+N783dVLGZJlQgrIbtqyJxPDzOOSSChpE0j3+MmorFm6IYrtEYh7X4+Q8vjqoAH
- 7IWEnf2zWDTscSPpAGAoTrhlYRAj63ce2beLYPsyyxVABP8HlzVTkQKcebtJNJWrwKAvpFw
- 6LcZb2au5yQr2BLuLVAeg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Gimchof243k=:qo/1X95tidx3mEqPIxw0cJ
- Ux5ENHeZ2iPB2DjPk07jt2615u+/Rl1WFCganOTdXJ2qg//lGkq+9Ys0YFbLHB/WiW58VYVCo
- WgOcqNkl3X4qV6sZobkyxHtt0jULe8PoTBPV8tWl9pVvzHsVVZeLNHJ/PrCyuzXjn+cRUYyy1
- 160NTCDrr+lIkwiZtUwe5qOC8Puk4adbUH97F5Ucj+4gpCnZ9UEbpr/sQ4Xi7kx/7yOy+moLA
- F6fP+ipgvuc178/CGQxZ5DgkGKn4tVjdJmr0DpqNAktuUyqxSbm69Mg4OWJDbylwMTS4G83UD
- YNljrnJl0eKq5/HSKtRbcp26Gdh7CcYyB06Q04Vj8Lm7mUUu5ay2wOq6xbcJsMzLVUqA52Et+
- A5adX4q4J2UI5veb104KxjFXin9AFJe6yR8mYlq7aeT9/ZFdDu9KG9p1agK6BL5LqugmWF1ez
- 7Y/OQPqcmcYVKhHwZxVtFTChYWDc6Ai81X4/emydaPJ193R1Iz3uMjhQh7oz+xLkEqQvHSPRH
- EWWJwFk1LfMHT4b4l7oREV+f1BHYrdeWkTAQMBbUps4zOpEiVSQBr63WF9EoSbrGzQyNVHn9i
- PSOJcjRBDigF2qw2NicKAF1E6V4OPzacUvefV6RPjLa1KsDAKHm4zwN0KzdqZsxzEWWX99jhq
- X0wOPf2TNd7nsflfPKPqM9OMKhWmJUh2ghSmpAH3Yp15eOntUdDMVIWgXPPL/zWx6Prm1ok17
- jdX4keZVxfUzXzVIdEQED6EL97eBOvnmndOinShNvJBwliGPWmuHEix8G6advAobzsYcvBMCk
- eTom1Yq1xC1BuryO1yRHVZ4tTdzOfJPElWH0lTkutzdZcqjwF/ldXLwEOZur+QFM6ICG6NqaS
- fA+TcWLzf6MN7wkUFbk4CaGMF510CpUrGFp44/0lV0tZ01QNU2ivfztPegKwJoa+OjdzqN2Oj
- jeCkBvGjuizxw1AJb9UrCgxcxWsZg5BSPj7Y5oDuqMHl7VJe6kwSwrH+wP4wbznGSolQ5tMe6
- 5A3iUBA2s5tQ9oNGASHFMdLY7rGXAvW5K+6gmmgyuDT4ZFhQptc8nGUkOPRzgOnH2yC2DCTdw
- xXHBHy1frpO8z9FImZ2qTgjg0fhCibeWB3p0McY0a3r6CAETrkHKSECXrLrPmu28OlV/iZf6f
- 8eiuSfZqdj1ka10NMEE0BSmq409sBNT+c6XqJfiSv4aJ2rLFxwn67WuT/LCmj8n3bDgOVIzhb
- 2QP2hHnUt9wx5K2eYPzis54+g/3m844VTc7BTP7FhRAjS2y/J/ChBu205EiM=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Does this feedback indicate also an agreement for the detail
->> if the mapping of internal phy registers would be a required operation?
->> (Would such a resource allocation eventually be optional?)
->
-> It is optional.
+On Wed, 25 Sep 2019, Michal Hocko wrote:
 
-Would you like to integrate an other patch variant then?
+> I am especially interested about this part. The more I think about this
+> the more I am convinced that the underlying problem really is in the pre
+> mature fallback in the fast path.
 
-Regards,
-Markus
+I appreciate you taking the time to continue to look at this but I'm 
+confused about the underlying problem you're referring to: we had no 
+underlying problem until 5.3 was released so we need to carry patches that 
+will revert this behavior (we simply can't tolerate double digit memory 
+access latency regressions lol).
+
+If you're referring to post-5.3 behavior, this appears to override 
+alloc_hugepage_direct_gfpmask() but directly in the page allocator.
+
+static inline gfp_t alloc_hugepage_direct_gfpmask(struct vm_area_struct *vma, unsigned long addr)
+{
+...
+        /*
+         * __GFP_THISNODE is used only when __GFP_DIRECT_RECLAIM is not
+         * specified, to express a general desire to stay on the current
+
+Your patch is setting __GFP_THISNODE for __GFP_DIRECT_RECLAIM: this 
+allocation will fail in the fastpath for both my case (fragmented local 
+node) and Andrea's case (out of memory local node).  The first 
+get_page_from_freelist() will then succeed in the slowpath for both cases; 
+compaction is not tried for either.
+
+In my case, that results in a perpetual remote access latency that we 
+can't tolerate.  If Andrea's remote nodes are fragmented or low on memory, 
+his case encounters swap storms over both the local node and remote nodes.
+
+So I'm not really sure what is solved by your patch?
+
+We're not on 5.3, but I can try it and collect data on exactly how poorly 
+it performs on fragmented *hosts* (not single nodes, but really the whole 
+system) because swap storms were never fixed here, it was only papered 
+over.
+
+> Does the almost-patch below helps your
+> workload? It effectively reduces the fast path for higher order
+> allocations to the local/requested node. The justification is that
+> watermark check might be too strict for those requests as it is primary
+> order-0 oriented. Low watermark target simply has no meaning for the
+> higher order requests AFAIU. The min-low gap is giving kswapd a chance
+> to balance and be more local node friendly while we do not have anything
+> like that in compaction.
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ff5484fdbdf9..09036cf55fca 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4685,7 +4685,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+>  {
+>  	struct page *page;
+>  	unsigned int alloc_flags = ALLOC_WMARK_LOW;
+> -	gfp_t alloc_mask; /* The gfp_t that was actually used for allocation */
+> +	gfp_t fastpath_mask, alloc_mask; /* The gfp_t that was actually used for allocation */
+>  	struct alloc_context ac = { };
+>  
+>  	/*
+> @@ -4698,7 +4698,7 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+>  	}
+>  
+>  	gfp_mask &= gfp_allowed_mask;
+> -	alloc_mask = gfp_mask;
+> +	fastpath_mask = alloc_mask = gfp_mask;
+>  	if (!prepare_alloc_pages(gfp_mask, order, preferred_nid, nodemask, &ac, &alloc_mask, &alloc_flags))
+>  		return NULL;
+>  
+> @@ -4710,8 +4710,17 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+>  	 */
+>  	alloc_flags |= alloc_flags_nofragment(ac.preferred_zoneref->zone, gfp_mask);
+>  
+> -	/* First allocation attempt */
+> -	page = get_page_from_freelist(alloc_mask, order, alloc_flags, &ac);
+> +	/*
+> +	 * First allocation attempt. If we have a high order allocation then do not fall
+> +	 * back to a remote node just based on the watermark check on the requested node
+> +	 * because compaction might easily free up a requested order and then it would be
+> +	 * better to simply go to the slow path.
+> +	 * TODO: kcompactd should help here but nobody has woken it up unless we hit the
+> +	 * slow path so we might need some tuning there as well.
+> +	 */
+> +	if (order && (gfp_mask & __GFP_DIRECT_RECLAIM))
+> +		fastpath_mask |= __GFP_THISNODE;
+> +	page = get_page_from_freelist(fastpath_mask, order, alloc_flags, &ac);
+>  	if (likely(page))
+>  		goto out;
